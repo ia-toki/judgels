@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
@@ -18,7 +18,7 @@ describe('ActivatePage', () => {
 
     store = createStore(() => {}, applyMiddleware(thunk));
 
-    mount(
+    render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/activate/code123']}>
           <Route exact path="/activate/:emailCode" component={ActivatePage} />

@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -6,7 +7,6 @@ import { ContestManagerAddDialog } from './ContestManagerAddDialog';
 
 describe('ContestManagerAddDialog', () => {
   let onUpsertManagers;
-  let wrapper;
 
   beforeEach(() => {
     onUpsertManagers = jest
@@ -19,22 +19,24 @@ describe('ContestManagerAddDialog', () => {
       contest: { jid: 'contestJid' },
       onUpsertManagers,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestManagerAddDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.prop('onChange')({ target: { value: 'andi\n\nbudi\n caca  \n' } });
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const usernames = screen.getByRole('textbox');
+    await user.type(usernames, 'andi\n\nbudi\n caca  \n');
+
+    const submitButton = screen.getByRole('button', { name: /^add$/i });
+    await user.click(submitButton);
 
     expect(onUpsertManagers).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
   });

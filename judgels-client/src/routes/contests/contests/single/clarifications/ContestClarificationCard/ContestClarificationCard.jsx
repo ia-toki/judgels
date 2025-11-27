@@ -23,7 +23,7 @@ export function ContestClarificationCard({
   const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
   const asker = canSupervise && (
     <>
-      &nbsp;<small>by</small> <UserRef profile={askerProfile} />
+      by <UserRef profile={askerProfile} />
     </>
   );
 
@@ -61,7 +61,7 @@ export function ContestClarificationCard({
 
     const answerer = canSupervise && (
       <>
-        &nbsp;<small>by</small> <UserRef profile={answererProfile} />
+        by <UserRef profile={answererProfile} />
       </>
     );
 
@@ -70,9 +70,8 @@ export function ContestClarificationCard({
         <h5>Answer:</h5>
         <p className="float-right">
           <small>
-            answered <FormattedRelative value={clarification.answeredTime} />
+            answered <FormattedRelative value={clarification.answeredTime} /> {answerer}
           </small>
-          {answerer}
         </p>
         <div className="clearfix" />
         <hr />
@@ -88,9 +87,8 @@ export function ContestClarificationCard({
       </h5>
       <p className="float-right">
         <small>
-          asked <FormattedRelative value={clarification.time} />
+          asked <FormattedRelative value={clarification.time} /> {asker}
         </small>
-        {asker}
       </p>
       <div className="clearfix" />
       <hr />

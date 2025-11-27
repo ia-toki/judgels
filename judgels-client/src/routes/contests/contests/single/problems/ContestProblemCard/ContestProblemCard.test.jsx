@@ -1,24 +1,26 @@
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 
-import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemCard } from './ContestProblemCard';
 
 describe('ContestProblemCard', () => {
-  let wrapper;
-
-  const render = problem => {
+  const renderComponent = problem => {
     const props = {
       contest: { jid: 'contestJid', slug: 'contest-a' },
       problem,
       problemName: 'The Problem',
       totalSubmissions: 10,
     };
-    wrapper = shallow(<ContestProblemCard {...props} />);
+    render(
+      <MemoryRouter>
+        <ContestProblemCard {...props} />
+      </MemoryRouter>
+    );
   };
 
   test('problem name', () => {
-    render({
+    renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -26,12 +28,15 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem');
-    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
+    const nameElement = document.querySelector('[data-key="name"]');
+    expect(nameElement.textContent).toEqual('A. The Problem');
+
+    const linkElement = screen.getByRole('link');
+    expect(linkElement.getAttribute('href')).toEqual('/contests/contest-a/problems/A');
   });
 
   test('problem name with points', () => {
-    render({
+    renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -39,12 +44,15 @@ describe('ContestProblemCard', () => {
       points: 30,
     });
 
-    expect(wrapper.find('[data-key="name"]').text()).toEqual('A. The Problem [30 points]');
-    expect(wrapper.find(ContentCardLink).props().to).toEqual('/contests/contest-a/problems/A');
+    const nameElement = document.querySelector('[data-key="name"]');
+    expect(nameElement.textContent).toEqual('A. The Problem [30 points]');
+
+    const linkElement = screen.getByRole('link');
+    expect(linkElement.getAttribute('href')).toEqual('/contests/contest-a/problems/A');
   });
 
   test('open problem with submissions limit', () => {
-    render({
+    renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -52,11 +60,12 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    expect(wrapper.find('[data-key="status"]').text()).toEqual('40 submissions left');
+    const statusElement = document.querySelector('[data-key="status"]');
+    expect(statusElement.textContent).toEqual('40 submissions left');
   });
 
   test('open problem without submissions limit', () => {
-    render({
+    renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -64,11 +73,12 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    expect(wrapper.find('[data-key="status"]').text()).toEqual('');
+    const statusElement = document.querySelector('[data-key="status"]');
+    expect(statusElement.textContent).toEqual('');
   });
 
   test('closed problem', () => {
-    render({
+    renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Closed,
@@ -76,6 +86,7 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    expect(wrapper.find('[data-key="status"]').childAt(0).childAt(0).text()).toEqual('CLOSED');
+    const statusElement = document.querySelector('[data-key="status"]');
+    expect(statusElement.textContent).toEqual('CLOSED');
   });
 });

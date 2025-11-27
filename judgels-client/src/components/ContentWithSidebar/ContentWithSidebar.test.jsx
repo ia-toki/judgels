@@ -1,5 +1,4 @@
-import { ChevronRight } from '@blueprintjs/icons';
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -8,13 +7,11 @@ import ContentWithSidebar from './ContentWithSidebar';
 
 describe('ContentWithSidebar', () => {
   let store;
-  let wrapper;
+  const FirstComponent = () => <div>One</div>;
+  const SecondComponent = () => <div>Two</div>;
+  const ThirdComponent = () => <div>Three</div>;
 
-  const FirstComponent = () => <div />;
-  const SecondComponent = () => <div />;
-  const ThirdComponent = () => <div />;
-
-  const render = (childPath, firstId) => {
+  const renderComponent = (childPath, firstId) => {
     const props = {
       title: 'Content with Sidebar',
       items: [
@@ -40,7 +37,7 @@ describe('ContentWithSidebar', () => {
     };
     const component = () => <ContentWithSidebar {...props} />;
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/parent' + childPath]}>
           <Route path="/parent" component={component} />
@@ -56,47 +53,48 @@ describe('ContentWithSidebar', () => {
   describe('when the first route is allowed to have suffix', () => {
     describe('when the child path is present', () => {
       beforeEach(() => {
-        render('/second', 'first');
+        renderComponent('/second', 'first');
       });
 
       it('shows sidebar items with the correct texts', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
         expect(items).toHaveLength(3);
 
-        expect(items.at(0).text()).toEqual('First');
-        expect(items.at(1).childAt(0).text()).toEqual('Second');
-        expect(items.at(2).childAt(0).text()).toEqual('Third');
+        expect(items[0]).toHaveTextContent('First');
+        expect(items[1]).toHaveTextContent('Second');
+        expect(items[2]).toHaveTextContent('Third');
       });
 
       it('has the correct active item', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
 
-        expect(items.at(0).find(ChevronRight)).toHaveLength(0);
-        expect(items.at(1).find(ChevronRight)).toHaveLength(1);
-        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
+        expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+        expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
+        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
       });
 
       it('renders the active component', () => {
-        expect(wrapper.find(SecondComponent)).toHaveLength(1);
+        expect(screen.getByText('Two')).toBeInTheDocument();
       });
 
       it('has the correct links', () => {
-        const link = wrapper.find('[role="tab"]').at(2).find('a');
-        expect(link.props().href).toEqual('/parent/third');
+        const items = screen.getAllByRole('tab');
+        const link = within(items[2]).getByRole('link');
+        expect(link).toHaveAttribute('href', '/parent/third');
       });
     });
 
     describe('when the child path is not present', () => {
       beforeEach(() => {
-        render('', 'first');
+        renderComponent('', 'first');
       });
 
       it('has the first item active by default', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
 
-        expect(items.at(0).find(ChevronRight)).toHaveLength(1);
-        expect(items.at(1).find(ChevronRight)).toHaveLength(0);
-        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
+        expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
+        expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
       });
     });
   });
@@ -104,47 +102,48 @@ describe('ContentWithSidebar', () => {
   describe('when the first route is not allowed to have suffix', () => {
     describe('when the child path is present', () => {
       beforeEach(() => {
-        render('/second');
+        renderComponent('/second');
       });
 
       it('shows sidebar items with the correct texts', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
         expect(items).toHaveLength(3);
 
-        expect(items.at(0).text()).toEqual('First');
-        expect(items.at(1).childAt(0).text()).toEqual('Second');
-        expect(items.at(2).childAt(0).text()).toEqual('Third');
+        expect(items[0]).toHaveTextContent('First');
+        expect(items[1]).toHaveTextContent('Second');
+        expect(items[2]).toHaveTextContent('Third');
       });
 
       it('has the correct active item', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
 
-        expect(items.at(0).find(ChevronRight)).toHaveLength(0);
-        expect(items.at(1).find(ChevronRight)).toHaveLength(1);
-        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
+        expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+        expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
+        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
       });
 
       it('renders the active component', () => {
-        expect(wrapper.find(SecondComponent)).toHaveLength(1);
+        expect(screen.getByRole('tab', { selected: true })).toBeInTheDocument();
       });
 
       it('has the correct first link without suffix', () => {
-        const link = wrapper.find('[role="tab"]').at(0).find('a');
-        expect(link.props().href).toEqual('/parent/');
+        const items = screen.getAllByRole('tab');
+        const link = within(items[0]).getByRole('link');
+        expect(link).toHaveAttribute('href', '/parent/');
       });
     });
 
     describe('when the child path is not present', () => {
       beforeEach(() => {
-        render('');
+        renderComponent('');
       });
 
       it('has the first item active by default', () => {
-        const items = wrapper.find('[role="tab"]');
+        const items = screen.getAllByRole('tab');
 
-        expect(items.at(0).find(ChevronRight)).toHaveLength(1);
-        expect(items.at(1).find(ChevronRight)).toHaveLength(0);
-        expect(items.at(2).find(ChevronRight)).toHaveLength(0);
+        expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
+        expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
       });
     });
   });

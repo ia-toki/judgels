@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
@@ -11,14 +12,12 @@ import * as resetPasswordActions from '../modules/resetPasswordActions';
 jest.mock('../modules/resetPasswordActions');
 
 describe('ResetPasswordPage', () => {
-  let wrapper;
-
   beforeEach(() => {
     resetPasswordActions.requestToResetPassword.mockReturnValue(() => Promise.resolve());
 
     const store = configureMockStore([thunk])({});
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ResetPasswordPage />
@@ -27,9 +26,11 @@ describe('ResetPasswordPage', () => {
     );
   });
 
-  test('form', () => {
-    const form = wrapper.find('form');
-    form.simulate('submit');
+  test('form', async () => {
+    const user = userEvent.setup();
+
+    const submitButton = screen.getByRole('button', { name: /request to reset password/i });
+    await user.click(submitButton);
 
     expect(resetPasswordActions.requestToResetPassword).toHaveBeenCalled();
   });

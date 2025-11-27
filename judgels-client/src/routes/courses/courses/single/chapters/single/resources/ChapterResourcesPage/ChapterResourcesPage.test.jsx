@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -14,11 +14,10 @@ import * as chapterResourceActions from '../modules/chapterResourceActions';
 jest.mock('../modules/chapterResourceActions');
 
 describe('ChapterResourcesPage', () => {
-  let wrapper;
   let lessons;
   let problems;
 
-  const render = async () => {
+  const renderComponent = async () => {
     chapterResourceActions.getResources.mockReturnValue(() =>
       Promise.resolve([
         {
@@ -76,29 +75,27 @@ describe('ChapterResourcesPage', () => {
     );
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1']}>
-          <Route path="/courses/courseSlug/chapter/chapter-1" component={ChapterResourcesPage} />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1']}>
+            <Route path="/courses/courseSlug/chapter/chapter-1" component={ChapterResourcesPage} />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no resources', () => {
     beforeEach(async () => {
       lessons = [];
       problems = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows placeholder text and no resources', () => {
-      expect(wrapper.text()).toContain('No resources.');
-      expect(wrapper.find('a.content-card-link')).toHaveLength(0);
+      expect(screen.getByText(/no resources/i)).toBeInTheDocument();
+      expect(document.querySelectorAll('a.content-card-link')).toHaveLength(0);
     });
   });
 
@@ -112,12 +109,12 @@ describe('ChapterResourcesPage', () => {
         { problemJid: 'problemJid1', alias: 'A' },
         { problemJid: 'problemJid2', alias: 'B' },
       ];
-      await render();
+      await renderComponent();
     });
 
     it('shows the resources', () => {
-      const cards = wrapper.find('a.content-card-link');
-      expect(cards.map(card => [card.text(), card.find('a').props().href])).toEqual([
+      const cards = document.querySelectorAll('a.content-card-link');
+      expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
         ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
         ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
         ['A. Problem Asolved  ', '/courses/courseSlug/chapters/chapter-1/problems/A'],

@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -6,7 +7,6 @@ import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 
 describe('ItemMultipleChoiceCard', () => {
-  let wrapper;
   const onChoiceChangeFn = jest.fn();
   const itemConfig = {
     statement: 'Statement',
@@ -38,27 +38,25 @@ describe('ItemMultipleChoiceCard', () => {
   beforeEach(() => {
     const store = createMockStore()({});
     const props = multipleChoiceCardProps;
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ItemMultipleChoiceCard {...props} />
       </Provider>
     );
   });
 
-  test('Answer the question by clicking a radio button', () => {
-    const radioButton = wrapper.find('label').children().find('input').first();
-    radioButton.getDOMNode().checked = true;
-    radioButton.simulate('change');
+  test('Answer the question by clicking a radio button', async () => {
+    const user = userEvent.setup();
+    const radioButtons = screen.getAllByRole('radio');
+    await user.click(radioButtons[0]);
     expect(onChoiceChangeFn).toBeCalled();
   });
 
-  test('Answer the question and change the answer', () => {
-    const prevAnswer = wrapper.find('label').children().find('input').first();
-    prevAnswer.getDOMNode().checked = true;
-    prevAnswer.simulate('click');
-    const currentAnswer = wrapper.find('label').children().find('input').last();
-    currentAnswer.getDOMNode().checked = true;
-    currentAnswer.simulate('change');
+  test('Answer the question and change the answer', async () => {
+    const user = userEvent.setup();
+    const radioButtons = screen.getAllByRole('radio');
+    await user.click(radioButtons[0]);
+    await user.click(radioButtons[2]);
     expect(onChoiceChangeFn).toHaveBeenCalled();
   });
 });

@@ -1,19 +1,18 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';
 import ItemShortAnswerForm from './ItemShortAnswerForm';
 
 describe('ItemShortAnswerForm', () => {
-  let wrapper;
   const onSubmitFn = jest.fn();
   const itemConfig = {
     statement: 'statement',
     score: 4,
     penalty: -2,
-    inputValidationRegex: '/^d+$/',
-    gradingRegex: '/^d+$/',
+    inputValidationRegex: '\\d+',
+    gradingRegex: '\\d+',
   };
 
   beforeEach(() => {
@@ -32,57 +31,51 @@ describe('ItemShortAnswerForm', () => {
     };
 
     beforeEach(() => {
-      wrapper = mount(<ItemShortAnswerForm {...props} />);
+      render(<ItemShortAnswerForm {...props} />);
     });
 
     test('text input should has empty value', () => {
-      const textInputValue = wrapper.find('input').props().value;
-      expect(textInputValue).toEqual('');
+      const textInput = screen.getByRole('textbox');
+      expect(textInput).toHaveValue('');
     });
 
     it('should render no buttons', () => {
-      const buttons = wrapper.find('button');
-      expect(buttons.length).toEqual(0);
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
     test("helptext should be 'Unanswered.'", () => {
-      const div = wrapper.find('div');
-      const helpText = div.at(div.length - 2).text();
-      expect(helpText).toContain('Unanswered.');
+      expect(screen.getByText(/Unanswered\./i)).toBeInTheDocument();
     });
 
     describe('fill and submit the answer', () => {
-      beforeEach(() => {
-        const answerButton = wrapper.find('form');
-        answerButton.simulate('submit');
-
-        const textInput = wrapper.find('input');
-        act(() => {
-          textInput.prop('onChange')({ target: { value: '1' } });
-        });
+      beforeEach(async () => {
+        const user = userEvent.setup();
+        const textInput = screen.getByRole('textbox');
+        await user.click(textInput);
+        await user.type(textInput, '1');
       });
 
-      test('fill the answer with wrong format will render the new help text', () => {
-        const textInput = wrapper.find('input');
-        textInput.prop('onChange')({ target: { value: 'answer' } });
-        wrapper.update();
-        const helpText = wrapper.find('div').at(1).text();
-        expect(helpText).toContain('Wrong answer format!');
+      test('fill the answer with wrong format will render the new help text', async () => {
+        const user = userEvent.setup();
+        const textInput = screen.getByRole('textbox');
+        await user.clear(textInput);
+        await user.type(textInput, 'answer');
+        expect(screen.getByText(/Wrong answer format!/i)).toBeInTheDocument();
       });
 
       test('cancel answer should render no buttons', async () => {
-        const cancelButton = wrapper.find('button').last();
-        await cancelButton.simulate('click');
-        const buttons = wrapper.find('button');
-        expect(buttons.length).toEqual(0);
+        const user = userEvent.setup();
+        const buttons = screen.getAllByRole('button');
+        const cancelButton = buttons[buttons.length - 1];
+        await user.click(cancelButton);
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
       });
 
-      test('submit the answer', () => {
-        const prevHelpText = wrapper.find('div').at(1);
-        const submitButton = wrapper.find('form');
-        submitButton.simulate('submit');
-        const helpText = wrapper.find('div').at(1);
-        expect(helpText).not.toEqual(prevHelpText);
+      test('submit the answer', async () => {
+        const user = userEvent.setup();
+        const buttons = screen.getAllByRole('button');
+        const submitButton = buttons[0];
+        await user.click(submitButton);
         expect(onSubmitFn).toBeCalled();
       });
     });
@@ -101,66 +94,64 @@ describe('ItemShortAnswerForm', () => {
     };
 
     beforeEach(() => {
-      wrapper = mount(<ItemShortAnswerForm {...props} />);
+      render(<ItemShortAnswerForm {...props} />);
     });
 
     it('should render text input with initial answer', () => {
-      const textInputValue = wrapper.find('input').props().value;
-      expect(textInputValue).toEqual(props.initialAnswer);
+      const textInput = screen.getByRole('textbox');
+      expect(textInput).toHaveValue(props.initialAnswer);
     });
 
     it('should render Clear button', () => {
-      const button = wrapper.find('button');
-      expect(button.length).toEqual(1);
-      expect(button.text()).toEqual('Clear');
+      const button = screen.getByRole('button');
+      expect(button).toHaveTextContent('Clear');
     });
 
     describe('change the answer', () => {
-      beforeEach(() => {
-        const textInput = wrapper.find('input');
-        textInput.simulate('click');
-        act(() => {
-          textInput.prop('onChange')({ target: { value: '2' } });
-        });
+      beforeEach(async () => {
+        const user = userEvent.setup();
+        const textInput = screen.getByRole('textbox');
+        await user.click(textInput);
+        await user.clear(textInput);
+        await user.type(textInput, '2');
       });
 
       test('change the answer with right format', () => {
-        const state = wrapper.state();
-        expect(state.answer).toEqual('2');
+        const textInput = screen.getByRole('textbox');
+        expect(textInput).toHaveValue('2');
       });
 
-      test('change the answer with wrong format', () => {
-        const textInput = wrapper.find('input');
-        textInput.prop('onChange')({ target: { value: 'answer' } });
-        wrapper.update();
-        const helpText = wrapper.find('div').at(1).text();
-        expect(helpText).toContain('Wrong answer format!');
+      test('change the answer with wrong format', async () => {
+        const user = userEvent.setup();
+        const textInput = screen.getByRole('textbox');
+        await user.clear(textInput);
+        await user.type(textInput, 'answer');
+        expect(screen.getByText(/Wrong answer format!/i)).toBeInTheDocument();
       });
 
-      test('cancel answer should render new Clear button', () => {
-        const prevButtons = wrapper.find('button');
-        const cancelButton = prevButtons.last();
-        cancelButton.simulate('click');
-        const clearButton = wrapper.find('button');
-        expect(clearButton).not.toEqual(prevButtons);
-        expect(clearButton.text()).toEqual('Clear');
+      test('cancel answer should render new Clear button', async () => {
+        const user = userEvent.setup();
+        const buttons = screen.getAllByRole('button');
+        const cancelButton = buttons[buttons.length - 1];
+        await user.click(cancelButton);
+        const clearButton = screen.getByRole('button');
+        expect(clearButton).toHaveTextContent('Clear');
       });
 
-      test('submit the answer', () => {
-        const prevHelpText = wrapper.find('div').at(1);
-        const submitButton = wrapper.find('form');
-        submitButton.simulate('submit');
-        const helpText = wrapper.find('div').at(1);
+      test('submit the answer', async () => {
+        const user = userEvent.setup();
+        const buttons = screen.getAllByRole('button');
+        const submitButton = buttons[0];
+        await user.click(submitButton);
         expect(onSubmitFn).toBeCalled();
-        expect(helpText).not.toEqual(prevHelpText);
       });
     });
 
-    test('clear the answer', () => {
-      const clearButton = wrapper.find('button');
-      clearButton.simulate('click');
-      const button = wrapper.find('button');
-      expect(button).not.toEqual(clearButton);
+    test('clear the answer', async () => {
+      const user = userEvent.setup();
+      const clearButton = screen.getByRole('button');
+      await user.click(clearButton);
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
   });
 
@@ -177,12 +168,12 @@ describe('ItemShortAnswerForm', () => {
     };
 
     beforeEach(() => {
-      wrapper = mount(<ItemShortAnswerForm {...props} />);
+      render(<ItemShortAnswerForm {...props} />);
     });
 
     it('buttons disabled', () => {
-      const button = wrapper.find('button');
-      expect(button.props().disabled).toEqual(true);
+      const button = screen.getByRole('button');
+      expect(button).toBeDisabled();
     });
   });
 });

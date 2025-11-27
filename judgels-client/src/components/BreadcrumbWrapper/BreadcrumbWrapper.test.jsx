@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { Component } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
@@ -9,7 +9,7 @@ import { withBreadcrumb } from './BreadcrumbWrapper';
 
 describe('BreadcrumbWrapper', () => {
   let store;
-  let wrapper;
+  let unmount;
   let renderFn;
 
   class InnerComponent extends Component {
@@ -28,13 +28,14 @@ describe('BreadcrumbWrapper', () => {
     const WrappedComponent = withBreadcrumb('My Component')(InnerComponent);
     const comp = () => <WrappedComponent num={42} />;
 
-    wrapper = mount(
+    const result = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/component/first']}>
           <Route path="/component" component={comp} />
         </MemoryRouter>
       </Provider>
     );
+    unmount = result.unmount;
   });
 
   it('pushes a new breadcrumb when mounted', () => {
@@ -46,7 +47,7 @@ describe('BreadcrumbWrapper', () => {
   });
 
   it('pops a breadcrumb when unmounted', () => {
-    wrapper.unmount();
+    unmount();
     expect(store.getActions()).toContainEqual(PopBreadcrumb({ link: '/component' }));
   });
 });

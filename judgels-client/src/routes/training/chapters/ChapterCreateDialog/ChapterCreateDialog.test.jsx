@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -8,7 +8,6 @@ import { ChapterCreateDialog } from './ChapterCreateDialog';
 describe('ChapterCreateDialog', () => {
   let onGetChapterConfig;
   let onCreateChapter;
-  let wrapper;
 
   beforeEach(async () => {
     onCreateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -19,28 +18,24 @@ describe('ChapterCreateDialog', () => {
       onGetChapterConfig,
       onCreateChapter,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ChapterCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('create dialog form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const name = wrapper.find('input[name="name"]');
-      name.prop('onChange')({ target: { value: 'New Chapter' } });
+    const name = screen.getByRole('textbox');
+    await user.type(name, 'New Chapter');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await user.click(submitButton);
 
     expect(onCreateChapter).toHaveBeenCalledWith({ name: 'New Chapter' });
   });

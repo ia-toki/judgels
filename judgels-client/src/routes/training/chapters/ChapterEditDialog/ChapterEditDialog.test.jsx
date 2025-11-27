@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -12,7 +13,6 @@ const chapter = {
 
 describe('ChapterEditDialog', () => {
   let onUpdateChapter;
-  let wrapper;
 
   beforeEach(() => {
     onUpdateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -25,20 +25,23 @@ describe('ChapterEditDialog', () => {
       onCloseDialog: jest.fn(),
       onUpdateChapter,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ChapterEditDialog {...props} />
       </Provider>
     );
   });
 
-  test('edit dialog form', () => {
-    const name = wrapper.find('input[name="name"]');
-    expect(name.prop('value')).toEqual('Chapter');
-    name.prop('onChange')({ target: { value: 'New chapter' } });
+  test('edit dialog form', async () => {
+    const user = userEvent.setup();
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const name = screen.getByRole('textbox');
+    expect(name).toHaveValue('Chapter');
+    await user.clear(name);
+    await user.type(name, 'New chapter');
+
+    const submitButton = screen.getByRole('button', { name: /update/i });
+    await user.click(submitButton);
 
     expect(onUpdateChapter).toHaveBeenCalledWith(chapter.jid, {
       name: 'New chapter',

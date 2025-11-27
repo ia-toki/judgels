@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -11,14 +12,12 @@ import * as loginActions from '../modules/loginActions';
 jest.mock('../modules/loginActions');
 
 describe('LoginPage', () => {
-  let wrapper;
-
   beforeEach(() => {
     loginActions.logIn.mockReturnValue(() => Promise.resolve());
 
     const store = createMockStore([thunk])({});
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <LoginPage />
@@ -27,15 +26,17 @@ describe('LoginPage', () => {
     );
   });
 
-  test('form', () => {
-    const usernameOrEmail = wrapper.find('input[name="usernameOrEmail"]');
-    usernameOrEmail.prop('onChange')({ target: { value: 'user' } });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    const password = wrapper.find('input[name="password"]');
-    password.prop('onChange')({ target: { value: 'pass' } });
+    const usernameOrEmail = screen.getByRole('textbox', { name: /username or email/i });
+    await user.type(usernameOrEmail, 'user');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const password = document.querySelector('input[name="password"]');
+    await user.type(password, 'pass');
+
+    const submitButton = screen.getByRole('button', { name: /log in/i });
+    await user.click(submitButton);
 
     expect(loginActions.logIn).toHaveBeenCalled();
   });

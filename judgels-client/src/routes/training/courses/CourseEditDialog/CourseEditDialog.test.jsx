@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -14,7 +15,6 @@ const course = {
 
 describe('CourseEditDialog', () => {
   let onUpdateCourse;
-  let wrapper;
 
   beforeEach(() => {
     onUpdateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -27,7 +27,7 @@ describe('CourseEditDialog', () => {
       onCloseDialog: jest.fn(),
       onUpdateCourse,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <CourseEditDialog {...props} />
       </Provider>
@@ -35,20 +35,25 @@ describe('CourseEditDialog', () => {
   });
 
   test('edit dialog form', async () => {
-    const slug = wrapper.find('input[name="slug"]');
-    expect(slug.prop('value')).toEqual('course');
-    slug.prop('onChange')({ target: { value: 'new-course' } });
+    const user = userEvent.setup();
 
-    const name = wrapper.find('input[name="name"]');
-    expect(name.prop('value')).toEqual('Course');
-    name.prop('onChange')({ target: { value: 'New course' } });
+    const slug = screen.getByRole('textbox', { name: /slug/i });
+    expect(slug).toHaveValue('course');
+    await user.clear(slug);
+    await user.type(slug, 'new-course');
 
-    const description = wrapper.find('textarea[name="description"]');
-    expect(description.prop('value')).toEqual('This is a course');
-    description.prop('onChange')({ target: { value: 'New description' } });
+    const name = screen.getByRole('textbox', { name: /name/i });
+    expect(name).toHaveValue('Course');
+    await user.clear(name);
+    await user.type(name, 'New course');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const description = screen.getByRole('textbox', { name: /description/i });
+    expect(description).toHaveValue('This is a course');
+    await user.clear(description);
+    await user.type(description, 'New description');
+
+    const submitButton = screen.getByRole('button', { name: /update/i });
+    await user.click(submitButton);
 
     expect(onUpdateCourse).toHaveBeenCalledWith(course.jid, {
       slug: 'new-course',

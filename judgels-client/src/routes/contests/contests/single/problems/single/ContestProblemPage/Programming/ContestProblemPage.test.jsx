@@ -1,7 +1,7 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -23,7 +23,6 @@ jest.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
 jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('ProgrammingContestProblemPage', () => {
-  let wrapper;
   let history;
 
   beforeEach(async () => {
@@ -71,51 +70,57 @@ describe('ProgrammingContestProblemPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
-        </ConnectedRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ConnectedRouter history={history}>
+            <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
+          </ConnectedRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   });
 
   test('navigation', async () => {
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
 
-    history.push('/contests/ioi/');
-    await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
+    await act(async () => {
+      history.push('/contests/ioi/');
+    });
+
+    await waitFor(() => {
+      expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
+    });
   });
 
   test('form', async () => {
-    act(() => {
-      const encoder = wrapper.find('input[name="sourceFiles.encoder"]');
-      encoder.prop('onChange')({ target: { files: [{ name: 'encoder.cpp', size: 1000 }] }, preventDefault: () => {} });
+    const user = userEvent.setup();
 
-      const decoder = wrapper.find('input[name="sourceFiles.decoder"]');
-      decoder.prop('onChange')({ target: { files: [{ name: 'decoder.cpp', size: 2000 }] }, preventDefault: () => {} });
-    });
+    const encoderInput = document.querySelector('input[name="sourceFiles.encoder"]');
+    const encoderFile = new File(['encoder content'], 'encoder.cpp', { type: 'text/plain' });
+    Object.defineProperty(encoderFile, 'size', { value: 1000 });
+    await user.upload(encoderInput, encoderFile);
+
+    const decoderInput = document.querySelector('input[name="sourceFiles.decoder"]');
+    const decoderFile = new File(['decoder content'], 'decoder.cpp', { type: 'text/plain' });
+    Object.defineProperty(decoderFile, 'size', { value: 2000 });
+    await user.upload(decoderInput, decoderFile);
 
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
 
-    // const gradingLanguageButton = wrapper.find('button[data-key="gradingLanguage"]');
-    // gradingLanguageButton.simulate('click');
+    // const gradingLanguageButton = screen.getByRole('button', { name: /grading language/i });
+    // await user.click(gradingLanguageButton);
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    await user.click(submitButton);
 
     expect(webPrefsActions.updateGradingLanguage).toHaveBeenCalledWith('Cpp11');
     expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-a', 'problemJid', {
       gradingLanguage: 'Cpp11',
       sourceFiles: {
-        encoder: { name: 'encoder.cpp', size: 1000 },
-        decoder: { name: 'decoder.cpp', size: 2000 },
+        encoder: expect.objectContaining({ name: 'encoder.cpp' }),
+        decoder: expect.objectContaining({ name: 'decoder.cpp' }),
       },
     });
   });

@@ -1,10 +1,10 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import RegisterForm from '../RegisterForm/RegisterForm';
 import RegisterPage from './RegisterPage';
 
 import * as registerActions from '../modules/registerActions';
@@ -12,44 +12,43 @@ import * as registerActions from '../modules/registerActions';
 jest.mock('../modules/registerActions');
 
 describe('RegisterPage', () => {
-  let wrapper;
-
-  beforeEach(() => {
+  beforeEach(async () => {
     registerActions.getWebConfig.mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
     registerActions.registerUser.mockReturnValue(() => Promise.resolve());
 
     const store = createStore(() => {}, applyMiddleware(thunk));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <RegisterPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <RegisterPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
   });
 
   test('form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+    const user = userEvent.setup();
 
-    const username = wrapper.find('input[name="username"]');
-    username.prop('onChange')({ target: { value: 'user' } });
+    const username = screen.getByRole('textbox', { name: /username/i });
+    await user.type(username, 'user');
 
-    const name = wrapper.find('input[name="name"]');
-    name.prop('onChange')({ target: { value: 'name' } });
+    const name = screen.getByRole('textbox', { name: /^name/i });
+    await user.type(name, 'name');
 
-    const email = wrapper.find('input[name="email"]');
-    email.prop('onChange')({ target: { value: 'email@domain.com' } });
+    const email = screen.getByRole('textbox', { name: /email/i });
+    await user.type(email, 'email@domain.com');
 
-    const password = wrapper.find('input[name="password"]');
-    password.prop('onChange')({ target: { value: 'pass' } });
+    const password = document.querySelector('input[name="password"]');
+    await user.type(password, 'pass');
 
-    const confirmPassword = wrapper.find('input[name="confirmPassword"]');
-    confirmPassword.prop('onChange')({ target: { value: 'pass' } });
+    const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+    await user.type(confirmPassword, 'pass');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const submitButton = screen.getByRole('button', { name: /register/i });
+    await user.click(submitButton);
 
     expect(registerActions.registerUser).toHaveBeenCalledWith({
       username: 'user',
@@ -58,11 +57,7 @@ describe('RegisterPage', () => {
       password: 'pass',
     });
 
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
-    expect(wrapper.find(RegisterForm)).toHaveLength(0);
-    expect(wrapper.find('[data-key="instruction"]').text()).toContain('email@domain.com');
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-key="instruction"]')).toHaveTextContent('email@domain.com');
   });
 });

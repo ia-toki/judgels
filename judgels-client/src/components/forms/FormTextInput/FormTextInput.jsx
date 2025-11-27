@@ -9,6 +9,7 @@ export function FormTextInput({ input, label, meta, autoFocus, inputType }) {
     <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
       <input
         {...input}
+        id={input.name}
         type={inputType || 'text'}
         autoFocus={autoFocus}
         className={classNames(Classes.INPUT, getIntentClassName(meta))}

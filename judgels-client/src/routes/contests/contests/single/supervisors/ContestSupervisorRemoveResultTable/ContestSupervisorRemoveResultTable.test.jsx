@@ -1,10 +1,9 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { ContestSupervisorRemoveResultTable } from './ContestSupervisorRemoveResultTable';
 
 describe('ContestSupervisorRemoveResultTable', () => {
-  let wrapper;
   beforeEach(() => {
     const props = {
       usernames: ['budi', 'andi', 'zoro'],
@@ -13,7 +12,7 @@ describe('ContestSupervisorRemoveResultTable', () => {
         andi: { username: 'andi' },
       },
     };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <ContestSupervisorRemoveResultTable {...props} />
       </MemoryRouter>
@@ -21,15 +20,15 @@ describe('ContestSupervisorRemoveResultTable', () => {
   });
 
   it('shows the correct tables', () => {
-    const tables = wrapper.find('table');
+    const tables = screen.getAllByRole('table');
 
-    const deletedSupervisorRows = tables.at(0).find('tbody');
-    expect(deletedSupervisorRows.children()).toHaveLength(2);
-    expect(deletedSupervisorRows.childAt(0).text()).toEqual('andi');
-    expect(deletedSupervisorRows.childAt(1).text()).toEqual('budi');
+    const deletedSupervisorRows = within(tables[0]).getAllByRole('row');
+    expect(deletedSupervisorRows).toHaveLength(2);
+    expect(deletedSupervisorRows[0].textContent).toEqual('andi');
+    expect(deletedSupervisorRows[1].textContent).toEqual('budi');
 
-    const unknownSupervisorRows = tables.at(1).find('tbody');
-    expect(unknownSupervisorRows.children()).toHaveLength(1);
-    expect(unknownSupervisorRows.childAt(0).text()).toEqual('zoro');
+    const unknownSupervisorRows = within(tables[1]).getAllByRole('row');
+    expect(unknownSupervisorRows).toHaveLength(1);
+    expect(unknownSupervisorRows[0].textContent).toEqual('zoro');
   });
 });

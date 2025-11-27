@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,9 +12,7 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 jest.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrantsDialog', () => {
-  let wrapper;
-
-  beforeEach(() => {
+  beforeEach(async () => {
     contestContestantActions.getApprovedContestants.mockReturnValue(() =>
       Promise.resolve({
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],
@@ -35,21 +33,20 @@ describe('ContestRegistrantsDialog', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestRegistrantsDialog />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestRegistrantsDialog />
+          </MemoryRouter>
+        </Provider>
+      )
     );
   });
 
-  test('table', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
-
-    expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
-      [],
+  test('table', () => {
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
       ['Indonesia', 'username3'],
       ['Indonesia', 'username4'],
       ['Thailand', 'username1'],

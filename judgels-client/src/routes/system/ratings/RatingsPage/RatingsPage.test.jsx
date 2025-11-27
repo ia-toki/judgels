@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
@@ -11,11 +12,10 @@ import * as ratingActions from '../modules/ratingActions';
 jest.mock('../modules/ratingActions');
 
 describe('RatingsPage', () => {
-  let wrapper;
   let contests;
   let ratingChangesMap;
 
-  const render = async () => {
+  const renderComponent = async () => {
     ratingActions.getContestsPendingRating.mockReturnValue(() =>
       Promise.resolve({
         data: contests,
@@ -26,27 +26,25 @@ describe('RatingsPage', () => {
 
     const store = createStore(() => {}, applyMiddleware(thunk));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <RatingsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <RatingsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no contests pending ratings', () => {
     beforeEach(async () => {
       contests = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows placeholder text and no files', async () => {
-      expect(wrapper.text()).toContain('No contests.');
+      expect(screen.getByText(/no contests/i)).toBeInTheDocument();
     });
   });
 
@@ -86,36 +84,56 @@ describe('RatingsPage', () => {
           },
         },
       };
-      await render();
+      await renderComponent();
     });
 
     it('shows the contests', () => {
-      expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text()))).toEqual([
-        [],
+      const rows = screen.getAllByRole('row').slice(1);
+
+      expect(
+        rows.map(row =>
+          within(row)
+            .getAllByRole('cell')
+            .map(td => td.textContent)
+        )
+      ).toEqual([
         ['Contest 1', 'View rating changes'],
         ['Contest 2', 'View rating changes'],
       ]);
     });
 
     describe('when view rating changes button is clicked', () => {
-      beforeEach(() => {
-        wrapper.find('tr').at(1).find('td').at(1).find('button').simulate('click');
-        wrapper.update();
+      let user;
+
+      beforeEach(async () => {
+        user = userEvent.setup();
+        const rows = screen.getAllByRole('row').slice(1);
+        const viewButton = within(rows[0]).getByRole('button', { name: /view rating changes/i });
+        await user.click(viewButton);
       });
 
       it('shows the users with rating changes', () => {
+        const dialog = screen.getByRole('dialog');
+        const rows = within(dialog).getAllByRole('row').slice(1);
+
         expect(
-          wrapper
-            .find('.contest-rating-changes-dialog')
-            .find('tr')
-            .map(tr => tr.find('td').map(td => td.text()))
-        ).toEqual([[], ['user2', '1700'], ['user1', '1600']]);
+          rows.map(row =>
+            within(row)
+              .getAllByRole('cell')
+              .map(td => td.textContent)
+          )
+        ).toEqual([
+          ['user2', '1700'],
+          ['user1', '1600'],
+        ]);
       });
 
       describe('when apply rating changes button is clicked', () => {
-        beforeEach(() => {
-          wrapper.find('.contest-rating-changes-dialog').find('button').last().simulate('click');
-          wrapper.update();
+        beforeEach(async () => {
+          const dialog = screen.getByRole('dialog');
+          const buttons = within(dialog).getAllByRole('button');
+          const applyButton = buttons[buttons.length - 1];
+          await user.click(applyButton);
         });
 
         it('calls API', () => {

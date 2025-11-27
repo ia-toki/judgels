@@ -1,10 +1,9 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { ContestContestantRemoveResultTable } from './ContestContestantRemoveResultTable';
 
 describe('ContestContestantRemoveResultTable', () => {
-  let wrapper;
   beforeEach(() => {
     const props = {
       usernames: ['budi', 'andi', 'zoro'],
@@ -13,7 +12,7 @@ describe('ContestContestantRemoveResultTable', () => {
         andi: { username: 'andi' },
       },
     };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <ContestContestantRemoveResultTable {...props} />
       </MemoryRouter>
@@ -21,15 +20,15 @@ describe('ContestContestantRemoveResultTable', () => {
   });
 
   it('shows the correct tables', () => {
-    const tables = wrapper.find('table');
+    const tables = screen.getAllByRole('table');
 
-    const deletedContestantRows = tables.at(0).find('tbody');
-    expect(deletedContestantRows.children()).toHaveLength(2);
-    expect(deletedContestantRows.childAt(0).text()).toEqual('andi');
-    expect(deletedContestantRows.childAt(1).text()).toEqual('budi');
+    const deletedContestantRows = within(tables[0]).getAllByRole('row');
+    expect(deletedContestantRows).toHaveLength(2);
+    expect(deletedContestantRows[0]).toHaveTextContent('andi');
+    expect(deletedContestantRows[1]).toHaveTextContent('budi');
 
-    const unknownContestantRows = tables.at(1).find('tbody');
-    expect(unknownContestantRows.children()).toHaveLength(1);
-    expect(unknownContestantRows.childAt(0).text()).toEqual('zoro');
+    const unknownContestantRows = within(tables[1]).getAllByRole('row');
+    expect(unknownContestantRows).toHaveLength(1);
+    expect(unknownContestantRows[0]).toHaveTextContent('zoro');
   });
 });

@@ -1,13 +1,12 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
 import createMockStore from 'redux-mock-store';
 
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
 describe('ContestClarificationAnswerBox', () => {
   let onAnswerClarification;
-  let wrapper;
 
   beforeEach(() => {
     onAnswerClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -24,19 +23,21 @@ describe('ContestClarificationAnswerBox', () => {
       },
       onAnswerClarification,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestClarificationAnswerBox {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    const answer = wrapper.find('textarea[name="answer"]');
-    answer.prop('onChange')({ target: { value: 'Yes.' } });
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const answer = screen.getByRole('textbox');
+    await user.type(answer, 'Yes.');
+
+    const submitButton = screen.getByRole('button', { name: /answer/i });
+    await user.click(submitButton);
 
     expect(onAnswerClarification).toHaveBeenCalledWith('contestJid', 'clarificationJid123', 'Yes.');
   });

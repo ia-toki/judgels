@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -8,7 +8,6 @@ import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
 
 describe('ContestAnnouncementEditDialog', () => {
   let onUpdateAnnouncement;
-  let wrapper;
 
   const announcement = {
     jid: 'announcementJid123',
@@ -17,7 +16,7 @@ describe('ContestAnnouncementEditDialog', () => {
     status: ContestAnnouncementStatus.Published,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     onUpdateAnnouncement = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
     const onToggleEditDialog = () => {
@@ -32,35 +31,39 @@ describe('ContestAnnouncementEditDialog', () => {
       onToggleEditDialog,
       onUpdateAnnouncement,
     };
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestAnnouncementEditDialog {...props} />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestAnnouncementEditDialog {...props} />
+        </Provider>
+      )
     );
   });
 
-  test('form', () => {
+  test('form', async () => {
+    const user = userEvent.setup();
+
     // TODO(fushar): make this work
     // See https://github.com/FezVrasta/popper.js/issues/478
 
-    // const status = wrapper.find('button[data-key="status"]');
-    // status.simulate('click');
+    // const status = screen.getByRole('button', { name: /status/i });
+    // await user.click(status);
 
-    act(() => {
-      const title = wrapper.find('input[name="title"]');
-      expect(title.prop('value')).toEqual('Snack');
-      title.prop('onChange')({ target: { value: 'Snack [edited]' } });
+    const title = screen.getByRole('textbox', { name: /title/i });
+    expect(title).toHaveValue('Snack');
+    await user.clear(title);
+    await user.type(title, 'Snack edited');
 
-      const content = wrapper.find('textarea[name="content"]');
-      expect(content.prop('value')).toEqual('Snack is provided.');
-      content.prop('onChange')({ target: { value: 'Snack is NOT provided.' } });
+    const content = screen.getByRole('textbox', { name: /content/i });
+    expect(content).toHaveValue('Snack is provided.');
+    await user.clear(content);
+    await user.type(content, 'Snack is NOT provided.');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
 
     expect(onUpdateAnnouncement).toHaveBeenCalledWith('contestJid', 'announcementJid123', {
-      title: 'Snack [edited]',
+      title: 'Snack edited',
       content: 'Snack is NOT provided.',
       status: ContestAnnouncementStatus.Published,
     });

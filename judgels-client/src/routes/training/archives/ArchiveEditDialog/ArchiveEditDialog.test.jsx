@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -15,7 +16,6 @@ const archive = {
 
 describe('ArchiveEditDialog', () => {
   let onUpdateArchive;
-  let wrapper;
 
   beforeEach(() => {
     onUpdateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -28,7 +28,7 @@ describe('ArchiveEditDialog', () => {
       onCloseDialog: jest.fn(),
       onUpdateArchive,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ArchiveEditDialog {...props} />
       </Provider>
@@ -36,24 +36,30 @@ describe('ArchiveEditDialog', () => {
   });
 
   test('edit dialog form', async () => {
-    const slug = wrapper.find('input[name="slug"]');
-    expect(slug.prop('value')).toEqual('archive');
-    slug.prop('onChange')({ target: { value: 'new-archive' } });
+    const user = userEvent.setup();
 
-    const name = wrapper.find('input[name="name"]');
-    expect(name.prop('value')).toEqual('Archive');
-    name.prop('onChange')({ target: { value: 'New archive' } });
+    const slug = screen.getByRole('textbox', { name: /slug/i });
+    expect(slug).toHaveValue('archive');
+    await user.clear(slug);
+    await user.type(slug, 'new-archive');
 
-    const category = wrapper.find('input[name="category"]');
-    expect(category.prop('value')).toEqual('Category');
-    category.prop('onChange')({ target: { value: 'New category' } });
+    const name = screen.getByRole('textbox', { name: /name/i });
+    expect(name).toHaveValue('Archive');
+    await user.clear(name);
+    await user.type(name, 'New archive');
 
-    const description = wrapper.find('textarea[name="description"]');
-    expect(description.prop('value')).toEqual('This is a archive');
-    description.prop('onChange')({ target: { value: 'New description' } });
+    const category = screen.getByRole('textbox', { name: /category/i });
+    expect(category).toHaveValue('Category');
+    await user.clear(category);
+    await user.type(category, 'New category');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const description = screen.getByRole('textbox', { name: /description/i });
+    expect(description).toHaveValue('This is a archive');
+    await user.clear(description);
+    await user.type(description, 'New description');
+
+    const submitButton = screen.getByRole('button', { name: /update/i });
+    await user.click(submitButton);
 
     expect(onUpdateArchive).toHaveBeenCalledWith(archive.jid, {
       slug: 'new-archive',

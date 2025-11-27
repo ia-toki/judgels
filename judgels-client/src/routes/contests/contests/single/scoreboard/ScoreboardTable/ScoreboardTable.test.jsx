@@ -1,14 +1,13 @@
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import { ScoreboardTable } from './ScoreboardTable';
 
 describe('ScoreboardTable', () => {
-  let wrapper;
   let problemPoints;
 
   const className = 'className';
 
-  const render = () => {
+  const renderComponent = () => {
     const state = {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
       problemAliases: ['A', 'B', 'C'],
@@ -17,20 +16,16 @@ describe('ScoreboardTable', () => {
     };
 
     const props = { className, state };
-    wrapper = shallow(<ScoreboardTable {...props} />);
+    render(<ScoreboardTable {...props} />);
   };
 
   describe('header', () => {
     describe('without points', () => {
-      beforeEach(() => render());
+      beforeEach(() => renderComponent());
 
       it('does not display the points', () => {
-        const header = wrapper
-          .find('thead')
-          .find('tr')
-          .first()
-          .children()
-          .map(th => th.text());
+        const headerCells = screen.getAllByRole('columnheader');
+        const header = headerCells.map(th => th.textContent);
         expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
       });
     });
@@ -38,16 +33,12 @@ describe('ScoreboardTable', () => {
     describe('points', () => {
       beforeEach(() => {
         problemPoints = [10, 0, 30];
-        render();
+        renderComponent();
       });
 
       it('displays the points', () => {
-        const header = wrapper
-          .find('thead')
-          .find('tr')
-          .first()
-          .children()
-          .map(th => th.text());
+        const headerCells = screen.getAllByRole('columnheader');
+        const header = headerCells.map(th => th.textContent);
         expect(header).toEqual(['#', 'Contestant', 'Total', 'A10', 'B0', 'C30']);
       });
     });

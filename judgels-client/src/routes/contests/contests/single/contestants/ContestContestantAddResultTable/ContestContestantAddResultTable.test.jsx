@@ -1,10 +1,9 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { ContestContestantAddResultTable } from './ContestContestantAddResultTable';
 
 describe('ContestContestantAddResultTable', () => {
-  let wrapper;
   beforeEach(() => {
     const props = {
       usernames: ['budi', 'caca', 'andi', 'dudi', 'zoro'],
@@ -17,7 +16,7 @@ describe('ContestContestantAddResultTable', () => {
         caca: { username: 'caca' },
       },
     };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <ContestContestantAddResultTable {...props} />
       </MemoryRouter>
@@ -25,20 +24,20 @@ describe('ContestContestantAddResultTable', () => {
   });
 
   it('shows the correct tables', () => {
-    const tables = wrapper.find('table');
+    const tables = screen.getAllByRole('table');
 
-    const insertedContestantRows = tables.at(0).find('tbody');
-    expect(insertedContestantRows.children()).toHaveLength(2);
-    expect(insertedContestantRows.childAt(0).text()).toEqual('andi');
-    expect(insertedContestantRows.childAt(1).text()).toEqual('budi');
+    const insertedContestantRows = within(tables[0]).getAllByRole('row');
+    expect(insertedContestantRows).toHaveLength(2);
+    expect(insertedContestantRows[0]).toHaveTextContent('andi');
+    expect(insertedContestantRows[1]).toHaveTextContent('budi');
 
-    const alreadyContestantRows = tables.at(1).find('tbody');
-    expect(alreadyContestantRows.children()).toHaveLength(2);
-    expect(alreadyContestantRows.childAt(0).text()).toEqual('caca');
-    expect(alreadyContestantRows.childAt(1).text()).toEqual('dudi');
+    const alreadyContestantRows = within(tables[1]).getAllByRole('row');
+    expect(alreadyContestantRows).toHaveLength(2); // 2 data rows
+    expect(alreadyContestantRows[0]).toHaveTextContent('caca');
+    expect(alreadyContestantRows[1]).toHaveTextContent('dudi');
 
-    const unknownContestantRows = tables.at(2).find('tbody');
-    expect(unknownContestantRows.children()).toHaveLength(1);
-    expect(unknownContestantRows.childAt(0).text()).toEqual('zoro');
+    const unknownContestantRows = within(tables[2]).getAllByRole('row');
+    expect(unknownContestantRows).toHaveLength(1);
+    expect(unknownContestantRows[0]).toHaveTextContent('zoro');
   });
 });

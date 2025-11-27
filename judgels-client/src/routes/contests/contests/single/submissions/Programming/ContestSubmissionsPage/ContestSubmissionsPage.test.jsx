@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -12,12 +12,11 @@ import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 jest.mock('../modules/contestSubmissionActions');
 
 describe('ContestSubmissionsPage', () => {
-  let wrapper;
   let submissions;
   let canSupervise;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestSubmissionActions.getSubmissions.mockReturnValue(() =>
       Promise.resolve({
         data: { page: submissions },
@@ -44,28 +43,27 @@ describe('ContestSubmissionsPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestSubmissionsPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestSubmissionsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no submissions', () => {
     beforeEach(async () => {
       submissions = [];
-      await render();
+      await renderComponent();
     });
 
     it('shows placeholder text and no submissions', () => {
-      expect(wrapper.text()).toContain('No submissions.');
-      expect(wrapper.find('tr')).toHaveLength(0);
+      expect(screen.getByText(/no submissions/i)).toBeInTheDocument();
+      const rows = screen.queryAllByRole('row');
+      expect(rows).toHaveLength(0);
     });
   });
 
@@ -103,12 +101,17 @@ describe('ContestSubmissionsPage', () => {
       beforeEach(async () => {
         canSupervise = false;
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows the submissions', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
-          [],
+        const rows = screen.getAllByRole('row').slice(1);
+        const data = rows.map(row => {
+          const cells = within(row).queryAllByRole('cell');
+          return cells.map(cell => cell.textContent.trim());
+        });
+
+        expect(data).toEqual([
           ['20', 'A', 'C++17', '', '1 day ago', 'search'],
           ['10', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);
@@ -119,12 +122,17 @@ describe('ContestSubmissionsPage', () => {
       beforeEach(async () => {
         canSupervise = true;
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows the submissions', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().trim()))).toEqual([
-          [],
+        const rows = screen.getAllByRole('row').slice(1);
+        const data = rows.map(row => {
+          const cells = within(row).queryAllByRole('cell');
+          return cells.map(cell => cell.textContent.trim());
+        });
+
+        expect(data).toEqual([
           ['20', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
           ['10', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);
@@ -135,12 +143,17 @@ describe('ContestSubmissionsPage', () => {
       beforeEach(async () => {
         canSupervise = true;
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
       it('shows the submissions', () => {
-        expect(wrapper.find('tr').map(tr => tr.find('td').map(td => td.text().replace(/\s+/g, ' ').trim()))).toEqual([
-          [],
+        const rows = screen.getAllByRole('row').slice(1);
+        const data = rows.map(row => {
+          const cells = within(row).queryAllByRole('cell');
+          return cells.map(cell => cell.textContent.replace(/\s+/g, ' ').trim());
+        });
+
+        expect(data).toEqual([
           ['20 refresh', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
           ['10 refresh', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
         ]);

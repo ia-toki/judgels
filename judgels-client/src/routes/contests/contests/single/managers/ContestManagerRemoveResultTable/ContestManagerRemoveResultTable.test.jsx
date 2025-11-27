@@ -1,10 +1,9 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { ContestManagerRemoveResultTable } from './ContestManagerRemoveResultTable';
 
 describe('ContestManagerRemoveResultTable', () => {
-  let wrapper;
   beforeEach(() => {
     const props = {
       usernames: ['budi', 'andi', 'zoro'],
@@ -13,7 +12,7 @@ describe('ContestManagerRemoveResultTable', () => {
         andi: { username: 'andi' },
       },
     };
-    wrapper = mount(
+    render(
       <MemoryRouter>
         <ContestManagerRemoveResultTable {...props} />
       </MemoryRouter>
@@ -21,15 +20,15 @@ describe('ContestManagerRemoveResultTable', () => {
   });
 
   it('shows the correct tables', () => {
-    const tables = wrapper.find('table');
+    const tables = screen.getAllByRole('table');
 
-    const deletedManagerRows = tables.at(0).find('tbody');
-    expect(deletedManagerRows.children()).toHaveLength(2);
-    expect(deletedManagerRows.childAt(0).text()).toEqual('andi');
-    expect(deletedManagerRows.childAt(1).text()).toEqual('budi');
+    const deletedManagerRows = within(tables[0]).getAllByRole('row');
+    expect(deletedManagerRows).toHaveLength(2);
+    expect(deletedManagerRows[0]).toHaveTextContent('andi');
+    expect(deletedManagerRows[1]).toHaveTextContent('budi');
 
-    const unknownManagerRows = tables.at(1).find('tbody');
-    expect(unknownManagerRows.children()).toHaveLength(1);
-    expect(unknownManagerRows.childAt(0).text()).toEqual('zoro');
+    const unknownManagerRows = within(tables[1]).getAllByRole('row');
+    expect(unknownManagerRows).toHaveLength(1);
+    expect(unknownManagerRows[0]).toHaveTextContent('zoro');
   });
 });

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -6,8 +6,6 @@ import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemStatementCard } from './ItemStatementCard';
 
 describe('ItemStatementCard', () => {
-  let wrapper;
-
   const props = {
     jid: 'jid',
     type: ItemType.Statement,
@@ -20,7 +18,7 @@ describe('ItemStatementCard', () => {
 
   beforeEach(() => {
     const store = createMockStore()({});
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ItemStatementCard {...props} />
       </Provider>
@@ -28,7 +26,6 @@ describe('ItemStatementCard', () => {
   });
 
   it('should render item statement', () => {
-    const statement = wrapper.find('div').map(div => div.text());
-    expect(statement).toContain(props.config.statement);
+    expect(screen.getByText(props.config.statement)).toBeInTheDocument();
   });
 });

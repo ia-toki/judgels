@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -10,14 +11,12 @@ import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 jest.mock('../modules/forgotPasswordActions');
 
 describe('ForgotPasswordPage', () => {
-  let wrapper;
-
   beforeEach(() => {
     forgotPasswordActions.requestToResetPassword.mockReturnValue(() => Promise.resolve());
 
     const store = configureMockStore([thunk])({});
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ForgotPasswordPage />
       </Provider>
@@ -25,16 +24,15 @@ describe('ForgotPasswordPage', () => {
   });
 
   test('form', async () => {
-    const email = wrapper.find('input[name="email"]');
-    email.prop('onChange')({ target: { value: 'email@domain.com' } });
+    const user = userEvent.setup();
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const email = screen.getByRole('textbox');
+    await user.type(email, 'email@domain.com');
 
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+    const submitButton = screen.getByRole('button', { name: /request to reset password/i });
+    await user.click(submitButton);
 
     expect(forgotPasswordActions.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
-    expect(wrapper.find('[data-key="instruction"]')).toHaveLength(1);
+    expect(document.querySelector('[data-key="instruction"]')).toBeInTheDocument();
   });
 });

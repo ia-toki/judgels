@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -16,11 +17,10 @@ import * as contestProblemActions from '../modules/contestProblemActions';
 jest.mock('../modules/contestProblemActions');
 
 describe('ContestProblemsPage', () => {
-  let wrapper;
   let problems;
   let canManage;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestProblemActions.getProblems.mockReturnValue(() =>
       Promise.resolve({
         data: problems,
@@ -63,7 +63,7 @@ describe('ContestProblemsPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <ContestProblemsPage />
@@ -71,9 +71,7 @@ describe('ContestProblemsPage', () => {
       </Provider>
     );
 
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+    await waitFor(() => expect(contestProblemActions.getProblems).toHaveBeenCalled());
   };
 
   describe('action buttons', () => {
@@ -84,27 +82,26 @@ describe('ContestProblemsPage', () => {
     describe('when not canManage', () => {
       beforeEach(async () => {
         canManage = false;
-        await render();
+        await renderComponent();
       });
 
-      it('shows no buttons', () => {
-        expect(wrapper.find('div.content-card__section').find('button')).toHaveLength(0);
+      it('shows no buttons', async () => {
+        const section = document.querySelector('div.content-card__section');
+        const buttons = section ? section.querySelectorAll('button') : [];
+        expect(buttons).toHaveLength(0);
       });
     });
 
     describe('when canManage', () => {
       beforeEach(async () => {
         canManage = true;
-        await render();
+        await renderComponent();
       });
 
-      it('shows action buttons', () => {
-        expect(
-          wrapper
-            .find('div.content-card__section')
-            .find('button')
-            .map(b => b.text())
-        ).toEqual(['Edit problems']);
+      it('shows action buttons', async () => {
+        const section = document.querySelector('div.content-card__section');
+        const buttons = Array.from(section.querySelectorAll('button'));
+        expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
       });
     });
   });
@@ -113,12 +110,13 @@ describe('ContestProblemsPage', () => {
     describe('when there are no problems', () => {
       beforeEach(async () => {
         problems = [];
-        await render();
+        await renderComponent();
       });
 
       it('shows placeholder text and no problems', () => {
-        expect(wrapper.text()).toContain('No problems.');
-        expect(wrapper.find('div.contest-problem-card')).toHaveLength(0);
+        expect(screen.getByText(/no problems/i)).toBeInTheDocument();
+        const cards = document.querySelectorAll('div.contest-problem-card');
+        expect(cards).toHaveLength(0);
       });
     });
 
@@ -139,12 +137,12 @@ describe('ContestProblemsPage', () => {
             points: 100,
           },
         ];
-        await render();
+        await renderComponent();
       });
 
       it('shows the problems', () => {
-        const cards = wrapper.find('div.contest-problem-card');
-        expect(cards.map(card => card.text())).toEqual([
+        const cards = document.querySelectorAll('div.contest-problem-card');
+        expect([...cards].map(card => card.textContent)).toEqual([
           'B. Problem B [100 points]8 submissions left',
           'A. Problem ACLOSED',
         ]);

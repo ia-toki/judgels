@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -8,7 +8,6 @@ import { ArchiveCreateDialog } from './ArchiveCreateDialog';
 describe('ArchiveCreateDialog', () => {
   let onGetArchiveConfig;
   let onCreateArchive;
-  let wrapper;
 
   beforeEach(() => {
     onCreateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
@@ -19,37 +18,33 @@ describe('ArchiveCreateDialog', () => {
       onGetArchiveConfig,
       onCreateArchive,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ArchiveCreateDialog {...props} />
       </Provider>
     );
   });
 
-  test('create dialog form', () => {
-    act(() => {
-      const button = wrapper.find('button');
-      button.simulate('click');
-    });
+  test('create dialog form', async () => {
+    const user = userEvent.setup();
 
-    wrapper.update();
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    act(() => {
-      const slug = wrapper.find('input[name="slug"]');
-      slug.prop('onChange')({ target: { value: 'new-archive' } });
+    const slug = document.querySelector('input[name="slug"]');
+    await user.type(slug, 'new-archive');
 
-      const name = wrapper.find('input[name="name"]');
-      name.prop('onChange')({ target: { value: 'New archive' } });
+    const name = document.querySelector('input[name="name"]');
+    await user.type(name, 'New archive');
 
-      const category = wrapper.find('input[name="category"]');
-      category.prop('onChange')({ target: { value: 'New category' } });
+    const category = document.querySelector('input[name="category"]');
+    await user.type(category, 'New category');
 
-      const description = wrapper.find('textarea[name="description"]');
-      description.prop('onChange')({ target: { value: 'New description' } });
+    const description = document.querySelector('textarea[name="description"]');
+    await user.type(description, 'New description');
 
-      const form = wrapper.find('form');
-      form.simulate('submit');
-    });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await user.click(submitButton);
 
     expect(onCreateArchive).toHaveBeenCalledWith({
       slug: 'new-archive',

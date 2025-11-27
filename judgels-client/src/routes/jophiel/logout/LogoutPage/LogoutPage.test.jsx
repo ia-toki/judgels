@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
@@ -16,7 +16,7 @@ describe('LogoutPage', () => {
 
     const store = createStore(() => {}, applyMiddleware(thunk));
 
-    mount(
+    render(
       <Provider store={store}>
         <MemoryRouter>
           <LogoutPage />

@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -12,7 +13,6 @@ const problemSet = {
 describe('ProblemSetProblemEditDialog', () => {
   let onGetProblems;
   let onSetProblems;
-  let wrapper;
 
   const problems = [
     {
@@ -45,7 +45,7 @@ describe('ProblemSetProblemEditDialog', () => {
     'contestJid-2': { slug: 'contestSlug-2' },
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap, contestsMap }));
     onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
 
@@ -58,29 +58,29 @@ describe('ProblemSetProblemEditDialog', () => {
       onGetProblems,
       onSetProblems,
     };
-    wrapper = mount(
-      <Provider store={store}>
-        <ProblemSetProblemEditDialog {...props} />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ProblemSetProblemEditDialog {...props} />
+        </Provider>
+      )
     );
   });
 
   test('edit problems dialog form', async () => {
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
+    const user = userEvent.setup();
 
-    const button = wrapper.find('button[data-key="edit"]');
-    button.simulate('click');
+    const editButton = screen.getByRole('button', { name: /edit/i });
+    await user.click(editButton);
 
-    const problemsField = wrapper.find('textarea[name="problems"]');
-    expect(problemsField.prop('value')).toEqual(
-      'A,slug-1\nB,slug-2,BUNDLE\nC,slug-3,PROGRAMMING,contestSlug-1;contestSlug-2'
-    );
+    const problemsField = screen.getByRole('textbox', /problems/i);
+    expect(problemsField).toHaveValue('A,slug-1\nB,slug-2,BUNDLE\nC,slug-3,PROGRAMMING,contestSlug-1;contestSlug-2');
 
-    problemsField.prop('onChange')({ target: { value: 'P, slug-3\n  Q,slug-4,BUNDLE  ,contestSlug-3 ' } });
+    await user.clear(problemsField);
+    await user.type(problemsField, 'P, slug-3\n  Q,slug-4,BUNDLE  ,contestSlug-3 ');
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
 
     expect(onSetProblems).toHaveBeenCalledWith(problemSet.jid, [
       {

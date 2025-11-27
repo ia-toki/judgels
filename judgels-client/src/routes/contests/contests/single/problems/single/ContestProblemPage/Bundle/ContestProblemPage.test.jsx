@@ -1,5 +1,6 @@
+import { act, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -22,7 +23,6 @@ jest.mock('../../../modules/contestProblemActions');
 jest.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
-  let wrapper;
   let history;
 
   beforeEach(async () => {
@@ -42,7 +42,6 @@ describe('BundleContestProblemPage', () => {
             name: 'Fake Name',
             text: 'Lorem ipsum dos color sit amet',
           },
-          reasonNotAllowedToSubmit: 'no reason',
           items: [
             {
               jid: 'fakeitemjid',
@@ -80,30 +79,35 @@ describe('BundleContestProblemPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.Bundle }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
-        </ConnectedRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ConnectedRouter history={history}>
+            <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
+          </ConnectedRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   });
 
   test('navigation', async () => {
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
 
-    history.push('/contests/xyz/');
-    await new Promise(resolve => setImmediate(resolve));
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
+    await act(async () => {
+      history.push('/contests/xyz/');
+    });
+
+    await waitFor(() => {
+      expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
+    });
   });
 
-  test('form', () => {
-    const inp = wrapper.find('.problem-multiple-choice-item-choice input').first();
-    inp.simulate('change');
+  test('form', async () => {
+    const user = userEvent.setup();
+
+    const input = document.querySelector('.problem-multiple-choice-item-choice input');
+    await user.click(input);
+
     expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
       'contestJid',
       'problemJid',

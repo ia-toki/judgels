@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -13,10 +13,9 @@ import * as contestFileActions from '../modules/contestFileActions';
 jest.mock('../modules/contestFileActions');
 
 describe('ContestFilesPage', () => {
-  let wrapper;
   let files;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestFileActions.uploadFile.mockReturnValue(() => Promise.resolve({}));
     contestFileActions.getFiles.mockReturnValue(() =>
       Promise.resolve({
@@ -31,28 +30,27 @@ describe('ContestFilesPage', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestFilesPage />
-        </MemoryRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestFilesPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no files', () => {
     beforeEach(async () => {
       files = [];
-      await render();
+      await renderComponent();
     });
 
-    it('shows placeholder text and no files', async () => {
-      expect(wrapper.text()).toContain('No files.');
-      expect(wrapper.find('tr')).toHaveLength(1 + 0);
+    it('shows placeholder text and no files', () => {
+      expect(screen.getByText(/no files/i)).toBeInTheDocument();
+      const rows = screen.getAllByRole('row');
+      expect(rows).toHaveLength(1 + 0);
     });
   });
 
@@ -70,31 +68,40 @@ describe('ContestFilesPage', () => {
           lastModifiedTime: 12345,
         },
       ];
-      await render();
+      await renderComponent();
     });
 
     it('shows the files', () => {
-      expect(wrapper.find('tr')).toHaveLength(1 + 1 + 2);
+      const rows = screen.getAllByRole('row');
+      expect(rows).toHaveLength(1 + 1 + 2);
     });
   });
 
-  beforeEach(async () => {
-    files = [];
-    await render();
-  });
-
-  test('upload form', () => {
-    act(() => {
-      const file = wrapper.find('input[name="file"]');
-      file.prop('onChange')({ target: { files: [{ name: 'editorial.txt', size: 1000 }] }, preventDefault: () => {} });
+  describe('upload form', () => {
+    beforeEach(async () => {
+      files = [];
+      await renderComponent();
     });
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    test('upload form', async () => {
+      const user = userEvent.setup();
 
-    expect(contestFileActions.uploadFile).toHaveBeenCalledWith('contestJid', {
-      name: 'editorial.txt',
-      size: 1000,
+      const file = new File(['content'], 'editorial.txt', { type: 'text/plain' });
+      Object.defineProperty(file, 'size', { value: 1000 });
+
+      const fileInput = screen.getByLabelText(/file/i);
+      await user.upload(fileInput, file);
+
+      const submitButton = screen.getByRole('button', { name: /upload/i });
+      await user.click(submitButton);
+
+      expect(contestFileActions.uploadFile).toHaveBeenCalledWith(
+        'contestJid',
+        expect.objectContaining({
+          name: 'editorial.txt',
+          size: 1000,
+        })
+      );
     });
   });
 });

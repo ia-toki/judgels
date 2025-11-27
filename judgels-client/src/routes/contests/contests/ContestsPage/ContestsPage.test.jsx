@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -13,10 +13,9 @@ import * as contestActions from '../modules/contestActions';
 jest.mock('../modules/contestActions');
 
 describe('ContestsPage', () => {
-  let wrapper;
   let contests;
 
-  const render = async () => {
+  const renderComponent = () => {
     contestActions.getContests.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -37,27 +36,26 @@ describe('ContestsPage', () => {
       applyMiddleware(thunk)
     );
 
-    wrapper = mount(
+    return render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/contests']}>
           <Route path="/contests" component={ContestsPage} />
         </MemoryRouter>
       </Provider>
     );
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('when there are no contests', () => {
     beforeEach(async () => {
       contests = [];
-      await render();
+      await act(async () => {
+        renderComponent();
+      });
     });
 
     it('shows placeholder text and no contests', () => {
-      expect(wrapper.text()).toContain('No contests.');
-      expect(wrapper.find('a.content-card')).toHaveLength(0);
+      expect(screen.getByText('No contests.')).toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: /contest/i })).not.toBeInTheDocument();
     });
   });
 
@@ -75,15 +73,19 @@ describe('ContestsPage', () => {
           name: 'Contest 2',
         },
       ];
-      await render();
+      await act(async () => {
+        renderComponent();
+      });
     });
 
     it('shows the contests', () => {
-      const cards = wrapper.find('a.content-card');
-      expect(cards.map(card => [card.find('h4').text(), card.props().href])).toEqual([
-        ['Contest 1CONTESTANT', '/contests/contest-1'],
-        ['Contest 2', '/contests/contest-2'],
-      ]);
+      const links = screen.getAllByRole('link');
+      expect(links).toHaveLength(2);
+      expect(links[0]).toHaveTextContent('Contest 1CONTESTANT');
+      expect(links[0]).toHaveAttribute('href', '/contests/contest-1');
+
+      expect(links[1]).toHaveTextContent('Contest 2');
+      expect(links[1]).toHaveAttribute('href', '/contests/contest-2');
     });
   });
 });

@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -15,12 +15,11 @@ import * as contestClarificationActions from '../modules/contestClarificationAct
 jest.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
-  let wrapper;
   let clarifications;
   let canCreate;
   let canSupervise;
 
-  const render = async () => {
+  const renderComponent = async () => {
     contestClarificationActions.getClarifications.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -54,17 +53,15 @@ describe('ContestClarificationsPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ContestClarificationsPage />
-        </MemoryRouter>
-      </Provider>
+    return await act(async () =>
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <ContestClarificationsPage />
+          </MemoryRouter>
+        </Provider>
+      )
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   describe('action buttons', () => {
@@ -75,22 +72,22 @@ describe('ContestClarificationsPage', () => {
     describe('when not canCreate', () => {
       beforeEach(async () => {
         canCreate = false;
-        await render();
+        await renderComponent();
       });
 
       it('shows no buttons', () => {
-        expect(wrapper.find('button')).toHaveLength(0);
+        expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
       });
     });
 
     describe('when canCreate', () => {
       beforeEach(async () => {
         canCreate = true;
-        await render();
+        await renderComponent();
       });
 
-      it('shows action buttons', () => {
-        expect(wrapper.find('button').map(b => b.text())).toEqual(['New clarification']);
+      it('shows action buttons', async () => {
+        expect(screen.getByRole('button', { name: /new clarification/i })).toBeInTheDocument();
       });
     });
   });
@@ -99,12 +96,12 @@ describe('ContestClarificationsPage', () => {
     describe('when there are no clarifications', () => {
       beforeEach(async () => {
         clarifications = [];
-        await render();
+        await renderComponent();
       });
 
-      it('shows placeholder text and no clarifications', () => {
-        expect(wrapper.text()).toContain('No clarifications.');
-        expect(wrapper.find('div.contest-clarification-card')).toHaveLength(0);
+      it('shows placeholder text and no clarifications', async () => {
+        expect(screen.getByText('No clarifications.')).toBeInTheDocument();
+        expect(document.querySelectorAll('div.contest-clarification-card')).toHaveLength(0);
       });
     });
 
@@ -138,64 +135,52 @@ describe('ContestClarificationsPage', () => {
       describe('when not canSupervise', () => {
         beforeEach(async () => {
           canSupervise = false;
-          await render();
+          await renderComponent();
         });
 
         it('shows the clarifications', () => {
-          const cards = wrapper.find('div.contest-clarification-card');
-          expect(
-            cards.map(card => [
-              card
-                .find('h5')
-                .at(0)
-                .map(n => n.text().replace(/\s+/g, ' ')),
-              card
-                .find('p')
-                .at(0)
-                .map(n => n.text().replace(/\s+/g, ' ')),
-              card
-                .find('.multiline-text')
-                .at(0)
-                .map(n => n.text()),
-            ])
-          ).toEqual([
-            [['Title 1 General'], ['asked 2 days ago'], ['Question 1']],
-            [['Answer:'], ['answered 1 day ago'], ['Answer 1']],
-            [['Title 2 A. Problem 1'], ['asked 1 day ago'], ['Question 2']],
-            [[], [], []],
-          ]);
+          const clarifications = document.querySelectorAll('div.contest-clarification-card');
+          expect(clarifications).toHaveLength(4);
+
+          expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
+          expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
+          expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago$/);
+
+          expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
+          expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
+          expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago$/);
+
+          expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
+          expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
+          expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago$/);
+
+          expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
         });
       });
 
       describe('when canSupervise', () => {
         beforeEach(async () => {
           canSupervise = true;
-          await render();
+          await renderComponent();
         });
 
         it('shows the clarifications', () => {
-          const cards = wrapper.find('div.contest-clarification-card');
-          expect(
-            cards.map(card => [
-              card
-                .find('h5')
-                .at(0)
-                .map(n => n.text().replace(/\s+/g, ' ')),
-              card
-                .find('p')
-                .at(0)
-                .map(n => n.text().replace(/\s+/g, ' ')),
-              card
-                .find('.multiline-text')
-                .at(0)
-                .map(n => n.text()),
-            ])
-          ).toEqual([
-            [['Title 1 General'], ['asked 2 days ago by username1'], ['Question 1']],
-            [['Answer:'], ['answered 1 day ago by username3'], ['Answer 1']],
-            [['Title 2 A. Problem 1'], ['asked 1 day ago by username2'], ['Question 2']],
-            [[], [], []],
-          ]);
+          const clarifications = document.querySelectorAll('div.contest-clarification-card');
+          expect(clarifications).toHaveLength(4);
+
+          expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
+          expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
+          expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago by username1$/);
+
+          expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
+          expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
+          expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago by username3$/);
+
+          expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
+          expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
+          expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago by username2$/);
+
+          expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
         });
       });
     });

@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -12,10 +13,9 @@ import * as contestModuleActions from '../../modules/contestModuleActions';
 jest.mock('../../modules/contestModuleActions');
 
 describe('ContestEditConfigsTab', () => {
-  let wrapper;
   let config;
 
-  const render = () => {
+  const renderComponent = async () => {
     contestModuleActions.getConfig.mockReturnValue(() => Promise.resolve(config));
     contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
 
@@ -25,23 +25,25 @@ describe('ContestEditConfigsTab', () => {
     );
     store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    wrapper = mount(
-      <Provider store={store}>
-        <ContestEditConfigsTab />
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <ContestEditConfigsTab />
+        </Provider>
+      )
     );
   };
 
   describe('form', () => {
     describe('when we fill all fields', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         config = {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: [] },
             wrongSubmissionPenalty: 20,
           },
           scoreboard: {
-            isIncognitoScoreboard: true,
+            isIncognitoScoreboard: false,
           },
           clarificationTimeLimit: {
             clarificationDuration: parseDuration('2h'),
@@ -67,48 +69,65 @@ describe('ContestEditConfigsTab', () => {
             virtualDuration: parseDuration('5h'),
           },
         };
-        render();
+        await renderComponent();
       });
 
-      it('submits the form', () => {
-        const button = wrapper.find('button');
-        button.simulate('click');
+      it('submits the form', async () => {
+        const user = userEvent.setup();
 
-        const icpcWrongSubmissionPenalty = wrapper.find('input[name="icpcWrongSubmissionPenalty"]');
-        icpcWrongSubmissionPenalty.prop('onChange')({ target: { value: '25' } });
+        const button = screen.getByRole('button', { name: /edit/i });
+        await user.click(button);
 
-        const scoreboardIsIncognito = wrapper.find('input[name="scoreboardIsIncognito"]');
-        scoreboardIsIncognito.prop('onChange')({ target: { checked: true } });
+        const icpcWrongSubmissionPenalty = document.querySelector('input[name="icpcWrongSubmissionPenalty"]');
+        await user.clear(icpcWrongSubmissionPenalty);
+        await user.type(icpcWrongSubmissionPenalty, '25');
 
-        const clarificationTimeLimitDuration = wrapper.find('input[name="clarificationTimeLimitDuration"]');
-        clarificationTimeLimitDuration.prop('onChange')({ target: { value: '2h 5m' } });
+        const scoreboardIsIncognito = document.querySelector('input[name="scoreboardIsIncognito"]');
+        await user.click(scoreboardIsIncognito);
 
-        const divisionDivision = wrapper.find('input[name="divisionDivision"]');
-        divisionDivision.prop('onChange')({ target: { value: '2' } });
+        const clarificationTimeLimitDuration = document.querySelector('input[name="clarificationTimeLimitDuration"]');
+        await user.clear(clarificationTimeLimitDuration);
+        await user.type(clarificationTimeLimitDuration, '2h 5m');
 
-        const frozenScoreboardFreezeTime = wrapper.find('input[name="frozenScoreboardFreezeTime"]');
-        frozenScoreboardFreezeTime.prop('onChange')({ target: { value: '1h 5m' } });
+        const divisionDivision = document.querySelector('input[name="divisionDivision"]');
+        await user.clear(divisionDivision);
+        await user.type(divisionDivision, '2');
 
-        const frozenScoreboardIsOfficialAllowed = wrapper.find('input[name="frozenScoreboardIsOfficialAllowed"]');
-        frozenScoreboardIsOfficialAllowed.prop('onChange')({ target: { checked: true } });
+        const frozenScoreboardFreezeTime = document.querySelector('input[name="frozenScoreboardFreezeTime"]');
+        await user.clear(frozenScoreboardFreezeTime);
+        await user.type(frozenScoreboardFreezeTime, '1h 5m');
 
-        const mergedScoreboardPreviousContestJid = wrapper.find('input[name="mergedScoreboardPreviousContestJid"]');
-        mergedScoreboardPreviousContestJid.prop('onChange')({ target: { value: 'JIDCONT12345' } });
+        const frozenScoreboardIsOfficialAllowed = document.querySelector(
+          'input[name="frozenScoreboardIsOfficialAllowed"]'
+        );
+        await user.click(frozenScoreboardIsOfficialAllowed);
 
-        const externalScoreboardReceiverUrl = wrapper.find('input[name="externalScoreboardReceiverUrl"]');
-        externalScoreboardReceiverUrl.prop('onChange')({ target: { value: 'http://new.external.scoreboard' } });
+        const mergedScoreboardPreviousContestJid = document.querySelector(
+          'input[name="mergedScoreboardPreviousContestJid"]'
+        );
+        await user.clear(mergedScoreboardPreviousContestJid);
+        await user.type(mergedScoreboardPreviousContestJid, 'JIDCONT12345');
 
-        const externalScoreboardReceiverSecret = wrapper.find('input[name="externalScoreboardReceiverSecret"]');
-        externalScoreboardReceiverSecret.prop('onChange')({ target: { value: 'the_new_secret' } });
+        const externalScoreboardReceiverUrl = document.querySelector('input[name="externalScoreboardReceiverUrl"]');
+        await user.clear(externalScoreboardReceiverUrl);
+        await user.type(externalScoreboardReceiverUrl, 'http://new.external.scoreboard');
 
-        const virtualDuration = wrapper.find('input[name="virtualDuration"]');
-        virtualDuration.prop('onChange')({ target: { value: '5h 5m' } });
+        const externalScoreboardReceiverSecret = document.querySelector(
+          'input[name="externalScoreboardReceiverSecret"]'
+        );
+        await user.clear(externalScoreboardReceiverSecret);
+        await user.type(externalScoreboardReceiverSecret, 'the_new_secret');
 
-        const editorialPreface = wrapper.find('textarea[name="editorialPreface"]');
-        editorialPreface.prop('onChange')({ target: { value: '<p>Thank you for your participation.</p>' } });
+        const virtualDuration = document.querySelector('input[name="virtualDuration"]');
+        await user.clear(virtualDuration);
+        await user.type(virtualDuration, '5h 5m');
 
-        const form = wrapper.find('form');
-        form.simulate('submit');
+        const editorialPreface = document.querySelector('textarea[name="editorialPreface"]');
+        await user.clear(editorialPreface);
+        await user.type(editorialPreface, '<p>Thank you for your participation.</p>');
+
+        const submitButton = screen.getByRole('button', { name: /save/i });
+        await user.click(submitButton);
 
         expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {
@@ -146,7 +165,7 @@ describe('ContestEditConfigsTab', () => {
     });
 
     describe('when we allow all languages', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         config = {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: ['C', 'Pascal'] },
@@ -154,21 +173,20 @@ describe('ContestEditConfigsTab', () => {
           },
           scoreboard: { isIncognitoScoreboard: false },
         };
-        render();
+        await renderComponent();
       });
 
-      it('submits empty restriction', () => {
-        const button = wrapper.find('button');
-        button.simulate('click');
+      it('submits empty restriction', async () => {
+        const user = userEvent.setup();
 
-        wrapper.update();
+        const button = screen.getByRole('button', { name: /edit/i });
+        await user.click(button);
 
-        const icpcAllowAllLanguages = wrapper.find('input[name="icpcAllowAllLanguages"]');
-        icpcAllowAllLanguages.getDOMNode().checked = true;
-        icpcAllowAllLanguages.simulate('change');
+        const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
+        await user.click(icpcAllowAllLanguages);
 
-        const form = wrapper.find('form');
-        form.simulate('submit');
+        const submitButton = screen.getByRole('button', { name: /save/i });
+        await user.click(submitButton);
 
         expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {
@@ -181,7 +199,7 @@ describe('ContestEditConfigsTab', () => {
     });
 
     describe('when we allow not all languages', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         config = {
           icpcStyle: {
             languageRestriction: { allowedLanguageNames: [] },
@@ -189,35 +207,26 @@ describe('ContestEditConfigsTab', () => {
           },
           scoreboard: { isIncognitoScoreboard: false },
         };
-        render();
+        await renderComponent();
       });
 
-      it('submits the restriction', () => {
-        const button = wrapper.find('button');
-        button.simulate('click');
+      it('submits the restriction', async () => {
+        const user = userEvent.setup();
 
-        wrapper.update();
+        const button = screen.getByRole('button', { name: /edit/i });
+        await user.click(button);
 
-        const icpcAllowAllLanguages = wrapper.find('input[name="icpcAllowAllLanguages"]');
-        icpcAllowAllLanguages.getDOMNode().checked = false;
-        icpcAllowAllLanguages.simulate('change');
+        const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
+        await user.click(icpcAllowAllLanguages);
 
-        wrapper.update();
+        const icpcAllowedLanguagesPascal = screen.getByRole('checkbox', { name: /pascal/i });
+        await user.click(icpcAllowedLanguagesPascal);
 
-        const icpcAllowedLanguagesGo = wrapper.find('input[name="icpcAllowedLanguages.Go"]');
-        icpcAllowedLanguagesGo.getDOMNode().checked = false;
-        icpcAllowedLanguagesGo.simulate('change');
+        const icpcAllowedLanguagesPython3 = screen.getByRole('checkbox', { name: /python 3/i });
+        await user.click(icpcAllowedLanguagesPython3);
 
-        const icpcAllowedLanguagesPascal = wrapper.find('input[name="icpcAllowedLanguages.Pascal"]');
-        icpcAllowedLanguagesPascal.getDOMNode().checked = true;
-        icpcAllowedLanguagesPascal.simulate('change');
-
-        const icpcAllowedLanguagesPython3 = wrapper.find('input[name="icpcAllowedLanguages.Python3"]');
-        icpcAllowedLanguagesPython3.getDOMNode().checked = true;
-        icpcAllowedLanguagesPython3.simulate('change');
-
-        const form = wrapper.find('form');
-        form.simulate('submit');
+        const submitButton = screen.getByRole('button', { name: /save/i });
+        await user.click(submitButton);
 
         expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
           icpcStyle: {

@@ -1,5 +1,5 @@
+import { act, render } from '@testing-library/react';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -18,7 +18,7 @@ jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 describe('SingleCourseDataRoute', () => {
   let history;
 
-  const render = currentPath => {
+  const renderComponent = currentPath => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
     const store = createStore(
@@ -29,7 +29,7 @@ describe('SingleCourseDataRoute', () => {
       applyMiddleware(thunk, routerMiddleware(history))
     );
 
-    mount(
+    render(
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Route path="/courses/:courseSlug" component={SingleCourseDataRoute} />
@@ -47,16 +47,21 @@ describe('SingleCourseDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/courses/basic');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      renderComponent('/courses/basic');
+    });
+
     expect(courseActions.getCourseBySlug).toHaveBeenCalledWith('basic');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic', 'Course 123');
 
-    history.push('/courses/basic/');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/courses/basic/');
+    });
 
-    history.push('/other');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/other');
+    });
+
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/');
     expect(courseActions.clearCourse).toHaveBeenCalled();
   });

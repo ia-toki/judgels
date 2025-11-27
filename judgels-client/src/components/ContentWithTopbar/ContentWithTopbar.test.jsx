@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -7,13 +7,11 @@ import ContentWithTopbar from './ContentWithTopbar';
 
 describe('ContentWithTopbar', () => {
   let store;
-  let wrapper;
+  const FirstComponent = () => <div>One</div>;
+  const SecondComponent = () => <div>Two</div>;
+  const ThirdComponent = () => <div>Three</div>;
 
-  const FirstComponent = () => <div />;
-  const SecondComponent = () => <div />;
-  const ThirdComponent = () => <div />;
-
-  const render = (childPath, firstId) => {
+  const renderComponent = (childPath, firstId) => {
     const props = {
       title: 'Content with Topbar',
       items: [
@@ -39,7 +37,7 @@ describe('ContentWithTopbar', () => {
     };
     const component = () => <ContentWithTopbar {...props} />;
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/parent' + childPath]}>
           <Route path="/parent" component={component} />
@@ -55,47 +53,47 @@ describe('ContentWithTopbar', () => {
   describe('when the first route is allowed to have suffix', () => {
     describe('when the child path is present', () => {
       beforeEach(() => {
-        render('/second', 'first');
+        renderComponent('/second', 'first');
       });
 
       it('shows sidebar items with the correct texts', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
         expect(items).toHaveLength(3);
 
-        expect(items.at(0).text()).toEqual('First');
-        expect(items.at(1).childAt(0).text()).toEqual('Second');
-        expect(items.at(2).childAt(0).text()).toEqual('Third');
+        expect(items[0]).toHaveTextContent('First');
+        expect(items[1]).toHaveTextContent('Second');
+        expect(items[2]).toHaveTextContent('Third');
       });
 
       it('has the correct active item', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
 
-        expect(items.at(0).hasClass('bp5-active')).toBeFalsy();
-        expect(items.at(1).hasClass('bp5-active')).toBeTruthy();
-        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
+        expect(items[0]).not.toHaveClass('bp5-active');
+        expect(items[1]).toHaveClass('bp5-active');
+        expect(items[2]).not.toHaveClass('bp5-active');
       });
 
       it('renders the active component', () => {
-        expect(wrapper.find(SecondComponent)).toBeTruthy();
+        expect(screen.getByText('Two')).toBeInTheDocument();
       });
 
       it('has the correct links', () => {
-        const link = wrapper.find('a').at(2);
-        expect(link.props().href).toEqual('/parent/third');
+        const items = screen.getAllByRole('link');
+        expect(items[2]).toHaveAttribute('href', '/parent/third');
       });
     });
 
     describe('when the child path is not present', () => {
       beforeEach(() => {
-        render('', 'first');
+        renderComponent('', 'first');
       });
 
       it('has the first item active by default', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
 
-        expect(items.at(0).hasClass('bp5-active')).toBeTruthy();
-        expect(items.at(1).hasClass('bp5-active')).toBeFalsy();
-        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
+        expect(items[0]).toHaveClass('bp5-active');
+        expect(items[1]).not.toHaveClass('bp5-active');
+        expect(items[2]).not.toHaveClass('bp5-active');
       });
     });
   });
@@ -103,47 +101,47 @@ describe('ContentWithTopbar', () => {
   describe('when the first route is not allowed to have suffix', () => {
     describe('when the child path is present', () => {
       beforeEach(() => {
-        render('/second');
+        renderComponent('/second');
       });
 
       it('shows sidebar items with the correct texts', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
         expect(items).toHaveLength(3);
 
-        expect(items.at(0).text()).toEqual('First');
-        expect(items.at(1).childAt(0).text()).toEqual('Second');
-        expect(items.at(2).childAt(0).text()).toEqual('Third');
+        expect(items[0]).toHaveTextContent('First');
+        expect(items[1]).toHaveTextContent('Second');
+        expect(items[2]).toHaveTextContent('Third');
       });
 
       it('has the correct active item', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
 
-        expect(items.at(0).hasClass('bp5-active')).toBeFalsy();
-        expect(items.at(1).hasClass('bp5-active')).toBeTruthy();
-        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
+        expect(items[0]).not.toHaveClass('bp5-active');
+        expect(items[1]).toHaveClass('bp5-active');
+        expect(items[2]).not.toHaveClass('bp5-active');
       });
 
       it('renders the active component', () => {
-        expect(wrapper.find(SecondComponent)).toBeTruthy();
+        expect(screen.getByText('Two')).toBeInTheDocument();
       });
 
       it('has the correct first link without suffix', () => {
-        const link = wrapper.find('a').at(0).find('a');
-        expect(link.props().href).toEqual('/parent/');
+        const items = screen.getAllByRole('link');
+        expect(items[0]).toHaveAttribute('href', '/parent/');
       });
     });
 
     describe('when the child path is not present', () => {
       beforeEach(() => {
-        render('');
+        renderComponent('');
       });
 
       it('has the first item active by default', () => {
-        const items = wrapper.find('a');
+        const items = screen.getAllByRole('link');
 
-        expect(items.at(0).hasClass('bp5-active')).toBeTruthy();
-        expect(items.at(1).hasClass('bp5-active')).toBeFalsy();
-        expect(items.at(2).hasClass('bp5-active')).toBeFalsy();
+        expect(items[0]).toHaveClass('bp5-active');
+        expect(items[1]).not.toHaveClass('bp5-active');
+        expect(items[2]).not.toHaveClass('bp5-active');
       });
     });
   });

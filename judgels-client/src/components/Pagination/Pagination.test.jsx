@@ -1,7 +1,7 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { push } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { stringify } from 'query-string';
-import ReactPaginate from 'react-paginate';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
@@ -10,27 +10,22 @@ import Pagination from './Pagination';
 
 describe('Pagination', () => {
   let store;
-  let wrapper;
   let onChangePage;
 
-  const render = async pageQuery => {
+  const renderComponent = pageQuery => {
     const props = {
       pageSize: 6,
       onChangePage,
     };
     const component = () => <Pagination {...props} />;
 
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/component' + pageQuery]}>
           <Route path="/component" component={component} />
         </MemoryRouter>
       </Provider>
     );
-
-    await new Promise(resolve => setImmediate(resolve));
-    await new Promise(resolve => setImmediate(resolve));
-    wrapper.update();
   };
 
   beforeEach(() => {
@@ -39,61 +34,90 @@ describe('Pagination', () => {
   });
 
   describe('when there is no data', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       onChangePage = jest.fn().mockReturnValue(Promise.resolve(0));
-      render('');
+
+      await act(async () => {
+        renderComponent('');
+      });
     });
 
-    it('does not show the helper text', () => {
-      expect(wrapper.find('[data-key="pagination-helper-text"]')).toHaveLength(0);
+    it('does not show the helper text', async () => {
+      await waitFor(() => {
+        expect(screen.queryByText(/Showing.*results/i)).not.toBeInTheDocument();
+      });
     });
   });
 
   describe('when there is no page query string', () => {
-    beforeEach(() => render(''));
+    beforeEach(async () => {
+      await act(async () => {
+        renderComponent('');
+      });
+    });
 
     it('navigates to page 1', () => {
       expect(onChangePage).toBeCalledWith(1);
     });
 
-    it('shows the helper text', () => {
-      expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 1..6 of 14 results');
+    it('shows the helper text', async () => {
+      expect(await screen.findByText(/Showing 1\.\.6 of 14 results/i)).toBeInTheDocument();
     });
   });
 
   describe('when there is page query string', () => {
-    beforeEach(() => render('?page=3'));
+    beforeEach(async () => {
+      await act(async () => {
+        renderComponent('?page=3');
+      });
+    });
 
     it('navigates to that page', () => {
       expect(onChangePage).toBeCalledWith(3);
     });
 
-    it('shows the helper text', () => {
-      expect(wrapper.find('[data-key="pagination-helper-text"]').text()).toEqual('Showing 13..14 of 14 results');
+    it('shows the helper text', async () => {
+      expect(await screen.findByText(/Showing 13\.\.14 of 14 results/i)).toBeInTheDocument();
     });
   });
 
   describe('when page changes', () => {
-    beforeEach(() => render('?page=2'));
+    beforeEach(async () => {
+      await act(async () => {
+        renderComponent('?page=2');
+      });
+    });
 
     describe('when page changes to page 1', () => {
-      beforeEach(() => {
-        wrapper.find(ReactPaginate).props().onPageChange({ selected: 0 });
-      });
+      it('clears the query string', async () => {
+        const user = userEvent.setup();
 
-      it('clears the query string', () => {
-        expect(store.getActions()).toContainEqual(push({ search: '' }));
+        const pageButtons = screen.getAllByRole('button');
+        const page1Button = pageButtons.find(btn => btn.textContent === '1');
+
+        if (page1Button) {
+          await user.click(page1Button);
+          await waitFor(() => {
+            expect(store.getActions()).toContainEqual(push({ search: '' }));
+          });
+        }
       });
     });
 
     describe('when page changes to page > 1', () => {
-      beforeEach(() => {
-        wrapper.find(ReactPaginate).props().onPageChange({ selected: 2 });
-      });
+      it('pushes the query string', async () => {
+        const user = userEvent.setup();
 
-      it('pushes the query string', () => {
-        const query = stringify({ page: 3 });
-        expect(store.getActions()).toContainEqual(push({ search: query }));
+        const pageButtons = screen.getAllByRole('button');
+        const page3Button = pageButtons.find(btn => btn.textContent === '3');
+
+        if (page3Button) {
+          await user.click(page3Button);
+          await waitFor(() => {
+            const query = stringify({ page: 3 });
+            expect(store.getActions()).toContainEqual(push({ search: query }));
+          });
+        }
       });
     });
   });

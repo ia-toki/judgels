@@ -1,5 +1,5 @@
+import { act, render } from '@testing-library/react';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
@@ -19,7 +19,7 @@ jest.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');
 describe('SingleCourseChapterDataRoute', () => {
   let history;
 
-  const render = currentPath => {
+  const renderComponent = currentPath => {
     history = createMemoryHistory({ initialEntries: [currentPath] });
 
     const store = createStore(
@@ -32,7 +32,7 @@ describe('SingleCourseChapterDataRoute', () => {
 
     store.dispatch(PutCourse({ id: 1, jid: 'jid123', slug: 'basic', name: 'Basic' }));
 
-    mount(
+    render(
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={SingleCourseChapterDataRoute} />
@@ -49,22 +49,29 @@ describe('SingleCourseChapterDataRoute', () => {
   });
 
   test('navigation', async () => {
-    render('/courses/basic/chapters/A');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      renderComponent('/courses/basic/chapters/A');
+    });
+
     expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'A');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A', 'A. Chapter 123');
 
-    history.push('/courses/basic/chapters/A/');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/courses/basic/chapters/A/');
+    });
 
-    history.push('/courses/basic/chapters/B');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/courses/basic/chapters/B');
+    });
+
     expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'B');
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B', 'B. Chapter 123');
 
-    history.push('/other');
-    await new Promise(resolve => setImmediate(resolve));
+    await act(async () => {
+      history.push('/other');
+    });
+
     expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B');
     expect(courseChapterActions.clearChapter).toHaveBeenCalled();
   });

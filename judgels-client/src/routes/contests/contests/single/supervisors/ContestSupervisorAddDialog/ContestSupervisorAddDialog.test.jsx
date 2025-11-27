@@ -1,4 +1,5 @@
-import { mount } from 'enzyme';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 
@@ -7,7 +8,6 @@ import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
 
 describe('ContestSupervisorAddDialog', () => {
   let onUpsertSupervisors;
-  let wrapper;
 
   beforeEach(() => {
     onUpsertSupervisors = jest
@@ -20,30 +20,31 @@ describe('ContestSupervisorAddDialog', () => {
       contest: { jid: 'contestJid' },
       onUpsertSupervisors: onUpsertSupervisors,
     };
-    wrapper = mount(
+    render(
       <Provider store={store}>
         <ContestSupervisorAddDialog {...props} />
       </Provider>
     );
   });
 
-  test('form', () => {
-    const button = wrapper.find('button');
-    button.simulate('click');
+  test('form', async () => {
+    const user = userEvent.setup();
 
-    const usernames = wrapper.find('textarea[name="usernames"]');
-    usernames.prop('onChange')({ target: { value: 'andi\n\nbudi\n caca  \n' } });
+    const button = screen.getByRole('button');
+    await user.click(button);
 
-    const announcementPermission = wrapper.find('input[name="managementPermissions.Announcements"]');
-    announcementPermission.getDOMNode().checked = true;
-    announcementPermission.simulate('change');
+    const usernames = screen.getByRole('textbox');
+    await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
-    const clarificationPermission = wrapper.find('input[name="managementPermissions.Clarifications"]');
-    clarificationPermission.getDOMNode().checked = true;
-    clarificationPermission.simulate('change');
+    const announcementPermission = document.querySelector('input[name="managementPermissions.Announcements"]');
+    await user.click(announcementPermission);
 
-    const form = wrapper.find('form');
-    form.simulate('submit');
+    const clarificationPermission = document.querySelector('input[name="managementPermissions.Clarifications"]');
+    await user.click(clarificationPermission);
+
+    const dialog = screen.getByRole('dialog');
+    const submitButton = within(dialog).getByRole('button', { name: /add\/update/i });
+    await user.click(submitButton);
 
     expect(onUpsertSupervisors).toHaveBeenCalledWith('contestJid', {
       managementPermissions: [
