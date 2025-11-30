@@ -58,14 +58,14 @@
     font-family: $accent-font;
     font-weight: bold;
 
-    .bp5-dark & {
+    .bp6-dark & {
       background-color: $dark-secondary-background-color;
     }
 
     &:hover {
       background-color: #e7e7e7;
 
-      .bp5-dark & {
+      .bp6-dark & {
         background-color: $dark-background-color;
       }
     }
@@ -89,7 +89,7 @@
     padding: 10px 20px;
     border-radius: 3px;
 
-    .bp5-dark & {
+    .bp6-dark & {
       background-color: #0c5174;
     }
 

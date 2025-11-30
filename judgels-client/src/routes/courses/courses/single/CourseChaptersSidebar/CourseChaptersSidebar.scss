@@ -10,7 +10,7 @@
   box-shadow: none !important;
   transition: flex-grow 0.2s ease-in-out;
 
-  .bp5-dark & {
+  .bp6-dark & {
     border-color: $dark-border-color;
   }
 
@@ -40,11 +40,11 @@ a.course-chapters-sidebar__item {
     background-color: $tertiary-background-color;
     border-radius: 3px;
 
-    .bp5-dark & {
+    .bp6-dark & {
       background-color: $dark-tertiary-background-color;
     }
 
-    .bp5-dark &.course-chapters-sidebar__item--selected {
+    .bp6-dark &.course-chapters-sidebar__item--selected {
       background-color: $dark-secondary-background-color;
     }
   }
@@ -52,14 +52,14 @@ a.course-chapters-sidebar__item {
   &--future {
     color: #bcc0c2;
 
-    .bp5-dark & {
+    .bp6-dark & {
       color: #5d6c79;
     }
 
-    .bp5-tag {
+    .bp6-tag {
       background-color: #ced4d8;
 
-      .bp5-dark & {
+      .bp6-dark & {
         background-color: #5f6d79;
       }
     }
@@ -70,7 +70,7 @@ a.course-chapters-sidebar__item {
     background-color: $tertiary-background-color;
     border-radius: 3px;
 
-    .bp5-dark & {
+    .bp6-dark & {
       color: inherit;
       background-color: $dark-secondary-background-color;
     }
@@ -82,7 +82,7 @@ a.course-chapters-sidebar__item {
     display: inline-block;
   }
 
-  .bp5-icon {
+  .bp6-icon {
     margin-right: 10px;
   }
 }

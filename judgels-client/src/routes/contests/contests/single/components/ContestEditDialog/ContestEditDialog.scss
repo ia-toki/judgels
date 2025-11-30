@@ -8,7 +8,7 @@
     outline: none;
   }
 
-  .bp5-tab-list {
+  .bp6-tab-list {
     width: 150px;
     margin-right: 15px;
     padding-top: 1px;
@@ -16,15 +16,15 @@
     padding-right: 1px;
   }
 
-  .bp5-tab-panel {
+  .bp6-tab-panel {
     width: 100%;
   }
 
-  .bp5-tab-indicator {
+  .bp6-tab-indicator {
     border-radius: 0 !important;
   }
 
-  .bp5-tab {
+  .bp6-tab {
     position: relative;
     padding-left: 20px !important;
     line-height: 40px;
@@ -35,13 +35,13 @@
       border-radius: 0 !important;
       font-weight: bold;
 
-      .bp5-light & {
+      .bp6-light & {
         background-color: white !important;
         border-left: 3px solid $primary-color;
         color: $text-color;
       }
 
-      .bp5-dark & {
+      .bp6-dark & {
         color: inherit !important;
         background-color: $dark-secondary-background-color !important;
         border-left: 3px solid $gray3;
@@ -60,13 +60,13 @@
     }
 
     &:not([aria-disabled='true']):hover {
-      .bp5-dark & {
+      .bp6-dark & {
         color: #48aff0;
       }
     }
   }
 
-  .bp5-tab span:first-child {
+  .bp6-tab span:first-child {
     width: 100%;
   }
 
@@ -74,7 +74,7 @@
     line-height: 0 !important;
     float: right;
 
-    .bp5-light & {
+    .bp6-light & {
       color: $primary-color !important;
     }
   }
@@ -98,7 +98,7 @@
   .contest-edit-dialog-button {
     margin-top: -5px;
 
-    .bp5-icon {
+    .bp6-icon {
       margin-right: 0;
     }
   }
@@ -112,16 +112,16 @@
     min-width: 350px;
     height: 850px;
 
-    .bp5-tabs {
+    .bp6-tabs {
       display: block;
     }
 
-    .bp5-tab-list {
+    .bp6-tab-list {
       width: 100%;
       margin-bottom: 25px;
     }
 
-    .bp5-tab-panel {
+    .bp6-tab-panel {
       padding-left: 0 !important;
     }
   }

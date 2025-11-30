@@ -2,7 +2,7 @@
   color: #252527 !important;
   font-weight: 600;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #f5f8fa !important;
   }
 }
@@ -11,14 +11,14 @@
   color: #b7b7b7 !important;
   font-weight: bold;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #738694 !important;
   }
 }
 
 .rating-green {
   &,
-  .bp5-dark & {
+  .bp6-dark & {
     color: #70ad47 !important;
     font-weight: bold;
   }
@@ -28,7 +28,7 @@
   color: #3c78d8 !important;
   font-weight: bold;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #39ace7 !important;
     font-weight: bold;
   }
@@ -38,7 +38,7 @@
   color: #7030a0 !important;
   font-weight: bold;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #cc99cd !important;
   }
 }
@@ -55,7 +55,7 @@
   color: #ff0000 !important;
   font-weight: bold;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #ff4545 !important;
   }
 }
@@ -66,7 +66,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  .bp5-dark & {
+  .bp6-dark & {
     background: linear-gradient(0deg, #ff4545 0%, #ff4545 50%, #f5f8fa 51%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

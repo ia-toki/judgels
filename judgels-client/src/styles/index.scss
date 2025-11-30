@@ -12,22 +12,22 @@ body {
   font-family: $primary-font;
   background-color: $background-color;
 
-  .bp5-dark {
+  .bp6-dark {
     background-color: $dark-background-color !important;
   }
 }
 
-.bp5-dark {
+.bp6-dark {
   &,
   td,
   th,
-  table.bp5-html-table td,
-  table.bp5-html-table th,
+  table.bp6-html-table td,
+  table.bp6-html-table th,
   label,
-  .bp5-control,
-  .bp5-dialog,
-  .bp5-tag.bp5-intent-primary,
-  .bp5-breadcrumb-current {
+  .bp6-control,
+  .bp6-dialog,
+  .bp6-tag.bp6-intent-primary,
+  .bp6-breadcrumb-current {
     color: $dark-text-color;
   }
 }
@@ -45,11 +45,11 @@ h5 {
 small {
   line-height: 14px !important;
 
-  .bp5-light & {
+  .bp6-light & {
     color: $secondary-text-color;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: $dark-secondary-text-color !important;
   }
 }
@@ -58,7 +58,7 @@ b,
 strong {
   font-weight: 700;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: #eeeeee;
   }
 }
@@ -94,11 +94,11 @@ hr {
   width: 100%;
   border: none;
 
-  .bp5-light & {
+  .bp6-light & {
     border-bottom: 1px solid $border-color;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     border-bottom: 1px solid $dark-border-color;
   }
 }
@@ -106,8 +106,8 @@ hr {
 a {
   color: $primary-color;
 
-  .bp5-dark &,
-  .bp5-dark &:hover {
+  .bp6-dark &,
+  .bp6-dark &:hover {
     color: #48aff0;
   }
 }
@@ -137,7 +137,7 @@ pre {
   border: 1px solid #cccccc;
   border-radius: 4px;
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: #293742;
     border-color: #202b33;
   }
@@ -186,7 +186,7 @@ table {
 
 td,
 th {
-  .bp5-dark & {
+  .bp6-dark & {
     border-color: $dark-secondary-background-color !important;
   }
 }
@@ -203,94 +203,94 @@ blockquote {
   margin-top: 50px;
 }
 
-.bp5-intent-primary {
-  &.bp5-button,
-  &.bp5-tag {
+.bp6-intent-primary {
+  &.bp6-button,
+  &.bp6-tag {
     background-color: $primary-color;
   }
 }
 
-.bp5-intent-warning {
-  &.bp5-button,
-  &.bp5-tag,
-  &.bp5-toast,
-  &.bp5-toast .bp5-icon,
-  &.bp5-toast .bp5-button,
-  &.bp5-toast .bp5-button svg {
+.bp6-intent-warning {
+  &.bp6-button,
+  &.bp6-tag,
+  &.bp6-toast,
+  &.bp6-toast .bp6-icon,
+  &.bp6-toast .bp6-button,
+  &.bp6-toast .bp6-button svg {
     color: #fff !important;
   }
 
-  &.bp5-toast .bp5-button:hover svg {
+  &.bp6-toast .bp6-button:hover svg {
     background-color: inherit !important;
   }
 }
 
-.bp5-intent-warning:not(.bp5-disabled) {
-  &:not(:hover).bp5-button,
-  &.bp5-tag,
-  &.bp5-toast,
-  &.bp5-toast .bp5-icon,
-  &.bp5-toast .bp5-button,
-  &.bp5-toast .bp5-button svg {
+.bp6-intent-warning:not(.bp6-disabled) {
+  &:not(:hover).bp6-button,
+  &.bp6-tag,
+  &.bp6-toast,
+  &.bp6-toast .bp6-icon,
+  &.bp6-toast .bp6-button,
+  &.bp6-toast .bp6-button svg {
     background-color: #d9822b !important;
   }
 }
 
-.bp5-button:not([class*='bp5-intent-']) {
-  .bp5-dark & {
+.bp6-button:not([class*='bp6-intent-']) {
+  .bp6-dark & {
     color: $dark-text-color;
     background-color: $dark-background-color;
   }
 
-  .bp5-dark &:hover {
+  .bp6-dark &:hover {
     background-color: $dark-tertiary-background-color;
   }
 
-  .bp5-dark &:active {
+  .bp6-dark &:active {
     background-color: $dark-background-color;
   }
 
-  .bp5-dark &.bp5-active {
+  .bp6-dark &.bp6-active {
     background-color: #202b33;
   }
 
-  .bp5-dark &.bp5-disabled {
+  .bp6-dark &.bp6-disabled {
     background-color: $dark-background-color;
   }
 }
 
-.bp5-callout {
+.bp6-callout {
   padding: 10px 12px 9px;
 
-  .bp5-dark &:not([class*='bp5-intent-']) {
+  .bp6-dark &:not([class*='bp6-intent-']) {
     background-color: $dark-tertiary-background-color;
   }
 
-  &.bp5-callout-icon > .bp5-icon:first-child {
+  &.bp6-callout-icon > .bp6-icon:first-child {
     top: 12px;
   }
 
-  &.bp5-intent-primary {
+  &.bp6-intent-primary {
     color: inherit;
     background-color: rgba(19, 124, 189, 0.15);
 
-    .bp5-dark & {
+    .bp6-dark & {
       color: unset;
       background-color: $dark-blue-secondary-background-color;
     }
   }
 }
 
-table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
+table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
   background-color: rgba(191, 204, 214, 0.15);
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: rgba(92, 112, 128, 0.15);
   }
 }
 
-.bp5-card {
-  .bp5-dark & {
+.bp6-card {
+  .bp6-dark & {
     background-color: $dark-card-background-color;
     box-shadow:
       0 0 0 1px rgba(16, 22, 26, 0.4),
@@ -299,62 +299,69 @@ table.bp5-html-table.bp5-html-table-striped tbody tr:nth-child(odd) td {
   }
 }
 
-.bp5-dialog {
+.bp6-dialog {
   background-color: rgb(235, 241, 245);
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: $dark-card-background-color;
   }
 }
 
-.bp5-dialog-header {
-  .bp5-dark & {
+.bp6-dialog-header {
+  .bp6-dark & {
     background-color: $dark-tertiary-background-color;
   }
 
-  .bp5-dark & .bp5-button {
+  .bp6-dark & .bp6-button {
     background-color: $dark-tertiary-background-color;
   }
 }
 
-.bp5-menu {
-  .bp5-dark & {
+.bp6-menu {
+  .bp6-dark & {
     background-color: $dark-background-color;
   }
 }
 
-.bp5-menu-item.bp5-active {
-  .bp5-dark & {
+.bp6-menu-item.bp6-active {
+  .bp6-dark & {
     color: inherit;
     background-color: $dark-blue-secondary-background-color;
   }
 }
 
-.bp5-popover {
-  .bp5-dark & {
+.bp6-popover {
+  .bp6-dark & {
     box-shadow:
       0 0 0 1px rgba(17, 20, 24, 0.1),
       0 2px 4px rgba(17, 20, 24, 0.2),
       0 8px 24px rgba(17, 20, 24, 0.2);
   }
 
-  .bp5-dark & .bp5-popover-arrow-fill {
+  .bp6-dark & .bp6-popover-arrow-fill {
     fill: $dark-background-color;
   }
 
-  .bp5-dark & .bp5-popover-arrow-border {
+  .bp6-dark & .bp6-popover-arrow-border {
     fill: $dark-background-color;
     fill-opacity: 1;
   }
 }
 
-.bp5-file-upload-input::after {
-  .bp5-dark & {
+.bp6-tag {
+  .bp6-dark &:not([class*='bp6-intent-']) {
+    background-color: #c5cbd3;
+    color: #1c2127;
+  }
+}
+
+.bp6-file-upload-input::after {
+  .bp6-dark & {
     color: $dark-text-color;
     background-color: $dark-background-color;
   }
 
-  .bp5-dark &:hover {
+  .bp6-dark &:hover {
     background-color: $dark-background-color;
   }
 }

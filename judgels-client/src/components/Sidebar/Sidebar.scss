@@ -5,7 +5,7 @@
     outline: none;
   }
 
-  .bp5-icon {
+  .bp6-icon {
     padding-bottom: 1px;
   }
 
@@ -14,37 +14,37 @@
     padding-bottom: 0;
   }
 
-  .bp5-tab-list {
+  .bp6-tab-list {
     left: -20px;
     width: 270px;
   }
 
-  .bp5-tab-indicator {
+  .bp6-tab-indicator {
     border-radius: 0 !important;
 
-    .bp5-light & {
+    .bp6-light & {
       background-color: $secondary-background-color !important;
       border-left: 3px solid $primary-color;
     }
 
-    .bp5-dark & {
+    .bp6-dark & {
       background-color: $dark-secondary-background-color !important;
       border-left: 3px solid $gray3;
     }
   }
 
-  .bp5-tab {
+  .bp6-tab {
     position: relative;
     padding-left: 20px !important;
     line-height: 50px;
     height: 50px;
 
     &:hover {
-      .bp5-light & {
+      .bp6-light & {
         background-color: $tertiary-background-color !important;
       }
 
-      .bp5-dark & {
+      .bp6-dark & {
         background-color: $dark-tertiary-background-color !important;
       }
     }
@@ -52,17 +52,17 @@
     &[aria-selected='true'] {
       font-weight: bold;
 
-      .bp5-light & {
+      .bp6-light & {
         color: $text-color;
       }
 
-      .bp5-dark & {
+      .bp6-dark & {
         color: inherit;
       }
     }
 
     &[aria-selected='false'] {
-      .bp5-light & {
+      .bp6-light & {
         color: $primary-color;
       }
     }
@@ -70,7 +70,7 @@
     a {
       width: 100%;
 
-      .bp5-dark & {
+      .bp6-dark & {
         color: $dark-text-color !important;
       }
     }
@@ -80,7 +80,7 @@
 .card-sidebar__arrow {
   float: right;
 
-  .bp5-light & {
+  .bp6-light & {
     color: $primary-color !important;
   }
 }
@@ -103,13 +103,13 @@
     width: 200px;
     top: -15px;
 
-    .bp5-tab-list {
+    .bp6-tab-list {
       left: 0;
     }
   }
 
   .card-sidebar__responsive-menu {
-    .bp5-icon {
+    .bp6-icon {
       padding-bottom: 0 !important;
     }
   }

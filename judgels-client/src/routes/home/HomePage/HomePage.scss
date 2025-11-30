@@ -5,11 +5,11 @@
   padding-top: 40px;
   padding-bottom: 20px;
 
-  .bp5-light & {
+  .bp6-light & {
     background-color: $primary-color;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: rgba(19, 124, 189, 0.25);
   }
 }
@@ -22,7 +22,7 @@
 .home-banner__text {
   color: white !important;
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: $dark-text-color !important;
   }
 }

@@ -4,12 +4,12 @@
   height: 50px;
   color: white;
 
-  .bp5-light & {
+  .bp6-light & {
     background-color: $primary-color !important;
     height: 50px;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     color: $dark-text-color !important;
     background-color: $dark-blue-main-background-color !important;
     box-shadow:
@@ -20,7 +20,7 @@
   a {
     color: white;
 
-    .bp5-dark & {
+    .bp6-dark & {
       color: $dark-text-color !important;
     }
 

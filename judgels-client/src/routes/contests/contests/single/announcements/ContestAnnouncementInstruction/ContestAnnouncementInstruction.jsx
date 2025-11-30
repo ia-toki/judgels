@@ -15,7 +15,7 @@ export function ContestAnnouncementInstruction() {
         style={{ marginBottom: '10px' }}
       />
       <Collapse isOpen={isOpen}>
-        <Callout className="bp5-icon-info-sign content-card__section">
+        <Callout className="bp6-icon-info-sign content-card__section">
           <ol>
             <li>
               Navigate to <strong>Settings</strong> and enable the <strong>Files</strong> module.

@@ -33,11 +33,11 @@ class App extends PureComponent {
 
     return (
       <DocumentTitle title={title}>
-        <div className={classNames({ 'bp5-light': !isDarkMode, 'bp5-dark': isDarkMode })}>
+        <div className={classNames({ 'bp6-light': !isDarkMode, 'bp6-dark': isDarkMode })}>
           <Announcements />
           <Header items={visibleAppRoutes} homeRoute={homeRoute} />
           <AppContent>
-            <PortalProvider portalClassName={isDarkMode ? 'bp5-dark' : 'bp5-light'}>
+            <PortalProvider portalClassName={isDarkMode ? 'bp6-dark' : 'bp6-light'}>
               <Switch>
                 {visibleAppRoutes.map(item => (
                   <Route key={item.id} {...item.route} />

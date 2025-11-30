@@ -8,11 +8,11 @@
   line-height: 30px;
   vertical-align: middle !important;
 
-  .bp5-light & {
+  .bp6-light & {
     background-color: #f4f5f6;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: $dark-background-color;
   }
 
@@ -21,8 +21,8 @@
   }
 }
 
-.bp5-menu li,
-.bp5-menu li a {
+.bp6-menu li,
+.bp6-menu li a {
   color: inherit;
 }
 
@@ -67,7 +67,7 @@
     display: block !important;
     cursor: pointer;
 
-    span.bp5-icon {
+    span.bp6-icon {
       float: left;
     }
   }
@@ -83,7 +83,7 @@
     display: block !important;
     cursor: pointer;
 
-    span.bp5-icon {
+    span.bp6-icon {
       float: left;
     }
   }

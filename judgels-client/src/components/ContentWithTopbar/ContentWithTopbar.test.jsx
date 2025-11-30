@@ -68,9 +68,9 @@ describe('ContentWithTopbar', () => {
       it('has the correct active item', () => {
         const items = screen.getAllByRole('link');
 
-        expect(items[0]).not.toHaveClass('bp5-active');
-        expect(items[1]).toHaveClass('bp5-active');
-        expect(items[2]).not.toHaveClass('bp5-active');
+        expect(items[0]).not.toHaveClass('bp6-active');
+        expect(items[1]).toHaveClass('bp6-active');
+        expect(items[2]).not.toHaveClass('bp6-active');
       });
 
       it('renders the active component', () => {
@@ -91,9 +91,9 @@ describe('ContentWithTopbar', () => {
       it('has the first item active by default', () => {
         const items = screen.getAllByRole('link');
 
-        expect(items[0]).toHaveClass('bp5-active');
-        expect(items[1]).not.toHaveClass('bp5-active');
-        expect(items[2]).not.toHaveClass('bp5-active');
+        expect(items[0]).toHaveClass('bp6-active');
+        expect(items[1]).not.toHaveClass('bp6-active');
+        expect(items[2]).not.toHaveClass('bp6-active');
       });
     });
   });
@@ -116,9 +116,9 @@ describe('ContentWithTopbar', () => {
       it('has the correct active item', () => {
         const items = screen.getAllByRole('link');
 
-        expect(items[0]).not.toHaveClass('bp5-active');
-        expect(items[1]).toHaveClass('bp5-active');
-        expect(items[2]).not.toHaveClass('bp5-active');
+        expect(items[0]).not.toHaveClass('bp6-active');
+        expect(items[1]).toHaveClass('bp6-active');
+        expect(items[2]).not.toHaveClass('bp6-active');
       });
 
       it('renders the active component', () => {
@@ -139,9 +139,9 @@ describe('ContentWithTopbar', () => {
       it('has the first item active by default', () => {
         const items = screen.getAllByRole('link');
 
-        expect(items[0]).toHaveClass('bp5-active');
-        expect(items[1]).not.toHaveClass('bp5-active');
-        expect(items[2]).not.toHaveClass('bp5-active');
+        expect(items[0]).toHaveClass('bp6-active');
+        expect(items[1]).not.toHaveClass('bp6-active');
+        expect(items[2]).not.toHaveClass('bp6-active');
       });
     });
   });
