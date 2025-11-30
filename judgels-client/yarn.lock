@@ -1196,58 +1196,60 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blueprintjs/colors@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/@blueprintjs/colors/-/colors-5.0.8.tgz"
-  integrity sha512-Y/gpCMc/NAiScuH6vJGDI6vW2RqgR9ayEwtesVirQz3KnQSAHvbZWlgHzEO4Teyhc6FuXL3Tbj5kfq5JCeEyoQ==
+"@blueprintjs/colors@^5.1.11":
+  version "5.1.11"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-5.1.11.tgz#f0e6d3fd0688ba386504984048fe57ac33894b80"
+  integrity sha512-nSmsgfORb1bYxW4FiMBmFuPPqBK0IbLn1M0hqQCZQ+3hkMJKyQIypBCsw44o4KrpJXbWdS7y2I/p40ZWubYHXw==
   dependencies:
     tslib "~2.6.2"
 
-"@blueprintjs/core@5.7.2", "@blueprintjs/core@^5.7.2":
-  version "5.7.2"
-  resolved "https://registry.npmjs.org/@blueprintjs/core/-/core-5.7.2.tgz"
-  integrity sha512-wzYSog3RGsNq95F0stYZ+C6/PBjPidFRzVRnQPeUO/M0tZCL4QEbKC4qNz1flGlXaQH5sD6rjaoRoFaJfouXVg==
+"@blueprintjs/core@6.3.4", "@blueprintjs/core@^6.3.4":
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-6.3.4.tgz#611e58f0538002f95b733b6eca248c72feb0206f"
+  integrity sha512-z3YOtqBhMgvdT6twZK0jhB8VTtYa02QNP0LCwW3+J2jZaDjftgk72DoSdIvQtKU6l89AMS0WULClEBrnLRpMfA==
   dependencies:
-    "@blueprintjs/colors" "^5.0.8"
-    "@blueprintjs/icons" "^5.5.0"
-    "@popperjs/core" "^2.11.7"
+    "@blueprintjs/colors" "^5.1.11"
+    "@blueprintjs/icons" "^6.3.1"
+    "@popperjs/core" "^2.11.8"
     classnames "^2.3.1"
     normalize.css "^8.0.1"
     react-popper "^2.3.0"
     react-transition-group "^4.4.5"
     tslib "~2.6.2"
+    use-sync-external-store "^1.2.0"
 
-"@blueprintjs/datetime@5.2.8":
-  version "5.2.8"
-  resolved "https://registry.npmjs.org/@blueprintjs/datetime/-/datetime-5.2.8.tgz"
-  integrity sha512-HcuCeKJRC7XyLyuDWRdS4OdK7wBqxBnZBoPRjHl6I3C13ZHGXnx159UtOuckNob280BIgX+mKbR1lCBKW1Kn/A==
+"@blueprintjs/datetime@6.0.8":
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/datetime/-/datetime-6.0.8.tgz#38e95c57fdb5284faac82c6010c8debd5157b534"
+  integrity sha512-AlhPHsX6hnfeb8rpkDmdpI026/QxKwOITj/MsktTjC7l8plRbG4NQYNUWotRAeyWOc1qsz1UKm4QfvC2EOFf/A==
   dependencies:
-    "@blueprintjs/core" "^5.7.2"
-    "@blueprintjs/icons" "^5.5.0"
-    "@blueprintjs/select" "^5.0.20"
+    "@blueprintjs/core" "^6.3.4"
+    "@blueprintjs/icons" "^6.3.1"
+    "@blueprintjs/select" "^6.0.8"
     classnames "^2.3.1"
     date-fns "^2.28.0"
     date-fns-tz "^2.0.0"
-    lodash "^4.17.21"
-    react-day-picker "7.4.9"
+    react-day-picker "^8.10.0"
+    react-innertext "^1.1.5"
     tslib "~2.6.2"
 
-"@blueprintjs/icons@5.5.0", "@blueprintjs/icons@^5.5.0":
-  version "5.5.0"
-  resolved "https://registry.npmjs.org/@blueprintjs/icons/-/icons-5.5.0.tgz"
-  integrity sha512-XnGWYZwtYh3+Cf9e2zYweZdwhZTevgufo287hu38Jfdhb7rcbWUwU7ktAmmf21QvGFqw6Ohyu8VVkoZZlE4eMg==
+"@blueprintjs/icons@6.3.1", "@blueprintjs/icons@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-6.3.1.tgz#425e36f36fde291a0403c4bb79b17de1a358d3ef"
+  integrity sha512-jq7bsOu6WT7hMl/PtCuTUwV3OOjQoPehnaiRxpLaMktWLzi9ELFhL6diV6j1hc2qP/spA45AqUof61F6GHt7gg==
   dependencies:
     change-case "^4.1.2"
     classnames "^2.3.1"
     tslib "~2.6.2"
 
-"@blueprintjs/select@5.0.20", "@blueprintjs/select@^5.0.20":
-  version "5.0.20"
-  resolved "https://registry.npmjs.org/@blueprintjs/select/-/select-5.0.20.tgz"
-  integrity sha512-t9T8mAXP5enMrieVOVv86J8OOv/+JiGIapiswgmt1MYpSO3mmF+yo3SGw/tOEqHla0Nk/tVxLbxdkwGGY2NYvA==
+"@blueprintjs/select@6.0.8", "@blueprintjs/select@^6.0.8":
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-6.0.8.tgz#c4227bdac4821fa35cd96f1e2e0f421212aa4106"
+  integrity sha512-R/bZUqm3cFeXCDJrLIen35ypgPdmFRQhW7tqc/UCI1AVRDTBUNybxClbzpgQ0mmtE3TjYi6Dyx9fpq2fkx9e3Q==
   dependencies:
-    "@blueprintjs/core" "^5.7.2"
-    "@blueprintjs/icons" "^5.5.0"
+    "@blueprintjs/colors" "^5.1.11"
+    "@blueprintjs/core" "^6.3.4"
+    "@blueprintjs/icons" "^6.3.1"
     classnames "^2.3.1"
     tslib "~2.6.2"
 
@@ -1726,9 +1728,9 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
-"@popperjs/core@^2.11.7":
+"@popperjs/core@^2.11.8":
   version "2.11.8"
-  resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
 "@react-oauth/google@0.11.1":
@@ -4957,12 +4959,10 @@ react-async-script@0.9.1:
   dependencies:
     prop-types ">=15.5.0"
 
-react-day-picker@7.4.9:
-  version "7.4.9"
-  resolved "https://registry.npmjs.org/react-day-picker/-/react-day-picker-7.4.9.tgz"
-  integrity sha512-CcXf0p7p6gTYnG0+n/4wNGljZuQDXl4HhgcxsXB0nX+8D4LnRho9EclPA/aLz4WlvvVpfY+AEgj2ylgPj4nm/g==
-  dependencies:
-    prop-types "^15.6.2"
+react-day-picker@^8.10.0:
+  version "8.10.1"
+  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-8.10.1.tgz#4762ec298865919b93ec09ba69621580835b8e80"
+  integrity sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==
 
 react-document-title@2.0.3:
   version "2.0.3"
@@ -5003,6 +5003,11 @@ react-google-recaptcha@0.9.9:
   integrity sha512-5Z5Lh6OSkrbqcxqnwrFYaUZb9rm4al6MD/InmyUMvHUgWSGq9KbNWCyzwffBcdtSw0u+59lNNu6RRTSlL1UzVA==
   dependencies:
     prop-types ">=15.5.0"
+
+react-innertext@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-innertext/-/react-innertext-1.1.5.tgz#8147ac54db3f7067d95f49e2d2c05a720d27d8d0"
+  integrity sha512-PWAqdqhxhHIv80dT9znP2KvS+hfkbRovFp4zFYHFFlOoQLRiawIic81gKb3U1wEyJZgMwgs3JoLtwryASRWP3Q==
 
 react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0:
   version "16.13.1"
@@ -5977,6 +5982,11 @@ use-sync-external-store@^1.0.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.5.0.tgz#55122e2a3edd2a6c106174c27485e0fd59bcfca0"
   integrity sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==
+
+use-sync-external-store@^1.2.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.6.0.tgz#b174bfa65cb2b526732d9f2ac0a408027876f32d"
+  integrity sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==
 
 v8-to-istanbul@^9.0.1:
   version "9.3.0"

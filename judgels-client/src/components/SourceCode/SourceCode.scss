@@ -5,13 +5,13 @@ pre.source-code {
   background-color: #f5f5f5 !important;
   overflow-y: auto !important;
 
-  .bp5-light & {
+  .bp6-light & {
     .token {
       background-color: inherit !important;
     }
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     border-color: #202b33;
     background-color: #293742 !important;
   }

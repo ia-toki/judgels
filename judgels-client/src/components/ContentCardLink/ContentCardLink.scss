@@ -11,11 +11,11 @@
   cursor: pointer;
   text-decoration: none;
 
-  .bp5-light & {
+  .bp6-light & {
     background-color: $secondary-background-color;
   }
 
-  .bp5-dark & {
+  .bp6-dark & {
     background-color: $dark-secondary-background-color;
   }
 }

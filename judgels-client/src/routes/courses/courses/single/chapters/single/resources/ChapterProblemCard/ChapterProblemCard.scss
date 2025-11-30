@@ -13,11 +13,11 @@
     margin-bottom: 0;
   }
 
-  .bp5-icon {
+  .bp6-icon {
     padding-top: 1px;
   }
 
-  .bp5-tag {
+  .bp6-tag {
     height: 21px;
   }
 
@@ -29,11 +29,11 @@
     background-color: inherit;
 
     > *,
-    .chapter-problem-card__heading > .bp5-icon {
+    .chapter-problem-card__heading > .bp6-icon {
       font-weight: normal !important;
       color: #bcc0c2;
 
-      .bp5-dark & {
+      .bp6-dark & {
         color: #5d6c79;
       }
 
@@ -43,10 +43,10 @@
       }
     }
 
-    .bp5-tag {
+    .bp6-tag {
       background-color: #ced4d8;
 
-      .bp5-dark & {
+      .bp6-dark & {
         background-color: #5f6d79;
       }
     }

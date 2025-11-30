@@ -3,35 +3,41 @@ import { Envelope, Tick, WarningSign } from '@blueprintjs/icons';
 
 import { ForbiddenError, NotFoundError, RemoteError } from '../api/error';
 
-const toaster = OverlayToaster.create({
+const toasterPromise = OverlayToaster.create({
   position: Position.TOP,
   className: 'toast',
 });
 
 export function showToast(message) {
-  toaster.show({
-    message,
-    intent: Intent.NONE,
-    timeout: 1500,
-  });
+  toasterPromise.then(toaster =>
+    toaster.show({
+      message,
+      intent: Intent.NONE,
+      timeout: 1500,
+    })
+  );
 }
 
 export function showSuccessToast(message) {
-  toaster.show({
-    icon: <Tick />,
-    message,
-    intent: Intent.SUCCESS,
-    timeout: 1500,
-  });
+  toasterPromise.then(toaster =>
+    toaster.show({
+      icon: <Tick />,
+      message,
+      intent: Intent.SUCCESS,
+      timeout: 1500,
+    })
+  );
 }
 
 export function showAlertToast(message) {
-  toaster.show({
-    icon: <Envelope />,
-    message,
-    intent: Intent.WARNING,
-    timeout: 0,
-  });
+  toasterPromise.then(toaster =>
+    toaster.show({
+      icon: <Envelope />,
+      message,
+      intent: Intent.WARNING,
+      timeout: 0,
+    })
+  );
 }
 
 export function showErrorToast(error) {
@@ -46,11 +52,13 @@ export function showErrorToast(error) {
     message = error.message;
   }
 
-  toaster.show({
-    icon: <WarningSign />,
-    message,
-    intent: Intent.DANGER,
-  });
+  toasterPromise.then(toaster =>
+    toaster.show({
+      icon: <WarningSign />,
+      message,
+      intent: Intent.DANGER,
+    })
+  );
 }
 
 export const toastActions = {
