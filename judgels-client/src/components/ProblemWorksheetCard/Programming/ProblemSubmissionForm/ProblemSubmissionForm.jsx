@@ -63,11 +63,7 @@ export default function ProblemSubmissionForm({
         label: isSingleSourceCode ? '... or submit source code file' : sourceKeys[key],
         validate: composeValidators(maxFileSize, CompatibleFilenameExtensionForGradingLanguage),
       };
-      return (
-        <>
-          <Field key={key} component={FormTableFileInput} {...fieldFile} />
-        </>
-      );
+      return <Field key={key} component={FormTableFileInput} {...fieldFile} />;
     });
   };
 
