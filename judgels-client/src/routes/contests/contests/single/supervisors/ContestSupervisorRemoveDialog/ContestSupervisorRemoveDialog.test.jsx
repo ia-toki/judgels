@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestSupervisorRemoveDialog } from './ContestSupervisorRemoveDialog';
 
@@ -9,7 +10,7 @@ describe('ContestSupervisorRemoveDialog', () => {
   let onDeleteSupervisors;
 
   beforeEach(() => {
-    onDeleteSupervisors = jest.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
+    onDeleteSupervisors = vi.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
 
     const store = configureMockStore()({});
 

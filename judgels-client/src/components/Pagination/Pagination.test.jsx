@@ -5,6 +5,7 @@ import { stringify } from 'query-string';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import Pagination from './Pagination';
 
@@ -30,12 +31,12 @@ describe('Pagination', () => {
 
   beforeEach(() => {
     store = createMockStore()({});
-    onChangePage = jest.fn().mockReturnValue(Promise.resolve(14));
+    onChangePage = vi.fn().mockReturnValue(Promise.resolve(14));
   });
 
   describe('when there is no data', () => {
     beforeEach(async () => {
-      onChangePage = jest.fn().mockReturnValue(Promise.resolve(0));
+      onChangePage = vi.fn().mockReturnValue(Promise.resolve(0));
 
       await act(async () => {
         renderComponent('');

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ArchiveCreateDialog } from './ArchiveCreateDialog';
 
@@ -10,7 +11,7 @@ describe('ArchiveCreateDialog', () => {
   let onCreateArchive;
 
   beforeEach(() => {
-    onCreateArchive = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onCreateArchive = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 

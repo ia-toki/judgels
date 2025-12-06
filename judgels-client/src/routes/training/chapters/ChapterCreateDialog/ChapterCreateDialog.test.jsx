@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ChapterCreateDialog } from './ChapterCreateDialog';
 
@@ -10,7 +11,7 @@ describe('ChapterCreateDialog', () => {
   let onCreateChapter;
 
   beforeEach(async () => {
-    onCreateChapter = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onCreateChapter = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 

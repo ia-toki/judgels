@@ -2,6 +2,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
 import sessionReducer, { PutToken, PutUser } from '../../../../../../modules/session/sessionReducer';
@@ -11,8 +12,8 @@ import ContestRegistrationCard from './ContestRegistrationCard';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-jest.mock('../../modules/contestWebActions');
-jest.mock('../../modules/contestContestantActions');
+vi.mock('../../modules/contestWebActions');
+vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrationCard', () => {
   const renderComponent = async () => {

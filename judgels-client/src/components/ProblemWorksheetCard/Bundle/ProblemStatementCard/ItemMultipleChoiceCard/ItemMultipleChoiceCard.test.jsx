@@ -2,12 +2,13 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 
 describe('ItemMultipleChoiceCard', () => {
-  const onChoiceChangeFn = jest.fn();
+  const onChoiceChangeFn = vi.fn();
   const itemConfig = {
     statement: 'Statement',
     choices: [

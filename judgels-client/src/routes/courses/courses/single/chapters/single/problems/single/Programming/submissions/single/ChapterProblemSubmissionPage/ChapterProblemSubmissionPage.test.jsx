@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../../../../../modules/api/gabriel/language';
 import webPrefsReducer, {
@@ -14,7 +15,7 @@ import ChapterProblemSubmissionPage from './ChapterProblemSubmissionPage';
 
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
-jest.mock('../../modules/chapterProblemSubmissionActions');
+vi.mock('../../modules/chapterProblemSubmissionActions');
 
 describe('ChapterProblemSubmissionPage', () => {
   let source = {};

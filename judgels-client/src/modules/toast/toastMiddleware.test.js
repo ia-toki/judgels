@@ -1,9 +1,11 @@
+import { vi } from 'vitest';
+
 import { NotFoundError } from '../api/error';
 import toastMiddleware from './toastMiddleware';
 
 import * as toastActions from './toastActions';
 
-jest.mock('./toastActions');
+vi.mock('./toastActions');
 
 describe('toastMiddleware', () => {
   let store;
@@ -13,7 +15,7 @@ describe('toastMiddleware', () => {
 
   beforeEach(() => {
     toastActions.showErrorToast.mockClear();
-    store = jest.fn();
+    store = vi.fn();
   });
 
   describe('when the action throws Error', () => {

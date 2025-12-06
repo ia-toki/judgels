@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
 import contestReducer from '../modules/contestReducer';
@@ -10,7 +11,7 @@ import ContestsPage from './ContestsPage';
 
 import * as contestActions from '../modules/contestActions';
 
-jest.mock('../modules/contestActions');
+vi.mock('../modules/contestActions');
 
 describe('ContestsPage', () => {
   let contests;

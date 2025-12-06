@@ -1,13 +1,15 @@
+import { vi } from 'vitest';
+
 import { FormattedRelative } from './FormattedRelative';
 
 describe('FormattedRelative', () => {
   beforeAll(() => {
-    jest.useFakeTimers('modern');
-    jest.setSystemTime(new Date(2021, 10, 10, 10, 10, 10));
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2021, 10, 10, 10, 10, 10));
   });
 
   afterAll(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('past', () => {

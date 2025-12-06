@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestManagerAddDialog } from './ContestManagerAddDialog';
 
@@ -9,7 +10,7 @@ describe('ContestManagerAddDialog', () => {
   let onUpsertManagers;
 
   beforeEach(() => {
-    onUpsertManagers = jest
+    onUpsertManagers = vi
       .fn()
       .mockReturnValue(Promise.resolve({ insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} }));
 

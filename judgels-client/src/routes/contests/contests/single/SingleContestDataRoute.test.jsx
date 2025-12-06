@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import contestReducer from '../modules/contestReducer';
 import SingleContestDataRoute from './SingleContestDataRoute';
@@ -13,9 +14,9 @@ import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbs
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 
-jest.mock('../modules/contestActions');
-jest.mock('./modules/contestWebActions');
-jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
+vi.mock('../modules/contestActions');
+vi.mock('./modules/contestWebActions');
+vi.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleContestDataRoute', () => {
   let history;

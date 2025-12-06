@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
@@ -17,7 +18,7 @@ describe('ContestAnnouncementEditDialog', () => {
   };
 
   beforeEach(async () => {
-    onUpdateAnnouncement = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpdateAnnouncement = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const onToggleEditDialog = () => {
       return;

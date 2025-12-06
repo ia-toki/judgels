@@ -4,12 +4,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import LoginPage from './LoginPage';
 
 import * as loginActions from '../modules/loginActions';
 
-jest.mock('../modules/loginActions');
+vi.mock('../modules/loginActions');
 
 describe('LoginPage', () => {
   beforeEach(() => {

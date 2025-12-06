@@ -1,12 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';
 import ItemShortAnswerForm from './ItemShortAnswerForm';
 
 describe('ItemShortAnswerForm', () => {
-  const onSubmitFn = jest.fn();
+  const onSubmitFn = vi.fn();
   const itemConfig = {
     statement: 'statement',
     score: 4,
@@ -16,7 +17,7 @@ describe('ItemShortAnswerForm', () => {
   };
 
   beforeEach(() => {
-    window.confirm = jest.fn(() => true);
+    window.confirm = vi.fn(() => true);
   });
 
   describe('not answered yet condition', () => {

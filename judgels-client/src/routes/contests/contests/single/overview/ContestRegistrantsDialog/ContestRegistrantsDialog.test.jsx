@@ -3,13 +3,14 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestRegistrantsDialog from './ContestRegistrantsDialog';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
-jest.mock('../../modules/contestContestantActions');
+vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrantsDialog', () => {
   beforeEach(async () => {

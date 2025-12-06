@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
@@ -11,7 +12,7 @@ import ContestSubmissionPage from './ContestSubmissionPage';
 
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
-jest.mock('../../modules/contestSubmissionActions');
+vi.mock('../../modules/contestSubmissionActions');
 
 describe('ContestSubmissionPage', () => {
   beforeEach(async () => {

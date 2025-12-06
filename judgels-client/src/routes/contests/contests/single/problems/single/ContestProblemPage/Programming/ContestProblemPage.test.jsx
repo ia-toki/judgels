@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
@@ -17,10 +18,10 @@ import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPr
 import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
-jest.mock('../../../modules/contestProblemActions');
-jest.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
-jest.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
-jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
+vi.mock('../../../modules/contestProblemActions');
+vi.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
+vi.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
+vi.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('ProgrammingContestProblemPage', () => {
   let history;

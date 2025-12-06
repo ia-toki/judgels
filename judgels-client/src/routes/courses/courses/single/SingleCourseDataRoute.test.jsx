@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import courseReducer from '../modules/courseReducer';
 import SingleCourseDataRoute from './SingleCourseDataRoute';
@@ -12,8 +13,8 @@ import SingleCourseDataRoute from './SingleCourseDataRoute';
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as courseActions from '../modules/courseActions';
 
-jest.mock('../modules/courseActions');
-jest.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
+vi.mock('../modules/courseActions');
+vi.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleCourseDataRoute', () => {
   let history;

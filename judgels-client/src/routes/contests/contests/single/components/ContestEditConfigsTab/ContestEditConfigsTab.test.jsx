@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { parseDuration } from '../../../../../../utils/duration';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
@@ -10,7 +11,7 @@ import ContestEditConfigsTab from './ContestEditConfigsTab';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-jest.mock('../../modules/contestModuleActions');
+vi.mock('../../modules/contestModuleActions');
 
 describe('ContestEditConfigsTab', () => {
   let config;

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { parseDateTime } from '../../../../utils/datetime';
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
@@ -11,7 +12,7 @@ describe('ProblemSetCreateDialog', () => {
   let onGetProblemSetConfig;
   let onCreateProblemSet;
   beforeEach(() => {
-    onCreateProblemSet = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onCreateProblemSet = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 

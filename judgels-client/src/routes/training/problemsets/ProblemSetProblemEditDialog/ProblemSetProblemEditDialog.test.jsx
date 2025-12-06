@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import { ProblemSetProblemEditDialog } from './ProblemSetProblemEditDialog';
@@ -46,15 +47,15 @@ describe('ProblemSetProblemEditDialog', () => {
   };
 
   beforeEach(async () => {
-    onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap, contestsMap }));
-    onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onGetProblems = vi.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap, contestsMap }));
+    onSetProblems = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
       problemSet,
-      onCloseDialog: jest.fn(),
+      onCloseDialog: vi.fn(),
       onGetProblems,
       onSetProblems,
     };

@@ -3,12 +3,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import LogoutPage from './LogoutPage';
 
 import * as logoutActions from '../modules/logoutActions';
 
-jest.mock('../modules/logoutActions');
+vi.mock('../modules/logoutActions');
 
 describe('LogoutPage', () => {
   beforeEach(() => {

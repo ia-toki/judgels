@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
@@ -14,7 +15,7 @@ import ContestProblemsPage from './ContestProblemsPage';
 
 import * as contestProblemActions from '../modules/contestProblemActions';
 
-jest.mock('../modules/contestProblemActions');
+vi.mock('../modules/contestProblemActions');
 
 describe('ContestProblemsPage', () => {
   let problems;

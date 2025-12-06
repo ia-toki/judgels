@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { ContestProblemEditDialog } from './ContestProblemEditDialog';
@@ -40,7 +41,7 @@ describe('ContestProblemEditDialog', () => {
   ];
 
   beforeEach(() => {
-    onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onSetProblems = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 

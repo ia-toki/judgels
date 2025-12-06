@@ -4,12 +4,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import ResetPasswordPage from './ResetPasswordPage';
 
 import * as resetPasswordActions from '../modules/resetPasswordActions';
 
-jest.mock('../modules/resetPasswordActions');
+vi.mock('../modules/resetPasswordActions');
 
 describe('ResetPasswordPage', () => {
   beforeEach(() => {

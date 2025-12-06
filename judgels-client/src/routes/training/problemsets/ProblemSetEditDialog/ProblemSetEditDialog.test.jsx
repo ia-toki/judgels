@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { parseDateTime } from '../../../../utils/datetime';
 import { ProblemSetEditDialog } from './ProblemSetEditDialog';
@@ -20,7 +21,7 @@ describe('ProblemSetEditDialog', () => {
   let onUpdateProblemSet;
 
   beforeEach(async () => {
-    onUpdateProblemSet = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpdateProblemSet = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 
@@ -28,7 +29,7 @@ describe('ProblemSetEditDialog', () => {
       isOpen: true,
       problemSet,
       archiveSlug: 'archive',
-      onCloseDialog: jest.fn(),
+      onCloseDialog: vi.fn(),
       onUpdateProblemSet,
     };
     await act(async () =>
