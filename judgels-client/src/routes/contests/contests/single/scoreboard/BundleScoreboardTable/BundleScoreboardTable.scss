@@ -1,4 +1,4 @@
-@import '../../../../../../styles/base';
+@use '../../../../../../styles/base' as *;
 
 table.bundle-scoreboard__content {
   td strong {

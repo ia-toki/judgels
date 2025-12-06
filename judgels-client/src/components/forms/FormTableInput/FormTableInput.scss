@@ -1,4 +1,4 @@
-@import '../../../styles/base';
+@use '../../../styles/base' as *;
 
 .form-table-input td {
   line-height: 40px !important;
