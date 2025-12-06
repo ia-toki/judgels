@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { PopBreadcrumb, PushBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 import { withBreadcrumb } from './BreadcrumbWrapper';
@@ -23,7 +24,7 @@ describe('BreadcrumbWrapper', () => {
     store = createMockStore()({
       breadcrumbs: { values: [] },
     });
-    renderFn = jest.fn();
+    renderFn = vi.fn();
 
     const WrappedComponent = withBreadcrumb('My Component')(InnerComponent);
     const comp = () => <WrappedComponent num={42} />;

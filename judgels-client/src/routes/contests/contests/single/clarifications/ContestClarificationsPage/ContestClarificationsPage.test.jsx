@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
@@ -12,7 +13,7 @@ import ContestClarificationsPage from './ContestClarificationsPage';
 
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
-jest.mock('../modules/contestClarificationActions');
+vi.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
   let clarifications;

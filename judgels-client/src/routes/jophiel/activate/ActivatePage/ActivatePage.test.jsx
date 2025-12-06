@@ -3,12 +3,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import ActivatePage from './ActivatePage';
 
 import * as activateActions from '../modules/activateActions';
 
-jest.mock('../modules/activateActions');
+vi.mock('../modules/activateActions');
 
 describe('ActivatePage', () => {
   let store;

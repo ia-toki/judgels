@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestEditModulesTab from './ContestEditModulesTab';
@@ -9,8 +10,8 @@ import ContestEditModulesTab from './ContestEditModulesTab';
 import * as contestModuleActions from '../../modules/contestModuleActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-jest.mock('../../modules/contestModuleActions');
-jest.mock('../../modules/contestWebActions');
+vi.mock('../../modules/contestModuleActions');
+vi.mock('../../modules/contestWebActions');
 
 describe('ContestEditModulesTab', () => {
   beforeEach(async () => {

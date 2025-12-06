@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
 import { ItemEssayCard } from './ItemEssayCard';
@@ -16,7 +17,7 @@ describe('ItemEssayCard', () => {
     meta: 'meta',
     config: itemConfig,
     disabled: false,
-    onSubmit: jest.fn(),
+    onSubmit: vi.fn(),
     itemNumber: 1,
   };
 

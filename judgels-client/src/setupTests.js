@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import nock from 'nock';
 import { TextDecoder, TextEncoder } from 'node:util';
 

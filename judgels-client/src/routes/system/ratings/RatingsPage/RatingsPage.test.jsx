@@ -4,12 +4,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import RatingsPage from './RatingsPage';
 
 import * as ratingActions from '../modules/ratingActions';
 
-jest.mock('../modules/ratingActions');
+vi.mock('../modules/ratingActions');
 
 describe('RatingsPage', () => {
   let contests;

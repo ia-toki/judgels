@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
@@ -10,7 +11,7 @@ describe('ContestSupervisorAddDialog', () => {
   let onUpsertSupervisors;
 
   beforeEach(() => {
-    onUpsertSupervisors = jest
+    onUpsertSupervisors = vi
       .fn()
       .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
 

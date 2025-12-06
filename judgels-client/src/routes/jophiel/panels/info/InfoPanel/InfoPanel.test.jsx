@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { InfoPanel } from './InfoPanel';
 
@@ -9,7 +10,7 @@ describe('InfoPanel', () => {
   let onUpdateInfo;
 
   beforeEach(() => {
-    onUpdateInfo = jest.fn().mockReturnValue({ type: 'mock-update', then: fn => fn() });
+    onUpdateInfo = vi.fn().mockReturnValue({ type: 'mock-update', then: fn => fn() });
 
     const info = {
       name: 'My Name',

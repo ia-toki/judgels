@@ -3,13 +3,14 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestContestantsPage from './ContestContestantsPage';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
-jest.mock('../../modules/contestContestantActions');
+vi.mock('../../modules/contestContestantActions');
 
 describe('ContestContestantsPage', () => {
   let contestants;

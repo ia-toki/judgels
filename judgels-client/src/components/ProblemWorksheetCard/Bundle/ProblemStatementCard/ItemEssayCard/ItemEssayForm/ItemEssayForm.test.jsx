@@ -1,19 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
 import { AnswerState } from '../../../itemStatement';
 import ItemEssayForm from './ItemEssayForm';
 
 describe('ItemEssayForm', () => {
-  const onSubmitFn = jest.fn(() => Promise.resolve(true));
+  const onSubmitFn = vi.fn(() => Promise.resolve(true));
   const itemConfig = {
     statement: 'statement',
     score: 100,
   };
 
   beforeEach(() => {
-    window.confirm = jest.fn(() => true);
+    window.confirm = vi.fn(() => true);
   });
 
   describe('not answered yet', () => {
@@ -156,7 +157,7 @@ describe('ItemEssayForm', () => {
       config: itemConfig,
       disabled: true,
       initialAnswer: 'initial',
-      onSubmit: jest.fn().mockReturnValue(undefined),
+      onSubmit: vi.fn().mockReturnValue(undefined),
       answerState: AnswerState.AnswerSaved,
     };
 

@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
@@ -18,9 +19,9 @@ import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
-jest.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
-jest.mock('../../../modules/contestProblemActions');
-jest.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
+vi.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
+vi.mock('../../../modules/contestProblemActions');
+vi.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
   let history;

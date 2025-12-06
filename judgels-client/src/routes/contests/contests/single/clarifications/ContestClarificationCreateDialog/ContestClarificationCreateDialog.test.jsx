@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
@@ -9,7 +10,7 @@ describe('ContestClarificationCreateDialog', () => {
   let onCreateClarification;
 
   beforeEach(() => {
-    onCreateClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onCreateClarification = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createMockStore()({});
 

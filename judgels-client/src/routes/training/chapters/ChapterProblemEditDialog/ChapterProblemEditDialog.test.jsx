@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import { ChapterProblemEditDialog } from './ChapterProblemEditDialog';
@@ -33,15 +34,15 @@ describe('ChapterProblemEditDialog', () => {
   };
 
   beforeEach(async () => {
-    onGetProblems = jest.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap }));
-    onSetProblems = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onGetProblems = vi.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap }));
+    onSetProblems = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
       chapter,
-      onCloseDialog: jest.fn(),
+      onCloseDialog: vi.fn(),
       onGetProblems,
       onSetProblems,
     };

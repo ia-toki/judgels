@@ -5,6 +5,7 @@ import { stringify } from 'query-string';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import SearchBox from './SearchBox';
 
@@ -40,7 +41,7 @@ describe('SearchBox', () => {
 
   describe('when onSubmit is invoked by enter key or button press', () => {
     beforeEach(() => {
-      onRouteChange = jest.fn().mockReturnValue({ key: 'judgels' });
+      onRouteChange = vi.fn().mockReturnValue({ key: 'judgels' });
     });
 
     it('updates the query string', async () => {

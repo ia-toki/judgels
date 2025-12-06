@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { CourseEditDialog } from './CourseEditDialog';
 
@@ -17,14 +18,14 @@ describe('CourseEditDialog', () => {
   let onUpdateCourse;
 
   beforeEach(() => {
-    onUpdateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onUpdateCourse = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 
     const props = {
       isOpen: true,
       course,
-      onCloseDialog: jest.fn(),
+      onCloseDialog: vi.fn(),
       onUpdateCourse,
     };
     render(

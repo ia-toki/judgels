@@ -3,12 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import ForgotPasswordPage from './ForgotPasswordPage';
 
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
-jest.mock('../modules/forgotPasswordActions');
+vi.mock('../modules/forgotPasswordActions');
 
 describe('ForgotPasswordPage', () => {
   beforeEach(() => {

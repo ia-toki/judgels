@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
@@ -12,7 +13,7 @@ import ContestScoreboardPage from './ContestScoreboardPage';
 
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
-jest.mock('../modules/contestScoreboardActions');
+vi.mock('../modules/contestScoreboardActions');
 
 describe('ContestScoreboardPage', () => {
   let scoreboard;

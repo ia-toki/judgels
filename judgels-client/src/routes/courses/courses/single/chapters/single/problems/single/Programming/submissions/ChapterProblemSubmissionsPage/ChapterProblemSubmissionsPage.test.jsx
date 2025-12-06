@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import sessionReducer, { PutUser } from '../../../../../../../../../../../modules/session/sessionReducer';
 import courseReducer, { PutCourse } from '../../../../../../../../modules/courseReducer';
@@ -11,7 +12,7 @@ import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
-jest.mock('../modules/chapterProblemSubmissionActions');
+vi.mock('../modules/chapterProblemSubmissionActions');
 
 describe('ChapterProblemSubmissionsPage', () => {
   let submissions;

@@ -4,12 +4,13 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import RegisterPage from './RegisterPage';
 
 import * as registerActions from '../modules/registerActions';
 
-jest.mock('../modules/registerActions');
+vi.mock('../modules/registerActions');
 
 describe('RegisterPage', () => {
   beforeEach(async () => {

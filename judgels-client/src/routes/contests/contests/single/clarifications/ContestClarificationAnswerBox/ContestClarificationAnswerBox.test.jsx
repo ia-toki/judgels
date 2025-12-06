@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
@@ -9,7 +10,7 @@ describe('ContestClarificationAnswerBox', () => {
   let onAnswerClarification;
 
   beforeEach(() => {
-    onAnswerClarification = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onAnswerClarification = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = createMockStore()({});
 

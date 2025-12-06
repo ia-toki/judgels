@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { ProblemSubmissionCard } from './ProblemSubmissionCard';
 
@@ -44,7 +45,7 @@ describe('ProblemSubmissionCard', () => {
     gradingEngine = 'Batch';
     preferredGradingLanguage = 'Cpp11';
     gradingLanguageRestriction = { allowedLanguageNames: [] };
-    onSubmit = jest.fn();
+    onSubmit = vi.fn();
     reasonNotAllowedToSubmit = undefined;
     submissionWarning = 'Submission Warning';
   });

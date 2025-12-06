@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import { vi } from 'vitest';
 
 import { CourseCreateDialog } from './CourseCreateDialog';
 
@@ -9,7 +10,7 @@ describe('CourseCreateDialog', () => {
   let onGetCourseConfig;
   let onCreateCourse;
   beforeEach(() => {
-    onCreateCourse = jest.fn().mockReturnValue(() => Promise.resolve({}));
+    onCreateCourse = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
 

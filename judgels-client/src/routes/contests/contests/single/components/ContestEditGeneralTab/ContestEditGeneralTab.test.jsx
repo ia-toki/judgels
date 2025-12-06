@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { parseDateTime } from '../../../../../../utils/datetime';
@@ -13,8 +14,8 @@ import ContestEditGeneralTab from './ContestEditGeneralTab';
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-jest.mock('../../../modules/contestActions');
-jest.mock('../../modules/contestWebActions');
+vi.mock('../../../modules/contestActions');
+vi.mock('../../modules/contestWebActions');
 
 describe('ContestEditGeneralTab', () => {
   beforeEach(() => {

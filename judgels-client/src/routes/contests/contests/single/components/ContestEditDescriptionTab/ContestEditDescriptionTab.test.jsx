@@ -3,13 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 
 import * as contestActions from '../../../modules/contestActions';
 
-jest.mock('../../../modules/contestActions');
+vi.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
   beforeEach(async () => {

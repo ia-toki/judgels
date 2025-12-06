@@ -1,6 +1,7 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
+import { vi } from 'vitest';
 
 import { IoiScoreboardTable } from './IoiScoreboardTable';
 
@@ -91,7 +92,7 @@ describe('IoiScoreboardTable', () => {
 
   describe('clicking a submission cell', () => {
     describe('when onClickSubmissionCell is passed', () => {
-      const onClickSubmissionCell = jest.fn();
+      const onClickSubmissionCell = vi.fn();
 
       beforeEach(() => {
         cleanup();
