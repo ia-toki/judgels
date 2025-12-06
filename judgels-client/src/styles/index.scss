@@ -1,12 +1,12 @@
-@import '../../node_modules/reset-css/reset.css';
-@import '../../node_modules/normalize.css/normalize.css';
-@import '../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
-@import '../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
-@import '../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
+@use '../../node_modules/reset-css/reset.css';
+@use '../../node_modules/normalize.css/normalize.css';
+@use '../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
+@use '../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
+@use '../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
 
-@import './base';
-@import './table';
-@import './ratings';
+@use './base' as *;
+@use './table';
+@use './ratings';
 
 body {
   font-family: $primary-font;

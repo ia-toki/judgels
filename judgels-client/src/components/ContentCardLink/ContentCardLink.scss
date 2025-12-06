@@ -1,4 +1,4 @@
-@import '../../styles/base';
+@use '../../styles/base' as *;
 
 .content-card.content-card-link {
   color: inherit !important;

@@ -1,4 +1,4 @@
-@import '../../styles/variables/colors';
+@use '../../styles/variables/colors' as *;
 
 .content-card {
   padding: 15px;
