@@ -1,5 +1,5 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
-import { Download, Lock } from '@blueprintjs/icons';
+import { Clipboard, Download, Lock } from '@blueprintjs/icons';
 import { Link } from 'react-router-dom';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
@@ -10,6 +10,7 @@ import {
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
 import { constructProblemName } from '../../../modules/api/sandalphon/problem';
+import { copyTextToClipboard, isClipboardWriteTextSupported } from '../../../modules/clipboard/clipboard.js';
 import { decodeBase64 } from '../../../utils/base64';
 import { ContentCard } from '../../ContentCard/ContentCard';
 import { FormattedDate } from '../../FormattedDate/FormattedDate';
@@ -387,13 +388,36 @@ export function SubmissionDetails({
     const { details, verdict } = grading;
     const { submissionFiles } = source;
 
+    const renderSourceFileHeading = key => {
+      if (!isClipboardWriteTextSupported()) {
+        return (
+          !hideSourceFilename && (
+            <h5>
+              {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+            </h5>
+          )
+        );
+      }
+
+      const onCopy = () => copyTextToClipboard(decodeBase64(submissionFiles[key].content));
+      return (
+        <div>
+          {!hideSourceFilename && (
+            <h5 className="source-filename">
+              {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
+            </h5>
+          )}
+          <Button small className="source-copy" icon={<Clipboard />} onClick={onCopy}>
+            Copy
+          </Button>
+          <div className="clearfix" />
+        </div>
+      );
+    };
+
     const sourceFiles = Object.keys(submissionFiles).map(key => (
       <ContentCard key={key}>
-        {!hideSourceFilename && (
-          <h5>
-            {key === DEFAULT_SOURCE_KEY ? '' : key + ': '} {submissionFiles[key].name}
-          </h5>
-        )}
+        {renderSourceFileHeading(key)}
         <SourceCode language={getGradingLanguageSyntaxHighlighterValue(gradingLanguage)}>
           {decodeBase64(submissionFiles[key].content)}
         </SourceCode>
