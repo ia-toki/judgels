@@ -1,9 +1,9 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
 import SingleCourseChapterRoutes from './SingleCourseChapterRoutes';
 
-function MainSingleCourseChapterRoutes() {
+export default function MainSingleCourseChapterRoutes() {
   return (
     <>
       <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={SingleCourseChapterDataRoute} />
@@ -11,5 +11,3 @@ function MainSingleCourseChapterRoutes() {
     </>
   );
 }
-
-export default withRouter(MainSingleCourseChapterRoutes);

@@ -1,9 +1,9 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import ContestProblemsPage from './ContestProblemsPage/ContestProblemsPage';
 import ContestProblemPage from './single/ContestProblemPage/ContestProblemPage';
 
-function ContestProblemRoutes() {
+export default function ContestProblemRoutes() {
   return (
     <div>
       <Route exact path="/contests/:contestSlug/problems" component={ContestProblemsPage} />
@@ -11,5 +11,3 @@ function ContestProblemRoutes() {
     </div>
   );
 }
-
-export default withRouter(ContestProblemRoutes);

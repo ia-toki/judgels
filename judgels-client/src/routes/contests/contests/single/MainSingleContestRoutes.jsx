@@ -1,9 +1,9 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import SingleContestDataRoute from './SingleContestDataRoute';
 import SingleContestRoutes from './SingleContestRoutes';
 
-function MainSingleContestRoutes() {
+export default function MainSingleContestRoutes() {
   return (
     <div>
       <Route path="/contests/:contestSlug" component={SingleContestDataRoute} />
@@ -11,5 +11,3 @@ function MainSingleContestRoutes() {
     </div>
   );
 }
-
-export default withRouter(MainSingleContestRoutes);

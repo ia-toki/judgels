@@ -1,9 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
-import { push } from 'connected-react-router';
-import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Route } from 'react-router';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
@@ -18,19 +17,19 @@ import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
 
 import './SingleProblemSetProblemRoutes.scss';
 
-function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack }) {
+export default function SingleProblemSetProblemRoutes() {
+  const { problemSetSlug, problemAlias } = useParams();
+  const history = useHistory();
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+
   const clickBack = () => {
-    return onClickBack(problemSet.slug);
+    history.push(`/problems/${problemSet.slug}`);
   };
 
   // Optimization:
   // We wait until we get the problem from the backend only if the current problem is different from the persisted one.
-  if (
-    !problemSet ||
-    !problem ||
-    problemSet.slug !== match.params.problemSetSlug ||
-    problem.alias !== match.params.problemAlias
-  ) {
+  if (!problemSet || !problem || problemSet.slug !== problemSetSlug || problem.alias !== problemAlias) {
     return <LoadingState large />;
   }
 
@@ -96,14 +95,3 @@ function SingleProblemSetProblemRoutes({ match, problemSet, problem, onClickBack
     </FullPageLayout>
   );
 }
-
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  problem: selectProblemSetProblem(state),
-});
-
-const mapDispatchToProps = {
-  onClickBack: problemSetSlug => push(`/problems/${problemSetSlug}`),
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetProblemRoutes));

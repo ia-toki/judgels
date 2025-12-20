@@ -1,11 +1,9 @@
 import { Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { push, replace } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import './Pagination.scss';
 
@@ -73,44 +71,37 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
   );
 }
 
-class PaginationContainer extends Component {
-  state = {
+export default function PaginationContainer({ pageSize, onChangePage }) {
+  const location = useLocation();
+  const history = useHistory();
+
+  const [state, setState] = useState({
     currentPage: undefined,
     totalCount: 0,
-  };
+  });
 
-  componentDidMount() {
-    this.refreshPagination();
-  }
+  const queries = parse(location.search);
 
-  componentDidUpdate(prevProps) {
-    const queries = parse(this.props.location.search);
-    const prevQueries = parse(prevProps.location.search);
+  useEffect(() => {
+    refreshPagination();
+  }, [queries.page]);
 
-    if (queries.page !== prevQueries.page) {
-      this.refreshPagination();
-    }
-  }
-
-  render() {
-    const { currentPage, totalCount } = this.state;
+  const render = () => {
+    const { currentPage, totalCount } = state;
     if (!currentPage) {
       return null;
     }
-
-    const { pageSize } = this.props;
 
     const props = {
       currentPage,
       pageSize,
       totalCount,
-      onChangePage: this.onChangePage,
+      onChangePage: handleChangePage,
     };
     return <Pagination {...props} />;
-  }
+  };
 
-  onChangePage = async nextPage => {
-    const { location, onPush, onReplace } = this.props;
+  const handleChangePage = async nextPage => {
     const queries = parse(location.search);
 
     let query = '';
@@ -121,14 +112,13 @@ class PaginationContainer extends Component {
     }
 
     if (!queries.page && nextPage === 1) {
-      return onReplace({ search: query });
+      history.replace({ search: query });
     } else {
-      return onPush({ search: query });
+      history.push({ search: query });
     }
   };
 
-  refreshPagination = async () => {
-    const { location, onChangePage } = this.props;
+  const refreshPagination = async () => {
     const queries = parse(location.search);
 
     let currentPage = 1;
@@ -138,12 +128,8 @@ class PaginationContainer extends Component {
     }
 
     const totalCount = await onChangePage(currentPage);
-    this.setState({ currentPage, totalCount });
+    setState({ currentPage, totalCount });
   };
-}
 
-const mapDispatchToProps = {
-  onPush: push,
-  onReplace: replace,
-};
-export default withRouter(connect(undefined, mapDispatchToProps)(PaginationContainer));
+  return render();
+}

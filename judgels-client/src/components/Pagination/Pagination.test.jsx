@@ -1,36 +1,41 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { push } from 'connected-react-router';
 import { stringify } from 'query-string';
-import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import Pagination from './Pagination';
 
 describe('Pagination', () => {
-  let store;
   let onChangePage;
+  let testLocation;
+
+  const LocationTracker = () => {
+    const location = require('react-router-dom').useLocation();
+    testLocation = location;
+    return null;
+  };
 
   const renderComponent = pageQuery => {
     const props = {
       pageSize: 6,
       onChangePage,
     };
-    const component = () => <Pagination {...props} />;
+    const component = () => (
+      <>
+        <Pagination {...props} />
+        <LocationTracker />
+      </>
+    );
 
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/component' + pageQuery]}>
-          <Route path="/component" component={component} />
-        </MemoryRouter>
-      </Provider>
+      <MemoryRouter initialEntries={['/component' + pageQuery]}>
+        <Route path="/component" component={component} />
+      </MemoryRouter>
     );
   };
 
   beforeEach(() => {
-    store = createMockStore()({});
     onChangePage = vi.fn().mockReturnValue(Promise.resolve(14));
   });
 
@@ -99,7 +104,7 @@ describe('Pagination', () => {
         if (page1Button) {
           await user.click(page1Button);
           await waitFor(() => {
-            expect(store.getActions()).toContainEqual(push({ search: '' }));
+            expect(testLocation.search).toBe('');
           });
         }
       });
@@ -116,7 +121,7 @@ describe('Pagination', () => {
           await user.click(page3Button);
           await waitFor(() => {
             const query = stringify({ page: 3 });
-            expect(store.getActions()).toContainEqual(push({ search: query }));
+            expect(testLocation.search).toBe('?' + query);
           });
         }
       });

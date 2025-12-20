@@ -1,7 +1,7 @@
 import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
@@ -13,70 +13,75 @@ import * as problemSetProblemActions from '../../modules/problemSetProblemAction
 
 import './ProblemEditorialDialog.scss';
 
-export class ProblemEditorialDialog extends Component {
-  state = {
+export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
+  const { problemAlias } = useParams();
+  const dispatch = useDispatch();
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+  const editorialLanguage = useSelector(selectEditorialLanguage);
+
+  const [state, setState] = useState({
     isDialogOpen: false,
     response: undefined,
+  });
+
+  const loadEditorial = async () => {
+    setState(prevState => ({ ...prevState, response: undefined }));
+
+    const response = await dispatch(
+      problemSetProblemActions.getProblemEditorial(problemSet.jid, problemAlias, editorialLanguage)
+    );
+
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.editorialLanguage !== prevProps.editorialLanguage &&
-      (prevState.response || !prevState.isDialogOpen)
-    ) {
-      this.setState({ response: undefined });
-    } else if (!this.state.response && (prevState.response || !prevState.isDialogOpen)) {
-      const response = await this.props.onGetProblemEditorial(
-        this.props.problemSet.jid,
-        this.props.match.params.problemAlias,
-        this.props.editorialLanguage
-      );
-      this.setState({ response });
+  useEffect(() => {
+    if (state.isDialogOpen) {
+      loadEditorial();
     }
-  }
+  }, [editorialLanguage, state.isDialogOpen]);
 
-  render() {
+  const render = () => {
     return (
       <div>
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
       <Button
         className="problem-editorial-dialog-button"
         intent={Intent.WARNING}
         small
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         View editorial
       </Button>
     );
   };
 
-  renderDialog = () => {
-    const { isDialogOpen } = this.state;
+  const renderDialog = () => {
+    const { isDialogOpen } = state;
     return (
-      <Dialog className="problem-editorial-dialog" isOpen={isDialogOpen} onClose={this.toggleDialog} title="Editorial">
+      <Dialog className="problem-editorial-dialog" isOpen={isDialogOpen} onClose={toggleDialog} title="Editorial">
         <div className={Classes.DIALOG_BODY}>
-          {this.renderEditorialLanguageWidget()}
-          <Card className="problem-editorial-card">{this.renderEditorial()}</Card>
+          {renderEditorialLanguageWidget()}
+          <Card className="problem-editorial-card">{renderEditorial()}</Card>
         </div>
       </Dialog>
     );
   };
 
-  renderEditorial = () => {
-    const { response } = this.state;
+  const renderEditorial = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
     const { editorial } = response;
-    const { problemSet, problem, settersMap, profilesMap } = this.props;
 
     return (
       <ProblemEditorial
@@ -90,12 +95,12 @@ export class ProblemEditorialDialog extends Component {
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderEditorialLanguageWidget = () => {
-    const { response } = this.state;
+  const renderEditorialLanguageWidget = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -113,14 +118,6 @@ export class ProblemEditorialDialog extends Component {
       </div>
     );
   };
-}
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  problem: selectProblemSetProblem(state),
-  editorialLanguage: selectEditorialLanguage(state),
-});
-const mapDispatchToProps = {
-  onGetProblemEditorial: problemSetProblemActions.getProblemEditorial,
-};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemEditorialDialog));
+  return render();
+}

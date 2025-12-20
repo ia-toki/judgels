@@ -1,7 +1,6 @@
-import { replace } from 'connected-react-router';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -14,76 +13,84 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 
 import './ChapterProblemStatementPage.scss';
 
-export class ChapterProblemStatementPage extends Component {
-  state = {
-    latestSubmissions: undefined,
-  };
+export default function ChapterProblemStatementPage(props) {
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const chapter = useSelector(selectCourseChapter);
 
-  async componentDidMount() {
-    if (!this.isInSubmissionsPath()) {
-      const { progress } = this.props.worksheet;
+  const [state, setState] = useState({
+    latestSubmissions: undefined,
+  });
+
+  const loadLatestSubmissions = async () => {
+    if (!isInSubmissionsPath()) {
+      const { progress } = props.worksheet;
       if (progress && progress.verdict !== VerdictCode.PND) {
-        const resultsUrl = (this.props.location.pathname + '/submissions').replace('//', '/');
-        this.props.onReplace(resultsUrl);
+        const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
+        history.replace(resultsUrl);
       }
     }
 
-    const latestSubmissions = await this.props.onGetLatestSubmissions(
-      this.props.chapter.jid,
-      this.props.worksheet.problem.alias
+    const latestSubmissions = await dispatch(
+      chapterProblemSubmissionActions.getLatestSubmissions(chapter.jid, props.worksheet.problem.alias)
     );
-    this.setState({
+    setState({
       latestSubmissions,
     });
-  }
+  };
 
-  render() {
+  useEffect(() => {
+    loadLatestSubmissions();
+  }, []);
+
+  const render = () => {
     return (
       <ContentCard className="chapter-bundle-problem-statement-page">
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
+        {renderStatementLanguageWidget()}
+        {renderStatement()}
       </ContentCard>
     );
-  }
+  };
 
-  renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = this.props.worksheet;
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = props.worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props = {
+    const widgetProps = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
     return (
       <div className="language-widget-wrapper">
-        <StatementLanguageWidget {...props} />
+        <StatementLanguageWidget {...widgetProps} />
       </div>
     );
   };
 
-  renderStatement = () => {
-    const { problem, worksheet } = this.props.worksheet;
+  const renderStatement = () => {
+    const { problem, worksheet } = props.worksheet;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
-    const { latestSubmissions } = this.state;
+    const { latestSubmissions } = state;
     if (!latestSubmissions) {
       return <LoadingState />;
     }
 
-    const reasonNotAllowedToSubmit = this.isInSubmissionsPath()
+    const reasonNotAllowedToSubmit = isInSubmissionsPath()
       ? 'Submission received.'
       : worksheet.reasonNotAllowedToSubmit;
 
-    const resultsUrl = (this.props.location.pathname + '/submissions').replace('//', '/');
+    const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
 
     return (
       <ProblemWorksheetCard
         alias={problem.alias}
         latestSubmissions={latestSubmissions}
-        onAnswerItem={this.createSubmission}
+        onAnswerItem={createSubmission}
         worksheet={{ ...worksheet, reasonNotAllowedToSubmit }}
         showTitle={false}
         resultsUrl={resultsUrl}
@@ -91,23 +98,16 @@ export class ChapterProblemStatementPage extends Component {
     );
   };
 
-  createSubmission = async (itemJid, answer) => {
-    const { problem } = this.props.worksheet;
-    return await this.props.onCreateSubmission(this.props.chapter.jid, problem.problemJid, itemJid, answer);
+  const createSubmission = async (itemJid, answer) => {
+    const { problem } = props.worksheet;
+    return await dispatch(
+      chapterProblemSubmissionActions.createItemSubmission(chapter.jid, problem.problemJid, itemJid, answer)
+    );
   };
 
-  isInSubmissionsPath = () => {
-    return (this.props.location.pathname + '/').includes('/submissions/');
+  const isInSubmissionsPath = () => {
+    return (location.pathname + '/').includes('/submissions/');
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  chapter: selectCourseChapter(state),
-});
-const mapDispatchToProps = {
-  onCreateSubmission: chapterProblemSubmissionActions.createItemSubmission,
-  onGetLatestSubmissions: chapterProblemSubmissionActions.getLatestSubmissions,
-  onReplace: replace,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemStatementPage));

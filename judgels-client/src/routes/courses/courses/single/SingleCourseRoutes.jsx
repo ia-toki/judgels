@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -10,10 +10,13 @@ import SingleCourseContentRoutes from './SingleCourseContentRoutes';
 
 import './SingleCourseRoutes.scss';
 
-function SingleCourseRoutes({ match, course }) {
+export default function SingleCourseRoutes() {
+  const { courseSlug } = useParams();
+  const course = useSelector(selectCourse);
+
   // Optimization:
   // We wait until we get the course from the backend only if the current slug is different from the persisted one.
-  if (!course || course.slug !== match.params.courseSlug) {
+  if (!course || course.slug !== courseSlug) {
     return <LoadingState large />;
   }
 
@@ -27,9 +30,3 @@ function SingleCourseRoutes({ match, course }) {
     </FullWidthPageLayout>
   );
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-});
-
-export default withRouter(connect(mapStateToProps)(SingleCourseRoutes));

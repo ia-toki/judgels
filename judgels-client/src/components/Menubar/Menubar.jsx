@@ -1,10 +1,12 @@
 import { Tab, Tabs } from '@blueprintjs/core';
-import { withRouter } from 'react-router';
-import { Link, matchPath } from 'react-router-dom';
+import { Link, matchPath, useLocation, useRouteMatch } from 'react-router-dom';
 
 import './Menubar.scss';
 
-function Menubar({ match, location, items, homeRoute }) {
+export default function Menubar({ items, homeRoute }) {
+  const match = useRouteMatch();
+  const location = useLocation();
+
   const getActiveItemId = () => {
     const relativePath = match.path === '/' ? location.pathname : location.pathname.slice(match.path.length);
     const matchingItem = items.find(item => matchPath(relativePath, item.route) !== null);
@@ -51,5 +53,3 @@ function Menubar({ match, location, items, homeRoute }) {
     </div>
   );
 }
-
-export default withRouter(Menubar);

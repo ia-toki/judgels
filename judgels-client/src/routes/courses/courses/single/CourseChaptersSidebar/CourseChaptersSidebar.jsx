@@ -1,9 +1,9 @@
 import { Popover, Position } from '@blueprintjs/core';
 import { Menu } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useRouteMatch } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
@@ -16,49 +16,49 @@ import * as courseChapterActions from '../chapters/modules/courseChapterActions'
 
 import './CourseChaptersSidebar.scss';
 
-class CourseChaptersSidebar extends Component {
-  state = {
+export default function CourseChaptersSidebar() {
+  const location = useLocation();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const course = useSelector(selectCourse);
+  const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
+
+  const [state, setState] = useState({
     response: undefined,
     isResponsivePopoverOpen: false,
+  });
+
+  const refreshChapters = async () => {
+    const response = await dispatch(courseChapterActions.getChapters(course.jid));
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  async componentDidMount() {
-    await this.refreshChapters();
-  }
+  useEffect(() => {
+    refreshChapters();
+  }, [chapterProblemReloadKey]);
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.chapterProblemReloadKey !== prevProps.chapterProblemReloadKey) {
-      await this.refreshChapters();
-    }
-  }
-
-  refreshChapters = async () => {
-    const response = await this.props.onGetChapters(this.props.course.jid);
-    this.setState({ response });
-  };
-
-  render() {
+  const render = () => {
     return (
       <>
         <div
           className={classNames('course-chapters-sidebar', 'course-chapters-sidebar__full', {
-            'course-chapters-sidebar--compact': this.isInProblemPath(),
-            'course-chapters-sidebar--wide': !this.isInChaptersPath(),
+            'course-chapters-sidebar--compact': isInProblemPath(),
+            'course-chapters-sidebar--wide': !isInChaptersPath(),
           })}
         >
-          {this.renderChapters({ showName: !this.isInProblemPath() })}
+          {renderChapters({ showName: !isInProblemPath() })}
         </div>
 
         <div
           className={classNames('course-chapters-sidebar', 'course-chapters-sidebar__responsive', {
-            'course-chapters-sidebar--wide': !this.isInChaptersPath(),
+            'course-chapters-sidebar--wide': !isInChaptersPath(),
           })}
         >
           <Popover
-            content={this.renderChapters({ showName: true })}
+            content={renderChapters({ showName: true })}
             position={Position.BOTTOM_LEFT}
-            isOpen={this.state.isResponsivePopoverOpen}
-            onInteraction={this.onResponsivePopoverInteraction}
+            isOpen={state.isResponsivePopoverOpen}
+            onInteraction={onResponsivePopoverInteraction}
             usePortal={false}
           >
             <p>
@@ -69,36 +69,37 @@ class CourseChaptersSidebar extends Component {
         </div>
       </>
     );
-  }
+  };
 
-  renderChapters = ({ showName }) => {
-    const { course, match, onPutCourseChapter } = this.props;
-    const { response } = this.state;
+  const renderChapters = ({ showName }) => {
+    const { response } = state;
     if (!course || !response) {
       return null;
     }
 
     const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
-
-    const firstUnsolvedChapterIndex = this.getFirstUnsolvedChapterIndex(courseChapters, chapterProgressesMap);
+    const firstUnsolvedChapterIndex = getFirstUnsolvedChapterIndex(courseChapters, chapterProgressesMap);
 
     return courseChapters.map((courseChapter, idx) => (
       <Link
+        key={courseChapter.alias}
         className={classNames('course-chapters-sidebar__item', {
-          'course-chapters-sidebar__item--selected': this.isInChapterPath(courseChapter.alias),
+          'course-chapters-sidebar__item--selected': isInChapterPath(courseChapter.alias),
           'course-chapters-sidebar__item--future': idx > firstUnsolvedChapterIndex,
         })}
         to={`${match.url}/chapters/${courseChapter.alias}`}
         onClick={() => {
-          onPutCourseChapter({
-            jid: courseChapter.chapterJid,
-            name: chaptersMap[courseChapter.chapterJid].name,
-            alias: courseChapter.alias,
-            courseSlug: course.slug,
-          });
+          dispatch(
+            PutCourseChapter({
+              jid: courseChapter.chapterJid,
+              name: chaptersMap[courseChapter.chapterJid].name,
+              alias: courseChapter.alias,
+              courseSlug: course.slug,
+            })
+          );
 
-          if (this.state.isResponsivePopoverOpen) {
-            this.onResponsiveItemClick();
+          if (state.isResponsivePopoverOpen) {
+            onResponsiveItemClick();
           }
         }}
       >
@@ -106,27 +107,25 @@ class CourseChaptersSidebar extends Component {
           {courseChapter.alias}
           {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
           &nbsp;&nbsp;
-          {this.renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
+          {renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
         </div>
       </Link>
     ));
   };
 
-  isInChaptersPath = () => {
-    return this.props.location.pathname.includes('/chapters/');
+  const isInChaptersPath = () => {
+    return location.pathname.includes('/chapters/');
   };
 
-  isInChapterPath = chapterAlias => {
-    return (this.props.location.pathname + '/')
-      .replace('//', '/')
-      .startsWith(this.props.match.url + '/chapters/' + chapterAlias);
+  const isInChapterPath = chapterAlias => {
+    return (location.pathname + '/').replace('//', '/').startsWith(match.url + '/chapters/' + chapterAlias);
   };
 
-  isInProblemPath = () => {
-    return this.props.location.pathname.includes('/problems/');
+  const isInProblemPath = () => {
+    return location.pathname.includes('/problems/');
   };
 
-  renderProgress = progress => {
+  const renderProgress = progress => {
     if (!progress || progress.totalProblems === 0) {
       return null;
     }
@@ -139,14 +138,13 @@ class CourseChaptersSidebar extends Component {
     );
   };
 
-  renderProgressBar = progress => {
+  const renderProgressBar = progress => {
     if (!progress) {
       return null;
     }
     return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
   };
-
-  getFirstUnsolvedChapterIndex = (courseChapters, chapterProgressesMap) => {
+  const getFirstUnsolvedChapterIndex = (courseChapters, chapterProgressesMap) => {
     for (let i = courseChapters.length - 1; i >= 0; i--) {
       const progress = chapterProgressesMap[courseChapters[i].chapterJid];
       if (!progress) {
@@ -173,25 +171,15 @@ class CourseChaptersSidebar extends Component {
     return 0;
   };
 
-  onResponsivePopoverInteraction = state => {
-    this.setState({ isResponsivePopoverOpen: state });
+  const onResponsivePopoverInteraction = state => {
+    setState(prevState => ({ ...prevState, isResponsivePopoverOpen: state }));
   };
 
-  onResponsiveItemClick = () => {
+  const onResponsiveItemClick = () => {
     setTimeout(() => {
-      this.setState({ isResponsivePopoverOpen: false });
+      setState(prevState => ({ ...prevState, isResponsivePopoverOpen: false }));
     }, 200);
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapterProblemReloadKey: selectChapterProblemReloadKey(state),
-});
-
-const mapDispatchToProps = {
-  onGetChapters: courseChapterActions.getChapters,
-  onPutCourseChapter: PutCourseChapter,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CourseChaptersSidebar));

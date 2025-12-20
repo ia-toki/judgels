@@ -1,10 +1,9 @@
 import { Checkbox } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 
@@ -12,49 +11,58 @@ import * as problemActions from '../modules/problemActions';
 
 import './ProblemTagFilter.scss';
 
-class ProblemTagFilter extends Component {
-  state;
+export default function ProblemTagFilter() {
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const parseTags = queryTags => {
+    let tags = queryTags || [];
+    if (typeof tags === 'string') {
+      tags = [tags];
+    }
+    return tags;
+  };
 
-    const queries = parse(this.props.location.search);
-    const tags = this.parseTags(queries.tags);
+  const queries = parse(location.search);
+  const tags = parseTags(queries.tags);
 
-    this.state = {
-      tags,
-      response: undefined,
-    };
-  }
+  const [state, setState] = useState({
+    tags,
+    response: undefined,
+  });
 
-  async componentDidMount() {
-    const response = await this.props.onGetProblemTags();
+  const loadTags = async () => {
+    const response = await dispatch(problemActions.getProblemTags());
     const allTags = [].concat(response.data.map(c => c.options.map(opt => opt.value))).flat();
+    setState(prevState => ({ ...prevState, response, allTags }));
+  };
 
-    this.setState({ response, allTags });
-  }
+  useEffect(() => {
+    loadTags();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h4>Filter problem</h4>
         <hr />
-        {this.renderAvailableTags()}
+        {renderAvailableTags()}
       </ContentCard>
     );
-  }
+  };
 
-  renderAvailableTags = () => {
-    const { response } = this.state;
+  const renderAvailableTags = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
 
     const { data: problemTags } = response;
-    return problemTags.map(category => this.renderTagCategory(category));
+    return problemTags.map(category => renderTagCategory(category));
   };
 
-  renderTagCategory = ({ title, options }) => {
+  const renderTagCategory = ({ title, options }) => {
     return (
       <div key={title}>
         <h5 className="problem-tag-filter__category">{title}</h5>
@@ -63,44 +71,44 @@ class ProblemTagFilter extends Component {
             key={opt.value}
             name={opt.value}
             className={classNames('problem-tag-filter__option', {
-              'problem-tag-filter__option-child': this.isTagChild(opt.value),
+              'problem-tag-filter__option-child': isTagChild(opt.value),
             })}
-            label={this.getTagName(opt) + ' (' + opt.count + ')'}
-            checked={this.isTagSelected(opt.value)}
-            indeterminate={this.isTagChildSelected(opt.value)}
-            disabled={this.isTagParentSelected(opt.value)}
-            onChange={this.changeTag}
+            label={getTagName(opt) + ' (' + opt.count + ')'}
+            checked={isTagSelected(opt.value)}
+            indeterminate={isTagChildSelected(opt.value)}
+            disabled={isTagParentSelected(opt.value)}
+            onChange={changeTag}
           />
         ))}
       </div>
     );
   };
 
-  isTagSelected = tag => {
-    return this.state.tags.includes(tag);
+  const isTagSelected = tag => {
+    return state.tags.includes(tag);
   };
 
-  isTagParentSelected = tag => {
-    return this.state.tags.some(t => t !== tag && tag.startsWith(t));
+  const isTagParentSelected = tag => {
+    return state.tags.some(t => t !== tag && tag.startsWith(t));
   };
 
-  isTagChildSelected = tag => {
-    return this.state.tags.some(t => t !== tag && t.startsWith(tag));
+  const isTagChildSelected = tag => {
+    return state.tags.some(t => t !== tag && t.startsWith(tag));
   };
 
-  isTagChild = tag => {
+  const isTagChild = tag => {
     return tag.includes(': ');
   };
 
-  getTagName = opt => {
-    return this.isTagChild(opt.value) ? opt.label.split(': ')[1] : opt.label;
+  const getTagName = opt => {
+    return isTagChild(opt.value) ? opt.label.split(': ')[1] : opt.label;
   };
 
-  changeTag = e => {
+  const changeTag = e => {
     const tag = e.target.name;
     const checked = e.target.checked;
 
-    let tags = this.state.tags;
+    let tags = state.tags;
     if (checked) {
       tags = [...new Set([...tags, tag])]
         .filter(t => !(t !== tag && t.startsWith(tag)))
@@ -111,10 +119,10 @@ class ProblemTagFilter extends Component {
       tags = [...s];
     }
 
-    tags = this.sanitizeTags(tags);
+    tags = sanitizeTags(tags);
 
-    const queries = parse(this.props.location.search);
-    this.props.onPush({
+    const queries = parse(location.search);
+    history.push({
       search: stringify({
         ...queries,
         tags,
@@ -122,24 +130,12 @@ class ProblemTagFilter extends Component {
       }),
     });
 
-    this.setState({ tags });
+    setState(prevState => ({ ...prevState, tags }));
   };
 
-  parseTags = queryTags => {
-    let tags = queryTags || [];
-    if (typeof tags === 'string') {
-      tags = [tags];
-    }
-    return tags;
+  const sanitizeTags = tags => {
+    return tags.filter(t => state.allTags.includes(t));
   };
 
-  sanitizeTags = tags => {
-    return tags.filter(t => this.state.allTags.includes(t));
-  };
+  return render();
 }
-
-const mapDispatchToProps = {
-  onPush: push,
-  onGetProblemTags: problemActions.getProblemTags,
-};
-export default withRouter(connect(undefined, mapDispatchToProps)(ProblemTagFilter));

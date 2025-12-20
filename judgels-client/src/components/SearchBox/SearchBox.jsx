@@ -1,14 +1,16 @@
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import SearchBoxForm from './SearchBoxForm';
 
-function SearchBoxContainer({ location, onAppendRoute, onRouteChange, initialValue, isLoading }) {
+export default function SearchBoxContainer({ onRouteChange, initialValue, isLoading }) {
+  const location = useLocation();
+  const history = useHistory();
+
   const handleSubmit = ({ content }) => {
     const queries = parse(location.search);
-    onAppendRoute(onRouteChange(content, queries));
+    const newQueries = onRouteChange(content, queries);
+    history.push({ search: stringify(newQueries) });
   };
 
   const formProps = {
@@ -20,8 +22,3 @@ function SearchBoxContainer({ location, onAppendRoute, onRouteChange, initialVal
 
   return <SearchBoxForm onSubmit={handleSubmit} {...formProps} />;
 }
-
-const mapDispatchToProps = {
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-export default withRouter(connect(undefined, mapDispatchToProps)(SearchBoxContainer));

@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
@@ -10,16 +10,20 @@ import { selectContest } from '../../../../modules/contestSelectors';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-class SubmissionSummaryPage extends Component {
-  state = {
+export default function ContestSubmissionSummaryPage() {
+  const { username } = useParams();
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const language = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     config: undefined,
     profile: undefined,
     problemSummaries: [],
-  };
+  });
 
-  async refreshSubmissions() {
-    const { contest, onGetSubmissionSummary } = this.props;
-    const response = await onGetSubmissionSummary(contest.jid, this.props.match.params.username, this.props.language);
+  const refreshSubmissions = async () => {
+    const response = await dispatch(contestSubmissionActions.getSubmissionSummary(contest.jid, username, language));
 
     const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
@@ -29,18 +33,18 @@ class SubmissionSummaryPage extends Component {
       canViewGrading: response.config.canManage,
       canManage: response.config.canManage,
       itemTypesMap: response.itemTypesMap,
-      onRegrade: () => this.regrade(problemJid),
+      onRegrade: () => regrade(problemJid),
     }));
 
-    this.setState({ config: response.config, profile: response.profile, problemSummaries });
-  }
+    setState({ config: response.config, profile: response.profile, problemSummaries });
+  };
 
-  async componentDidMount() {
-    await this.refreshSubmissions();
-  }
+  useEffect(() => {
+    refreshSubmissions();
+  }, []);
 
-  render() {
-    if (!this.state.profile) {
+  const render = () => {
+    if (!state.profile) {
       return null;
     }
     return (
@@ -48,32 +52,22 @@ class SubmissionSummaryPage extends Component {
         <h3>Submissions</h3>
         <hr />
         <ContentCard>
-          Summary for <UserRef profile={this.state.profile} />
+          Summary for <UserRef profile={state.profile} />
         </ContentCard>
-        {this.state.problemSummaries.map(props => (
+        {problemSummaries.map(props => (
           <SubmissionDetails key={props.alias} {...props} />
         ))}
       </ContentCard>
     );
-  }
+  };
 
-  regrade = async problemJid => {
-    const { userJids } = this.state.config;
+  const regrade = async problemJid => {
+    const { userJids } = state.config;
     const userJid = userJids[0];
 
-    await this.props.onRegradeAll(this.props.contest.jid, userJid, problemJid);
-    await this.refreshSubmissions();
+    await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, userJid, problemJid));
+    await refreshSubmissions();
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  language: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionSummary: contestSubmissionActions.getSubmissionSummary,
-  onRegradeAll: contestSubmissionActions.regradeSubmissions,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionSummaryPage));

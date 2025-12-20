@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
@@ -15,13 +15,11 @@ export const ResetPasswordPage = ({ onResetPassword }) => (
   </SingleColumnLayout>
 );
 
-const ResetPasswordPageContainer = ({ match, onResetPassword }) => {
-  const resetPassword = data => onResetPassword(match.params.emailCode, data);
+export default function ResetPasswordPageContainer() {
+  const { emailCode } = useParams();
+  const dispatch = useDispatch();
+
+  const resetPassword = data => dispatch(resetPasswordActions.resetPassword(emailCode, data.password));
+
   return <ResetPasswordPage onResetPassword={resetPassword} />;
-};
-
-const mapDispatchToProps = {
-  onResetPassword: (emailCode, data) => resetPasswordActions.resetPassword(emailCode, data.password),
-};
-
-export default withRouter(connect(undefined, mapDispatchToProps)(ResetPasswordPageContainer));
+}

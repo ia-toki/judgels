@@ -1,9 +1,8 @@
 import { Switch } from '@blueprintjs/core';
-import { push } from 'connected-react-router';
 import { parse } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
@@ -20,66 +19,72 @@ import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTabl
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
-class ChapterProblemSubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
-  state = {
-    response: undefined,
-  };
+const PAGE_SIZE = 20;
 
-  render() {
+export default function ChapterProblemSubmissionsPage() {
+  const { problemAlias } = useParams();
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const userJid = useSelector(selectMaybeUserJid);
+  const username = useSelector(selectMaybeUsername);
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+
+  const [state, setState] = useState({
+    response: undefined,
+  });
+
+  const render = () => {
     return (
       <ContentCard>
-        {this.renderFilter()}
-        {this.renderHeader()}
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderFilter()}
+        {renderHeader()}
+        {renderSubmissions()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderHeader = () => {
+  const renderHeader = () => {
     return (
       <div className="content-card__header">
-        <div className="action-buttons float-left">{this.renderRegradeAllButton()}</div>
+        <div className="action-buttons float-left">{renderRegradeAllButton()}</div>
         <div className="clearfix" />
       </div>
     );
   };
 
-  renderFilter = () => {
+  const renderFilter = () => {
     return (
-      this.props.userJid && (
-        <Switch
-          label="Show all submissions"
-          checked={this.isFilterShowAllChecked()}
-          onChange={this.onChangeFilterShowAll}
-        />
+      userJid && (
+        <Switch label="Show all submissions" checked={isFilterShowAllChecked()} onChange={onChangeFilterShowAll} />
       )
     );
   };
 
-  isFilterShowAllChecked = () => {
-    return (this.props.location.pathname + '/').includes('/all/');
+  const isFilterShowAllChecked = () => {
+    return (location.pathname + '/').includes('/all/');
   };
 
-  onChangeFilterShowAll = ({ target }) => {
+  const onChangeFilterShowAll = ({ target }) => {
     if (target.checked) {
-      this.props.push((this.props.location.pathname + '/all').replace('//', '/'));
+      history.push((location.pathname + '/all').replace('//', '/'));
     } else {
-      const idx = this.props.location.pathname.lastIndexOf('/all');
-      this.props.push(this.props.location.pathname.substr(0, idx));
+      const idx = location.pathname.lastIndexOf('/all');
+      history.push(location.pathname.substr(0, idx));
     }
   };
 
-  renderRegradeAllButton = () => {
-    if (!this.state.response || !this.state.response.config.canManage) {
+  const renderRegradeAllButton = () => {
+    if (!state.response || !state.response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={this.onRegradeSubmissions} />;
+    return <RegradeAllButton onRegradeAll={onRegradeSubmissions} />;
   };
 
-  renderSubmissions = () => {
-    const { response } = this.state;
+  const renderSubmissions = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -95,63 +100,49 @@ class ChapterProblemSubmissionsPage extends Component {
 
     return (
       <ChapterProblemSubmissionsTable
-        course={this.props.course}
-        chapter={this.props.chapter}
-        problemAlias={this.props.match.params.problemAlias}
+        course={course}
+        chapter={chapter}
+        problemAlias={problemAlias}
         submissions={submissions.page}
         canManage={config.canManage}
         profilesMap={profilesMap}
-        onRegrade={this.onRegradeSubmission}
+        onRegrade={onRegradeSubmission}
       />
     );
   };
 
-  renderPagination = () => {
-    const key = '' + this.isFilterShowAllChecked();
-    return <Pagination key={key} pageSize={ChapterProblemSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    const key = '' + isFilterShowAllChecked();
+    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshSubmissions(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  refreshSubmissions = async page => {
-    const username = this.isFilterShowAllChecked() ? undefined : this.props.username;
-    const problemAlias = this.props.match.params.problemAlias;
-    const response = await this.props.onGetSubmissions(this.props.chapter.jid, problemAlias, username, page);
-    this.setState({ response });
+  const refreshSubmissions = async page => {
+    const usernameFilter = isFilterShowAllChecked() ? undefined : username;
+    const response = await dispatch(
+      chapterProblemSubmissionActions.getSubmissions(chapter.jid, problemAlias, usernameFilter, page)
+    );
+    setState({ response });
     return response.data;
   };
 
-  onRegradeSubmission = async submissionJid => {
-    await this.props.onRegradeSubmission(submissionJid);
-    const queries = parse(this.props.location.search);
-    await this.refreshSubmissions(queries.page);
+  const onRegradeSubmission = async submissionJid => {
+    await dispatch(chapterProblemSubmissionActions.regradeSubmission(submissionJid));
+    const queries = parse(location.search);
+    await refreshSubmissions(queries.page);
   };
 
-  onRegradeSubmissions = async () => {
+  const onRegradeSubmissions = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      const problemAlias = this.props.match.params.problemAlias;
-      await this.props.onRegradeSubmissions(this.props.chapter.jid, undefined, problemAlias);
-      const queries = parse(this.props.location.search);
-      await this.refreshSubmissions(queries.page);
+      await dispatch(chapterProblemSubmissionActions.regradeSubmissions(chapter.jid, undefined, problemAlias));
+      const queries = parse(location.search);
+      await refreshSubmissions(queries.page);
     }
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  username: selectMaybeUsername(state),
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissions: chapterProblemSubmissionActions.getSubmissions,
-  onRegradeSubmission: chapterProblemSubmissionActions.regradeSubmission,
-  onRegradeSubmissions: chapterProblemSubmissionActions.regradeSubmissions,
-  push,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemSubmissionsPage));

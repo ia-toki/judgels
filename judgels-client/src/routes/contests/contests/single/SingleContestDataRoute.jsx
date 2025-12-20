@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../modules/contestSelectors';
@@ -9,69 +9,47 @@ import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbs
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 
-class SingleContestDataRoute extends Component {
-  static GET_CONFIG_TIMEOUT = REFRESH_WEB_CONFIG_INTERVAL;
+export default function SingleContestDataRoute() {
+  const { contestSlug } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const currentTimeoutRef = useRef(null);
 
-  currentTimeout;
-
-  async componentDidMount() {
-    const { contest, match } = this.props;
-
+  const loadContest = async () => {
     // Optimization:
     // If the current contest slug is equal to the persisted one, then assume the JID is still the same,
-    if (contest && contest.slug === match.params.contestSlug) {
-      this.currentTimeout = setTimeout(
-        () => this.refreshWebConfig(contest.jid),
-        SingleContestDataRoute.GET_CONFIG_TIMEOUT
-      );
+    if (contest && contest.slug === contestSlug) {
+      currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contest.jid), REFRESH_WEB_CONFIG_INTERVAL);
     }
 
     // so that we don't have to wait until we get the contest from backend.
-    const { contest: newContest } = await this.props.onGetContestBySlugWithWebConfig(match.params.contestSlug);
-    this.props.onPushBreadcrumb(this.props.match.url, newContest.name);
+    const { contest: newContest } = await dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, newContest.name));
 
-    if (!contest || contest.slug !== match.params.contestSlug) {
-      this.currentTimeout = setTimeout(
-        () => this.refreshWebConfig(newContest.jid),
-        SingleContestDataRoute.GET_CONFIG_TIMEOUT
-      );
+    if (!contest || contest.slug !== contestSlug) {
+      currentTimeoutRef.current = setTimeout(() => refreshWebConfig(newContest.jid), REFRESH_WEB_CONFIG_INTERVAL);
     }
-  }
-
-  componentWillUnmount() {
-    this.props.onClearContest();
-    this.props.onClearContestWebConfig();
-    this.props.onPopBreadcrumb(this.props.match.url);
-
-    if (this.currentTimeout) {
-      clearTimeout(this.currentTimeout);
-    }
-  }
-
-  render() {
-    return null;
-  }
-
-  refreshWebConfig = async contestJid => {
-    await this.props.onGetContestWebConfig(contestJid);
-    this.currentTimeout = setTimeout(
-      () => this.refreshWebConfig(contestJid),
-      SingleContestDataRoute.GET_CONFIG_TIMEOUT
-    );
   };
+
+  useEffect(() => {
+    loadContest();
+
+    return () => {
+      dispatch(contestActions.clearContest());
+      dispatch(contestWebActions.clearWebConfig());
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+
+      if (currentTimeoutRef.current) {
+        clearTimeout(currentTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const refreshWebConfig = async contestJid => {
+    await dispatch(contestWebActions.getWebConfig(contestJid));
+    currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contestJid), REFRESH_WEB_CONFIG_INTERVAL);
+  };
+
+  return null;
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetContestBySlugWithWebConfig: contestWebActions.getContestBySlugWithWebConfig,
-  onGetContestWebConfig: contestWebActions.getWebConfig,
-  onClearContestWebConfig: contestWebActions.clearWebConfig,
-  onClearContest: contestActions.clearContest,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleContestDataRoute));

@@ -1,9 +1,9 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import SingleProblemSetProblemDataRoute from './SingleProblemSetProblemDataRoute';
 import SingleProblemSetProblemRoutes from './SingleProblemSetProblemRoutes';
 
-function MainSingleProblemSetProblemRoutes() {
+export default function MainSingleProblemSetProblemRoutes() {
   return (
     <div>
       <Route path="/problems/:problemSetSlug/:problemAlias" component={SingleProblemSetProblemDataRoute} />
@@ -11,5 +11,3 @@ function MainSingleProblemSetProblemRoutes() {
     </div>
   );
 }
-
-export default withRouter(MainSingleProblemSetProblemRoutes);

@@ -1,8 +1,8 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
 
-function ChapterProblemSubmissionRoutes({ worksheet, renderNavigation }) {
+export default function ChapterProblemSubmissionRoutes({ worksheet, renderNavigation }) {
   return (
     <Route
       exact
@@ -13,5 +13,3 @@ function ChapterProblemSubmissionRoutes({ worksheet, renderNavigation }) {
     />
   );
 }
-
-export default withRouter(ChapterProblemSubmissionRoutes);

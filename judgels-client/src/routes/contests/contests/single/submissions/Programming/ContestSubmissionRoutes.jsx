@@ -1,9 +1,9 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
 import ContestSubmissionPage from './single/ContestSubmissionPage/ContestSubmissionPage';
 
-function ContestSubmissionRoutes() {
+export default function ContestSubmissionRoutes() {
   return (
     <div>
       <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
@@ -11,5 +11,3 @@ function ContestSubmissionRoutes() {
     </div>
   );
 }
-
-export default withRouter(ContestSubmissionRoutes);

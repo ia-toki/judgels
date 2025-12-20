@@ -1,31 +1,24 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation, useRouteMatch } from 'react-router-dom';
 
 import { PopBreadcrumb, PushBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
 export function withBreadcrumb(breadcrumbTitle) {
   return InnerComponent => {
-    class WrappedComponent extends Component {
-      componentDidMount() {
-        this.props.onPushBreadcrumb(this.props.match.url, breadcrumbTitle);
-      }
+    return function WrappedComponent(props) {
+      const dispatch = useDispatch();
+      const match = useRouteMatch();
+      const location = useLocation();
 
-      render() {
-        const { location, match, onPushBreadcrumb, onPopBreadcrumb, ...props } = this.props;
-        return <InnerComponent location={this.props.location} {...props} />;
-      }
+      useEffect(() => {
+        dispatch(PushBreadcrumb({ link: match.url, title: breadcrumbTitle }));
+        return () => {
+          dispatch(PopBreadcrumb({ link: match.url }));
+        };
+      }, [dispatch, match.url]);
 
-      componentWillUnmount() {
-        this.props.onPopBreadcrumb(this.props.match.url);
-      }
-    }
-
-    const mapDispatchToProps = {
-      onPushBreadcrumb: (link, title) => PushBreadcrumb({ link, title }),
-      onPopBreadcrumb: link => PopBreadcrumb({ link }),
+      return <InnerComponent location={location} {...props} />;
     };
-
-    return withRouter(connect(undefined, mapDispatchToProps)(WrappedComponent));
   };
 }

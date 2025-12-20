@@ -1,7 +1,7 @@
 import { ChevronLeft } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
@@ -14,32 +14,34 @@ import { selectCourseChapter } from '../../../../../../../modules/courseChapterS
 import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
-export class ChapterProblemSubmissionPage extends Component {
-  state = {
+export default function ChapterProblemSubmissionPage() {
+  const { problemAlias, submissionId } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     submissionWithSource: undefined,
     sourceImageUrl: undefined,
     profile: undefined,
     problemName: undefined,
     containerName: undefined,
-  };
+  });
 
-  currentTimeout;
+  useEffect(() => {
+    refreshSubmission();
 
-  componentDidMount() {
-    this.refreshSubmission();
-  }
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+    };
+  }, []);
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
-
-  render() {
-    const { course, chapter } = this.props;
-    const { problemAlias } = this.props.match.params;
-
+  const render = () => {
     return (
       <ContentCard>
-        <h3 className="heading-with-button-action">Submission #{this.props.match.params.submissionId}</h3>
+        <h3 className="heading-with-button-action">Submission #{submissionId}</h3>
         <ButtonLink
           small
           icon={<ChevronLeft />}
@@ -49,18 +51,18 @@ export class ChapterProblemSubmissionPage extends Component {
         </ButtonLink>
         <hr />
 
-        {this.renderSubmission()}
+        {renderSubmission()}
       </ContentCard>
     );
-  }
+  };
 
-  refreshSubmission = async () => {
-    const { data, profile, problemName, containerName } = await this.props.onGetSubmissionWithSource(
-      +this.props.match.params.submissionId,
-      this.props.statementLanguage
+  const refreshSubmission = async () => {
+    const { data, profile, problemName, containerName } = await dispatch(
+      chapterProblemSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
-    this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
-    this.setState({
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, '#' + data.submission.id));
+
+    setState({
       submissionWithSource: data,
       profile,
       problemName,
@@ -68,10 +70,8 @@ export class ChapterProblemSubmissionPage extends Component {
     });
   };
 
-  renderSubmission = () => {
-    const { submissionWithSource, profile, sourceImageUrl } = this.state;
-    const { course, chapter } = this.props;
-    const { problemAlias } = this.props.match.params;
+  const renderSubmission = () => {
+    const { submissionWithSource, profile, sourceImageUrl } = state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -89,18 +89,6 @@ export class ChapterProblemSubmissionPage extends Component {
       />
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionWithSource: chapterProblemSubmissionActions.getSubmissionWithSource,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemSubmissionPage));

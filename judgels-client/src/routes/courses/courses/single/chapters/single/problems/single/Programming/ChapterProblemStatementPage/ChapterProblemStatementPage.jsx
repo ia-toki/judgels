@@ -1,16 +1,11 @@
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemEditorialCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { selectCourse } from '../../../../../../../modules/courseSelectors';
-import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 
 import './ChapterProblemStatementPage.scss';
 
-function ChapterProblemStatementPage({ worksheet }) {
+export default function ChapterProblemStatementPage({ worksheet }) {
   const renderTimeLimit = timeLimit => {
     if (!timeLimit) {
       return '-';
@@ -110,10 +105,3 @@ function ChapterProblemStatementPage({ worksheet }) {
     </ContentCard>
   );
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-});
-
-export default withRouter(connect(mapStateToProps)(ChapterProblemStatementPage));

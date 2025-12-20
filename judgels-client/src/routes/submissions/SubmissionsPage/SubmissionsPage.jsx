@@ -1,8 +1,7 @@
-import { push } from 'connected-react-router';
-import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { parse } from 'query-string';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import Pagination from '../../../components/Pagination/Pagination';
@@ -12,33 +11,38 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 import * as submissionActions from '../modules/submissionActions';
 
-export class SubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state = {
+export default function SubmissionsPage() {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const userJid = useSelector(selectMaybeUserJid);
+  const username = useSelector(selectMaybeUsername);
+
+  const [state, setState] = useState({
     response: undefined,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <>
-        {this.renderUserFilter()}
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderUserFilter()}
+        {renderSubmissions()}
+        {renderPagination()}
       </>
     );
-  }
-
-  renderUserFilter = () => {
-    return this.props.userJid && <SubmissionUserFilter />;
   };
 
-  isUserFilterMine = () => {
-    return (this.props.location.pathname + '/').includes('/mine/');
+  const renderUserFilter = () => {
+    return userJid && <SubmissionUserFilter />;
   };
 
-  renderSubmissions = () => {
-    const { response } = this.state;
+  const isUserFilterMine = () => {
+    return (location.pathname + '/').includes('/mine/');
+  };
+
+  const renderSubmissions = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -69,49 +73,32 @@ export class SubmissionsPage extends Component {
         problemNamesMap={problemNamesMap}
         containerNamesMap={containerNamesMap}
         containerPathsMap={containerPathsMap}
-        onRegrade={this.onRegrade}
+        onRegrade={onRegrade}
       />
     );
   };
 
-  renderPagination = () => {
-    return (
-      <Pagination
-        key={'' + this.isUserFilterMine()}
-        pageSize={SubmissionsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+  const renderPagination = () => {
+    return <Pagination key={'' + isUserFilterMine()} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshSubmissions(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  refreshSubmissions = async page => {
-    const username = this.isUserFilterMine() ? this.props.username : undefined;
-    const response = await this.props.onGetProgrammingSubmissions(undefined, username, undefined, page);
-    this.setState({ response });
+  const refreshSubmissions = async page => {
+    const usernameFilter = isUserFilterMine() ? username : undefined;
+    const response = await dispatch(submissionActions.getSubmissions(undefined, usernameFilter, undefined, page));
+    setState({ response });
     return response.data;
   };
 
-  onRegrade = async submissionJid => {
-    await this.props.onRegrade(submissionJid);
-    const queries = parse(this.props.location.search);
-    await this.refreshSubmissions(queries.page);
+  const onRegrade = async submissionJid => {
+    await dispatch(submissionActions.regradeSubmission(submissionJid));
+    const queries = parse(location.search);
+    await refreshSubmissions(queries.page);
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  username: selectMaybeUsername(state),
-});
-
-const mapDispatchToProps = {
-  onGetProgrammingSubmissions: submissionActions.getSubmissions,
-  onRegrade: submissionActions.regradeSubmission,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionsPage));

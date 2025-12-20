@@ -1,11 +1,12 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { push } from 'connected-react-router';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import './ItemSubmissionUserFilter.scss';
 
-function ItemSubmissionUserFilter({ location, push }) {
+export default function ItemSubmissionUserFilter() {
+  const location = useLocation();
+  const history = useHistory();
+
   const isAll = () => {
     return (location.pathname + '/').includes('/all/');
   };
@@ -13,13 +14,13 @@ function ItemSubmissionUserFilter({ location, push }) {
   const clickMine = () => {
     if (isAll()) {
       const idx = location.pathname.lastIndexOf('/all');
-      push(location.pathname.substr(0, idx));
+      history.push(location.pathname.substr(0, idx));
     }
   };
 
   const clickAll = () => {
     if (!isAll()) {
-      push((location.pathname + '/all').replace('//', '/'));
+      history.push((location.pathname + '/all').replace('//', '/'));
     }
   };
 
@@ -30,9 +31,3 @@ function ItemSubmissionUserFilter({ location, push }) {
     </ButtonGroup>
   );
 }
-
-const mapDispatchToProps = {
-  push,
-};
-
-export default withRouter(connect(undefined, mapDispatchToProps)(ItemSubmissionUserFilter));

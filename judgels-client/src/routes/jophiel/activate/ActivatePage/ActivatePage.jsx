@@ -1,26 +1,23 @@
-import { push } from 'connected-react-router';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 
 import * as activateActions from '../modules/activateActions';
 
-class ActivatePage extends Component {
-  async componentDidMount() {
-    await this.props.onActivateUser(this.props.match.params.emailCode);
-    this.props.onPush('/registered?source=internal');
-  }
+export default function ActivatePage() {
+  const { emailCode } = useParams();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  render() {
-    return <SingleColumnLayout></SingleColumnLayout>;
-  }
+  useEffect(() => {
+    const activate = async () => {
+      await dispatch(activateActions.activateUser(emailCode));
+      history.push('/registered?source=internal');
+    };
+    activate();
+  }, [emailCode, history, dispatch]);
+
+  return <SingleColumnLayout></SingleColumnLayout>;
 }
-
-const mapDispatchToProps = {
-  onActivateUser: activateActions.activateUser,
-  onPush: push,
-};
-
-export default withRouter(connect(undefined, mapDispatchToProps)(ActivatePage));

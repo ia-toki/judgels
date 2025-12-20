@@ -1,10 +1,9 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { push } from 'connected-react-router';
-import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { parse } from 'query-string';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -23,38 +22,43 @@ import * as problemSetSubmissionActions from '../modules/problemSetSubmissionAct
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
-export class ProblemSubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state = {
+export default function ProblemSubmissionsPage() {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const userJid = useSelector(selectMaybeUserJid);
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+
+  const [state, setState] = useState({
     response: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    await this.refreshSubmissions();
-  }
+  useEffect(() => {
+    refreshSubmissions();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Results</h3>
         <hr />
         <ItemSubmissionUserFilter />
-        {this.renderRegradeAllButton()}
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderRegradeAllButton()}
+        {renderSubmissions()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderSubmissions = () => {
-    const response = this.state.response;
+  const renderSubmissions = () => {
+    const response = state.response;
     if (!response) {
       return <LoadingState />;
     }
 
     const { data, profilesMap, problemAliasesMap, itemNumbersMap, itemTypesMap } = response;
-    const { userJid, problemSet, problem } = this.props;
     const canManage = response.config.canManage;
 
     return (
@@ -99,7 +103,7 @@ export class ProblemSubmissionsPage extends Component {
                     </Link>
                   )}
                   {canManage && (
-                    <Button icon={<Refresh />} intent={Intent.NONE} small onClick={this.onClickRegrade(item.jid)} />
+                    <Button icon={<Refresh />} intent={Intent.NONE} small onClick={() => onRegrade(item.jid)} />
                   )}
                 </ButtonGroup>
               </td>
@@ -110,42 +114,39 @@ export class ProblemSubmissionsPage extends Component {
     );
   };
 
-  renderPagination = () => {
-    return <Pagination pageSize={ProblemSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  refreshSubmissions = async page => {
-    const { problemSet, problem, onGetSubmissions } = this.props;
-    const response = await onGetSubmissions(problemSet.jid, undefined, problem.alias, page);
-    this.setState({ response });
+  const refreshSubmissions = async page => {
+    const response = await dispatch(
+      problemSetSubmissionActions.getSubmissions(problemSet.jid, undefined, problem.alias, page)
+    );
+    setState({ response });
     return response.data;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshSubmissions(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  onClickRegrade = submissionJid => {
-    return () => this.onRegrade(submissionJid);
+  const onRegrade = async submissionJid => {
+    await dispatch(problemSetSubmissionActions.regradeSubmission(submissionJid));
+    const queries = parse(location.search);
+    await refreshSubmissions(queries.page);
   };
 
-  onRegrade = async submissionJid => {
-    await this.props.onRegrade(submissionJid);
-    const queries = parse(this.props.location.search);
-    await this.refreshSubmissions(queries.page);
-  };
-
-  onRegradeAll = async () => {
+  const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await this.props.onRegradeAll(this.props.problemSet.jid, undefined, this.props.problem.problemJid);
-      const queries = parse(this.props.location.search);
-      await this.refreshSubmissions(queries.page);
+      await dispatch(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, undefined, problem.problemJid));
+      const queries = parse(location.search);
+      await refreshSubmissions(queries.page);
     }
   };
 
-  renderRegradeAllButton = () => {
-    if (!this.state.response || !this.state.response.config.canManage) {
+  const renderRegradeAllButton = () => {
+    if (!state.response || !state.response.config.canManage) {
       return null;
     }
 
@@ -154,25 +155,12 @@ export class ProblemSubmissionsPage extends Component {
         className="item-submissions-table__regrade-button"
         intent="primary"
         icon={<Refresh />}
-        onClick={this.onRegradeAll}
+        onClick={onRegradeAll}
       >
         Regrade all pages
       </Button>
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  problemSet: selectProblemSet(state),
-  problem: selectProblemSetProblem(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissions: problemSetSubmissionActions.getSubmissions,
-  onRegrade: problemSetSubmissionActions.regradeSubmission,
-  onRegradeAll: problemSetSubmissionActions.regradeSubmissions,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionsPage));

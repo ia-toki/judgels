@@ -1,8 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { parse } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -13,32 +13,35 @@ import * as rankingActions from '../../modules/rankingActions';
 
 import './ScoresPage.scss';
 
-class ScoresPage extends Component {
-  static PAGE_SIZE = 50;
+const PAGE_SIZE = 50;
 
-  state = {
+export default function ScoresPage() {
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <Card title="Top scorers">
-        {this.renderScores()}
-        <Pagination pageSize={ScoresPage.PAGE_SIZE} onChangePage={this.onChangePage} />
+        {renderScores()}
+        <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} />
       </Card>
     );
-  }
+  };
 
-  renderScores = () => {
-    const { response } = this.state;
+  const renderScores = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
     const { data, profilesMap } = response;
 
-    const page = +(parse(this.props.location.search).page || '1');
-    const baseRank = (page - 1) * ScoresPage.PAGE_SIZE + 1;
+    const page = +(parse(location.search).page || '1');
+    const baseRank = (page - 1) * PAGE_SIZE + 1;
     const rows = data.page.map((e, idx) => (
       <tr key={e.userJid}>
         <td className="col-rank">{baseRank + idx}</td>
@@ -63,15 +66,11 @@ class ScoresPage extends Component {
     );
   };
 
-  onChangePage = async nextPage => {
-    const response = await this.props.onGetTopUserStats(nextPage, ScoresPage.PAGE_SIZE);
-    this.setState({ response });
+  const onChangePage = async nextPage => {
+    const response = await dispatch(rankingActions.getTopUserStats(nextPage, PAGE_SIZE));
+    setState({ response });
     return response.data.totalCount;
   };
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onGetTopUserStats: rankingActions.getTopUserStats,
-};
-
-export default withRouter(connect(undefined, mapDispatchToProps)(ScoresPage));
