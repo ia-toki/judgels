@@ -48,12 +48,9 @@ export default function ChapterProblemPage() {
   }, [statementLanguage, reloadKey, problemAlias]);
 
   useEffect(() => {
-    prevProgressRef.current = state.response?.progress;
-  }, [state.response?.progress]);
-
-  useEffect(() => {
     if (state.response) {
       checkEditorial(prevProgressRef.current, state.response.progress);
+      prevProgressRef.current = state.response.progress;
     }
   }, [reloadKey, state.response]);
 
