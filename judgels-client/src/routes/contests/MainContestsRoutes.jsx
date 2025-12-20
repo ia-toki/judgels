@@ -1,4 +1,4 @@
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContestsRoutes from './ContestsRoutes';
@@ -15,4 +15,4 @@ function MainContestRoutes() {
   );
 }
 
-export default withRouter(withBreadcrumb('Contests')(MainContestRoutes));
+export default withBreadcrumb('Contests')(MainContestRoutes);

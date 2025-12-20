@@ -1,6 +1,7 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
@@ -34,10 +35,18 @@ import ContestSupervisorsPage from './supervisors/ContestSupervisorsPage/Contest
 
 import './SingleContestRoutes.scss';
 
-function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfig, onSetNotEditingContest }) {
+export default function SingleContestRoutes() {
+  const { contestSlug } = useParams();
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const isEditingContest = useSelector(selectIsEditingContest);
+  const contestWebConfig = useSelector(selectContestWebConfig);
+
+  const onSetNotEditingContest = () => dispatch(EditContest(false));
+
   // Optimization:
   // We wait until we get the contest from the backend only if the current slug is different from the persisted one.
-  if (!contest || contest.slug !== match.params.contestSlug) {
+  if (!contest || contest.slug !== contestSlug) {
     return <LoadingState large />;
   }
 
@@ -197,14 +206,3 @@ function SingleContestRoutes({ match, contest, isEditingContest, contestWebConfi
     </FullPageLayout>
   );
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  isEditingContest: selectIsEditingContest(state),
-  contestWebConfig: selectContestWebConfig(state),
-});
-
-const mapDispatchToProps = {
-  onSetNotEditingContest: () => EditContest(false),
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleContestRoutes));

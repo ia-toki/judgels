@@ -1,4 +1,4 @@
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
@@ -34,4 +34,4 @@ function JophielRoutes() {
   );
 }
 
-export default withRouter(JophielRoutes);
+export default JophielRoutes;

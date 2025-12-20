@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { Redirect, Switch, withRouter } from 'react-router';
+import { Redirect, Switch } from 'react-router';
+import { useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Sidebar } from '../Sidebar/Sidebar';
 
@@ -30,9 +31,7 @@ function resolveUrl(parentPath, childPath) {
   return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
 }
 
-function ContentWithSidebar({
-  match,
-  location,
+export default function ContentWithSidebar({
   items,
   title,
   action,
@@ -41,6 +40,9 @@ function ContentWithSidebar({
   stickyWidget2,
   smallContent,
 }) {
+  const match = useRouteMatch();
+  const location = useLocation();
+
   const renderSidebar = () => {
     const sidebarItems = items
       .filter(item => !item.disabled)
@@ -160,5 +162,3 @@ function ContentWithSidebar({
     />
   );
 }
-
-export default withRouter(ContentWithSidebar);

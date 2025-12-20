@@ -1,5 +1,6 @@
-import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
@@ -7,10 +8,14 @@ import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
 import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
 import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResourcesPage';
 
-function SingleCourseChapterRoutes({ chapter, match }) {
+export default function SingleCourseChapterRoutes() {
+  const { courseSlug, chapterAlias } = useParams();
+  const match = useRouteMatch();
+  const chapter = useSelector(selectCourseChapter);
+
   // Optimization:
   // We wait until we get the chapter from the backend only if the current chapter is different from the persisted one.
-  if (!chapter || chapter.courseSlug !== match.params.courseSlug || chapter.alias !== match.params.chapterAlias) {
+  if (!chapter || chapter.courseSlug !== courseSlug || chapter.alias !== chapterAlias) {
     return <LoadingState large />;
   }
 
@@ -22,9 +27,3 @@ function SingleCourseChapterRoutes({ chapter, match }) {
     </Switch>
   );
 }
-
-const mapStateToProps = state => ({
-  chapter: selectCourseChapter(state),
-});
-
-export default withRouter(connect(mapStateToProps)(SingleCourseChapterRoutes));

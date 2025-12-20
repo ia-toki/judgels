@@ -1,8 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, Manual } from '@blueprintjs/icons';
-import { push } from 'connected-react-router';
-import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Route } from 'react-router';
+import { useHistory, useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
@@ -13,12 +13,20 @@ import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSet
 
 import './SingleProblemSetRoutes.scss';
 
-function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
+export default function SingleProblemSetRoutes() {
+  const { problemSetSlug } = useParams();
+  const history = useHistory();
+  const problemSet = useSelector(selectProblemSet);
+
   // Optimization:
   // We wait until we get the problemSet from the backend only if the current slug is different from the persisted one.
-  if (!problemSet || problemSet.slug !== match.params.problemSetSlug) {
+  if (!problemSet || problemSet.slug !== problemSetSlug) {
     return <LoadingState large />;
   }
+
+  const onClickBack = () => {
+    history.push('/problems/problemsets');
+  };
 
   const sidebarItems = [
     {
@@ -52,17 +60,3 @@ function SingleProblemSetRoutes({ match, problemSet, onClickBack }) {
     </FullPageLayout>
   );
 }
-
-function createSingleProblemSetRoutes() {
-  const mapStateToProps = state => ({
-    problemSet: selectProblemSet(state),
-  });
-
-  const mapDispatchToProps = {
-    onClickBack: () => push('/problems/problemsets'),
-  };
-
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(SingleProblemSetRoutes));
-}
-
-export default createSingleProblemSetRoutes();

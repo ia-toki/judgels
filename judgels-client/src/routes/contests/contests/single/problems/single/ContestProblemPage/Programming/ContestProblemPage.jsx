@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -17,66 +17,70 @@ import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 import './ContestProblemPage.scss';
 
-export class ContestProblemPage extends Component {
-  state = {
+export default function ContestProblemPage() {
+  const { problemAlias } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const statementLanguage = useSelector(selectStatementLanguage);
+  const gradingLanguage = useSelector(selectGradingLanguage);
+
+  const [state, setState] = useState({
     defaultLanguage: undefined,
     languages: undefined,
     problem: undefined,
     totalSubmissions: undefined,
     worksheet: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await this.props.onGetProblemWorksheet(
-      this.props.contest.jid,
-      this.props.match.params.problemAlias,
-      this.props.statementLanguage
+  const loadWorksheet = async () => {
+    setState(prevState => ({
+      ...prevState,
+      worksheet: undefined,
+    }));
+
+    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await dispatch(
+      contestProblemActions.getProgrammingProblemWorksheet(contest.jid, problemAlias, statementLanguage)
     );
 
-    this.setState({
+    setState({
       defaultLanguage,
       languages,
       problem,
       totalSubmissions,
       worksheet,
     });
-    this.props.onPushBreadcrumb(this.props.match.url, 'Problem ' + problem.alias);
-  }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.worksheet) {
-      this.setState({ worksheet: undefined });
-    } else if (!this.state.worksheet && prevState.worksheet) {
-      await this.componentDidMount();
-    }
-  }
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Problem ' + problem.alias));
+  };
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
+  useEffect(() => {
+    loadWorksheet();
 
-  render() {
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+    };
+  }, [statementLanguage]);
+
+  const render = () => {
     return (
       <ContentCard>
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
+        {renderStatementLanguageWidget()}
+        {renderStatement()}
       </ContentCard>
-    );
-  }
-
-  createSubmission = async data => {
-    const problem = this.state.problem;
-    this.props.onUpdateGradingLanguage(data.gradingLanguage);
-    return await this.props.onCreateSubmission(
-      this.props.contest.jid,
-      this.props.contest.slug,
-      problem.problemJid,
-      data
     );
   };
 
-  renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = this.state;
+  const createSubmission = async data => {
+    const problem = state.problem;
+    dispatch(webPrefsActions.updateGradingLanguage(data.gradingLanguage));
+    return await dispatch(
+      contestSubmissionActions.createSubmission(contest.jid, contest.slug, problem.problemJid, data)
+    );
+  };
+
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = state;
     if (!defaultLanguage || !languages) {
       return null;
     }
@@ -91,8 +95,8 @@ export class ContestProblemPage extends Component {
     );
   };
 
-  renderStatement = () => {
-    const { problem, totalSubmissions, worksheet } = this.state;
+  const renderStatement = () => {
+    const { problem, totalSubmissions, worksheet } = state;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
@@ -107,26 +111,12 @@ export class ContestProblemPage extends Component {
       <ProblemWorksheetCard
         alias={problem.alias}
         worksheet={worksheet}
-        onSubmit={this.createSubmission}
+        onSubmit={createSubmission}
         submissionWarning={submissionWarning}
-        gradingLanguage={this.props.gradingLanguage}
+        gradingLanguage={gradingLanguage}
       />
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  statementLanguage: selectStatementLanguage(state),
-  gradingLanguage: selectGradingLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetProblemWorksheet: contestProblemActions.getProgrammingProblemWorksheet,
-  onCreateSubmission: contestSubmissionActions.createSubmission,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-  onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestProblemPage));

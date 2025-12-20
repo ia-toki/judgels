@@ -1,4 +1,4 @@
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import SingleProfileDataRoute from './single/SingleProfileDataRoute';
@@ -13,4 +13,4 @@ function ProfileRoutes() {
   );
 }
 
-export default withBreadcrumb('Profiles')(withRouter(ProfileRoutes));
+export default withBreadcrumb('Profiles')(ProfileRoutes);

@@ -1,6 +1,7 @@
 import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
-import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Route } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
@@ -12,10 +13,14 @@ import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHisto
 import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage';
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 
-function SingleProfileRoutes({ match, userJid, username }) {
+export default function SingleProfileRoutes() {
+  const { username: paramUsername } = useParams();
+  const userJid = useSelector(selectUserJid);
+  const username = useSelector(selectUsername);
+
   // Optimization:
   // We wait until we get the username from the backend only if the current username is different from the persisted one.
-  if (!userJid || username !== match.params.username) {
+  if (!userJid || username !== paramUsername) {
     return <LoadingState large />;
   }
 
@@ -60,13 +65,3 @@ function SingleProfileRoutes({ match, userJid, username }) {
     </FullPageLayout>
   );
 }
-
-function createSingleProfileRoutes() {
-  const mapStateToProps = state => ({
-    userJid: selectUserJid(state),
-    username: selectUsername(state),
-  });
-  return withRouter(connect(mapStateToProps)(SingleProfileRoutes));
-}
-
-export default createSingleProfileRoutes();

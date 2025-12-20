@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
@@ -14,29 +14,40 @@ import * as breadcrumbsActions from '../../../../../../../../../modules/breadcru
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
-export class ProblemSubmissionPage extends Component {
-  state = {
+export default function ProblemSubmissionPage() {
+  const { submissionId } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     submissionWithSource: undefined,
     sourceImageUrl: undefined,
     profile: undefined,
     problemName: undefined,
     problemAlias: undefined,
     containerName: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      +this.props.match.params.submissionId,
-      this.props.statementLanguage
+  const loadSubmission = async () => {
+    const { data, profile, problemName, problemAlias, containerName } = await dispatch(
+      problemSetSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
-    if (data.submission.problemJid !== this.props.problem.problemJid) {
+    if (data.submission.problemJid !== problem.problemJid) {
       const error = new NotFoundError();
       toastActions.showErrorToast(error);
       throw error;
     }
-    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
-    this.props.onPushBreadcrumb(this.props.match.url, '#' + data.submission.id);
-    this.setState({
+
+    const sourceImageUrl = data.source
+      ? undefined
+      : await dispatch(problemSetSubmissionActions.getSubmissionSourceImage(data.submission.jid));
+
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, '#' + data.submission.id));
+
+    setState({
       submissionWithSource: data,
       sourceImageUrl,
       profile,
@@ -44,26 +55,28 @@ export class ProblemSubmissionPage extends Component {
       problemAlias,
       containerName,
     });
-  }
+  };
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
+  useEffect(() => {
+    loadSubmission();
 
-  render() {
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+    };
+  }, []);
+
+  const render = () => {
     return (
       <ContentCard>
-        <h3>Submission #{this.props.match.params.submissionId}</h3>
+        <h3>Submission #{submissionId}</h3>
         <hr />
-        {this.renderSubmission()}
+        {renderSubmission()}
       </ContentCard>
     );
-  }
+  };
 
-  renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, problemAlias, containerName, sourceImageUrl } = this.state;
-    const { problemSet } = this.props;
-
+  const renderSubmission = () => {
+    const { submissionWithSource, profile, problemName, problemAlias, containerName, sourceImageUrl } = state;
     if (!submissionWithSource) {
       return <LoadingState />;
     }
@@ -81,19 +94,6 @@ export class ProblemSubmissionPage extends Component {
       />
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  statementLanguage: selectStatementLanguage(state),
-  problem: selectProblemSetProblem(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionWithSource: problemSetSubmissionActions.getSubmissionWithSource,
-  onGetSubmissionSourceImage: problemSetSubmissionActions.getSubmissionSourceImage,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemSubmissionPage));

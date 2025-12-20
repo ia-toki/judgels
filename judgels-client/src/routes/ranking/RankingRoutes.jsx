@@ -1,5 +1,5 @@
 import { Property, TimelineLineChart } from '@blueprintjs/icons';
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -40,4 +40,4 @@ function RankingRoutes() {
   );
 }
 
-export default withRouter(withBreadcrumb('Ranking')(RankingRoutes));
+export default withBreadcrumb('Ranking')(RankingRoutes);

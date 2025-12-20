@@ -1,9 +1,9 @@
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
 import ChapterProblemSubmissionPage from './single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage';
 
-function ChapterProblemSubmissionRoutes() {
+export default function ChapterProblemSubmissionRoutes() {
   return (
     <Switch>
       <Route
@@ -24,5 +24,3 @@ function ChapterProblemSubmissionRoutes() {
     </Switch>
   );
 }
-
-export default withRouter(ChapterProblemSubmissionRoutes);

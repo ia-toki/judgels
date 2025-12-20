@@ -1,32 +1,37 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { push } from 'connected-react-router';
 import { stringify } from 'query-string';
-import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import SearchBox from './SearchBox';
 
 describe('SearchBox', () => {
   let onRouteChange;
+  let testLocation;
 
-  const store = createMockStore()({});
+  const LocationTracker = () => {
+    const location = require('react-router-dom').useLocation();
+    testLocation = location;
+    return null;
+  };
 
   const renderComponent = (key, initialValue) => {
     const props = {
       initialValue,
       onRouteChange,
     };
-    const component = () => <SearchBox {...props} />;
+    const component = () => (
+      <>
+        <SearchBox {...props} />
+        <LocationTracker />
+      </>
+    );
 
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/component?${key}=${initialValue}&page=2`]}>
-          <Route path="/component" component={component} />
-        </MemoryRouter>
-      </Provider>
+      <MemoryRouter initialEntries={[`/component?${key}=${initialValue}&page=2`]}>
+        <Route path="/component" component={component} />
+      </MemoryRouter>
     );
   };
 
@@ -48,7 +53,7 @@ describe('SearchBox', () => {
       renderComponent('key', 'test');
       await submit('judgels');
       const query = stringify({ key: 'judgels' });
-      expect(store.getActions()).toContainEqual(push({ search: query }));
+      expect(testLocation.search).toBe('?' + query);
     });
 
     it('calls onRouteChange with correct previous route and the typed string', async () => {

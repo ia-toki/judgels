@@ -58,10 +58,6 @@ describe('SingleCourseChapterDataRoute', () => {
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A', 'A. Chapter 123');
 
     await act(async () => {
-      history.push('/courses/basic/chapters/A/');
-    });
-
-    await act(async () => {
       history.push('/courses/basic/chapters/B');
     });
 

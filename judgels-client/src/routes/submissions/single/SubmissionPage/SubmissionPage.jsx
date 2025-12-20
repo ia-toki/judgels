@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -11,8 +11,13 @@ import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSe
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
 
-export class SubmissionPage extends Component {
-  state = {
+export default function SubmissionPage() {
+  const { submissionId } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     submissionWithSource: undefined,
     profile: undefined,
     problemName: undefined,
@@ -20,14 +25,19 @@ export class SubmissionPage extends Component {
     containerPath: undefined,
     containerName: undefined,
     sourceImageUrl: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    const { data, profile, problemName, problemAlias, containerPath, containerName } =
-      await this.props.onGetSubmissionWithSource(+this.props.match.params.submissionId, this.props.statementLanguage);
-    const sourceImageUrl = data.source ? undefined : await this.props.onGetSubmissionSourceImage(data.submission.jid);
-    this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
-    this.setState({
+  const loadSubmission = async () => {
+    const { data, profile, problemName, problemAlias, containerPath, containerName } = await dispatch(
+      submissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
+    );
+    const sourceImageUrl = data.source
+      ? undefined
+      : await dispatch(submissionActions.getSubmissionSourceImage(data.submission.jid));
+
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Submission #' + data.submission.id));
+
+    setState({
       submissionWithSource: data,
       profile,
       problemName,
@@ -36,25 +46,29 @@ export class SubmissionPage extends Component {
       containerName,
       sourceImageUrl,
     });
-  }
+  };
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
+  useEffect(() => {
+    loadSubmission();
 
-  render() {
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+    };
+  }, []);
+
+  const render = () => {
     return (
       <ContentCard>
-        <h3>Submission #{this.props.match.params.submissionId}</h3>
+        <h3>Submission #{submissionId}</h3>
         <hr />
-        {this.renderSubmission()}
+        {renderSubmission()}
       </ContentCard>
     );
-  }
+  };
 
-  renderSubmission = () => {
+  const renderSubmission = () => {
     const { submissionWithSource, profile, problemAlias, problemName, containerPath, containerName, sourceImageUrl } =
-      this.state;
+      state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -73,17 +87,6 @@ export class SubmissionPage extends Component {
       />
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionWithSource: submissionActions.getSubmissionWithSource,
-  onGetSubmissionSourceImage: submissionActions.getSubmissionSourceImage,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SubmissionPage));

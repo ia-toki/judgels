@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -19,38 +19,44 @@ import * as problemSetProblemActions from '../../modules/problemSetProblemAction
 
 import './ProblemReportWidget.scss';
 
-class ProblemReportWidget extends Component {
-  static TOP_STATS_SIZE = 5;
+const TOP_STATS_SIZE = 5;
 
-  state = {
+export default function ProblemReportWidget() {
+  const { problemAlias } = useParams();
+  const dispatch = useDispatch();
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const loadReport = async () => {
+    const response = await dispatch(problemSetProblemActions.getProblemReport(problemSet.jid, problemAlias));
+    setState({ response });
   };
 
-  async componentDidMount() {
-    const response = await this.props.onGetProblemReport(
-      this.props.problemSet.jid,
-      this.props.match.params.problemAlias
-    );
-    this.setState({ response });
-  }
+  useEffect(() => {
+    loadReport();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
 
     return (
       <div className="problem-report-widget">
-        {this.renderContests(response)}
-        {this.renderProgress(response)}
-        {this.renderSpoilers(response)}
-        {this.renderTopStats(response)}
+        {renderContests(response)}
+        {renderProgress(response)}
+        {renderSpoilers(response)}
+        {renderTopStats(response)}
       </div>
     );
-  }
+  };
 
-  renderContests = ({ contests }) => {
+  const renderContests = ({ contests }) => {
     if (contests.length === 0) {
       return null;
     }
@@ -69,7 +75,7 @@ class ProblemReportWidget extends Component {
     );
   };
 
-  renderProgress = ({ progress }) => {
+  const renderProgress = ({ progress }) => {
     return (
       <ContentCard>
         <h4 className="progress-title">Your score</h4>
@@ -80,31 +86,31 @@ class ProblemReportWidget extends Component {
     );
   };
 
-  renderSpoilers = ({ metadata, difficulty, profilesMap }) => {
+  const renderSpoilers = ({ metadata, difficulty, profilesMap }) => {
     return (
       <ContentCard>
         <h4>Spoilers</h4>
-        {this.renderSpoilersWidget()}
-        {this.renderDifficulty({ difficulty })}
-        {this.renderTopicTags({ metadata })}
-        {this.renderEditorial({ metadata, profilesMap })}
+        {renderSpoilersWidget()}
+        {renderDifficulty({ difficulty })}
+        {renderTopicTags({ metadata })}
+        {renderEditorial({ metadata, profilesMap })}
       </ContentCard>
     );
   };
 
-  renderSpoilersWidget = () => {
+  const renderSpoilersWidget = () => {
     return <ProblemSpoilerWidget />;
   };
 
-  renderDifficulty = ({ difficulty }) => {
-    return <ProblemDifficulty problem={this.props.problem} difficulty={difficulty} />;
+  const renderDifficulty = ({ difficulty }) => {
+    return <ProblemDifficulty problem={problem} difficulty={difficulty} />;
   };
 
-  renderTopicTags = ({ metadata }) => {
+  const renderTopicTags = ({ metadata }) => {
     return <ProblemTopicTags tags={metadata.tags} alignLeft />;
   };
 
-  renderEditorial = ({ metadata, profilesMap }) => {
+  const renderEditorial = ({ metadata, profilesMap }) => {
     const { hasEditorial, settersMap } = metadata;
     if (!hasEditorial) {
       return null;
@@ -117,36 +123,37 @@ class ProblemReportWidget extends Component {
     );
   };
 
-  renderTopStats = ({ topStats, profilesMap }) => {
+  const renderTopStats = ({ topStats, profilesMap }) => {
     const { topUsersByScore, topUsersByTime, topUsersByMemory } = topStats;
     if (
-      topUsersByScore.length === ProblemReportWidget.TOP_STATS_SIZE &&
-      topUsersByTime.length === ProblemReportWidget.TOP_STATS_SIZE &&
-      topUsersByScore[ProblemReportWidget.TOP_STATS_SIZE - 1].stats >= 100
+      topUsersByScore.length === TOP_STATS_SIZE &&
+      topUsersByTime.length === TOP_STATS_SIZE &&
+      topUsersByScore[TOP_STATS_SIZE - 1].stats >= 100
     ) {
       return (
         <>
-          {this.renderTopTime(topUsersByTime, profilesMap)}
-          {this.renderTopMemory(topUsersByMemory, profilesMap)}
+          {renderTopTime(topUsersByTime, profilesMap)}
+          {renderTopMemory(topUsersByMemory, profilesMap)}
         </>
       );
     } else {
-      return this.renderTopScore(topUsersByScore, profilesMap);
+      return renderTopScore(topUsersByScore, profilesMap);
     }
   };
 
-  renderTopScore = (entries, profilesMap) => {
-    return this.renderTopEntries(entries, profilesMap, 'score', 'Score', '');
+  const renderTopScore = (entries, profilesMap) => {
+    return renderTopEntries(entries, profilesMap, 'score', 'Score', '');
   };
 
-  renderTopTime = (entries, profilesMap) => {
-    return this.renderTopEntries(entries, profilesMap, 'time', 'Time', 'ms');
-  };
-  renderTopMemory = (entries, profilesMap) => {
-    return this.renderTopEntries(entries, profilesMap, 'memory', 'Memory', 'KB');
+  const renderTopTime = (entries, profilesMap) => {
+    return renderTopEntries(entries, profilesMap, 'time', 'Time', 'ms');
   };
 
-  renderTopEntries = (entries, profilesMap, title, header, suffix) => {
+  const renderTopMemory = (entries, profilesMap) => {
+    return renderTopEntries(entries, profilesMap, 'memory', 'Memory', 'KB');
+  };
+
+  const renderTopEntries = (entries, profilesMap, title, header, suffix) => {
     if (entries.length === 0) {
       return null;
     }
@@ -179,13 +186,6 @@ class ProblemReportWidget extends Component {
       </ContentCard>
     );
   };
-}
 
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  problem: selectProblemSetProblem(state),
-});
-const mapDispatchToProps = {
-  onGetProblemReport: problemSetProblemActions.getProblemReport,
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemReportWidget));
+  return render();
+}

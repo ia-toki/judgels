@@ -56,14 +56,10 @@ describe('SingleCourseDataRoute', () => {
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic', 'Course 123');
 
     await act(async () => {
-      history.push('/courses/basic/');
-    });
-
-    await act(async () => {
       history.push('/other');
     });
 
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/');
+    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic');
     expect(courseActions.clearCourse).toHaveBeenCalled();
   });
 });

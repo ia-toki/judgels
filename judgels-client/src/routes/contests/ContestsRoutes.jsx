@@ -1,11 +1,11 @@
 import { Console } from '@blueprintjs/icons';
-import { Route, withRouter } from 'react-router';
+import { Route } from 'react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 
-function ContestsRoutes() {
+export default function ContestsRoutes() {
   const sidebarItems = [
     {
       id: '@',
@@ -27,5 +27,3 @@ function ContestsRoutes() {
     </FullPageLayout>
   );
 }
-
-export default withRouter(ContestsRoutes);

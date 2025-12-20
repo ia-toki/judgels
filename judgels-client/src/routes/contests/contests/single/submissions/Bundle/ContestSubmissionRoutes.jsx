@@ -1,12 +1,14 @@
-import { connect } from 'react-redux';
-import { Route, withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Route } from 'react-router';
 
 import { ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 import ContestSubmissionSummaryPage from './ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
 import ContestSubmissionsPage from './ContestSubmissionsPage/ContestSubmissionsPage';
 
-function ContestSubmissionRoutes({ webConfig }) {
+export default function ContestSubmissionRoutes() {
+  const webConfig = useSelector(selectContestWebConfig);
+
   if (!webConfig) {
     return null;
   }
@@ -20,8 +22,3 @@ function ContestSubmissionRoutes({ webConfig }) {
     </div>
   );
 }
-
-const mapStateToProps = state => ({
-  webConfig: selectContestWebConfig(state),
-});
-export default withRouter(connect(mapStateToProps)(ContestSubmissionRoutes));

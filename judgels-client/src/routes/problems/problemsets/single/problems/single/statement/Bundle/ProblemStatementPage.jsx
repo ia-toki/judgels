@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -10,79 +10,79 @@ import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
 
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
-export class ProblemStatementPage extends Component {
-  state = {
+export default function ProblemStatementPage(props) {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const problemSet = useSelector(selectProblemSet);
+
+  const [state, setState] = useState({
     latestSubmissions: undefined,
+  });
+
+  const refreshSubmissions = async () => {
+    const latestSubmissions = await dispatch(
+      problemSetSubmissionActions.getLatestSubmissions(problemSet.jid, props.worksheet.problem.alias)
+    );
+    setState({ latestSubmissions });
   };
 
-  async componentDidMount() {
-    const latestSubmissions = await this.props.onGetLatestSubmissions(
-      this.props.problemSet.jid,
-      this.props.worksheet.problem.alias
-    );
-    this.setState({
-      latestSubmissions,
-    });
-  }
+  useEffect(() => {
+    refreshSubmissions();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
-        {this.renderStatementLanguageWidget()}
-        {this.renderStatement()}
+        {renderStatementLanguageWidget()}
+        {renderStatement()}
       </ContentCard>
     );
-  }
+  };
 
-  renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = this.props.worksheet;
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = props.worksheet;
     if (!defaultLanguage || !languages) {
       return null;
     }
-    const props = {
+    const widgetProps = {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
     return (
       <div className="language-widget-wrapper">
-        <StatementLanguageWidget {...props} />
+        <StatementLanguageWidget {...widgetProps} />
       </div>
     );
   };
 
-  renderStatement = () => {
-    const { problem, worksheet } = this.props.worksheet;
+  const renderStatement = () => {
+    const { problem, worksheet } = props.worksheet;
     if (!problem || !worksheet) {
       return <LoadingState />;
     }
 
-    const { latestSubmissions } = this.state;
+    const { latestSubmissions } = state;
     if (!latestSubmissions) {
       return <LoadingState />;
     }
-    const resultsUrl = (this.props.location.pathname + '/results').replace('//', '/');
+    const resultsUrl = (location.pathname + '/results').replace('//', '/');
 
     return (
       <ProblemWorksheetCard
         latestSubmissions={latestSubmissions}
-        onAnswerItem={this.createSubmission}
+        onAnswerItem={createSubmission}
         worksheet={worksheet}
         resultsUrl={resultsUrl}
       />
     );
   };
 
-  createSubmission = async (itemJid, answer) => {
-    const { problem } = this.props.worksheet;
-    return await this.props.onCreateSubmission(this.props.problemSet.jid, problem.problemJid, itemJid, answer);
+  const createSubmission = async (itemJid, answer) => {
+    const { problem } = props.worksheet;
+    return await dispatch(
+      problemSetSubmissionActions.createItemSubmission(problemSet.jid, problem.problemJid, itemJid, answer)
+    );
   };
-}
 
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-});
-const mapDispatchToProps = {
-  onCreateSubmission: problemSetSubmissionActions.createItemSubmission,
-  onGetLatestSubmissions: problemSetSubmissionActions.getLatestSubmissions,
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage));
+  return render();
+}

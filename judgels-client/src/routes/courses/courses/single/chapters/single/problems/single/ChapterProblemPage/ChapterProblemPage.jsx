@@ -1,7 +1,7 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
@@ -23,84 +23,80 @@ import * as chapterProblemActions from '../modules/chapterProblemActions';
 
 import './ChapterProblemPage.scss';
 
-export class ChapterProblemPage extends Component {
-  state = {
+export default function ChapterProblemPage() {
+  const { problemAlias } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+  const chapters = useSelector(selectCourseChapters);
+  const reloadKey = useSelector(selectChapterProblemReloadKey);
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     response: undefined,
-  };
+  });
 
-  componentDidMount() {
-    this.refreshProblem();
-  }
+  const prevReloadKeyRef = useRef(reloadKey);
+  const prevProgressRef = useRef(state.response?.progress);
 
-  async componentDidUpdate(prevProps) {
-    if (
-      this.props.statementLanguage !== prevProps.statementLanguage ||
-      this.props.reloadKey !== prevProps.reloadKey ||
-      this.props.match.params.problemAlias !== prevProps.match.params.problemAlias
-    ) {
-      const isReloadingProblem = this.props.reloadKey !== prevProps.reloadKey;
-      await this.refreshProblem(isReloadingProblem);
+  useEffect(() => {
+    refreshProblem();
+
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.path));
+    };
+  }, [statementLanguage, problemAlias]);
+
+  useEffect(() => {
+    prevReloadKeyRef.current = reloadKey;
+  }, [reloadKey]);
+
+  useEffect(() => {
+    prevProgressRef.current = state.response?.progress;
+  }, [state.response?.progress]);
+
+  useEffect(() => {
+    if (reloadKey !== prevReloadKeyRef.current && state.response) {
+      checkEditorial(prevProgressRef.current, state.response.progress, state.response);
     }
-  }
+  }, [reloadKey, state.response]);
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.path);
-  }
-
-  render() {
+  const render = () => {
     return (
       <div className="chapter-problem-page">
-        {this.renderHeader()}
-        {this.renderContent()}
+        {renderHeader()}
+        {renderContent()}
       </div>
     );
-  }
+  };
 
-  refreshProblem = async (isReloadingProblem = false) => {
-    let oldProgress = undefined;
-    if (isReloadingProblem) {
-      oldProgress = this.state.response.progress;
-    } else {
-      this.setState({
-        response: undefined,
-      });
-    }
+  const refreshProblem = async () => {
+    setState({
+      response: undefined,
+    });
 
-    const response = await this.props.onGetProblemWorksheet(
-      this.props.chapter.jid,
-      this.props.match.params.problemAlias,
-      this.props.statementLanguage
+    const response = await dispatch(
+      chapterProblemActions.getProblemWorksheet(chapter.jid, problemAlias, statementLanguage)
     );
 
-    this.setState(
-      {
-        response,
-      },
-      () => {
-        if (isReloadingProblem) {
-          const newProgress = response.progress;
-          this.checkEditorial(oldProgress, newProgress);
-        }
-      }
-    );
+    setState({
+      response,
+    });
 
-    this.props.onPushBreadcrumb(this.props.match.path, this.props.chapter.alias + ' / ' + response.problem.alias);
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.path, chapter.alias + ' / ' + response.problem.alias));
 
-    sendGAEvent({ category: 'Courses', action: 'View course problem', label: this.props.course.name });
-    sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: this.props.chapter.name });
+    sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
+    sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });
     sendGAEvent({
       category: 'Courses',
       action: 'View problem',
-      label: this.props.chapterName + ': ' + this.props.match.params.problemAlias,
+      label: chapter.name + ': ' + problemAlias,
     });
   };
 
-  checkEditorial = (oldProgress, newProgress) => {
-    if (
-      oldProgress?.verdict !== VerdictCode.AC &&
-      newProgress?.verdict == VerdictCode.AC &&
-      this.state.response.editorial
-    ) {
+  const checkEditorial = (oldProgress, newProgress) => {
+    if (oldProgress?.verdict !== VerdictCode.AC && newProgress?.verdict == VerdictCode.AC && state.response.editorial) {
       const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
       if (problemEditorialEl) {
         problemEditorialEl.scrollIntoView({ behavior: 'smooth' });
@@ -108,9 +104,8 @@ export class ChapterProblemPage extends Component {
     }
   };
 
-  renderHeader = () => {
-    const { course, chapter, match } = this.props;
-    const { response } = this.state;
+  const renderHeader = () => {
+    const { response } = state;
     const problemTitle = response && response.worksheet.statement.title;
 
     return (
@@ -128,17 +123,17 @@ export class ChapterProblemPage extends Component {
           &nbsp;
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
           &nbsp;
-          {match.params.problemAlias}. {problemTitle}
+          {problemAlias}. {problemTitle}
         </h3>
 
-        {this.renderProgress()}
-        {this.renderNavigation()}
+        {renderProgress()}
+        {renderNavigation()}
       </div>
     );
   };
 
-  renderProgress = () => {
-    const { response } = this.state;
+  const renderProgress = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -151,9 +146,8 @@ export class ChapterProblemPage extends Component {
     return <ChapterProblemProgressTag verdict={progress.verdict} />;
   };
 
-  renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
-    const { course, chapter, chapters } = this.props;
-    const { response } = this.state;
+  const renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -171,31 +165,19 @@ export class ChapterProblemPage extends Component {
     );
   };
 
-  renderContent = () => {
-    const { response } = this.state;
+  const renderContent = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
     const { problem } = response;
     if (problem.type === ProblemType.Programming) {
-      return <ChapterProblemProgrammingPage worksheet={response} renderNavigation={this.renderNavigation} />;
+      return <ChapterProblemProgrammingPage worksheet={response} renderNavigation={renderNavigation} />;
     } else {
-      return <ChapterProblemBundlePage worksheet={response} renderNavigation={this.renderNavigation} />;
+      return <ChapterProblemBundlePage worksheet={response} renderNavigation={renderNavigation} />;
     }
   };
-}
 
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-  chapters: selectCourseChapters(state),
-  reloadKey: selectChapterProblemReloadKey(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-const mapDispatchToProps = {
-  onGetProblemWorksheet: chapterProblemActions.getProblemWorksheet,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemPage));
+  return render();
+}

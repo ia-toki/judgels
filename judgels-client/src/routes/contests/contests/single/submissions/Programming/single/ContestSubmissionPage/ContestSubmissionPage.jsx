@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -11,48 +11,57 @@ import { selectContest } from '../../../../../modules/contestSelectors';
 import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
-export class ContestSubmissionPage extends Component {
-  state = {
+export default function ContestSubmissionPage() {
+  const { submissionId } = useParams();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     submissionWithSource: undefined,
     profile: undefined,
     problemName: undefined,
     problemAlias: undefined,
     containerName: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    const { data, profile, problemName, problemAlias, containerName } = await this.props.onGetSubmissionWithSource(
-      this.props.contest.jid,
-      +this.props.match.params.submissionId,
-      this.props.statementLanguage
+  const loadSubmission = async () => {
+    const { data, profile, problemName, problemAlias, containerName } = await dispatch(
+      contestSubmissionActions.getSubmissionWithSource(contest.jid, +submissionId, statementLanguage)
     );
-    this.props.onPushBreadcrumb(this.props.match.url, 'Submission #' + data.submission.id);
-    this.setState({
+
+    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Submission #' + data.submission.id));
+
+    setState({
       submissionWithSource: data,
       profile,
       problemName,
       problemAlias,
       containerName,
     });
-  }
+  };
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
+  useEffect(() => {
+    loadSubmission();
 
-  render() {
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+    };
+  }, []);
+
+  const render = () => {
     return (
       <ContentCard>
-        <h3>Submission #{this.props.match.params.submissionId}</h3>
+        <h3>Submission #{submissionId}</h3>
         <hr />
-        {this.renderSubmission()}
+        {renderSubmission()}
       </ContentCard>
     );
-  }
+  };
 
-  renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, problemAlias } = this.state;
-    const { contest } = this.props;
+  const renderSubmission = () => {
+    const { submissionWithSource, profile, problemName, problemAlias } = state;
 
     if (!submissionWithSource) {
       return <LoadingState />;
@@ -66,27 +75,15 @@ export class ContestSubmissionPage extends Component {
         problemName={problemName}
         problemAlias={problemAlias}
         problemUrl={`/contests/${contest.slug}/problems/${problemAlias}`}
-        onDownload={this.downloadSubmission}
+        onDownload={downloadSubmission}
       />
     );
   };
 
-  downloadSubmission = () => {
-    const { submissionWithSource } = this.state;
-    this.props.onDownloadSubmission(submissionWithSource.submission.jid);
+  const downloadSubmission = () => {
+    const { submissionWithSource } = state;
+    dispatch(contestSubmissionActions.downloadSubmission(submissionWithSource.submission.jid));
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionWithSource: contestSubmissionActions.getSubmissionWithSource,
-  onDownloadSubmission: contestSubmissionActions.downloadSubmission,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionPage));

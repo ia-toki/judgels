@@ -1,7 +1,6 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -17,34 +16,28 @@ import * as chapterResourcesActions from '../modules/chapterResourceActions';
 
 import './ChapterResourcesPage.scss';
 
-export class ChapterResourcesPage extends Component {
-  state = {
+export default function ChapterResourcesPage() {
+  const dispatch = useDispatch();
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+
+  const [state, setState] = useState({
     response: undefined,
-  };
+  });
 
-  componentDidMount() {
-    this.refreshResources();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.chapter.jid !== prevProps.chapter.jid) {
-      this.refreshResources();
-    }
-  }
-
-  refreshResources = async () => {
-    this.setState({
+  const refreshResources = async () => {
+    setState({
       response: undefined,
     });
 
-    const response = await this.props.onGetResources(this.props.chapter.jid);
+    const response = await dispatch(chapterResourcesActions.getResources(chapter.jid));
     const [lessonsResponse, problemsResponse] = response;
     const { data: lessons, lessonsMap } = lessonsResponse;
     const { data: problems, problemsMap, problemSetProblemPathsMap, problemProgressesMap } = problemsResponse;
 
-    const firstUnsolvedProblemIndex = this.getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
+    const firstUnsolvedProblemIndex = getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
 
-    this.setState({
+    setState({
       response,
       lessons,
       lessonsMap,
@@ -56,18 +49,20 @@ export class ChapterResourcesPage extends Component {
     });
   };
 
-  render() {
+  useEffect(() => {
+    refreshResources();
+  }, [chapter.jid]);
+
+  const render = () => {
     return (
       <div className="chapter-resources-page">
-        {this.renderHeader()}
-        {this.renderResources()}
+        {renderHeader()}
+        {renderResources()}
       </div>
     );
-  }
+  };
 
-  renderHeader = () => {
-    const { course, chapter } = this.props;
-
+  const renderHeader = () => {
     return (
       <h3 className="chapter-resources-page__title">
         <Link className="chapter-resources-page__title--link" to={`/courses/${course.slug}`}>
@@ -81,8 +76,8 @@ export class ChapterResourcesPage extends Component {
     );
   };
 
-  renderResources = () => {
-    const { response, lessons, problems, problemSetProblemPathsMap } = this.state;
+  const renderResources = () => {
+    const { response, lessons, problems, problemSetProblemPathsMap } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -102,8 +97,8 @@ export class ChapterResourcesPage extends Component {
     if (lessons.length > 0 || chapterProblems.length > 0) {
       chapterResources = (
         <div className="chapter-resources-page__resources">
-          {lessons.map(this.renderLesson)}
-          {chapterProblems.map(this.renderProblem)}
+          {lessons.map(renderLesson)}
+          {chapterProblems.map(renderProblem)}
         </div>
       );
     }
@@ -114,7 +109,7 @@ export class ChapterResourcesPage extends Component {
         <div className="chapter-resources-page__problem-set-problems">
           <h4>Practice Problems</h4>
           <div className="chapter-resources-page__resources">
-            {problemSetProblems.map((p, idx) => this.renderProblem(p, idx + chapterProblems.length))}
+            {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
           </div>
         </div>
       );
@@ -128,24 +123,24 @@ export class ChapterResourcesPage extends Component {
     );
   };
 
-  renderLesson = lesson => {
-    const { lessonsMap } = this.state;
+  const renderLesson = lesson => {
+    const { lessonsMap } = state;
 
     const props = {
-      course: this.props.course,
-      chapter: this.props.chapter,
+      course,
+      chapter,
       lesson,
       lessonName: getLessonName(lessonsMap[lesson.lessonJid], undefined),
     };
     return <ChapterLessonCard key={lesson.lessonJid} {...props} />;
   };
 
-  renderProblem = (problem, idx) => {
-    const { problemsMap, problemSetProblemPathsMap, problemProgressesMap, firstUnsolvedProblemIndex } = this.state;
+  const renderProblem = (problem, idx) => {
+    const { problemsMap, problemSetProblemPathsMap, problemProgressesMap, firstUnsolvedProblemIndex } = state;
 
     const props = {
-      course: this.props.course,
-      chapter: this.props.chapter,
+      course,
+      chapter,
       problem,
       problemName: getProblemName(problemsMap[problem.problemJid], undefined),
       problemSetProblemPaths: problemSetProblemPathsMap[problem.problemJid],
@@ -155,7 +150,7 @@ export class ChapterResourcesPage extends Component {
     return <ChapterProblemCard key={problem.problemJid} {...props} />;
   };
 
-  getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
+  const getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
     for (let i = problems.length - 1; i >= 0; i--) {
       const progress = problemProgressesMap[problems[i].problemJid];
       if (!progress) {
@@ -167,15 +162,6 @@ export class ChapterResourcesPage extends Component {
     }
     return 0;
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-});
-
-const mapDispatchToProps = {
-  onGetResources: chapterResourcesActions.getResources,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterResourcesPage));

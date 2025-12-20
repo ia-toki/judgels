@@ -1,10 +1,9 @@
 import { Radio, RadioGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { sendGAEvent } from '../../../../ga';
@@ -13,28 +12,30 @@ import * as archiveActions from '../modules/archiveActions';
 
 import './ProblemSetArchiveFilter.scss';
 
-class ProblemSetArchiveFilter extends Component {
-  state;
+export default function ProblemSetArchiveFilter() {
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const queries = parse(location.search);
+  const archiveSlug = queries.archive || '';
 
-    const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archive || '';
+  const [state, setState] = useState({
+    response: undefined,
+    archiveSlug,
+  });
 
-    this.state = {
-      response: undefined,
-      archiveSlug,
-    };
-  }
+  const loadArchives = async () => {
+    const response = await dispatch(archiveActions.getArchives());
+    setState(prevState => ({ ...prevState, response }));
+  };
 
-  async componentDidMount() {
-    const response = await this.props.onGetArchives();
-    this.setState({ response });
-  }
+  useEffect(() => {
+    loadArchives();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -42,13 +43,13 @@ class ProblemSetArchiveFilter extends Component {
       <ContentCard>
         <h4>Filter problemset</h4>
         <hr />
-        {this.renderArchiveCategories()}
+        {renderArchiveCategories()}
       </ContentCard>
     );
-  }
+  };
 
-  renderArchiveCategories = () => {
-    const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...this.state.response.data];
+  const renderArchiveCategories = () => {
+    const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...state.response.data];
     const archivesByCategory = {};
     archives.forEach(archive => {
       if (archivesByCategory[archive.category]) {
@@ -59,39 +60,34 @@ class ProblemSetArchiveFilter extends Component {
     });
 
     const categories = Object.keys(archivesByCategory).sort();
-    return categories.map(category => this.renderArchives(category, archivesByCategory[category]));
+    return categories.map(category => renderArchives(category, archivesByCategory[category]));
   };
 
-  renderArchives = (category, archives) => {
+  const renderArchives = (category, archives) => {
     return (
       <div key={category}>
         {category && <p className="archive-filter__category">{category}</p>}
-        <RadioGroup
-          key={category}
-          name="archiveSlug"
-          onChange={this.changeArchive}
-          selectedValue={this.state.archiveSlug}
-        >
+        <RadioGroup key={category} name="archiveSlug" onChange={changeArchive} selectedValue={archiveSlug}>
           {archives.map(archive => (
-            <Radio key={archive.slug} labelElement={this.renderArchiveOption(archive)} value={archive.slug} />
+            <Radio key={archive.slug} labelElement={renderArchiveOption(archive)} value={archive.slug} />
           ))}
         </RadioGroup>
       </div>
     );
   };
 
-  renderArchiveOption = archive => {
+  const renderArchiveOption = archive => {
     return (
-      <span className={classNames({ 'archive-filter__option--inactive': archive.slug !== this.state.archiveSlug })}>
+      <span className={classNames({ 'archive-filter__option--inactive': archive.slug !== archiveSlug })}>
         {archive.name}
       </span>
     );
   };
 
-  changeArchive = e => {
+  const changeArchive = e => {
     const archiveSlug = e.target.value;
-    const queries = parse(this.props.location.search);
-    this.props.onPush({
+    const queries = parse(location.search);
+    history.push({
       search: stringify({
         ...queries,
         name: undefined,
@@ -99,7 +95,7 @@ class ProblemSetArchiveFilter extends Component {
         archive: archiveSlug === '' ? undefined : archiveSlug,
       }),
     });
-    this.setState({ archiveSlug });
+    setState(prevState => ({ ...prevState, archiveSlug }));
 
     sendGAEvent({
       category: 'Problems',
@@ -107,10 +103,6 @@ class ProblemSetArchiveFilter extends Component {
       label: archiveSlug,
     });
   };
-}
 
-const mapDispatchToProps = {
-  onGetArchives: archiveActions.getArchives,
-  onPush: push,
-};
-export default withRouter(connect(undefined, mapDispatchToProps)(ProblemSetArchiveFilter));
+  return render();
+}

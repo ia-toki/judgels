@@ -1,4 +1,4 @@
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -18,4 +18,4 @@ function SubmissionsRoutes() {
   );
 }
 
-export default withBreadcrumb('Submissions')(withRouter(SubmissionsRoutes));
+export default withBreadcrumb('Submissions')(SubmissionsRoutes);

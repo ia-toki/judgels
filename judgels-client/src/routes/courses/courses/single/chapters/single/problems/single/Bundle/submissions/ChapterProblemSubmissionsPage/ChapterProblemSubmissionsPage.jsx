@@ -1,11 +1,10 @@
 import { Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { ButtonLink } from '../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
-import ItemSubmissionUserFilter from '../../../../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
@@ -18,21 +17,29 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 
 import './ChapterProblemSubmissionsPage.scss';
 
-class ChapterProblemSubmissionsPage extends Component {
-  state = {
+export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
+  const { problemAlias } = useParams();
+  const dispatch = useDispatch();
+  const userJid = useSelector(selectMaybeUserJid);
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+  const language = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     config: undefined,
     profile: undefined,
     problemSummaries: undefined,
-  };
+  });
 
-  async refreshSubmissions() {
-    const { userJid, chapter, match, language, onGetSubmissionSummary } = this.props;
+  const refreshSubmissions = async () => {
     if (!userJid) {
-      this.setState({ problemSummaries: [] });
+      setState(prevState => ({ ...prevState, problemSummaries: [] }));
       return;
     }
 
-    const response = await onGetSubmissionSummary(chapter.jid, match.params.problemAlias, language);
+    const response = await dispatch(
+      chapterProblemSubmissionActions.getSubmissionSummary(chapter.jid, problemAlias, language)
+    );
 
     const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
@@ -44,43 +51,34 @@ class ChapterProblemSubmissionsPage extends Component {
       itemTypesMap: response.itemTypesMap,
     }));
 
-    this.setState({ config: response.config, profile: response.profile, problemSummaries });
-  }
+    setState({ config: response.config, profile: response.profile, problemSummaries });
+  };
 
-  async componentDidMount() {
-    await this.refreshSubmissions();
-  }
+  useEffect(() => {
+    refreshSubmissions();
+  }, []);
 
-  render() {
-    const { course, chapter, match } = this.props;
-
+  const render = () => {
     return (
       <ContentCard className="chapter-bundle-problem-submissions-page">
         <h3 className="heading-with-button-action">Results</h3>
         <ButtonLink
           small
           intent={Intent.PRIMARY}
-          to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${match.params.problemAlias}`}
+          to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
         >
           Retake
         </ButtonLink>
         <hr />
-        {this.renderResults()}
-        {this.renderEditorial()}
-        {this.renderNavigation()}
+        {renderResults()}
+        {renderEditorial()}
+        {renderNavigationSection()}
       </ContentCard>
     );
-  }
-
-  renderUserFilter = () => {
-    if (this.props.location.pathname.includes('/users/')) {
-      return null;
-    }
-    return <ItemSubmissionUserFilter />;
   };
 
-  renderResults = () => {
-    const { problemSummaries } = this.state;
+  const renderResults = () => {
+    const { problemSummaries } = state;
     if (!problemSummaries) {
       return <LoadingState />;
     }
@@ -89,15 +87,14 @@ class ChapterProblemSubmissionsPage extends Component {
     }
     return (
       <>
-        {this.state.problemSummaries.map(props => (
+        {problemSummaries.map(props => (
           <SubmissionDetails key={props.alias} {...props} showTitle={false} />
         ))}
       </>
     );
   };
 
-  renderEditorial = () => {
-    const { worksheet } = this.props;
+  const renderEditorial = () => {
     const { problem, editorial } = worksheet;
     if (!editorial) {
       return null;
@@ -115,20 +112,9 @@ class ChapterProblemSubmissionsPage extends Component {
     );
   };
 
-  renderNavigation = () => {
-    return <div className="chapter-problem-navigation">{this.props.renderNavigation({ hidePrev: true })}</div>;
+  const renderNavigationSection = () => {
+    return <div className="chapter-problem-navigation">{renderNavigation({ hidePrev: true })}</div>;
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-  language: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionSummary: chapterProblemSubmissionActions.getSubmissionSummary,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChapterProblemSubmissionsPage));
