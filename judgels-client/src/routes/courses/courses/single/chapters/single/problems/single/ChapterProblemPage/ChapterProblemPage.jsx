@@ -37,7 +37,6 @@ export default function ChapterProblemPage() {
     response: undefined,
   });
 
-  const prevReloadKeyRef = useRef(reloadKey);
   const prevProgressRef = useRef(state.response?.progress);
 
   useEffect(() => {
@@ -46,19 +45,15 @@ export default function ChapterProblemPage() {
     return () => {
       dispatch(breadcrumbsActions.popBreadcrumb(match.path));
     };
-  }, [statementLanguage, problemAlias]);
-
-  useEffect(() => {
-    prevReloadKeyRef.current = reloadKey;
-  }, [reloadKey]);
+  }, [statementLanguage, reloadKey, problemAlias]);
 
   useEffect(() => {
     prevProgressRef.current = state.response?.progress;
   }, [state.response?.progress]);
 
   useEffect(() => {
-    if (reloadKey !== prevReloadKeyRef.current && state.response) {
-      checkEditorial(prevProgressRef.current, state.response.progress, state.response);
+    if (state.response) {
+      checkEditorial(prevProgressRef.current, state.response.progress);
     }
   }, [reloadKey, state.response]);
 
