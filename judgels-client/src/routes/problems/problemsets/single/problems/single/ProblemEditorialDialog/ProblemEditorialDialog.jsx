@@ -1,7 +1,7 @@
 import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 

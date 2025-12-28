@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useResolvedPath } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { useBreadcrumbsPath } from '../../../../hooks/useBreadcrumbsPath';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
 
@@ -13,7 +14,7 @@ import * as submissionActions from '../../modules/submissionActions';
 
 export default function SubmissionPage() {
   const { submissionId } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const statementLanguage = useSelector(selectStatementLanguage);
 

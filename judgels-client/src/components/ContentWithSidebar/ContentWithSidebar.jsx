@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { useLocation, useResolvedPath } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
+import { useBreadcrumbsPath } from '../../hooks/useBreadcrumbsPath';
 import { Sidebar } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.scss';
@@ -41,8 +42,8 @@ export default function ContentWithSidebar({
   children,
 }) {
   const location = useLocation();
-  const { pathname: resolvedPathname } = useResolvedPath('');
-  const pathname = basePath || resolvedPathname;
+  const computedBasePath = useBreadcrumbsPath();
+  const pathname = basePath || computedBasePath;
 
   const renderSidebar = () => {
     const sidebarItems = items

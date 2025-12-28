@@ -1,5 +1,5 @@
 import { Property, TimelineLineChart } from '@blueprintjs/icons';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';

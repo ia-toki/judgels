@@ -1,7 +1,7 @@
 import { Popover, Position, Tab, Tabs } from '@blueprintjs/core';
 import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
 import { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { Card } from '../Card/Card';
 

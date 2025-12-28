@@ -1,7 +1,7 @@
 import { ChevronRight } from '@blueprintjs/icons';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';

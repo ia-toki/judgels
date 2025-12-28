@@ -1,5 +1,5 @@
 import { Console } from '@blueprintjs/icons';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';

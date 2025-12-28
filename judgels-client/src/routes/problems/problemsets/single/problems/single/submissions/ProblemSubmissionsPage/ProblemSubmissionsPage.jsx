@@ -1,7 +1,7 @@
 import { parse } from 'query-string';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';

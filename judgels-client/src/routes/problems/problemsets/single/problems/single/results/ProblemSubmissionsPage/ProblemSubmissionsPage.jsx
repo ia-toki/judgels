@@ -3,7 +3,7 @@ import { Refresh, Search } from '@blueprintjs/icons';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';

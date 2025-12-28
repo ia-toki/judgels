@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { ButtonLink } from '../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';

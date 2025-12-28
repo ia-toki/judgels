@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { Card } from '../../../../../components/Card/Card';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';

@@ -3,10 +3,11 @@ import { Menu } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useResolvedPath } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
+import { useBreadcrumbsPath } from '../../../../../hooks/useBreadcrumbsPath';
 import { selectCourse } from '../../modules/courseSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
 import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
@@ -17,7 +18,7 @@ import './CourseChaptersSidebar.scss';
 
 export default function CourseChaptersSidebar() {
   const location = useLocation();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);

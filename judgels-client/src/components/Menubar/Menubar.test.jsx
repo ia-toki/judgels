@@ -1,139 +1,59 @@
-import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import createMockStore from 'redux-mock-store';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 
 import Menubar from './Menubar';
 
 describe('Menubar', () => {
-  let store;
+  const items = [
+    { id: 'first', title: 'First', route: { path: '/first' } },
+    { id: 'second', title: 'Second', route: { path: '/second' } },
+    { id: 'third', title: 'Third', route: { path: '/third' } },
+  ];
 
-  const FirstComponent = () => <div />;
-  const SecondComponent = () => <div />;
-  const ThirdComponent = () => <div />;
-  const HomeComponent = () => <div />;
+  const homeRoute = { id: 'home', title: 'Home', route: { path: '/' } };
 
-  const renderComponent = (childPath, withHome, parentRoute) => {
-    const props = {
-      items: [
-        {
-          id: 'first',
-          title: 'First',
-          route: {
-            path: '/first',
-            component: FirstComponent,
-          },
-        },
-        {
-          id: 'second',
-          title: 'Second',
-          route: {
-            path: '/second',
-            component: SecondComponent,
-          },
-        },
-        {
-          id: 'third',
-          title: 'Third',
-          route: {
-            path: '/third',
-            component: ThirdComponent,
-          },
-        },
-      ],
-      homeRoute: withHome
-        ? {
-            id: 'home',
-            title: 'Home',
-            route: {
-              path: '/',
-              component: HomeComponent,
-            },
-          }
-        : undefined,
-    };
-
-    const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
-
+  const renderMenubar = path => {
     render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[initialPath]}>
-          <Routes>
-            <Route path={parentRoute === '/' ? '/*' : parentRoute + '/*'} element={<Menubar {...props} />} />
-          </Routes>
-        </MemoryRouter>
-      </Provider>
+      <MemoryRouter initialEntries={[path]}>
+        <Menubar items={items} homeRoute={homeRoute} />
+      </MemoryRouter>
     );
   };
 
-  beforeEach(() => {
-    store = createMockStore()({});
+  it('renders all menu items', () => {
+    renderMenubar('/');
+
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('First')).toBeInTheDocument();
+    expect(screen.getByText('Second')).toBeInTheDocument();
+    expect(screen.getByText('Third')).toBeInTheDocument();
   });
 
-  describe('when the child path is present', () => {
-    beforeEach(() => {
-      renderComponent('/second', false, '/parent');
-    });
+  it('highlights the active route', () => {
+    renderMenubar('/second');
 
-    it('shows menubar items with the correct texts', () => {
-      const items = screen.getAllByRole('tab');
-      expect(items).toHaveLength(3);
-
-      expect(items[0]).toHaveTextContent('First');
-      expect(items[1]).toHaveTextContent('Second');
-      expect(items[2]).toHaveTextContent('Third');
-    });
-
-    it('has the correct active item', () => {
-      const items = screen.getAllByRole('tab');
-
-      expect(items[0]).toHaveAttribute('aria-selected', 'false');
-      expect(items[1]).toHaveAttribute('aria-selected', 'true');
-      expect(items[2]).toHaveAttribute('aria-selected', 'false');
-    });
-
-    it('has the correct links', () => {
-      const items = screen.getAllByRole('tab');
-      const link = within(items[2]).getByRole('link');
-      // React Router resolves './third' relative to /parent, giving /parent/third
-      expect(link).toHaveAttribute('href', '/parent/third');
-    });
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs.find(t => t.textContent === 'Home')).toHaveAttribute('aria-selected', 'false');
+    expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  describe('when the home path is present', () => {
-    beforeEach(() => {
-      renderComponent('/', true, '/parent');
-    });
+  it('highlights active route for nested paths', () => {
+    renderMenubar('/second/child/path');
 
-    it('shows menubar items with the correct texts', () => {
-      const items = screen.getAllByRole('tab');
-      expect(items).toHaveLength(4);
-
-      expect(items[0]).toHaveTextContent('Home');
-      expect(items[1]).toHaveTextContent('First');
-      expect(items[2]).toHaveTextContent('Second');
-      expect(items[3]).toHaveTextContent('Third');
-    });
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  describe('when the parent path is empty', () => {
-    beforeEach(() => {
-      renderComponent('/second', false, '/');
-    });
+  it('falls back to home when no route matches', () => {
+    renderMenubar('/unknown');
 
-    it('has the correct active item', () => {
-      const items = screen.getAllByRole('tab');
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs.find(t => t.textContent === 'Home')).toHaveAttribute('aria-selected', 'true');
+  });
 
-      expect(items[0]).toHaveAttribute('aria-selected', 'false');
-      expect(items[1]).toHaveAttribute('aria-selected', 'true');
-      expect(items[2]).toHaveAttribute('aria-selected', 'false');
-    });
+  it('generates correct links', () => {
+    renderMenubar('/');
 
-    it('has the correct links', () => {
-      const items = screen.getAllByRole('tab');
-      const link = within(items[2]).getByRole('link');
-      expect(link).toHaveAttribute('href', '/third');
-    });
+    expect(screen.getByRole('link', { name: 'Third' })).toHaveAttribute('href', '/third');
   });
 });

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useResolvedPath } from 'react-router-dom';
+import { useParams } from 'react-router';
 
+import { useBreadcrumbsPath } from '../../../../hooks/useBreadcrumbsPath';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../modules/contestSelectors';
 
@@ -11,7 +12,7 @@ import * as contestWebActions from './modules/contestWebActions';
 
 export default function SingleContestDataRoute() {
   const { contestSlug } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const currentTimeoutRef = useRef(null);

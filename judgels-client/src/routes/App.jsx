@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { PureComponent } from 'react';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import Announcements from '../components/Announcements/Announcements';
 import { AppContent } from '../components/AppContent/AppContent';

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
 import ChapterProblemWorkspacePage from './ChapterProblemWorkspacePage/ChapterProblemWorkspacePage';

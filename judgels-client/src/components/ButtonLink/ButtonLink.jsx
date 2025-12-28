@@ -1,6 +1,6 @@
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export function ButtonLink({ className, disabled, active, intent, small, large, ...linkProps }) {
   if (disabled) {

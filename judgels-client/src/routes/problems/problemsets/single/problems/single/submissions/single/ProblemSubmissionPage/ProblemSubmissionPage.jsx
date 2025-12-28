@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useResolvedPath } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { useBreadcrumbsPath } from '../../../../../../../../../hooks/useBreadcrumbsPath';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
@@ -16,7 +17,7 @@ import * as problemSetSubmissionActions from '../../modules/problemSetSubmission
 
 export default function ProblemSubmissionPage() {
   const { submissionId } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);

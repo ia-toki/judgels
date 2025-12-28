@@ -1,12 +1,13 @@
 import { ChevronRight } from '@blueprintjs/icons';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams, useResolvedPath } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { useBreadcrumbsPath } from '../../../../../../../../../hooks/useBreadcrumbsPath';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
@@ -20,7 +21,7 @@ import './ChapterLessonPage.scss';
 
 export default function ChapterLessonPage() {
   const { lessonAlias } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);

@@ -1,6 +1,6 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
 import { Download, Lock } from '@blueprintjs/icons';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
 import {

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';

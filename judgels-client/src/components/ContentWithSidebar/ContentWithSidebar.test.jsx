@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Navigate, Route, Routes } from 'react-router';
 import createMockStore from 'redux-mock-store';
 
 import ContentWithSidebar from './ContentWithSidebar';
