@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { useLocation, useResolvedPath } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
+import { useBreadcrumbsPath } from '../../hooks/useBreadcrumbsPath';
 import { Topbar } from '../Topbar/Topbar';
 
 function ContentAndTopbar({ className, topbarElement, contentElement }) {
@@ -18,8 +19,8 @@ function resolveUrl(parentPath, childPath) {
 
 export default function ContentWithTopbar({ className, items, basePath, children }) {
   const location = useLocation();
-  const { pathname: resolvedPathname } = useResolvedPath('');
-  const pathname = basePath || resolvedPathname;
+  const computedBasePath = useBreadcrumbsPath();
+  const pathname = basePath || computedBasePath;
 
   const renderTopbar = () => {
     const topbarItems = items

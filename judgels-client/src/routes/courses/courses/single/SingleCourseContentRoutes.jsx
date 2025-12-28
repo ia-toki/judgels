@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import CourseOverview from './CourseOverview/CourseOverview';
 import MainSingleCourseChapterRoutes from './chapters/single/MainSingleCourseChapterRoutes';

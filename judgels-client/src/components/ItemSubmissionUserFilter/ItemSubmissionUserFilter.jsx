@@ -1,5 +1,5 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import './ItemSubmissionUserFilter.scss';
 

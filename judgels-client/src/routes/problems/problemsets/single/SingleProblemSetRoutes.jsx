@@ -1,8 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, Manual } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';

@@ -1,11 +1,12 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams, useResolvedPath } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../../ga';
+import { useBreadcrumbsPath } from '../../../../../../../../../hooks/useBreadcrumbsPath';
 import { VerdictCode } from '../../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../../modules/api/sandalphon/problem';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
@@ -24,7 +25,7 @@ import './ChapterProblemPage.scss';
 
 export default function ChapterProblemPage() {
   const { problemAlias } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);

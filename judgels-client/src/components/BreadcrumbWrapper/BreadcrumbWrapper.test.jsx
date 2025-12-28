@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { Component } from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 

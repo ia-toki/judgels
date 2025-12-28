@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
+import { useParams } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';

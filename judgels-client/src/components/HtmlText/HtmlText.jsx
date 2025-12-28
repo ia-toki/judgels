@@ -1,7 +1,7 @@
 import HTMLReactParser from 'html-react-parser';
 import { Component } from 'react';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 import { UserRef } from '../UserRef/UserRef';
 

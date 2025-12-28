@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import 'typeface-open-sans';
 import 'typeface-roboto';

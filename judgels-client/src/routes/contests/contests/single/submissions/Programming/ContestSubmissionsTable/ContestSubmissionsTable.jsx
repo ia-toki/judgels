@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { GradingVerdictTag } from '../../../../../../../components/GradingVerdictTag/GradingVerdictTag';

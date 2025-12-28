@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';

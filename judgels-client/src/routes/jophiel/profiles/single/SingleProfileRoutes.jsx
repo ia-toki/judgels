@@ -1,7 +1,7 @@
 import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
+import { useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';

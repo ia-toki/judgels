@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
 import ChapterProblemSubmissionPage from './single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage';

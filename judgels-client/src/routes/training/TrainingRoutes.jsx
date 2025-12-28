@@ -1,5 +1,5 @@
 import { Box, PanelStats, PredictiveAnalysis, Properties } from '@blueprintjs/icons';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';

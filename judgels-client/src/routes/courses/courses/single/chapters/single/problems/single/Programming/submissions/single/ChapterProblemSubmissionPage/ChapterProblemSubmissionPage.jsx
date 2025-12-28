@@ -1,12 +1,13 @@
 import { ChevronLeft } from '@blueprintjs/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useResolvedPath } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { useBreadcrumbsPath } from '../../../../../../../../../../../../hooks/useBreadcrumbsPath';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
@@ -16,7 +17,7 @@ import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSu
 
 export default function ChapterProblemSubmissionPage() {
   const { problemAlias, submissionId } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);

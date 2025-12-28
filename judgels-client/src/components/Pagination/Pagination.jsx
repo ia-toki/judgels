@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import './Pagination.scss';
 

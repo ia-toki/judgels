@@ -1,5 +1,5 @@
 import { MenuItem } from '@blueprintjs/core';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export default function MenuItemLink({ text, to }) {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { parse, stringify } from 'query-string';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import SearchBoxForm from './SearchBoxForm';
 

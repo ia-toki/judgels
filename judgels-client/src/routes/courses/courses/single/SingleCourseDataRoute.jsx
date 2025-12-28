@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams, useResolvedPath } from 'react-router-dom';
+import { useParams } from 'react-router';
+
+import { useBreadcrumbsPath } from '../../../../hooks/useBreadcrumbsPath';
 
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as courseActions from '../modules/courseActions';
 
 export default function SingleCourseDataRoute() {
   const { courseSlug } = useParams();
-  const { pathname } = useResolvedPath('');
+  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
 
   const loadCourse = async () => {

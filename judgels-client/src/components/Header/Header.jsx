@@ -1,5 +1,5 @@
 import { Alignment, Navbar } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import logo from '../../assets/images/logo-header.png';
 import { APP_CONFIG } from '../../conf';
