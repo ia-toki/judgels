@@ -1,5 +1,5 @@
 import { TimelineLineChart } from '@blueprintjs/icons';
-import { Route } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -10,11 +10,9 @@ import RatingsPage from './ratings/RatingsPage/RatingsPage';
 function SystemRoutes() {
   const sidebarItems = [
     {
-      id: 'ratings',
+      path: 'ratings',
       titleIcon: <TimelineLineChart />,
       title: 'Ratings',
-      routeComponent: Route,
-      component: RatingsPage,
     },
   ];
 
@@ -26,7 +24,12 @@ function SystemRoutes() {
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<Navigate to="ratings" replace />} />
+          <Route path="ratings" element={<RatingsPage />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

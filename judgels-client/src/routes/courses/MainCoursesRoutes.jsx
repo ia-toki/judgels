@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import CoursesRoutes from './CoursesRoutes';
@@ -7,10 +7,10 @@ import MainSingleCourseRoutes from './courses/single/MainSingleCourseRoutes';
 function MainCoursesRoutes() {
   return (
     <div>
-      <Switch>
-        <Route path="/courses/:courseSlug([a-zA-Z0-9-]+)" component={MainSingleCourseRoutes} />
-        <Route path="/courses" component={CoursesRoutes} />
-      </Switch>
+      <Routes>
+        <Route path=":courseSlug/*" element={<MainSingleCourseRoutes />} />
+        <Route path="*" element={<CoursesRoutes />} />
+      </Routes>
     </div>
   );
 }

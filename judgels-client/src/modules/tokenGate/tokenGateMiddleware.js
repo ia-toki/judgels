@@ -1,6 +1,5 @@
-import { replace } from 'connected-react-router';
-
 import { UnauthorizedError } from '../api/error';
+import { getNavigationRef } from '../navigation/navigationRef';
 
 const tokenGateMiddleware = store => next => async action => {
   try {
@@ -8,7 +7,8 @@ const tokenGateMiddleware = store => next => async action => {
   } catch (error) {
     // redirects to /logout if receiving UnauthorizedError
     if (error instanceof UnauthorizedError) {
-      return await next(replace('/logout'));
+      getNavigationRef().replace('/logout');
+      return;
     }
 
     throw error;

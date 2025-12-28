@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { ContestRole } from '../../../../../../modules/api/uriel/contestWeb';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
@@ -17,8 +17,10 @@ export default function ContestSubmissionRoutes() {
   }
   return (
     <div>
-      <Route path="/contests/:contestSlug/submissions/users/:username" component={ContestSubmissionSummaryPage} />
-      <Route exact path="/contests/:contestSlug/submissions" component={ContestSubmissionsPage} />
+      <Routes>
+        <Route path="users/:username" element={<ContestSubmissionSummaryPage />} />
+        <Route index element={<ContestSubmissionsPage />} />
+      </Routes>
     </div>
   );
 }

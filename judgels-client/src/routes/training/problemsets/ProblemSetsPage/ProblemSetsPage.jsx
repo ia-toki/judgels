@@ -1,6 +1,5 @@
-import { parse } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -12,82 +11,68 @@ import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
 
 import * as problemSetActions from '../modules/problemSetActions';
 
-class ProblemSetsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+export default function ProblemSetsPage() {
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const [state, setState] = useState({
+    response: undefined,
+    isEditDialogOpen: false,
+    isEditProblemsDialogOpen: false,
+    editedProblemSet: undefined,
+  });
 
-    const queries = parse(this.props.location.search);
-    const page = queries.page;
-
-    this.state = {
-      page,
-      response: undefined,
-      isEditDialogOpen: false,
-      isEditProblemsDialogOpen: false,
-      editedProblemSet: undefined,
-    };
-  }
-
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const page = queries.page;
-
-    if (page !== this.state.page) {
-      this.setState({ page });
-    }
-  }
-
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Problemsets</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderEditDialog()}
-        {this.renderEditProblemsDialog()}
-        {this.renderProblemSets()}
-        {this.renderPagination()}
+        {renderCreateDialog()}
+        {renderEditDialog()}
+        {renderEditProblemsDialog()}
+        {renderProblemSets()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
-
-  renderCreateDialog = () => {
-    return <ProblemSetCreateDialog onCreateProblemSet={this.createProblemSet} />;
   };
 
-  renderEditDialog = () => {
-    const { isEditDialogOpen, editedProblemSet, response } = this.state;
+  const renderCreateDialog = () => {
+    return <ProblemSetCreateDialog onCreateProblemSet={createProblemSet} />;
+  };
+
+  const renderEditDialog = () => {
+    const { isEditDialogOpen, editedProblemSet, response } = state;
     const archiveSlug = response && editedProblemSet && response.archiveSlugsMap[editedProblemSet.archiveJid];
     return (
       <ProblemSetEditDialog
         isOpen={isEditDialogOpen}
         problemSet={editedProblemSet}
         archiveSlug={archiveSlug}
-        onUpdateProblemSet={this.updateProblemSet}
-        onCloseDialog={() => this.editProblemSet(undefined)}
+        onUpdateProblemSet={updateProblemSet}
+        onCloseDialog={() => editProblemSet(undefined)}
       />
     );
   };
 
-  renderEditProblemsDialog = () => {
-    const { isEditProblemsDialogOpen, editedProblemSet } = this.state;
+  const getProblems = problemSetJid => dispatch(problemSetActions.getProblems(problemSetJid));
+  const setProblems = (problemSetJid, data) => dispatch(problemSetActions.setProblems(problemSetJid, data));
+
+  const renderEditProblemsDialog = () => {
+    const { isEditProblemsDialogOpen, editedProblemSet } = state;
     return (
       <ProblemSetProblemEditDialog
         isOpen={isEditProblemsDialogOpen}
         problemSet={editedProblemSet}
-        onGetProblems={this.props.onGetProblems}
-        onSetProblems={this.props.onSetProblems}
-        onCloseDialog={() => this.editProblemSetProblems(undefined)}
+        onGetProblems={getProblems}
+        onSetProblems={setProblems}
+        onCloseDialog={() => editProblemSetProblems(undefined)}
       />
     );
   };
 
-  renderProblemSets = () => {
-    const { response } = this.state;
+  const renderProblemSets = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -105,53 +90,46 @@ class ProblemSetsPage extends Component {
       <ProblemSetsTable
         problemSets={problemSets.page}
         archiveSlugsMap={archiveSlugsMap}
-        onEditProblemSet={this.editProblemSet}
-        onEditProblemSetProblems={this.editProblemSetProblems}
+        onEditProblemSet={editProblemSet}
+        onEditProblemSetProblems={editProblemSetProblems}
       />
     );
   };
 
-  renderPagination = () => {
-    return <Pagination pageSize={ProblemSetsPage.PAGE_SIZE} onChangePage={this.onChangePage} key={1} />;
+  const renderPagination = () => {
+    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={1} />;
   };
 
-  onChangePage = async nextPage => {
-    const response = await this.props.onGetProblemSets(nextPage);
-    this.setState({ response });
+  const onChangePage = async nextPage => {
+    const response = await dispatch(problemSetActions.getProblemSets(nextPage));
+    setState(prevState => ({ ...prevState, response }));
     return response.data.totalCount;
   };
 
-  createProblemSet = async data => {
-    await this.props.onCreateProblemSet(data);
-    await this.onChangePage(1);
+  const createProblemSet = async data => {
+    await dispatch(problemSetActions.createProblemSet(data));
   };
 
-  editProblemSet = async problemSet => {
-    this.setState({
+  const editProblemSet = problemSet => {
+    setState(prevState => ({
+      ...prevState,
       isEditDialogOpen: !!problemSet,
       editedProblemSet: problemSet,
-    });
+    }));
   };
 
-  updateProblemSet = async (problemSetJid, data) => {
-    await this.props.onUpdateProblemSet(problemSetJid, data);
-    this.editProblemSet(undefined);
-    await this.onChangePage(this.state.page);
+  const updateProblemSet = async (problemSetJid, data) => {
+    await dispatch(problemSetActions.updateProblemSet(problemSetJid, data));
+    editProblemSet(undefined);
   };
 
-  editProblemSetProblems = async problemSet => {
-    this.setState({
+  const editProblemSetProblems = problemSet => {
+    setState(prevState => ({
+      ...prevState,
       isEditProblemsDialogOpen: !!problemSet,
       editedProblemSet: problemSet,
-    });
+    }));
   };
-}
 
-const mapDispatchToProps = {
-  onGetProblemSets: problemSetActions.getProblemSets,
-  onCreateProblemSet: problemSetActions.createProblemSet,
-  onUpdateProblemSet: problemSetActions.updateProblemSet,
-  onGetProblems: problemSetActions.getProblems,
-  onSetProblems: problemSetActions.setProblems,
-};
-export default connect(undefined, mapDispatchToProps)(ProblemSetsPage);
+  return render();
+}

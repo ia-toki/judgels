@@ -1,8 +1,7 @@
-import { push } from 'connected-react-router';
-
 import { NotFoundError } from '../../../../../../../modules/api/error';
 import { getGradingLanguageEditorSubmissionFilename } from '../../../../../../../modules/api/gabriel/language';
 import { contestSubmissionProgrammingAPI } from '../../../../../../../modules/api/uriel/contestSubmissionProgramming';
+import { getNavigationRef } from '../../../../../../../modules/navigation/navigationRef';
 import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
@@ -55,7 +54,7 @@ export function createSubmission(contestJid, contestSlug, problemJid, data) {
     toastActions.showSuccessToast('Solution submitted.');
 
     window.scrollTo(0, 0);
-    dispatch(push(`/contests/${contestSlug}/submissions`));
+    getNavigationRef().push(`/contests/${contestSlug}/submissions`);
   };
 }
 

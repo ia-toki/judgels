@@ -1,10 +1,9 @@
-import { replace } from 'connected-react-router';
-
 import { BadRequestError, ForbiddenError } from '../../../../modules/api/error';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';
 import { sessionAPI } from '../../../../modules/api/jophiel/session';
 import { userAPI } from '../../../../modules/api/jophiel/user';
 import { userWebAPI } from '../../../../modules/api/jophiel/userWeb';
+import { getNavigationRef } from '../../../../modules/navigation/navigationRef';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { PutWebConfig } from '../../modules/userWebReducer';
 
@@ -18,7 +17,7 @@ export function logIn(usernameOrEmail, password) {
     } catch (error) {
       if (error instanceof ForbiddenError) {
         if (error.message === SessionErrors.UserNotActivated) {
-          dispatch(replace('/need-activation', { email: error.args.email }));
+          getNavigationRef().replace('/need-activation', { email: error.args.email });
           return;
         } else if (error.message === SessionErrors.UserMaxConcurrentSessionsExceeded) {
           throw new Error('Login failed because you are trying to log in from too many places at once.');

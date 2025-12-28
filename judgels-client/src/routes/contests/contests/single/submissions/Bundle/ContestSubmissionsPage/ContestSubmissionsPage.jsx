@@ -1,10 +1,9 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -22,56 +21,50 @@ import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
-export class ContestSubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+function ContestSubmissionsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const contest = useSelector(selectContest);
 
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
+  const queries = parse(location.search);
+  const username = queries.username;
+  const problemAlias = queries.problemAlias;
 
-    this.state = {
-      response: undefined,
-      filter: { username, problemAlias },
-      isFilterLoading: false,
-    };
-  }
+  const [state, setState] = useState({
+    response: undefined,
+    isFilterLoading: false,
+  });
 
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
-
-    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
-      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
+  useEffect(() => {
+    if (username || problemAlias) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
     }
-  }
+  }, [username, problemAlias]);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Submissions</h3>
         <hr />
-        {this.renderRegradeAllButton()}
-        {this.renderFilterWidget()}
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderRegradeAllButton()}
+        {renderFilterWidget()}
+        {renderSubmissions()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderSubmissions = () => {
-    const response = this.state.response;
+  const renderSubmissions = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
     const { data, profilesMap, problemAliasesMap, itemNumbersMap, itemTypesMap } = response;
-    const { contest } = this.props;
     const canManage = response.config.canManage;
 
     return (
@@ -118,41 +111,32 @@ export class ContestSubmissionsPage extends Component {
     );
   };
 
-  renderPagination = () => {
-    const { filter } = this.state;
-
-    const key = '' + filter.username + filter.problemAlias;
-    return <Pagination key={key} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    const key = '' + username + problemAlias;
+    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  refreshSubmissions = async (username, problemAlias, page) => {
-    const { contest, onGetSubmissions } = this.props;
-    const response = await onGetSubmissions(contest.jid, username, problemAlias, page);
-    this.setState({ response, isFilterLoading: false });
+  const refreshSubmissions = async page => {
+    const response = await dispatch(contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page));
+    setState({ response, isFilterLoading: false });
     return response;
   };
 
-  onChangePage = async nextPage => {
-    const { username, problemAlias } = this.state.filter;
-    const response = await this.refreshSubmissions(username, problemAlias, nextPage);
+  const onChangePage = async nextPage => {
+    const response = await refreshSubmissions(nextPage);
     return response.data.totalCount;
   };
 
-  onClickRegrade = submissionJid => {
-    return () => this.onRegrade(submissionJid);
-  };
-
-  onRegradeAll = async () => {
+  const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      const { username, problemAlias } = this.state.filter;
-      await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
-      const queries = parse(this.props.location.search);
-      await this.refreshSubmissions(username, problemAlias, queries.page);
+      await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
+      const queries = parse(location.search);
+      await refreshSubmissions(queries.page);
     }
   };
 
-  renderRegradeAllButton = () => {
-    if (!this.state.response || !this.state.response.config.canManage) {
+  const renderRegradeAllButton = () => {
+    if (!state.response || !state.response.config.canManage) {
       return null;
     }
 
@@ -161,16 +145,16 @@ export class ContestSubmissionsPage extends Component {
         className="item-submissions-table__regrade-button"
         intent="primary"
         icon={<Refresh />}
-        onClick={this.onRegradeAll}
+        onClick={onRegradeAll}
       >
         Regrade all pages
       </Button>
     );
   };
 
-  renderFilterWidget = () => {
-    const { response, filter, isFilterLoading } = this.state;
-    if (!response || !filter) {
+  const renderFilterWidget = () => {
+    const { response, isFilterLoading } = state;
+    if (!response) {
       return null;
     }
     const { config, profilesMap, problemAliasesMap } = response;
@@ -179,32 +163,23 @@ export class ContestSubmissionsPage extends Component {
       return null;
     }
 
-    const { username, problemAlias } = filter;
     return (
       <SubmissionFilterWidget
         usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
         problemAlias={problemAlias}
-        onFilter={this.onFilter}
+        onFilter={onFilter}
         isLoading={!!isFilterLoading}
       />
     );
   };
 
-  onFilter = async filter => {
-    this.props.onAppendRoute(filter);
+  const onFilter = async filter => {
+    navigate({ search: stringify(filter) });
   };
+
+  return render();
 }
 
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissions: contestSubmissionActions.getSubmissions,
-  onRegradeAll: contestSubmissionActions.regradeSubmissions,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+export default withBreadcrumb('Submissions')(ContestSubmissionsPage);

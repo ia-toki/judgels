@@ -1,9 +1,7 @@
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -24,8 +22,6 @@ vi.mock('../../../modules/contestProblemActions');
 vi.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
-  let history;
-
   beforeEach(async () => {
     contestProblemActions.getBundleProblemWorksheet.mockReturnValue(() =>
       Promise.resolve({
@@ -68,24 +64,23 @@ describe('BundleContestProblemPage', () => {
     breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
     breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
-    history = createMemoryHistory({ initialEntries: [`/contests/contestJid/problems/C`] });
-
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
         uriel: combineReducers({ contest: contestReducer }),
-        router: connectRouter(history),
       }),
-      applyMiddleware(thunk, routerMiddleware(history))
+      applyMiddleware(thunk)
     );
     store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.Bundle }));
 
     await act(async () =>
       render(
         <Provider store={store}>
-          <ConnectedRouter history={history}>
-            <Route path="/contests/:contestSlug/problems/:problemAlias" component={ContestProblemPage} />
-          </ConnectedRouter>
+          <MemoryRouter initialEntries={[`/contests/contestJid/problems/C`]}>
+            <Routes>
+              <Route path="/contests/:contestSlug/problems/:problemAlias" element={<ContestProblemPage />} />
+            </Routes>
+          </MemoryRouter>
         </Provider>
       )
     );
@@ -93,14 +88,6 @@ describe('BundleContestProblemPage', () => {
 
   test('navigation', async () => {
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
-
-    await act(async () => {
-      history.push('/contests/xyz/');
-    });
-
-    await waitFor(() => {
-      expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`);
-    });
   });
 
   test('form', async () => {

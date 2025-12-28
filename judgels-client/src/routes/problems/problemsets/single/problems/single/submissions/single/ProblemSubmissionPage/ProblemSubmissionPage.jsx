@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
@@ -16,7 +16,7 @@ import * as problemSetSubmissionActions from '../../modules/problemSetSubmission
 
 export default function ProblemSubmissionPage() {
   const { submissionId } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);
@@ -45,7 +45,7 @@ export default function ProblemSubmissionPage() {
       ? undefined
       : await dispatch(problemSetSubmissionActions.getSubmissionSourceImage(data.submission.jid));
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, '#' + data.submission.id));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, '#' + data.submission.id));
 
     setState({
       submissionWithSource: data,
@@ -61,7 +61,7 @@ export default function ProblemSubmissionPage() {
     loadSubmission();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, []);
 

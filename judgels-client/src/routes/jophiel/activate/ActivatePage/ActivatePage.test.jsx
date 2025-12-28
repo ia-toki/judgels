@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -22,7 +22,9 @@ describe('ActivatePage', () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/activate/code123']}>
-          <Route exact path="/activate/:emailCode" component={ActivatePage} />
+          <Routes>
+            <Route path="/activate/:emailCode" element={<ActivatePage />} />
+          </Routes>
         </MemoryRouter>
       </Provider>
     );

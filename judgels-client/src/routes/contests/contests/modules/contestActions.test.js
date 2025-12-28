@@ -1,7 +1,7 @@
-import { push } from 'connected-react-router';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { ContestErrors } from '../../../../modules/api/uriel/contest';
 import { SubmissionError } from '../../../../modules/form/submissionError';
@@ -9,6 +9,16 @@ import { nockUriel } from '../../../../utils/nock';
 import { EditContest, PutContest } from './contestReducer';
 
 import * as contestActions from './contestActions';
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+
+vi.mock('../../../../modules/navigation/navigationRef', () => ({
+  getNavigationRef: () => ({
+    push: mockPush,
+    replace: mockReplace,
+  }),
+}));
 
 const contestJid = 'contestJid';
 const mockStore = configureMockStore([thunk]);
@@ -18,6 +28,8 @@ describe('contestActions', () => {
 
   beforeEach(() => {
     store = mockStore({});
+    mockPush.mockClear();
+    mockReplace.mockClear();
   });
 
   afterEach(function () {
@@ -33,7 +45,7 @@ describe('contestActions', () => {
 
         await store.dispatch(contestActions.createContest(params));
 
-        expect(store.getActions()).toContainEqual(push('/contests/new-contest'));
+        expect(mockPush).toHaveBeenCalledWith('/contests/new-contest');
         expect(store.getActions()).toContainEqual(EditContest(true));
       });
     });
@@ -71,7 +83,7 @@ describe('contestActions', () => {
 
           await store.dispatch(contestActions.updateContest(contestJid, slug, params));
 
-          expect(store.getActions()).toContainEqual(push('/contests/new-slug'));
+          expect(mockPush).toHaveBeenCalledWith('/contests/new-slug');
         });
       });
 

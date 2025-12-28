@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -15,7 +15,7 @@ import './ChapterProblemStatementPage.scss';
 
 export default function ChapterProblemStatementPage(props) {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const chapter = useSelector(selectCourseChapter);
 
@@ -28,7 +28,7 @@ export default function ChapterProblemStatementPage(props) {
       const { progress } = props.worksheet;
       if (progress && progress.verdict !== VerdictCode.PND) {
         const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
-        history.replace(resultsUrl);
+        navigate(resultsUrl, { replace: true });
       }
     }
 

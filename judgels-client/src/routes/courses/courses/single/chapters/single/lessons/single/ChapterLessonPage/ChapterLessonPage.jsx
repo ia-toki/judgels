@@ -1,12 +1,13 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams, useResolvedPath } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
@@ -17,52 +18,52 @@ import * as chapterLessonActions from '../modules/chapterLessonActions';
 
 import './ChapterLessonPage.scss';
 
-export class ChapterLessonPage extends Component {
-  state = {
-    response: undefined,
-  };
+export default function ChapterLessonPage() {
+  const { lessonAlias } = useParams();
+  const { pathname } = useResolvedPath('');
+  const dispatch = useDispatch();
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+  const chapters = useSelector(selectCourseChapters);
+  const statementLanguage = useSelector(selectStatementLanguage);
 
-  async componentDidMount() {
-    const response = await this.props.onGetLessonStatement(
-      this.props.chapter.jid,
-      this.props.match.params.lessonAlias,
-      this.props.statementLanguage
+  const [state, setState] = useState({
+    response: undefined,
+  });
+
+  const refreshLesson = async () => {
+    const response = await dispatch(
+      chapterLessonActions.getLessonStatement(chapter.jid, lessonAlias, statementLanguage)
     );
 
-    this.setState({
+    setState({
       response,
     });
 
-    this.props.onPushBreadcrumb(this.props.match.url, response.lesson.alias);
-  }
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, response.lesson.alias));
+  };
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage) {
-      await this.componentDidMount();
-    } else if (this.props.match.params.lessonAlias !== prevProps.match.params.lessonAlias) {
-      await this.componentDidMount();
-    }
-  }
+  useEffect(() => {
+    refreshLesson();
 
-  async componentWillUnmount() {
-    this.props.onPopBreadcrumb(this.props.match.url);
-  }
+    return () => {
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
+    };
+  }, [statementLanguage, lessonAlias]);
 
-  render() {
+  const render = () => {
     return (
       <div className="chapter-lesson-page">
-        {this.renderHeader()}
+        {renderHeader()}
         <ContentCard>
-          {this.renderStatementLanguageWidget()}
-          {this.renderStatement()}
+          {renderStatementLanguageWidget()}
+          {renderStatement()}
         </ContentCard>
       </div>
     );
-  }
+  };
 
-  renderHeader = () => {
-    const { course, chapter, match } = this.props;
-
+  const renderHeader = () => {
     return (
       <div className="chapter-lesson-page__title">
         <h3>
@@ -78,16 +79,16 @@ export class ChapterLessonPage extends Component {
           &nbsp;
           <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
           &nbsp;
-          {match.params.lessonAlias}
+          {lessonAlias}
         </h3>
 
-        {this.renderPrevAndNextResourcePaths()}
+        {renderPrevAndNextResourcePaths()}
       </div>
     );
   };
 
-  renderStatementLanguageWidget = () => {
-    const { response } = this.state;
+  const renderStatementLanguageWidget = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -103,8 +104,8 @@ export class ChapterLessonPage extends Component {
     );
   };
 
-  renderStatement = () => {
-    const { response } = this.state;
+  const renderStatement = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -112,9 +113,8 @@ export class ChapterLessonPage extends Component {
     return <LessonStatementCard alias={response.lesson.alias} statement={response.statement} />;
   };
 
-  renderPrevAndNextResourcePaths = () => {
-    const { course, chapter, chapters } = this.props;
-    const { response } = this.state;
+  const renderPrevAndNextResourcePaths = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -130,18 +130,6 @@ export class ChapterLessonPage extends Component {
       />
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-  chapters: selectCourseChapters(state),
-});
-
-const mapDispatchToProps = {
-  onGetLessonStatement: chapterLessonActions.getLessonStatement,
-  onPushBreadcrumb: breadcrumbsActions.pushBreadcrumb,
-  onPopBreadcrumb: breadcrumbsActions.popBreadcrumb,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChapterLessonPage);

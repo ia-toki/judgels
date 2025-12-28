@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -13,7 +13,7 @@ import * as contestSubmissionActions from '../../modules/contestSubmissionAction
 
 export default function ContestSubmissionPage() {
   const { submissionId } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);
@@ -31,7 +31,7 @@ export default function ContestSubmissionPage() {
       contestSubmissionActions.getSubmissionWithSource(contest.jid, +submissionId, statementLanguage)
     );
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Submission #' + data.submission.id));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, 'Submission #' + data.submission.id));
 
     setState({
       submissionWithSource: data,
@@ -46,7 +46,7 @@ export default function ContestSubmissionPage() {
     loadSubmission();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, []);
 

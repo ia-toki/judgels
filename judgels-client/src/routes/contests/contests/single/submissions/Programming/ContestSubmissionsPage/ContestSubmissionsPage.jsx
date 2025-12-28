@@ -1,7 +1,7 @@
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -15,67 +15,62 @@ import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmi
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
-export class ContestSubmissionsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+function ContestSubmissionsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const contest = useSelector(selectContest);
 
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
+  const queries = parse(location.search);
+  const username = queries.username;
+  const problemAlias = queries.problemAlias;
 
-    this.state = {
-      response: undefined,
-      filter: { username, problemAlias },
-      isFilterLoading: false,
-      isRegradingAll: false,
-    };
-  }
+  const [state, setState] = useState({
+    response: undefined,
+    isFilterLoading: false,
+    isRegradingAll: false,
+  });
 
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
-
-    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
-      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
+  useEffect(() => {
+    if (username || problemAlias) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
     }
-  }
+  }, [username, problemAlias]);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Submissions</h3>
         <hr />
-        {this.renderHeader()}
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderHeader()}
+        {renderSubmissions()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderHeader = () => {
+  const renderHeader = () => {
     return (
       <div className="content-card__header">
-        <div className="float-left">{this.renderRegradeAllButton()}</div>
-        <div className="float-right">{this.renderFilterWidget()}</div>
+        <div className="float-left">{renderRegradeAllButton()}</div>
+        <div className="float-right">{renderFilterWidget()}</div>
         <div className="clearfix" />
       </div>
     );
   };
 
-  renderRegradeAllButton = () => {
-    if (!this.state.response || !this.state.response.config.canManage) {
+  const renderRegradeAllButton = () => {
+    if (!state.response || !state.response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={this.onRegradeAll} isRegradingAll={this.state.isRegradingAll} />;
+    return <RegradeAllButton onRegradeAll={onRegradeAll} isRegradingAll={state.isRegradingAll} />;
   };
 
-  renderFilterWidget = () => {
-    const { response, filter, isFilterLoading } = this.state;
+  const renderFilterWidget = () => {
+    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
@@ -85,21 +80,20 @@ export class ContestSubmissionsPage extends Component {
       return null;
     }
 
-    const { username, problemAlias } = filter;
     return (
       <SubmissionFilterWidget
         usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
         problemAlias={problemAlias}
-        onFilter={this.onFilter}
+        onFilter={onFilter}
         isLoading={!!isFilterLoading}
       />
     );
   };
 
-  renderSubmissions = () => {
-    const { response } = this.state;
+  const renderSubmissions = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -115,69 +109,54 @@ export class ContestSubmissionsPage extends Component {
 
     return (
       <ContestSubmissionsTable
-        contest={this.props.contest}
+        contest={contest}
         submissions={submissions.page}
         canSupervise={config.canSupervise}
         canManage={config.canManage}
         profilesMap={profilesMap}
         problemAliasesMap={problemAliasesMap}
-        onRegrade={this.onRegrade}
+        onRegrade={onRegrade}
       />
     );
   };
 
-  renderPagination = () => {
-    const { filter } = this.state;
-
-    const key = '' + filter.username + filter.problemAlias;
-    return <Pagination key={key} pageSize={ContestSubmissionsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    const key = '' + username + problemAlias;
+    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const { username, problemAlias } = this.state.filter;
-    const data = await this.refreshSubmissions(username, problemAlias, nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  refreshSubmissions = async (username, problemAlias, page) => {
-    const response = await this.props.onGetProgrammingSubmissions(this.props.contest.jid, username, problemAlias, page);
-    this.setState({ response, isFilterLoading: false });
+  const refreshSubmissions = async page => {
+    const response = await dispatch(contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page));
+    setState(prevState => ({ ...prevState, response, isFilterLoading: false }));
     return response.data;
   };
 
-  onRegrade = async submissionJid => {
-    await this.props.onRegrade(submissionJid);
-    const { username, problemAlias } = this.state.filter;
-    const queries = parse(this.props.location.search);
-    await this.refreshSubmissions(username, problemAlias, queries.page);
+  const onRegrade = async submissionJid => {
+    await onRegrade(submissionJid);
+    const queries = parse(location.search);
+    await refreshSubmissions(queries.page);
   };
 
-  onRegradeAll = async () => {
+  const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      const { username, problemAlias } = this.state.filter;
-
-      this.setState({ isRegradingAll: true });
-      await this.props.onRegradeAll(this.props.contest.jid, username, problemAlias);
-      this.setState({ isRegradingAll: false });
-      const queries = parse(this.props.location.search);
-      await this.refreshSubmissions(username, problemAlias, queries.page);
+      setState(prevState => ({ ...prevState, isRegradingAll: true }));
+      await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
+      setState(prevState => ({ ...prevState, isRegradingAll: false }));
+      const queries = parse(location.search);
+      await refreshSubmissions(queries.page);
     }
   };
 
-  onFilter = async filter => {
-    this.props.onAppendRoute(filter);
+  const onFilter = async filter => {
+    navigate({ search: stringify(filter) });
   };
+
+  return render();
 }
 
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetProgrammingSubmissions: contestSubmissionActions.getSubmissions,
-  onRegrade: contestSubmissionActions.regradeSubmission,
-  onRegradeAll: contestSubmissionActions.regradeSubmissions,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withBreadcrumb('Submissions')(connect(mapStateToProps, mapDispatchToProps)(ContestSubmissionsPage));
+export default withBreadcrumb('Submissions')(ContestSubmissionsPage);

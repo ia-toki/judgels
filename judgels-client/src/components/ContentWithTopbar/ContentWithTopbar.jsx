@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { Redirect, Switch } from 'react-router';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useLocation, useResolvedPath } from 'react-router-dom';
 
 import { Topbar } from '../Topbar/Topbar';
 
@@ -14,65 +13,39 @@ function ContentAndTopbar({ className, topbarElement, contentElement }) {
 }
 
 function resolveUrl(parentPath, childPath) {
-  const actualChildPath = childPath === '@' ? '' : childPath;
-  return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
+  return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
 }
 
-export default function ContentWithTopbar({ className, items }) {
-  const match = useRouteMatch();
+export default function ContentWithTopbar({ className, items, basePath, children }) {
   const location = useLocation();
+  const { pathname: resolvedPathname } = useResolvedPath('');
+  const pathname = basePath || resolvedPathname;
 
   const renderTopbar = () => {
     const topbarItems = items
       .filter(item => !item.disabled)
       .map(item => ({
-        id: item.id,
+        path: item.path,
         titleIcon: item.titleIcon,
         title: item.title,
       }));
 
-    return <Topbar activeItemId={getActiveItemId()} items={topbarItems} onResolveItemUrl={onResolveItemUrl} />;
+    return <Topbar activeItemPath={getActiveItemPath()} items={topbarItems} onResolveItemUrl={onResolveItemUrl} />;
   };
 
-  const renderContent = () => {
-    const components = items.map(item => {
-      const RouteC = item.routeComponent;
-      const props = {
-        exact: item.id === '@',
-        path: resolveUrl(match.url, item.id),
-      };
-      if (item.component) {
-        props.component = item.component;
-      }
-      if (item.render) {
-        props.render = item.render;
-      }
-      return <RouteC key={item.id} {...props} />;
-    });
-
-    const redirect = items[0].id !== '@' && <Redirect exact from={match.url} to={resolveUrl(match.url, items[0].id)} />;
-
-    return (
-      <Switch>
-        {redirect}
-        {components}
-      </Switch>
-    );
+  const onResolveItemUrl = itemPath => {
+    return resolveUrl(pathname, itemPath);
   };
 
-  const onResolveItemUrl = itemId => {
-    return resolveUrl(match.url, itemId);
-  };
-
-  const getActiveItemId = () => {
-    if (location.pathname === match.url) {
-      return '@';
+  const getActiveItemPath = () => {
+    if (location.pathname === pathname || location.pathname === pathname + '/') {
+      return '';
     }
 
     const currentPath = location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', match.url.length + 1);
-    return currentPath.substring(match.url.length + 1, nextSlashPos);
+    const nextSlashPos = currentPath.indexOf('/', pathname.length + 1);
+    return currentPath.substring(pathname.length + 1, nextSlashPos);
   };
 
-  return <ContentAndTopbar className={className} topbarElement={renderTopbar()} contentElement={renderContent()} />;
+  return <ContentAndTopbar className={className} topbarElement={renderTopbar()} contentElement={children} />;
 }

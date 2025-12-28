@@ -11,16 +11,16 @@ export class Sidebar extends PureComponent {
   state = { isResponsivePopoverOpen: false };
 
   render() {
-    const { title, action, activeItemId, items, widget, onResolveItemUrl } = this.props;
+    const { title, action, activeItemPath, items, widget, onResolveItemUrl } = this.props;
 
     const tabs = items.map(item => {
       const ItemIcon = widget ? ChevronDown : ChevronRight;
 
-      const icon = item.id === activeItemId && <ItemIcon className="card-sidebar__arrow" />;
+      const icon = item.path === activeItemPath && <ItemIcon className="card-sidebar__arrow" />;
 
       return (
-        <Tab key={item.id} id={item.id}>
-          <Link to={onResolveItemUrl(item.id)}>
+        <Tab key={item.path} id={item.path}>
+          <Link to={onResolveItemUrl(item.path)}>
             {item.titleIcon}
             {item.titleIcon && <span>&nbsp;&nbsp;</span>}
             {item.title}
@@ -33,7 +33,7 @@ export class Sidebar extends PureComponent {
     const tabsContainer = (
       <Tabs
         id="sidebar"
-        selectedTabId={activeItemId}
+        selectedTabId={activeItemPath}
         onChange={this.onResponsiveItemClick}
         animate={!this.state.isResponsivePopoverOpen}
         vertical

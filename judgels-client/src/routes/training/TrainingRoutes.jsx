@@ -1,5 +1,5 @@
 import { Box, PanelStats, PredictiveAnalysis, Properties } from '@blueprintjs/icons';
-import { Route } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -13,32 +13,24 @@ import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 function TrainingRoutes() {
   const sidebarItems = [
     {
-      id: 'courses',
+      path: 'courses',
       titleIcon: <PredictiveAnalysis />,
       title: 'Courses',
-      routeComponent: Route,
-      component: CoursesPage,
     },
     {
-      id: 'chapters',
+      path: 'chapters',
       titleIcon: <Properties />,
       title: 'Chapters',
-      routeComponent: Route,
-      component: ChaptersPage,
     },
     {
-      id: 'archives',
+      path: 'archives',
       titleIcon: <Box />,
       title: 'Archives',
-      routeComponent: Route,
-      component: ArchivesPage,
     },
     {
-      id: 'problemsets',
+      path: 'problemsets',
       titleIcon: <PanelStats />,
       title: 'Problemsets',
-      routeComponent: Route,
-      component: ProblemSetsPage,
     },
   ];
 
@@ -50,7 +42,15 @@ function TrainingRoutes() {
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<Navigate to="courses" replace />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="chapters" element={<ChaptersPage />} />
+          <Route path="archives" element={<ArchivesPage />} />
+          <Route path="problemsets" element={<ProblemSetsPage />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

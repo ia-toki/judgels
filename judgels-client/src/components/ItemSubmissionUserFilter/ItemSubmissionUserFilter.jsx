@@ -1,11 +1,11 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './ItemSubmissionUserFilter.scss';
 
 export default function ItemSubmissionUserFilter() {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const isAll = () => {
     return (location.pathname + '/').includes('/all/');
@@ -14,13 +14,13 @@ export default function ItemSubmissionUserFilter() {
   const clickMine = () => {
     if (isAll()) {
       const idx = location.pathname.lastIndexOf('/all');
-      history.push(location.pathname.substr(0, idx));
+      navigate(location.pathname.substr(0, idx));
     }
   };
 
   const clickAll = () => {
     if (!isAll()) {
-      history.push((location.pathname + '/all').replace('//', '/'));
+      navigate((location.pathname + '/all').replace('//', '/'));
     }
   };
 

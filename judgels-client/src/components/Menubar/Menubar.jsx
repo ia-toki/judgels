@@ -1,15 +1,27 @@
 import { Tab, Tabs } from '@blueprintjs/core';
-import { Link, matchPath, useLocation, useRouteMatch } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import './Menubar.scss';
 
 export default function Menubar({ items, homeRoute }) {
-  const match = useRouteMatch();
   const location = useLocation();
 
   const getActiveItemId = () => {
-    const relativePath = match.path === '/' ? location.pathname : location.pathname.slice(match.path.length);
-    const matchingItem = items.find(item => matchPath(relativePath, item.route) !== null);
+    // Check each item to find the one matching the current path
+    // In React Router 6, we need to check if location.pathname starts with the item path
+    // The basePath gives us the current matched route, but we need to check child paths
+
+    const matchingItem = items.find(item => {
+      const itemPath = item.route.path || '/';
+      // Check if pathname contains this item's path
+      // First try to match against the end of the pathname (relative match)
+      const pathnameEnding = '/' + location.pathname.split('/').filter(Boolean).pop();
+      if (pathnameEnding === itemPath || pathnameEnding.startsWith(itemPath + '/')) {
+        return true;
+      }
+      // Also try direct match in case of absolute paths
+      return location.pathname === itemPath || location.pathname.startsWith(itemPath + '/');
+    });
     if (matchingItem) {
       return matchingItem.id;
     } else if (homeRoute) {
@@ -29,7 +41,8 @@ export default function Menubar({ items, homeRoute }) {
     if (!newTabItem) {
       return '';
     }
-    return (match.path === '/' ? '' : match.path) + (newTabItem.route.path ? newTabItem.route.path : '/');
+    // Use relative path - React Router will resolve it relative to current route
+    return newTabItem.route.path ? '.' + newTabItem.route.path : '.';
   };
 
   const selectedTabId = getActiveItemId();

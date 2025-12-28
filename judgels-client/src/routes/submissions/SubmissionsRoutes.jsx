@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -8,12 +8,11 @@ import SubmissionPage from './single/SubmissionPage/SubmissionPage';
 function SubmissionsRoutes() {
   return (
     <FullPageLayout>
-      <Switch>
-        <Route exact path="/submissions" component={SubmissionsPage} />
-        <Route exact path="/submissions/mine" component={SubmissionsPage} />
-
-        <Route path="/submissions/:submissionId" component={SubmissionPage} />
-      </Switch>
+      <Routes>
+        <Route index element={<SubmissionsPage />} />
+        <Route path="mine" element={<SubmissionsPage />} />
+        <Route path=":submissionId" element={<SubmissionPage />} />
+      </Routes>
     </FullPageLayout>
   );
 }

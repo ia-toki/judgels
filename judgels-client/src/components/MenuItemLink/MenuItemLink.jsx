@@ -1,18 +1,12 @@
 import { MenuItem } from '@blueprintjs/core';
-import { push } from 'connected-react-router';
-import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-function MenuItemLink({ text, onClick }) {
-  return <MenuItem text={text} onClick={onClick} />;
+export default function MenuItemLink({ text, to }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(to);
+  };
+
+  return <MenuItem text={text} onClick={handleClick} />;
 }
-
-const mapDispatchToProps = {
-  onClick: push,
-};
-
-const mergeProps = (stateProps, dispatchProps, { text, to }) => ({
-  text,
-  onClick: () => dispatchProps.onClick(to),
-});
-
-export default connect(undefined, mapDispatchToProps, mergeProps)(MenuItemLink);

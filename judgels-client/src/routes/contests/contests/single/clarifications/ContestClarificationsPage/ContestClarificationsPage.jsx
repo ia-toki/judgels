@@ -1,7 +1,7 @@
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
@@ -9,7 +9,6 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
-import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../modules/contestSelectors';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
@@ -17,70 +16,65 @@ import { ContestClarificationCreateDialog } from '../ContestClarificationCreateD
 
 import * as contestClarificationActions from '../modules/contestClarificationActions';
 
-class ContestClarificationsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+function ContestClarificationsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const contest = useSelector(selectContest);
+  const statementLanguage = useSelector(selectStatementLanguage);
 
-    const queries = parse(this.props.location.search);
-    const status = queries.status;
+  const queries = parse(location.search);
+  const status = queries.status;
 
-    this.state = {
-      response: undefined,
-      lastRefreshClarificationsTime: 0,
-      openAnswerBoxClarification: undefined,
-      isAnswerBoxLoading: false,
-      filter: { status },
-      isFilterLoading: false,
-    };
-  }
+  const [state, setState] = useState({
+    response: undefined,
+    lastRefreshClarificationsTime: 0,
+    openAnswerBoxClarification: undefined,
+    isAnswerBoxLoading: false,
+    isFilterLoading: false,
+  });
 
-  componentDidMount() {
+  useEffect(() => {
     askDesktopNotificationPermission();
-  }
+  }, []);
 
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const status = queries.status;
-
-    if (status !== this.state.filter.status) {
-      this.setState({
-        filter: { status },
-        isFilterLoading: true,
-        lastRefreshClarificationsTime: new Date().getTime(),
-      });
+  useEffect(() => {
+    if (status) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
     }
-  }
+  }, [status]);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Clarifications</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderFilterWidget()}
-        {this.renderClarifications()}
-        {this.renderPagination()}
+        {renderCreateDialog()}
+        {renderFilterWidget()}
+        {renderClarifications()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  refreshClarifications = async (status, page) => {
-    const response = await this.props.onGetClarifications(
-      this.props.contest.jid,
-      status,
-      this.props.statementLanguage,
-      page
+  const refreshClarifications = async page => {
+    const response = await dispatch(
+      contestClarificationActions.getClarifications(contest.jid, status, statementLanguage, page)
     );
-    this.setState({ response, isAnswerBoxLoading: false, isFilterLoading: false });
+    setState(prevState => ({
+      ...prevState,
+      response,
+      isAnswerBoxLoading: false,
+      isFilterLoading: false,
+    }));
     return response.data;
   };
 
-  renderClarifications = () => {
-    const { response, openAnswerBoxClarification } = this.state;
+  const renderClarifications = () => {
+    const { response, openAnswerBoxClarification } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -99,7 +93,7 @@ class ContestClarificationsPage extends Component {
     return clarifications.page.map(clarification => (
       <div className="content-card__section" key={clarification.jid}>
         <ContestClarificationCard
-          contest={this.props.contest}
+          contest={contest}
           clarification={clarification}
           canSupervise={canSupervise}
           canManage={canManage}
@@ -110,34 +104,31 @@ class ContestClarificationsPage extends Component {
           problemAlias={problemAliasesMap[clarification.topicJid]}
           problemName={problemNamesMap[clarification.topicJid]}
           isAnswerBoxOpen={openAnswerBoxClarification === clarification}
-          isAnswerBoxLoading={!!this.state.isAnswerBoxLoading}
-          onToggleAnswerBox={this.toggleAnswerBox}
-          onAnswerClarification={this.answerClarification}
+          isAnswerBoxLoading={!!state.isAnswerBoxLoading}
+          onToggleAnswerBox={toggleAnswerBox}
+          onAnswerClarification={answerClarification}
         />
       </div>
     ));
   };
 
-  renderPagination = () => {
-    const { lastRefreshClarificationsTime } = this.state;
-    const key = lastRefreshClarificationsTime || 0;
-
-    return <Pagination key={key} pageSize={ContestClarificationsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    const { lastRefreshClarificationsTime } = state;
+    const key = '' + lastRefreshClarificationsTime + status;
+    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  toggleAnswerBox = clarification => {
-    this.setState({ openAnswerBoxClarification: clarification });
+  const toggleAnswerBox = clarification => {
+    setState(prevState => ({ ...prevState, openAnswerBoxClarification: clarification }));
   };
 
-  onChangePage = async nextPage => {
-    const { filter } = this.state;
-    const { status } = filter;
-    const data = await this.refreshClarifications(status, nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshClarifications(nextPage);
     return data.totalCount;
   };
 
-  renderCreateDialog = () => {
-    const { response } = this.state;
+  const renderCreateDialog = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -148,36 +139,36 @@ class ContestClarificationsPage extends Component {
 
     return (
       <ContestClarificationCreateDialog
-        contest={this.props.contest}
+        contest={contest}
         problemJids={config.problemJids}
         problemAliasesMap={response.problemAliasesMap}
         problemNamesMap={response.problemNamesMap}
-        statementLanguage={this.props.statementLanguage}
-        onCreateClarification={this.createClarification}
+        statementLanguage={statementLanguage}
+        onCreateClarification={createClarification}
       />
     );
   };
 
-  createClarification = async (contestJid, data) => {
-    await this.props.onCreateClarification(contestJid, data);
-    this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
+  const createClarification = async (contestJid, data) => {
+    await dispatch(contestClarificationActions.createClarification(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshClarificationsTime: new Date().getTime() }));
   };
 
-  answerClarification = async (contestJid, clarificationJid, data) => {
-    this.setState({ isAnswerBoxLoading: true });
+  const answerClarification = async (contestJid, clarificationJid, data) => {
+    setState(prevState => ({ ...prevState, isAnswerBoxLoading: true }));
     try {
-      await this.props.onAnswerClarification(contestJid, clarificationJid, data);
-      this.setState({ lastRefreshClarificationsTime: new Date().getTime() });
-      this.toggleAnswerBox();
+      await dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, data));
+      setState(prevState => ({ ...prevState, lastRefreshClarificationsTime: new Date().getTime() }));
+      toggleAnswerBox();
     } catch (err) {
       // Don't close answer box yet on error
     } finally {
-      this.setState({ isAnswerBoxLoading: false });
+      setState(prevState => ({ ...prevState, isAnswerBoxLoading: false }));
     }
   };
 
-  renderFilterWidget = () => {
-    const { response, filter, isFilterLoading } = this.state;
+  const renderFilterWidget = () => {
+    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
@@ -187,35 +178,21 @@ class ContestClarificationsPage extends Component {
       return null;
     }
 
-    const { status } = filter;
     return (
       <ClarificationFilterWidget
         statuses={['ASKED']}
         status={status}
-        onFilter={this.onFilter}
+        onFilter={onFilter}
         isLoading={!!isFilterLoading}
       />
     );
   };
 
-  onFilter = async filter => {
-    this.props.onAppendRoute(filter);
+  const onFilter = async newFilter => {
+    navigate({ search: stringify(newFilter) });
   };
+
+  return render();
 }
 
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  contest: selectContest(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetClarifications: contestClarificationActions.getClarifications,
-  onCreateClarification: contestClarificationActions.createClarification,
-  onAnswerClarification: contestClarificationActions.answerClarification,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withBreadcrumb('Clarifications')(
-  connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsPage)
-);
+export default withBreadcrumb('Clarifications')(ContestClarificationsPage);

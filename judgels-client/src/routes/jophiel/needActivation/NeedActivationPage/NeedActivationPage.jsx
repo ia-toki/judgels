@@ -1,14 +1,15 @@
-import { Redirect } from 'react-router';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
 
-export default function NeedActivationPage({ history }) {
-  const email = history.location.state && history.location.state.email;
+export default function NeedActivationPage() {
+  const location = useLocation();
+  const email = location.state && location.state.email;
 
   if (!email) {
-    return <Redirect to={{ pathname: '/' }} />;
+    return <Navigate to="/" replace />;
   }
 
   return (

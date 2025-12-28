@@ -1,12 +1,22 @@
-import { push } from 'connected-react-router';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { NotFoundError } from '../../../../../../../modules/api/error';
 import { nockUriel } from '../../../../../../../utils/nock';
 
 import * as contestSubmissionActions from './contestSubmissionActions';
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+
+vi.mock('../../../../../../../modules/navigation/navigationRef', () => ({
+  getNavigationRef: () => ({
+    push: mockPush,
+    replace: mockReplace,
+  }),
+}));
 
 const contestJid = 'contest-jid';
 const username = 'username';
@@ -20,6 +30,8 @@ describe('contestSubmissionProgrammingActions', () => {
 
   beforeEach(() => {
     store = mockStore({});
+    mockPush.mockClear();
+    mockReplace.mockClear();
   });
 
   afterEach(function () {
@@ -108,7 +120,7 @@ describe('contestSubmissionProgrammingActions', () => {
       nockUriel().post(`/contests/submissions/programming`).reply(200);
 
       await store.dispatch(contestSubmissionActions.createSubmission(contestJid, contestSlug, problemJid, data));
-      expect(store.getActions()).toContainEqual(push(`/contests/contest-a/submissions`));
+      expect(mockPush).toHaveBeenCalledWith(`/contests/contest-a/submissions`);
     });
   });
 });

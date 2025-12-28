@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import createMockStore from 'redux-mock-store';
 
 import Menubar from './Menubar';
@@ -53,14 +53,15 @@ describe('Menubar', () => {
           }
         : undefined,
     };
-    const component = () => <Menubar {...props} />;
 
     const initialPath = parentRoute === '/' ? childPath : parentRoute + childPath;
 
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[initialPath]}>
-          <Route path={parentRoute} component={component} />
+          <Routes>
+            <Route path={parentRoute === '/' ? '/*' : parentRoute + '/*'} element={<Menubar {...props} />} />
+          </Routes>
         </MemoryRouter>
       </Provider>
     );
@@ -95,6 +96,7 @@ describe('Menubar', () => {
     it('has the correct links', () => {
       const items = screen.getAllByRole('tab');
       const link = within(items[2]).getByRole('link');
+      // React Router resolves './third' relative to /parent, giving /parent/third
       expect(link).toHaveAttribute('href', '/parent/third');
     });
   });

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { stringify } from 'query-string';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import SearchBox from './SearchBox';
@@ -11,7 +11,7 @@ describe('SearchBox', () => {
   let testLocation;
 
   const LocationTracker = () => {
-    const location = require('react-router-dom').useLocation();
+    const location = useLocation();
     testLocation = location;
     return null;
   };
@@ -21,16 +21,20 @@ describe('SearchBox', () => {
       initialValue,
       onRouteChange,
     };
-    const component = () => (
-      <>
-        <SearchBox {...props} />
-        <LocationTracker />
-      </>
-    );
 
     render(
       <MemoryRouter initialEntries={[`/component?${key}=${initialValue}&page=2`]}>
-        <Route path="/component" component={component} />
+        <Routes>
+          <Route
+            path="/component"
+            element={
+              <>
+                <SearchBox {...props} />
+                <LocationTracker />
+              </>
+            }
+          />
+        </Routes>
       </MemoryRouter>
     );
   };

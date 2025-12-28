@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './Pagination.scss';
 
@@ -73,7 +73,7 @@ function Pagination({ currentPage, pageSize, totalCount, onChangePage }) {
 
 export default function PaginationContainer({ pageSize, onChangePage }) {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [state, setState] = useState({
     currentPage: undefined,
@@ -112,9 +112,9 @@ export default function PaginationContainer({ pageSize, onChangePage }) {
     }
 
     if (!queries.page && nextPage === 1) {
-      history.replace({ search: query });
+      navigate({ search: query }, { replace: true });
     } else {
-      history.push({ search: query });
+      navigate({ search: query });
     }
   };
 

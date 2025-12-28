@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useResolvedPath } from 'react-router-dom';
 
 import { PopBreadcrumb, PushBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
 
@@ -8,17 +8,16 @@ export function withBreadcrumb(breadcrumbTitle) {
   return InnerComponent => {
     return function WrappedComponent(props) {
       const dispatch = useDispatch();
-      const match = useRouteMatch();
-      const location = useLocation();
+      const { pathname } = useResolvedPath('');
 
       useEffect(() => {
-        dispatch(PushBreadcrumb({ link: match.url, title: breadcrumbTitle }));
+        dispatch(PushBreadcrumb({ link: pathname, title: breadcrumbTitle }));
         return () => {
-          dispatch(PopBreadcrumb({ link: match.url }));
+          dispatch(PopBreadcrumb({ link: pathname }));
         };
-      }, [dispatch, match.url]);
+      }, []);
 
-      return <InnerComponent location={location} {...props} />;
+      return <InnerComponent {...props} />;
     };
   };
 }

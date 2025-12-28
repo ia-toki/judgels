@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -21,7 +21,9 @@ describe('ResetPasswordPage', () => {
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/reset-password/code123']}>
-          <Route exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
+          <Routes>
+            <Route path="/reset-password/:emailCode" element={<ResetPasswordPage />} />
+          </Routes>
         </MemoryRouter>
       </Provider>
     );

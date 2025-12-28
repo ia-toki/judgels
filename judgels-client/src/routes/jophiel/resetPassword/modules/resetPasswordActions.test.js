@@ -1,11 +1,21 @@
-import { push } from 'connected-react-router';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { nockJophiel } from '../../../../utils/nock';
 
 import * as resetPasswordActions from './resetPasswordActions';
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+
+vi.mock('../../../../modules/navigation/navigationRef', () => ({
+  getNavigationRef: () => ({
+    push: mockPush,
+    replace: mockReplace,
+  }),
+}));
 
 const emailCode = 'code123';
 const newPassword = 'pass';
@@ -16,6 +26,8 @@ describe('resetPasswordActions', () => {
 
   beforeEach(() => {
     store = mockStore({});
+    mockPush.mockClear();
+    mockReplace.mockClear();
   });
 
   afterEach(function () {
@@ -29,7 +41,7 @@ describe('resetPasswordActions', () => {
 
         await store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword));
 
-        expect(store.getActions()).toContainEqual(push('/login'));
+        expect(mockPush).toHaveBeenCalledWith('/login');
       });
     });
 

@@ -2,7 +2,7 @@ import { Switch } from '@blueprintjs/core';
 import { parse } from 'query-string';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
@@ -24,7 +24,7 @@ const PAGE_SIZE = 20;
 export default function ChapterProblemSubmissionsPage() {
   const { problemAlias } = useParams();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userJid = useSelector(selectMaybeUserJid);
   const username = useSelector(selectMaybeUsername);
@@ -69,10 +69,10 @@ export default function ChapterProblemSubmissionsPage() {
 
   const onChangeFilterShowAll = ({ target }) => {
     if (target.checked) {
-      history.push((location.pathname + '/all').replace('//', '/'));
+      navigate((location.pathname + '/all').replace('//', '/'));
     } else {
       const idx = location.pathname.lastIndexOf('/all');
-      history.push(location.pathname.substr(0, idx));
+      navigate(location.pathname.substr(0, idx));
     }
   };
 

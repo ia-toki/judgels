@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { Component } from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
@@ -27,12 +27,13 @@ describe('BreadcrumbWrapper', () => {
     renderFn = vi.fn();
 
     const WrappedComponent = withBreadcrumb('My Component')(InnerComponent);
-    const comp = () => <WrappedComponent num={42} />;
 
     const result = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/component/first']}>
-          <Route path="/component" component={comp} />
+          <Routes>
+            <Route path="/component/*" element={<WrappedComponent num={42} />} />
+          </Routes>
         </MemoryRouter>
       </Provider>
     );

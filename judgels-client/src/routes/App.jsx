@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { PureComponent } from 'react';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import Announcements from '../components/Announcements/Announcements';
 import { AppContent } from '../components/AppContent/AppContent';
@@ -30,6 +30,7 @@ class App extends PureComponent {
 
     const visibleAppRoutes = getVisibleAppRoutes(role);
     const homeRoute = getHomeRoute();
+    const HomeComponent = homeRoute.route.component;
 
     return (
       <DocumentTitle title={title}>
@@ -38,12 +39,13 @@ class App extends PureComponent {
           <Header items={visibleAppRoutes} homeRoute={homeRoute} />
           <AppContent>
             <PortalProvider portalClassName={isDarkMode ? 'bp6-dark' : 'bp6-light'}>
-              <Switch>
-                {visibleAppRoutes.map(item => (
-                  <Route key={item.id} {...item.route} />
-                ))}
-                <Route {...homeRoute.route} />
-              </Switch>
+              <Routes>
+                {visibleAppRoutes.map(item => {
+                  const Component = item.route.component;
+                  return <Route key={item.id} path={item.route.path + '/*'} element={<Component />} />;
+                })}
+                <Route path="/*" element={<HomeComponent />} />
+              </Routes>
             </PortalProvider>
             <Footer />
           </AppContent>

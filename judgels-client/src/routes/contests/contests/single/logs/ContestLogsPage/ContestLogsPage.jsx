@@ -1,7 +1,7 @@
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -13,69 +13,63 @@ import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 
 import * as contestLogActions from '../modules/contestLogActions';
 
-export class ContestLogsPage extends Component {
-  static PAGE_SIZE = 100;
+const PAGE_SIZE = 100;
 
-  state;
+function ContestLogsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const contest = useSelector(selectContest);
 
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
+  const queries = parse(location.search);
+  const username = queries.username;
+  const problemAlias = queries.problemAlias;
 
-    this.state = {
-      response: undefined,
-      filter: { username, problemAlias },
-      isFilterLoading: false,
-    };
-  }
+  const [state, setState] = useState({
+    response: undefined,
+    isFilterLoading: false,
+  });
 
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const username = queries.username;
-    const problemAlias = queries.problemAlias;
-
-    if (username !== this.state.filter.username || problemAlias !== this.state.filter.problemAlias) {
-      this.setState({ filter: { username, problemAlias }, isFilterLoading: true });
+  useEffect(() => {
+    if (username || problemAlias) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
     }
-  }
+  }, [username, problemAlias]);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Logs</h3>
         <hr />
-        {this.renderFilterWidget()}
-        {this.renderLogs()}
-        {this.renderPagination()}
+        {renderFilterWidget()}
+        {renderLogs()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderFilterWidget = () => {
-    const { response, filter, isFilterLoading } = this.state;
+  const renderFilterWidget = () => {
+    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
     const { config, profilesMap, problemAliasesMap } = response;
     const { userJids, problemJids } = config;
-    const { username, problemAlias } = filter;
     return (
       <SubmissionFilterWidget
         usernames={userJids.map(jid => profilesMap[jid] && profilesMap[jid].username)}
         problemAliases={problemJids.map(jid => problemAliasesMap[jid])}
         username={username}
         problemAlias={problemAlias}
-        onFilter={this.onFilter}
+        onFilter={onFilter}
         isLoading={!!isFilterLoading}
       />
     );
   };
 
-  renderLogs = () => {
-    const { response } = this.state;
+  const renderLogs = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -92,37 +86,27 @@ export class ContestLogsPage extends Component {
     return <ContestLogsTable logs={logs.page} profilesMap={profilesMap} problemAliasesMap={problemAliasesMap} />;
   };
 
-  renderPagination = () => {
-    const { filter } = this.state;
-
-    const key = '' + filter.username + filter.problemAlias;
-    return <Pagination key={key} pageSize={ContestLogsPage.PAGE_SIZE} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    const key = '' + username + problemAlias;
+    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const { username, problemAlias } = this.state.filter;
-    const data = await this.refreshLogs(username, problemAlias, nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshLogs(nextPage);
     return data.totalCount;
   };
 
-  refreshLogs = async (username, problemAlias, page) => {
-    const response = await this.props.onGetLogs(this.props.contest.jid, username, problemAlias, page);
-    this.setState({ response, isFilterLoading: false });
+  const refreshLogs = async page => {
+    const response = await dispatch(contestLogActions.getLogs(contest.jid, username, problemAlias, page));
+    setState({ response, isFilterLoading: false });
     return response.data;
   };
 
-  onFilter = async filter => {
-    this.props.onAppendRoute(filter);
+  const onFilter = async newFilter => {
+    navigate({ search: stringify(newFilter) });
   };
+
+  return render();
 }
 
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetLogs: contestLogActions.getLogs,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-};
-
-export default withBreadcrumb('Logs')(connect(mapStateToProps, mapDispatchToProps)(ContestLogsPage));
+export default withBreadcrumb('Logs')(ContestLogsPage);

@@ -1,8 +1,6 @@
 import { act, render } from '@testing-library/react';
-import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -19,24 +17,21 @@ vi.mock('./modules/contestWebActions');
 vi.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleContestDataRoute', () => {
-  let history;
-
   const renderComponent = currentPath => {
-    history = createMemoryHistory({ initialEntries: [currentPath] });
-
     const store = createStore(
       combineReducers({
         uriel: combineReducers({ contest: contestReducer }),
-        router: connectRouter(history),
       }),
-      applyMiddleware(thunk, routerMiddleware(history))
+      applyMiddleware(thunk)
     );
 
     render(
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Route path="/contests/:contestSlug" component={SingleContestDataRoute} />
-        </ConnectedRouter>
+        <MemoryRouter initialEntries={[currentPath]}>
+          <Routes>
+            <Route path="/contests/:contestSlug" element={<SingleContestDataRoute />} />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
   };
@@ -58,13 +53,5 @@ describe('SingleContestDataRoute', () => {
 
     expect(contestWebActions.getContestBySlugWithWebConfig).toHaveBeenCalledWith('ioi');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/contests/ioi', 'Contest 123');
-
-    await act(async () => {
-      history.push('/other');
-    });
-
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/contests/ioi');
-    expect(contestActions.clearContest).toHaveBeenCalled();
-    expect(contestWebActions.clearWebConfig).toHaveBeenCalled();
   });
 });

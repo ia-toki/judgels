@@ -1,27 +1,31 @@
-import { ConnectedRouter } from 'connected-react-router';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import 'typeface-open-sans';
 import 'typeface-roboto';
 
+import { GAListener } from './components/GAListener/GAListener';
 import { initGA } from './ga';
-import { history, persistor, store } from './modules/store';
+import { NavigationSetter } from './modules/navigation/NavigationSetter';
+import { persistor, store } from './modules/store';
 
 import './styles/index.scss';
 
 import App from './routes/App';
 
-initGA(history);
+initGA();
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <ConnectedRouter history={history}>
+      <BrowserRouter>
+        <NavigationSetter />
+        <GAListener />
         <App />
-      </ConnectedRouter>
+      </BrowserRouter>
     </PersistGate>
   </Provider>
 );

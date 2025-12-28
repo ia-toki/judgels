@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { sendGAEvent } from '../../../../ga';
@@ -14,7 +14,7 @@ import './ProblemSetArchiveFilter.scss';
 
 export default function ProblemSetArchiveFilter() {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const queries = parse(location.search);
@@ -87,7 +87,7 @@ export default function ProblemSetArchiveFilter() {
   const changeArchive = e => {
     const archiveSlug = e.target.value;
     const queries = parse(location.search);
-    history.push({
+    navigate({
       search: stringify({
         ...queries,
         name: undefined,

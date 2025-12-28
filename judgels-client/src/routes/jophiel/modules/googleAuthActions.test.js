@@ -1,7 +1,7 @@
-import { push } from 'connected-react-router';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { vi } from 'vitest';
 
 import { SubmissionError } from '../../../modules/form/submissionError';
 import { PutToken, PutUser } from '../../../modules/session/sessionReducer';
@@ -9,6 +9,16 @@ import { nockJophiel } from '../../../utils/nock';
 import { PutWebConfig } from '../modules/userWebReducer';
 
 import * as googleAuthActions from './googleAuthActions';
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+
+vi.mock('../../../modules/navigation/navigationRef', () => ({
+  getNavigationRef: () => ({
+    push: mockPush,
+    replace: mockReplace,
+  }),
+}));
 
 const authCode = 'authCode';
 const userJid = 'userJid';
@@ -24,6 +34,8 @@ describe('googleAuthActions', () => {
 
   beforeEach(() => {
     store = mockStore({});
+    mockPush.mockClear();
+    mockReplace.mockClear();
   });
 
   afterEach(function () {
@@ -90,7 +102,7 @@ describe('googleAuthActions', () => {
           .reply(200, config);
 
         await store.dispatch(googleAuthActions.register({ idToken, username }));
-        expect(store.getActions()).toContainEqual(push('/registered?source=google'));
+        expect(mockPush).toHaveBeenCalledWith('/registered?source=google');
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
         expect(store.getActions()).toContainEqual(PutWebConfig(config));

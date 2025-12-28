@@ -1,10 +1,9 @@
-import { push } from 'connected-react-router';
-
 import { isTLX } from '../../../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../../../../modules/api/error';
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
 import { ContestErrors, contestAPI } from '../../../../modules/api/uriel/contest';
 import { SubmissionError } from '../../../../modules/form/submissionError';
+import { getNavigationRef } from '../../../../modules/navigation/navigationRef';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { DelContest, EditContest, PutContest } from './contestReducer';
 
@@ -21,7 +20,7 @@ export function createContest(data) {
       }
       throw error;
     }
-    dispatch(push(`/contests/${data.slug}`));
+    getNavigationRef().push(`/contests/${data.slug}`);
     dispatch(EditContest(true));
     toastActions.showSuccessToast('Contest created.');
   };
@@ -41,7 +40,7 @@ export function updateContest(contestJid, contestSlug, data) {
     toastActions.showSuccessToast('Contest updated.');
 
     if (data.slug && data.slug !== contestSlug) {
-      dispatch(push(`/contests/${data.slug}`));
+      getNavigationRef().push(`/contests/${data.slug}`);
     }
   };
 }

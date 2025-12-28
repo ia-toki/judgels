@@ -2,19 +2,22 @@ import ReactGA from 'react-ga4';
 
 import { APP_CONFIG } from './conf';
 
-export function initGA(history) {
+export function initGA() {
   if (APP_CONFIG.googleAnalytics) {
     ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
-    history.listen(location => {
-      let page = location.pathname.replace(/\/+$/, '');
-      if (page === '') {
-        page = '/';
-      }
-      page += location.search;
+  }
+}
 
-      ReactGA.set({ page });
-      ReactGA.send({ hitType: 'pageview', page });
-    });
+export function sendGAPageview(location) {
+  if (APP_CONFIG.googleAnalytics) {
+    let page = location.pathname.replace(/\/+$/, '');
+    if (page === '') {
+      page = '/';
+    }
+    page += location.search;
+
+    ReactGA.set({ page });
+    ReactGA.send({ hitType: 'pageview', page });
   }
 }
 

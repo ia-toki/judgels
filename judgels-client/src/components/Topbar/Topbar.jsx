@@ -4,10 +4,10 @@ import { ButtonLink } from '../ButtonLink/ButtonLink';
 
 import './Topbar.scss';
 
-export function Topbar({ activeItemId, items, onResolveItemUrl }) {
+export function Topbar({ activeItemPath, items, onResolveItemUrl }) {
   const tabs = items.map(item => {
     return (
-      <ButtonLink key={item.id} id={item.id} active={item.id === activeItemId} to={onResolveItemUrl(item.id)}>
+      <ButtonLink key={item.path} id={item.path} active={item.path === activeItemPath} to={onResolveItemUrl(item.path)}>
         {item.titleIcon}
         <span className="topbar__item">{item.title}</span>
       </ButtonLink>

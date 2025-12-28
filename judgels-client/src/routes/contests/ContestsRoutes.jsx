@@ -1,5 +1,5 @@
 import { Console } from '@blueprintjs/icons';
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
@@ -8,11 +8,9 @@ import ContestsPage from './contests/ContestsPage/ContestsPage';
 export default function ContestsRoutes() {
   const sidebarItems = [
     {
-      id: '@',
+      path: '',
       titleIcon: <Console />,
       title: 'Contests',
-      routeComponent: Route,
-      component: ContestsPage,
     },
   ];
 
@@ -23,7 +21,11 @@ export default function ContestsRoutes() {
 
   return (
     <FullPageLayout>
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<ContestsPage />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

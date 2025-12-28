@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -19,7 +19,7 @@ import './ContestProblemPage.scss';
 
 export default function ContestProblemPage() {
   const { problemAlias } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);
@@ -51,14 +51,14 @@ export default function ContestProblemPage() {
       worksheet,
     });
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Problem ' + problem.alias));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, 'Problem ' + problem.alias));
   };
 
   useEffect(() => {
     loadWorksheet();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [statementLanguage]);
 

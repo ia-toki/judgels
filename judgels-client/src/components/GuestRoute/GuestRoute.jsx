@@ -1,12 +1,14 @@
 import { useSelector } from 'react-redux';
-import { Redirect, Route } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 import { selectIsLoggedIn } from '../../modules/session/sessionSelectors';
 
-export default function GuestRoute({ component: Component, ...rest }) {
+export default function GuestRoute({ children }) {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const render = props => (isLoggedIn ? <Redirect to={{ pathname: '/' }} /> : <Component {...props} />);
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
-  return <Route {...rest} render={render} />;
+  return children;
 }

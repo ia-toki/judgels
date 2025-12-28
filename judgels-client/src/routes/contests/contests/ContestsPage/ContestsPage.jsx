@@ -1,6 +1,7 @@
 import { parse } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -11,47 +12,48 @@ import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog'
 
 import * as contestActions from '../modules/contestActions';
 
-class ContestsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+export default function ContestsPage() {
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const queries = parse(location.search);
+  const name = queries.name;
 
-    const queries = parse(props.location.search);
-    const name = queries.name;
+  const [state, setState] = useState({
+    response: undefined,
+    isFilterLoading: false,
+  });
 
-    this.state = {
-      response: undefined,
-      filter: { name },
-      isFilterLoading: false,
-    };
-  }
+  useEffect(() => {
+    if (name) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
+    }
+  }, [name]);
 
-  render() {
+  const render = () => {
     return (
       <Card title="Contests">
-        {this.renderHeader()}
-        {this.renderContests()}
-        {this.renderPagination()}
+        {renderHeader()}
+        {renderContests()}
+        {renderPagination()}
       </Card>
     );
-  }
+  };
 
-  renderHeader = () => {
+  const renderHeader = () => {
     return (
       <>
-        <div className="float-left">{this.renderCreateDialog()}</div>
-        <div className="float-right">{this.renderFilter()}</div>
+        <div className="float-left">{renderCreateDialog()}</div>
+        <div className="float-right">{renderFilter()}</div>
         <div className="clearfix" />
-        {this.renderFilterResultsBanner()}
+        {renderFilterResultsBanner()}
       </>
     );
   };
 
-  renderFilterResultsBanner = () => {
-    const name = this.getNameFilter(this.state);
+  const renderFilterResultsBanner = () => {
     if (!name) {
       return null;
     }
@@ -64,19 +66,16 @@ class ContestsPage extends Component {
     );
   };
 
-  renderFilter = () => {
-    const name = this.getNameFilter(this.state);
+  const renderFilter = () => {
     return (
-      <SearchBox
-        onRouteChange={this.searchBoxUpdateQueries}
-        initialValue={name || ''}
-        isLoading={this.state.isFilterLoading}
-      />
+      <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={state.isFilterLoading} />
     );
   };
 
-  renderCreateDialog = () => {
-    const { response } = this.state;
+  const createContest = data => dispatch(contestActions.createContest(data));
+
+  const renderCreateDialog = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -84,11 +83,11 @@ class ContestsPage extends Component {
     if (!config.canAdminister) {
       return null;
     }
-    return <ContestCreateDialog onCreateContest={this.props.onCreateContest} />;
+    return <ContestCreateDialog onCreateContest={createContest} />;
   };
 
-  renderContests = () => {
-    const { response } = this.state;
+  const renderContests = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -112,49 +111,22 @@ class ContestsPage extends Component {
     ));
   };
 
-  renderPagination = () => {
-    return (
-      <Pagination
-        pageSize={ContestsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-        key={this.getNameFilter(this.state) || ''}
-      />
-    );
+  const renderPagination = () => {
+    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={name || ''} />;
   };
 
-  onChangePage = async nextPage => {
-    if (this.state.response) {
-      this.setState({ response: { ...this.state.response, data: undefined } });
+  const onChangePage = async nextPage => {
+    if (state.response) {
+      setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
     }
-    const response = await this.props.onGetContests(this.getNameFilter(this.state), nextPage);
-    this.setState({ response, isFilterLoading: false });
+    const response = await dispatch(contestActions.getContests(name, nextPage));
+    setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };
 
-  searchBoxUpdateQueries = (name, queries) => {
-    this.setState(prevState => {
-      const isFilterLoading = this.getNameFilter(prevState) !== name;
-      return {
-        filter: {
-          name,
-        },
-        isFilterLoading,
-        isContestsListLoading: isFilterLoading,
-      };
-    });
+  const searchBoxUpdateQueries = (name, queries) => {
     return { ...queries, page: undefined, name };
   };
 
-  getNameFilter = state => {
-    if (!state.filter.name) {
-      return '';
-    }
-    return state.filter.name;
-  };
+  return render();
 }
-
-const mapDispatchToProps = {
-  onGetContests: contestActions.getContests,
-  onCreateContest: contestActions.createContest,
-};
-export default connect(undefined, mapDispatchToProps)(ContestsPage);

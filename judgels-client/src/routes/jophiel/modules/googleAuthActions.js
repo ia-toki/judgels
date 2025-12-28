@@ -1,10 +1,9 @@
-import { push } from 'connected-react-router';
-
 import { ForbiddenError } from '../../../modules/api/error';
 import { sessionAPI } from '../../../modules/api/jophiel/session';
 import { userAccountAPI } from '../../../modules/api/jophiel/userAccount';
 import { userSearchAPI } from '../../../modules/api/jophiel/userSearch';
 import { SubmissionError } from '../../../modules/form/submissionError';
+import { getNavigationRef } from '../../../modules/navigation/navigationRef';
 
 import { afterLogin } from '../login/modules/loginActions';
 
@@ -31,7 +30,7 @@ export function register(data) {
     }
 
     await userAccountAPI.registerGoogleUser(data);
-    await dispatch(push('/registered?source=google'));
+    getNavigationRef().push('/registered?source=google');
     await dispatch(logIn(data.idToken));
   };
 }

@@ -1,8 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route } from 'react-router';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
@@ -19,12 +19,12 @@ import './SingleProblemSetProblemRoutes.scss';
 
 export default function SingleProblemSetProblemRoutes() {
   const { problemSetSlug, problemAlias } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);
 
   const clickBack = () => {
-    history.push(`/problems/${problemSet.slug}`);
+    navigate(`/problems/${problemSet.slug}`);
   };
 
   // Optimization:
@@ -33,39 +33,28 @@ export default function SingleProblemSetProblemRoutes() {
     return <LoadingState large />;
   }
 
-  let sidebarItems = [
+  const sidebarItems = [
     {
-      id: '@',
+      path: '',
       titleIcon: <Document />,
       title: 'Statement',
-      routeComponent: Route,
-      component: ProblemStatementPage,
     },
+    ...(problem.type === ProblemType.Programming
+      ? [
+          {
+            path: 'submissions',
+            titleIcon: <Layers />,
+            title: 'Submissions',
+          },
+        ]
+      : [
+          {
+            path: 'results',
+            titleIcon: <ManuallyEnteredData />,
+            title: 'Results',
+          },
+        ]),
   ];
-
-  if (problem.type === ProblemType.Programming) {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'submissions',
-        titleIcon: <Layers />,
-        title: 'Submissions',
-        routeComponent: Route,
-        component: ProblemSubmissionRoutes,
-      },
-    ];
-  } else {
-    sidebarItems = [
-      ...sidebarItems,
-      {
-        id: 'results',
-        titleIcon: <ManuallyEnteredData />,
-        title: 'Results',
-        routeComponent: Route,
-        component: ProblemItemSubmissionRoutes,
-      },
-    ];
-  }
 
   const contentWithSidebarProps = {
     title: 'Problem Menu',
@@ -91,7 +80,13 @@ export default function SingleProblemSetProblemRoutes() {
 
   return (
     <FullPageLayout>
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<ProblemStatementPage />} />
+          <Route path="submissions/*" element={<ProblemSubmissionRoutes />} />
+          <Route path="results/*" element={<ProblemItemSubmissionRoutes />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }
