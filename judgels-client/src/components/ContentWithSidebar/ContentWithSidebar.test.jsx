@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Navigate, Route, Routes } from 'react-router-dom';
 import createMockStore from 'redux-mock-store';
 
 import ContentWithSidebar from './ContentWithSidebar';
@@ -11,36 +11,48 @@ describe('ContentWithSidebar', () => {
   const SecondComponent = () => <div>Two</div>;
   const ThirdComponent = () => <div>Three</div>;
 
-  const renderComponent = (childPath, firstId) => {
+  const renderComponent = (childPath, firstPath) => {
     const props = {
       title: 'Content with Sidebar',
+      basePath: '/parent',
       items: [
         {
-          id: firstId || '@',
+          path: firstPath || '',
           title: 'First',
-          routeComponent: Route,
-          component: FirstComponent,
         },
         {
-          id: 'second',
+          path: 'second',
           title: 'Second',
-          routeComponent: Route,
-          component: SecondComponent,
         },
         {
-          id: 'third',
+          path: 'third',
           title: 'Third',
-          routeComponent: Route,
-          component: ThirdComponent,
         },
       ],
     };
-    const component = () => <ContentWithSidebar {...props} />;
+
+    const children =
+      firstPath && firstPath !== '' ? (
+        <Routes>
+          <Route index element={<Navigate to={firstPath} replace />} />
+          <Route path={firstPath} element={<FirstComponent />} />
+          <Route path="second" element={<SecondComponent />} />
+          <Route path="third" element={<ThirdComponent />} />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route index element={<FirstComponent />} />
+          <Route path="second" element={<SecondComponent />} />
+          <Route path="third" element={<ThirdComponent />} />
+        </Routes>
+      );
 
     render(
       <Provider store={store}>
         <MemoryRouter initialEntries={['/parent' + childPath]}>
-          <Route path="/parent" component={component} />
+          <Routes>
+            <Route path="/parent/*" element={<ContentWithSidebar {...props}>{children}</ContentWithSidebar>} />
+          </Routes>
         </MemoryRouter>
       </Provider>
     );

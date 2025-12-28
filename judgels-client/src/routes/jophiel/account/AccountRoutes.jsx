@@ -1,3 +1,5 @@
+import { Navigate, Route, Routes } from 'react-router-dom';
+
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
@@ -10,22 +12,16 @@ import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPa
 function AccountRoutes() {
   const sidebarItems = [
     {
-      id: 'info',
+      path: 'info',
       title: 'Info',
-      routeComponent: UserRoute,
-      component: InfoPage,
     },
     {
-      id: 'avatar',
+      path: 'avatar',
       title: 'Change avatar',
-      routeComponent: UserRoute,
-      component: ChangeAvatarPage,
     },
     {
-      id: 'password',
+      path: 'password',
       title: 'Reset password',
-      routeComponent: UserRoute,
-      component: ResetPasswordPage,
     },
   ];
 
@@ -38,7 +34,16 @@ function AccountRoutes() {
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <UserRoute>
+          <Routes>
+            <Route index element={<Navigate to="info" replace />} />
+            <Route path="info" element={<InfoPage />} />
+            <Route path="avatar" element={<ChangeAvatarPage />} />
+            <Route path="password" element={<ResetPasswordPage />} />
+          </Routes>
+        </UserRoute>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

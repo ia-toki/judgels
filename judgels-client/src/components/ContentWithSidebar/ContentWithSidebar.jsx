@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { Redirect, Switch } from 'react-router';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useLocation, useResolvedPath } from 'react-router-dom';
 
 import { Sidebar } from '../Sidebar/Sidebar';
 
@@ -27,8 +26,7 @@ function ContentAndSidebar({ sidebarElement, contentElement, stickyWidget, small
 }
 
 function resolveUrl(parentPath, childPath) {
-  const actualChildPath = childPath === '@' ? '' : childPath;
-  return (parentPath + '/' + actualChildPath).replace(/\/\/+/g, '/');
+  return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
 }
 
 export default function ContentWithSidebar({
@@ -39,15 +37,18 @@ export default function ContentWithSidebar({
   stickyWidget1,
   stickyWidget2,
   smallContent,
+  basePath,
+  children,
 }) {
-  const match = useRouteMatch();
   const location = useLocation();
+  const { pathname: resolvedPathname } = useResolvedPath('');
+  const pathname = basePath || resolvedPathname;
 
   const renderSidebar = () => {
     const sidebarItems = items
       .filter(item => !item.disabled)
       .map(item => ({
-        id: item.id,
+        path: item.path,
         titleIcon: item.titleIcon,
         title: item.title,
       }));
@@ -57,7 +58,7 @@ export default function ContentWithSidebar({
       <Sidebar
         title={title}
         action={action}
-        activeItemId={getActiveItemId()}
+        activeItemPath={getActiveItemPath()}
         items={sidebarItems}
         widget={sidebarWidget}
         onResolveItemUrl={onResolveItemUrl}
@@ -91,66 +92,43 @@ export default function ContentWithSidebar({
   };
 
   const renderSidebarWidget = () => {
-    const components = items
-      .filter(item => !!item.widgetComponent)
-      .map(item => {
-        const RouteC = item.routeComponent;
-        const props = {
-          exact: item.id === '@',
-          path: resolveUrl(match.url, item.id),
-          component: item.widgetComponent,
-        };
-        return <RouteC key={item.id} {...props} />;
-      });
+    const activeItemPath = getActiveItemPath();
+    const activeItem = items.find(item => item.path === activeItemPath);
 
-    if (components.length === 0) {
+    if (!activeItem || !activeItem.widgetComponent) {
       return null;
     }
 
+    const Widget = activeItem.widgetComponent;
     return (
       <div>
         <hr />
-        <Switch>{components}</Switch>
+        <Widget />
       </div>
     );
   };
 
   const renderContent = () => {
-    const components = items.map(item => {
-      const RouteC = item.routeComponent;
-      const props = {
-        exact: item.id === '@',
-        path: resolveUrl(match.url, item.id),
-        component: item.component,
-      };
-      return <RouteC key={item.id} {...props} />;
-    });
-
-    const redirect = items[0].id !== '@' && <Redirect exact from={match.url} to={resolveUrl(match.url, items[0].id)} />;
-
     return (
       <div>
         {contentHeader}
-        <Switch>
-          {redirect}
-          {components}
-        </Switch>
+        {children}
       </div>
     );
   };
 
-  const onResolveItemUrl = itemId => {
-    return resolveUrl(match.url, itemId);
+  const onResolveItemUrl = itemPath => {
+    return resolveUrl(pathname, itemPath);
   };
 
-  const getActiveItemId = () => {
-    if (location.pathname === match.url) {
-      return '@';
+  const getActiveItemPath = () => {
+    if (location.pathname === pathname) {
+      return '';
     }
 
     const currentPath = location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', match.url.length + 1);
-    return currentPath.substring(match.url.length + 1, nextSlashPos);
+    const nextSlashPos = currentPath.indexOf('/', pathname.length + 1);
+    return currentPath.substring(pathname.length + 1, nextSlashPos);
   };
 
   return (

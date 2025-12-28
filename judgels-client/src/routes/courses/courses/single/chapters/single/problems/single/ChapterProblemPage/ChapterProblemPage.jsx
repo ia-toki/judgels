@@ -1,8 +1,7 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useResolvedPath } from 'react-router-dom';
 
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
@@ -25,7 +24,7 @@ import './ChapterProblemPage.scss';
 
 export default function ChapterProblemPage() {
   const { problemAlias } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);
@@ -43,7 +42,7 @@ export default function ChapterProblemPage() {
     refreshProblem();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.path));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [statementLanguage, reloadKey, problemAlias]);
 
@@ -76,7 +75,7 @@ export default function ChapterProblemPage() {
       response,
     });
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.path, chapter.alias + ' / ' + response.problem.alias));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, chapter.alias + ' / ' + response.problem.alias));
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });

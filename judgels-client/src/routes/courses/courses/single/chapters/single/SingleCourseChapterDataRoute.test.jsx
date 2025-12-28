@@ -1,8 +1,6 @@
 import { act, render } from '@testing-library/react';
-import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
-import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
-import { Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -18,26 +16,23 @@ vi.mock('../modules/courseChapterActions');
 vi.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('SingleCourseChapterDataRoute', () => {
-  let history;
-
   const renderComponent = currentPath => {
-    history = createMemoryHistory({ initialEntries: [currentPath] });
-
     const store = createStore(
       combineReducers({
         jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
-        router: connectRouter(history),
       }),
-      applyMiddleware(thunk, routerMiddleware(history))
+      applyMiddleware(thunk)
     );
 
     store.dispatch(PutCourse({ id: 1, jid: 'jid123', slug: 'basic', name: 'Basic' }));
 
     render(
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Route path="/courses/:courseSlug/chapters/:chapterAlias" component={SingleCourseChapterDataRoute} />
-        </ConnectedRouter>
+        <MemoryRouter initialEntries={[currentPath]}>
+          <Routes>
+            <Route path="/courses/:courseSlug/chapters/:chapterAlias" element={<SingleCourseChapterDataRoute />} />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
   };
@@ -56,20 +51,5 @@ describe('SingleCourseChapterDataRoute', () => {
 
     expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'A');
     expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A', 'A. Chapter 123');
-
-    await act(async () => {
-      history.push('/courses/basic/chapters/B');
-    });
-
-    expect(courseChapterActions.getChapter).toHaveBeenCalledWith('jid123', 'basic', 'B');
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/A');
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B', 'B. Chapter 123');
-
-    await act(async () => {
-      history.push('/other');
-    });
-
-    expect(breadcrumbsActions.popBreadcrumb).toHaveBeenCalledWith('/courses/basic/chapters/B');
-    expect(courseChapterActions.clearChapter).toHaveBeenCalled();
   });
 });

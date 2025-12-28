@@ -1,9 +1,9 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { Pause, Refresh } from '@blueprintjs/icons';
-import { push } from 'connected-react-router';
 import { parse, stringify } from 'query-string';
-import { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import { Fragment, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -26,81 +26,72 @@ import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestScoreboardPage.scss';
 
-export class ContestScoreboardPage extends Component {
-  static PAGE_SIZE = 250;
-  state;
+const PAGE_SIZE = 250;
 
-  constructor(props) {
-    super(props);
+function ContestScoreboardPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const queries = parse(this.props.location.search);
-    const frozen = !!queries.frozen;
-    const showClosedProblems = !!queries.showClosedProblems;
-    this.state = {
-      response: undefined,
-      frozen,
-      showClosedProblems,
-      lastRefreshScoreboardTime: 0,
-      isForceRefreshButtonLoading: false,
-      isSubmissionImageDialogOpen: false,
-      isSubmissionsDialogOpen: false,
-      submissionImageUrl: undefined,
-      submissionDialogTitle: '',
-      submissionsDialogProps: undefined,
-    };
-  }
+  const userJid = useSelector(selectMaybeUserJid);
+  const contest = useSelector(selectContest);
 
-  render() {
-    const { lastRefreshScoreboardTime } = this.state;
+  const queries = parse(location.search);
+  const frozen = !!queries.frozen;
+  const showClosedProblems = !!queries.showClosedProblems;
 
+  const [state, setState] = useState({
+    response: undefined,
+    isForceRefreshButtonLoading: false,
+    isSubmissionImageDialogOpen: false,
+    isSubmissionsDialogOpen: false,
+    submissionImageUrl: undefined,
+    submissionDialogTitle: '',
+    submissionsDialogProps: undefined,
+  });
+
+  const render = () => {
     return (
       <ContentCard className="contest-scoreboard-page">
         <h3>Scoreboard</h3>
-        {this.renderScoreboardUpdatedTime()}
+        {renderScoreboardUpdatedTime()}
         <div className="clearfix" />
         <hr />
         <div className="content-card__header">
-          {this.renderFilter()}
-          {this.renderForceRefreshButton()}
+          {renderFilter()}
+          {renderForceRefreshButton()}
           <div className="clearfix" />
         </div>
-        {this.renderFrozenScoreboardNotice()}
-        {this.renderScoreboard()}
-        <Pagination
-          key={lastRefreshScoreboardTime}
-          pageSize={ContestScoreboardPage.PAGE_SIZE}
-          onChangePage={this.onChangePage}
-        />
-        {this.state.isSubmissionImageDialogOpen && (
+        {renderFrozenScoreboardNotice()}
+        {renderScoreboard()}
+        <Pagination key={'' + frozen + showClosedProblems} pageSize={PAGE_SIZE} onChangePage={onChangePage} />
+        {state.isSubmissionImageDialogOpen && (
           <SubmissionImageDialog
-            onClose={this.toggleSubmissionImageDialog}
-            title={this.state.submissionDialogTitle}
-            imageUrl={this.state.submissionImageUrl}
+            onClose={toggleSubmissionImageDialog}
+            title={state.submissionDialogTitle}
+            imageUrl={state.submissionImageUrl}
           />
         )}
-        {this.state.isSubmissionsDialogOpen && (
-          <ContestUserProblemSubmissionsDialog
-            onClose={this.toggleSubmissionsDialog}
-            {...this.state.submissionsDialogProps}
-          />
+        {state.isSubmissionsDialogOpen && (
+          <ContestUserProblemSubmissionsDialog onClose={toggleSubmissionsDialog} {...state.submissionsDialogProps} />
         )}
       </ContentCard>
     );
-  }
-
-  toggleSubmissionImageDialog = () => {
-    this.setState(prevState => ({ isSubmissionImageDialogOpen: !prevState.isSubmissionImageDialogOpen }));
   };
 
-  toggleSubmissionsDialog = props => {
-    this.setState(prevState => ({
+  const toggleSubmissionImageDialog = () => {
+    setState(prevState => ({ isSubmissionImageDialogOpen: !prevState.isSubmissionImageDialogOpen }));
+  };
+
+  const toggleSubmissionsDialog = props => {
+    setState(prevState => ({
       isSubmissionsDialogOpen: !prevState.isSubmissionsDialogOpen,
       submissionsDialogProps: props,
     }));
   };
 
-  onChangePage = async nextPage => {
-    const scoreboard = await this.refreshScoreboard(nextPage, this.state.frozen, this.state.showClosedProblems);
+  const onChangePage = async nextPage => {
+    const scoreboard = await refreshScoreboard(nextPage);
     if (scoreboard) {
       return scoreboard.data.totalEntries;
     } else {
@@ -108,20 +99,22 @@ export class ContestScoreboardPage extends Component {
     }
   };
 
-  refreshScoreboard = async (nextPage, frozen, showClosedProblems) => {
-    const response = await this.props.onGetScoreboard(this.props.contest.jid, frozen, showClosedProblems, nextPage);
-    this.setState({ response: response ? [response] : [], frozen, showClosedProblems });
+  const refreshScoreboard = async nextPage => {
+    const response = await dispatch(
+      contestScoreboardActions.getScoreboard(contest.jid, frozen, showClosedProblems, nextPage)
+    );
+    setState(prevState => ({ ...prevState, response: response ? [response] : [] }));
     return response;
   };
 
-  renderScoreboardUpdatedTime = () => {
-    const { response } = this.state;
+  const renderScoreboardUpdatedTime = () => {
+    const { response } = state;
     if (!response || response.length === 0) {
       return null;
     }
 
     const scoreboard = response[0].data;
-    const contestEndTime = this.props.contest.beginTime + this.props.contest.duration;
+    const contestEndTime = contest.beginTime + contest.duration;
     return (
       <p className="contest-scoreboard-page__info">
         <small>
@@ -131,8 +124,8 @@ export class ContestScoreboardPage extends Component {
     );
   };
 
-  renderFrozenScoreboardNotice = () => {
-    const { response } = this.state;
+  const renderFrozenScoreboardNotice = () => {
+    const { response } = state;
     if (!response || response.length === 0 || response[0].data.type !== ContestScoreboardType.Frozen) {
       return null;
     }
@@ -147,8 +140,8 @@ export class ContestScoreboardPage extends Component {
     );
   };
 
-  renderFilter = () => {
-    const { response } = this.state;
+  const renderFilter = () => {
+    const { response } = state;
     if (!response || response.length === 0) {
       return null;
     }
@@ -164,16 +157,16 @@ export class ContestScoreboardPage extends Component {
           <Switch
             className="contest-scoreboard-page__filter"
             label="Frozen"
-            checked={this.state.frozen}
-            onChange={this.onChangeFrozen}
+            checked={frozen}
+            onChange={onChangeFrozen}
           />
         )}
         {canViewClosedProblems && (
           <Switch
             className="contest-scoreboard-page__filter"
             label="Show closed problems"
-            checked={this.state.showClosedProblems}
-            onChange={this.onChangeShowClosedProblems}
+            checked={showClosedProblems}
+            onChange={onChangeShowClosedProblems}
           />
         )}
         <div className="clearfix " />
@@ -181,8 +174,8 @@ export class ContestScoreboardPage extends Component {
     );
   };
 
-  renderForceRefreshButton = () => {
-    const { response } = this.state;
+  const renderForceRefreshButton = () => {
+    const { response } = state;
     if (!response || response.length === 0) {
       return null;
     }
@@ -198,85 +191,80 @@ export class ContestScoreboardPage extends Component {
         intent="primary"
         small
         icon={<Refresh />}
-        onClick={this.forceRefreshScoreboard}
-        loading={!!this.state.isForceRefreshButtonLoading}
+        onClick={forceRefreshScoreboard}
+        loading={!!state.isForceRefreshButtonLoading}
       >
         Force refresh
       </Button>
     );
   };
 
-  forceRefreshScoreboard = async () => {
-    this.setState({ isForceRefreshButtonLoading: true });
-    await this.props.onRefreshScoreboard(this.props.contest.jid);
-    this.setState({ isForceRefreshButtonLoading: false });
+  const forceRefreshScoreboard = async () => {
+    setState(prevState => ({ ...prevState, isForceRefreshButtonLoading: true }));
+    await dispatch(contestScoreboardActions.refreshScoreboard(contest.jid));
+    setState(prevState => ({ ...prevState, isForceRefreshButtonLoading: false }));
   };
 
-  onChangeFrozen = ({ target }) => this.onChange(target.checked, this.state.showClosedProblems);
+  const onChangeFrozen = ({ target }) => onChange(target.checked, showClosedProblems);
 
-  onChangeShowClosedProblems = ({ target }) => this.onChange(this.state.frozen, target.checked);
+  const onChangeShowClosedProblems = ({ target }) => onChange(frozen, target.checked);
 
-  onChange = (frozen, showClosedProblems) => {
-    this.setState({ frozen, showClosedProblems });
-    this.refreshScoreboard(1, frozen, showClosedProblems);
-    this.setState({ lastRefreshScoreboardTime: new Date().getTime() });
-
-    let queries = parse(this.props.location.search);
-    queries = { ...queries, frozen: undefined, showClosedProblems: undefined };
-    if (frozen) {
-      queries = { ...queries, frozen };
+  const onChange = (frozenVal, showClosedProblemsVal) => {
+    let newQueries = parse(location.search);
+    newQueries = { ...newQueries, frozen: undefined, showClosedProblems: undefined };
+    if (frozenVal) {
+      newQueries = { ...newQueries, frozen: frozenVal };
     }
-    if (showClosedProblems) {
-      queries = { ...queries, showClosedProblems };
+    if (showClosedProblemsVal) {
+      newQueries = { ...newQueries, showClosedProblems: showClosedProblemsVal };
     }
-    this.props.onAppendRoute(queries);
+    navigate({ search: stringify(newQueries) });
   };
 
-  openSubmissionsDialog = (contestantJid, problemJid) => {
+  const openSubmissionsDialog = (contestantJid, problemJid) => {
     const {
       profilesMap,
       data: { scoreboard },
-    } = this.state.response[0];
+    } = state.response[0];
 
     const profile = profilesMap[contestantJid];
 
     const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
     const problemAlias = scoreboard.state.problemAliases[problemIndex];
 
-    this.toggleSubmissionsDialog({
+    toggleSubmissionsDialog({
       userJid: contestantJid,
       problemJid,
       title: `Submissions by ${profile.username} for problem ${problemAlias}`,
     });
   };
 
-  openSubmissionImage = async (contestantJid, problemJid) => {
+  const openSubmissionImage = async (contestantJid, problemJid) => {
     const {
       data: { scoreboard },
-    } = this.state.response[0];
+    } = state.response[0];
 
     const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
     const problemAlias = scoreboard.state.problemAliases[problemIndex];
 
     const [info, submissionImageUrl] = await Promise.all([
-      this.props.onGetSubmissionInfo(this.props.contest.jid, contestantJid, problemJid),
-      this.props.onGetSubmissionSourceImage(this.props.contest.jid, contestantJid, problemJid),
+      dispatch(contestScoreboardActions.getSubmissionInfo(contest.jid, contestantJid, problemJid)),
+      dispatch(contestScoreboardActions.getSubmissionSourceImage(contest.jid, contestantJid, problemJid)),
     ]);
     const submissionDialogTitle = `Submission #${info.id} by ${info.profile.username} for problem ${problemAlias}`;
-    this.setState({ submissionImageUrl, submissionDialogTitle });
-    this.toggleSubmissionImageDialog();
+    setState(prevState => ({ ...prevState, submissionImageUrl, submissionDialogTitle }));
+    toggleSubmissionImageDialog();
   };
 
-  openSubmissionSummary = contestantJid => {
-    const { contest, onPush } = this.props;
-    const { profilesMap } = this.state.response[0];
+  const openSubmissionSummary = contestantJid => {
+    const { profilesMap } = state.response[0];
 
     const profile = profilesMap[contestantJid];
-    onPush(`/contests/${contest.slug}/submissions/users/${profile.username}`);
+    navigate(`/contests/${contest.slug}/submissions/users/${profile.username}`);
   };
 
-  renderScoreboard = () => {
-    const { response } = this.state;
+  const renderScoreboard = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -296,52 +284,52 @@ export class ContestScoreboardPage extends Component {
 
     let onClickSubmissionCell;
     if (canViewSubmissionDetails) {
-      onClickSubmissionCell = this.openSubmissionsDialog;
+      onClickSubmissionCell = openSubmissionsDialog;
     } else if (canViewSubmissions) {
-      onClickSubmissionCell = this.openSubmissionImage;
+      onClickSubmissionCell = openSubmissionImage;
     }
 
-    if (this.props.contest.style === ContestStyle.TROC) {
+    if (contest.style === ContestStyle.TROC) {
       return (
         <TrocScoreboardTable
-          userJid={this.props.userJid}
+          userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           canViewSubmissions={canViewSubmissions}
           onClickSubmissionCell={onClickSubmissionCell}
         />
       );
-    } else if (this.props.contest.style === ContestStyle.ICPC) {
+    } else if (contest.style === ContestStyle.ICPC) {
       return (
         <IcpcScoreboardTable
-          userJid={this.props.userJid}
+          userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           onClickSubmissionCell={onClickSubmissionCell}
         />
       );
-    } else if (this.props.contest.style === ContestStyle.IOI) {
+    } else if (contest.style === ContestStyle.IOI) {
       return (
         <IoiScoreboardTable
-          userJid={this.props.userJid}
+          userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           onClickSubmissionCell={onClickSubmissionCell}
         />
       );
-    } else if (this.props.contest.style === ContestStyle.Bundle) {
+    } else if (contest.style === ContestStyle.Bundle) {
       return (
         <BundleScoreboardTable
-          userJid={this.props.userJid}
+          userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          onClickTotalScoresCell={this.openSubmissionSummary}
+          onClickTotalScoresCell={openSubmissionSummary}
         />
       );
-    } else if (this.props.contest.style === ContestStyle.GCJ) {
+    } else if (contest.style === ContestStyle.GCJ) {
       return (
         <GcjScoreboardTable
-          userJid={this.props.userJid}
+          userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
           onClickSubmissionCell={onClickSubmissionCell}
@@ -351,20 +339,8 @@ export class ContestScoreboardPage extends Component {
       return <Fragment />;
     }
   };
+
+  return render();
 }
 
-const mapStateToProps = state => ({
-  userJid: selectMaybeUserJid(state),
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetScoreboard: contestScoreboardActions.getScoreboard,
-  onRefreshScoreboard: contestScoreboardActions.refreshScoreboard,
-  onGetSubmissionSourceImage: contestScoreboardActions.getSubmissionSourceImage,
-  onGetSubmissionInfo: contestScoreboardActions.getSubmissionInfo,
-  onAppendRoute: queries => push({ search: stringify(queries) }),
-  onPush: push,
-};
-
-export default withBreadcrumb('Scoreboard')(connect(mapStateToProps, mapDispatchToProps)(ContestScoreboardPage));
+export default withBreadcrumb('Scoreboard')(ContestScoreboardPage);

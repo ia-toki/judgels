@@ -3,8 +3,7 @@ import { Menu } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useRouteMatch } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useResolvedPath } from 'react-router-dom';
 
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
@@ -18,7 +17,7 @@ import './CourseChaptersSidebar.scss';
 
 export default function CourseChaptersSidebar() {
   const location = useLocation();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
@@ -87,7 +86,7 @@ export default function CourseChaptersSidebar() {
           'course-chapters-sidebar__item--selected': isInChapterPath(courseChapter.alias),
           'course-chapters-sidebar__item--future': idx > firstUnsolvedChapterIndex,
         })}
-        to={`${match.url}/chapters/${courseChapter.alias}`}
+        to={`${pathname}/chapters/${courseChapter.alias}`}
         onClick={() => {
           dispatch(
             PutCourseChapter({
@@ -118,7 +117,7 @@ export default function CourseChaptersSidebar() {
   };
 
   const isInChapterPath = chapterAlias => {
-    return (location.pathname + '/').replace('//', '/').startsWith(match.url + '/chapters/' + chapterAlias);
+    return (location.pathname + '/').replace('//', '/').startsWith(pathname + '/chapters/' + chapterAlias);
   };
 
   const isInProblemPath = () => {

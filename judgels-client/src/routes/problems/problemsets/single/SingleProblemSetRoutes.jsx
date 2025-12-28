@@ -1,8 +1,8 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, Manual } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route } from 'react-router';
-import { useHistory, useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
@@ -15,7 +15,7 @@ import './SingleProblemSetRoutes.scss';
 
 export default function SingleProblemSetRoutes() {
   const { problemSetSlug } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const problemSet = useSelector(selectProblemSet);
 
   // Optimization:
@@ -25,16 +25,14 @@ export default function SingleProblemSetRoutes() {
   }
 
   const onClickBack = () => {
-    history.push('/problems/problemsets');
+    navigate('/problems/problemsets');
   };
 
   const sidebarItems = [
     {
-      id: '@',
+      path: '',
       titleIcon: <Manual />,
       title: 'Problems',
-      routeComponent: Route,
-      component: ProblemSetProblemsPage,
     },
   ];
 
@@ -56,7 +54,11 @@ export default function SingleProblemSetRoutes() {
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<ProblemSetProblemsPage />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

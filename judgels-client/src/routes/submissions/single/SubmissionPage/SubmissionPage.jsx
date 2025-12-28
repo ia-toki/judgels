@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -13,7 +13,7 @@ import * as submissionActions from '../../modules/submissionActions';
 
 export default function SubmissionPage() {
   const { submissionId } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const statementLanguage = useSelector(selectStatementLanguage);
 
@@ -35,7 +35,7 @@ export default function SubmissionPage() {
       ? undefined
       : await dispatch(submissionActions.getSubmissionSourceImage(data.submission.jid));
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, 'Submission #' + data.submission.id));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, 'Submission #' + data.submission.id));
 
     setState({
       submissionWithSource: data,
@@ -52,7 +52,7 @@ export default function SubmissionPage() {
     loadSubmission();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, []);
 

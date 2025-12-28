@@ -1,20 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { push } from 'connected-react-router';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import MenuItemLink from './MenuItemLink';
 
 describe('MenuItemLink', () => {
-  let store;
-
   beforeEach(() => {
-    store = createMockStore()({});
     render(
-      <Provider store={store}>
-        <MenuItemLink text="Account" to="/account" />
-      </Provider>
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<MenuItemLink text="Account" to="/account" />} />
+          <Route path="/account" element={<div>Account Page</div>} />
+        </Routes>
+      </MemoryRouter>
     );
   });
 
@@ -22,10 +20,10 @@ describe('MenuItemLink', () => {
     expect(screen.getByText('Account')).toBeInTheDocument();
   });
 
-  it('pushes new location when clicked', async () => {
+  it('navigates when clicked', async () => {
     const user = userEvent.setup();
     const link = screen.getByRole('menuitem', { name: /Account/i });
     await user.click(link);
-    expect(store.getActions()).toContainEqual(push('/account'));
+    expect(screen.getByText('Account Page')).toBeInTheDocument();
   });
 });

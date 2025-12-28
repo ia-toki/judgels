@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { selectCourse } from '../../../modules/courseSelectors';
 
@@ -9,7 +9,7 @@ import * as courseChapterActions from '../modules/courseChapterActions';
 
 export default function SingleCourseChapterDataRoute() {
   const { courseSlug, chapterAlias } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
 
@@ -18,7 +18,7 @@ export default function SingleCourseChapterDataRoute() {
       return;
     }
     const chapter = await dispatch(courseChapterActions.getChapter(course.jid, course.slug, chapterAlias));
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, `${chapterAlias}. ${chapter.name}`));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, `${chapterAlias}. ${chapter.name}`));
   };
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function SingleCourseChapterDataRoute() {
 
     return () => {
       dispatch(courseChapterActions.clearChapter());
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [course?.jid, chapterAlias]);
 

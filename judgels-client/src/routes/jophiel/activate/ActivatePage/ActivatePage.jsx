@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 
@@ -8,16 +8,16 @@ import * as activateActions from '../modules/activateActions';
 
 export default function ActivatePage() {
   const { emailCode } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const activate = async () => {
       await dispatch(activateActions.activateUser(emailCode));
-      history.push('/registered?source=internal');
+      navigate('/registered?source=internal');
     };
     activate();
-  }, [emailCode, history, dispatch]);
+  }, [emailCode, navigate, dispatch]);
 
   return <SingleColumnLayout></SingleColumnLayout>;
 }

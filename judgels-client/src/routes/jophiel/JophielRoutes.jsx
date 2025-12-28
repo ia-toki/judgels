@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
@@ -17,19 +17,75 @@ import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPa
 function JophielRoutes() {
   return (
     <div>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/registered" component={RegisteredPage} />
-        <GuestRoute exact path="/login" component={LoginPage} />
-        <UserRoute exact path="/logout" component={LogoutPage} />
-        <GuestRoute exact path="/register" component={RegisterPage} />
-        <GuestRoute exact path="/activate/:emailCode" component={ActivatePage} />
-        <GuestRoute exact path="/forgot-password" component={ForgotPasswordPage} />
-        <GuestRoute exact path="/need-activation" component={NeedActivationPage} />
-        <GuestRoute exact path="/reset-password/:emailCode" component={ResetPasswordPage} />
-        <UserRoute path="/account" component={JophielAccountRoutes} />
-        <Route path="/profiles" component={JophielProfilesRoutes} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/registered" element={<RegisteredPage />} />
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/logout"
+          element={
+            <UserRoute>
+              <LogoutPage />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/activate/:emailCode"
+          element={
+            <GuestRoute>
+              <ActivatePage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <GuestRoute>
+              <ForgotPasswordPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/need-activation"
+          element={
+            <GuestRoute>
+              <NeedActivationPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/reset-password/:emailCode"
+          element={
+            <GuestRoute>
+              <ResetPasswordPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/account/*"
+          element={
+            <UserRoute>
+              <JophielAccountRoutes />
+            </UserRoute>
+          }
+        />
+        <Route path="/profiles/*" element={<JophielProfilesRoutes />} />
+      </Routes>
     </div>
   );
 }

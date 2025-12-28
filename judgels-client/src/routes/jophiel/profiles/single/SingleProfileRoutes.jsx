@@ -1,6 +1,6 @@
 import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -26,27 +26,21 @@ export default function SingleProfileRoutes() {
 
   const sidebarItems = [
     {
-      id: '@',
+      path: '',
       titleIcon: <Properties />,
       title: 'Summary',
-      routeComponent: Route,
-      component: ProfileSummaryPage,
     },
     {
-      id: 'contest-history',
+      path: 'contest-history',
       titleIcon: <TimelineEvents />,
       title: 'Contest history',
-      routeComponent: Route,
-      component: ContestHistoryPage,
     },
     ...(isTLX()
       ? [
           {
-            id: 'submission-history',
+            path: 'submission-history',
             titleIcon: <Layers />,
             title: 'Submission history',
-            routeComponent: Route,
-            component: SubmissionHistoryPage,
           },
         ]
       : []),
@@ -61,7 +55,13 @@ export default function SingleProfileRoutes() {
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<ProfileSummaryPage />} />
+          <Route path="contest-history" element={<ContestHistoryPage />} />
+          {isTLX() && <Route path="submission-history" element={<SubmissionHistoryPage />} />}
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

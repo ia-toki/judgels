@@ -1,11 +1,13 @@
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ChapterProblemPage from './single/ChapterProblemPage/ChapterProblemPage';
 
 function ChapterProblemRoutes() {
   return (
-    <Route path="/courses/:courseSlug/chapters/:chapterAlias/problems/:problemAlias" component={ChapterProblemPage} />
+    <Routes>
+      <Route path=":problemAlias/*" element={<ChapterProblemPage />} />
+    </Routes>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContestsRoutes from './ContestsRoutes';
@@ -7,10 +7,10 @@ import MainSingleContestRoutes from './contests/single/MainSingleContestRoutes';
 function MainContestRoutes() {
   return (
     <div>
-      <Switch>
-        <Route path="/contests/:contestSlug([a-zA-Z0-9-]+)" component={MainSingleContestRoutes} />
-        <Route path="/contests" component={ContestsRoutes} />
-      </Switch>
+      <Routes>
+        <Route path=":contestSlug/*" element={<MainSingleContestRoutes />} />
+        <Route path="*" element={<ContestsRoutes />} />
+      </Routes>
     </div>
   );
 }

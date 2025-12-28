@@ -1,6 +1,7 @@
 import { parse } from 'query-string';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -10,64 +11,56 @@ import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
 
 import * as problemSetActions from '../modules/problemSetActions';
 
-class ProblemSetsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state;
+export default function ProblemSetsPage() {
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
+  const queries = parse(location.search);
+  const archiveSlug = queries.archive;
+  const name = queries.name;
 
-    const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archive;
-    const name = queries.name;
+  const [state, setState] = useState({
+    response: undefined,
+    isFilterLoading: false,
+  });
 
-    this.state = {
-      response: undefined,
-      filter: { archiveSlug, name },
-      isFilterLoading: false,
-    };
-  }
-
-  componentDidUpdate() {
-    const queries = parse(this.props.location.search);
-    const archiveSlug = queries.archive;
-
-    if (archiveSlug !== this.state.filter.archiveSlug) {
-      this.setState({ filter: { archiveSlug }, isFilterLoading: false });
+  useEffect(() => {
+    if (archiveSlug || name) {
+      setState(prevState => ({ ...prevState, isFilterLoading: true }));
     }
-  }
+  }, [archiveSlug, name]);
 
-  render() {
+  const render = () => {
     return (
       <Card title="Browse problemsets">
-        {this.renderHeader()}
-        {this.renderProblemSets()}
-        {this.renderPagination()}
+        {renderHeader()}
+        {renderProblemSets()}
+        {renderPagination()}
       </Card>
     );
-  }
+  };
 
-  renderHeader = () => {
+  const renderHeader = () => {
     return (
       <>
-        <div className="float-right">{this.renderFilter()}</div>
+        <div className="float-right">{renderFilter()}</div>
         <div className="clearfix" />
         <div className="content-card__section">
-          {this.renderFilterResultsBanner()}
+          {renderFilterResultsBanner()}
           <hr />
         </div>
       </>
     );
   };
 
-  renderFilterResultsBanner = () => {
-    const { archiveSlug, name } = this.state.filter;
+  const renderFilterResultsBanner = () => {
     if (!archiveSlug && !name) {
       return <>Most recently added problemsets:</>;
     }
 
-    const { response } = this.state;
+    const { response } = state;
     const archiveName = response && response.archiveName;
 
     if (archiveName && !name) {
@@ -98,19 +91,14 @@ class ProblemSetsPage extends Component {
     );
   };
 
-  renderFilter = () => {
-    const { name } = this.state.filter;
+  const renderFilter = () => {
     return (
-      <SearchBox
-        onRouteChange={this.searchBoxUpdateQueries}
-        initialValue={name || ''}
-        isLoading={this.state.isFilterLoading}
-      />
+      <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={state.isFilterLoading} />
     );
   };
 
-  renderProblemSets = () => {
-    const { response } = this.state;
+  const renderProblemSets = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -138,43 +126,22 @@ class ProblemSetsPage extends Component {
     ));
   };
 
-  renderPagination = () => {
-    const { filter } = this.state;
-    return (
-      <Pagination
-        pageSize={ProblemSetsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-        key={'' + filter.archiveSlug + filter.name}
-      />
-    );
+  const renderPagination = () => {
+    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={'' + archiveSlug + name} />;
   };
 
-  onChangePage = async nextPage => {
-    if (this.state.response) {
-      this.setState({ response: { ...this.state.response, data: undefined } });
+  const onChangePage = async nextPage => {
+    if (state.response) {
+      setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
     }
-    const { archiveSlug, name } = this.state.filter;
-    const response = await this.props.onGetProblemSets(archiveSlug, name, nextPage);
-    this.setState({ response, isFilterLoading: false });
+    const response = await dispatch(problemSetActions.getProblemSets(archiveSlug, name, nextPage));
+    setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };
 
-  searchBoxUpdateQueries = (name, queries) => {
-    this.setState(prevState => {
-      const prevFilter = prevState.filter || {};
-      return {
-        filter: {
-          ...prevFilter,
-          name,
-        },
-        isFilterLoading: prevFilter.name !== name,
-      };
-    });
+  const searchBoxUpdateQueries = (name, queries) => {
     return { ...queries, page: undefined, name };
   };
-}
 
-const mapDispatchToProps = {
-  onGetProblemSets: problemSetActions.getProblemSets,
-};
-export default connect(undefined, mapDispatchToProps)(ProblemSetsPage);
+  return render();
+}

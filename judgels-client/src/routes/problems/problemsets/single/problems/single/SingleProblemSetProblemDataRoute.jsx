@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 
@@ -9,7 +9,7 @@ import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
 export default function SingleProblemSetProblemDataRoute() {
   const { problemSetSlug, problemAlias } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
 
@@ -18,7 +18,7 @@ export default function SingleProblemSetProblemDataRoute() {
       return;
     }
     await dispatch(problemSetProblemActions.getProblem(problemSet.jid, problemAlias));
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, problemAlias));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, problemAlias));
   };
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function SingleProblemSetProblemDataRoute() {
 
     return () => {
       dispatch(problemSetProblemActions.clearProblem());
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [problemSet?.jid]);
 

@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ProblemSubmissionSummaryPage from './ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage';
@@ -7,14 +7,11 @@ import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsP
 function ProblemItemSubmissionRoutes() {
   return (
     <div>
-      <Switch>
-        <Route
-          path="/problems/:problemSetSlug/:problemAlias/results/users/:username"
-          component={ProblemSubmissionSummaryPage}
-        />
-        <Route path="/problems/:problemSetSlug/:problemAlias/results/all" component={ProblemSubmissionsPage} />
-        <Route path="/problems/:problemSetSlug/:problemAlias/results" component={ProblemSubmissionSummaryPage} />
-      </Switch>
+      <Routes>
+        <Route path="users/:username" element={<ProblemSubmissionSummaryPage />} />
+        <Route path="all" element={<ProblemSubmissionsPage />} />
+        <Route index element={<ProblemSubmissionSummaryPage />} />
+      </Routes>
     </div>
   );
 }

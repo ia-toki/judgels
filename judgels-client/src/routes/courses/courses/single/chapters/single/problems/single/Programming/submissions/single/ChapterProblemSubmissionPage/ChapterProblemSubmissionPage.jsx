@@ -1,7 +1,7 @@
 import { ChevronLeft } from '@blueprintjs/icons';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
@@ -16,7 +16,7 @@ import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSu
 
 export default function ChapterProblemSubmissionPage() {
   const { problemAlias, submissionId } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);
@@ -34,7 +34,7 @@ export default function ChapterProblemSubmissionPage() {
     refreshSubmission();
 
     return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, []);
 
@@ -60,7 +60,7 @@ export default function ChapterProblemSubmissionPage() {
     const { data, profile, problemName, containerName } = await dispatch(
       chapterProblemSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, '#' + data.submission.id));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, '#' + data.submission.id));
 
     setState({
       submissionWithSource: data,

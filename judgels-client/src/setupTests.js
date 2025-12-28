@@ -1,15 +1,25 @@
 import '@testing-library/jest-dom/vitest';
 import nock from 'nock';
 import { TextDecoder, TextEncoder } from 'node:util';
+import { vi } from 'vitest';
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
 nock.disableNetConnect();
 
-window.setImmediate = function (fn) {
-  setTimeout(fn, 0);
-};
+vi.mock('./modules/toast/toastActions', () => ({
+  showToast: vi.fn(),
+  showSuccessToast: vi.fn(),
+  showAlertToast: vi.fn(),
+  showErrorToast: vi.fn(),
+  toastActions: {
+    showToast: vi.fn(),
+    showSuccessToast: vi.fn(),
+    showAlertToast: vi.fn(),
+    showErrorToast: vi.fn(),
+  },
+}));
 
 window.conf = {
   mode: 'TLX',

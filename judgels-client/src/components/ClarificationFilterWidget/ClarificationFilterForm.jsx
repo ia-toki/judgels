@@ -6,7 +6,7 @@ import { Required } from '../forms/validations';
 
 import './ClarificationFilterForm.scss';
 
-export default function ClarificationFilterForm({ onSubmit, initialValues, statuses }) {
+export default function ClarificationFilterForm({ onSubmit, initialValues, statuses, isLoading }) {
   const statusField = {
     className: 'form-status',
     name: 'status',
@@ -18,7 +18,7 @@ export default function ClarificationFilterForm({ onSubmit, initialValues, statu
 
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
-      {({ handleSubmit, isLoading }) => (
+      {({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className="clarification-filter-form">
           <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
           <Field component={FormSelect2} {...statusField} />

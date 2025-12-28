@@ -1,6 +1,6 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -53,14 +53,12 @@ export default function SingleContestRoutes() {
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
   const sidebarItems = [
     {
-      id: '@',
+      path: '',
       titleIcon: contestIcon[ContestTab.Overview],
       title: 'Overview',
-      routeComponent: Route,
-      component: ContestOverviewPage,
     },
     {
-      id: 'announcements',
+      path: 'announcements',
       titleIcon: contestIcon[ContestTab.Announcements],
       title: (
         <div className="tab-item-with-widget">
@@ -71,20 +69,16 @@ export default function SingleContestRoutes() {
           <div className="clearfix" />
         </div>
       ),
-      routeComponent: Route,
-      component: ContestAnnouncementsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Announcements) === -1,
     },
     {
-      id: 'problems',
+      path: 'problems',
       titleIcon: contestIcon[ContestTab.Problems],
       title: 'Problems',
-      routeComponent: Route,
-      component: ContestProblemRoutes,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Problems) === -1,
     },
     {
-      id: 'editorial',
+      path: 'editorial',
       titleIcon: contestIcon[ContestTab.Editorial],
       title: (
         <div className="tab-item-with-widget">
@@ -97,44 +91,34 @@ export default function SingleContestRoutes() {
           <div className="clearfix" />
         </div>
       ),
-      routeComponent: Route,
-      component: ContestEditorialPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Editorial) === -1,
     },
     {
-      id: 'contestants',
+      path: 'contestants',
       titleIcon: contestIcon[ContestTab.Contestants],
       title: 'Contestants',
-      routeComponent: Route,
-      component: ContestContestantsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Contestants) === -1,
     },
     {
-      id: 'supervisors',
+      path: 'supervisors',
       titleIcon: contestIcon[ContestTab.Supervisors],
       title: 'Supervisors',
-      routeComponent: Route,
-      component: ContestSupervisorsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Supervisors) === -1,
     },
     {
-      id: 'managers',
+      path: 'managers',
       titleIcon: contestIcon[ContestTab.Managers],
       title: 'Managers',
-      routeComponent: Route,
-      component: ContestManagersPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Managers) === -1,
     },
     {
-      id: 'submissions',
+      path: 'submissions',
       titleIcon: contestIcon[ContestTab.Submissions],
       title: 'Submissions',
-      routeComponent: Route,
-      component: contest.style === ContestStyle.Bundle ? BundleSubmissionRoutes : ProgrammingSubmissionRoutes,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Submissions) === -1,
     },
     {
-      id: 'clarifications',
+      path: 'clarifications',
       titleIcon: contestIcon[ContestTab.Clarifications],
       title: (
         <div className="tab-item-with-widget">
@@ -145,32 +129,24 @@ export default function SingleContestRoutes() {
           <div className="clearfix" />
         </div>
       ),
-      routeComponent: Route,
-      component: ContestClarificationsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Clarifications) === -1,
     },
     {
-      id: 'scoreboard',
+      path: 'scoreboard',
       titleIcon: contestIcon[ContestTab.Scoreboard],
       title: 'Scoreboard',
-      routeComponent: Route,
-      component: ContestScoreboardPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Scoreboard) === -1,
     },
     {
-      id: 'files',
+      path: 'files',
       titleIcon: contestIcon[ContestTab.Files],
       title: 'Files',
-      routeComponent: Route,
-      component: ContestFilesPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Files) === -1,
     },
     {
-      id: 'logs',
+      path: 'logs',
       titleIcon: contestIcon[ContestTab.Logs],
       title: 'Logs',
-      routeComponent: Route,
-      component: ContestLogsPage,
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Logs) === -1,
     },
   ];
@@ -199,10 +175,28 @@ export default function SingleContestRoutes() {
     ),
   };
 
+  const ContestSubmissionRoutes =
+    contest.style === ContestStyle.Bundle ? BundleSubmissionRoutes : ProgrammingSubmissionRoutes;
+
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
-      <ContentWithSidebar {...contentWithSidebarProps} />
+      <ContentWithSidebar {...contentWithSidebarProps}>
+        <Routes>
+          <Route index element={<ContestOverviewPage />} />
+          <Route path="announcements" element={<ContestAnnouncementsPage />} />
+          <Route path="problems/*" element={<ContestProblemRoutes />} />
+          <Route path="editorial" element={<ContestEditorialPage />} />
+          <Route path="contestants" element={<ContestContestantsPage />} />
+          <Route path="supervisors" element={<ContestSupervisorsPage />} />
+          <Route path="managers" element={<ContestManagersPage />} />
+          <Route path="submissions/*" element={<ContestSubmissionRoutes />} />
+          <Route path="clarifications" element={<ContestClarificationsPage />} />
+          <Route path="scoreboard" element={<ContestScoreboardPage />} />
+          <Route path="files" element={<ContestFilesPage />} />
+          <Route path="logs" element={<ContestLogsPage />} />
+        </Routes>
+      </ContentWithSidebar>
     </FullPageLayout>
   );
 }

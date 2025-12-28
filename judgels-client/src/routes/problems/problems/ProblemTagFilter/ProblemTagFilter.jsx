@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 
@@ -13,7 +13,7 @@ import './ProblemTagFilter.scss';
 
 export default function ProblemTagFilter() {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const parseTags = queryTags => {
@@ -122,7 +122,7 @@ export default function ProblemTagFilter() {
     tags = sanitizeTags(tags);
 
     const queries = parse(location.search);
-    history.push({
+    navigate({
       search: stringify({
         ...queries,
         tags,

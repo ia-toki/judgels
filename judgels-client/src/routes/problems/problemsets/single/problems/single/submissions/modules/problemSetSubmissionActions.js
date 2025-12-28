@@ -1,7 +1,6 @@
-import { push } from 'connected-react-router';
-
 import { getGradingLanguageEditorSubmissionFilename } from '../../../../../../../../modules/api/gabriel/language';
 import { submissionProgrammingAPI } from '../../../../../../../../modules/api/jerahmeel/submissionProgramming';
+import { getNavigationRef } from '../../../../../../../../modules/navigation/navigationRef';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectIsDarkMode } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 
@@ -41,7 +40,7 @@ export function createSubmission(problemSetSlug, problemSetJid, problemAlias, pr
     toastActions.showSuccessToast('Solution submitted.');
 
     window.scrollTo(0, 0);
-    dispatch(push(`/problems/${problemSetSlug}/${problemAlias}/submissions/mine`));
+    getNavigationRef().push(`/problems/${problemSetSlug}/${problemAlias}/submissions/mine`);
   };
 }
 

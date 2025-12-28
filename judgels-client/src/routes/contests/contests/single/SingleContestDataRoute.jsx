@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
 import { selectContest } from '../modules/contestSelectors';
@@ -11,7 +11,7 @@ import * as contestWebActions from './modules/contestWebActions';
 
 export default function SingleContestDataRoute() {
   const { contestSlug } = useParams();
-  const match = useRouteMatch();
+  const { pathname } = useResolvedPath('');
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const currentTimeoutRef = useRef(null);
@@ -25,7 +25,7 @@ export default function SingleContestDataRoute() {
 
     // so that we don't have to wait until we get the contest from backend.
     const { contest: newContest } = await dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
-    dispatch(breadcrumbsActions.pushBreadcrumb(match.url, newContest.name));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, newContest.name));
 
     if (!contest || contest.slug !== contestSlug) {
       currentTimeoutRef.current = setTimeout(() => refreshWebConfig(newContest.jid), REFRESH_WEB_CONFIG_INTERVAL);
@@ -38,13 +38,13 @@ export default function SingleContestDataRoute() {
     return () => {
       dispatch(contestActions.clearContest());
       dispatch(contestWebActions.clearWebConfig());
-      dispatch(breadcrumbsActions.popBreadcrumb(match.url));
+      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
 
       if (currentTimeoutRef.current) {
         clearTimeout(currentTimeoutRef.current);
       }
     };
-  }, []);
+  }, [contestSlug]);
 
   const refreshWebConfig = async contestJid => {
     await dispatch(contestWebActions.getWebConfig(contestJid));

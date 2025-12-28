@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -46,10 +46,12 @@ describe('ContestSubmissionPage', () => {
       render(
         <Provider store={store}>
           <MemoryRouter initialEntries={['/contest/contestSlug/submissions/submissions/10']}>
-            <Route
-              path="/contest/contestSlug/submissions/submissions/:submissionId"
-              component={ContestSubmissionPage}
-            />
+            <Routes>
+              <Route
+                path="/contest/:contestSlug/submissions/submissions/:submissionId"
+                element={<ContestSubmissionPage />}
+              />
+            </Routes>
           </MemoryRouter>
         </Provider>
       )

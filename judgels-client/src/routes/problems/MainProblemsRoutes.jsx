@@ -1,19 +1,32 @@
-import { Route, Switch } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import MainProblemsWrapperRoutes from './MainProblemsWrapperRoutes';
+import ProblemsRoutes from './ProblemsRoutes';
+import ProblemsPage from './problems/ProblemsPage/ProblemsPage';
+import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 import MainSingleProblemSetRoutes from './problemsets/single/MainSingleProblemSetRoutes';
 
 function MainProblemsRoutes() {
   return (
-    <div>
-      <Switch>
-        <Route exact path="/problems" component={MainProblemsWrapperRoutes} />
-        <Route path="/problems/problemsets" component={MainProblemsWrapperRoutes} />
-        <Route path="/problems/submissions" component={MainProblemsWrapperRoutes} />
-        <Route path="/problems" component={MainSingleProblemSetRoutes} />
-      </Switch>
-    </div>
+    <Routes>
+      <Route
+        path="problemsets"
+        element={
+          <ProblemsRoutes>
+            <ProblemSetsPage />
+          </ProblemsRoutes>
+        }
+      />
+      <Route path=":problemSetSlug/*" element={<MainSingleProblemSetRoutes />} />
+      <Route
+        index
+        element={
+          <ProblemsRoutes>
+            <ProblemsPage />
+          </ProblemsRoutes>
+        }
+      />
+    </Routes>
   );
 }
 

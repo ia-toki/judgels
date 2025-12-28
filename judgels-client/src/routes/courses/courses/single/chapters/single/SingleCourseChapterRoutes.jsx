@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
@@ -10,7 +10,6 @@ import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResour
 
 export default function SingleCourseChapterRoutes() {
   const { courseSlug, chapterAlias } = useParams();
-  const match = useRouteMatch();
   const chapter = useSelector(selectCourseChapter);
 
   // Optimization:
@@ -20,10 +19,10 @@ export default function SingleCourseChapterRoutes() {
   }
 
   return (
-    <Switch>
-      <Route exact path={match.url} component={ChapterResourcesPage} />
-      <Route path={`${match.url}/lessons`} component={ChapterLessonRoutes} />
-      <Route path={`${match.url}/problems`} component={ChapterProblemRoutes} />
-    </Switch>
+    <Routes>
+      <Route index element={<ChapterResourcesPage />} />
+      <Route path="lessons/*" element={<ChapterLessonRoutes />} />
+      <Route path="problems/*" element={<ChapterProblemRoutes />} />
+    </Routes>
   );
 }

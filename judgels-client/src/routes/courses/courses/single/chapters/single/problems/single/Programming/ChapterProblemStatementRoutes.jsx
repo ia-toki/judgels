@@ -1,4 +1,4 @@
-import { Route } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
 import ChapterProblemWorkspacePage from './ChapterProblemWorkspacePage/ChapterProblemWorkspacePage';
@@ -9,20 +9,27 @@ import './ChapterProblemStatementRoutes.scss';
 export default function ChapterProblemStatementRoutes({ worksheet, renderNavigation }) {
   const topbarItems = [
     {
-      id: '@',
+      path: '',
       title: 'Code',
-      routeComponent: Route,
-      render: props => (
-        <ChapterProblemWorkspacePage {...props} worksheet={worksheet} renderNavigation={renderNavigation} />
-      ),
     },
     {
-      id: 'submissions',
+      path: 'submissions',
       title: 'Submissions',
-      routeComponent: Route,
-      component: ChapterProblemSubmissionRoutes,
     },
   ];
 
-  return <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} />;
+  return (
+    <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems}>
+      <Routes>
+        <Route
+          index
+          element={<ChapterProblemWorkspacePage worksheet={worksheet} renderNavigation={renderNavigation} />}
+        />
+        <Route
+          path="submissions/*"
+          element={<ChapterProblemSubmissionRoutes worksheet={worksheet} renderNavigation={renderNavigation} />}
+        />
+      </Routes>
+    </ContentWithTopbar>
+  );
 }
