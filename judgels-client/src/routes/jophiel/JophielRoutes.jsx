@@ -84,7 +84,7 @@ function JophielRoutes() {
             </UserRoute>
           }
         />
-        <Route path="/profiles/*" element={<JophielProfilesRoutes />} />
+        <Route path="/profiles/:username/*" element={<JophielProfilesRoutes />} />
       </Routes>
     </div>
   );
