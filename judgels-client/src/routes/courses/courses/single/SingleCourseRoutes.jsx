@@ -1,16 +1,39 @@
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { selectCourse } from '../modules/courseSelectors';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
-import SingleCourseContentRoutes from './SingleCourseContentRoutes';
+import CourseOverview from './CourseOverview/CourseOverview';
+import SingleCourseDataLayout from './SingleCourseDataLayout';
+import { SingleCourseChapterLayout, singleCourseChapterRoutes } from './chapters/single/SingleCourseChapterRoutes';
 
 import './SingleCourseRoutes.scss';
 
-export default function SingleCourseRoutes() {
+export const singleCourseRoutes = [
+  {
+    index: true,
+    element: <CourseOverview />,
+  },
+  {
+    path: 'chapters/:chapterAlias',
+    element: <SingleCourseChapterLayout />,
+    children: singleCourseChapterRoutes,
+  },
+];
+
+export function SingleCourseLayout() {
+  return (
+    <>
+      <SingleCourseDataLayout />
+      <MainSingleCourseLayout />
+    </>
+  );
+}
+
+function MainSingleCourseLayout() {
   const { courseSlug } = useParams();
   const course = useSelector(selectCourse);
 
@@ -25,7 +48,7 @@ export default function SingleCourseRoutes() {
       <ScrollToTopOnMount />
       <div className="single-course-routes">
         <CourseChaptersSidebar />
-        <SingleCourseContentRoutes />
+        <Outlet />
       </div>
     </FullWidthPageLayout>
   );

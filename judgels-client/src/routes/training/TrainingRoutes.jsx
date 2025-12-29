@@ -1,5 +1,5 @@
 import { Box, PanelStats, PredictiveAnalysis, Properties } from '@blueprintjs/icons';
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -10,7 +10,7 @@ import ChaptersPage from './chapters/ChaptersPage/ChaptersPage';
 import CoursesPage from './courses/CoursesPage/CoursesPage';
 import ProblemSetsPage from './problemsets/ProblemSetsPage/ProblemSetsPage';
 
-function TrainingRoutes() {
+function TrainingLayout() {
   const sidebarItems = [
     {
       path: 'courses',
@@ -37,22 +37,46 @@ function TrainingRoutes() {
   const contentWithSidebarProps = {
     title: 'Training',
     items: sidebarItems,
+    basePath: '/training',
   };
 
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<Navigate to="courses" replace />} />
-          <Route path="courses" element={<CoursesPage />} />
-          <Route path="chapters" element={<ChaptersPage />} />
-          <Route path="archives" element={<ArchivesPage />} />
-          <Route path="problemsets" element={<ProblemSetsPage />} />
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );
 }
 
-export default withBreadcrumb('Training')(TrainingRoutes);
+const TrainingLayoutWithBreadcrumb = withBreadcrumb('Training')(TrainingLayout);
+
+export const routes = [
+  {
+    path: 'training',
+    element: <TrainingLayoutWithBreadcrumb />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="courses" replace />,
+      },
+      {
+        path: 'courses',
+        element: <CoursesPage />,
+      },
+      {
+        path: 'chapters',
+        element: <ChaptersPage />,
+      },
+      {
+        path: 'archives',
+        element: <ArchivesPage />,
+      },
+      {
+        path: 'problemsets',
+        element: <ProblemSetsPage />,
+      },
+    ],
+  },
+];

@@ -1,12 +1,12 @@
-import { Route, Routes } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
-import ChapterProblemWorkspacePage from './ChapterProblemWorkspacePage/ChapterProblemWorkspacePage';
-import ChapterProblemSubmissionRoutes from './submissions/ChapterProblemSubmissionRoutes';
 
 import './ChapterProblemStatementRoutes.scss';
 
 export default function ChapterProblemStatementRoutes({ worksheet, renderNavigation }) {
+  const { courseSlug, chapterAlias, problemAlias } = useParams();
+
   const topbarItems = [
     {
       path: '',
@@ -18,18 +18,11 @@ export default function ChapterProblemStatementRoutes({ worksheet, renderNavigat
     },
   ];
 
+  const basePath = `/courses/${courseSlug}/chapters/${chapterAlias}/problems/${problemAlias}`;
+
   return (
-    <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems}>
-      <Routes>
-        <Route
-          index
-          element={<ChapterProblemWorkspacePage worksheet={worksheet} renderNavigation={renderNavigation} />}
-        />
-        <Route
-          path="submissions/*"
-          element={<ChapterProblemSubmissionRoutes worksheet={worksheet} renderNavigation={renderNavigation} />}
-        />
-      </Routes>
+    <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath}>
+      <Outlet context={{ worksheet, renderNavigation }} />
     </ContentWithTopbar>
   );
 }

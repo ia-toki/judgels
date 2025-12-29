@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { useOutletContext } from 'react-router';
 
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
@@ -14,7 +15,7 @@ import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
-class ChapterProblemWorkspacePage extends Component {
+class ChapterProblemWorkspacePageInner extends Component {
   state = {
     shouldResetEditor: false,
   };
@@ -107,4 +108,12 @@ const mapDispatchToProps = {
   onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChapterProblemWorkspacePage);
+const ConnectedChapterProblemWorkspacePage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChapterProblemWorkspacePageInner);
+
+export default function ChapterProblemWorkspacePage() {
+  const { worksheet, renderNavigation } = useOutletContext();
+  return <ConnectedChapterProblemWorkspacePage worksheet={worksheet} renderNavigation={renderNavigation} />;
+}

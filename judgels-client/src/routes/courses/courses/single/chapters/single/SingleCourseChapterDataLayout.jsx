@@ -8,7 +8,7 @@ import { selectCourse } from '../../../modules/courseSelectors';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as courseChapterActions from '../modules/courseChapterActions';
 
-export default function SingleCourseChapterDataRoute() {
+export default function SingleCourseChapterDataLayout() {
   const { courseSlug, chapterAlias } = useParams();
   const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();

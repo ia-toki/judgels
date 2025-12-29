@@ -10,7 +10,7 @@ import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbs
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 
-export default function SingleContestDataRoute() {
+export default function SingleContestDataLayout() {
   const { contestSlug } = useParams();
   const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();

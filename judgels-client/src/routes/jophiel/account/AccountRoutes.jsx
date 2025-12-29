@@ -1,15 +1,14 @@
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import UserRoute from '../../../components/UserRoute/UserRoute';
 import ChangeAvatarPage from './changeAvatar/ChangeAvatarPage/ChangeAvatarPage';
 import InfoPage from './info/InfoPage/InfoPage';
 import ResetPasswordPage from './resetPassword/ResetPasswordPage/ResetPasswordPage';
 
-function AccountRoutes() {
+function AccountLayout() {
   const sidebarItems = [
     {
       path: 'info',
@@ -29,23 +28,41 @@ function AccountRoutes() {
     title: 'My account',
     items: sidebarItems,
     smallContent: true,
+    basePath: '/account',
   };
 
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <UserRoute>
-          <Routes>
-            <Route index element={<Navigate to="info" replace />} />
-            <Route path="info" element={<InfoPage />} />
-            <Route path="avatar" element={<ChangeAvatarPage />} />
-            <Route path="password" element={<ResetPasswordPage />} />
-          </Routes>
-        </UserRoute>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );
 }
 
-export default withBreadcrumb('My account')(AccountRoutes);
+const AccountLayoutWithBreadcrumb = withBreadcrumb('My account')(AccountLayout);
+
+export const accountRoutes = [
+  {
+    element: <AccountLayoutWithBreadcrumb />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="info" replace />,
+      },
+      {
+        path: 'info',
+        element: <InfoPage />,
+      },
+      {
+        path: 'avatar',
+        element: <ChangeAvatarPage />,
+      },
+      {
+        path: 'password',
+        element: <ResetPasswordPage />,
+      },
+    ],
+  },
+];

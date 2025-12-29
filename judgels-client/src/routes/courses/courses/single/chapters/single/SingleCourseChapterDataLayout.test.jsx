@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 
 import courseReducer, { PutCourse } from '../../../modules/courseReducer';
 import courseChapterReducer from '../modules/courseChapterReducer';
-import SingleCourseChapterDataRoute from './SingleCourseChapterDataRoute';
+import SingleCourseChapterDataLayout from './SingleCourseChapterDataLayout';
 
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as courseChapterActions from '../modules/courseChapterActions';
@@ -15,7 +15,7 @@ import * as courseChapterActions from '../modules/courseChapterActions';
 vi.mock('../modules/courseChapterActions');
 vi.mock('../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
-describe('SingleCourseChapterDataRoute', () => {
+describe('SingleCourseChapterDataLayout', () => {
   const renderComponent = currentPath => {
     const store = createStore(
       combineReducers({
@@ -30,7 +30,7 @@ describe('SingleCourseChapterDataRoute', () => {
       <Provider store={store}>
         <MemoryRouter initialEntries={[currentPath]}>
           <Routes>
-            <Route path="/courses/:courseSlug/chapters/:chapterAlias" element={<SingleCourseChapterDataRoute />} />
+            <Route path="/courses/:courseSlug/chapters/:chapterAlias" element={<SingleCourseChapterDataLayout />} />
           </Routes>
         </MemoryRouter>
       </Provider>

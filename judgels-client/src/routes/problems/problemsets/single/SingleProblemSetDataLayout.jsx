@@ -5,19 +5,23 @@ import { useParams } from 'react-router';
 import { useBreadcrumbsPath } from '../../../../hooks/useBreadcrumbsPath';
 
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
-import * as profileActions from '../../modules/profileActions';
+import * as problemSetActions from '../modules/problemSetActions';
 
-export default function SingleProfileDataRoute() {
-  const { username } = useParams();
+export default function SingleProblemSetDataLayout() {
+  const { problemSetSlug } = useParams();
   const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
 
+  const loadProblemSet = async () => {
+    const problemSet = await dispatch(problemSetActions.getProblemSetBySlug(problemSetSlug));
+    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, problemSet.name));
+  };
+
   useEffect(() => {
-    dispatch(profileActions.getUser(username));
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, username));
+    loadProblemSet();
 
     return () => {
-      dispatch(profileActions.clearUser());
+      dispatch(problemSetActions.clearProblemSet());
       dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, []);

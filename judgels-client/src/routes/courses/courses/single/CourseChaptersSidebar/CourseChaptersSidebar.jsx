@@ -7,7 +7,6 @@ import { Link, useLocation } from 'react-router';
 
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
-import { useBreadcrumbsPath } from '../../../../../hooks/useBreadcrumbsPath';
 import { selectCourse } from '../../modules/courseSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
 import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
@@ -18,7 +17,6 @@ import './CourseChaptersSidebar.scss';
 
 export default function CourseChaptersSidebar() {
   const location = useLocation();
-  const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
@@ -87,7 +85,7 @@ export default function CourseChaptersSidebar() {
           'course-chapters-sidebar__item--selected': isInChapterPath(courseChapter.alias),
           'course-chapters-sidebar__item--future': idx > firstUnsolvedChapterIndex,
         })}
-        to={`${pathname}/chapters/${courseChapter.alias}`}
+        to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}
         onClick={() => {
           dispatch(
             PutCourseChapter({
@@ -118,7 +116,8 @@ export default function CourseChaptersSidebar() {
   };
 
   const isInChapterPath = chapterAlias => {
-    return (location.pathname + '/').replace('//', '/').startsWith(pathname + '/chapters/' + chapterAlias);
+    const basePath = `/courses/${course.slug}/chapters/${chapterAlias}`;
+    return (location.pathname + '/').replace('//', '/').startsWith(basePath);
   };
 
   const isInProblemPath = () => {

@@ -6,7 +6,8 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import contestReducer from '../modules/contestReducer';
-import SingleContestDataRoute from './SingleContestDataRoute';
+import contestWebConfigReducer from '../modules/contestWebConfigReducer';
+import SingleContestDataLayout from './SingleContestDataLayout';
 
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestActions from '../modules/contestActions';
@@ -16,11 +17,14 @@ vi.mock('../modules/contestActions');
 vi.mock('./modules/contestWebActions');
 vi.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
-describe('SingleContestDataRoute', () => {
+describe('SingleContestDataLayout', () => {
   const renderComponent = currentPath => {
     const store = createStore(
       combineReducers({
-        uriel: combineReducers({ contest: contestReducer }),
+        uriel: combineReducers({
+          contest: contestReducer,
+          contestWebConfig: contestWebConfigReducer,
+        }),
       }),
       applyMiddleware(thunk)
     );
@@ -29,7 +33,7 @@ describe('SingleContestDataRoute', () => {
       <Provider store={store}>
         <MemoryRouter initialEntries={[currentPath]}>
           <Routes>
-            <Route path="/contests/:contestSlug" element={<SingleContestDataRoute />} />
+            <Route path="/contests/:contestSlug" element={<SingleContestDataLayout />} />
           </Routes>
         </MemoryRouter>
       </Provider>

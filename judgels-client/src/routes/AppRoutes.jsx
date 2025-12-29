@@ -12,14 +12,7 @@ import {
 import { isTLX } from '../conf';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
-import LazyContestsRoutes, { ContestsRoutesPromise } from './contests/LazyContestsRoutes';
-import LazyCoursesRoutes from './courses/LazyCoursesRoutes';
-import JophielRoutes from './jophiel/JophielRoutes';
-import LazyProblemsRoutes from './problems/LazyProblemsRoutes';
-import LazyRankingRoutes from './ranking/LazyRankingRoutes';
-import LazySubmissionsRoutes from './submissions/LazySubmissionsRoutes';
-import LazySystemRoutes from './system/LazySystemRoutes';
-import LazyTrainingRoutes from './training/LazyTrainingRoutes';
+import { lazyRoutes } from './router';
 
 const appRoutes = [
   {
@@ -28,7 +21,6 @@ const appRoutes = [
     title: 'System',
     route: {
       path: '/system',
-      component: LazySystemRoutes,
     },
     visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
   },
@@ -38,7 +30,6 @@ const appRoutes = [
     title: 'Contests',
     route: {
       path: '/contests',
-      component: LazyContestsRoutes,
     },
     visible: () => true,
   },
@@ -48,7 +39,6 @@ const appRoutes = [
     title: 'Training',
     route: {
       path: '/training',
-      component: LazyTrainingRoutes,
     },
     visible: role => isTLX() && role.jerahmeel === JerahmeelRole.Admin,
   },
@@ -58,7 +48,6 @@ const appRoutes = [
     title: 'Courses',
     route: {
       path: '/courses',
-      component: LazyCoursesRoutes,
     },
     visible: () => isTLX(),
   },
@@ -68,7 +57,6 @@ const appRoutes = [
     title: 'Problems',
     route: {
       path: '/problems',
-      component: LazyProblemsRoutes,
     },
     visible: () => isTLX(),
   },
@@ -78,7 +66,6 @@ const appRoutes = [
     title: 'Submissions',
     route: {
       path: '/submissions',
-      component: LazySubmissionsRoutes,
     },
     visible: () => isTLX(),
   },
@@ -88,7 +75,6 @@ const appRoutes = [
     title: 'Ranking',
     route: {
       path: '/ranking',
-      component: LazyRankingRoutes,
     },
     visible: () => isTLX(),
   },
@@ -98,14 +84,12 @@ const homeRoute = {
   id: 'home',
   icon: <Home />,
   title: 'Home',
-  route: {
-    component: JophielRoutes,
-  },
+  route: {},
 };
 
 export function preloadRoutes() {
   if (!isTLX()) {
-    ContestsRoutesPromise();
+    lazyRoutes.contests();
   }
 }
 

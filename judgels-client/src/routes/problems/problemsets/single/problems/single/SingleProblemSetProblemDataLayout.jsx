@@ -8,7 +8,7 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-export default function SingleProblemSetProblemDataRoute() {
+export default function SingleProblemSetProblemDataLayout() {
   const { problemSetSlug, problemAlias } = useParams();
   const pathname = useBreadcrumbsPath();
   const dispatch = useDispatch();

@@ -1,18 +1,17 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { ContestStyle } from '../../../../modules/api/uriel/contest';
 import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
+import SingleContestDataLayout from './SingleContestDataLayout';
 import ContestAnnouncementsPage from './announcements/ContestAnnouncementsPage/ContestAnnouncementsPage';
 import ContestClarificationsPage from './clarifications/ContestClarificationsPage/ContestClarificationsPage';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
@@ -27,15 +26,80 @@ import ContestLogsPage from './logs/ContestLogsPage/ContestLogsPage';
 import ContestManagersPage from './managers/ContestManagersPage/ContestManagersPage';
 import { contestIcon } from './modules/contestIcon';
 import ContestOverviewPage from './overview/ContestOverviewPage/ContestOverviewPage';
-import ContestProblemRoutes from './problems/ContestProblemRoutes';
+import ContestProblemsPage from './problems/ContestProblemsPage/ContestProblemsPage';
+import ContestProblemPage from './problems/single/ContestProblemPage/ContestProblemPage';
 import ContestScoreboardPage from './scoreboard/ContestScoreboardPage/ContestScoreboardPage';
-import BundleSubmissionRoutes from './submissions/Bundle/ContestSubmissionRoutes';
-import ProgrammingSubmissionRoutes from './submissions/Programming/ContestSubmissionRoutes';
+import { ContestSubmissionLayout, contestSubmissionRoutes } from './submissions/ContestSubmissionRoutes';
 import ContestSupervisorsPage from './supervisors/ContestSupervisorsPage/ContestSupervisorsPage';
 
 import './SingleContestRoutes.scss';
 
-export default function SingleContestRoutes() {
+export const singleContestRoutes = [
+  {
+    index: true,
+    element: <ContestOverviewPage />,
+  },
+  {
+    path: 'announcements',
+    element: <ContestAnnouncementsPage />,
+  },
+  {
+    path: 'problems',
+    element: <ContestProblemsPage />,
+  },
+  {
+    path: 'problems/:problemAlias',
+    element: <ContestProblemPage />,
+  },
+  {
+    path: 'editorial',
+    element: <ContestEditorialPage />,
+  },
+  {
+    path: 'contestants',
+    element: <ContestContestantsPage />,
+  },
+  {
+    path: 'supervisors',
+    element: <ContestSupervisorsPage />,
+  },
+  {
+    path: 'managers',
+    element: <ContestManagersPage />,
+  },
+  {
+    path: 'submissions',
+    element: <ContestSubmissionLayout />,
+    children: contestSubmissionRoutes,
+  },
+  {
+    path: 'clarifications',
+    element: <ContestClarificationsPage />,
+  },
+  {
+    path: 'scoreboard',
+    element: <ContestScoreboardPage />,
+  },
+  {
+    path: 'files',
+    element: <ContestFilesPage />,
+  },
+  {
+    path: 'logs',
+    element: <ContestLogsPage />,
+  },
+];
+
+export function SingleContestLayout() {
+  return (
+    <>
+      <SingleContestDataLayout />
+      <MainSingleContestLayout />
+    </>
+  );
+}
+
+function MainSingleContestLayout() {
   const { contestSlug } = useParams();
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
@@ -155,6 +219,7 @@ export default function SingleContestRoutes() {
     title: 'Contest Menu',
     action: contestWebConfig && <ContestRoleTag role={contestWebConfig.role} />,
     items: sidebarItems,
+    basePath: `/contests/${contestSlug}`,
     contentHeader: (
       <div className="single-contest-routes__header">
         <div className="single-contest-routes__heading">
@@ -175,27 +240,11 @@ export default function SingleContestRoutes() {
     ),
   };
 
-  const ContestSubmissionRoutes =
-    contest.style === ContestStyle.Bundle ? BundleSubmissionRoutes : ProgrammingSubmissionRoutes;
-
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<ContestOverviewPage />} />
-          <Route path="announcements" element={<ContestAnnouncementsPage />} />
-          <Route path="problems/*" element={<ContestProblemRoutes />} />
-          <Route path="editorial" element={<ContestEditorialPage />} />
-          <Route path="contestants" element={<ContestContestantsPage />} />
-          <Route path="supervisors" element={<ContestSupervisorsPage />} />
-          <Route path="managers" element={<ContestManagersPage />} />
-          <Route path="submissions/*" element={<ContestSubmissionRoutes />} />
-          <Route path="clarifications" element={<ContestClarificationsPage />} />
-          <Route path="scoreboard" element={<ContestScoreboardPage />} />
-          <Route path="files" element={<ContestFilesPage />} />
-          <Route path="logs" element={<ContestLogsPage />} />
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );

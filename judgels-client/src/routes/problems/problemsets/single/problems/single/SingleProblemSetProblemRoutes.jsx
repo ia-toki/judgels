@@ -1,23 +1,51 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, Outlet, useNavigate, useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
+import SingleProblemSetDataLayout from '../../SingleProblemSetDataLayout';
 import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
-import ProblemItemSubmissionRoutes from './results/ProblemItemSubmissionRoutes';
+import SingleProblemSetProblemDataLayout from './SingleProblemSetProblemDataLayout';
+import ProblemItemSubmissionLayout, { problemItemSubmissionRoutes } from './results/ProblemItemSubmissionRoutes';
 import ProblemStatementPage from './statement/ProblemStatementPage/ProblemStatementPage';
-import ProblemSubmissionRoutes from './submissions/ProblemSubmissionRoutes';
+import ProblemSubmissionLayout, { problemSubmissionRoutes } from './submissions/ProblemSubmissionRoutes';
 
 import './SingleProblemSetProblemRoutes.scss';
 
-export default function SingleProblemSetProblemRoutes() {
+export const singleProblemSetProblemRoutes = [
+  {
+    index: true,
+    element: <ProblemStatementPage />,
+  },
+  {
+    path: 'submissions',
+    element: <ProblemSubmissionLayout />,
+    children: problemSubmissionRoutes,
+  },
+  {
+    path: 'results',
+    element: <ProblemItemSubmissionLayout />,
+    children: problemItemSubmissionRoutes,
+  },
+];
+
+export function SingleProblemSetProblemLayout() {
+  return (
+    <>
+      <SingleProblemSetDataLayout />
+      <SingleProblemSetProblemDataLayout />
+      <MainSingleProblemSetProblemLayout />
+    </>
+  );
+}
+
+function MainSingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams();
   const navigate = useNavigate();
   const problemSet = useSelector(selectProblemSet);
@@ -59,6 +87,7 @@ export default function SingleProblemSetProblemRoutes() {
   const contentWithSidebarProps = {
     title: 'Problem Menu',
     items: sidebarItems,
+    basePath: `/problems/${problemSetSlug}/${problemAlias}`,
     action: (
       <Button small icon={<ChevronLeft />} onClick={clickBack}>
         Back
@@ -81,11 +110,7 @@ export default function SingleProblemSetProblemRoutes() {
   return (
     <FullPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<ProblemStatementPage />} />
-          <Route path="submissions/*" element={<ProblemSubmissionRoutes />} />
-          <Route path="results/*" element={<ProblemItemSubmissionRoutes />} />
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );

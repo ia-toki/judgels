@@ -1,14 +1,19 @@
-import { Route, Routes } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ChapterProblemPage from './single/ChapterProblemPage/ChapterProblemPage';
+import { chapterProblemRoutes as chapterProblemChildRoutes } from './single/ChapterProblemRoutes';
 
-function ChapterProblemRoutes() {
-  return (
-    <Routes>
-      <Route path=":problemAlias/*" element={<ChapterProblemPage />} />
-    </Routes>
-  );
+export const chapterProblemRoutes = [
+  {
+    path: ':problemAlias',
+    element: <ChapterProblemPage />,
+    children: chapterProblemChildRoutes,
+  },
+];
+
+function ChapterProblemLayout() {
+  return <Outlet />;
 }
 
-export default withBreadcrumb('Problems')(ChapterProblemRoutes);
+export default withBreadcrumb('Problems')(ChapterProblemLayout);
