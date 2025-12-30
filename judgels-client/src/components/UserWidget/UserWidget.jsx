@@ -72,7 +72,7 @@ export class UserWidget extends PureComponent {
 
     const responsiveMenu = (
       <Menu>
-        <MenuItem text={this.props.homeRoute.title} to="/" />
+        <MenuItemLink text={this.props.homeRoute.title} to="/" />
         {this.props.items.map(item => (
           <MenuItemLink text={item.title} to={item.route.path} />
         ))}
@@ -126,7 +126,7 @@ export class UserWidget extends PureComponent {
   renderGuestResponsiveMenu = () => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItem text={this.props.homeRoute.title} to="/" />
+        <MenuItemLink text={this.props.homeRoute.title} to="/" />
         {this.props.items.map(item => (
           <MenuItemLink text={item.title} to={item.route.path} />
         ))}
