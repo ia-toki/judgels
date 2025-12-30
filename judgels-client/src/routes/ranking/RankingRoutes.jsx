@@ -1,5 +1,5 @@
 import { Property, TimelineLineChart } from '@blueprintjs/icons';
-import { Route, Routes } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -8,7 +8,7 @@ import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollTo
 import RatingSystemPage from './ratings/RatingSystemPage/RatingSystemPage';
 import RatingsPage from './ratings/RatingsPage/RatingsPage';
 
-function RankingRoutes() {
+function RankingLayout() {
   const sidebarItems = [
     {
       path: '',
@@ -26,19 +26,34 @@ function RankingRoutes() {
     title: 'Menu',
     items: sidebarItems,
     smallContent: true,
+    basePath: '/ranking',
   };
 
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<RatingsPage />} />
-          <Route path="rating-system" element={<RatingSystemPage />} />
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );
 }
 
-export default withBreadcrumb('Ranking')(RankingRoutes);
+const RankingLayoutWithBreadcrumb = withBreadcrumb('Ranking')(RankingLayout);
+
+export const routes = [
+  {
+    path: 'ranking',
+    element: <RankingLayoutWithBreadcrumb />,
+    children: [
+      {
+        index: true,
+        element: <RatingsPage />,
+      },
+      {
+        path: 'rating-system',
+        element: <RatingSystemPage />,
+      },
+    ],
+  },
+];

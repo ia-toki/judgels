@@ -1,19 +1,35 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, Manual } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router';
-import { useNavigate, useParams } from 'react-router';
+import { Outlet, useNavigate, useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { selectProblemSet } from '../modules/problemSetSelectors';
+import SingleProblemSetDataLayout from './SingleProblemSetDataLayout';
 import ProblemSetProblemsPage from './problems/ProblemSetProblemsPage/ProblemSetProblemsPage';
 
 import './SingleProblemSetRoutes.scss';
 
-export default function SingleProblemSetRoutes() {
+export const singleProblemSetRoutes = [
+  {
+    index: true,
+    element: <ProblemSetProblemsPage />,
+  },
+];
+
+export function SingleProblemSetLayout() {
+  return (
+    <>
+      <SingleProblemSetDataLayout />
+      <MainSingleProblemSetLayout />
+    </>
+  );
+}
+
+function MainSingleProblemSetLayout() {
   const { problemSetSlug } = useParams();
   const navigate = useNavigate();
   const problemSet = useSelector(selectProblemSet);
@@ -39,6 +55,7 @@ export default function SingleProblemSetRoutes() {
   const contentWithSidebarProps = {
     title: 'Problemset Menu',
     items: sidebarItems,
+    basePath: `/problems/${problemSet.slug}`,
     action: (
       <Button small icon={<ChevronLeft />} onClick={onClickBack}>
         Back
@@ -55,9 +72,7 @@ export default function SingleProblemSetRoutes() {
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<ProblemSetProblemsPage />} />
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );

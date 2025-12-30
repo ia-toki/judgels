@@ -1,14 +1,22 @@
 import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
-import SingleProfileDataRoute from './single/SingleProfileDataRoute';
-import SingleProfileRoutes from './single/SingleProfileRoutes';
+import SingleProfileDataLayout from './single/SingleProfileDataLayout';
+import { SingleProfileLayout, singleProfileRoutes } from './single/SingleProfileRoutes';
 
-function ProfileRoutes() {
+function ProfilesLayout() {
   return (
     <div>
-      <SingleProfileDataRoute />
-      <SingleProfileRoutes />
+      <SingleProfileDataLayout />
+      <SingleProfileLayout />
     </div>
   );
 }
 
-export default withBreadcrumb('Profiles')(ProfileRoutes);
+const ProfilesLayoutWithBreadcrumb = withBreadcrumb('Profiles')(ProfilesLayout);
+
+export const profilesRoutes = [
+  {
+    path: ':username',
+    element: <ProfilesLayoutWithBreadcrumb />,
+    children: singleProfileRoutes,
+  },
+];

@@ -1,14 +1,40 @@
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectCourseChapter } from '../modules/courseChapterSelectors';
-import ChapterLessonRoutes from './lessons/ChapterLessonRoutes';
-import ChapterProblemRoutes from './problems/ChapterProblemRoutes';
+import SingleCourseChapterDataLayout from './SingleCourseChapterDataLayout';
+import ChapterLessonLayout, { chapterLessonRoutes } from './lessons/ChapterLessonRoutes';
+import ChapterProblemLayout, { chapterProblemRoutes } from './problems/ChapterProblemRoutes';
 import ChapterResourcesPage from './resources/ChapterResourcesPage/ChapterResourcesPage';
 
-export default function SingleCourseChapterRoutes() {
+export const singleCourseChapterRoutes = [
+  {
+    index: true,
+    element: <ChapterResourcesPage />,
+  },
+  {
+    path: 'lessons',
+    element: <ChapterLessonLayout />,
+    children: chapterLessonRoutes,
+  },
+  {
+    path: 'problems',
+    element: <ChapterProblemLayout />,
+    children: chapterProblemRoutes,
+  },
+];
+
+export function SingleCourseChapterLayout() {
+  return (
+    <>
+      <SingleCourseChapterDataLayout />
+      <MainSingleCourseChapterLayout />
+    </>
+  );
+}
+
+function MainSingleCourseChapterLayout() {
   const { courseSlug, chapterAlias } = useParams();
   const chapter = useSelector(selectCourseChapter);
 
@@ -18,11 +44,5 @@ export default function SingleCourseChapterRoutes() {
     return <LoadingState large />;
   }
 
-  return (
-    <Routes>
-      <Route index element={<ChapterResourcesPage />} />
-      <Route path="lessons/*" element={<ChapterLessonRoutes />} />
-      <Route path="problems/*" element={<ChapterProblemRoutes />} />
-    </Routes>
-  );
+  return <Outlet />;
 }

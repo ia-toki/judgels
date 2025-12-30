@@ -1,19 +1,30 @@
-import { Route, Routes } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ProblemSubmissionsPage from './ProblemSubmissionsPage/ProblemSubmissionsPage';
 import ProblemSubmissionPage from './single/ProblemSubmissionPage/ProblemSubmissionPage';
 
-function ProblemSubmissionRoutes() {
+export const problemSubmissionRoutes = [
+  {
+    index: true,
+    element: <ProblemSubmissionsPage />,
+  },
+  {
+    path: 'mine',
+    element: <ProblemSubmissionsPage />,
+  },
+  {
+    path: ':submissionId',
+    element: <ProblemSubmissionPage />,
+  },
+];
+
+function ProblemSubmissionLayout() {
   return (
     <div>
-      <Routes>
-        <Route index element={<ProblemSubmissionsPage />} />
-        <Route path="mine" element={<ProblemSubmissionsPage />} />
-        <Route path=":submissionId" element={<ProblemSubmissionPage />} />
-      </Routes>
+      <Outlet />
     </div>
   );
 }
 
-export default withBreadcrumb('Submissions')(ProblemSubmissionRoutes);
+export default withBreadcrumb('Submissions')(ProblemSubmissionLayout);

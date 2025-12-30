@@ -1,14 +1,17 @@
-import { Route, Routes } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ChapterLessonPage from './single/ChapterLessonPage/ChapterLessonPage.jsx';
 
-function ChapterLessonRoutes() {
-  return (
-    <Routes>
-      <Route path=":lessonAlias" element={<ChapterLessonPage />} />
-    </Routes>
-  );
+export const chapterLessonRoutes = [
+  {
+    path: ':lessonAlias',
+    element: <ChapterLessonPage />,
+  },
+];
+
+function ChapterLessonLayout() {
+  return <Outlet />;
 }
 
-export default withBreadcrumb('Lessons')(ChapterLessonRoutes);
+export default withBreadcrumb('Lessons')(ChapterLessonLayout);

@@ -1,7 +1,6 @@
 import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
 import { useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
@@ -13,7 +12,26 @@ import ContestHistoryPage from './contestHistory/ContestHistoryPage/ContestHisto
 import SubmissionHistoryPage from './submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage';
 import ProfileSummaryPage from './summary/ProfileSummaryPage/ProfileSummaryPage';
 
-export default function SingleProfileRoutes() {
+export const singleProfileRoutes = [
+  {
+    index: true,
+    element: <ProfileSummaryPage />,
+  },
+  {
+    path: 'contest-history',
+    element: <ContestHistoryPage />,
+  },
+  ...(isTLX()
+    ? [
+        {
+          path: 'submission-history',
+          element: <SubmissionHistoryPage />,
+        },
+      ]
+    : []),
+];
+
+export function SingleProfileLayout() {
   const { username: paramUsername } = useParams();
   const userJid = useSelector(selectUserJid);
   const username = useSelector(selectUsername);
@@ -50,17 +68,14 @@ export default function SingleProfileRoutes() {
     title: 'Profile Menu',
     items: sidebarItems,
     contentHeader: <h2>Profile of {username}</h2>,
+    basePath: `/profiles/${username}`,
   };
 
   return (
     <FullPageLayout>
       <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
-        <Routes>
-          <Route index element={<ProfileSummaryPage />} />
-          <Route path="contest-history" element={<ContestHistoryPage />} />
-          {isTLX() && <Route path="submission-history" element={<SubmissionHistoryPage />} />}
-        </Routes>
+        <Outlet />
       </ContentWithSidebar>
     </FullPageLayout>
   );

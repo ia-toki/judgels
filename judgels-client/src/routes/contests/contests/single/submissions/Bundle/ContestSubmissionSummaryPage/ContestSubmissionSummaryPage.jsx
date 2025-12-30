@@ -54,7 +54,7 @@ export default function ContestSubmissionSummaryPage() {
         <ContentCard>
           Summary for <UserRef profile={state.profile} />
         </ContentCard>
-        {problemSummaries.map(props => (
+        {state.problemSummaries.map(props => (
           <SubmissionDetails key={props.alias} {...props} />
         ))}
       </ContentCard>

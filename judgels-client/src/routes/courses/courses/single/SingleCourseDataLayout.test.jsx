@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import courseReducer from '../modules/courseReducer';
-import SingleCourseDataRoute from './SingleCourseDataRoute';
+import SingleCourseDataLayout from './SingleCourseDataLayout';
 
 import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as courseActions from '../modules/courseActions';
@@ -14,7 +14,7 @@ import * as courseActions from '../modules/courseActions';
 vi.mock('../modules/courseActions');
 vi.mock('../../../../modules/breadcrumbs/breadcrumbsActions');
 
-describe('SingleCourseDataRoute', () => {
+describe('SingleCourseDataLayout', () => {
   const renderComponent = currentPath => {
     const store = createStore(
       combineReducers({
@@ -27,7 +27,7 @@ describe('SingleCourseDataRoute', () => {
       <Provider store={store}>
         <MemoryRouter initialEntries={[currentPath]}>
           <Routes>
-            <Route path="/courses/:courseSlug" element={<SingleCourseDataRoute />} />
+            <Route path="/courses/:courseSlug" element={<SingleCourseDataLayout />} />
           </Routes>
         </MemoryRouter>
       </Provider>
