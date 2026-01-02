@@ -1,6 +1,5 @@
 import { act, render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -8,6 +7,7 @@ import { vi } from 'vitest';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestEditorialPage from './ContestEditorialPage';
 
@@ -107,9 +107,9 @@ describe('ContestEditorialPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <ContestEditorialPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

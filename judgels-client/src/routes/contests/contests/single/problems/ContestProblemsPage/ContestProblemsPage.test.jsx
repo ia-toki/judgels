@@ -1,15 +1,14 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
-import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestProblemsPage from './ContestProblemsPage';
 
@@ -66,9 +65,9 @@ describe('ContestProblemsPage', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <TestRouter>
           <ContestProblemsPage />
-        </MemoryRouter>
+        </TestRouter>
       </Provider>
     );
 

@@ -1,7 +1,6 @@
-import { parse, stringify } from 'query-string';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
@@ -26,8 +25,7 @@ function ContestClarificationsPage() {
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);
 
-  const queries = parse(location.search);
-  const status = queries.status;
+  const status = location.search.status;
 
   const [state, setState] = useState({
     response: undefined,
@@ -189,7 +187,7 @@ function ContestClarificationsPage() {
   };
 
   const onFilter = async newFilter => {
-    navigate({ search: stringify(newFilter) });
+    navigate({ search: newFilter });
   };
 
   return render();

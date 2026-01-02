@@ -1,7 +1,7 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 
 import { GcjScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { GcjScoreboardTable } from './GcjScoreboardTable';
 
 describe('GcjScoreboardTable', () => {
@@ -54,9 +54,9 @@ describe('GcjScoreboardTable', () => {
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <GcjScoreboardTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 
@@ -73,9 +73,9 @@ describe('GcjScoreboardTable', () => {
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       render(
-        <MemoryRouter>
+        <TestRouter>
           <GcjScoreboardTable {...props} />
-        </MemoryRouter>
+        </TestRouter>
       );
     });
 

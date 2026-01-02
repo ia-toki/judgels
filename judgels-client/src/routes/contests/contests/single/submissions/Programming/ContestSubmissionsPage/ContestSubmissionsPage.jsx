@@ -1,7 +1,6 @@
-import { parse, stringify } from 'query-string';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -24,9 +23,8 @@ function ContestSubmissionsPage() {
 
   const contest = useSelector(selectContest);
 
-  const queries = parse(location.search);
-  const username = queries.username;
-  const problemAlias = queries.problemAlias;
+  const username = location.search.username;
+  const problemAlias = location.search.problemAlias;
 
   const [state, setState] = useState({
     response: undefined,
@@ -138,8 +136,7 @@ function ContestSubmissionsPage() {
 
   const onRegrade = async submissionJid => {
     await onRegrade(submissionJid);
-    const queries = parse(location.search);
-    await refreshSubmissions(queries.page);
+    await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
@@ -147,13 +144,12 @@ function ContestSubmissionsPage() {
       setState(prevState => ({ ...prevState, isRegradingAll: true }));
       await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
       setState(prevState => ({ ...prevState, isRegradingAll: false }));
-      const queries = parse(location.search);
-      await refreshSubmissions(queries.page);
+      await refreshSubmissions(location.search.page);
     }
   };
 
   const onFilter = async filter => {
-    navigate({ search: stringify(filter) });
+    navigate({ search: filter });
   };
 
   return render();

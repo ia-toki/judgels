@@ -1,9 +1,8 @@
 import { Radio, RadioGroup } from '@blueprintjs/core';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { sendGAEvent } from '../../../../ga';
@@ -17,8 +16,7 @@ export default function ProblemSetArchiveFilter() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const queries = parse(location.search);
-  const archiveSlug = queries.archive || '';
+  const archiveSlug = location.search.archive || '';
 
   const [state, setState] = useState({
     response: undefined,
@@ -86,14 +84,13 @@ export default function ProblemSetArchiveFilter() {
 
   const changeArchive = e => {
     const archiveSlug = e.target.value;
-    const queries = parse(location.search);
     navigate({
-      search: stringify({
-        ...queries,
+      search: {
+        ...location.search,
         name: undefined,
         page: undefined,
         archive: archiveSlug === '' ? undefined : archiveSlug,
-      }),
+      },
     });
     setState(prevState => ({ ...prevState, archiveSlug }));
 

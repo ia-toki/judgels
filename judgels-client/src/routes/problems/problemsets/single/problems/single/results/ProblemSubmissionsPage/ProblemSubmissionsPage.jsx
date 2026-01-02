@@ -1,9 +1,8 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { parse } from 'query-string';
+import { Link, useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -133,15 +132,13 @@ export default function ProblemSubmissionsPage() {
 
   const onRegrade = async submissionJid => {
     await dispatch(problemSetSubmissionActions.regradeSubmission(submissionJid));
-    const queries = parse(location.search);
-    await refreshSubmissions(queries.page);
+    await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
       await dispatch(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, undefined, problem.problemJid));
-      const queries = parse(location.search);
-      await refreshSubmissions(queries.page);
+      await refreshSubmissions(location.search.page);
     }
   };
 

@@ -1,7 +1,7 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 
 import { TrocScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { TrocScoreboardTable } from './TrocScoreboardTable';
 
 describe('TrocScoreboardTable', () => {
@@ -54,9 +54,9 @@ describe('TrocScoreboardTable', () => {
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <TrocScoreboardTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 
@@ -73,9 +73,9 @@ describe('TrocScoreboardTable', () => {
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       render(
-        <MemoryRouter>
+        <TestRouter>
           <TrocScoreboardTable {...props} />
-        </MemoryRouter>
+        </TestRouter>
       );
     });
 

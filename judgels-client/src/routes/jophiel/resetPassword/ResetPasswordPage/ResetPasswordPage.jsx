@@ -1,5 +1,5 @@
+import { useParams } from '@tanstack/react-router';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
@@ -16,7 +16,7 @@ export const ResetPasswordPage = ({ onResetPassword }) => (
 );
 
 export default function ResetPasswordPageContainer() {
-  const { emailCode } = useParams();
+  const { emailCode } = useParams({ strict: false });
   const dispatch = useDispatch();
 
   const resetPassword = data => dispatch(resetPasswordActions.resetPassword(emailCode, data.password));

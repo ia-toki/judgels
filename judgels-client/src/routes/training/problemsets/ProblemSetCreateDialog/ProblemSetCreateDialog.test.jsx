@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../utils/datetime';
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 
@@ -22,9 +22,9 @@ describe('ProblemSetCreateDialog', () => {
     };
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <TestRouter>
           <ProblemSetCreateDialog {...props} />
-        </MemoryRouter>
+        </TestRouter>
       </Provider>
     );
   });

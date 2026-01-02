@@ -1,163 +1,97 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Navigate, Route, Routes } from 'react-router';
 import createMockStore from 'redux-mock-store';
 
+import { TestRouter } from '../../test/RouterWrapper';
 import ContentWithTopbar from './ContentWithTopbar';
 
 describe('ContentWithTopbar', () => {
   let store;
-  const FirstComponent = () => <div>One</div>;
-  const SecondComponent = () => <div>Two</div>;
-  const ThirdComponent = () => <div>Three</div>;
 
-  const renderComponent = (childPath, firstPath) => {
+  const renderComponent = async (childPath, firstPath) => {
     const items = [
-      {
-        path: firstPath !== undefined ? firstPath : '',
-        title: 'First',
-      },
-      {
-        path: 'second',
-        title: 'Second',
-      },
-      {
-        path: 'third',
-        title: 'Third',
-      },
+      { path: firstPath || '', title: 'First' },
+      { path: 'second', title: 'Second' },
+      { path: 'third', title: 'Third' },
     ];
-
-    const children =
-      firstPath && firstPath !== '' ? (
-        <Routes>
-          <Route index element={<Navigate to={firstPath} replace />} />
-          <Route path={firstPath} element={<FirstComponent />} />
-          <Route path="second" element={<SecondComponent />} />
-          <Route path="third" element={<ThirdComponent />} />
-        </Routes>
-      ) : (
-        <Routes>
-          <Route index element={<FirstComponent />} />
-          <Route path="second" element={<SecondComponent />} />
-          <Route path="third" element={<ThirdComponent />} />
-        </Routes>
-      );
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/parent' + childPath]}>
-          <Routes>
-            <Route
-              path="/parent/*"
-              element={
-                <ContentWithTopbar title="Content with Topbar" items={items}>
-                  {children}
-                </ContentWithTopbar>
-              }
-            />
-          </Routes>
-        </MemoryRouter>
+        <TestRouter initialEntries={['/parent' + childPath]}>
+          <ContentWithTopbar title="Content with Topbar" basePath="/parent" items={items}>
+            <div>Content</div>
+          </ContentWithTopbar>
+        </TestRouter>
       </Provider>
     );
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('link')).toHaveLength(3);
+    });
   };
 
   beforeEach(() => {
     store = createMockStore()({});
   });
 
-  describe('when the first route is allowed to have suffix', () => {
-    describe('when the child path is present', () => {
-      beforeEach(() => {
-        renderComponent('/second', 'first');
-      });
+  describe('when the first item has a path', () => {
+    it('shows topbar items with correct texts', async () => {
+      await renderComponent('/second', 'first');
 
-      it('shows sidebar items with the correct texts', () => {
-        const items = screen.getAllByRole('link');
-        expect(items).toHaveLength(3);
-
-        expect(items[0]).toHaveTextContent('First');
-        expect(items[1]).toHaveTextContent('Second');
-        expect(items[2]).toHaveTextContent('Third');
-      });
-
-      it('has the correct active item', () => {
-        const items = screen.getAllByRole('link');
-
-        expect(items[0]).not.toHaveClass('bp6-active');
-        expect(items[1]).toHaveClass('bp6-active');
-        expect(items[2]).not.toHaveClass('bp6-active');
-      });
-
-      it('renders the active component', () => {
-        expect(screen.getByText('Two')).toBeInTheDocument();
-      });
-
-      it('has the correct links', () => {
-        const items = screen.getAllByRole('link');
-        expect(items[2]).toHaveAttribute('href', '/parent/third');
-      });
+      const items = screen.getAllByRole('link');
+      expect(items).toHaveLength(3);
+      expect(items[0]).toHaveTextContent('First');
+      expect(items[1]).toHaveTextContent('Second');
+      expect(items[2]).toHaveTextContent('Third');
     });
 
-    describe('when the child path is not present', () => {
-      beforeEach(() => {
-        renderComponent('', 'first');
-      });
+    it('marks the matching item as active', async () => {
+      await renderComponent('/second', 'first');
 
-      it('has the first item active by default', () => {
-        const items = screen.getAllByRole('link');
+      const items = screen.getAllByRole('link');
+      expect(items[0]).not.toHaveClass('bp6-active');
+      expect(items[1]).toHaveClass('bp6-active');
+      expect(items[2]).not.toHaveClass('bp6-active');
+    });
 
-        expect(items[0]).toHaveClass('bp6-active');
-        expect(items[1]).not.toHaveClass('bp6-active');
-        expect(items[2]).not.toHaveClass('bp6-active');
-      });
+    it('has no active item when at base path (first item has non-empty path)', async () => {
+      await renderComponent('', 'first');
+
+      const items = screen.getAllByRole('link');
+      expect(items[0]).not.toHaveClass('bp6-active');
+      expect(items[1]).not.toHaveClass('bp6-active');
+    });
+
+    it('generates correct links', async () => {
+      await renderComponent('/second', 'first');
+
+      const items = screen.getAllByRole('link');
+      expect(items[2]).toHaveAttribute('href', '/parent/third');
     });
   });
 
-  describe('when the first route is not allowed to have suffix', () => {
-    describe('when the child path is present', () => {
-      beforeEach(() => {
-        renderComponent('/second');
-      });
+  describe('when the first item has empty path', () => {
+    it('marks the matching item as active', async () => {
+      await renderComponent('/second');
 
-      it('shows sidebar items with the correct texts', () => {
-        const items = screen.getAllByRole('link');
-        expect(items).toHaveLength(3);
-
-        expect(items[0]).toHaveTextContent('First');
-        expect(items[1]).toHaveTextContent('Second');
-        expect(items[2]).toHaveTextContent('Third');
-      });
-
-      it('has the correct active item', () => {
-        const items = screen.getAllByRole('link');
-
-        expect(items[0]).not.toHaveClass('bp6-active');
-        expect(items[1]).toHaveClass('bp6-active');
-        expect(items[2]).not.toHaveClass('bp6-active');
-      });
-
-      it('renders the active component', () => {
-        expect(screen.getByText('Two')).toBeInTheDocument();
-      });
-
-      it('has the correct first link without suffix', () => {
-        const items = screen.getAllByRole('link');
-        expect(items[0]).toHaveAttribute('href', '/parent/');
-      });
+      const items = screen.getAllByRole('link');
+      expect(items[0]).not.toHaveClass('bp6-active');
+      expect(items[1]).toHaveClass('bp6-active');
     });
 
-    describe('when the child path is not present', () => {
-      beforeEach(() => {
-        renderComponent('');
-      });
+    it('marks the first item as active when at base path', async () => {
+      await renderComponent('');
 
-      it('has the first item active by default', () => {
-        const items = screen.getAllByRole('link');
+      const items = screen.getAllByRole('link');
+      expect(items[0]).toHaveClass('bp6-active');
+      expect(items[1]).not.toHaveClass('bp6-active');
+    });
 
-        expect(items[0]).toHaveClass('bp6-active');
-        expect(items[1]).not.toHaveClass('bp6-active');
-        expect(items[2]).not.toHaveClass('bp6-active');
-      });
+    it('generates correct link for first item', async () => {
+      await renderComponent('/second');
+
+      const items = screen.getAllByRole('link');
+      expect(items[0]).toHaveAttribute('href', '/parent');
     });
   });
 });

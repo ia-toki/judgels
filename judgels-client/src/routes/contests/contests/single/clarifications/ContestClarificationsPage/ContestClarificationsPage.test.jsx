@@ -1,6 +1,5 @@
 import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -8,6 +7,7 @@ import { vi } from 'vitest';
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestClarificationsPage from './ContestClarificationsPage';
 
@@ -57,9 +57,9 @@ describe('ContestClarificationsPage', () => {
     return await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <ContestClarificationsPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

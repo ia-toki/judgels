@@ -1,11 +1,10 @@
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { useBreadcrumbsPath } from '../../../../../../../../../hooks/useBreadcrumbsPath';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
@@ -16,8 +15,8 @@ import * as toastActions from '../../../../../../../../../modules/toast/toastAct
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
 export default function ProblemSubmissionPage() {
-  const { submissionId } = useParams();
-  const pathname = useBreadcrumbsPath();
+  const { submissionId } = useParams({ strict: false });
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);

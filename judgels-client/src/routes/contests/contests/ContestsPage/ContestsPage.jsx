@@ -1,7 +1,6 @@
-import { parse } from 'query-string';
+import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -18,8 +17,7 @@ export default function ContestsPage() {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const queries = parse(location.search);
-  const name = queries.name;
+  const name = location.search.name;
 
   const [state, setState] = useState({
     response: undefined,

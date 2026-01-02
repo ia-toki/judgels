@@ -1,7 +1,6 @@
-import { parse } from 'query-string';
+import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import Pagination from '../../../components/Pagination/Pagination';
@@ -96,8 +95,7 @@ export default function SubmissionsPage() {
 
   const onRegrade = async submissionJid => {
     await dispatch(submissionActions.regradeSubmission(submissionJid));
-    const queries = parse(location.search);
-    await refreshSubmissions(queries.page);
+    await refreshSubmissions(location.search.page);
   };
 
   return render();

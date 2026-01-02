@@ -1,54 +1,44 @@
-import { render } from '@testing-library/react';
-import { Component } from 'react';
+import { render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { PopBreadcrumb, PushBreadcrumb } from '../../modules/breadcrumbs/breadcrumbsReducer';
+import { TestRouter } from '../../test/RouterWrapper';
 import { withBreadcrumb } from './BreadcrumbWrapper';
 
 describe('BreadcrumbWrapper', () => {
   let store;
-  let unmount;
-  let renderFn;
-
-  class InnerComponent extends Component {
-    render() {
-      renderFn(this.props.num);
-      return <div />;
-    }
-  }
 
   beforeEach(() => {
     store = createMockStore()({
       breadcrumbs: { values: [] },
     });
-    renderFn = vi.fn();
+  });
+
+  it('pushes breadcrumb on mount and pops on unmount', async () => {
+    const renderFn = vi.fn();
+    const InnerComponent = ({ num }) => {
+      renderFn(num);
+      return <div>Inner</div>;
+    };
 
     const WrappedComponent = withBreadcrumb('My Component')(InnerComponent);
 
-    const result = render(
+    const { unmount } = render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/component/first']}>
-          <Routes>
-            <Route path="/component/*" element={<WrappedComponent num={42} />} />
-          </Routes>
-        </MemoryRouter>
+        <TestRouter initialEntries={['/component']}>
+          <WrappedComponent num={42} />
+        </TestRouter>
       </Provider>
     );
-    unmount = result.unmount;
-  });
 
-  it('pushes a new breadcrumb when mounted', () => {
-    expect(store.getActions()).toContainEqual(PushBreadcrumb({ link: '/component', title: 'My Component' }));
-  });
+    await waitFor(() => {
+      expect(store.getActions()).toContainEqual(PushBreadcrumb({ link: '/component', title: 'My Component' }));
+    });
 
-  it('renders the inner component', () => {
     expect(renderFn).toHaveBeenCalledWith(42);
-  });
 
-  it('pops a breadcrumb when unmounted', () => {
     unmount();
     expect(store.getActions()).toContainEqual(PopBreadcrumb({ link: '/component' }));
   });

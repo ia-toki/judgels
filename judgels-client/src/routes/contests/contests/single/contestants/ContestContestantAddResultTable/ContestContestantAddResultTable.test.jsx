@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantAddResultTable } from './ContestContestantAddResultTable';
 
 describe('ContestContestantAddResultTable', () => {
@@ -17,9 +17,9 @@ describe('ContestContestantAddResultTable', () => {
       },
     };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <ContestContestantAddResultTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 

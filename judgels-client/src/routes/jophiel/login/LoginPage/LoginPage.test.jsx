@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import LoginPage from './LoginPage';
 
 import * as loginActions from '../modules/loginActions';
@@ -20,9 +20,9 @@ describe('LoginPage', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <TestRouter>
           <LoginPage />
-        </MemoryRouter>
+        </TestRouter>
       </Provider>
     );
   });

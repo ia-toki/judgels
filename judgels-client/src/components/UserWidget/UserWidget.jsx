@@ -1,8 +1,8 @@
 import { Alignment, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
+import { Link } from '@tanstack/react-router';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { isTLX } from '../../conf';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';

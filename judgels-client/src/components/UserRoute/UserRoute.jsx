@@ -1,5 +1,5 @@
+import { Navigate } from '@tanstack/react-router';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router';
 
 import { selectIsLoggedIn } from '../../modules/session/sessionSelectors';
 
@@ -7,7 +7,7 @@ export default function UserRoute({ children }) {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" />;
   }
 
   return children;

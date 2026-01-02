@@ -1,8 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { parse } from 'query-string';
+import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -40,7 +39,7 @@ export default function ScoresPage() {
 
     const { data, profilesMap } = response;
 
-    const page = +(parse(location.search).page || '1');
+    const page = +(location.search.page || '1');
     const baseRank = (page - 1) * PAGE_SIZE + 1;
     const rows = data.page.map((e, idx) => (
       <tr key={e.userJid}>

@@ -1,9 +1,9 @@
 import { PortalProvider } from '@blueprintjs/core';
+import { Outlet } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import DocumentTitle from 'react-document-title';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router';
 
 import Announcements from '../components/Announcements/Announcements';
 import { AppContent } from '../components/AppContent/AppContent';
@@ -13,7 +13,7 @@ import { setGAUser } from '../ga';
 import { selectDocumentTitle } from '../modules/breadcrumbs/breadcrumbsSelectors';
 import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
 import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
-import { getHomeRoute, getVisibleAppRoutes, preloadRoutes } from './AppRoutes';
+import { getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 import { selectRole } from './jophiel/modules/userWebSelectors';
 
 import * as userWebActions from './jophiel/modules/userWebActions';
@@ -27,7 +27,6 @@ export default function App() {
 
   useEffect(() => {
     dispatch(userWebActions.getWebConfig());
-    preloadRoutes();
     setGAUser(userJid);
   }, []);
 

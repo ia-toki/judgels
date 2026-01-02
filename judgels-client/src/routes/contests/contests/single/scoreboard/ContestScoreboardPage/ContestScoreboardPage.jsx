@@ -1,9 +1,8 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { Pause, Refresh } from '@blueprintjs/icons';
-import { parse, stringify } from 'query-string';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -36,9 +35,8 @@ function ContestScoreboardPage() {
   const userJid = useSelector(selectMaybeUserJid);
   const contest = useSelector(selectContest);
 
-  const queries = parse(location.search);
-  const frozen = !!queries.frozen;
-  const showClosedProblems = !!queries.showClosedProblems;
+  const frozen = !!location.search.frozen;
+  const showClosedProblems = !!location.search.showClosedProblems;
 
   const [state, setState] = useState({
     response: undefined,
@@ -210,15 +208,14 @@ function ContestScoreboardPage() {
   const onChangeShowClosedProblems = ({ target }) => onChange(frozen, target.checked);
 
   const onChange = (frozenVal, showClosedProblemsVal) => {
-    let newQueries = parse(location.search);
-    newQueries = { ...newQueries, frozen: undefined, showClosedProblems: undefined };
+    let newQueries = { ...location.search, frozen: undefined, showClosedProblems: undefined };
     if (frozenVal) {
       newQueries = { ...newQueries, frozen: frozenVal };
     }
     if (showClosedProblemsVal) {
       newQueries = { ...newQueries, showClosedProblems: showClosedProblemsVal };
     }
-    navigate({ search: stringify(newQueries) });
+    navigate({ search: newQueries });
   };
 
   const openSubmissionsDialog = (contestantJid, problemJid) => {
@@ -260,7 +257,7 @@ function ContestScoreboardPage() {
     const { profilesMap } = state.response[0];
 
     const profile = profilesMap[contestantJid];
-    navigate(`/contests/${contest.slug}/submissions/users/${profile.username}`);
+    navigate({ to: `/contests/${contest.slug}/submissions/users/${profile.username}` });
   };
 
   const renderScoreboard = () => {

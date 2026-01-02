@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../../test/RouterWrapper';
 import ResetPasswordPage from './ResetPasswordPage';
 
 import * as resetPasswordActions from '../modules/resetPasswordActions';
@@ -20,9 +20,9 @@ describe('ResetPasswordPage', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <TestRouter>
           <ResetPasswordPage />
-        </MemoryRouter>
+        </TestRouter>
       </Provider>
     );
   });

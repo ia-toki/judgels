@@ -1,6 +1,6 @@
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
@@ -11,7 +11,7 @@ import { selectContest } from '../../../../modules/contestSelectors';
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export default function ContestSubmissionSummaryPage() {
-  const { username } = useParams();
+  const { username } = useParams({ strict: false });
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const language = useSelector(selectStatementLanguage);

@@ -1,11 +1,10 @@
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { useBreadcrumbsPath } from '../../../../../../../../hooks/useBreadcrumbsPath';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../../modules/contestSelectors';
 
@@ -13,8 +12,8 @@ import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
 export default function ContestSubmissionPage() {
-  const { submissionId } = useParams();
-  const pathname = useBreadcrumbsPath();
+  const { submissionId } = useParams({ strict: false });
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);

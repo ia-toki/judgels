@@ -1,9 +1,8 @@
 import { Checkbox } from '@blueprintjs/core';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 
@@ -24,8 +23,7 @@ export default function ProblemTagFilter() {
     return tags;
   };
 
-  const queries = parse(location.search);
-  const tags = parseTags(queries.tags);
+  const tags = parseTags(location.search.tags);
 
   const [state, setState] = useState({
     tags,
@@ -121,13 +119,12 @@ export default function ProblemTagFilter() {
 
     tags = sanitizeTags(tags);
 
-    const queries = parse(location.search);
     navigate({
-      search: stringify({
-        ...queries,
+      search: {
+        ...location.search,
         tags,
         page: 1,
-      }),
+      },
     });
 
     setState(prevState => ({ ...prevState, tags }));

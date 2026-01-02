@@ -12,7 +12,6 @@ import {
 import { isTLX } from '../conf';
 import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
-import { lazyRoutes } from './router';
 
 const appRoutes = [
   {
@@ -86,12 +85,6 @@ const homeRoute = {
   title: 'Home',
   route: {},
 };
-
-export function preloadRoutes() {
-  if (!isTLX()) {
-    lazyRoutes.contests();
-  }
-}
 
 export function getVisibleAppRoutes(role) {
   return appRoutes.filter(route => route.visible(role));

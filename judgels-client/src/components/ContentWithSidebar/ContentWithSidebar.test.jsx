@@ -1,162 +1,97 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Navigate, Route, Routes } from 'react-router';
 import createMockStore from 'redux-mock-store';
 
+import { TestRouter } from '../../test/RouterWrapper';
 import ContentWithSidebar from './ContentWithSidebar';
 
 describe('ContentWithSidebar', () => {
   let store;
-  const FirstComponent = () => <div>One</div>;
-  const SecondComponent = () => <div>Two</div>;
-  const ThirdComponent = () => <div>Three</div>;
 
-  const renderComponent = (childPath, firstPath) => {
-    const props = {
-      title: 'Content with Sidebar',
-      basePath: '/parent',
-      items: [
-        {
-          path: firstPath || '',
-          title: 'First',
-        },
-        {
-          path: 'second',
-          title: 'Second',
-        },
-        {
-          path: 'third',
-          title: 'Third',
-        },
-      ],
-    };
-
-    const children =
-      firstPath && firstPath !== '' ? (
-        <Routes>
-          <Route index element={<Navigate to={firstPath} replace />} />
-          <Route path={firstPath} element={<FirstComponent />} />
-          <Route path="second" element={<SecondComponent />} />
-          <Route path="third" element={<ThirdComponent />} />
-        </Routes>
-      ) : (
-        <Routes>
-          <Route index element={<FirstComponent />} />
-          <Route path="second" element={<SecondComponent />} />
-          <Route path="third" element={<ThirdComponent />} />
-        </Routes>
-      );
+  const renderComponent = async (childPath, firstPath) => {
+    const items = [
+      { path: firstPath || '', title: 'First' },
+      { path: 'second', title: 'Second' },
+      { path: 'third', title: 'Third' },
+    ];
 
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/parent' + childPath]}>
-          <Routes>
-            <Route path="/parent/*" element={<ContentWithSidebar {...props}>{children}</ContentWithSidebar>} />
-          </Routes>
-        </MemoryRouter>
+        <TestRouter initialEntries={['/parent' + childPath]}>
+          <ContentWithSidebar title="Content with Sidebar" basePath="/parent" items={items}>
+            <div>Content</div>
+          </ContentWithSidebar>
+        </TestRouter>
       </Provider>
     );
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('tab')).toHaveLength(3);
+    });
   };
 
   beforeEach(() => {
     store = createMockStore()({});
   });
 
-  describe('when the first route is allowed to have suffix', () => {
-    describe('when the child path is present', () => {
-      beforeEach(() => {
-        renderComponent('/second', 'first');
-      });
+  describe('when the first item has a path', () => {
+    it('shows sidebar items with correct texts', async () => {
+      await renderComponent('/second', 'first');
 
-      it('shows sidebar items with the correct texts', () => {
-        const items = screen.getAllByRole('tab');
-        expect(items).toHaveLength(3);
-
-        expect(items[0]).toHaveTextContent('First');
-        expect(items[1]).toHaveTextContent('Second');
-        expect(items[2]).toHaveTextContent('Third');
-      });
-
-      it('has the correct active item', () => {
-        const items = screen.getAllByRole('tab');
-
-        expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-        expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
-        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      });
-
-      it('renders the active component', () => {
-        expect(screen.getByText('Two')).toBeInTheDocument();
-      });
-
-      it('has the correct links', () => {
-        const items = screen.getAllByRole('tab');
-        const link = within(items[2]).getByRole('link');
-        expect(link).toHaveAttribute('href', '/parent/third');
-      });
+      const items = screen.getAllByRole('tab');
+      expect(items).toHaveLength(3);
+      expect(items[0]).toHaveTextContent('First');
+      expect(items[1]).toHaveTextContent('Second');
+      expect(items[2]).toHaveTextContent('Third');
     });
 
-    describe('when the child path is not present', () => {
-      beforeEach(() => {
-        renderComponent('', 'first');
-      });
+    it('marks the matching item as active', async () => {
+      await renderComponent('/second', 'first');
 
-      it('has the first item active by default', () => {
-        const items = screen.getAllByRole('tab');
+      const items = screen.getAllByRole('tab');
+      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+      expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
+      expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    });
 
-        expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
-        expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      });
+    it('has no active item when at base path (first item has non-empty path)', async () => {
+      await renderComponent('', 'first');
+
+      const items = screen.getAllByRole('tab');
+      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+      expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    });
+
+    it('generates correct links', async () => {
+      await renderComponent('/second', 'first');
+
+      const items = screen.getAllByRole('tab');
+      expect(within(items[2]).getByRole('link')).toHaveAttribute('href', '/parent/third');
     });
   });
 
-  describe('when the first route is not allowed to have suffix', () => {
-    describe('when the child path is present', () => {
-      beforeEach(() => {
-        renderComponent('/second');
-      });
+  describe('when the first item has empty path', () => {
+    it('marks the matching item as active', async () => {
+      await renderComponent('/second');
 
-      it('shows sidebar items with the correct texts', () => {
-        const items = screen.getAllByRole('tab');
-        expect(items).toHaveLength(3);
-
-        expect(items[0]).toHaveTextContent('First');
-        expect(items[1]).toHaveTextContent('Second');
-        expect(items[2]).toHaveTextContent('Third');
-      });
-
-      it('has the correct active item', () => {
-        const items = screen.getAllByRole('tab');
-
-        expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-        expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
-        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      });
-
-      it('renders the active component', () => {
-        expect(screen.getByRole('tab', { selected: true })).toBeInTheDocument();
-      });
-
-      it('has the correct first link without suffix', () => {
-        const items = screen.getAllByRole('tab');
-        const link = within(items[0]).getByRole('link');
-        expect(link).toHaveAttribute('href', '/parent/');
-      });
+      const items = screen.getAllByRole('tab');
+      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+      expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
     });
 
-    describe('when the child path is not present', () => {
-      beforeEach(() => {
-        renderComponent('');
-      });
+    it('marks the first item as active when at base path', async () => {
+      await renderComponent('');
 
-      it('has the first item active by default', () => {
-        const items = screen.getAllByRole('tab');
+      const items = screen.getAllByRole('tab');
+      expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
+      expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    });
 
-        expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
-        expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-        expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      });
+    it('generates correct link for first item', async () => {
+      await renderComponent('/second');
+
+      const items = screen.getAllByRole('tab');
+      expect(within(items[0]).getByRole('link')).toHaveAttribute('href', '/parent');
     });
   });
 });

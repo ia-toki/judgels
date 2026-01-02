@@ -1,12 +1,11 @@
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { useBreadcrumbsPath } from '../../../../../../../../hooks/useBreadcrumbsPath';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectContest } from '../../../../../modules/contestSelectors';
@@ -19,8 +18,8 @@ import * as contestProblemActions from '../../../modules/contestProblemActions';
 import './ContestProblemPage.scss';
 
 export default function ContestProblemPage() {
-  const { problemAlias } = useParams();
-  const pathname = useBreadcrumbsPath();
+  const { problemAlias } = useParams({ strict: false });
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);

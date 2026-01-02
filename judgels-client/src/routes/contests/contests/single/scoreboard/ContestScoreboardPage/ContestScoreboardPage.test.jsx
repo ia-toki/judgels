@@ -1,6 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
@@ -8,6 +7,7 @@ import { vi } from 'vitest';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestScoreboardPage from './ContestScoreboardPage';
 
@@ -31,9 +31,9 @@ describe('ContestScoreboardPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <ContestScoreboardPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

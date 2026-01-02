@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard';
 
 describe('ProblemSubmissionCard', () => {
@@ -14,7 +14,7 @@ describe('ProblemSubmissionCard', () => {
   let submissionWarning;
   let preferredGradingLanguage;
 
-  const renderComponent = () => {
+  const renderComponent = async () => {
     const props = {
       config: {
         sourceKeys: {
@@ -32,12 +32,14 @@ describe('ProblemSubmissionCard', () => {
 
     const store = createMockStore()({});
 
-    return render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ProblemSubmissionCard {...props} />
-        </MemoryRouter>
-      </Provider>
+    return await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <ProblemSubmissionCard {...props} />
+          </TestRouter>
+        </Provider>
+      )
     );
   };
 
@@ -55,8 +57,8 @@ describe('ProblemSubmissionCard', () => {
       reasonNotAllowedToSubmit = 'Contest is over';
     });
 
-    it('does not show the form and shows the reason', () => {
-      const { container } = renderComponent();
+    it('does not show the form and shows the reason', async () => {
+      const { container } = await renderComponent();
       expect(screen.queryByRole('form')).not.toBeInTheDocument();
       expect(container.querySelector('[data-key="reason-not-allowed-to-submit"]')).toHaveTextContent('Contest is over');
     });
@@ -64,8 +66,8 @@ describe('ProblemSubmissionCard', () => {
 
   describe('when it is allowed to submit', () => {
     describe('when there is no grading language restriction', () => {
-      it('shows the preferred grading language as default value in the dropdown', () => {
-        const { container } = renderComponent();
+      it('shows the preferred grading language as default value in the dropdown', async () => {
+        const { container } = await renderComponent();
         expect(container.querySelector('[data-key="gradingLanguage"]')).toHaveTextContent('C++11');
       });
     });
@@ -75,22 +77,22 @@ describe('ProblemSubmissionCard', () => {
         gradingLanguageRestriction = { allowedLanguageNames: ['Pascal', 'Python3'] };
       });
 
-      it('shows the first grading language as default value in the dropdown', () => {
-        const { container } = renderComponent();
+      it('shows the first grading language as default value in the dropdown', async () => {
+        const { container } = await renderComponent();
         expect(container.querySelector('[data-key="gradingLanguage"]')).toHaveTextContent('Pascal');
       });
     });
   });
 
-  it('shows the correct form inputs', () => {
-    const { container } = renderComponent();
+  it('shows the correct form inputs', async () => {
+    const { container } = await renderComponent();
     expect(container.querySelector('input[name="sourceFiles.encoder"]')).toBeInTheDocument();
     expect(container.querySelector('input[name="sourceFiles.decoder"]')).toBeInTheDocument();
     expect(container.querySelector('[data-key="gradingLanguage"]')).toHaveTextContent('C++11');
   });
 
-  it('shows the submission warning', () => {
-    const { container } = renderComponent();
+  it('shows the submission warning', async () => {
+    const { container } = await renderComponent();
     expect(container.querySelector('[data-key="submission-warning"]')).toHaveTextContent('Submission Warning');
   });
 
@@ -99,8 +101,8 @@ describe('ProblemSubmissionCard', () => {
       gradingEngine = 'OutputOnly';
     });
 
-    it('does not show the grading language input', () => {
-      const { container } = renderComponent();
+    it('does not show the grading language input', async () => {
+      const { container } = await renderComponent();
       expect(container.querySelector('[name="gradingLanguage"]')).not.toBeInTheDocument();
     });
   });
@@ -110,8 +112,8 @@ describe('ProblemSubmissionCard', () => {
       gradingEngine = 'OutputOnlyWithSubtasks';
     });
 
-    it('does not show the grading language input', () => {
-      const { container } = renderComponent();
+    it('does not show the grading language input', async () => {
+      const { container } = await renderComponent();
       expect(container.querySelector('[name="gradingLanguage"]')).not.toBeInTheDocument();
     });
   });

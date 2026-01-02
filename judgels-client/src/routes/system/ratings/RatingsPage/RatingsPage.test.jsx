@@ -1,11 +1,11 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import RatingsPage from './RatingsPage';
 
 import * as ratingActions from '../modules/ratingActions';
@@ -30,9 +30,9 @@ describe('RatingsPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <RatingsPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

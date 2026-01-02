@@ -1,11 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import RegisterPage from './RegisterPage';
 
 import * as registerActions from '../modules/registerActions';
@@ -22,9 +22,9 @@ describe('RegisterPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <RegisterPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

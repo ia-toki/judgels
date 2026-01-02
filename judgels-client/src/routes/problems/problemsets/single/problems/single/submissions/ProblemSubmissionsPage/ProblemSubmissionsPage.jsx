@@ -1,7 +1,6 @@
-import { parse } from 'query-string';
+import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -110,15 +109,13 @@ export default function ProblemSubmissionsPage() {
 
   const onRegrade = async submissionJid => {
     await dispatch(problemSetSubmissionActions.regradeSubmission(submissionJid));
-    const queries = parse(location.search);
-    await refreshSubmissions(queries.page);
+    await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
       await dispatch(problemSetSubmissionActions.regradeSubmissions(undefined, undefined, problem.problemJid));
-      const queries = parse(location.search);
-      await refreshSubmissions(queries.page);
+      await refreshSubmissions(location.search.page);
     }
   };
 

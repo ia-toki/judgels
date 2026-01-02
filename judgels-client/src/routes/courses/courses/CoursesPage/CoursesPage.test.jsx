@@ -1,10 +1,10 @@
 import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import courseReducer from '../modules/courseReducer';
 import CoursesPage from './CoursesPage';
 
@@ -40,11 +40,9 @@ describe('CoursesPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={['/courses']}>
-            <Routes>
-              <Route path="/courses" element={<CoursesPage />} />
-            </Routes>
-          </MemoryRouter>
+          <TestRouter initialEntries={['/courses']}>
+            <CoursesPage />
+          </TestRouter>
         </Provider>
       )
     );

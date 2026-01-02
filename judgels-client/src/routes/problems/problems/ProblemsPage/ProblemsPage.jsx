@@ -1,7 +1,6 @@
-import { parse } from 'query-string';
+import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -26,8 +25,7 @@ export default function ProblemsPage() {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const queries = parse(location.search);
-  const tags = parseTags(queries.tags);
+  const tags = parseTags(location.search.tags);
 
   const [state, setState] = useState({
     response: undefined,

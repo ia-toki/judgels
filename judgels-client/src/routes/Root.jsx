@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet } from '@tanstack/react-router';
 
 import { GAListener } from '../components/GAListener/GAListener';
 import { NavigationSetter } from '../modules/navigation/NavigationSetter';

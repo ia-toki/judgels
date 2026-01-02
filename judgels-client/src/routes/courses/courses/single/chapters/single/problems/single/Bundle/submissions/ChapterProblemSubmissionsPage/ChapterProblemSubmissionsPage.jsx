@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ButtonLink } from '../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
@@ -18,7 +18,7 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
-  const { problemAlias } = useParams();
+  const { problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const userJid = useSelector(selectMaybeUserJid);
   const course = useSelector(selectCourse);

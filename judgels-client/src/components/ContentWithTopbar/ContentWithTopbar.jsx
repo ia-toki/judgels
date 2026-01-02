@@ -1,7 +1,6 @@
+import { useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useLocation } from 'react-router';
 
-import { useBreadcrumbsPath } from '../../hooks/useBreadcrumbsPath';
 import { Topbar } from '../Topbar/Topbar';
 
 function ContentAndTopbar({ className, topbarElement, contentElement }) {
@@ -19,8 +18,6 @@ function resolveUrl(parentPath, childPath) {
 
 export default function ContentWithTopbar({ className, items, basePath, children }) {
   const location = useLocation();
-  const computedBasePath = useBreadcrumbsPath();
-  const pathname = basePath || computedBasePath;
 
   const renderTopbar = () => {
     const topbarItems = items
@@ -35,17 +32,17 @@ export default function ContentWithTopbar({ className, items, basePath, children
   };
 
   const onResolveItemUrl = itemPath => {
-    return resolveUrl(pathname, itemPath);
+    return resolveUrl(basePath, itemPath);
   };
 
   const getActiveItemPath = () => {
-    if (location.pathname === pathname || location.pathname === pathname + '/') {
+    if (location.pathname === basePath || location.pathname === basePath + '/') {
       return '';
     }
 
     const currentPath = location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', pathname.length + 1);
-    return currentPath.substring(pathname.length + 1, nextSlashPos);
+    const nextSlashPos = currentPath.indexOf('/', basePath.length + 1);
+    return currentPath.substring(basePath.length + 1, nextSlashPos);
   };
 
   return <ContentAndTopbar className={className} topbarElement={renderTopbar()} contentElement={children} />;

@@ -1,7 +1,7 @@
 import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
@@ -14,7 +14,7 @@ import * as problemSetProblemActions from '../../modules/problemSetProblemAction
 import './ProblemEditorialDialog.scss';
 
 export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
-  const { problemAlias } = useParams();
+  const { problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);

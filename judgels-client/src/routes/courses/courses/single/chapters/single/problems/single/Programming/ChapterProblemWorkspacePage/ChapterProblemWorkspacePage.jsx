@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { useOutletContext } from 'react-router';
 
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
@@ -10,6 +9,7 @@ import { getGradingLanguageFamily } from '../../../../../../../../../../modules/
 import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
+import { useChapterProblemContext } from '../../ChapterProblemContext';
 
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
@@ -114,6 +114,6 @@ const ConnectedChapterProblemWorkspacePage = connect(
 )(ChapterProblemWorkspacePageInner);
 
 export default function ChapterProblemWorkspacePage() {
-  const { worksheet, renderNavigation } = useOutletContext();
+  const { worksheet, renderNavigation } = useChapterProblemContext();
   return <ConnectedChapterProblemWorkspacePage worksheet={worksheet} renderNavigation={renderNavigation} />;
 }

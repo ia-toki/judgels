@@ -1,11 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import courseReducer, { PutCourse } from '../../../../../modules/courseReducer';
 import courseChapterReducer, { PutCourseChapter } from '../../../modules/courseChapterReducer';
 import ChapterResourcesPage from './ChapterResourcesPage';
@@ -79,11 +79,12 @@ describe('ChapterResourcesPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1']}>
-            <Routes>
-              <Route path="/courses/:courseSlug/chapter/:chapterAlias" element={<ChapterResourcesPage />} />
-            </Routes>
-          </MemoryRouter>
+          <TestRouter
+            initialEntries={['/courses/courseSlug/chapter/chapter-1']}
+            path="/courses/$courseSlug/chapter/$chapterAlias"
+          >
+            <ChapterResourcesPage />
+          </TestRouter>
         </Provider>
       )
     );
