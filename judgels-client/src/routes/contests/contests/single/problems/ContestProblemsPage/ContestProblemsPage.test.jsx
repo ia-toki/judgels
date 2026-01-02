@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -63,12 +63,14 @@ describe('ContestProblemsPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
-    render(
-      <Provider store={store}>
-        <TestRouter>
-          <ContestProblemsPage />
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <ContestProblemsPage />
+          </TestRouter>
+        </Provider>
+      )
     );
 
     await waitFor(() => expect(contestProblemActions.getProblems).toHaveBeenCalled());

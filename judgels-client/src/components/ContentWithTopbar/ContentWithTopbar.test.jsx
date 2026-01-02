@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -15,14 +15,16 @@ describe('ContentWithTopbar', () => {
       { path: 'third', title: 'Third' },
     ];
 
-    render(
-      <Provider store={store}>
-        <TestRouter initialEntries={['/parent' + childPath]}>
-          <ContentWithTopbar title="Content with Topbar" basePath="/parent" items={items}>
-            <div>Content</div>
-          </ContentWithTopbar>
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter initialEntries={['/parent' + childPath]}>
+            <ContentWithTopbar title="Content with Topbar" basePath="/parent" items={items}>
+              <div>Content</div>
+            </ContentWithTopbar>
+          </TestRouter>
+        </Provider>
+      )
     );
 
     await waitFor(() => {

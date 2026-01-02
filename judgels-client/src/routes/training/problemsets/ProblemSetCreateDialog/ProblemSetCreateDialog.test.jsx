@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
@@ -11,7 +11,7 @@ import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 describe('ProblemSetCreateDialog', () => {
   let onGetProblemSetConfig;
   let onCreateProblemSet;
-  beforeEach(() => {
+  beforeEach(async () => {
     onCreateProblemSet = vi.fn().mockReturnValue(() => Promise.resolve({}));
 
     const store = configureMockStore()({});
@@ -20,12 +20,14 @@ describe('ProblemSetCreateDialog', () => {
       onGetProblemSetConfig,
       onCreateProblemSet,
     };
-    render(
-      <Provider store={store}>
-        <TestRouter>
-          <ProblemSetCreateDialog {...props} />
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <ProblemSetCreateDialog {...props} />
+          </TestRouter>
+        </Provider>
+      )
     );
   });
 

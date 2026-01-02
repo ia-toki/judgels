@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
@@ -13,17 +13,19 @@ import * as loginActions from '../modules/loginActions';
 vi.mock('../modules/loginActions');
 
 describe('LoginPage', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     loginActions.logIn.mockReturnValue(() => Promise.resolve());
 
     const store = createMockStore([thunk])({});
 
-    render(
-      <Provider store={store}>
-        <TestRouter>
-          <LoginPage />
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <LoginPage />
+          </TestRouter>
+        </Provider>
+      )
     );
   });
 

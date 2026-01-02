@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
@@ -13,17 +13,19 @@ import * as resetPasswordActions from '../modules/resetPasswordActions';
 vi.mock('../modules/resetPasswordActions');
 
 describe('ResetPasswordPage', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     resetPasswordActions.requestToResetPassword.mockReturnValue(() => Promise.resolve());
 
     const store = configureMockStore([thunk])({});
 
-    render(
-      <Provider store={store}>
-        <TestRouter>
-          <ResetPasswordPage />
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <ResetPasswordPage />
+          </TestRouter>
+        </Provider>
+      )
     );
   });
 

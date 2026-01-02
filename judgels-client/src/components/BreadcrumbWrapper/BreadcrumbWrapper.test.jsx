@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
@@ -25,12 +25,14 @@ describe('BreadcrumbWrapper', () => {
 
     const WrappedComponent = withBreadcrumb('My Component')(InnerComponent);
 
-    const { unmount } = render(
-      <Provider store={store}>
-        <TestRouter initialEntries={['/component']}>
-          <WrappedComponent num={42} />
-        </TestRouter>
-      </Provider>
+    const { unmount } = await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter initialEntries={['/component']}>
+            <WrappedComponent num={42} />
+          </TestRouter>
+        </Provider>
+      )
     );
 
     await waitFor(() => {

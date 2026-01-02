@@ -1,10 +1,10 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantRemoveResultTable } from './ContestContestantRemoveResultTable';
 
 describe('ContestContestantRemoveResultTable', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = {
       usernames: ['budi', 'andi', 'zoro'],
       deletedContestantProfilesMap: {
@@ -12,10 +12,12 @@ describe('ContestContestantRemoveResultTable', () => {
         andi: { username: 'andi' },
       },
     };
-    render(
-      <TestRouter>
-        <ContestContestantRemoveResultTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <ContestContestantRemoveResultTable {...props} />
+        </TestRouter>
+      )
     );
   });
 

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 
 import { TrocScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -51,12 +51,14 @@ describe('TrocScoreboardTable', () => {
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = { scoreboard, profilesMap };
-    render(
-      <TestRouter>
-        <TrocScoreboardTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <TrocScoreboardTable {...props} />
+        </TestRouter>
+      )
     );
   });
 
@@ -67,15 +69,17 @@ describe('TrocScoreboardTable', () => {
   });
 
   describe('incognito ranks', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       cleanup();
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      render(
-        <TestRouter>
-          <TrocScoreboardTable {...props} />
-        </TestRouter>
+      await act(async () =>
+        render(
+          <TestRouter>
+            <TrocScoreboardTable {...props} />
+          </TestRouter>
+        )
       );
     });
 

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -12,17 +12,19 @@ import * as logoutActions from '../modules/logoutActions';
 vi.mock('../modules/logoutActions');
 
 describe('LogoutPage', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     logoutActions.logOut.mockReturnValue(() => Promise.resolve());
 
     const store = createStore(() => {}, applyMiddleware(thunk));
 
-    render(
-      <Provider store={store}>
-        <TestRouter>
-          <LogoutPage />
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter>
+            <LogoutPage />
+          </TestRouter>
+        </Provider>
+      )
     );
   });
 

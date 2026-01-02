@@ -1,10 +1,10 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestSupervisorAddResultTable } from './ContestSupervisorAddResultTable';
 
 describe('ContestSupervisorAddResultTable', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = {
       usernames: ['budi', 'caca', 'andi', 'dudi', 'zoro'],
       insertedSupervisorProfilesMap: {
@@ -14,10 +14,12 @@ describe('ContestSupervisorAddResultTable', () => {
         dudi: { username: 'dudi' },
       },
     };
-    render(
-      <TestRouter>
-        <ContestSupervisorAddResultTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <ContestSupervisorAddResultTable {...props} />
+        </TestRouter>
+      )
     );
   });
 
