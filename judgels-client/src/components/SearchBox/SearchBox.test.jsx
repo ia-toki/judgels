@@ -1,5 +1,5 @@
 import { RouterProvider, useLocation } from '@tanstack/react-router';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -16,7 +16,7 @@ describe('SearchBox', () => {
     return null;
   };
 
-  const renderComponent = (key, initialValue) => {
+  const renderComponent = async (key, initialValue) => {
     const props = {
       initialValue,
       onRouteChange,
@@ -32,7 +32,7 @@ describe('SearchBox', () => {
       [`/component?${key}=${initialValue}&page=2`]
     );
 
-    render(<RouterProvider router={router} />);
+    await act(async () => render(<RouterProvider router={router} />));
   };
 
   const submit = async value => {
@@ -50,13 +50,13 @@ describe('SearchBox', () => {
     });
 
     it('updates the query string', async () => {
-      renderComponent('key', 'test');
+      await renderComponent('key', 'test');
       await submit('judgels');
       expect(testLocation.search).toEqual({ key: 'judgels' });
     });
 
     it('calls onRouteChange with correct previous route and the typed string', async () => {
-      renderComponent('key', 'test');
+      await renderComponent('key', 'test');
       await submit('judgels');
       expect(onRouteChange).toBeCalledWith('judgels', { key: 'test', page: '2' });
     });

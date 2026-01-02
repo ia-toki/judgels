@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { BundleScoreboardTable } from './BundleScoreboardTable';
@@ -33,12 +33,14 @@ describe('BundleScoreboardTable', () => {
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = { scoreboard, profilesMap };
-    render(
-      <TestRouter>
-        <BundleScoreboardTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <BundleScoreboardTable {...props} />
+        </TestRouter>
+      )
     );
   });
 
@@ -49,7 +51,7 @@ describe('BundleScoreboardTable', () => {
   });
 
   describe('incognito ranks', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       cleanup();
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = {
@@ -57,10 +59,12 @@ describe('BundleScoreboardTable', () => {
         content: { entries: incognitoEntries },
       };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      render(
-        <TestRouter>
-          <BundleScoreboardTable {...props} />
-        </TestRouter>
+      await act(async () =>
+        render(
+          <TestRouter>
+            <BundleScoreboardTable {...props} />
+          </TestRouter>
+        )
       );
     });
 

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -37,12 +37,14 @@ describe('IoiScoreboardTable', () => {
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const props = { scoreboard, profilesMap };
-    render(
-      <TestRouter>
-        <IoiScoreboardTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <IoiScoreboardTable {...props} />
+        </TestRouter>
+      )
     );
   });
 
@@ -53,15 +55,17 @@ describe('IoiScoreboardTable', () => {
   });
 
   describe('incognito ranks', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       cleanup();
       const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
-      render(
-        <TestRouter>
-          <IoiScoreboardTable {...props} />
-        </TestRouter>
+      await act(async () =>
+        render(
+          <TestRouter>
+            <IoiScoreboardTable {...props} />
+          </TestRouter>
+        )
       );
     });
 
@@ -94,13 +98,15 @@ describe('IoiScoreboardTable', () => {
     describe('when onClickSubmissionCell is passed', () => {
       const onClickSubmissionCell = vi.fn();
 
-      beforeEach(() => {
+      beforeEach(async () => {
         cleanup();
         const props = { scoreboard, profilesMap, onClickSubmissionCell };
-        render(
-          <TestRouter>
-            <IoiScoreboardTable {...props} />
-          </TestRouter>
+        await act(async () =>
+          render(
+            <TestRouter>
+              <IoiScoreboardTable {...props} />
+            </TestRouter>
+          )
         );
       });
 

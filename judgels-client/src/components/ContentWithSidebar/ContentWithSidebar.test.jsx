@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
@@ -15,14 +15,16 @@ describe('ContentWithSidebar', () => {
       { path: 'third', title: 'Third' },
     ];
 
-    render(
-      <Provider store={store}>
-        <TestRouter initialEntries={['/parent' + childPath]}>
-          <ContentWithSidebar title="Content with Sidebar" basePath="/parent" items={items}>
-            <div>Content</div>
-          </ContentWithSidebar>
-        </TestRouter>
-      </Provider>
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestRouter initialEntries={['/parent' + childPath]}>
+            <ContentWithSidebar title="Content with Sidebar" basePath="/parent" items={items}>
+              <div>Content</div>
+            </ContentWithSidebar>
+          </TestRouter>
+        </Provider>
+      )
     );
 
     await waitFor(() => {

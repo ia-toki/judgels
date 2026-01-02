@@ -83,6 +83,7 @@ describe('ChapterProblemLayout', () => {
     const router = createRouter({
       routeTree,
       history: createMemoryHistory({ initialEntries: ['/test'] }),
+      defaultPendingMinMs: 0,
     });
 
     await act(async () =>

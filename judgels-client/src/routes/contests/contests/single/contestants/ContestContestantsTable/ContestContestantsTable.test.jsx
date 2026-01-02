@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantsTable } from './ContestContestantsTable';
@@ -8,7 +8,7 @@ describe('ContestContestantsTable', () => {
   let contestants;
   let now;
 
-  const renderComponent = () => {
+  const renderComponent = async () => {
     const props = {
       contest: {
         beginTime: 10,
@@ -26,15 +26,17 @@ describe('ContestContestantsTable', () => {
       now,
     };
 
-    render(
-      <TestRouter>
-        <ContestContestantsTable {...props} />
-      </TestRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <ContestContestantsTable {...props} />
+        </TestRouter>
+      )
     );
   };
 
   describe('when contest is not virtual', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       contestants = [
         { userJid: 'userJid1' },
         { userJid: 'userJid2' },
@@ -42,7 +44,7 @@ describe('ContestContestantsTable', () => {
         { userJid: 'userJid4' },
         { userJid: 'userJid5' },
       ];
-      renderComponent();
+      await renderComponent();
     });
 
     it('shows the correct columns', () => {
@@ -53,7 +55,7 @@ describe('ContestContestantsTable', () => {
   });
 
   describe('when contest is virtual', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       now = 70;
       virtualModuleConfig = { virtualDuration: 50 };
       contestants = [
@@ -63,7 +65,7 @@ describe('ContestContestantsTable', () => {
         { userJid: 'userJid4', contestStartTime: 65 },
         { userJid: 'userJid5' },
       ];
-      renderComponent();
+      await renderComponent();
     });
 
     it('shows the correct columns', () => {

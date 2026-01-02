@@ -21,22 +21,22 @@ export function createTestRouter(component, initialEntries = ['/']) {
       const str = stringify(searchObj);
       return str ? `?${str}` : '';
     },
+    defaultPendingMinMs: 0,
   });
 
   return router;
 }
 
 export function TestRouter({ children, initialEntries = ['/'], path }) {
-  const rootRoute = createRootRoute({
-    component: Outlet,
-  });
-
   let routeTree;
   if (path) {
     // Create a route with the specified path pattern to support useParams
+    const rootRoute = createRootRoute({
+      component: Outlet,
+    });
     const childRoute = createRoute({
       getParentRoute: () => rootRoute,
-      path: path,
+      path,
       component: () => children,
     });
     routeTree = rootRoute.addChildren([childRoute]);
@@ -55,6 +55,7 @@ export function TestRouter({ children, initialEntries = ['/'], path }) {
       const str = stringify(searchObj);
       return str ? `?${str}` : '';
     },
+    defaultPendingMinMs: 0,
   });
 
   return <RouterProvider router={router} />;
