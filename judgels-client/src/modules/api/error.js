@@ -1,61 +1,35 @@
-export class BadRequestError {
-  name = 'BadRequestError';
-  message;
-  stack;
-
-  constructor(message) {
-    const error = new Error(message && message.message);
-    this.stack = error.stack;
-    this.message = error.message;
+export class BadRequestError extends Error {
+  constructor(response) {
+    super(response?.message);
+    this.name = 'BadRequestError';
   }
 }
 
-export class UnauthorizedError {
-  name = 'UnauthorizedError';
-  message;
-  stack;
-
-  constructor(message) {
-    const error = new Error(message && message.message);
-    this.stack = error.stack;
-    this.message = error.message;
+export class UnauthorizedError extends Error {
+  constructor(response) {
+    super(response?.message);
+    this.name = 'UnauthorizedError';
   }
 }
 
-export class ForbiddenError {
-  name = 'ForbiddenError';
-  message;
-  args;
-  stack;
-
-  constructor(message) {
-    const error = new Error(message && message.message);
-    this.stack = error.stack;
-    this.args = (message && message.args) || {};
-    this.message = error.message;
+export class ForbiddenError extends Error {
+  constructor(response) {
+    super(response?.message);
+    this.name = 'ForbiddenError';
+    this.args = response?.args || {};
   }
 }
 
-export class NotFoundError {
-  name = 'NotFoundError';
-  message;
-  stack;
-
-  constructor(message) {
-    const error = new Error(message && message.message);
-    this.stack = error.stack;
-    this.message = error.message;
+export class NotFoundError extends Error {
+  constructor(response) {
+    super(response?.message);
+    this.name = 'NotFoundError';
   }
 }
 
-export class RemoteError {
-  name = 'RemoteError';
-  message;
-  stack;
-
-  constructor(message) {
-    const error = new Error(message && message.message);
-    this.stack = error.stack;
-    this.message = error.message;
+export class RemoteError extends Error {
+  constructor(response) {
+    super(response?.message);
+    this.name = 'RemoteError';
   }
 }

@@ -9,10 +9,7 @@ const toastMiddleware = store => next => async action => {
     if (!(error instanceof SubmissionError)) {
       toastActions.showErrorToast(error);
     }
-
-    if (!(error instanceof Error)) {
-      throw error;
-    }
+    throw error;
   }
 };
 
