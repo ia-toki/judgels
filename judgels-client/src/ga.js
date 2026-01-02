@@ -1,3 +1,4 @@
+import { stringify } from 'query-string';
 import ReactGA from 'react-ga4';
 
 import { APP_CONFIG } from './conf';
