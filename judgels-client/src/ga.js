@@ -14,7 +14,11 @@ export function sendGAPageview(location) {
     if (page === '') {
       page = '/';
     }
-    page += location.search;
+
+    const search = stringify(location.search);
+    if (search) {
+      page += `?${search}`;
+    }
 
     ReactGA.set({ page });
     ReactGA.send({ hitType: 'pageview', page });
