@@ -74,7 +74,7 @@ export class UserWidget extends PureComponent {
       <Menu>
         <MenuItemLink text={this.props.homeRoute.title} to="/" />
         {this.props.items.map(item => (
-          <MenuItemLink text={item.title} to={item.route.path} />
+          <MenuItemLink key={item.route.path} text={item.title} to={item.route.path} />
         ))}
         <MenuDivider className="widget-user__menu-helper" />
         {menuItems}
