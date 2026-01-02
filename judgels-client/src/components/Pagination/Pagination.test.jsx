@@ -1,9 +1,9 @@
+import { RouterProvider, useLocation } from '@tanstack/react-router';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { stringify } from 'query-string';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { vi } from 'vitest';
 
+import { createTestRouter } from '../../test/RouterWrapper';
 import Pagination from './Pagination';
 
 describe('Pagination', () => {
@@ -22,21 +22,17 @@ describe('Pagination', () => {
       onChangePage,
     };
 
-    render(
-      <MemoryRouter initialEntries={['/component' + pageQuery]}>
-        <Routes>
-          <Route
-            path="/component"
-            element={
-              <>
-                <Pagination {...props} />
-                <LocationTracker />
-              </>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
+    const router = createTestRouter(
+      () => (
+        <>
+          <Pagination {...props} />
+          <LocationTracker />
+        </>
+      ),
+      ['/component' + pageQuery]
     );
+
+    render(<RouterProvider router={router} />);
   };
 
   beforeEach(() => {
@@ -108,7 +104,7 @@ describe('Pagination', () => {
         if (page1Button) {
           await user.click(page1Button);
           await waitFor(() => {
-            expect(testLocation.search).toBe('');
+            expect(testLocation.search).toEqual({});
           });
         }
       });
@@ -124,8 +120,7 @@ describe('Pagination', () => {
         if (page3Button) {
           await user.click(page3Button);
           await waitFor(() => {
-            const query = stringify({ page: 3 });
-            expect(testLocation.search).toBe('?' + query);
+            expect(testLocation.search).toEqual({ page: '3' });
           });
         }
       });

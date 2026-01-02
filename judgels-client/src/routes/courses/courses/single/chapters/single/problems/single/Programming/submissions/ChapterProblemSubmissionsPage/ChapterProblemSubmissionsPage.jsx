@@ -1,8 +1,7 @@
 import { Switch } from '@blueprintjs/core';
-import { parse } from 'query-string';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
@@ -15,6 +14,7 @@ import {
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
 import { selectCourse } from '../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
+import { useChapterProblemContext } from '../../../ChapterProblemContext';
 import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
@@ -22,7 +22,8 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 const PAGE_SIZE = 20;
 
 export default function ChapterProblemSubmissionsPage() {
-  const { problemAlias } = useParams();
+  const { worksheet } = useChapterProblemContext();
+  const problemAlias = worksheet?.problem?.alias;
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -69,10 +70,10 @@ export default function ChapterProblemSubmissionsPage() {
 
   const onChangeFilterShowAll = ({ target }) => {
     if (target.checked) {
-      navigate((location.pathname + '/all').replace('//', '/'));
+      navigate({ to: (location.pathname + '/all').replace('//', '/') });
     } else {
       const idx = location.pathname.lastIndexOf('/all');
-      navigate(location.pathname.substr(0, idx));
+      navigate({ to: location.pathname.substring(0, idx) });
     }
   };
 
@@ -132,15 +133,13 @@ export default function ChapterProblemSubmissionsPage() {
 
   const onRegradeSubmission = async submissionJid => {
     await dispatch(chapterProblemSubmissionActions.regradeSubmission(submissionJid));
-    const queries = parse(location.search);
-    await refreshSubmissions(queries.page);
+    await refreshSubmissions(location.search.page);
   };
 
   const onRegradeSubmissions = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
       await dispatch(chapterProblemSubmissionActions.regradeSubmissions(chapter.jid, undefined, problemAlias));
-      const queries = parse(location.search);
-      await refreshSubmissions(queries.page);
+      await refreshSubmissions(location.search.page);
     }
   };
 

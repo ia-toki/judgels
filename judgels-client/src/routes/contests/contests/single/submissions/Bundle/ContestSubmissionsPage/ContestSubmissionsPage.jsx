@@ -1,9 +1,8 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { parse, stringify } from 'query-string';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
@@ -30,9 +29,8 @@ function ContestSubmissionsPage() {
 
   const contest = useSelector(selectContest);
 
-  const queries = parse(location.search);
-  const username = queries.username;
-  const problemAlias = queries.problemAlias;
+  const username = location.search.username;
+  const problemAlias = location.search.problemAlias;
 
   const [state, setState] = useState({
     response: undefined,
@@ -130,8 +128,7 @@ function ContestSubmissionsPage() {
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
-      const queries = parse(location.search);
-      await refreshSubmissions(queries.page);
+      await refreshSubmissions(location.search.page);
     }
   };
 
@@ -176,7 +173,7 @@ function ContestSubmissionsPage() {
   };
 
   const onFilter = async filter => {
-    navigate({ search: stringify(filter) });
+    navigate({ search: filter });
   };
 
   return render();

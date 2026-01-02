@@ -1,11 +1,11 @@
+import { Link } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { Link } from 'react-router';
 
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
 
 import './UserRef.scss';
 
-export function UserRef({ profile, showFlag }) {
+export function UserRef({ profile, showFlag, useAnchor }) {
   const renderFlag = () => {
     if (!showFlag) {
       return null;
@@ -19,15 +19,26 @@ export function UserRef({ profile, showFlag }) {
   };
 
   const renderUsername = () => {
-    return (
-      profile && (
-        <Link
-          className={classNames('user-ref__username', getRatingClass(profile.rating))}
-          to={`/profiles/${profile.username}`}
-        >
+    if (!profile) {
+      return null;
+    }
+
+    const className = classNames('user-ref__username', getRatingClass(profile.rating));
+    const to = `/profiles/${profile.username}`;
+
+    // Use plain anchor when rendering outside router context (e.g., renderToString)
+    if (useAnchor) {
+      return (
+        <a className={className} href={to}>
           {profile.username}
-        </Link>
-      )
+        </a>
+      );
+    }
+
+    return (
+      <Link className={className} to={to}>
+        {profile.username}
+      </Link>
     );
   };
 

@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Link } from '@tanstack/react-router';
 import { Field, Form } from 'react-final-form';
-import { Link } from 'react-router';
 
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormRecaptcha } from '../../../../components/forms/FormRecaptcha/FormRecaptcha';

@@ -1,12 +1,12 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import ContestSubmissionPage from './ContestSubmissionPage';
 
@@ -45,14 +45,12 @@ describe('ContestSubmissionPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={['/contest/contestSlug/submissions/submissions/10']}>
-            <Routes>
-              <Route
-                path="/contest/:contestSlug/submissions/submissions/:submissionId"
-                element={<ContestSubmissionPage />}
-              />
-            </Routes>
-          </MemoryRouter>
+          <TestRouter
+            initialEntries={['/contests/contestSlug/submissions/10']}
+            path="/contests/$contestSlug/submissions/$submissionId"
+          >
+            <ContestSubmissionPage />
+          </TestRouter>
         </Provider>
       )
     );

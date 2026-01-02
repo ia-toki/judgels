@@ -1,26 +1,28 @@
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { act, render, screen } from '@testing-library/react';
 
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestProblemCard } from './ContestProblemCard';
 
 describe('ContestProblemCard', () => {
-  const renderComponent = problem => {
+  const renderComponent = async problem => {
     const props = {
       contest: { jid: 'contestJid', slug: 'contest-a' },
       problem,
       problemName: 'The Problem',
       totalSubmissions: 10,
     };
-    render(
-      <MemoryRouter>
-        <ContestProblemCard {...props} />
-      </MemoryRouter>
+    await act(async () =>
+      render(
+        <TestRouter>
+          <ContestProblemCard {...props} />
+        </TestRouter>
+      )
     );
   };
 
-  test('problem name', () => {
-    renderComponent({
+  test('problem name', async () => {
+    await renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -35,8 +37,8 @@ describe('ContestProblemCard', () => {
     expect(linkElement.getAttribute('href')).toEqual('/contests/contest-a/problems/A');
   });
 
-  test('problem name with points', () => {
-    renderComponent({
+  test('problem name with points', async () => {
+    await renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -51,8 +53,8 @@ describe('ContestProblemCard', () => {
     expect(linkElement.getAttribute('href')).toEqual('/contests/contest-a/problems/A');
   });
 
-  test('open problem with submissions limit', () => {
-    renderComponent({
+  test('open problem with submissions limit', async () => {
+    await renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -64,8 +66,8 @@ describe('ContestProblemCard', () => {
     expect(statusElement.textContent).toEqual('40 submissions left');
   });
 
-  test('open problem without submissions limit', () => {
-    renderComponent({
+  test('open problem without submissions limit', async () => {
+    await renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Open,
@@ -77,8 +79,8 @@ describe('ContestProblemCard', () => {
     expect(statusElement.textContent).toEqual('');
   });
 
-  test('closed problem', () => {
-    renderComponent({
+  test('closed problem', async () => {
+    await renderComponent({
       problemJid: 'jid',
       alias: 'A',
       status: ContestProblemStatus.Closed,

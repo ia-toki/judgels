@@ -1,6 +1,6 @@
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { act, render } from '@testing-library/react';
 
+import { TestRouter } from '../../test/RouterWrapper';
 import { UserWidget } from './UserWidget';
 
 describe('UserWidget', () => {
@@ -8,7 +8,7 @@ describe('UserWidget', () => {
   let profile;
   let onRenderAvatar = () => Promise.resolve('url');
 
-  const renderComponent = () => {
+  const renderComponent = async () => {
     const props = {
       user,
       isWebConfigLoaded: true,
@@ -18,10 +18,12 @@ describe('UserWidget', () => {
       onRenderAvatar,
     };
 
-    return render(
-      <MemoryRouter>
-        <UserWidget {...props} />
-      </MemoryRouter>
+    return await act(async () =>
+      render(
+        <TestRouter>
+          <UserWidget {...props} />
+        </TestRouter>
+      )
     );
   };
 
@@ -31,8 +33,8 @@ describe('UserWidget', () => {
   });
 
   describe('when the user is not logged in', () => {
-    it('shows guest links', () => {
-      const { container } = renderComponent();
+    it('shows guest links', async () => {
+      const { container } = await renderComponent();
       expect(container.querySelector('[data-key="login"]')).toBeInTheDocument();
       expect(container.querySelector('[data-key="register"]')).toBeInTheDocument();
     });
@@ -45,10 +47,8 @@ describe('UserWidget', () => {
     });
 
     it('shows the user widget', async () => {
-      const { container } = renderComponent();
-      await waitFor(() => {
-        expect(container.querySelector('[data-key="username"]')).toBeInTheDocument();
-      });
+      const { container } = await renderComponent();
+      expect(container.querySelector('[data-key="username"]')).toBeInTheDocument();
     });
   });
 });

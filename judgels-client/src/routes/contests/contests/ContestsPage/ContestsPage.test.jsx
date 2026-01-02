@@ -1,11 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
+import { TestRouter } from '../../../../test/RouterWrapper';
 import contestReducer from '../modules/contestReducer';
 import ContestsPage from './ContestsPage';
 
@@ -39,11 +39,9 @@ describe('ContestsPage', () => {
 
     return render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/contests']}>
-          <Routes>
-            <Route path="/contests" element={<ContestsPage />} />
-          </Routes>
-        </MemoryRouter>
+        <TestRouter initialEntries={['/contests']}>
+          <ContestsPage />
+        </TestRouter>
       </Provider>
     );
   };

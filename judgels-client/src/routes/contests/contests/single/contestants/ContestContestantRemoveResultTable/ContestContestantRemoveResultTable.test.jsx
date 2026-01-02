@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantRemoveResultTable } from './ContestContestantRemoveResultTable';
 
 describe('ContestContestantRemoveResultTable', () => {
@@ -13,9 +13,9 @@ describe('ContestContestantRemoveResultTable', () => {
       },
     };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <ContestContestantRemoveResultTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 

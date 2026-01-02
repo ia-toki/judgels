@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { act, render, screen } from '@testing-library/react';
 
+import { TestRouter } from '../../test/RouterWrapper';
 import Menubar from './Menubar';
 
 describe('Menubar', () => {
@@ -12,16 +12,18 @@ describe('Menubar', () => {
 
   const homeRoute = { id: 'home', title: 'Home', route: { path: '/' } };
 
-  const renderMenubar = path => {
-    render(
-      <MemoryRouter initialEntries={[path]}>
-        <Menubar items={items} homeRoute={homeRoute} />
-      </MemoryRouter>
+  const renderMenubar = async path => {
+    await act(async () =>
+      render(
+        <TestRouter initialEntries={[path]}>
+          <Menubar items={items} homeRoute={homeRoute} />
+        </TestRouter>
+      )
     );
   };
 
-  it('renders all menu items', () => {
-    renderMenubar('/');
+  it('renders all menu items', async () => {
+    await renderMenubar('/');
 
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('First')).toBeInTheDocument();
@@ -29,30 +31,30 @@ describe('Menubar', () => {
     expect(screen.getByText('Third')).toBeInTheDocument();
   });
 
-  it('highlights the active route', () => {
-    renderMenubar('/second');
+  it('highlights the active route', async () => {
+    await renderMenubar('/second');
 
     const tabs = screen.getAllByRole('tab');
     expect(tabs.find(t => t.textContent === 'Home')).toHaveAttribute('aria-selected', 'false');
     expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('highlights active route for nested paths', () => {
-    renderMenubar('/second/child/path');
+  it('highlights active route for nested paths', async () => {
+    await renderMenubar('/second/child/path');
 
     const tabs = screen.getAllByRole('tab');
     expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('falls back to home when no route matches', () => {
-    renderMenubar('/unknown');
+  it('falls back to home when no route matches', async () => {
+    await renderMenubar('/unknown');
 
     const tabs = screen.getAllByRole('tab');
     expect(tabs.find(t => t.textContent === 'Home')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('generates correct links', () => {
-    renderMenubar('/');
+  it('generates correct links', async () => {
+    await renderMenubar('/');
 
     expect(screen.getByRole('link', { name: 'Third' })).toHaveAttribute('href', '/third');
   });

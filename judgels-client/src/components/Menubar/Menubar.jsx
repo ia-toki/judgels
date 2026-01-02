@@ -1,5 +1,5 @@
 import { Tab, Tabs } from '@blueprintjs/core';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 
 import './Menubar.scss';
 

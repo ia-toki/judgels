@@ -1,10 +1,10 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestLogsPage from './ContestLogsPage';
 
@@ -45,9 +45,9 @@ describe('ContestLogsPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter>
+          <TestRouter>
             <ContestLogsPage />
-          </MemoryRouter>
+          </TestRouter>
         </Provider>
       )
     );

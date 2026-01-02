@@ -1,6 +1,6 @@
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
@@ -15,7 +15,7 @@ import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelec
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 export default function ProblemSubmissionSummaryPage() {
-  const { username } = useParams();
+  const { username } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
   const userJid = useSelector(selectMaybeUserJid);

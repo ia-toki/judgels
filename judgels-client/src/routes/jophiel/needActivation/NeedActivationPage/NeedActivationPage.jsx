@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router';
+import { Navigate, useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';

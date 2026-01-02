@@ -1,13 +1,14 @@
 import { act, render, screen, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import sessionReducer, { PutUser } from '../../../../../../../../../../../modules/session/sessionReducer';
+import { TestRouter } from '../../../../../../../../../../../test/RouterWrapper';
 import courseReducer, { PutCourse } from '../../../../../../../../modules/courseReducer';
 import courseChapterReducer, { PutCourseChapter } from '../../../../../../modules/courseChapterReducer';
+import { ChapterProblemContext } from '../../../ChapterProblemContext';
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
@@ -62,14 +63,14 @@ describe('ChapterProblemSubmissionsPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}>
-            <Routes>
-              <Route
-                path="/courses/:courseSlug/chapter/:chapterAlias/problems/:problemAlias/submissions"
-                element={<ChapterProblemSubmissionsPage />}
-              />
-            </Routes>
-          </MemoryRouter>
+          <TestRouter
+            initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}
+            path="/courses/$courseSlug/chapter/$chapterAlias/problems/$problemAlias/submissions"
+          >
+            <ChapterProblemContext.Provider value={{ worksheet: null, renderNavigation: () => null }}>
+              <ChapterProblemSubmissionsPage />
+            </ChapterProblemContext.Provider>
+          </TestRouter>
         </Provider>
       )
     );

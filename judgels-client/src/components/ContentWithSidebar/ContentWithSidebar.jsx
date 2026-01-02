@@ -1,7 +1,6 @@
+import { useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useLocation } from 'react-router';
 
-import { useBreadcrumbsPath } from '../../hooks/useBreadcrumbsPath';
 import { Sidebar } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.scss';
@@ -42,8 +41,6 @@ export default function ContentWithSidebar({
   children,
 }) {
   const location = useLocation();
-  const computedBasePath = useBreadcrumbsPath();
-  const pathname = basePath || computedBasePath;
 
   const renderSidebar = () => {
     const sidebarItems = items
@@ -119,17 +116,17 @@ export default function ContentWithSidebar({
   };
 
   const onResolveItemUrl = itemPath => {
-    return resolveUrl(pathname, itemPath);
+    return resolveUrl(basePath, itemPath);
   };
 
   const getActiveItemPath = () => {
-    if (location.pathname === pathname) {
+    if (location.pathname === basePath) {
       return '';
     }
 
     const currentPath = location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', pathname.length + 1);
-    return currentPath.substring(pathname.length + 1, nextSlashPos);
+    const nextSlashPos = currentPath.indexOf('/', basePath.length + 1);
+    return currentPath.substring(basePath.length + 1, nextSlashPos);
   };
 
   return (

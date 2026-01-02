@@ -1,6 +1,6 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
 
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { BundleScoreboardTable } from './BundleScoreboardTable';
 
 describe('BundleScoreboardTable', () => {
@@ -36,9 +36,9 @@ describe('BundleScoreboardTable', () => {
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <BundleScoreboardTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 
@@ -58,9 +58,9 @@ describe('BundleScoreboardTable', () => {
       };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       render(
-        <MemoryRouter>
+        <TestRouter>
           <BundleScoreboardTable {...props} />
-        </MemoryRouter>
+        </TestRouter>
       );
     });
 

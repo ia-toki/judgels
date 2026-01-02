@@ -1,9 +1,8 @@
 import { Classes } from '@blueprintjs/core';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { parse, stringify } from 'query-string';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useLocation, useNavigate } from 'react-router';
 
 import './Pagination.scss';
 
@@ -80,11 +79,9 @@ export default function PaginationContainer({ pageSize, onChangePage }) {
     totalCount: 0,
   });
 
-  const queries = parse(location.search);
-
   useEffect(() => {
     refreshPagination();
-  }, [queries.page]);
+  }, [location.search.page]);
 
   const render = () => {
     const { currentPage, totalCount } = state;
@@ -102,24 +99,24 @@ export default function PaginationContainer({ pageSize, onChangePage }) {
   };
 
   const handleChangePage = async nextPage => {
-    const queries = parse(location.search);
+    const queries = location.search;
 
-    let query = '';
+    let newSearch;
     if (nextPage > 1) {
-      query = stringify({ ...queries, page: nextPage });
+      newSearch = { ...queries, page: nextPage };
     } else {
-      query = stringify({ ...queries, page: undefined });
+      newSearch = { ...queries, page: undefined };
     }
 
     if (!queries.page && nextPage === 1) {
-      navigate({ search: query }, { replace: true });
+      navigate({ search: newSearch, replace: true });
     } else {
-      navigate({ search: query });
+      navigate({ search: newSearch });
     }
   };
 
   const refreshPagination = async () => {
-    const queries = parse(location.search);
+    const queries = location.search;
 
     let currentPage = 1;
     const parsedCurrentPage = +queries.page;

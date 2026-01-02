@@ -1,13 +1,13 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
@@ -67,11 +67,12 @@ describe('ProgrammingContestProblemPage', () => {
     await act(async () =>
       render(
         <Provider store={store}>
-          <MemoryRouter initialEntries={[`/contests/contestJid/problems/C`]}>
-            <Routes>
-              <Route path="/contests/:contestSlug/problems/:problemAlias" element={<ContestProblemPage />} />
-            </Routes>
-          </MemoryRouter>
+          <TestRouter
+            initialEntries={['/contests/contestJid/problems/C']}
+            path="/contests/$contestSlug/problems/$problemAlias"
+          >
+            <ContestProblemPage />
+          </TestRouter>
         </Provider>
       )
     );

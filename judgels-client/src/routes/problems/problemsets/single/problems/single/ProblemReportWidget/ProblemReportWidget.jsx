@@ -1,8 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { useParams } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { Link } from 'react-router';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
@@ -22,7 +22,7 @@ import './ProblemReportWidget.scss';
 const TOP_STATS_SIZE = 5;
 
 export default function ProblemReportWidget() {
-  const { problemAlias } = useParams();
+  const { problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);

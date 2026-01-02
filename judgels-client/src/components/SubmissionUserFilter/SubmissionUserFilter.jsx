@@ -1,5 +1,5 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 import './SubmissionUserFilter.scss';
 
@@ -14,13 +14,13 @@ export default function SubmissionUserFilter() {
   const clickAll = () => {
     if (isMine()) {
       const idx = location.pathname.lastIndexOf('/mine');
-      navigate(location.pathname.substr(0, idx));
+      navigate({ to: location.pathname.substr(0, idx) });
     }
   };
 
   const clickMine = () => {
     if (!isMine()) {
-      navigate((location.pathname + '/mine').replace('//', '/'));
+      navigate({ to: (location.pathname + '/mine').replace('//', '/') });
     }
   };
 

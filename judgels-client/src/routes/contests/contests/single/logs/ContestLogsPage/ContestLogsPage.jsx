@@ -1,7 +1,6 @@
-import { parse, stringify } from 'query-string';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
 
 import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -22,9 +21,8 @@ function ContestLogsPage() {
 
   const contest = useSelector(selectContest);
 
-  const queries = parse(location.search);
-  const username = queries.username;
-  const problemAlias = queries.problemAlias;
+  const username = location.search.username;
+  const problemAlias = location.search.problemAlias;
 
   const [state, setState] = useState({
     response: undefined,
@@ -103,7 +101,7 @@ function ContestLogsPage() {
   };
 
   const onFilter = async newFilter => {
-    navigate({ search: stringify(newFilter) });
+    navigate({ search: newFilter });
   };
 
   return render();

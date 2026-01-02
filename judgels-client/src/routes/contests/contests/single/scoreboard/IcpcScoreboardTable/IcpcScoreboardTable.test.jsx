@@ -1,9 +1,9 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 
 import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { IcpcScoreboardTable } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
@@ -55,9 +55,9 @@ describe('IcpcScoreboardTable', () => {
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <IcpcScoreboardTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 
@@ -74,9 +74,9 @@ describe('IcpcScoreboardTable', () => {
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       render(
-        <MemoryRouter>
+        <TestRouter>
           <IcpcScoreboardTable {...props} />
-        </MemoryRouter>
+        </TestRouter>
       );
     });
 
@@ -128,9 +128,9 @@ describe('IcpcScoreboardTable', () => {
         cleanup();
         const props = { scoreboard, profilesMap, onClickSubmissionCell };
         render(
-          <MemoryRouter>
+          <TestRouter>
             <IcpcScoreboardTable {...props} />
-          </MemoryRouter>
+          </TestRouter>
         );
       });
 

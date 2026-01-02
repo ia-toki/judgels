@@ -1,53 +1,48 @@
-import { createBrowserRouter } from 'react-router';
+import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
+import { parse, stringify } from 'query-string';
 
 import { LoadingState } from '../components/LoadingState/LoadingState';
 import App from './App';
 import Root from './Root';
-import { jophielRoutes } from './jophiel/JophielRoutes';
-import { systemRoutes } from './system/SystemRoutes';
+import { createContestsRoutes } from './contests/routes';
+import { createCoursesRoutes } from './courses/routes';
+import { createJophielRoutes } from './jophiel/routes';
+import { createProblemsRoutes } from './problems/routes';
+import { createRankingRoutes } from './ranking/routes';
+import { createSubmissionsRoutes } from './submissions/routes';
+import { createSystemRoutes } from './system/routes';
+import { createTrainingRoutes } from './training/routes';
 
-export const lazyRoutes = {
-  contests: () => import('./contests/ContestsRoutes'),
-  courses: () => import('./courses/CoursesRoutes'),
-  problems: () => import('./problems/ProblemsRoutes'),
-  training: () => import('./training/TrainingRoutes'),
-  submissions: () => import('./submissions/SubmissionsRoutes'),
-  ranking: () => import('./ranking/RankingRoutes'),
-};
+const rootRoute = createRootRoute({
+  component: Root,
+});
 
-async function patchRoutesOnNavigation({ path, patch }) {
-  for (const [prefix, importFn] of Object.entries(lazyRoutes)) {
-    if (path.startsWith(`/${prefix}`)) {
-      const module = await importFn();
-      patch('app', module.routes);
-      delete lazyRoutes[prefix]; // Don't re-patch once loaded
-      return;
-    }
-  }
-}
+export const appRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: 'app',
+  component: App,
+});
 
-export const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: <Root />,
-      children: [
-        {
-          id: 'app',
-          element: <App />,
-          children: [
-            ...systemRoutes,
-            jophielRoutes,
-            {
-              path: '*',
-              element: <LoadingState large />,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  {
-    patchRoutesOnNavigation,
-  }
-);
+const appChildren = [
+  createSystemRoutes(appRoute),
+  createJophielRoutes(appRoute),
+  createContestsRoutes(appRoute),
+  createCoursesRoutes(appRoute),
+  createProblemsRoutes(appRoute),
+  createTrainingRoutes(appRoute),
+  createSubmissionsRoutes(appRoute),
+  createRankingRoutes(appRoute),
+].filter(Boolean);
+
+const routeTree = rootRoute.addChildren([appRoute.addChildren(appChildren)]);
+
+export const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  defaultPendingComponent: () => <LoadingState large />,
+  parseSearch: searchStr => parse(searchStr),
+  stringifySearch: searchObj => {
+    const str = stringify(searchObj);
+    return str ? `?${str}` : '';
+  },
+});

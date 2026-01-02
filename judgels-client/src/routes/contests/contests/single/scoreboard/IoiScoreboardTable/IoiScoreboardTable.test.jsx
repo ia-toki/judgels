@@ -1,8 +1,8 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { IoiScoreboardTable } from './IoiScoreboardTable';
 
 describe('IoiScoreboardTable', () => {
@@ -40,9 +40,9 @@ describe('IoiScoreboardTable', () => {
   beforeEach(() => {
     const props = { scoreboard, profilesMap };
     render(
-      <MemoryRouter>
+      <TestRouter>
         <IoiScoreboardTable {...props} />
-      </MemoryRouter>
+      </TestRouter>
     );
   });
 
@@ -59,9 +59,9 @@ describe('IoiScoreboardTable', () => {
       const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
       const props = { scoreboard: incognitoScoreboard, profilesMap };
       render(
-        <MemoryRouter>
+        <TestRouter>
           <IoiScoreboardTable {...props} />
-        </MemoryRouter>
+        </TestRouter>
       );
     });
 
@@ -98,9 +98,9 @@ describe('IoiScoreboardTable', () => {
         cleanup();
         const props = { scoreboard, profilesMap, onClickSubmissionCell };
         render(
-          <MemoryRouter>
+          <TestRouter>
             <IoiScoreboardTable {...props} />
-          </MemoryRouter>
+          </TestRouter>
         );
       });
 

@@ -1,9 +1,9 @@
+import { RouterProvider, useLocation } from '@tanstack/react-router';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { stringify } from 'query-string';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { vi } from 'vitest';
 
+import { createTestRouter } from '../../test/RouterWrapper';
 import SearchBox from './SearchBox';
 
 describe('SearchBox', () => {
@@ -22,26 +22,22 @@ describe('SearchBox', () => {
       onRouteChange,
     };
 
-    render(
-      <MemoryRouter initialEntries={[`/component?${key}=${initialValue}&page=2`]}>
-        <Routes>
-          <Route
-            path="/component"
-            element={
-              <>
-                <SearchBox {...props} />
-                <LocationTracker />
-              </>
-            }
-          />
-        </Routes>
-      </MemoryRouter>
+    const router = createTestRouter(
+      () => (
+        <>
+          <SearchBox {...props} />
+          <LocationTracker />
+        </>
+      ),
+      [`/component?${key}=${initialValue}&page=2`]
     );
+
+    render(<RouterProvider router={router} />);
   };
 
   const submit = async value => {
     const user = userEvent.setup();
-    const content = screen.getByRole('textbox');
+    const content = await screen.findByRole('textbox');
     await user.clear(content);
     await user.type(content, value);
     const submitButton = screen.getByRole('button');
@@ -56,8 +52,7 @@ describe('SearchBox', () => {
     it('updates the query string', async () => {
       renderComponent('key', 'test');
       await submit('judgels');
-      const query = stringify({ key: 'judgels' });
-      expect(testLocation.search).toBe('?' + query);
+      expect(testLocation.search).toEqual({ key: 'judgels' });
     });
 
     it('calls onRouteChange with correct previous route and the typed string', async () => {

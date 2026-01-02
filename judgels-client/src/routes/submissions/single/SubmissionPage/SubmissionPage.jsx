@@ -1,11 +1,10 @@
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { useBreadcrumbsPath } from '../../../../hooks/useBreadcrumbsPath';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
 
@@ -13,8 +12,8 @@ import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbs
 import * as submissionActions from '../../modules/submissionActions';
 
 export default function SubmissionPage() {
-  const { submissionId } = useParams();
-  const pathname = useBreadcrumbsPath();
+  const { submissionId } = useParams({ strict: false });
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const statementLanguage = useSelector(selectStatementLanguage);
 

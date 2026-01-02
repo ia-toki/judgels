@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../test/RouterWrapper';
 import LogoutPage from './LogoutPage';
 
 import * as logoutActions from '../modules/logoutActions';
@@ -19,9 +19,9 @@ describe('LogoutPage', () => {
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
+        <TestRouter>
           <LogoutPage />
-        </MemoryRouter>
+        </TestRouter>
       </Provider>
     );
   });
