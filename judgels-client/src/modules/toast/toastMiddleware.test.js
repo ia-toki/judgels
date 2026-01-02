@@ -25,13 +25,13 @@ describe('toastMiddleware', () => {
     };
     const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
-    it('shows the error toast', async () => {
-      await applyMiddleware(myAction);
+    it('rethrows the error and shows the error toast', async () => {
+      await expect(applyMiddleware(myAction)).rejects.toThrow(error);
       expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
 
-  describe('when the action throws other error', () => {
+  describe('when the action throws API error', () => {
     const error = new NotFoundError({ message: 'error' });
     const next = async action => {
       throw error;
@@ -39,7 +39,7 @@ describe('toastMiddleware', () => {
     const applyMiddleware = action => toastMiddleware(store)(next)(action);
 
     it('rethrows the error and shows the error toast', async () => {
-      await expect(applyMiddleware(myAction)).rejects.toMatchObject(error);
+      await expect(applyMiddleware(myAction)).rejects.toThrow(error);
       expect(toastActions.showErrorToast).toHaveBeenCalledWith(error);
     });
   });
