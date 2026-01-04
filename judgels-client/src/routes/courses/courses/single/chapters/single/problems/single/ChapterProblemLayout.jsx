@@ -1,5 +1,5 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
-import { Link, useLocation, useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,6 +9,7 @@ import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../modules/courseChaptersSelectors';
@@ -17,14 +18,12 @@ import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
 import { selectChapterProblemReloadKey } from './modules/chapterProblemSelectors';
 
-import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemActions from './modules/chapterProblemActions';
 
 import './ChapterProblemLayout.scss';
 
 export default function ChapterProblemLayout() {
   const { problemAlias } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);
@@ -40,10 +39,6 @@ export default function ChapterProblemLayout() {
 
   useEffect(() => {
     refreshProblem();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, [statementLanguage, reloadKey, problemAlias]);
 
   useEffect(() => {
@@ -75,7 +70,7 @@ export default function ChapterProblemLayout() {
       response,
     });
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, chapter.alias + ' / ' + response.problem.alias));
+    document.title = createDocumentTitle(`${chapter.alias} / ${response.problem.alias}`);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });

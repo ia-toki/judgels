@@ -13,11 +13,9 @@ import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
-import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
-vi.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 vi.mock('../../../modules/contestProblemActions');
 vi.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
@@ -61,8 +59,6 @@ describe('BundleContestProblemPage', () => {
 
     contestSubmissionActions.createItemSubmission.mockReturnValue(() => Promise.resolve({}));
     contestSubmissionActions.getLatestSubmissions.mockReturnValue(() => Promise.resolve({}));
-    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
-    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
     const store = createStore(
       combineReducers({
@@ -85,10 +81,6 @@ describe('BundleContestProblemPage', () => {
         </Provider>
       )
     );
-  });
-
-  test('navigation', async () => {
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
   });
 
   test('form', async () => {

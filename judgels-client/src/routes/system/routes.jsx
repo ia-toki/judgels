@@ -1,6 +1,7 @@
 import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
+import { createDocumentTitle } from '../../utils/title';
 
 export const createSystemRoutes = appRoute => {
   if (!isTLX()) {
@@ -11,6 +12,7 @@ export const createSystemRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'system',
     component: lazyRouteComponent(() => import('./SystemLayout')),
+    head: () => ({ meta: [{ title: createDocumentTitle('System') }] }),
   });
 
   const systemIndexRoute = createRoute({

@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, Manual } from '@blueprintjs/icons';
-import { Outlet, useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,16 +8,15 @@ import ContentWithSidebar from '../../../../components/ContentWithSidebar/Conten
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { createDocumentTitle } from '../../../../utils/title';
 import { selectProblemSet } from '../modules/problemSetSelectors';
 
-import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetActions from '../modules/problemSetActions';
 
 import './SingleProblemSetLayout.scss';
 
 export default function SingleProblemSetLayout() {
   const { problemSetSlug } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const problemSet = useSelector(selectProblemSet);
@@ -25,13 +24,12 @@ export default function SingleProblemSetLayout() {
   useEffect(() => {
     const loadProblemSet = async () => {
       const loadedProblemSet = await dispatch(problemSetActions.getProblemSetBySlug(problemSetSlug));
-      dispatch(breadcrumbsActions.pushBreadcrumb(pathname, loadedProblemSet.name));
+      document.title = createDocumentTitle(loadedProblemSet.name);
     };
     loadProblemSet();
 
     return () => {
       dispatch(problemSetActions.clearProblemSet());
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [problemSetSlug]);
 

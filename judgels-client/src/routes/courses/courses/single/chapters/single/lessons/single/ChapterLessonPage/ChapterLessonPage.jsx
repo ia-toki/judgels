@@ -1,5 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Link, useLocation, useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,19 +8,18 @@ import StatementLanguageWidget from '../../../../../../../../../components/Langu
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../../../../../../utils/title';
 import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 
-import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterLessonActions from '../modules/chapterLessonActions';
 
 import './ChapterLessonPage.scss';
 
 export default function ChapterLessonPage() {
   const { lessonAlias } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);
@@ -40,15 +39,11 @@ export default function ChapterLessonPage() {
       response,
     });
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, response.lesson.alias));
+    document.title = createDocumentTitle(`${chapter.alias} / ${response.lesson.alias}`);
   };
 
   useEffect(() => {
     refreshLesson();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, [statementLanguage, lessonAlias]);
 
   const render = () => {

@@ -3,7 +3,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 
-import breadcrumbsReducer from './breadcrumbs/breadcrumbsReducer';
 import jerahmeelReducer from './jerahmeel/jerahmeelReducer';
 import jophielReducer from './jophiel/jophielReducer';
 import sessionReducer from './session/sessionReducer';
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   jophiel: jophielReducer,
   uriel: urielReducer,
   jerahmeel: jerahmeelReducer,
-  breadcrumbs: breadcrumbsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

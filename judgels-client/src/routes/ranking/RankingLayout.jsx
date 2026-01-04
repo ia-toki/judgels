@@ -1,12 +1,11 @@
 import { Property, TimelineLineChart } from '@blueprintjs/icons';
 import { Outlet } from '@tanstack/react-router';
 
-import { withBreadcrumb } from '../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 
-function RankingLayout() {
+export default function RankingLayout() {
   const sidebarItems = [
     {
       path: '',
@@ -36,5 +35,3 @@ function RankingLayout() {
     </FullPageLayout>
   );
 }
-
-export default withBreadcrumb('Ranking')(RankingLayout);

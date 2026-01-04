@@ -1,4 +1,4 @@
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,16 +7,15 @@ import { LoadingState } from '../../../../../../../../../components/LoadingState
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../../../../../../utils/title';
 import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../../../../modules/problemSetProblemSelectors';
 
-import * as breadcrumbsActions from '../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
 export default function ProblemSubmissionPage() {
   const { submissionId } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const problemSet = useSelector(selectProblemSet);
   const problem = useSelector(selectProblemSetProblem);
@@ -45,7 +44,7 @@ export default function ProblemSubmissionPage() {
       ? undefined
       : await dispatch(problemSetSubmissionActions.getSubmissionSourceImage(data.submission.jid));
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, '#' + data.submission.id));
+    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
     setState({
       submissionWithSource: data,
@@ -59,10 +58,6 @@ export default function ProblemSubmissionPage() {
 
   useEffect(() => {
     loadSubmission();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, []);
 
   const render = () => {

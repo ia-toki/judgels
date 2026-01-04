@@ -1,12 +1,11 @@
 import { HTMLTable } from '@blueprintjs/core';
 
-import { withBreadcrumb } from '../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../components/Card/Card';
 import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
 
 import './RatingSystemPage.scss';
 
-function RatingSystemPage() {
+export default function RatingSystemPage() {
   return (
     <Card title="Rating system">
       <h4>Rating table</h4>
@@ -166,5 +165,3 @@ function RatingSystemPage() {
     </Card>
   );
 }
-
-export default withBreadcrumb('Rating system')(RatingSystemPage);

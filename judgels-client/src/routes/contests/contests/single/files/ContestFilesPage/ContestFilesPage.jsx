@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { selectContest } from '../../../modules/contestSelectors';
@@ -80,4 +79,4 @@ const mapDispatchToProps = {
   onUploadFile: contestFileActions.uploadFile,
 };
 
-export default withBreadcrumb('Files')(connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage);

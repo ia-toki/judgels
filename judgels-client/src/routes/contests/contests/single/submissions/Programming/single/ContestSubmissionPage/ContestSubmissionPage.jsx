@@ -1,4 +1,4 @@
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,14 +6,13 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { selectContest } from '../../../../../modules/contestSelectors';
 
-import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
 export default function ContestSubmissionPage() {
   const { submissionId } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const contest = useSelector(selectContest);
   const statementLanguage = useSelector(selectStatementLanguage);
@@ -31,7 +30,7 @@ export default function ContestSubmissionPage() {
       contestSubmissionActions.getSubmissionWithSource(contest.jid, +submissionId, statementLanguage)
     );
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, 'Submission #' + data.submission.id));
+    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
     setState({
       submissionWithSource: data,
@@ -44,10 +43,6 @@ export default function ContestSubmissionPage() {
 
   useEffect(() => {
     loadSubmission();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, []);
 
   const render = () => {

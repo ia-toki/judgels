@@ -1,5 +1,5 @@
 import { ChevronLeft } from '@blueprintjs/icons';
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,15 +8,14 @@ import { ContentCard } from '../../../../../../../../../../../../components/Cont
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 
-import * as breadcrumbsActions from '../../../../../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemSubmissionPage() {
   const { problemAlias, submissionId } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const course = useSelector(selectCourse);
   const chapter = useSelector(selectCourseChapter);
@@ -32,10 +31,6 @@ export default function ChapterProblemSubmissionPage() {
 
   useEffect(() => {
     refreshSubmission();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, []);
 
   const render = () => {
@@ -60,7 +55,7 @@ export default function ChapterProblemSubmissionPage() {
     const { data, profile, problemName, containerName } = await dispatch(
       chapterProblemSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, '#' + data.submission.id));
+    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
     setState({
       submissionWithSource: data,

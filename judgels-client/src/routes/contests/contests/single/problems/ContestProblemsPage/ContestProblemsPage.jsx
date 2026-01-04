@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -169,4 +168,4 @@ const mapDispatchToProps = {
   onSetProblems: contestProblemActions.setProblems,
 };
 
-export default withBreadcrumb('Problems')(connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestProblemsPage);

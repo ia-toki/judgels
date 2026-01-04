@@ -8,11 +8,11 @@ import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
+import { createDocumentTitle } from '../../../../../../utils/title';
 import { selectProblemSet } from '../../../modules/problemSetSelectors';
 import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
 
-import * as breadcrumbsActions from '../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as problemSetActions from '../../../modules/problemSetActions';
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
@@ -29,14 +29,12 @@ export default function SingleProblemSetProblemLayout() {
   // Load problem set
   useEffect(() => {
     const loadProblemSet = async () => {
-      const loadedProblemSet = await dispatch(problemSetActions.getProblemSetBySlug(problemSetSlug));
-      dispatch(breadcrumbsActions.pushBreadcrumb(pathname, loadedProblemSet.name));
+      await dispatch(problemSetActions.getProblemSetBySlug(problemSetSlug));
     };
     loadProblemSet();
 
     return () => {
       dispatch(problemSetActions.clearProblemSet());
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [problemSetSlug]);
 
@@ -48,13 +46,12 @@ export default function SingleProblemSetProblemLayout() {
 
     const loadProblem = async () => {
       await dispatch(problemSetProblemActions.getProblem(problemSet.jid, problemAlias));
-      dispatch(breadcrumbsActions.pushBreadcrumb(pathname + '/' + problemAlias, problemAlias));
+      document.title = createDocumentTitle(`${problemSet.name} / ${problemAlias}`);
     };
     loadProblem();
 
     return () => {
       dispatch(problemSetProblemActions.clearProblem());
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname + '/' + problemAlias));
     };
   }, [problemSet?.jid, problemAlias]);
 

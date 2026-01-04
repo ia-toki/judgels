@@ -1,4 +1,4 @@
-import { useLocation, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,13 +7,12 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
 import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
+import { createDocumentTitle } from '../../../../utils/title';
 
-import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as submissionActions from '../../modules/submissionActions';
 
 export default function SubmissionPage() {
   const { submissionId } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const statementLanguage = useSelector(selectStatementLanguage);
 
@@ -35,7 +34,7 @@ export default function SubmissionPage() {
       ? undefined
       : await dispatch(submissionActions.getSubmissionSourceImage(data.submission.jid));
 
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, 'Submission #' + data.submission.id));
+    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
     setState({
       submissionWithSource: data,
@@ -50,10 +49,6 @@ export default function SubmissionPage() {
 
   useEffect(() => {
     loadSubmission();
-
-    return () => {
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
-    };
   }, []);
 
   const render = () => {

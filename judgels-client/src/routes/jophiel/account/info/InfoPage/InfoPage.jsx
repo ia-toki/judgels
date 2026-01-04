@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
@@ -51,4 +50,4 @@ const mergeProps = (stateProps, dispatchProps) => ({
   onGetInfo: () => dispatchProps.onGetInfo(stateProps.userJid),
   onUpdateInfo: info => dispatchProps.onUpdateInfo(stateProps.userJid, info),
 });
-export default withBreadcrumb('Info')(connect(mapStateToProps, mapDispatchToProps, mergeProps)(InfoPage));
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(InfoPage);

@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import EditorialLanguageWidget from '../../../../../../components/LanguageWidget/EditorialLanguageWidget';
@@ -131,4 +130,4 @@ const mapDispatchToProps = {
   onGetEditorial: contestEditorialActions.getEditorial,
 };
 
-export default withBreadcrumb('Editorial')(connect(mapStateToProps, mapDispatchToProps)(ContestEditorialPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestEditorialPage);
