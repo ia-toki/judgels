@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 import { parse, stringify } from 'query-string';
 
 import { LoadingState } from '../components/LoadingState/LoadingState';
+import { APP_CONFIG } from '../conf';
 import App from './App';
 import Root from './Root';
 import { createContestsRoutes } from './contests/routes';

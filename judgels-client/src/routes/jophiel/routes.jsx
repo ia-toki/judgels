@@ -3,6 +3,7 @@ import { Navigate, Outlet, createRoute, lazyRouteComponent } from '@tanstack/rea
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
 import { isTLX } from '../../conf';
+import { createDocumentTitle } from '../../utils/title';
 import HomePage from '../home/HomePage/HomePage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
@@ -100,12 +101,14 @@ export const createJophielRoutes = appRoute => {
         <ResetPasswordPage />
       </GuestRoute>
     ),
+    head: () => ({ meta: [{ title: createDocumentTitle('Reset password') }] }),
   });
 
   const accountRoute = createRoute({
     getParentRoute: () => jophielRoute,
     path: 'account',
     component: lazyRouteComponent(() => import('./account/AccountLayout')),
+    head: () => ({ meta: [{ title: createDocumentTitle('My account') }] }),
   });
 
   const accountIndexRoute = createRoute({
@@ -118,24 +121,28 @@ export const createJophielRoutes = appRoute => {
     getParentRoute: () => accountRoute,
     path: 'info',
     component: lazyRouteComponent(() => import('./account/info/InfoPage/InfoPage')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Info') }] }),
   });
 
   const accountAvatarRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'avatar',
     component: lazyRouteComponent(() => import('./account/changeAvatar/ChangeAvatarPage/ChangeAvatarPage')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Change avatar') }] }),
   });
 
   const accountPasswordRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'password',
     component: lazyRouteComponent(() => import('./account/resetPassword/ResetPasswordPage/ResetPasswordPage')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Change password') }] }),
   });
 
   const profilesRoute = createRoute({
     getParentRoute: () => jophielRoute,
     path: 'profiles/$username',
     component: lazyRouteComponent(() => import('./profiles/ProfilesLayout')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Profiles') }] }),
   });
 
   const profileIndexRoute = createRoute({

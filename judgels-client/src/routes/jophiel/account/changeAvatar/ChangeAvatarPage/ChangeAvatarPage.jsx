@@ -2,7 +2,6 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
@@ -86,4 +85,4 @@ const mapDispatchToProps = {
   onDeleteAvatar: avatarActions.deleteAvatar,
   onUpdateAvatar: avatarActions.updateAvatar,
 };
-export default withBreadcrumb('Change avatar')(connect(mapStateToProps, mapDispatchToProps)(ChangeAvatarPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ChangeAvatarPage);

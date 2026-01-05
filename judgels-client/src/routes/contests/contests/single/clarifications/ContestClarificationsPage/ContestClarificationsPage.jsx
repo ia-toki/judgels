@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -193,4 +192,4 @@ function ContestClarificationsPage() {
   return render();
 }
 
-export default withBreadcrumb('Clarifications')(ContestClarificationsPage);
+export default ContestClarificationsPage;

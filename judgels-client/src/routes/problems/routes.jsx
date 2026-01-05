@@ -1,10 +1,13 @@
-import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
+
+import { createDocumentTitle } from '../../utils/title';
 
 export const createProblemsRoutes = appRoute => {
   const problemsRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'problems',
-    component: lazyRouteComponent(() => import('./ProblemsLayout')),
+    component: Outlet,
+    head: () => ({ meta: [{ title: createDocumentTitle('Problems') }] }),
   });
 
   const problemsIndexRoute = createRoute({
@@ -56,9 +59,8 @@ export const createProblemsRoutes = appRoute => {
   const problemSetProblemSubmissionsRoute = createRoute({
     getParentRoute: () => problemSetProblemRoute,
     path: 'submissions',
-    component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionLayout')
-    ),
+    component: Outlet,
+    head: () => ({ meta: [{ title: createDocumentTitle('Submissions') }] }),
   });
 
   const problemSetProblemSubmissionsIndexRoute = createRoute({
@@ -89,7 +91,8 @@ export const createProblemsRoutes = appRoute => {
   const problemSetProblemResultsRoute = createRoute({
     getParentRoute: () => problemSetProblemRoute,
     path: 'results',
-    component: lazyRouteComponent(() => import('./problemsets/single/problems/single/results/ProblemResultsLayout')),
+    component: Outlet,
+    head: () => ({ meta: [{ title: createDocumentTitle('Results') }] }),
   });
 
   const problemSetProblemResultsIndexRoute = createRoute({

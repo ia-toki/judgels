@@ -1,33 +1,30 @@
 import { Layers, Properties, TimelineEvents } from '@blueprintjs/icons';
-import { Outlet, useLocation, useParams } from '@tanstack/react-router';
+import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withBreadcrumb } from '../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { isTLX } from '../../../conf';
+import { createDocumentTitle } from '../../../utils/title';
 import { selectUserJid, selectUsername } from '../modules/profileSelectors';
 
-import * as breadcrumbsActions from '../../../modules/breadcrumbs/breadcrumbsActions';
 import * as profileActions from '../modules/profileActions';
 
-function ProfilesLayoutInner() {
+export default function ProfilesLayout() {
   const { username: paramUsername } = useParams({ strict: false });
-  const { pathname } = useLocation();
   const dispatch = useDispatch();
   const userJid = useSelector(selectUserJid);
   const username = useSelector(selectUsername);
 
   useEffect(() => {
     dispatch(profileActions.getUser(paramUsername));
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, paramUsername));
+    document.title = createDocumentTitle(paramUsername);
 
     return () => {
       dispatch(profileActions.clearUser());
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
     };
   }, [paramUsername]);
 
@@ -75,5 +72,3 @@ function ProfilesLayoutInner() {
     </FullPageLayout>
   );
 }
-
-export default withBreadcrumb('Profiles')(ProfilesLayoutInner);

@@ -1,10 +1,13 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { createDocumentTitle } from '../../utils/title';
+
 export const createSubmissionsRoutes = appRoute => {
   const submissionsRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'submissions',
     component: lazyRouteComponent(() => import('./SubmissionsLayout')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Submissions') }] }),
   });
 
   const submissionsIndexRoute = createRoute({

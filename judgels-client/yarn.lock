@@ -2611,7 +2611,7 @@ promise@^8.1.0:
   dependencies:
     asap "~2.0.6"
 
-prop-types@>=15.5.0, prop-types@^15.5.6, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@>=15.5.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -2687,14 +2687,6 @@ react-day-picker@^8.10.0:
   version "8.10.1"
   resolved "https://registry.npmjs.org/react-day-picker/-/react-day-picker-8.10.1.tgz"
   integrity sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==
-
-react-document-title@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/react-document-title/-/react-document-title-2.0.3.tgz"
-  integrity sha512-T5y+quDAybtD7JhvVyc2BDW3a9xj6MoW6/VZU6OJkbASqwEMo5G4nB0RqFJCEHOqjQMcQI+wGRPDhUADnaHlQw==
-  dependencies:
-    prop-types "^15.5.6"
-    react-side-effect "^1.0.2"
 
 react-dom@18.3.1:
   version "18.3.1"
@@ -2789,13 +2781,6 @@ react-refresh@^0.17.0:
   version "0.17.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.17.0.tgz"
   integrity sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==
-
-react-side-effect@^1.0.2:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/react-side-effect/-/react-side-effect-1.2.0.tgz"
-  integrity sha512-v1ht1aHg5k/thv56DRcjw+WtojuuDHFUgGfc+bFHOWsF4ZK6C2V57DO0Or0GPsg6+LSTE0M6Ry/gfzhzSwbc5w==
-  dependencies:
-    shallowequal "^1.0.1"
 
 react-syntax-highlighter@8.1.0:
   version "8.1.0"
@@ -3068,11 +3053,6 @@ set-function-name@^2.0.0:
     define-data-property "^1.0.1"
     functions-have-names "^1.2.3"
     has-property-descriptors "^1.0.0"
-
-shallowequal@^1.0.1:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/shallowequal/-/shallowequal-1.1.0.tgz"
-  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
 shebang-command@^1.2.0:
   version "1.2.0"

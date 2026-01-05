@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { Card } from '../../../../../components/Card/Card';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
@@ -38,4 +37,4 @@ const mapDispatchToProps = {
   onResetPassword: resetPasswordActions.requestToResetPassword,
 };
 
-export default withBreadcrumb('Change password')(connect(undefined, mapDispatchToProps)(ResetPasswordPage));
+export default connect(undefined, mapDispatchToProps)(ResetPasswordPage);

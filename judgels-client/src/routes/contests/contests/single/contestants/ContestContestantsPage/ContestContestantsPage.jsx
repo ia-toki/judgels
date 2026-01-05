@@ -3,7 +3,6 @@ import { Refresh } from '@blueprintjs/icons';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -148,4 +147,4 @@ const mapDispatchToProps = {
   onResetVirtualContest: contestActions.resetVirtualContest,
 };
 
-export default withBreadcrumb('Contestants')(connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage);

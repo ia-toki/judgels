@@ -1,10 +1,13 @@
 import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { createDocumentTitle } from '../../utils/title';
+
 export const createTrainingRoutes = appRoute => {
   const trainingRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'training',
     component: lazyRouteComponent(() => import('./TrainingLayout')),
+    head: () => ({ meta: [{ title: createDocumentTitle('Training') }] }),
   });
 
   const trainingIndexRoute = createRoute({

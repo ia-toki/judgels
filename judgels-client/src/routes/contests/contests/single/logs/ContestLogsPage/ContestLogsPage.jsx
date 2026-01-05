@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -107,4 +106,4 @@ function ContestLogsPage() {
   return render();
 }
 
-export default withBreadcrumb('Logs')(ContestLogsPage);
+export default ContestLogsPage;

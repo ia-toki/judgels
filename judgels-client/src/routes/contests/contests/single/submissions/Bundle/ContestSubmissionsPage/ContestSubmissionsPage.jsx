@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
@@ -179,4 +178,4 @@ function ContestSubmissionsPage() {
   return render();
 }
 
-export default withBreadcrumb('Submissions')(ContestSubmissionsPage);
+export default ContestSubmissionsPage;

@@ -9,6 +9,7 @@ import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLa
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { ContestTab, REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
+import { createDocumentTitle } from '../../../../utils/title';
 import { EditContest } from '../modules/contestReducer';
 import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
@@ -19,7 +20,6 @@ import ContestStateWidget from './components/ContestStateWidget/ContestStateWidg
 import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import { contestIcon } from './modules/contestIcon';
 
-import * as breadcrumbsActions from '../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 
@@ -50,7 +50,7 @@ export default function SingleContestLayout() {
 
     // so that we don't have to wait until we get the contest from backend.
     const { contest: newContest } = await dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
-    dispatch(breadcrumbsActions.pushBreadcrumb(pathname, newContest.name));
+    document.title = createDocumentTitle(newContest.name);
 
     if (!contest || contest.slug !== contestSlug) {
       currentTimeoutRef.current = setTimeout(() => refreshWebConfig(newContest.jid), REFRESH_WEB_CONFIG_INTERVAL);
@@ -63,7 +63,6 @@ export default function SingleContestLayout() {
     return () => {
       dispatch(contestActions.clearContest());
       dispatch(contestWebActions.clearWebConfig());
-      dispatch(breadcrumbsActions.popBreadcrumb(pathname));
 
       if (currentTimeoutRef.current) {
         clearTimeout(currentTimeoutRef.current);

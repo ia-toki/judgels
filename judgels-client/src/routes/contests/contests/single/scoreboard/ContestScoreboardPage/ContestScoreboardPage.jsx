@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withBreadcrumb } from '../../../../../../components/BreadcrumbWrapper/BreadcrumbWrapper';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -340,4 +339,4 @@ function ContestScoreboardPage() {
   return render();
 }
 
-export default withBreadcrumb('Scoreboard')(ContestScoreboardPage);
+export default ContestScoreboardPage;

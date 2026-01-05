@@ -11,7 +11,6 @@ import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
-import * as breadcrumbsActions from '../../../../../../../../modules/breadcrumbs/breadcrumbsActions';
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
@@ -19,7 +18,6 @@ import * as contestProblemActions from '../../../modules/contestProblemActions';
 vi.mock('../../../modules/contestProblemActions');
 vi.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
 vi.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
-vi.mock('../../../../../../../../modules/breadcrumbs/breadcrumbsActions');
 
 describe('ProgrammingContestProblemPage', () => {
   beforeEach(async () => {
@@ -52,8 +50,6 @@ describe('ProgrammingContestProblemPage', () => {
 
     webPrefsActions.updateGradingLanguage.mockReturnValue(() => Promise.resolve({}));
     contestSubmissionActions.createSubmission.mockReturnValue(() => Promise.resolve({}));
-    breadcrumbsActions.pushBreadcrumb.mockReturnValue({ type: 'push' });
-    breadcrumbsActions.popBreadcrumb.mockReturnValue({ type: 'pop' });
 
     const store = createStore(
       combineReducers({
@@ -76,10 +72,6 @@ describe('ProgrammingContestProblemPage', () => {
         </Provider>
       )
     );
-  });
-
-  test('navigation', async () => {
-    expect(breadcrumbsActions.pushBreadcrumb).toHaveBeenCalledWith(`/contests/contestJid/problems/C`, 'Problem C');
   });
 
   test('form', async () => {
