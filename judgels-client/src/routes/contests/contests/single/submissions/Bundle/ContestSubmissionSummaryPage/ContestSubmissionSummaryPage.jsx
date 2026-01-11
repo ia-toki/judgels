@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -5,15 +6,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectContest } from '../../../../modules/contestSelectors';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export default function ContestSubmissionSummaryPage() {
-  const { username } = useParams({ strict: false });
+  const { contestSlug, username } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const contest = useSelector(selectContest);
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const language = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({

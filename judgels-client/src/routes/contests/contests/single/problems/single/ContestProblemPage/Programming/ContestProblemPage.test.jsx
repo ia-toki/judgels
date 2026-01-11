@@ -7,8 +7,10 @@ import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../../../utils/nock';
+import contestReducer from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
@@ -51,6 +53,11 @@ describe('ProgrammingContestProblemPage', () => {
     webPrefsActions.updateGradingLanguage.mockReturnValue(() => Promise.resolve({}));
     contestSubmissionActions.createSubmission.mockReturnValue(() => Promise.resolve({}));
 
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
@@ -58,23 +65,26 @@ describe('ProgrammingContestProblemPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-a' }));
 
-    await act(async () =>
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/contests/contestJid/problems/C']}
-            path="/contests/$contestSlug/problems/$problemAlias"
-          >
-            <ContestProblemPage />
-          </TestRouter>
-        </Provider>
-      )
-    );
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/problems/C']}
+              path="/contests/$contestSlug/problems/$problemAlias"
+            >
+              <ContestProblemPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
+      );
+    });
   });
 
   test('form', async () => {
+    await screen.findByText('Lorem ipsum');
+
     const user = userEvent.setup();
 
     const encoderInput = document.querySelector('input[name="sourceFiles.encoder"]');
@@ -97,7 +107,7 @@ describe('ProgrammingContestProblemPage', () => {
     await user.click(submitButton);
 
     expect(webPrefsActions.updateGradingLanguage).toHaveBeenCalledWith('Cpp11');
-    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-a', 'problemJid', {
+    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-slug', 'problemJid', {
       gradingLanguage: 'Cpp11',
       sourceFiles: {
         encoder: expect.objectContaining({ name: 'encoder.cpp' }),

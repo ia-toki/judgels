@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,8 +8,9 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectContest } from '../../../modules/contestSelectors';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 
@@ -20,8 +22,9 @@ function ContestClarificationsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const contest = useSelector(selectContest);
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const statementLanguage = useSelector(selectStatementLanguage);
 
   const status = location.search.status;

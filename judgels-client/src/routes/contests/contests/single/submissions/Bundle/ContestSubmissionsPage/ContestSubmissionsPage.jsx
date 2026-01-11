@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,8 +13,9 @@ import { FormattedAnswer } from '../../../../../../../components/SubmissionDetai
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
-import { selectContest } from '../../../../modules/contestSelectors';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
@@ -25,8 +27,9 @@ function ContestSubmissionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const contest = useSelector(selectContest);
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;

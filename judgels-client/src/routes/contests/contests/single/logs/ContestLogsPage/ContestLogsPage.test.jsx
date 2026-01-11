@@ -4,8 +4,10 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
+import contestReducer from '../../../modules/contestReducer';
 import ContestLogsPage from './ContestLogsPage';
 
 import * as contestLogActions from '../modules/contestLogActions';
@@ -16,6 +18,11 @@ describe('ContestLogsPage', () => {
   let logs;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestLogActions.getLogs.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -40,15 +47,16 @@ describe('ContestLogsPage', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestLogsPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug/logs']} path="/contests/$contestSlug/logs">
+              <ContestLogsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -59,8 +67,8 @@ describe('ContestLogsPage', () => {
       await renderComponent();
     });
 
-    it('shows placeholder text and no logs', () => {
-      expect(screen.getByText(/no logs/i)).toBeInTheDocument();
+    it('shows placeholder text and no logs', async () => {
+      expect(await screen.findByText(/no logs/i)).toBeInTheDocument();
       expect(screen.queryByRole('row')).not.toBeInTheDocument();
     });
   });
@@ -85,7 +93,8 @@ describe('ContestLogsPage', () => {
       await renderComponent();
     });
 
-    it('shows the logs', () => {
+    it('shows the logs', async () => {
+      await screen.findAllByRole('row');
       const rows = screen.getAllByRole('row').slice(1);
       expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
         ['username1', 'OPEN_PROBLEM', 'A', '1 day ago '],

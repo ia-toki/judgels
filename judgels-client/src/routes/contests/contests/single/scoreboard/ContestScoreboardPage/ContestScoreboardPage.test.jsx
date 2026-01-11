@@ -7,7 +7,9 @@ import { vi } from 'vitest';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestScoreboardPage from './ContestScoreboardPage';
 
@@ -19,6 +21,12 @@ describe('ContestScoreboardPage', () => {
   let scoreboard;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+      style: ContestStyle.ICPC,
+    });
+
     contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(scoreboard));
 
     const store = createStore(
@@ -26,17 +34,18 @@ describe('ContestScoreboardPage', () => {
       applyMiddleware(thunk)
     );
     store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.ICPC }));
 
-    await act(async () =>
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestScoreboardPage />
-          </TestRouter>
-        </Provider>
-      )
-    );
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug/scoreboard']} path="/contests/$contestSlug/scoreboard">
+              <ContestScoreboardPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
+      );
+    });
   };
 
   describe('when there is no scoreboard', () => {
@@ -44,8 +53,8 @@ describe('ContestScoreboardPage', () => {
       await renderComponent();
     });
 
-    it('shows placeholder text and no scoreboard', () => {
-      expect(screen.getByText(/no scoreboard/i)).toBeInTheDocument();
+    it('shows placeholder text and no scoreboard', async () => {
+      expect(await screen.findByText(/no scoreboard/i)).toBeInTheDocument();
     });
   });
 
@@ -74,9 +83,9 @@ describe('ContestScoreboardPage', () => {
       await renderComponent();
     });
 
-    it('shows the scoreboard without frozen notice', () => {
+    it('shows the scoreboard without frozen notice', async () => {
+      expect(await screen.findByRole('table')).toBeInTheDocument();
       expect(screen.queryByText(/FROZEN/)).not.toBeInTheDocument();
-      expect(screen.getByRole('table')).toBeInTheDocument();
     });
   });
 
@@ -105,9 +114,9 @@ describe('ContestScoreboardPage', () => {
       await renderComponent();
     });
 
-    it('shows the scoreboard with frozen notice', () => {
+    it('shows the scoreboard with frozen notice', async () => {
+      expect(await screen.findByRole('table')).toBeInTheDocument();
       expect(screen.getByText(/FROZEN/)).toBeInTheDocument();
-      expect(screen.getByRole('table')).toBeInTheDocument();
     });
   });
 });

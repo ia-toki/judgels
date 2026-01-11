@@ -1,6 +1,7 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { Pause, Refresh } from '@blueprintjs/icons';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,8 +12,9 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
-import { selectContest } from '../../../modules/contestSelectors';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardTable';
 import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
@@ -30,9 +32,10 @@ function ContestScoreboardPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
-  const contest = useSelector(selectContest);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const frozen = !!location.search.frozen;
   const showClosedProblems = !!location.search.showClosedProblems;

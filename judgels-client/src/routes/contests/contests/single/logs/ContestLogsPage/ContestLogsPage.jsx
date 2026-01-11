@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,7 +7,8 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { selectContest } from '../../../modules/contestSelectors';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 
 import * as contestLogActions from '../modules/contestLogActions';
@@ -17,8 +19,10 @@ function ContestLogsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
 
-  const contest = useSelector(selectContest);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;

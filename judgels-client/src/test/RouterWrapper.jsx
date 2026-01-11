@@ -7,6 +7,7 @@ import {
   createRouter,
 } from '@tanstack/react-router';
 import { parse, stringify } from 'query-string';
+import { Suspense } from 'react';
 
 export function createTestRouter(component, initialEntries = ['/']) {
   const rootRoute = createRootRoute({
@@ -37,13 +38,13 @@ export function TestRouter({ children, initialEntries = ['/'], path }) {
     const childRoute = createRoute({
       getParentRoute: () => rootRoute,
       path,
-      component: () => children,
+      component: () => <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>,
     });
     routeTree = rootRoute.addChildren([childRoute]);
   } else {
     // Simple case: just render children at root
     routeTree = createRootRoute({
-      component: () => children,
+      component: () => <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>,
     });
   }
 
