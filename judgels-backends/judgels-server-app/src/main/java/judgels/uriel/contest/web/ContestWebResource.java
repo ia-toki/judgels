@@ -77,4 +77,18 @@ public class ContestWebResource {
         checkAllowed(contestRoleChecker.canView(actorJid, contest));
         return webConfigFetcher.fetchConfig(actorJid, contest);
     }
+
+    @GET
+    @Path("/slug/{contestSlug}/config")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public ContestWebConfig getWebConfigBySlug(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("contestSlug") String contestSlug) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestBySlug(contestSlug));
+        checkAllowed(contestRoleChecker.canView(actorJid, contest));
+        return webConfigFetcher.fetchConfig(actorJid, contest);
+    }
 }

@@ -6,8 +6,10 @@ import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../../../utils/nock';
+import contestReducer from '../../../../../modules/contestReducer';
 import ContestSubmissionPage from './ContestSubmissionPage';
 
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
@@ -28,6 +30,11 @@ describe('ContestSubmissionPage', () => {
       })
     );
 
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
@@ -35,28 +42,25 @@ describe('ContestSubmissionPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(
-      PutContest({
-        jid: 'contestJid',
-      })
-    );
     store.dispatch(PutStatementLanguage('en'));
 
-    await act(async () =>
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/contests/contestSlug/submissions/10']}
-            path="/contests/$contestSlug/submissions/$submissionId"
-          >
-            <ContestSubmissionPage />
-          </TestRouter>
-        </Provider>
-      )
-    );
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/submissions/10']}
+              path="/contests/$contestSlug/submissions/$submissionId"
+            >
+              <ContestSubmissionPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
+      );
+    });
   });
 
-  test('page', () => {
-    expect(screen.getByText(/Submission #10/)).toBeInTheDocument();
+  test('page', async () => {
+    expect(await screen.findByText(/Submission #10/)).toBeInTheDocument();
   });
 });

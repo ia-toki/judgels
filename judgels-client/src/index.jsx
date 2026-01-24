@@ -1,3 +1,6 @@
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -13,12 +16,26 @@ import './styles/index.scss';
 
 initGA();
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
+
+const persister = createAsyncStoragePersister({
+  storage: window.localStorage,
+});
+
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <RouterProvider router={router} />
+      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+        <RouterProvider router={router} />
+      </PersistQueryClientProvider>
     </PersistGate>
   </Provider>
 );

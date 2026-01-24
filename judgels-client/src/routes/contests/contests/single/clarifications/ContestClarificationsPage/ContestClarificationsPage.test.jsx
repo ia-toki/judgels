@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -7,7 +7,9 @@ import { vi } from 'vitest';
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestClarificationsPage from './ContestClarificationsPage';
 
@@ -21,6 +23,11 @@ describe('ContestClarificationsPage', () => {
   let canSupervise;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestClarificationActions.getClarifications.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -54,13 +61,18 @@ describe('ContestClarificationsPage', () => {
     store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
-    return await act(async () =>
+    await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestClarificationsPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/clarifications']}
+              path="/contests/$contestSlug/clarifications"
+            >
+              <ContestClarificationsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -76,7 +88,8 @@ describe('ContestClarificationsPage', () => {
         await renderComponent();
       });
 
-      it('shows no buttons', () => {
+      it('shows no buttons', async () => {
+        await screen.findByRole('heading', { name: 'Clarifications' });
         expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
       });
     });
@@ -88,7 +101,7 @@ describe('ContestClarificationsPage', () => {
       });
 
       it('shows action buttons', async () => {
-        expect(screen.getByRole('button', { name: /new clarification/i })).toBeInTheDocument();
+        expect(await screen.findByRole('button', { name: /new clarification/i })).toBeInTheDocument();
       });
     });
   });
@@ -101,7 +114,7 @@ describe('ContestClarificationsPage', () => {
       });
 
       it('shows placeholder text and no clarifications', async () => {
-        expect(screen.getByText('No clarifications.')).toBeInTheDocument();
+        expect(await screen.findByText('No clarifications.')).toBeInTheDocument();
         expect(document.querySelectorAll('div.contest-clarification-card')).toHaveLength(0);
       });
     });
@@ -139,7 +152,10 @@ describe('ContestClarificationsPage', () => {
           await renderComponent();
         });
 
-        it('shows the clarifications', () => {
+        it('shows the clarifications', async () => {
+          await waitFor(() => {
+            expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
+          });
           const clarifications = document.querySelectorAll('div.contest-clarification-card');
           expect(clarifications).toHaveLength(4);
 
@@ -165,7 +181,10 @@ describe('ContestClarificationsPage', () => {
           await renderComponent();
         });
 
-        it('shows the clarifications', () => {
+        it('shows the clarifications', async () => {
+          await waitFor(() => {
+            expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
+          });
           const clarifications = document.querySelectorAll('div.contest-clarification-card');
           expect(clarifications).toHaveLength(4);
 

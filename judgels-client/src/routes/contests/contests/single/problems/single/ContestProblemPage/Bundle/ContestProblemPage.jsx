@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,17 +7,19 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-import { selectContest } from '../../../../../modules/contestSelectors';
 
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 export default function ContestProblemPage() {
-  const { problemAlias } = useParams({ strict: false });
+  const { contestSlug, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const contest = useSelector(selectContest);
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const statementLanguage = useSelector(selectStatementLanguage);
   const [state, setState] = useState({
     defaultLanguage: undefined,

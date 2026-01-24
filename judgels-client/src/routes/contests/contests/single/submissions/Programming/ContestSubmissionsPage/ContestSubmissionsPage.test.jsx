@@ -4,7 +4,10 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
+import { QueryClientProviderWrapper } from '../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../../utils/nock';
 import contestReducer, { PutContest } from '../../../../modules/contestReducer';
 import ContestSubmissionsPage from './ContestSubmissionsPage';
 
@@ -18,6 +21,12 @@ describe('ContestSubmissionsPage', () => {
   let canManage;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+      style: ContestStyle.ICPC,
+    });
+
     contestSubmissionActions.getSubmissions.mockReturnValue(() =>
       Promise.resolve({
         data: { page: submissions },
@@ -42,17 +51,21 @@ describe('ContestSubmissionsPage', () => {
       combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
 
-    await act(async () =>
+    await act(async () => {
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestSubmissionsPage />
-          </TestRouter>
-        </Provider>
-      )
-    );
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/submissions']}
+              path="/contests/$contestSlug/submissions"
+            >
+              <ContestSubmissionsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
+      );
+    });
   };
 
   describe('when there are no submissions', () => {
@@ -61,8 +74,8 @@ describe('ContestSubmissionsPage', () => {
       await renderComponent();
     });
 
-    it('shows placeholder text and no submissions', () => {
-      expect(screen.getByText(/no submissions/i)).toBeInTheDocument();
+    it('shows placeholder text and no submissions', async () => {
+      expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
       const rows = screen.queryAllByRole('row');
       expect(rows).toHaveLength(0);
     });
@@ -105,7 +118,9 @@ describe('ContestSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows the submissions', () => {
+      it('shows the submissions', async () => {
+        await screen.findAllByRole('row');
+
         const rows = screen.getAllByRole('row').slice(1);
         const data = rows.map(row => {
           const cells = within(row).queryAllByRole('cell');
@@ -126,7 +141,9 @@ describe('ContestSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows the submissions', () => {
+      it('shows the submissions', async () => {
+        await screen.findAllByRole('row');
+
         const rows = screen.getAllByRole('row').slice(1);
         const data = rows.map(row => {
           const cells = within(row).queryAllByRole('cell');
@@ -147,7 +164,9 @@ describe('ContestSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows the submissions', () => {
+      it('shows the submissions', async () => {
+        await screen.findAllByRole('row');
+
         const rows = screen.getAllByRole('row').slice(1);
         const data = rows.map(row => {
           const cells = within(row).queryAllByRole('cell');

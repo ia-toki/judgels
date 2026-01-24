@@ -1,20 +1,21 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { useSelector } from 'react-redux';
 
 import { ContestStyle } from '../../../../../modules/api/uriel/contest';
 import { ContestRole } from '../../../../../modules/api/uriel/contestWeb';
-import { selectContest } from '../../modules/contestSelectors';
-import { selectContestWebConfig } from '../../modules/contestWebConfigSelectors';
+import { contestBySlugQueryOptions } from '../../../../../modules/queries/contest';
+import { contestWebConfigQueryOptions } from '../../../../../modules/queries/contestWeb';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import BundleContestSubmissionSummaryPage from './Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';
 import BundleContestSubmissionsPage from './Bundle/ContestSubmissionsPage/ContestSubmissionsPage';
 import ProgrammingContestSubmissionsPage from './Programming/ContestSubmissionsPage/ContestSubmissionsPage';
 
 export default function ContestSubmissionsPage() {
-  const contest = useSelector(selectContest);
-  const webConfig = useSelector(selectContestWebConfig);
-
-  if (!contest || !webConfig) {
-    return null;
-  }
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
 
   if (contest.style === ContestStyle.Bundle) {
     if (webConfig.role === ContestRole.Contestant) {

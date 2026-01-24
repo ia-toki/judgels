@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -9,8 +9,10 @@ import { ItemType } from '../../../../../../../../modules/api/sandalphon/problem
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
 import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../../../utils/nock';
+import contestReducer from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
@@ -60,6 +62,12 @@ describe('BundleContestProblemPage', () => {
     contestSubmissionActions.createItemSubmission.mockReturnValue(() => Promise.resolve({}));
     contestSubmissionActions.getLatestSubmissions.mockReturnValue(() => Promise.resolve({}));
 
+    nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+      style: ContestStyle.Bundle,
+    });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
@@ -67,23 +75,26 @@ describe('BundleContestProblemPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid', style: ContestStyle.Bundle }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/contests/contestJid/problems/C']}
-            path="/contests/$contestSlug/problems/$problemAlias"
-          >
-            <ContestProblemPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/problems/C']}
+              path="/contests/$contestSlug/problems/$problemAlias"
+            >
+              <ContestProblemPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   });
 
   test('form', async () => {
+    await screen.findByText('somestatement');
+
     const user = userEvent.setup();
 
     const input = document.querySelector('.problem-multiple-choice-item-choice input');
