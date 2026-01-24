@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -13,28 +13,31 @@ import * as contestManagerActions from '../modules/contestManagerActions';
 
 import './ContestManagersPage.scss';
 
-class ContestManagersPage extends Component {
-  static PAGE_SIZE = 250;
+const PAGE_SIZE = 250;
 
-  state = {
+export default function ContestManagersPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+
+  const [state, setState] = useState({
     response: undefined,
     lastRefreshManagersTime: 0,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Managers</h3>
         <hr />
-        {this.renderAddRemoveDialogs()}
-        {this.renderManagers()}
-        {this.renderPagination()}
+        {renderAddRemoveDialogs()}
+        {renderManagers()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderManagers = () => {
-    const { response } = this.state;
+  const renderManagers = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -51,29 +54,26 @@ class ContestManagersPage extends Component {
     return <ContestManagersTable managers={managers.page} profilesMap={profilesMap} />;
   };
 
-  renderPagination = () => {
-    // updates pagination when managers are refreshed
-    const { lastRefreshManagersTime } = this.state;
+  const renderPagination = () => {
+    const { lastRefreshManagersTime } = state;
     const key = lastRefreshManagersTime || 0;
 
-    return (
-      <Pagination key={key} currentPage={1} pageSize={ContestManagersPage.PAGE_SIZE} onChangePage={this.onChangePage} />
-    );
+    return <Pagination key={key} currentPage={1} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshManagers(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshManagers(nextPage);
     return data.totalCount;
   };
 
-  refreshManagers = async page => {
-    const response = await this.props.onGetManagers(this.props.contest.jid, page);
-    this.setState({ response });
+  const refreshManagers = async page => {
+    const response = await dispatch(contestManagerActions.getManagers(contest.jid, page));
+    setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
 
-  renderAddRemoveDialogs = () => {
-    const { response } = this.state;
+  const renderAddRemoveDialogs = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -82,34 +82,24 @@ class ContestManagersPage extends Component {
     }
     return (
       <div className="content-card__header">
-        <ContestManagerAddDialog contest={this.props.contest} onUpsertManagers={this.upsertManagers} />
-        <ContestManagerRemoveDialog contest={this.props.contest} onDeleteManagers={this.deleteManagers} />
+        <ContestManagerAddDialog contest={contest} onUpsertManagers={upsertManagers} />
+        <ContestManagerRemoveDialog contest={contest} onDeleteManagers={deleteManagers} />
         <div className="clearfix" />
       </div>
     );
   };
 
-  upsertManagers = async (contestJid, data) => {
-    const response = await this.props.onUpsertManagers(contestJid, data);
-    this.setState({ lastRefreshManagersTime: new Date().getTime() });
+  const upsertManagers = async (contestJid, data) => {
+    const response = await dispatch(contestManagerActions.upsertManagers(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
     return response;
   };
 
-  deleteManagers = async (contestJid, data) => {
-    const response = await this.props.onDeleteManagers(contestJid, data);
-    this.setState({ lastRefreshManagersTime: new Date().getTime() });
+  const deleteManagers = async (contestJid, data) => {
+    const response = await dispatch(contestManagerActions.deleteManagers(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
     return response;
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetManagers: contestManagerActions.getManagers,
-  onUpsertManagers: contestManagerActions.upsertManagers,
-  onDeleteManagers: contestManagerActions.deleteManagers,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestManagersPage);

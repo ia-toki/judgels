@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -9,28 +9,38 @@ import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
 
 import * as contestFileActions from '../modules/contestFileActions';
 
-class ContestFilesPage extends Component {
-  state = {
+export default function ContestFilesPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const refreshFiles = async () => {
+    const data = await dispatch(contestFileActions.getFiles(contest.jid));
+    setState({
+      response: data,
+    });
   };
 
-  async componentDidMount() {
-    await this.refreshFiles();
-  }
+  useEffect(() => {
+    refreshFiles();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Files</h3>
         <hr />
-        {this.renderUploadCard()}
-        {this.renderFiles()}
+        {renderUploadCard()}
+        {renderFiles()}
       </ContentCard>
     );
-  }
+  };
 
-  renderUploadCard = () => {
-    const { response } = this.state;
+  const renderUploadCard = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -38,11 +48,11 @@ class ContestFilesPage extends Component {
     if (!config.canManage) {
       return null;
     }
-    return <ContestFileUploadCard onSubmit={this.uploadFile} />;
+    return <ContestFileUploadCard onSubmit={uploadFile} />;
   };
 
-  renderFiles = () => {
-    const { response } = this.state;
+  const renderFiles = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -56,27 +66,13 @@ class ContestFilesPage extends Component {
       );
     }
 
-    return <ContestFilesTable contest={this.props.contest} files={files} />;
+    return <ContestFilesTable contest={contest} files={files} />;
   };
 
-  uploadFile = async data => {
-    await this.props.onUploadFile(this.props.contest.jid, data.file);
-    await this.refreshFiles();
+  const uploadFile = async data => {
+    await dispatch(contestFileActions.uploadFile(contest.jid, data.file));
+    await refreshFiles();
   };
 
-  refreshFiles = async () => {
-    const response = await this.props.onGetFiles(this.props.contest.jid);
-    this.setState({ response });
-  };
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetFiles: contestFileActions.getFiles,
-  onUploadFile: contestFileActions.uploadFile,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestFilesPage);

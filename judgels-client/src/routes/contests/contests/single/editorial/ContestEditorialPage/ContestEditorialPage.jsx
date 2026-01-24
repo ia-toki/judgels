@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -13,51 +13,45 @@ import { selectContest } from '../../../modules/contestSelectors';
 
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
-class ContestEditorialPage extends Component {
-  state = {
+export default function ContestEditorialPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+  const editorialLanguage = useSelector(selectEditorialLanguage);
+
+  const [state, setState] = useState({
     response: undefined,
     defaultLanguage: undefined,
     uniqueLanguages: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    await this.refreshEditorial();
-  }
+  const loadEditorial = async () => {
+    const response = await dispatch(contestEditorialActions.getEditorial(contest.jid, editorialLanguage));
+    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemEditorialsMap, editorialLanguage);
 
-  async componentDidUpdate(prevProps) {
-    const { response } = this.state;
-    if (this.props.editorialLanguage !== prevProps.editorialLanguage && response) {
-      await this.refreshEditorial();
-    }
-  }
-
-  refreshEditorial = async () => {
-    const response = await this.props.onGetEditorial(this.props.contest.jid, this.props.editorialLanguage);
-    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
-      response.problemEditorialsMap,
-      this.props.editorialLanguage
-    );
-
-    this.setState({
+    setState({
       response,
       defaultLanguage,
       uniqueLanguages,
     });
   };
 
-  render() {
+  useEffect(() => {
+    loadEditorial();
+  }, [editorialLanguage]);
+
+  const render = () => {
     return (
       <ContentCard>
         <h3>Editorial</h3>
         <hr />
-        {this.renderEditorialLanguageWidget()}
-        {this.renderEditorial()}
+        {renderEditorialLanguageWidget()}
+        {renderEditorial()}
       </ContentCard>
     );
-  }
+  };
 
-  renderEditorialLanguageWidget = () => {
-    const { defaultLanguage, uniqueLanguages } = this.state;
+  const renderEditorialLanguageWidget = () => {
+    const { defaultLanguage, uniqueLanguages } = state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
@@ -69,8 +63,8 @@ class ContestEditorialPage extends Component {
     return <EditorialLanguageWidget {...props} />;
   };
 
-  renderEditorial = () => {
-    const { response } = this.state;
+  const renderEditorial = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -79,11 +73,11 @@ class ContestEditorialPage extends Component {
 
     return (
       <div className="contest-editorial">
-        {this.renderPreface(preface, profilesMap)}
+        {renderPreface(preface, profilesMap)}
         {problems
           .filter(p => problemMetadatasMap[p.problemJid].hasEditorial)
           .map(p =>
-            this.renderProblemEditorial(
+            renderProblemEditorial(
               p,
               problemsMap[p.problemJid],
               problemEditorialsMap[p.problemJid],
@@ -95,7 +89,7 @@ class ContestEditorialPage extends Component {
     );
   };
 
-  renderPreface = (preface, profilesMap) => {
+  const renderPreface = (preface, profilesMap) => {
     if (!preface) {
       return null;
     }
@@ -106,11 +100,11 @@ class ContestEditorialPage extends Component {
     );
   };
 
-  renderProblemEditorial = (problem, problemInfo, editorial, metadata, profilesMap) => {
+  const renderProblemEditorial = (problem, problemInfo, editorial, metadata, profilesMap) => {
     return (
-      <ContentCard key={problem.problemJid + this.state.defaultLanguage}>
+      <ContentCard key={problem.problemJid + state.defaultLanguage}>
         <ProblemEditorial
-          title={`${problem.alias}. ${getProblemName(problemInfo, this.state.defaultLanguage)}`}
+          title={`${problem.alias}. ${getProblemName(problemInfo, state.defaultLanguage)}`}
           settersMap={metadata.settersMap}
           profilesMap={profilesMap}
         >
@@ -119,15 +113,6 @@ class ContestEditorialPage extends Component {
       </ContentCard>
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  editorialLanguage: selectEditorialLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetEditorial: contestEditorialActions.getEditorial,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestEditorialPage);
