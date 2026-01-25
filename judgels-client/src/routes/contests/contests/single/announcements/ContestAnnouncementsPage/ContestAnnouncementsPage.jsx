@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -12,34 +12,37 @@ import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/
 
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
-class ContestAnnouncementsPage extends Component {
-  static PAGE_SIZE = 20;
+const PAGE_SIZE = 20;
 
-  state = {
+export default function ContestAnnouncementsPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+
+  const [state, setState] = useState({
     response: undefined,
     lastRefreshAnnouncementsTime: 0,
     openEditDialogAnnouncement: undefined,
-  };
+  });
 
-  componentDidMount() {
+  useEffect(() => {
     askDesktopNotificationPermission();
-  }
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Announcements</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderAnnouncements()}
-        {this.renderPagination()}
-        {this.renderEditDialog()}
+        {renderCreateDialog()}
+        {renderAnnouncements()}
+        {renderPagination()}
+        {renderEditDialog()}
       </ContentCard>
     );
-  }
+  };
 
-  renderAnnouncements = () => {
-    const { response, openEditDialogAnnouncement } = this.state;
+  const renderAnnouncements = () => {
+    const { response, openEditDialogAnnouncement } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -58,54 +61,47 @@ class ContestAnnouncementsPage extends Component {
     return announcements.page.map(announcement => (
       <div className="content-card__section" key={announcement.jid}>
         <ContestAnnouncementCard
-          contest={this.props.contest}
+          contest={contest}
           announcement={announcement}
           canSupervise={canSupervise}
           canManage={canManage}
           profile={canSupervise ? profilesMap[announcement.userJid] : undefined}
           isEditDialogOpen={!openEditDialogAnnouncement ? false : announcement.jid === openEditDialogAnnouncement.jid}
-          onToggleEditDialog={this.toggleEditDialog}
+          onToggleEditDialog={toggleEditDialog}
         />
       </div>
     ));
   };
 
-  renderPagination = () => {
-    // updates pagination when announcements are refreshed
-    const { lastRefreshAnnouncementsTime } = this.state;
+  const renderPagination = () => {
+    const { lastRefreshAnnouncementsTime } = state;
 
-    return (
-      <Pagination
-        key={lastRefreshAnnouncementsTime}
-        pageSize={ContestAnnouncementsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={lastRefreshAnnouncementsTime} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshAnnouncements(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshAnnouncements(nextPage);
     return data.totalCount;
   };
 
-  refreshAnnouncements = async page => {
-    const response = await this.props.onGetAnnouncements(this.props.contest.jid, page);
-    this.setState({ response });
+  const refreshAnnouncements = async page => {
+    const response = await dispatch(contestAnnouncementActions.getAnnouncements(contest.jid, page));
+    setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
 
-  createAnnouncement = async (contestJid, data) => {
-    await this.props.onCreateAnnouncement(contestJid, data);
-    this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
+  const createAnnouncement = async (contestJid, data) => {
+    await dispatch(contestAnnouncementActions.createAnnouncement(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
   };
 
-  updateAnnouncement = async (contestJid, announcementJid, data) => {
-    await this.props.onUpdateAnnouncement(contestJid, announcementJid, data);
-    this.setState({ lastRefreshAnnouncementsTime: new Date().getTime() });
+  const updateAnnouncement = async (contestJid, announcementJid, data) => {
+    await dispatch(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
   };
 
-  renderCreateDialog = () => {
-    const { response } = this.state;
+  const renderCreateDialog = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -113,13 +109,11 @@ class ContestAnnouncementsPage extends Component {
       return null;
     }
 
-    return (
-      <ContestAnnouncementCreateDialog contest={this.props.contest} onCreateAnnouncement={this.createAnnouncement} />
-    );
+    return <ContestAnnouncementCreateDialog contest={contest} onCreateAnnouncement={createAnnouncement} />;
   };
 
-  renderEditDialog = () => {
-    const { response, openEditDialogAnnouncement } = this.state;
+  const renderEditDialog = () => {
+    const { response, openEditDialogAnnouncement } = state;
     if (!response) {
       return null;
     }
@@ -129,27 +123,17 @@ class ContestAnnouncementsPage extends Component {
 
     return (
       <ContestAnnouncementEditDialog
-        contest={this.props.contest}
+        contest={contest}
         announcement={openEditDialogAnnouncement}
-        onToggleEditDialog={this.toggleEditDialog}
-        onUpdateAnnouncement={this.updateAnnouncement}
+        onToggleEditDialog={toggleEditDialog}
+        onUpdateAnnouncement={updateAnnouncement}
       />
     );
   };
 
-  toggleEditDialog = announcement => {
-    this.setState({ openEditDialogAnnouncement: announcement });
+  const toggleEditDialog = announcement => {
+    setState(prevState => ({ ...prevState, openEditDialogAnnouncement: announcement }));
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetAnnouncements: contestAnnouncementActions.getAnnouncements,
-  onCreateAnnouncement: contestAnnouncementActions.createAnnouncement,
-  onUpdateAnnouncement: contestAnnouncementActions.updateAnnouncement,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestAnnouncementsPage);

@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -11,33 +11,40 @@ import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.scss';
 
-class ContestOverviewPage extends Component {
-  state = {
-    response: undefined,
-  };
+export default function ContestOverviewPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
 
-  async componentDidMount() {
-    const response = await this.props.onGetContestDescription(this.props.contest.jid);
-    this.setState({
+  const [state, setState] = useState({
+    response: undefined,
+  });
+
+  const loadDescription = async () => {
+    const response = await dispatch(contestActions.getContestDescription(contest.jid));
+    setState({
       response,
     });
-  }
+  };
 
-  render() {
+  useEffect(() => {
+    loadDescription();
+  }, []);
+
+  const render = () => {
     return (
       <>
-        {this.renderRegistration()}
-        {this.renderDescription()}
+        {renderRegistration()}
+        {renderDescription()}
       </>
     );
-  }
+  };
 
-  renderRegistration = () => {
+  const renderRegistration = () => {
     return <ContestRegistrationCard />;
   };
 
-  renderDescription = () => {
-    const { response } = this.state;
+  const renderDescription = () => {
+    const { response } = state;
 
     if (response === undefined) {
       return <LoadingState />;
@@ -54,13 +61,6 @@ class ContestOverviewPage extends Component {
       </ContentCard>
     );
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetContestDescription: contestActions.getContestDescription,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestOverviewPage);

@@ -1,7 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -17,28 +17,31 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 
 import './ContestContestantsPage.scss';
 
-class ContestContestantsPage extends Component {
-  static PAGE_SIZE = 1000;
+const PAGE_SIZE = 1000;
 
-  state = {
+export default function ContestContestantsPage() {
+  const dispatch = useDispatch();
+  const contest = useSelector(selectContest);
+
+  const [state, setState] = useState({
     response: undefined,
     lastRefreshContestantsTime: 0,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Contestants</h3>
         <hr />
-        {this.renderAddRemoveDialogs()}
-        {this.renderContestants()}
-        {this.renderPagination()}
+        {renderAddRemoveDialogs()}
+        {renderContestants()}
+        {renderPagination()}
       </ContentCard>
     );
-  }
+  };
 
-  renderContestants = () => {
-    const { response } = this.state;
+  const renderContestants = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -52,7 +55,6 @@ class ContestContestantsPage extends Component {
       );
     }
 
-    const { contest } = this.props;
     return (
       <ContestContestantsTable
         contest={contest}
@@ -64,31 +66,25 @@ class ContestContestantsPage extends Component {
     );
   };
 
-  renderPagination = () => {
-    const { lastRefreshContestantsTime } = this.state;
+  const renderPagination = () => {
+    const { lastRefreshContestantsTime } = state;
 
-    return (
-      <Pagination
-        key={lastRefreshContestantsTime}
-        pageSize={ContestContestantsPage.PAGE_SIZE}
-        onChangePage={this.onChangePage}
-      />
-    );
+    return <Pagination key={lastRefreshContestantsTime} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshContestants(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshContestants(nextPage);
     return data.totalCount;
   };
 
-  refreshContestants = async page => {
-    const response = await this.props.onGetContestants(this.props.contest.jid, page);
-    this.setState({ response });
+  const refreshContestants = async page => {
+    const response = await dispatch(contestContestantActions.getContestants(contest.jid, page));
+    setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
 
-  renderAddRemoveDialogs = () => {
-    const { response } = this.state;
+  const renderAddRemoveDialogs = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -99,14 +95,14 @@ class ContestContestantsPage extends Component {
     const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
       <div className="content-card__header">
-        <ContestContestantAddDialog contest={this.props.contest} onUpsertContestants={this.upsertContestants} />
-        <ContestContestantRemoveDialog contest={this.props.contest} onDeleteContestants={this.deleteContestants} />
+        <ContestContestantAddDialog contest={contest} onUpsertContestants={upsertContestants} />
+        <ContestContestantRemoveDialog contest={contest} onDeleteContestants={deleteContestants} />
         {isVirtualContest && (
           <Button
             className="contest-contestant-dialog-button"
             intent={Intent.DANGER}
             icon={<Refresh />}
-            onClick={this.onResetVirtualContest}
+            onClick={onResetVirtualContest}
           >
             Reset all contestant virtual start times
           </Button>
@@ -116,35 +112,24 @@ class ContestContestantsPage extends Component {
     );
   };
 
-  onResetVirtualContest = async () => {
+  const onResetVirtualContest = async () => {
     if (reallyConfirm('Are you sure to reset all contestant virtual start times?')) {
-      await this.props.onResetVirtualContest(this.props.contest.jid);
-      this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+      await dispatch(contestActions.resetVirtualContest(contest.jid));
+      setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     }
   };
 
-  upsertContestants = async (contestJid, data) => {
-    const response = await this.props.onUpsertContestants(contestJid, data);
-    this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+  const upsertContestants = async (contestJid, data) => {
+    const response = await dispatch(contestContestantActions.upsertContestants(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     return response;
   };
 
-  deleteContestants = async (contestJid, data) => {
-    const response = await this.props.onDeleteContestants(contestJid, data);
-    this.setState({ lastRefreshContestantsTime: new Date().getTime() });
+  const deleteContestants = async (contestJid, data) => {
+    const response = await dispatch(contestContestantActions.deleteContestants(contestJid, data));
+    setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     return response;
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-
-const mapDispatchToProps = {
-  onGetContestants: contestContestantActions.getContestants,
-  onUpsertContestants: contestContestantActions.upsertContestants,
-  onDeleteContestants: contestContestantActions.deleteContestants,
-  onResetVirtualContest: contestActions.resetVirtualContest,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestContestantsPage);
