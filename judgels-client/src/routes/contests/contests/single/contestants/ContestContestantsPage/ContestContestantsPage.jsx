@@ -1,13 +1,16 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../utils/confirmation';
-import { selectContest } from '../../../modules/contestSelectors';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
 import { ContestContestantsTable } from '../ContestContestantsTable/ContestContestantsTable';
@@ -20,8 +23,10 @@ import './ContestContestantsPage.scss';
 const PAGE_SIZE = 1000;
 
 export default function ContestContestantsPage() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const contest = useSelector(selectContest);
 
   const [state, setState] = useState({
     response: undefined,

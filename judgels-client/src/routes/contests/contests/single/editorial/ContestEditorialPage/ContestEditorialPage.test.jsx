@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
@@ -7,8 +7,9 @@ import { vi } from 'vitest';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditorialPage from './ContestEditorialPage';
 
 import * as contestEditorialActions from '../modules/contestEditorialActions';
@@ -17,6 +18,11 @@ vi.mock('../modules/contestEditorialActions');
 
 describe('ContestEditorialPage', () => {
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestEditorialActions.getEditorial.mockReturnValue(() =>
       Promise.resolve({
         preface: '<p>Thanks for participating.</p>',
@@ -96,21 +102,21 @@ describe('ContestEditorialPage', () => {
       combineReducers({
         session: sessionReducer,
         webPrefs: webPrefsReducer,
-        uriel: combineReducers({ contest: contestReducer }),
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
     store.dispatch(PutEditorialLanguage('en'));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestEditorialPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug/editorial']} path="/contests/$contestSlug/editorial">
+              <ContestEditorialPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -120,7 +126,10 @@ describe('ContestEditorialPage', () => {
       await renderComponent();
     });
 
-    it('shows the editorial', () => {
+    it('shows the editorial', async () => {
+      await waitFor(() => {
+        expect(document.querySelector('.contest-editorial')).toBeInTheDocument();
+      });
       expect(document.querySelector('.contest-editorial')).toHaveTextContent(
         '' +
           'Thanks for participating.' +

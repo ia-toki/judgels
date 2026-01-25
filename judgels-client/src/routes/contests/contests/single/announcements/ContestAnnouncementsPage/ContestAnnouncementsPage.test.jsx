@@ -1,11 +1,13 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
 import ContestAnnouncementsPage from './ContestAnnouncementsPage';
 
 import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
@@ -18,6 +20,11 @@ describe('ContestAnnouncementsPage', () => {
   let canManage;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -34,19 +41,21 @@ describe('ContestAnnouncementsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
+    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestAnnouncementsPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/announcements']}
+              path="/contests/$contestSlug/announcements"
+            >
+              <ContestAnnouncementsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -62,7 +71,8 @@ describe('ContestAnnouncementsPage', () => {
         await renderComponent();
       });
 
-      it('shows no buttons', () => {
+      it('shows no buttons', async () => {
+        await screen.findByRole('heading', { name: 'Announcements' });
         expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
       });
     });
@@ -73,8 +83,8 @@ describe('ContestAnnouncementsPage', () => {
         await renderComponent();
       });
 
-      it('shows action buttons', () => {
-        expect(screen.getByRole('button', { name: /new announcement/i })).toBeInTheDocument();
+      it('shows action buttons', async () => {
+        expect(await screen.findByRole('button', { name: /new announcement/i })).toBeInTheDocument();
       });
     });
   });
@@ -86,8 +96,8 @@ describe('ContestAnnouncementsPage', () => {
         await renderComponent();
       });
 
-      it('shows placeholder text and no announcements', () => {
-        expect(screen.getByText(/no announcements/i)).toBeInTheDocument();
+      it('shows placeholder text and no announcements', async () => {
+        expect(await screen.findByText('No announcements.')).toBeInTheDocument();
         expect(document.querySelectorAll('div.contest-announcement-card')).toHaveLength(0);
       });
     });
@@ -119,7 +129,10 @@ describe('ContestAnnouncementsPage', () => {
           await renderComponent();
         });
 
-        it('shows the announcements', () => {
+        it('shows the announcements', async () => {
+          await waitFor(() => {
+            expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+          });
           const announcements = document.querySelectorAll('div.contest-announcement-card');
           expect(announcements).toHaveLength(2);
 
@@ -140,7 +153,10 @@ describe('ContestAnnouncementsPage', () => {
           await renderComponent();
         });
 
-        it('shows the announcements', () => {
+        it('shows the announcements', async () => {
+          await waitFor(() => {
+            expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+          });
           const announcements = document.querySelectorAll('div.contest-announcement-card');
           expect(announcements).toHaveLength(2);
 
@@ -161,7 +177,10 @@ describe('ContestAnnouncementsPage', () => {
           await renderComponent();
         });
 
-        it('shows the announcements', () => {
+        it('shows the announcements', async () => {
+          await waitFor(() => {
+            expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+          });
           const announcements = document.querySelectorAll('div.contest-announcement-card');
           expect(announcements).toHaveLength(2);
 
