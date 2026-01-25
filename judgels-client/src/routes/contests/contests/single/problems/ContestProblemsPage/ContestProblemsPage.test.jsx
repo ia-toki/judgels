@@ -8,8 +8,9 @@ import { vi } from 'vitest';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
 import ContestProblemsPage from './ContestProblemsPage';
 
 import * as contestProblemActions from '../modules/contestProblemActions';
@@ -21,6 +22,11 @@ describe('ContestProblemsPage', () => {
   let canManage;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestProblemActions.getProblems.mockReturnValue(() =>
       Promise.resolve({
         data: problems,
@@ -55,21 +61,21 @@ describe('ContestProblemsPage', () => {
       combineReducers({
         session: sessionReducer,
         webPrefs: webPrefsReducer,
-        uriel: combineReducers({ contest: contestReducer }),
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
     store.dispatch(PutStatementLanguage('en'));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestProblemsPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug/problems']} path="/contests/$contestSlug/problems">
+              <ContestProblemsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
 

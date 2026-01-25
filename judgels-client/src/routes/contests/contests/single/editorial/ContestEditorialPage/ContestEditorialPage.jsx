@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
@@ -8,14 +10,17 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { ProblemEditorial } from '../../../../../../components/ProblemEditorial/ProblemEditorial';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { selectEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectContest } from '../../../modules/contestSelectors';
 
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
 export default function ContestEditorialPage() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const contest = useSelector(selectContest);
   const editorialLanguage = useSelector(selectEditorialLanguage);
 
   const [state, setState] = useState({

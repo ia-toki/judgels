@@ -1,11 +1,13 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
 import ContestSupervisorsPage from './ContestSupervisorsPage';
 
 import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
@@ -16,6 +18,11 @@ describe('ContestSupervisorsPage', () => {
   let supervisors;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestSupervisorActions.getSupervisors.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -28,19 +35,21 @@ describe('ContestSupervisorsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
+    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestSupervisorsPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/supervisors']}
+              path="/contests/$contestSlug/supervisors"
+            >
+              <ContestSupervisorsPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -51,8 +60,8 @@ describe('ContestSupervisorsPage', () => {
       await renderComponent();
     });
 
-    it('shows action buttons', () => {
-      expect(screen.getByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
+    it('shows action buttons', async () => {
+      expect(await screen.findByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();
     });
   });
@@ -64,8 +73,8 @@ describe('ContestSupervisorsPage', () => {
         await renderComponent();
       });
 
-      it('shows placeholder text and no supervisors', () => {
-        expect(screen.getByText(/no supervisors/i)).toBeInTheDocument();
+      it('shows placeholder text and no supervisors', async () => {
+        expect(await screen.findByText(/no supervisors/i)).toBeInTheDocument();
         const rows = screen.queryAllByRole('row');
         expect(rows).toHaveLength(0);
       });
@@ -86,7 +95,10 @@ describe('ContestSupervisorsPage', () => {
         await renderComponent();
       });
 
-      it('shows the supervisors', () => {
+      it('shows the supervisors', async () => {
+        await waitFor(() => {
+          expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
+        });
         const rows = screen.getAllByRole('row').slice(1);
         expect(
           rows.map(row =>

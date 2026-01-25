@@ -1,11 +1,13 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
 import ContestManagersPage from './ContestManagersPage';
 
 import * as contestManagerActions from '../modules/contestManagerActions';
@@ -17,6 +19,11 @@ describe('ContestManagersPage', () => {
   let canManage;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestManagerActions.getManagers.mockReturnValue(() =>
       Promise.resolve({
         data: {
@@ -32,19 +39,18 @@ describe('ContestManagersPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
+    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestManagersPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug/managers']} path="/contests/$contestSlug/managers">
+              <ContestManagersPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -60,7 +66,8 @@ describe('ContestManagersPage', () => {
         await renderComponent();
       });
 
-      it('shows no buttons', () => {
+      it('shows no buttons', async () => {
+        await screen.findByRole('heading', { name: 'Managers' });
         expect(screen.queryByRole('button', { name: /add managers/i })).not.toBeInTheDocument();
         expect(screen.queryByRole('button', { name: /remove managers/i })).not.toBeInTheDocument();
       });
@@ -72,8 +79,8 @@ describe('ContestManagersPage', () => {
         await renderComponent();
       });
 
-      it('shows action buttons', () => {
-        expect(screen.getByRole('button', { name: /add managers/i })).toBeInTheDocument();
+      it('shows action buttons', async () => {
+        expect(await screen.findByRole('button', { name: /add managers/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
       });
     });
@@ -86,8 +93,8 @@ describe('ContestManagersPage', () => {
         await renderComponent();
       });
 
-      it('shows placeholder text and no managers', () => {
-        expect(screen.getByText(/no managers/i)).toBeInTheDocument();
+      it('shows placeholder text and no managers', async () => {
+        expect(await screen.findByText(/no managers/i)).toBeInTheDocument();
         expect(screen.queryByRole('row')).not.toBeInTheDocument();
       });
     });
@@ -105,7 +112,10 @@ describe('ContestManagersPage', () => {
         await renderComponent();
       });
 
-      it('shows the managers', () => {
+      it('shows the managers', async () => {
+        await waitFor(() => {
+          expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
+        });
         const rows = screen.getAllByRole('row').slice(1);
         expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
           ['username1'],
