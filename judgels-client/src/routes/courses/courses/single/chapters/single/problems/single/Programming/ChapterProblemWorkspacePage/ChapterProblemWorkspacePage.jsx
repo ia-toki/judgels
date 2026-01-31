@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
@@ -15,15 +15,26 @@ import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs
 import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
-class ChapterProblemWorkspacePageInner extends Component {
-  state = {
-    shouldResetEditor: false,
-  };
+export default function ChapterProblemWorkspacePage() {
+  const { worksheet, renderNavigation } = useChapterProblemContext();
+  const course = useSelector(selectCourse);
+  const chapter = useSelector(selectCourseChapter);
+  const gradingLanguage = useSelector(selectGradingLanguage);
+  const dispatch = useDispatch();
 
-  createSubmission = async data => {
-    const { worksheet, course, chapter, onCreateSubmission, onUpdateGradingLanguage } = this.props;
+  const [state, setState] = useState({
+    shouldResetEditor: false,
+  });
+
+  useEffect(() => {
+    if (state.shouldResetEditor === null) {
+      setState(prevState => ({ ...prevState, shouldResetEditor: true }));
+    }
+  }, [state.shouldResetEditor]);
+
+  const createSubmission = async data => {
     const { problem } = worksheet;
-    onUpdateGradingLanguage(data.gradingLanguage);
+    dispatch(webPrefsActions.updateGradingLanguage(data.gradingLanguage));
 
     sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: course.name });
     sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: chapter.name });
@@ -40,26 +51,29 @@ class ChapterProblemWorkspacePageInner extends Component {
       });
     }
 
-    const submission = await onCreateSubmission(chapter.jid, problem.problemJid, data);
+    const submission = await dispatch(
+      chapterProblemSubmissionActions.createSubmission(chapter.jid, problem.problemJid, data)
+    );
     return {
       submission,
       submissionUrl: `/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}/submissions/${submission.id}`,
     };
   };
 
-  resetEditor = () => {
+  const getSubmission = submissionJid => dispatch(chapterProblemSubmissionActions.getSubmission(submissionJid));
+
+  const reloadProblem = () => dispatch(chapterProblemActions.reloadProblem());
+
+  const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {
-      this.setState({ shouldResetEditor: null }, () => {
-        this.setState({ shouldResetEditor: true });
-      });
+      setState(prevState => ({ ...prevState, shouldResetEditor: null }));
     }
   };
 
-  render() {
-    const { gradingLanguage, worksheet, onGetSubmission, onReloadProblem, renderNavigation } = this.props;
+  const render = () => {
     const { skeletons, lastSubmission, lastSubmissionSource } = worksheet;
     const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
-    const { shouldResetEditor } = this.state;
+    const { shouldResetEditor } = state;
 
     if (shouldResetEditor === null) {
       return null;
@@ -69,7 +83,7 @@ class ChapterProblemWorkspacePageInner extends Component {
       return (
         <ProblemSubmissionCard
           config={submissionConfig}
-          onSubmit={this.createSubmission}
+          onSubmit={createSubmission}
           reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
           preferredGradingLanguage={gradingLanguage}
         />
@@ -85,35 +99,14 @@ class ChapterProblemWorkspacePageInner extends Component {
         reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
         preferredGradingLanguage={gradingLanguage}
         shouldReset={shouldResetEditor}
-        onSubmit={this.createSubmission}
-        onReset={this.resetEditor}
-        onGetSubmission={onGetSubmission}
-        onReloadProblem={onReloadProblem}
+        onSubmit={createSubmission}
+        onReset={resetEditor}
+        onGetSubmission={getSubmission}
+        onReloadProblem={reloadProblem}
         renderNavigation={renderNavigation}
       />
     );
-  }
-}
+  };
 
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapter: selectCourseChapter(state),
-  gradingLanguage: selectGradingLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onReloadProblem: chapterProblemActions.reloadProblem,
-  onCreateSubmission: chapterProblemSubmissionActions.createSubmission,
-  onGetSubmission: chapterProblemSubmissionActions.getSubmission,
-  onUpdateGradingLanguage: webPrefsActions.updateGradingLanguage,
-};
-
-const ConnectedChapterProblemWorkspacePage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChapterProblemWorkspacePageInner);
-
-export default function ChapterProblemWorkspacePage() {
-  const { worksheet, renderNavigation } = useChapterProblemContext();
-  return <ConnectedChapterProblemWorkspacePage worksheet={worksheet} renderNavigation={renderNavigation} />;
+  return render();
 }

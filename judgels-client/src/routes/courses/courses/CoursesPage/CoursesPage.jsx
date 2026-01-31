@@ -1,6 +1,6 @@
 import { Callout, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -10,18 +10,24 @@ import * as courseActions from '../modules/courseActions';
 
 import './CoursesPage.scss';
 
-class CoursesPage extends Component {
-  state = {
+export default function CoursesPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const refreshCourses = async () => {
+    const response = await dispatch(courseActions.getCourses());
+    setState({ response });
   };
 
-  async componentDidMount() {
-    const response = await this.props.onGetCourses();
-    this.setState({ response });
-  }
+  useEffect(() => {
+    refreshCourses();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -49,10 +55,7 @@ class CoursesPage extends Component {
         </div>
       </>
     );
-  }
-}
+  };
 
-const mapDispatchToProps = {
-  onGetCourses: courseActions.getCourses,
-};
-export default connect(undefined, mapDispatchToProps)(CoursesPage);
+  return render();
+}
