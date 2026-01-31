@@ -1,6 +1,6 @@
 import { Button, Classes, Dialog, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { ChevronRight, Cog } from '@blueprintjs/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
@@ -9,17 +9,10 @@ import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTa
 
 import './ContestEditDialog.scss';
 
-export function ContestEditDialog({ isEditingContest, onSetNotEditingContest, canManage }) {
+export function ContestEditDialog({ initiallyOpen, canManage }) {
   const [state, setState] = useState({
-    isDialogOpen: false,
+    isDialogOpen: initiallyOpen || false,
   });
-
-  useEffect(() => {
-    if (isEditingContest) {
-      setState(prevState => ({ ...prevState, isDialogOpen: true }));
-      onSetNotEditingContest();
-    }
-  }, []);
 
   const render = () => {
     return (

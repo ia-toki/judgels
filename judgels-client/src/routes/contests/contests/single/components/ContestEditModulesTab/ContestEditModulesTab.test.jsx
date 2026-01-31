@@ -8,7 +8,6 @@ import sessionReducer, { PutUser } from '../../../../../../modules/session/sessi
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer from '../../../modules/contestReducer';
 import ContestEditModulesTab from './ContestEditModulesTab';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
@@ -25,13 +24,7 @@ describe('ContestEditModulesTab', () => {
 
     contestModuleActions.getModules.mockReturnValue(() => Promise.resolve(['REGISTRATION', 'CLARIFICATION', 'FILE']));
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>

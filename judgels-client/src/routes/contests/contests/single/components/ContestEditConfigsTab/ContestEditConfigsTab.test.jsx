@@ -10,7 +10,6 @@ import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientPr
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDuration } from '../../../../../../utils/duration';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer from '../../../modules/contestReducer';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
@@ -29,13 +28,7 @@ describe('ContestEditConfigsTab', () => {
     contestModuleActions.getConfig.mockReturnValue(() => Promise.resolve(config));
     contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>

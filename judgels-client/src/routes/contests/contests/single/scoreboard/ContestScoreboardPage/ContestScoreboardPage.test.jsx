@@ -10,7 +10,6 @@ import sessionReducer, { PutUser } from '../../../../../../modules/session/sessi
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestScoreboardPage from './ContestScoreboardPage';
 
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
@@ -29,10 +28,7 @@ describe('ContestScoreboardPage', () => {
 
     contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(scoreboard));
 
-    const store = createStore(
-      combineReducers({ session: sessionReducer, uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () => {

@@ -5,7 +5,6 @@ import { ContestErrors, contestAPI } from '../../../../modules/api/uriel/contest
 import { SubmissionError } from '../../../../modules/form/submissionError';
 import { getNavigationRef } from '../../../../modules/navigation/navigationRef';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
-import { DelContest, EditContest, PutContest } from './contestReducer';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -20,8 +19,7 @@ export function createContest(data) {
       }
       throw error;
     }
-    getNavigationRef().push(`/contests/${data.slug}`);
-    dispatch(EditContest(true));
+    getNavigationRef().push(`/contests/${data.slug}`, { isEditingContest: true });
     toastActions.showSuccessToast('Contest created.');
   };
 }
@@ -63,7 +61,6 @@ export function getContestBySlug(contestSlug) {
   return async (dispatch, getState) => {
     const token = selectToken(getState());
     const contest = await contestAPI.getContestBySlug(token, contestSlug);
-    dispatch(PutContest(contest));
     return contest;
   };
 }
@@ -116,5 +113,3 @@ export function searchProblemSet(contestJid) {
     }
   };
 }
-
-export const clearContest = DelContest;

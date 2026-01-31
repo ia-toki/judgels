@@ -5,10 +5,10 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
+import sessionReducer from '../../../../../../../modules/session/sessionReducer';
 import { QueryClientProviderWrapper } from '../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../utils/nock';
-import contestReducer, { PutContest } from '../../../../modules/contestReducer';
 import ContestSubmissionsPage from './ContestSubmissionsPage';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
@@ -47,10 +47,7 @@ describe('ContestSubmissionsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
 
     await act(async () => {
       render(
