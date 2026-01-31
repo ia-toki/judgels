@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,13 +11,13 @@ import { selectToken } from '../../../../../../modules/session/sessionSelectors'
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 export default function ContestEditModulesTab() {
   const { contestSlug } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const [state, setState] = useState({
     modules: undefined,
@@ -109,12 +109,18 @@ export default function ContestEditModulesTab() {
 
   const enableModule = async type => {
     await dispatch(contestModuleActions.enableModule(contest.jid, type));
-    await Promise.all([dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid)), refreshModules()]);
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
+      refreshModules(),
+    ]);
   };
 
   const disableModule = async type => {
     await dispatch(contestModuleActions.disableModule(contest.jid, type));
-    await Promise.all([dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid)), refreshModules()]);
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
+      refreshModules(),
+    ]);
   };
 
   return render();

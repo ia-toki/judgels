@@ -12,10 +12,8 @@ import contestReducer from '../../../modules/contestReducer';
 import ContestEditModulesTab from './ContestEditModulesTab';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 vi.mock('../../modules/contestModuleActions');
-vi.mock('../../modules/contestWebActions');
 
 describe('ContestEditModulesTab', () => {
   beforeEach(async () => {
@@ -23,8 +21,8 @@ describe('ContestEditModulesTab', () => {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
+    nockUriel().get('/contests/slug/contest-slug/config').reply(200, {});
 
-    contestWebActions.getContestByJidWithWebConfig.mockReturnValue(() => Promise.resolve());
     contestModuleActions.getModules.mockReturnValue(() => Promise.resolve(['REGISTRATION', 'CLARIFICATION', 'FILE']));
 
     const store = createStore(

@@ -1,28 +1,25 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
-import { ContestTab, REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
+import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
+import { contestWebConfigQueryOptions } from '../../../../modules/queries/contestWeb';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { createDocumentTitle } from '../../../../utils/title';
 import { EditContest } from '../modules/contestReducer';
 import { selectIsEditingContest } from '../modules/contestSelectors';
-import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';
-import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import { contestIcon } from './modules/contestIcon';
-
-import * as contestWebActions from './modules/contestWebActions';
 
 import './SingleContestLayout.scss';
 
@@ -31,33 +28,15 @@ export default function SingleContestLayout() {
   const { pathname } = useLocation();
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
   const isEditingContest = useSelector(selectIsEditingContest);
-  const contestWebConfig = useSelector(selectContestWebConfig);
-  const currentTimeoutRef = useRef(null);
 
   const onSetNotEditingContest = () => dispatch(EditContest(false));
 
-  const refreshWebConfig = async contestJid => {
-    await dispatch(contestWebActions.getWebConfig(contestJid));
-    currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contestJid), REFRESH_WEB_CONFIG_INTERVAL);
-  };
-
   useEffect(() => {
     document.title = createDocumentTitle(contest.name);
-
-    // Start refreshing web config
-    dispatch(contestWebActions.getWebConfig(contest.jid));
-    currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contest.jid), REFRESH_WEB_CONFIG_INTERVAL);
-
-    return () => {
-      dispatch(contestWebActions.clearWebConfig());
-
-      if (currentTimeoutRef.current) {
-        clearTimeout(currentTimeoutRef.current);
-      }
-    };
-  }, [contestSlug, contest.jid]);
+  }, [contestSlug, contest.name]);
 
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
   const sidebarItems = [
@@ -162,25 +141,23 @@ export default function SingleContestLayout() {
 
   const contentWithSidebarProps = {
     title: 'Contest Menu',
-    action: contestWebConfig && <ContestRoleTag role={contestWebConfig.role} />,
+    action: <ContestRoleTag role={contestWebConfig.role} />,
     items: sidebarItems,
     basePath: `/contests/${contestSlug}`,
     contentHeader: (
       <div className="single-contest-routes__header">
         <div className="single-contest-routes__heading">
           <h2>{contest.name}</h2>
-          {contestWebConfig && (
-            <div className="single-contest-routes__action">
-              <ContestEditDialog
-                contest={contest}
-                canManage={contestWebConfig.canManage}
-                isEditingContest={isEditingContest}
-                onSetNotEditingContest={onSetNotEditingContest}
-              />
-            </div>
-          )}
+          <div className="single-contest-routes__action">
+            <ContestEditDialog
+              contest={contest}
+              canaManage={contestWebConfig.canManage}
+              isEditingContest={isEditingContest}
+              onSetNotEditingContest={onSetNotEditingContest}
+            />
+          </div>
         </div>
-        {contestWebConfig ? <ContestStateWidget /> : <LoadingContestStateWidget />}
+        <ContestStateWidget />
       </div>
     ),
   };

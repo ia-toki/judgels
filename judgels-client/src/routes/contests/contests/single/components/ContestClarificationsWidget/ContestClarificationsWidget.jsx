@@ -1,19 +1,23 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
-import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
+import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
 
 export default function ContestClarificationsWidget() {
   const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const clarificationCount = useSelector(state => selectContestWebConfig(state).clarificationCount);
-  const clarificationStatus = useSelector(state => selectContestWebConfig(state).clarificationStatus);
+  const clarificationCount = webConfig.clarificationCount;
+  const clarificationStatus = webConfig.clarificationStatus;
   const prevClarificationCountRef = useRef(clarificationCount);
 
   useEffect(() => {
