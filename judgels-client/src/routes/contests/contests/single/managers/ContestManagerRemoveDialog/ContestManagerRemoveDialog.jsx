@@ -1,54 +1,53 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Trash } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import ContestManagerRemoveForm from '../ContestManagerRemoveForm/ContestManagerRemoveForm';
 import { ContestManagerRemoveResultTable } from '../ContestManagerRemoveResultTable/ContestManagerRemoveResultTable';
 
-export class ContestManagerRemoveDialog extends Component {
-  state = {
+export function ContestManagerRemoveDialog({ contest, onDeleteManagers }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
     submitted: undefined,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
       <Button
         className="contest-manager-dialog-button"
         intent={Intent.DANGER}
         icon={<Trash />}
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         Remove managers
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  renderDialog = () => {
-    const dialogBody =
-      this.state.submitted !== undefined ? this.renderDialogRemoveResultTable() : this.renderDialogRemoveForm();
-    const dialogTitle = this.state.submitted !== undefined ? 'Remove managers results' : 'Remove managers';
+  const renderDialog = () => {
+    const dialogBody = state.submitted !== undefined ? renderDialogRemoveResultTable() : renderDialogRemoveForm();
+    const dialogTitle = state.submitted !== undefined ? 'Remove managers results' : 'Remove managers';
 
     return (
       <Dialog
         className="contest-manager-dialog"
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
         enforceFocus={false}
@@ -58,16 +57,16 @@ export class ContestManagerRemoveDialog extends Component {
     );
   };
 
-  renderDialogRemoveForm = () => {
+  const renderDialogRemoveForm = () => {
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.addManagers,
+      renderFormComponents: renderDialogForm,
+      onSubmit: addManagers,
     };
     return <ContestManagerRemoveForm {...props} />;
   };
 
-  renderDialogRemoveResultTable = () => {
-    const { usernames, response } = this.state.submitted;
+  const renderDialogRemoveResultTable = () => {
+    const { usernames, response } = state.submitted;
     const { deletedManagerProfilesMap } = response;
     return (
       <>
@@ -79,35 +78,37 @@ export class ContestManagerRemoveDialog extends Component {
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Done" intent={Intent.PRIMARY} onClick={this.toggleDialog} />
+            <Button text="Done" intent={Intent.PRIMARY} onClick={toggleDialog} />
           </div>
         </div>
       </>
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-manager-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  addManagers = async data => {
+  const addManagers = async data => {
     const usernames = data.usernames
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await this.props.onDeleteManagers(this.props.contest.jid, usernames);
+    const response = await onDeleteManagers(contest.jid, usernames);
     if (usernames.length !== Object.keys(response.deletedManagerProfilesMap).length) {
-      this.setState({ submitted: { usernames, response } });
+      setState(prevState => ({ ...prevState, submitted: { usernames, response } }));
     } else {
-      this.setState({ isDialogOpen: false });
+      setState(prevState => ({ ...prevState, isDialogOpen: false }));
     }
   };
+
+  return render();
 }

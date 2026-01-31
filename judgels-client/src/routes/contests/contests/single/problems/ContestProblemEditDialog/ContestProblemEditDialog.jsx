@@ -1,122 +1,111 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
 
 import './ContestProblemEditDialog.scss';
 
-export class ContestProblemEditDialog extends Component {
-  state;
+export function ContestProblemEditDialog({ contest, problems, onSetProblems }) {
+  const [state, setState] = useState({
+    isDialogOpen: false,
+    editor: getContestProblemEditor(contest.style),
+  });
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDialogOpen: false,
-      editor: getContestProblemEditor(props.contest.style),
-    };
-  }
-
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.contest.style !== this.props.contest.style) {
-      this.updateEditor();
-    }
-  }
+  useEffect(() => {
+    setState(prevState => ({ ...prevState, editor: getContestProblemEditor(contest.style) }));
+  }, [contest.style]);
 
-  updateEditor() {
-    this.setState({
-      editor: getContestProblemEditor(this.props.contest.style),
-    });
-  }
-
-  renderButton = () => {
+  const renderButton = () => {
     return (
       <Button
         className="contest-problem-set-dialog__button"
         intent={Intent.PRIMARY}
         icon={<Edit />}
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         Edit problems
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderDialog = () => {
+  const renderDialog = () => {
     return (
       <Dialog
         className="contest-problem-set-dialog"
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title="Edit problems"
         canOutsideClickClose={false}
         enforceFocus={false}
       >
-        {this.renderDialogSetForm()}
+        {renderDialogSetForm()}
       </Dialog>
     );
   };
 
-  renderDialogSetForm = () => {
-    const problems = this.state.editor.serializer(this.props.problems);
+  const renderDialogSetForm = () => {
+    const editProblems = state.editor.serializer(problems);
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      validator: this.state.editor.validator,
-      onSubmit: this.setProblems,
-      initialValues: { problems },
+      renderFormComponents: renderDialogForm,
+      validator: state.editor.validator,
+      onSubmit: setProblems,
+      initialValues: { problems: editProblems },
     };
     return <ContestProblemEditForm {...props} />;
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-problem-edit-dialog__body')}>
         {fields}
-        {this.renderInstructions()}
+        {renderInstructions()}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  renderInstructions = () => {
+  const renderInstructions = () => {
     return (
       <Callout icon={null}>
         <p>
-          <strong>Format:</strong> {this.state.editor.format}
+          <strong>Format:</strong> {state.editor.format}
         </p>
         <p>
           <strong>Example:</strong>
         </p>
-        {this.state.editor.example}
+        {state.editor.example}
       </Callout>
     );
   };
 
-  setProblems = async data => {
-    const problems = this.state.editor.deserializer(data.problems);
+  const setProblems = async data => {
+    const deserializedProblems = state.editor.deserializer(data.problems);
 
-    await this.props.onSetProblems(this.props.contest.jid, problems);
-    this.setState({ isDialogOpen: false });
+    await onSetProblems(contest.jid, deserializedProblems);
+    setState(prevState => ({ ...prevState, isDialogOpen: false }));
   };
+
+  return render();
 }

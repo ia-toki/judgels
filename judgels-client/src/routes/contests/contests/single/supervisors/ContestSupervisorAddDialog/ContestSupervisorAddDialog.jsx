@@ -1,56 +1,54 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
 import ContestSupervisorAddForm from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
 
-export class ContestSupervisorAddDialog extends Component {
-  state = {
+export function ContestSupervisorAddDialog({ contest, onUpsertSupervisors }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
     submitted: undefined,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
       <Button
         className="contest-supervisor-dialog-button"
         intent={Intent.PRIMARY}
         icon={<Plus />}
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         Add/update supervisors
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  renderDialog = () => {
-    const dialogBody =
-      this.state.submitted !== undefined ? this.renderDialogAddResultTable() : this.renderDialogAddForm();
-    const dialogTitle =
-      this.state.submitted !== undefined ? 'Add/update supervisors results' : 'Add/update supervisors';
+  const renderDialog = () => {
+    const dialogBody = state.submitted !== undefined ? renderDialogAddResultTable() : renderDialogAddForm();
+    const dialogTitle = state.submitted !== undefined ? 'Add/update supervisors results' : 'Add/update supervisors';
 
     return (
       <Dialog
         className="contest-supervisor-dialog"
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
         enforceFocus={false}
@@ -60,16 +58,16 @@ export class ContestSupervisorAddDialog extends Component {
     );
   };
 
-  renderDialogAddForm = () => {
+  const renderDialogAddForm = () => {
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.addSupervisors,
+      renderFormComponents: renderDialogForm,
+      onSubmit: addSupervisors,
     };
     return <ContestSupervisorAddForm {...props} />;
   };
 
-  renderDialogAddResultTable = () => {
-    const { usernames, response } = this.state.submitted;
+  const renderDialogAddResultTable = () => {
+    const { usernames, response } = state.submitted;
     const { upsertedSupervisorProfilesMap: insertedSupervisorProfilesMap } = response;
     return (
       <>
@@ -81,47 +79,49 @@ export class ContestSupervisorAddDialog extends Component {
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Done" intent={Intent.PRIMARY} onClick={this.toggleDialog} />
+            <Button text="Done" intent={Intent.PRIMARY} onClick={toggleDialog} />
           </div>
         </div>
       </>
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  getPermissionList(managementPermissions) {
+  const getPermissionList = managementPermissions => {
     return !managementPermissions
       ? []
       : Object.keys(managementPermissions)
           .filter(p => managementPermissions[p])
           .map(p => SupervisorManagementPermission[p]);
-  }
+  };
 
-  addSupervisors = async dataForm => {
+  const addSupervisors = async dataForm => {
     const usernames = dataForm.usernames
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
     const data = {
       usernames,
-      managementPermissions: this.getPermissionList(dataForm.managementPermissions),
+      managementPermissions: getPermissionList(dataForm.managementPermissions),
     };
-    const response = await this.props.onUpsertSupervisors(this.props.contest.jid, data);
+    const response = await onUpsertSupervisors(contest.jid, data);
     if (usernames.length !== Object.keys(response.upsertedSupervisorProfilesMap).length) {
-      this.setState({ submitted: { usernames, response } });
+      setState(prevState => ({ ...prevState, submitted: { usernames, response } }));
     } else {
-      this.setState({ isDialogOpen: false });
+      setState(prevState => ({ ...prevState, isDialogOpen: false }));
     }
   };
+
+  return render();
 }

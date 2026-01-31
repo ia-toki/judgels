@@ -1,52 +1,57 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import ContestClarificationCreateForm from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 
-export class ContestClarificationCreateDialog extends Component {
-  state = {
+export function ContestClarificationCreateDialog({
+  contest,
+  problemJids,
+  problemAliasesMap,
+  problemNamesMap,
+  onCreateClarification,
+}) {
+  const [state, setState] = useState({
     isDialogOpen: false,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
         New clarification
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderDialog = () => {
-    const { contest, problemJids, problemAliasesMap, problemNamesMap } = this.props;
+  const renderDialog = () => {
     const props = {
       contestJid: contest.jid,
       problemJids,
       problemAliasesMap,
       problemNamesMap,
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.createClarification,
+      renderFormComponents: renderDialogForm,
+      onSubmit: createClarification,
       initialValues: {
         topicJid: contest.jid,
       },
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title="Submit new clarification"
         canOutsideClickClose={false}
       >
@@ -55,20 +60,22 @@ export class ContestClarificationCreateDialog extends Component {
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  createClarification = async data => {
-    await this.props.onCreateClarification(this.props.contest.jid, data);
-    this.setState({ isDialogOpen: false });
+  const createClarification = async data => {
+    await onCreateClarification(contest.jid, data);
+    setState(prevState => ({ ...prevState, isDialogOpen: false }));
   };
+
+  return render();
 }
