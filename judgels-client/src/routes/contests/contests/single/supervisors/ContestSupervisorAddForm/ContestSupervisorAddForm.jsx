@@ -1,5 +1,4 @@
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
@@ -7,34 +6,34 @@ import { FormTextArea } from '../../../../../../components/forms/FormTextArea/Fo
 import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 import { supervisorManagementPermissions } from '../../../../../../modules/api/uriel/contestSupervisor';
 
-export default class ContestSupervisorAddForm extends Component {
-  render() {
+export default function ContestSupervisorAddForm({ onSubmit, renderFormComponents }) {
+  const render = () => {
     const initialValues = { managementPermissions: { All: false } };
     return (
-      <Form onSubmit={this.props.onSubmit} initialValues={initialValues}>
+      <Form onSubmit={onSubmit} initialValues={initialValues}>
         {({ handleSubmit, values, submitting }) => (
           <form onSubmit={handleSubmit}>
-            {this.props.renderFormComponents(this.renderFields(values), this.renderSubmitButton(submitting))}
+            {renderFormComponents(renderFields(values), renderSubmitButton(submitting))}
           </form>
         )}
       </Form>
     );
-  }
+  };
 
-  renderSubmitButton(submitting) {
+  const renderSubmitButton = submitting => {
     return <Button type="submit" text="Add/update" intent={Intent.PRIMARY} loading={submitting} />;
-  }
+  };
 
-  renderFields(values) {
+  const renderFields = values => {
     return (
       <>
-        {this.renderUsernamesField()}
-        {this.renderPermissionFields(values)}
+        {renderUsernamesField()}
+        {renderPermissionFields(values)}
       </>
     );
-  }
+  };
 
-  renderUsernamesField() {
+  const renderUsernamesField = () => {
     const usernamesField = {
       name: 'usernames',
       label: 'Usernames',
@@ -46,9 +45,9 @@ export default class ContestSupervisorAddForm extends Component {
     };
 
     return <Field component={FormTextArea} {...usernamesField} />;
-  }
+  };
 
-  renderPermissionFields(values) {
+  const renderPermissionFields = values => {
     const allowAllPermissionsField = {
       name: 'managementPermissions.All',
       label: '(all)',
@@ -69,5 +68,7 @@ export default class ContestSupervisorAddForm extends Component {
           permissionFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
       </FormGroup>
     );
-  }
+  };
+
+  return render();
 }

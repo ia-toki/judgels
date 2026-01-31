@@ -1,54 +1,53 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Trash } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import ContestSupervisorRemoveForm from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
 
-export class ContestSupervisorRemoveDialog extends Component {
-  state = {
+export function ContestSupervisorRemoveDialog({ contest, onDeleteSupervisors }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
     submitted: undefined,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
       <Button
         className="contest-supervisor-dialog-button"
         intent={Intent.DANGER}
         icon={<Trash />}
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         Remove supervisors
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
   };
 
-  renderDialog = () => {
-    const dialogBody =
-      this.state.submitted !== undefined ? this.renderDialogRemoveResultTable() : this.renderDialogRemoveForm();
-    const dialogTitle = this.state.submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
+  const renderDialog = () => {
+    const dialogBody = state.submitted !== undefined ? renderDialogRemoveResultTable() : renderDialogRemoveForm();
+    const dialogTitle = state.submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
 
     return (
       <Dialog
         className="contest-supervisor-dialog"
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title={dialogTitle}
         canOutsideClickClose={false}
         enforceFocus={false}
@@ -58,16 +57,16 @@ export class ContestSupervisorRemoveDialog extends Component {
     );
   };
 
-  renderDialogRemoveForm = () => {
+  const renderDialogRemoveForm = () => {
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.addSupervisors,
+      renderFormComponents: renderDialogForm,
+      onSubmit: addSupervisors,
     };
     return <ContestSupervisorRemoveForm {...props} />;
   };
 
-  renderDialogRemoveResultTable = () => {
-    const { usernames, response } = this.state.submitted;
+  const renderDialogRemoveResultTable = () => {
+    const { usernames, response } = state.submitted;
     const { deletedSupervisorProfilesMap } = response;
     return (
       <>
@@ -79,35 +78,37 @@ export class ContestSupervisorRemoveDialog extends Component {
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Done" intent={Intent.PRIMARY} onClick={this.toggleDialog} />
+            <Button text="Done" intent={Intent.PRIMARY} onClick={toggleDialog} />
           </div>
         </div>
       </>
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  addSupervisors = async data => {
+  const addSupervisors = async data => {
     const usernames = data.usernames
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await this.props.onDeleteSupervisors(this.props.contest.jid, usernames);
+    const response = await onDeleteSupervisors(contest.jid, usernames);
     if (usernames.length !== Object.keys(response.deletedSupervisorProfilesMap).length) {
-      this.setState({ submitted: { usernames, response } });
+      setState(prevState => ({ ...prevState, submitted: { usernames, response } }));
     } else {
-      this.setState({ isDialogOpen: false });
+      setState(prevState => ({ ...prevState, isDialogOpen: false }));
     }
   };
+
+  return render();
 }

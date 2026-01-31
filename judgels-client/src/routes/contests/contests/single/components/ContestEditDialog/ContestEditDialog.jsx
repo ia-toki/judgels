@@ -1,6 +1,6 @@
 import { Button, Classes, Dialog, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { ChevronRight, Cog } from '@blueprintjs/icons';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import ContestEditConfigsTab from '../ContestEditConfigsTab/ContestEditConfigsTab';
 import ContestEditDescriptionTab from '../ContestEditDescriptionTab/ContestEditDescriptionTab';
@@ -9,29 +9,29 @@ import ContestEditModulesTab from '../ContestEditModulesTab/ContestEditModulesTa
 
 import './ContestEditDialog.scss';
 
-export class ContestEditDialog extends Component {
-  state = {
+export function ContestEditDialog({ isEditingContest, onSetNotEditingContest, canManage }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
-  };
+  });
 
-  async componentDidMount() {
-    if (this.props.isEditingContest) {
-      this.setState({ isDialogOpen: true });
-      this.props.onSetNotEditingContest();
+  useEffect(() => {
+    if (isEditingContest) {
+      setState(prevState => ({ ...prevState, isDialogOpen: true }));
+      onSetNotEditingContest();
     }
-  }
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <>
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </>
     );
-  }
+  };
 
-  renderButton = () => {
-    if (!this.props.canManage) {
+  const renderButton = () => {
+    if (!canManage) {
       return null;
     }
     return (
@@ -39,24 +39,24 @@ export class ContestEditDialog extends Component {
         className="contest-edit-dialog-button"
         intent={Intent.PRIMARY}
         icon={<Cog />}
-        onClick={this.toggleDialog}
-        disabled={this.state.isDialogOpen}
+        onClick={toggleDialog}
+        disabled={state.isDialogOpen}
       >
         <span className="contest-edit-dialog-button__text">Settings</span>
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderDialog = () => {
+  const renderDialog = () => {
     return (
       <Dialog
         className="contest-edit-dialog"
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title="Contest settings"
         canOutsideClickClose={false}
         enforceFocus={false}
@@ -84,10 +84,12 @@ export class ContestEditDialog extends Component {
         <div className={Classes.DIALOG_FOOTER}>
           <hr />
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Close" onClick={this.toggleDialog} />
+            <Button text="Close" onClick={toggleDialog} />
           </div>
         </div>
       </Dialog>
     );
   };
+
+  return render();
 }
