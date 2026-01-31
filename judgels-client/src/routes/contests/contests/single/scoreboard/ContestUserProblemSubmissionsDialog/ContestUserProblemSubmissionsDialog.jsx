@@ -1,60 +1,70 @@
 import { Classes, Dialog } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectContest } from '../../../modules/contestSelectors';
 
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestUserProblemSubmissionsDialog.scss';
 
-class ContestUserProblemSubmissionsDialog extends Component {
-  state = {
+export default function ContestUserProblemSubmissionsDialog({ userJid, problemJid, title, onClose }) {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+  const statementLanguage = useSelector(selectStatementLanguage);
+
+  const [state, setState] = useState({
     submissions: undefined,
     submissionSourcesById: {},
-  };
+  });
 
-  async componentDidMount() {
-    const response = await this.props.onGetUserProblemSubmissions(
-      this.props.contest.jid,
-      this.props.userJid,
-      this.props.problemJid
+  const refreshUserProblemSubmissions = async () => {
+    const response = await dispatch(
+      contestScoreboardActions.getUserProblemSubmissions(contest.jid, userJid, problemJid)
     );
 
     const { data: submissions, latestSubmissionSource } = response;
 
-    this.setState({
+    setState({
       submissions,
     });
 
     if (submissions.length > 0) {
-      this.setState({
+      setState({
+        submissions,
         submissionSourcesById: {
           [submissions[0].id]: latestSubmissionSource,
         },
       });
     }
-  }
+  };
 
-  loadSubmissionSource = async submissionId => {
-    this.setState(prevState => ({
+  useEffect(() => {
+    refreshUserProblemSubmissions();
+  }, []);
+
+  const loadSubmissionSource = async submissionId => {
+    setState(prevState => ({
       submissionSourcesById: {
         ...prevState.submissionSourcesById,
         [submissionId]: null,
       },
     }));
 
-    const submissionWithSource = await this.props.onGetSubmissionWithSource(
-      this.props.contest.jid,
-      submissionId,
-      this.props.statementLanguage
+    const submissionWithSource = await dispatch(
+      contestScoreboardActions.getSubmissionWithSource(contest.jid, submissionId, statementLanguage)
     );
 
-    this.setState(prevState => ({
+    setState(prevState => ({
       submissionSourcesById: {
         ...prevState.submissionSourcesById,
         [submissionId]: submissionWithSource.data.source,
@@ -62,8 +72,8 @@ class ContestUserProblemSubmissionsDialog extends Component {
     }));
   };
 
-  renderContent = () => {
-    const { submissions } = this.state;
+  const renderContent = () => {
+    const { submissions } = state;
     if (!submissions) {
       return null;
     }
@@ -81,8 +91,8 @@ class ContestUserProblemSubmissionsDialog extends Component {
           <div className="details-content">
             <SubmissionDetails
               submission={submission}
-              source={this.state.submissionSourcesById[submission.id]}
-              onClickViewSource={() => this.loadSubmissionSource(submission.id)}
+              source={state.submissionSourcesById[submission.id]}
+              onClickViewSource={() => loadSubmissionSource(submission.id)}
             />
           </div>
         </details>
@@ -90,32 +100,16 @@ class ContestUserProblemSubmissionsDialog extends Component {
     ));
   };
 
-  render() {
-    const { onClose, title } = this.props;
-
-    return (
-      <Dialog
-        className="contest-user-problem-submissions-dialog"
-        isOpen
-        onClose={onClose}
-        title={title}
-        canOutsideClickClose={true}
-        enforceFocus={true}
-      >
-        <div className={Classes.DIALOG_BODY}>{this.renderContent()}</div>
-      </Dialog>
-    );
-  }
+  return (
+    <Dialog
+      className="contest-user-problem-submissions-dialog"
+      isOpen
+      onClose={onClose}
+      title={title}
+      canOutsideClickClose={true}
+      enforceFocus={true}
+    >
+      <div className={Classes.DIALOG_BODY}>{renderContent()}</div>
+    </Dialog>
+  );
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetSubmissionWithSource: contestScoreboardActions.getSubmissionWithSource,
-  onGetUserProblemSubmissions: contestScoreboardActions.getUserProblemSubmissions,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestUserProblemSubmissionsDialog);

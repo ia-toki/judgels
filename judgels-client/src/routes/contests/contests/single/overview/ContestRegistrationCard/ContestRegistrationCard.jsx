@@ -1,12 +1,14 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle, People, Tick } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
-import { selectIsLoggedIn } from '../../../../../../modules/session/sessionSelectors';
-import { selectContest } from '../../../modules/contestSelectors';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectIsLoggedIn, selectToken } from '../../../../../../modules/session/sessionSelectors';
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
@@ -14,64 +16,71 @@ import * as contestWebActions from '../../modules/contestWebActions';
 
 import './ContestRegistrationCard.scss';
 
-class ContestRegistrationCard extends Component {
-  state = {
+export default function ContestRegistrationCard() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
+  const [state, setState] = useState({
     contestantState: undefined,
-    contestantCount: undefined,
+    contestantsCount: undefined,
     isActionButtonLoading: false,
     isRegistrantsDialogOpen: false,
-  };
+  });
 
-  async componentDidMount() {
-    await this.refresh();
-  }
-
-  render() {
-    if (!this.props.isLoggedIn) {
+  const render = () => {
+    if (!isLoggedIn) {
       return (
         <Callout icon={<BanCircle />} className="contest-registration-card--error secondary-info">
           Please log in to register.
         </Callout>
       );
     }
+
     return (
       <Callout className="contest-registration-card" icon={null}>
-        {this.renderCard()}
+        {renderCard()}
       </Callout>
     );
-  }
+  };
 
-  refresh = async () => {
-    if (!this.props.isLoggedIn) {
+  const refresh = async () => {
+    if (!isLoggedIn) {
       return;
     }
 
     const [contestantState, contestantsCount] = await Promise.all([
-      this.props.onGetMyContestantState(this.props.contest.jid),
-      this.props.onGetApprovedContestantsCount(this.props.contest.jid),
-      this.props.onGetContestWebConfig(this.props.contest.jid),
+      dispatch(contestContestantActions.getMyContestantState(contest.jid)),
+      dispatch(contestContestantActions.getApprovedContestantsCount(contest.jid)),
+      dispatch(contestWebActions.getWebConfig(contest.jid)),
     ]);
-    this.setState({ contestantState, contestantsCount });
+    setState(prevState => ({ ...prevState, contestantState, contestantsCount }));
   };
 
-  renderCard = () => {
-    const { contestantState, contestantsCount } = this.state;
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  const renderCard = () => {
+    const { contestantState, contestantsCount } = state;
     if (!contestantState || contestantsCount === undefined) {
       return <LoadingState />;
     }
 
     return (
       <>
-        {this.renderContestantStateTag(contestantState)}
-        {this.renderActionButton(contestantState)}
-        {this.renderViewRegistrantsButton(contestantsCount)}
-        {this.renderRegistrantsDialog()}
+        {renderContestantStateTag(contestantState)}
+        {renderActionButton(contestantState)}
+        {renderViewRegistrantsButton(contestantsCount)}
+        {renderRegistrantsDialog()}
         <div className="clearfix" />
       </>
     );
   };
 
-  renderContestantStateTag = contestantState => {
+  const renderContestantStateTag = contestantState => {
     if (
       contestantState === ContestContestantState.Registrant ||
       contestantState === ContestContestantState.Contestant
@@ -85,7 +94,7 @@ class ContestRegistrationCard extends Component {
     return null;
   };
 
-  renderActionButton = contestantState => {
+  const renderActionButton = contestantState => {
     if (contestantState === ContestContestantState.RegistrableWrongDivision) {
       return (
         <Button
@@ -102,8 +111,8 @@ class ContestRegistrationCard extends Component {
           className="contest-registration-card__item contest-registration-card__action"
           intent={Intent.PRIMARY}
           text="Register"
-          onClick={this.register}
-          loading={this.state.isActionButtonLoading}
+          onClick={register}
+          loading={state.isActionButtonLoading}
         />
       );
     }
@@ -113,62 +122,52 @@ class ContestRegistrationCard extends Component {
           className="contest-registration-card__item contest-registration-card__action"
           intent={Intent.DANGER}
           text="Unregister"
-          onClick={this.unregister}
-          loading={this.state.isActionButtonLoading}
+          onClick={unregister}
+          loading={state.isActionButtonLoading}
         />
       );
     }
     return null;
   };
 
-  renderViewRegistrantsButton = contestantsCount => {
+  const renderViewRegistrantsButton = contestantsCount => {
     return (
       <Button
         className="contest-registration-card__item"
         icon={<People />}
         text={`View registrants (${contestantsCount})`}
-        onClick={this.toggleRegistrantsDialog}
+        onClick={toggleRegistrantsDialog}
       />
     );
   };
 
-  renderRegistrantsDialog = () => {
-    if (!this.state.isRegistrantsDialogOpen) {
+  const renderRegistrantsDialog = () => {
+    if (!state.isRegistrantsDialogOpen) {
       return null;
     }
-    return <ContestRegistrantsDialog onClose={this.toggleRegistrantsDialog} />;
+    return <ContestRegistrantsDialog onClose={toggleRegistrantsDialog} />;
   };
 
-  register = async () => {
-    this.setState({ isActionButtonLoading: true });
-    await this.props.onRegisterMyselfAsContestant(this.props.contest.jid);
-    this.setState({ isActionButtonLoading: false });
-    await this.refresh();
+  const register = async () => {
+    setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
+    await dispatch(contestContestantActions.registerMyselfAsContestant(contest.jid));
+    setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
+    await refresh();
   };
 
-  unregister = async () => {
-    this.setState({ isActionButtonLoading: true });
-    await this.props.onUnregisterMyselfAsContestant(this.props.contest.jid);
-    this.setState({ isActionButtonLoading: false });
-    await this.refresh();
+  const unregister = async () => {
+    setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
+    await dispatch(contestContestantActions.unregisterMyselfAsContestant(contest.jid));
+    setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
+    await refresh();
   };
 
-  toggleRegistrantsDialog = () => {
-    this.setState(prevState => ({
+  const toggleRegistrantsDialog = () => {
+    setState(prevState => ({
+      ...prevState,
       isRegistrantsDialogOpen: !prevState.isRegistrantsDialogOpen,
     }));
   };
-}
 
-const mapStateToProps = state => ({
-  isLoggedIn: selectIsLoggedIn(state),
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetContestWebConfig: contestWebActions.getWebConfig,
-  onGetMyContestantState: contestContestantActions.getMyContestantState,
-  onGetApprovedContestantsCount: contestContestantActions.getApprovedContestantsCount,
-  onRegisterMyselfAsContestant: contestContestantActions.registerMyselfAsContestant,
-  onUnregisterMyselfAsContestant: contestContestantActions.unregisterMyselfAsContestant,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestRegistrationCard);
+  return render();
+}

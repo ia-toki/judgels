@@ -64,7 +64,7 @@ describe('ContestProblemsPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
     await act(async () =>

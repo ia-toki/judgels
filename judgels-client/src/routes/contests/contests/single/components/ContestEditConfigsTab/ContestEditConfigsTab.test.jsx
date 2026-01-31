@@ -5,8 +5,12 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDuration } from '../../../../../../utils/duration';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
+import contestReducer from '../../../modules/contestReducer';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
@@ -17,20 +21,32 @@ describe('ContestEditConfigsTab', () => {
   let config;
 
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestModuleActions.getConfig.mockReturnValue(() => Promise.resolve(config));
     contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
+      combineReducers({
+        session: sessionReducer,
+        uriel: combineReducers({ contest: contestReducer }),
+      }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <ContestEditConfigsTab />
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+              <ContestEditConfigsTab />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -76,7 +92,7 @@ describe('ContestEditConfigsTab', () => {
       it('submits the form', async () => {
         const user = userEvent.setup();
 
-        const button = screen.getByRole('button', { name: /edit/i });
+        const button = await screen.findByRole('button', { name: /edit/i });
         await user.click(button);
 
         const icpcWrongSubmissionPenalty = document.querySelector('input[name="icpcWrongSubmissionPenalty"]');
@@ -180,7 +196,7 @@ describe('ContestEditConfigsTab', () => {
       it('submits empty restriction', async () => {
         const user = userEvent.setup();
 
-        const button = screen.getByRole('button', { name: /edit/i });
+        const button = await screen.findByRole('button', { name: /edit/i });
         await user.click(button);
 
         const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
@@ -214,7 +230,7 @@ describe('ContestEditConfigsTab', () => {
       it('submits the restriction', async () => {
         const user = userEvent.setup();
 
-        const button = screen.getByRole('button', { name: /edit/i });
+        const button = await screen.findByRole('button', { name: /edit/i });
         await user.click(button);
 
         const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');

@@ -1,36 +1,49 @@
 import { Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { allModules } from '../../../../../../modules/api/uriel/contestModule';
-import { selectContest } from '../../../modules/contestSelectors';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-class ContestEditModulesTab extends Component {
-  state = {
+export default function ContestEditModulesTab() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     modules: undefined,
+  });
+
+  const refreshModules = async () => {
+    const modules = await dispatch(contestModuleActions.getModules(contest.jid));
+    setState(prevState => ({ ...prevState, modules }));
   };
 
-  async componentDidMount() {
-    await this.refreshModules();
-  }
+  useEffect(() => {
+    refreshModules();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <>
         <h4>Modules settings</h4>
         <hr />
-        {this.renderContent()}
+        {renderContent()}
       </>
     );
-  }
+  };
 
-  renderContent = () => {
-    const { modules } = this.state;
+  const renderContent = () => {
+    const { modules } = state;
 
     if (!modules) {
       return <LoadingState />;
@@ -41,14 +54,14 @@ class ContestEditModulesTab extends Component {
 
     return (
       <div className="contest-edit-dialog__content">
-        <>{this.renderEnabledModules(enabledModules)}</>
+        <>{renderEnabledModules(enabledModules)}</>
         <hr />
-        <>{this.renderDisabledModules(disabledModules)}</>
+        <>{renderDisabledModules(disabledModules)}</>
       </div>
     );
   };
 
-  renderEnabledModules = enabledModules => {
+  const renderEnabledModules = enabledModules => {
     if (enabledModules.length === 0) {
       return (
         <p>
@@ -64,14 +77,14 @@ class ContestEditModulesTab extends Component {
         intent={Intent.PRIMARY}
         buttonIntent={Intent.NONE}
         buttonText={'Disable'}
-        buttonOnClick={this.disableModule}
+        buttonOnClick={disableModule}
         buttonIsLoading={false}
         buttonIsDisabled={false}
       />
     ));
   };
 
-  renderDisabledModules = disabledModules => {
+  const renderDisabledModules = disabledModules => {
     if (disabledModules.length === 0) {
       return (
         <p>
@@ -87,36 +100,22 @@ class ContestEditModulesTab extends Component {
         intent={Intent.NONE}
         buttonIntent={Intent.PRIMARY}
         buttonText={'Enable'}
-        buttonOnClick={this.enableModule}
+        buttonOnClick={enableModule}
         buttonIsLoading={false}
         buttonIsDisabled={false}
       />
     ));
   };
 
-  enableModule = async type => {
-    await this.props.onEnableModule(this.props.contest.jid, type);
-    await Promise.all([this.props.onGetContestByJidWithWebConfig(this.props.contest.jid), this.refreshModules()]);
+  const enableModule = async type => {
+    await dispatch(contestModuleActions.enableModule(contest.jid, type));
+    await Promise.all([dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid)), refreshModules()]);
   };
 
-  disableModule = async type => {
-    await this.props.onDisableModule(this.props.contest.jid, type);
-    await Promise.all([this.props.onGetContestByJidWithWebConfig(this.props.contest.jid), this.refreshModules()]);
+  const disableModule = async type => {
+    await dispatch(contestModuleActions.disableModule(contest.jid, type));
+    await Promise.all([dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid)), refreshModules()]);
   };
 
-  refreshModules = async () => {
-    const modules = await this.props.onGetModules(this.props.contest.jid);
-    this.setState({ modules });
-  };
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
-  onGetModules: contestModuleActions.getModules,
-  onEnableModule: contestModuleActions.enableModule,
-  onDisableModule: contestModuleActions.disableModule,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestEditModulesTab);

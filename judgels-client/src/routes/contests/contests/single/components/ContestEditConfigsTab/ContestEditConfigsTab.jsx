@@ -1,57 +1,65 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
-import { selectContest } from '../../../modules/contestSelectors';
 import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
-class ContestEditConfigsTab extends Component {
-  state = {
+export default function ContestEditConfigsTab() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     config: undefined,
     isEditing: false,
+  });
+
+  const refreshConfig = async () => {
+    const config = await dispatch(contestModuleActions.getConfig(contest.jid));
+    setState(prevState => ({ ...prevState, config }));
   };
 
-  async componentDidMount() {
-    await this.refreshConfig();
-  }
+  useEffect(() => {
+    refreshConfig();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <>
         <h4>
           Configs settings
-          {this.renderEditButton()}
+          {renderEditButton()}
         </h4>
         <hr />
-        {this.renderContent()}
+        {renderContent()}
       </>
     );
-  }
-
-  refreshConfig = async () => {
-    const config = await this.props.onGetConfig(this.props.contest.jid);
-    this.setState({ config });
   };
 
-  renderEditButton = () => {
+  const renderEditButton = () => {
     return (
-      !this.state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={this.toggleEdit}>
+      !state.isEditing && (
+        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
           Edit
         </Button>
       )
     );
   };
 
-  renderContent = () => {
-    const { config, isEditing } = this.state;
+  const renderContent = () => {
+    const { config, isEditing } = state;
     if (config === undefined) {
       return <LoadingState />;
     }
@@ -78,7 +86,7 @@ class ContestEditConfigsTab extends Component {
         initialValues = {
           ...initialValues,
           trocAllowAllLanguages: allLanguagesAllowed(trocStyle.languageRestriction),
-          trocAllowedLanguages: this.fromLanguageRestriction(trocStyle.languageRestriction),
+          trocAllowedLanguages: fromLanguageRestriction(trocStyle.languageRestriction),
           trocWrongSubmissionPenalty: '' + trocStyle.wrongSubmissionPenalty,
         };
       }
@@ -86,7 +94,7 @@ class ContestEditConfigsTab extends Component {
         initialValues = {
           ...initialValues,
           icpcAllowAllLanguages: allLanguagesAllowed(icpcStyle.languageRestriction),
-          icpcAllowedLanguages: this.fromLanguageRestriction(icpcStyle.languageRestriction),
+          icpcAllowedLanguages: fromLanguageRestriction(icpcStyle.languageRestriction),
           icpcWrongSubmissionPenalty: '' + icpcStyle.wrongSubmissionPenalty,
         };
       }
@@ -94,7 +102,7 @@ class ContestEditConfigsTab extends Component {
         initialValues = {
           ...initialValues,
           ioiAllowAllLanguages: allLanguagesAllowed(ioiStyle.languageRestriction),
-          ioiAllowedLanguages: this.fromLanguageRestriction(ioiStyle.languageRestriction),
+          ioiAllowedLanguages: fromLanguageRestriction(ioiStyle.languageRestriction),
           ioiUsingLastAffectingPenalty: ioiStyle.usingLastAffectingPenalty,
           ioiUsingMaxScorePerSubtask: ioiStyle.usingMaxScorePerSubtask,
         };
@@ -103,7 +111,7 @@ class ContestEditConfigsTab extends Component {
         initialValues = {
           ...initialValues,
           gcjAllowAllLanguages: allLanguagesAllowed(gcjStyle.languageRestriction),
-          gcjAllowedLanguages: this.fromLanguageRestriction(gcjStyle.languageRestriction),
+          gcjAllowedLanguages: fromLanguageRestriction(gcjStyle.languageRestriction),
           gcjWrongSubmissionPenalty: '' + gcjStyle.wrongSubmissionPenalty,
         };
       }
@@ -151,14 +159,14 @@ class ContestEditConfigsTab extends Component {
 
       const formProps = {
         config,
-        onCancel: this.toggleEdit,
+        onCancel: toggleEdit,
       };
-      return <ContestEditConfigsForm initialValues={initialValues} onSubmit={this.upsertConfig} {...formProps} />;
+      return <ContestEditConfigsForm initialValues={initialValues} onSubmit={upsertConfig} {...formProps} />;
     }
     return <ContestEditConfigsTable config={config} />;
   };
 
-  upsertConfig = async data => {
+  const upsertConfig = async data => {
     const {
       trocStyle,
       icpcStyle,
@@ -171,7 +179,7 @@ class ContestEditConfigsTab extends Component {
       mergedScoreboard,
       externalScoreboard,
       virtual,
-    } = this.state.config;
+    } = state.config;
 
     let config = {
       scoreboard: {
@@ -179,9 +187,7 @@ class ContestEditConfigsTab extends Component {
       },
     };
     if (trocStyle) {
-      const allowedLanguageNames = data.trocAllowAllLanguages
-        ? []
-        : this.toLanguageRestriction(data.trocAllowedLanguages);
+      const allowedLanguageNames = data.trocAllowAllLanguages ? [] : toLanguageRestriction(data.trocAllowedLanguages);
       config = {
         ...config,
         trocStyle: {
@@ -191,9 +197,7 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (icpcStyle) {
-      const allowedLanguageNames = data.icpcAllowAllLanguages
-        ? []
-        : this.toLanguageRestriction(data.icpcAllowedLanguages);
+      const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : toLanguageRestriction(data.icpcAllowedLanguages);
       config = {
         ...config,
         icpcStyle: {
@@ -203,9 +207,7 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (ioiStyle) {
-      const allowedLanguageNames = data.ioiAllowAllLanguages
-        ? []
-        : this.toLanguageRestriction(data.ioiAllowedLanguages);
+      const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : toLanguageRestriction(data.ioiAllowedLanguages);
       config = {
         ...config,
         ioiStyle: {
@@ -216,9 +218,7 @@ class ContestEditConfigsTab extends Component {
       };
     }
     if (gcjStyle) {
-      const allowedLanguageNames = data.gcjAllowAllLanguages
-        ? []
-        : this.toLanguageRestriction(data.gcjAllowedLanguages);
+      const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : toLanguageRestriction(data.gcjAllowedLanguages);
       config = {
         ...config,
         gcjStyle: {
@@ -275,31 +275,22 @@ class ContestEditConfigsTab extends Component {
       config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
     }
 
-    await this.props.onUpsertConfig(this.props.contest.jid, config);
-    await this.refreshConfig();
-    this.toggleEdit();
+    await dispatch(contestModuleActions.upsertConfig(contest.jid, config));
+    await refreshConfig();
+    toggleEdit();
   };
 
-  fromLanguageRestriction = r => {
+  const fromLanguageRestriction = r => {
     return Object.assign({}, ...r.allowedLanguageNames.map(l => ({ [l]: true })));
   };
 
-  toLanguageRestriction = r => {
+  const toLanguageRestriction = r => {
     return Object.keys(r).filter(l => r[l]);
   };
 
-  toggleEdit = () => {
-    this.setState(prevState => ({
-      isEditing: !prevState.isEditing,
-    }));
+  const toggleEdit = () => {
+    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
   };
-}
 
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetConfig: contestModuleActions.getConfig,
-  onUpsertConfig: contestModuleActions.upsertConfig,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestEditConfigsTab);
+  return render();
+}

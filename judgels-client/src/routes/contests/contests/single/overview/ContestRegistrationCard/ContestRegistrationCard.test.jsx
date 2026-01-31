@@ -6,7 +6,10 @@ import { vi } from 'vitest';
 
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
 import sessionReducer, { PutToken, PutUser } from '../../../../../../modules/session/sessionReducer';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
+import contestReducer from '../../../modules/contestReducer';
 import ContestRegistrationCard from './ContestRegistrationCard';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
@@ -17,6 +20,11 @@ vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrationCard', () => {
   const renderComponent = async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestWebActions.getWebConfig.mockReturnValue(() => Promise.resolve());
     contestContestantActions.getApprovedContestantsCount.mockReturnValue(() => Promise.resolve(10));
 
@@ -29,13 +37,16 @@ describe('ContestRegistrationCard', () => {
     );
     store.dispatch(PutUser({ jid: 'userJid' }));
     store.dispatch(PutToken('token'));
-    store.dispatch(PutContest({ jid: 'contestJid' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <ContestRegistrationCard />
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+              <ContestRegistrationCard />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -52,13 +63,15 @@ describe('ContestRegistrationCard', () => {
       await renderComponent();
     });
 
-    it(`shows correct texts when contestant state is ${contestantState}`, () => {
-      const container = document.body;
-      const stateElements = container.querySelectorAll('span.contest-registration-card__state');
-      const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
+    it(`shows correct texts when contestant state is ${contestantState}`, async () => {
+      await waitFor(() => {
+        const container = document.body;
+        const stateElements = container.querySelectorAll('span.contest-registration-card__state');
+        const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
 
-      expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
-      expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
+        expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
+        expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
+      });
     });
   });
 });

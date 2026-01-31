@@ -1,4 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,12 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { ContestTab, REFRESH_WEB_CONFIG_INTERVAL } from '../../../../modules/api/uriel/contestWeb';
+import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { createDocumentTitle } from '../../../../utils/title';
 import { EditContest } from '../modules/contestReducer';
-import { selectContest, selectIsEditingContest } from '../modules/contestSelectors';
+import { selectIsEditingContest } from '../modules/contestSelectors';
 import { selectContestWebConfig } from '../modules/contestWebConfigSelectors';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
@@ -20,7 +22,6 @@ import ContestStateWidget from './components/ContestStateWidget/ContestStateWidg
 import { LoadingContestStateWidget } from './components/ContestStateWidget/LoadingContestStateWidget';
 import { contestIcon } from './modules/contestIcon';
 
-import * as contestActions from '../modules/contestActions';
 import * as contestWebActions from './modules/contestWebActions';
 
 import './SingleContestLayout.scss';
@@ -28,8 +29,9 @@ import './SingleContestLayout.scss';
 export default function SingleContestLayout() {
   const { contestSlug } = useParams({ strict: false });
   const { pathname } = useLocation();
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const contest = useSelector(selectContest);
   const isEditingContest = useSelector(selectIsEditingContest);
   const contestWebConfig = useSelector(selectContestWebConfig);
   const currentTimeoutRef = useRef(null);
@@ -41,40 +43,21 @@ export default function SingleContestLayout() {
     currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contestJid), REFRESH_WEB_CONFIG_INTERVAL);
   };
 
-  const loadContest = async () => {
-    // Optimization:
-    // If the current contest slug is equal to the persisted one, then assume the JID is still the same,
-    if (contest && contest.slug === contestSlug) {
-      currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contest.jid), REFRESH_WEB_CONFIG_INTERVAL);
-    }
-
-    // so that we don't have to wait until we get the contest from backend.
-    const { contest: newContest } = await dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
-    document.title = createDocumentTitle(newContest.name);
-
-    if (!contest || contest.slug !== contestSlug) {
-      currentTimeoutRef.current = setTimeout(() => refreshWebConfig(newContest.jid), REFRESH_WEB_CONFIG_INTERVAL);
-    }
-  };
-
   useEffect(() => {
-    loadContest();
+    document.title = createDocumentTitle(contest.name);
+
+    // Start refreshing web config
+    dispatch(contestWebActions.getWebConfig(contest.jid));
+    currentTimeoutRef.current = setTimeout(() => refreshWebConfig(contest.jid), REFRESH_WEB_CONFIG_INTERVAL);
 
     return () => {
-      dispatch(contestActions.clearContest());
       dispatch(contestWebActions.clearWebConfig());
 
       if (currentTimeoutRef.current) {
         clearTimeout(currentTimeoutRef.current);
       }
     };
-  }, [contestSlug]);
-
-  // Optimization:
-  // We wait until we get the contest from the backend only if the current slug is different from the persisted one.
-  if (!contest || contest.slug !== contestSlug) {
-    return <LoadingState large />;
-  }
+  }, [contestSlug, contest.jid]);
 
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
   const sidebarItems = [

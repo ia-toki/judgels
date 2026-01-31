@@ -1,44 +1,40 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
-import { selectContest } from '../../../modules/contestSelectors';
 import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
 
-class ContestClarificationsWidget extends Component {
-  render() {
-    if (this.props.clarificationCount === 0) {
-      return null;
-    }
-    const intent = this.props.clarificationStatus === ContestClarificationStatus.Asked ? Intent.WARNING : Intent.NONE;
-    return (
-      <Tag className="normal-weight" intent={intent}>
-        {this.props.clarificationCount}
-      </Tag>
-    );
-  }
+export default function ContestClarificationsWidget() {
+  const { contestSlug } = useParams({ strict: false });
+  const dispatch = useDispatch();
+  const clarificationCount = useSelector(state => selectContestWebConfig(state).clarificationCount);
+  const clarificationStatus = useSelector(state => selectContestWebConfig(state).clarificationStatus);
+  const prevClarificationCountRef = useRef(clarificationCount);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.clarificationCount > prevProps.clarificationCount) {
+  useEffect(() => {
+    if (clarificationCount > prevClarificationCountRef.current) {
       // TODO(lungsin): change the notification tag to be more proper, e.g. using clarification JID.
-      const timestamp = Math.floor(Date.now() / REFRESH_WEB_CONFIG_INTERVAL); // Use timestamp for notification tag
-      const notificationTag = `clarification_${this.props.contestSlug}_timestamp_${timestamp}`;
-      this.props.onAlertNewClarifications(this.props.clarificationStatus, notificationTag);
+      const timestamp = Math.floor(Date.now() / REFRESH_WEB_CONFIG_INTERVAL);
+      const notificationTag = `clarification_${contestSlug}_timestamp_${timestamp}`;
+      dispatch(contestClarificationActions.alertNewClarifications(clarificationStatus, notificationTag));
     }
+    prevClarificationCountRef.current = clarificationCount;
+  }, [clarificationCount]);
+
+  if (clarificationCount === 0) {
+    return null;
   }
+
+  const intent = clarificationStatus === ContestClarificationStatus.Asked ? Intent.WARNING : Intent.NONE;
+
+  return (
+    <Tag className="normal-weight" intent={intent}>
+      {clarificationCount}
+    </Tag>
+  );
 }
-
-const mapStateToProps = state => ({
-  contestSlug: selectContest(state).slug,
-  clarificationCount: selectContestWebConfig(state).clarificationCount,
-  clarificationStatus: selectContestWebConfig(state).clarificationStatus,
-});
-const mapDispatchToProps = {
-  onAlertNewClarifications: contestClarificationActions.alertNewClarifications,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestClarificationsWidget);

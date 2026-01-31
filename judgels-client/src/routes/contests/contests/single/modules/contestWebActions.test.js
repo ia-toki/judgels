@@ -7,7 +7,6 @@ import { nockUriel } from '../../../../../utils/nock';
 import * as contestWebActions from './contestWebActions';
 
 const contestJid = 'contestJid';
-const contestSlug = 'contestSlug';
 const mockStore = configureMockStore([thunk]);
 
 describe('contestWebActions', () => {
@@ -19,20 +18,6 @@ describe('contestWebActions', () => {
 
   afterEach(function () {
     nock.cleanAll();
-  });
-
-  describe('getContestBySlugWithWebConfig()', () => {
-    const responseBody = {
-      contest: {},
-      config: {},
-    };
-
-    it('calls API', async () => {
-      nockUriel().get(`/contest-web/slug/${contestSlug}/with-config`).reply(200, responseBody);
-
-      const response = await store.dispatch(contestWebActions.getContestBySlugWithWebConfig(contestSlug));
-      expect(response).toEqual(responseBody);
-    });
   });
 
   describe('getContestByJidWithWebConfig()', () => {

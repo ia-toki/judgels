@@ -1,56 +1,64 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { selectContest } from '../../../modules/contestSelectors';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
 
 import * as contestActions from '../../../modules/contestActions';
 
-class ContestEditDescriptionTab extends Component {
-  state = {
+export default function ContestEditDescriptionTab() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     isEditing: false,
     response: undefined,
+  });
+
+  const refreshContestDescription = async () => {
+    const response = await dispatch(contestActions.getContestDescription(contest.jid));
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  async componentDidMount() {
-    await this.refreshContestDescription();
-  }
+  useEffect(() => {
+    refreshContestDescription();
+  }, [contest.jid]);
 
-  render() {
+  const render = () => {
     return (
       <>
         <h4>
           Description settings
-          {this.renderEditButton()}
+          {renderEditButton()}
         </h4>
         <hr />
-        {this.renderContent()}
+        {renderContent()}
       </>
     );
-  }
-
-  refreshContestDescription = async () => {
-    const response = await this.props.onGetContestDescription(this.props.contest.jid);
-    this.setState({ response });
   };
 
-  renderEditButton = () => {
+  const renderEditButton = () => {
     return (
-      !this.state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={this.toggleEdit}>
+      !state.isEditing && (
+        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
           Edit
         </Button>
       )
     );
   };
 
-  renderContent = () => {
-    const { isEditing, response } = this.state;
+  const renderContent = () => {
+    const { isEditing, response } = state;
     if (response === undefined) {
       return <LoadingState />;
     }
@@ -59,20 +67,16 @@ class ContestEditDescriptionTab extends Component {
         description: response.description,
       };
       const formProps = {
-        onCancel: this.toggleEdit,
+        onCancel: toggleEdit,
       };
       return (
-        <ContestEditDescriptionForm
-          initialValues={initialValues}
-          onSubmit={this.updateContestDescription}
-          {...formProps}
-        />
+        <ContestEditDescriptionForm initialValues={initialValues} onSubmit={updateContestDescription} {...formProps} />
       );
     }
-    return this.renderDescription(response);
+    return renderDescription(response);
   };
 
-  renderDescription = ({ description, profilesMap }) => {
+  const renderDescription = ({ description, profilesMap }) => {
     if (!description) {
       return (
         <p>
@@ -87,24 +91,15 @@ class ContestEditDescriptionTab extends Component {
     );
   };
 
-  updateContestDescription = async data => {
-    await this.props.onUpdateContestDescription(this.props.contest.jid, data.description);
-    await this.refreshContestDescription();
-    this.toggleEdit();
+  const updateContestDescription = async data => {
+    await dispatch(contestActions.updateContestDescription(contest.jid, data.description));
+    await refreshContestDescription();
+    toggleEdit();
   };
 
-  toggleEdit = () => {
-    this.setState(prevState => ({
-      isEditing: !prevState.isEditing,
-    }));
+  const toggleEdit = () => {
+    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetContestDescription: contestActions.getContestDescription,
-  onUpdateContestDescription: contestActions.updateContestDescription,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestEditDescriptionTab);

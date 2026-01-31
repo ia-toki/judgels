@@ -42,7 +42,7 @@ describe('ContestAnnouncementsPage', () => {
     );
 
     const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>
       render(

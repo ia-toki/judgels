@@ -105,7 +105,7 @@ describe('ContestEditorialPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
     store.dispatch(PutEditorialLanguage('en'));
 
     await act(async () =>
