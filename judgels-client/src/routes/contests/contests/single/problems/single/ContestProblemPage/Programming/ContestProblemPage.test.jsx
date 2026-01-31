@@ -10,7 +10,6 @@ import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsRe
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
-import contestReducer from '../../../../../modules/contestReducer';
 import ContestProblemPage from './ContestProblemPage';
 
 import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
@@ -58,13 +57,7 @@ describe('ProgrammingContestProblemPage', () => {
       slug: 'contest-slug',
     });
 
-    const store = createStore(
-      combineReducers({
-        webPrefs: webPrefsReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ webPrefs: webPrefsReducer }), applyMiddleware(thunk));
 
     await act(async () => {
       render(

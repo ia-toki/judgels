@@ -4,10 +4,10 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer from '../../../../../../modules/session/sessionReducer';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer from '../../../modules/contestReducer';
 import ContestLogsPage from './ContestLogsPage';
 
 import * as contestLogActions from '../modules/contestLogActions';
@@ -43,10 +43,7 @@ describe('ContestLogsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
 
     await act(async () =>
       render(

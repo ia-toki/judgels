@@ -1,12 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import contestReducer from '../modules/contestReducer';
 import ContestsPage from './ContestsPage';
 
 import * as contestActions from '../modules/contestActions';
@@ -32,10 +31,7 @@ describe('ContestsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(state => state, applyMiddleware(thunk));
 
     return render(
       <Provider store={store}>

@@ -12,7 +12,6 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer from '../../../modules/contestReducer';
 import ContestEditGeneralTab from './ContestEditGeneralTab';
 
 import * as contestActions from '../../../modules/contestActions';
@@ -34,13 +33,7 @@ describe('ContestEditGeneralTab', () => {
 
     contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>

@@ -9,7 +9,6 @@ import sessionReducer, { PutUser } from '../../../../../../modules/session/sessi
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer from '../../../modules/contestReducer';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 
 import * as contestActions from '../../../modules/contestActions';
@@ -30,13 +29,7 @@ describe('ContestEditDescriptionTab', () => {
     );
     contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>

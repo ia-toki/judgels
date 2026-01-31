@@ -9,7 +9,6 @@ import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../m
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
-import contestReducer from '../../../../../modules/contestReducer';
 import ContestSubmissionPage from './ContestSubmissionPage';
 
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
@@ -35,13 +34,7 @@ describe('ContestSubmissionPage', () => {
       slug: 'contest-slug',
     });
 
-    const store = createStore(
-      combineReducers({
-        webPrefs: webPrefsReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ webPrefs: webPrefsReducer }), applyMiddleware(thunk));
     store.dispatch(PutStatementLanguage('en'));
 
     await act(async () => {

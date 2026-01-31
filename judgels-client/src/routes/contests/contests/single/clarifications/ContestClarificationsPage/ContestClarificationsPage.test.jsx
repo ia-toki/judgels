@@ -10,7 +10,6 @@ import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestClarificationsPage from './ContestClarificationsPage';
 
 import * as contestClarificationActions from '../modules/contestClarificationActions';
@@ -50,15 +49,10 @@ describe('ContestClarificationsPage', () => {
     );
 
     const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        webPrefs: webPrefsReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
+      combineReducers({ session: sessionReducer, webPrefs: webPrefsReducer }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutContest({ jid: 'contestJid' }));
     store.dispatch(PutStatementLanguage('en'));
 
     await act(async () =>

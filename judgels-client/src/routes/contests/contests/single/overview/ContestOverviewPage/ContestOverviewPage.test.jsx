@@ -8,7 +8,6 @@ import sessionReducer, { PutUser } from '../../../../../../modules/session/sessi
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
 import ContestOverviewPage from './ContestOverviewPage';
 
 import * as contestActions from '../../../modules/contestActions';
@@ -28,15 +27,8 @@ describe('ContestOverviewPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-        uriel: combineReducers({ contest: contestReducer }),
-      }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
     store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-slug' }));
 
     await act(async () =>
       render(

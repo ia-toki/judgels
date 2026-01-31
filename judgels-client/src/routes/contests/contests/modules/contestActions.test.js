@@ -6,7 +6,6 @@ import { vi } from 'vitest';
 import { ContestErrors } from '../../../../modules/api/uriel/contest';
 import { SubmissionError } from '../../../../modules/form/submissionError';
 import { nockUriel } from '../../../../utils/nock';
-import { EditContest, PutContest } from './contestReducer';
 
 import * as contestActions from './contestActions';
 
@@ -45,8 +44,7 @@ describe('contestActions', () => {
 
         await store.dispatch(contestActions.createContest(params));
 
-        expect(mockPush).toHaveBeenCalledWith('/contests/new-contest');
-        expect(store.getActions()).toContainEqual(EditContest(true));
+        expect(mockPush).toHaveBeenCalledWith('/contests/new-contest', { isEditingContest: true });
       });
     });
 
@@ -137,8 +135,6 @@ describe('contestActions', () => {
 
       const response = await store.dispatch(contestActions.getContestBySlug('ioi'));
       expect(response).toEqual(contest);
-
-      expect(store.getActions()).toContainEqual(PutContest(contest));
     });
   });
 

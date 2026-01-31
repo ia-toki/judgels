@@ -2,7 +2,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
@@ -13,8 +13,6 @@ import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../modules/queries/contestWeb';
 import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { createDocumentTitle } from '../../../../utils/title';
-import { EditContest } from '../modules/contestReducer';
-import { selectIsEditingContest } from '../modules/contestSelectors';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
 import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
@@ -25,18 +23,21 @@ import './SingleContestLayout.scss';
 
 export default function SingleContestLayout() {
   const { contestSlug } = useParams({ strict: false });
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const isEditingContest = location.state?.isEditingContest;
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
-  const isEditingContest = useSelector(selectIsEditingContest);
-
-  const onSetNotEditingContest = () => dispatch(EditContest(false));
 
   useEffect(() => {
     document.title = createDocumentTitle(contest.name);
   }, [contestSlug, contest.name]);
+
+  useEffect(() => {
+    if (isEditingContest) {
+      window.history.replaceState({}, '');
+    }
+  }, [isEditingContest]);
 
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
   const sidebarItems = [
@@ -152,8 +153,7 @@ export default function SingleContestLayout() {
             <ContestEditDialog
               contest={contest}
               canaManage={contestWebConfig.canManage}
-              isEditingContest={isEditingContest}
-              onSetNotEditingContest={onSetNotEditingContest}
+              initiallyOpen={isEditingContest}
             />
           </div>
         </div>
