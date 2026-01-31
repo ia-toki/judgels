@@ -5,7 +5,11 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
+import contestReducer from '../../../modules/contestReducer';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 
 import * as contestActions from '../../../modules/contestActions';
@@ -14,6 +18,11 @@ vi.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
   beforeEach(async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestActions.getContestDescription.mockReturnValue(() =>
       Promise.resolve({
         description: 'current description',
@@ -22,16 +31,23 @@ describe('ContestEditDescriptionTab', () => {
     contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
+      combineReducers({
+        session: sessionReducer,
+        uriel: combineReducers({ contest: contestReducer }),
+      }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <ContestEditDescriptionTab />
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+              <ContestEditDescriptionTab />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   });
@@ -39,7 +55,7 @@ describe('ContestEditDescriptionTab', () => {
   test('contest edit description tab form', async () => {
     const user = userEvent.setup();
 
-    const button = screen.getByRole('button', { name: /edit/i });
+    const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
     const description = screen.getByRole('textbox');

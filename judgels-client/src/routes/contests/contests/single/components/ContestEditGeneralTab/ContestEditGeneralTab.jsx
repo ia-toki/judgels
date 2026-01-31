@@ -1,47 +1,55 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
-import { selectContest } from '../../../modules/contestSelectors';
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 
 import * as contestActions from '../../../modules/contestActions';
 import * as contestWebActions from '../../modules/contestWebActions';
 
-class ContestEditGeneralTab extends Component {
-  state = {
-    isEditing: false,
-  };
+export default function ContestEditGeneralTab() {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
-  render() {
+  const [state, setState] = useState({
+    isEditing: false,
+  });
+
+  const render = () => {
     return (
       <>
         <h4>
           General settings
-          {this.renderEditButton()}
+          {renderEditButton()}
         </h4>
         <hr />
-        {this.renderContent()}
+        {renderContent()}
       </>
     );
-  }
+  };
 
-  renderEditButton = () => {
+  const renderEditButton = () => {
     return (
-      !this.state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={this.toggleEdit}>
+      !state.isEditing && (
+        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
           Edit
         </Button>
       )
     );
   };
 
-  renderContent = () => {
-    const { contest } = this.props;
-    if (this.state.isEditing) {
+  const renderContent = () => {
+    if (state.isEditing) {
       const initialValues = {
         slug: contest.slug,
         name: contest.name,
@@ -50,14 +58,14 @@ class ContestEditGeneralTab extends Component {
         duration: formatDuration(contest.duration),
       };
       const formProps = {
-        onCancel: this.toggleEdit,
+        onCancel: toggleEdit,
       };
-      return <ContestEditGeneralForm initialValues={initialValues} onSubmit={this.updateContest} {...formProps} />;
+      return <ContestEditGeneralForm initialValues={initialValues} onSubmit={updateContest} {...formProps} />;
     }
     return <ContestEditGeneralTable contest={contest} />;
   };
 
-  updateContest = async data => {
+  const updateContest = async data => {
     const updateData = {
       slug: data.slug,
       name: data.name,
@@ -65,23 +73,15 @@ class ContestEditGeneralTab extends Component {
       beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
-    await this.props.onUpdateContest(this.props.contest.jid, this.props.contest.slug, updateData);
-    await this.props.onGetContestByJidWithWebConfig(this.props.contest.jid);
-    this.toggleEdit();
+    await dispatch(contestActions.updateContest(contest.jid, contest.slug, updateData));
+    await dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid));
+    await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug] });
+    toggleEdit();
   };
 
-  toggleEdit = () => {
-    this.setState(prevState => ({
-      isEditing: !prevState.isEditing,
-    }));
+  const toggleEdit = () => {
+    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetContestByJidWithWebConfig: contestWebActions.getContestByJidWithWebConfig,
-  onUpdateContest: contestActions.updateContest,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestEditGeneralTab);

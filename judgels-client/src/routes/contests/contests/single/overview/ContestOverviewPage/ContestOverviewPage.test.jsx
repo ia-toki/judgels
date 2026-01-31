@@ -35,7 +35,7 @@ describe('ContestOverviewPage', () => {
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutUser({ jid: 'userJid', token: 'token' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
     store.dispatch(PutContest({ jid: 'contestJid', slug: 'contest-slug' }));
 
     await act(async () =>

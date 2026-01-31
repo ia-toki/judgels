@@ -1,47 +1,57 @@
 import { Button, Classes, Dialog, HTMLTable } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getCountryName } from '../../../../../../assets/data/countries';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { selectContest } from '../../../modules/contestSelectors';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
 import './ContestRegistrantsDialog.scss';
 
-class ContestRegistrantsDialog extends Component {
-  state = {
+export default function ContestRegistrantsDialog({ onClose }) {
+  const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const refreshRegistrants = async () => {
+    const response = await dispatch(contestContestantActions.getApprovedContestants(contest.jid));
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  async componentDidMount() {
-    const response = await this.props.onGetApprovedContestants(this.props.contest.jid);
-    this.setState({ response });
-  }
+  useEffect(() => {
+    refreshRegistrants();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     const contestantsCount = response ? ` (${response.data.length})` : '';
 
     return (
-      <Dialog isOpen onClose={this.props.onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>
-          {this.renderRegistrants()}
-        </div>
+      <Dialog isOpen onClose={onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>{renderRegistrants()}</div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Close" onClick={this.props.onClose} />
+            <Button text="Close" onClick={onClose} />
           </div>
         </div>
       </Dialog>
     );
-  }
+  };
 
-  renderRegistrants = () => {
-    const { response } = this.state;
+  const renderRegistrants = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -86,12 +96,6 @@ class ContestRegistrantsDialog extends Component {
       </HTMLTable>
     );
   };
-}
 
-const mapStateToProps = state => ({
-  contest: selectContest(state),
-});
-const mapDispatchToProps = {
-  onGetApprovedContestants: contestContestantActions.getApprovedContestants,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ContestRegistrantsDialog);
+  return render();
+}

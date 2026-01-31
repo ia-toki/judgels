@@ -4,8 +4,11 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
+import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import contestReducer, { PutContest } from '../../../modules/contestReducer';
+import { nockUriel } from '../../../../../../utils/nock';
+import contestReducer from '../../../modules/contestReducer';
 import ContestRegistrantsDialog from './ContestRegistrantsDialog';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
@@ -14,6 +17,11 @@ vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrantsDialog', () => {
   beforeEach(async () => {
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
     contestContestantActions.getApprovedContestants.mockReturnValue(() =>
       Promise.resolve({
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],
@@ -29,25 +37,30 @@ describe('ContestRegistrantsDialog', () => {
     );
 
     const store = createStore(
-      combineReducers({ uriel: combineReducers({ contest: contestReducer }) }),
+      combineReducers({
+        session: sessionReducer,
+        uriel: combineReducers({ contest: contestReducer }),
+      }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutContest({ jid: 'contestJid' }));
+    store.dispatch(PutUser({ jid: 'userJid' }));
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ContestRegistrantsDialog />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+              <ContestRegistrantsDialog />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   });
 
-  test('table', () => {
-    const rows = screen.getAllByRole('row').slice(1);
-    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
+  test('table', async () => {
+    const rows = await screen.findAllByRole('row');
+    expect(rows.slice(1).map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
       ['Indonesia', 'username3'],
       ['Indonesia', 'username4'],
       ['Thailand', 'username1'],
