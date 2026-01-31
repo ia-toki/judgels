@@ -16,10 +16,8 @@ import contestReducer from '../../../modules/contestReducer';
 import ContestEditGeneralTab from './ContestEditGeneralTab';
 
 import * as contestActions from '../../../modules/contestActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 vi.mock('../../../modules/contestActions');
-vi.mock('../../modules/contestWebActions');
 
 describe('ContestEditGeneralTab', () => {
   beforeEach(async () => {
@@ -32,8 +30,8 @@ describe('ContestEditGeneralTab', () => {
         style: ContestStyle.ICPC,
         beginTime: parseDateTime('2018-09-10 13:00').getTime(),
       });
+    nockUriel().get('/contests/slug/contest-a/config').reply(200, {});
 
-    contestWebActions.getContestByJidWithWebConfig.mockReturnValue(() => Promise.resolve({}));
     contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
 
     const store = createStore(

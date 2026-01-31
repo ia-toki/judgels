@@ -1,6 +1,6 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle, People, Tick } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ import { selectIsLoggedIn, selectToken } from '../../../../../../modules/session
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 import './ContestRegistrationCard.scss';
 
@@ -21,6 +20,7 @@ export default function ContestRegistrationCard() {
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [state, setState] = useState({
@@ -54,7 +54,7 @@ export default function ContestRegistrationCard() {
     const [contestantState, contestantsCount] = await Promise.all([
       dispatch(contestContestantActions.getMyContestantState(contest.jid)),
       dispatch(contestContestantActions.getApprovedContestantsCount(contest.jid)),
-      dispatch(contestWebActions.getWebConfig(contest.jid)),
+      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
     ]);
     setState(prevState => ({ ...prevState, contestantState, contestantsCount }));
   };

@@ -12,7 +12,6 @@ import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneral
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 
 import * as contestActions from '../../../modules/contestActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 export default function ContestEditGeneralTab() {
   const { contestSlug } = useParams({ strict: false });
@@ -74,7 +73,6 @@ export default function ContestEditGeneralTab() {
       duration: parseDuration(data.duration),
     };
     await dispatch(contestActions.updateContest(contest.jid, contest.slug, updateData));
-    await dispatch(contestWebActions.getContestByJidWithWebConfig(contest.jid));
     await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug] });
     toggleEdit();
   };

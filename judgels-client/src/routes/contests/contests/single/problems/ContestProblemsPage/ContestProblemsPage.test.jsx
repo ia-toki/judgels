@@ -107,9 +107,12 @@ describe('ContestProblemsPage', () => {
       });
 
       it('shows action buttons', async () => {
-        const section = document.querySelector('div.content-card__section');
-        const buttons = Array.from(section.querySelectorAll('button'));
-        expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
+        await waitFor(() => {
+          const section = document.querySelector('div.content-card__section');
+          expect(section).not.toBeNull();
+          const buttons = Array.from(section.querySelectorAll('button'));
+          expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
+        });
       });
     });
   });

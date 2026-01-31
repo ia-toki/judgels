@@ -1,17 +1,21 @@
 import { Tag } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
-import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
+import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 
 export default function ContestAnnouncementsWidget() {
   const { contestSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const announcementCount = useSelector(state => selectContestWebConfig(state).announcementCount);
+  const announcementCount = webConfig.announcementCount;
   const prevAnnouncementCountRef = useRef(announcementCount);
 
   useEffect(() => {

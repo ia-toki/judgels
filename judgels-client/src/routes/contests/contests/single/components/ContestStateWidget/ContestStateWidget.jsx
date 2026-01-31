@@ -1,6 +1,6 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import { InfoSign, Time } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,21 +9,22 @@ import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { selectContestWebConfig } from '../../../modules/contestWebConfigSelectors';
 
 import * as contestActions from '../../../modules/contestActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
 // TODO(fushar): unit tests
 export default function ContestStateWidget() {
   const { contestSlug } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
-  const contestState = useSelector(state => selectContestWebConfig(state).state);
-  const remainingStateDuration = useSelector(state => selectContestWebConfig(state).remainingStateDuration);
+  const contestState = webConfig.state;
+  const remainingStateDuration = webConfig.remainingStateDuration;
 
   const [state, setState] = useState({
     baseRemainingDuration: undefined,
@@ -159,7 +160,7 @@ export default function ContestStateWidget() {
       );
 
       if (remainingDuration === 0 && prevRemainingDuration !== 0) {
-        dispatch(contestWebActions.getWebConfig(contest.jid));
+        queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] });
       }
 
       return { ...prevState, remainingDuration };
@@ -187,7 +188,7 @@ export default function ContestStateWidget() {
   const startVirtualContest = async () => {
     setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true }));
     await dispatch(contestActions.startVirtualContest(contest.jid));
-    await dispatch(contestWebActions.getWebConfig(contest.jid));
+    await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] });
     setState(prevState => ({ ...prevState, isVirtualContestButtonLoading: false }));
   };
 

@@ -13,9 +13,7 @@ import contestReducer from '../../../modules/contestReducer';
 import ContestRegistrationCard from './ContestRegistrationCard';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
-import * as contestWebActions from '../../modules/contestWebActions';
 
-vi.mock('../../modules/contestWebActions');
 vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrationCard', () => {
@@ -24,8 +22,8 @@ describe('ContestRegistrationCard', () => {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
+    nockUriel().get('/contests/slug/contest-slug/config').reply(200, {});
 
-    contestWebActions.getWebConfig.mockReturnValue(() => Promise.resolve());
     contestContestantActions.getApprovedContestantsCount.mockReturnValue(() => Promise.resolve(10));
 
     const store = createStore(
