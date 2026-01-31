@@ -137,7 +137,7 @@ function ContestSubmissionsPage() {
   };
 
   const onRegrade = async submissionJid => {
-    await onRegrade(submissionJid);
+    await dispatch(contestSubmissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 
