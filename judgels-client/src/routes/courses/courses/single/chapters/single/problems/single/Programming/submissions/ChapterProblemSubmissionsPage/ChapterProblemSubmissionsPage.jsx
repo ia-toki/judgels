@@ -1,5 +1,6 @@
 import { Switch } from '@blueprintjs/core';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,12 +8,13 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
 import {
   selectMaybeUserJid,
   selectMaybeUsername,
+  selectToken,
 } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
-import { selectCourse } from '../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
 import { useChapterProblemContext } from '../../../ChapterProblemContext';
 import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
@@ -24,12 +26,14 @@ const PAGE_SIZE = 20;
 export default function ChapterProblemSubmissionsPage() {
   const { worksheet } = useChapterProblemContext();
   const problemAlias = worksheet?.problem?.alias;
+  const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
   const username = useSelector(selectMaybeUsername);
-  const course = useSelector(selectCourse);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
 
   const [state, setState] = useState({

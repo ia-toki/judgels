@@ -5,8 +5,9 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import courseReducer, { PutCourse } from '../../../../../modules/courseReducer';
+import { nockJerahmeel } from '../../../../../../../../utils/nock';
 import courseChapterReducer, { PutCourseChapter } from '../../../modules/courseChapterReducer';
 import ChapterResourcesPage from './ChapterResourcesPage';
 
@@ -58,14 +59,15 @@ describe('ChapterResourcesPage', () => {
       ])
     );
 
+    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
-        jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
+        jerahmeel: combineReducers({ courseChapter: courseChapterReducer }),
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
         jid: 'chapterJid',
@@ -78,14 +80,16 @@ describe('ChapterResourcesPage', () => {
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/courses/courseSlug/chapter/chapter-1']}
-            path="/courses/$courseSlug/chapter/$chapterAlias"
-          >
-            <ChapterResourcesPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/courses/courseSlug/chapter/chapter-1']}
+              path="/courses/$courseSlug/chapter/$chapterAlias"
+            >
+              <ChapterResourcesPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -97,8 +101,8 @@ describe('ChapterResourcesPage', () => {
       await renderComponent();
     });
 
-    it('shows placeholder text and no resources', () => {
-      expect(screen.getByText(/no resources/i)).toBeInTheDocument();
+    it('shows placeholder text and no resources', async () => {
+      await screen.findByText(/no resources/i);
       expect(document.querySelectorAll('a.content-card-link')).toHaveLength(0);
     });
   });
@@ -116,7 +120,8 @@ describe('ChapterResourcesPage', () => {
       await renderComponent();
     });
 
-    it('shows the resources', () => {
+    it('shows the resources', async () => {
+      await screen.findByText('X. Lesson X');
       const cards = document.querySelectorAll('a.content-card-link');
       expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
         ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],

@@ -1,4 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,9 +8,10 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
-import { selectCourse } from '../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
@@ -19,9 +21,10 @@ import * as chapterLessonActions from '../modules/chapterLessonActions';
 import './ChapterLessonPage.scss';
 
 export default function ChapterLessonPage() {
-  const { lessonAlias } = useParams({ strict: false });
+  const { courseSlug, lessonAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const chapters = useSelector(selectCourseChapters);
   const statementLanguage = useSelector(selectStatementLanguage);

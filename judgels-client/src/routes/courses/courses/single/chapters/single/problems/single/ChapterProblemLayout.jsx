@@ -1,4 +1,5 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,9 +9,10 @@ import { ChapterProblemProgressTag } from '../../../../../../../../components/Ve
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-import { selectCourse } from '../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
@@ -23,9 +25,10 @@ import * as chapterProblemActions from './modules/chapterProblemActions';
 import './ChapterProblemLayout.scss';
 
 export default function ChapterProblemLayout() {
-  const { problemAlias } = useParams({ strict: false });
+  const { courseSlug, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const chapters = useSelector(selectCourseChapters);
   const reloadKey = useSelector(selectChapterProblemReloadKey);

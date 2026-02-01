@@ -8,8 +8,9 @@ import { OutputOnlyOverrides } from '../../../../../../../../../../../../modules
 import webPrefsReducer, {
   PutStatementLanguage,
 } from '../../../../../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../../../../../test/RouterWrapper';
-import courseReducer, { PutCourse } from '../../../../../../../../../modules/courseReducer';
+import { nockJerahmeel } from '../../../../../../../../../../../../utils/nock';
 import courseChapterReducer, { PutCourseChapter } from '../../../../../../../modules/courseChapterReducer';
 import ChapterProblemSubmissionPage from './ChapterProblemSubmissionPage';
 
@@ -35,14 +36,15 @@ describe('ChapterProblemSubmissionPage', () => {
     );
     chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image url'));
 
+    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
-        jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
+        jerahmeel: combineReducers({ courseChapter: courseChapterReducer }),
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
         jid: 'chapterJid',
@@ -55,14 +57,16 @@ describe('ChapterProblemSubmissionPage', () => {
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
-            path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
-          >
-            <ChapterProblemSubmissionPage />
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
+              path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
+            >
+              <ChapterProblemSubmissionPage />
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -71,7 +75,7 @@ describe('ChapterProblemSubmissionPage', () => {
     await renderComponent();
   });
 
-  test('page', () => {
-    expect(screen.getByText('Submission #10')).toBeInTheDocument();
+  test('page', async () => {
+    await screen.findByText('Submission #10');
   });
 });

@@ -1,13 +1,15 @@
 import { Popover, Position } from '@blueprintjs/core';
 import { Menu } from '@blueprintjs/icons';
-import { Link, useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
-import { selectCourse } from '../../modules/courseSelectors';
+import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
 import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
 
@@ -16,9 +18,11 @@ import * as courseChapterActions from '../chapters/modules/courseChapterActions'
 import './CourseChaptersSidebar.scss';
 
 export default function CourseChaptersSidebar() {
+  const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
 
   const [state, setState] = useState({

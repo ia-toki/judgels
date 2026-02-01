@@ -1,15 +1,23 @@
 import { Intent } from '@blueprintjs/core';
 import { SendMessage } from '@blueprintjs/icons';
-import { connect } from 'react-redux';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
-import { selectCourse } from '../../modules/courseSelectors';
+import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { selectCourseChapters } from '../chapters/modules/courseChaptersSelectors';
 
 import './CourseOverview.scss';
 
-function CourseOverview({ course, chapters }) {
+export default function CourseOverview() {
+  const { courseSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
+  const chapters = useSelector(selectCourseChapters);
+
   const renderStartButton = () => {
     if (!chapters || chapters.length === 0) {
       return null;
@@ -33,10 +41,3 @@ function CourseOverview({ course, chapters }) {
     </div>
   );
 }
-
-const mapStateToProps = state => ({
-  course: selectCourse(state),
-  chapters: selectCourseChapters(state),
-});
-
-export default connect(mapStateToProps)(CourseOverview);

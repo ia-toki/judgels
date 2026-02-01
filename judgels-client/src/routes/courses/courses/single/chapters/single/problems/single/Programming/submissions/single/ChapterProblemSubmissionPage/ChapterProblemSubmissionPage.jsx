@@ -1,4 +1,5 @@
 import { ChevronLeft } from '@blueprintjs/icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,17 +8,19 @@ import { ButtonLink } from '../../../../../../../../../../../../components/Butto
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
-import { selectCourse } from '../../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemSubmissionPage() {
-  const { problemAlias, submissionId } = useParams({ strict: false });
+  const { courseSlug, problemAlias, submissionId } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const statementLanguage = useSelector(selectStatementLanguage);
 

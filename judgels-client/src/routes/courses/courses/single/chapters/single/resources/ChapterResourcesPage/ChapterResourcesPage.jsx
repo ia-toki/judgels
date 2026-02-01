@@ -1,5 +1,6 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Link } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,7 +8,8 @@ import { LoadingContentCard } from '../../../../../../../../components/LoadingCo
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
-import { selectCourse } from '../../../../../modules/courseSelectors';
+import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
@@ -17,8 +19,10 @@ import * as chapterResourcesActions from '../modules/chapterResourceActions';
 import './ChapterResourcesPage.scss';
 
 export default function ChapterResourcesPage() {
+  const { courseSlug } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
 
   const [state, setState] = useState({
