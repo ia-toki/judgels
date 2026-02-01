@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
@@ -12,27 +12,35 @@ import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.scss';
 
-class ContestHistoryPage extends Component {
-  state = {
+export default function ContestHistoryPage() {
+  const userJid = useSelector(selectUserJid);
+  const username = useSelector(selectUsername);
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const refreshContestHistory = async () => {
+    const response = await dispatch(profileActions.getContestPublicHistory(username));
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  async componentDidMount() {
-    const response = await this.props.onGetContestPublicHistory(this.props.username);
-    this.setState({ response });
-  }
+  useEffect(() => {
+    refreshContestHistory();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
-    return <Card title="Contest history">{this.renderTable()}</Card>;
-  }
+    return <Card title="Contest history">{renderTable()}</Card>;
+  };
 
-  renderTable = () => {
-    const { data } = this.state.response;
+  const renderTable = () => {
+    const { data } = state.response;
     if (data.length === 0) {
       return (
         <p>
@@ -51,13 +59,13 @@ class ContestHistoryPage extends Component {
             <th>Diff</th>
           </tr>
         </thead>
-        <tbody>{this.renderRows()}</tbody>
+        <tbody>{renderRows()}</tbody>
       </HTMLTable>
     );
   };
 
-  renderRows = () => {
-    const { data, contestsMap } = this.state.response;
+  const renderRows = () => {
+    const { data, contestsMap } = state.response;
     const rows = [];
     let lastRating = null;
 
@@ -75,7 +83,7 @@ class ContestHistoryPage extends Component {
               <span className={getRatingClass(event.rating)}>{event.rating.publicRating}</span>
             </>
           );
-          ratingDiff = this.renderRatingDiff(event.rating.publicRating - lastRating.publicRating);
+          ratingDiff = renderRatingDiff(event.rating.publicRating - lastRating.publicRating);
         }
         lastRating = event.rating;
       }
@@ -96,7 +104,7 @@ class ContestHistoryPage extends Component {
     return rows.reverse();
   };
 
-  renderRatingDiff = diff => {
+  const renderRatingDiff = diff => {
     if (diff === 0) {
       return '0';
     } else if (diff > 0) {
@@ -105,14 +113,6 @@ class ContestHistoryPage extends Component {
       return <span className="diff-negative">&minus;{-diff}</span>;
     }
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectUserJid(state),
-  username: selectUsername(state),
-});
-const mapDispatchToProps = {
-  onGetContestPublicHistory: profileActions.getContestPublicHistory,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContestHistoryPage);

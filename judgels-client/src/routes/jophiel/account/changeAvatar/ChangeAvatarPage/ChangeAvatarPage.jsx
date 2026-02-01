@@ -1,6 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
@@ -11,19 +11,29 @@ import * as avatarActions from '../../../modules/avatarActions';
 
 import './ChangeAvatarPanel.scss';
 
-class ChangeAvatarPage extends Component {
-  state = {
+export default function ChangeAvatarPage() {
+  const userJid = useSelector(selectUserJid);
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     avatarExists: undefined,
     avatarUrl: undefined,
+  });
+
+  const refreshAvatar = async () => {
+    const [avatarExists, avatarUrl] = await Promise.all([
+      dispatch(avatarActions.avatarExists(userJid)),
+      dispatch(avatarActions.renderAvatar(userJid)),
+    ]);
+    setState(prevState => ({ ...prevState, avatarExists, avatarUrl }));
   };
 
-  async componentDidMount() {
-    const [avatarExists, avatarUrl] = await Promise.all([this.avatarExists(), this.renderAvatar()]);
-    this.setState({ avatarExists, avatarUrl });
-  }
+  useEffect(() => {
+    refreshAvatar();
+  }, []);
 
-  render() {
-    const { avatarExists, avatarUrl } = this.state;
+  const render = () => {
+    const { avatarExists, avatarUrl } = state;
     if (!avatarUrl) {
       return <LoadingState />;
     }
@@ -33,7 +43,7 @@ class ChangeAvatarPage extends Component {
         <h4>Current avatar</h4>
         <img src={avatarUrl} alt="avatar" />
         <div>
-          <Button intent={Intent.DANGER} onClick={this.deleteAvatar}>
+          <Button intent={Intent.DANGER} onClick={deleteAvatar}>
             Remove avatar
           </Button>
         </div>
@@ -43,7 +53,7 @@ class ChangeAvatarPage extends Component {
     const newAvatar = (
       <div className="card-change-avatar__panel">
         <h4>Upload new avatar</h4>
-        <ChangeAvatarForm onSubmit={this.uploadAvatar} />
+        <ChangeAvatarForm onSubmit={uploadAvatar} />
       </div>
     );
 
@@ -55,34 +65,17 @@ class ChangeAvatarPage extends Component {
         </div>
       </Card>
     );
-  }
-
-  avatarExists = async () => {
-    return await this.props.onAvatarExists(this.props.userJid);
   };
 
-  renderAvatar = async () => {
-    return await this.props.onRenderAvatar(this.props.userJid);
-  };
-
-  deleteAvatar = async () => {
-    await this.props.onDeleteAvatar(this.props.userJid);
+  const deleteAvatar = async () => {
+    await dispatch(avatarActions.deleteAvatar(userJid));
     window.location.reload();
   };
 
-  uploadAvatar = async data => {
-    await this.props.onUpdateAvatar(this.props.userJid, data.file);
+  const uploadAvatar = async data => {
+    await dispatch(avatarActions.updateAvatar(userJid, data.file));
     window.location.reload();
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectUserJid(state),
-});
-const mapDispatchToProps = {
-  onAvatarExists: avatarActions.avatarExists,
-  onRenderAvatar: avatarActions.renderAvatar,
-  onDeleteAvatar: avatarActions.deleteAvatar,
-  onUpdateAvatar: avatarActions.updateAvatar,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ChangeAvatarPage);

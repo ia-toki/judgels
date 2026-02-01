@@ -1,58 +1,55 @@
 import { Button, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import * as userAccountActions from '../../modules/userAccountActions';
 
-class ResendActivationEmailButton extends Component {
-  timer;
+export default function ResendActivationEmailButton({ email }) {
+  const dispatch = useDispatch();
+  const timerRef = useRef(null);
 
-  state = {
+  const [state, setState] = useState({
     timeRemainingResendEmail: 5,
-  };
+  });
 
-  componentDidMount() {
-    this.timer = setInterval(this.countDown, 1000);
-  }
+  useEffect(() => {
+    timerRef.current = setInterval(countDown, 1000);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = 0;
-    }
-  }
-
-  render() {
-    const { timeRemainingResendEmail } = this.state;
+  const render = () => {
+    const { timeRemainingResendEmail } = state;
     return (
       <Button
         type="submit"
         text={`Resend activation email${timeRemainingResendEmail > 0 ? ` (${timeRemainingResendEmail})` : ''}`}
         intent={Intent.PRIMARY}
-        onClick={this.onResendEmail}
+        onClick={onResendEmail}
         disabled={timeRemainingResendEmail > 0}
       />
     );
-  }
-
-  onResendEmail = async () => {
-    await this.props.onResendActivationEmail(this.props.email);
-    this.setState({ timeRemainingResendEmail: 5 });
-    this.timer = setInterval(this.countDown, 1000);
   };
 
-  countDown = () => {
-    const seconds = this.state.timeRemainingResendEmail - 1;
-    this.setState({ timeRemainingResendEmail: seconds });
-
-    if (seconds === 0 && this.timer) {
-      clearInterval(this.timer);
-    }
+  const onResendEmail = async () => {
+    await dispatch(userAccountActions.resendActivationEmail(email));
+    setState(prevState => ({ ...prevState, timeRemainingResendEmail: 5 }));
+    timerRef.current = setInterval(countDown, 1000);
   };
+
+  const countDown = () => {
+    setState(prevState => {
+      const seconds = prevState.timeRemainingResendEmail - 1;
+      if (seconds === 0 && timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      return { ...prevState, timeRemainingResendEmail: seconds };
+    });
+  };
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onResendActivationEmail: userAccountActions.resendActivationEmail,
-};
-
-export default connect(undefined, mapDispatchToProps)(ResendActivationEmailButton);

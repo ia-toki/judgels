@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -10,22 +10,26 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 import * as profileActions from '../../modules/profileActions';
 
-class SubmissionHistoryPage extends Component {
-  state = {
-    response: undefined,
-  };
+export default function SubmissionHistoryPage() {
+  const username = useSelector(selectUsername);
+  const sessionUserJid = useSelector(selectMaybeUserJid);
+  const dispatch = useDispatch();
 
-  render() {
+  const [state, setState] = useState({
+    response: undefined,
+  });
+
+  const render = () => {
     return (
       <Card title="Submission history">
-        {this.renderSubmissions()}
-        {this.renderPagination()}
+        {renderSubmissions()}
+        {renderPagination()}
       </Card>
     );
-  }
+  };
 
-  renderSubmissions = () => {
-    const { response } = this.state;
+  const renderSubmissions = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -58,28 +62,20 @@ class SubmissionHistoryPage extends Component {
     );
   };
 
-  renderPagination = () => {
-    return <Pagination key={1} pageSize={20} onChangePage={this.onChangePage} />;
+  const renderPagination = () => {
+    return <Pagination key={1} pageSize={20} onChangePage={onChangePage} />;
   };
 
-  onChangePage = async nextPage => {
-    const data = await this.refreshSubmissions(nextPage);
+  const onChangePage = async nextPage => {
+    const data = await refreshSubmissions(nextPage);
     return data.totalCount;
   };
 
-  refreshSubmissions = async page => {
-    const response = await this.props.onGetSubmissions(this.props.username, page);
-    this.setState({ response });
+  const refreshSubmissions = async page => {
+    const response = await dispatch(profileActions.getSubmissions(username, page));
+    setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  username: selectUsername(state),
-  sessionUserJid: selectMaybeUserJid(state),
-});
-const mapDispatchToProps = {
-  onGetSubmissions: profileActions.getSubmissions,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SubmissionHistoryPage);
