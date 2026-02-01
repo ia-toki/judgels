@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
@@ -12,40 +12,39 @@ import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemSta
 
 import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
-export class ProblemStatementPage extends Component {
-  state = {
-    response: undefined,
-  };
+export default function ProblemStatementPage() {
+  const problemSet = useSelector(selectProblemSet);
+  const problem = useSelector(selectProblemSetProblem);
+  const statementLanguage = useSelector(selectStatementLanguage);
+  const dispatch = useDispatch();
 
-  async componentDidMount() {
-    const response = await this.props.onGetProblemWorksheet(
-      this.props.problemSet.jid,
-      this.props.problem.alias,
-      this.props.statementLanguage
+  const [state, setState] = useState({
+    response: undefined,
+  });
+
+  const loadWorksheet = async () => {
+    setState({ response: undefined });
+
+    const response = await dispatch(
+      problemSetProblemActions.getProblemWorksheet(problemSet.jid, problem.alias, statementLanguage)
     );
 
-    this.setState({
-      response,
-    });
+    setState({ response });
 
-    sendGAEvent({ category: 'Problems', action: 'View problemset problem', label: this.props.problemSet.name });
+    sendGAEvent({ category: 'Problems', action: 'View problemset problem', label: problemSet.name });
     sendGAEvent({
       category: 'Problems',
       action: 'View problem',
-      label: this.props.problemSet.name + ': ' + this.props.problem.alias,
+      label: problemSet.name + ': ' + problem.alias,
     });
-  }
+  };
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (this.props.statementLanguage !== prevProps.statementLanguage && prevState.response) {
-      this.setState({ response: undefined });
-    } else if (!this.state.response && prevState.response) {
-      await this.componentDidMount();
-    }
-  }
+  useEffect(() => {
+    loadWorksheet();
+  }, [statementLanguage]);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -55,15 +54,7 @@ export class ProblemStatementPage extends Component {
     } else {
       return <ProblemSetProblemBundleStatementPage worksheet={response} />;
     }
-  }
-}
+  };
 
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  problem: selectProblemSetProblem(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-const mapDispatchToProps = {
-  onGetProblemWorksheet: problemSetProblemActions.getProblemWorksheet,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemStatementPage);
+  return render();
+}
