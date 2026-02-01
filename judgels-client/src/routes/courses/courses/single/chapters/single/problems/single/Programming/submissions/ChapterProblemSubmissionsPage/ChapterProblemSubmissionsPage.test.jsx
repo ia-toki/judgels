@@ -1,12 +1,13 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import sessionReducer, { PutUser } from '../../../../../../../../../../../modules/session/sessionReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../../../../test/RouterWrapper';
-import courseReducer, { PutCourse } from '../../../../../../../../modules/courseReducer';
+import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
 import courseChapterReducer, { PutCourseChapter } from '../../../../../../modules/courseChapterReducer';
 import { ChapterProblemContext } from '../../../ChapterProblemContext';
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
@@ -42,15 +43,16 @@ describe('ChapterProblemSubmissionsPage', () => {
 
     chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image.url'));
 
+    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+
     const store = createStore(
       combineReducers({
         session: sessionReducer,
-        jerahmeel: combineReducers({ course: courseReducer, courseChapter: courseChapterReducer }),
+        jerahmeel: combineReducers({ courseChapter: courseChapterReducer }),
       }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutUser({ jid: 'userJid1', username: 'username' }));
-    store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
         jid: 'chapterJid',
@@ -62,16 +64,18 @@ describe('ChapterProblemSubmissionsPage', () => {
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter
-            initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}
-            path="/courses/$courseSlug/chapter/$chapterAlias/problems/$problemAlias/submissions"
-          >
-            <ChapterProblemContext.Provider value={{ worksheet: null, renderNavigation: () => null }}>
-              <ChapterProblemSubmissionsPage />
-            </ChapterProblemContext.Provider>
-          </TestRouter>
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <TestRouter
+              initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}
+              path="/courses/$courseSlug/chapter/$chapterAlias/problems/$problemAlias/submissions"
+            >
+              <ChapterProblemContext.Provider value={{ worksheet: null, renderNavigation: () => null }}>
+                <ChapterProblemSubmissionsPage />
+              </ChapterProblemContext.Provider>
+            </TestRouter>
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -87,7 +91,8 @@ describe('ChapterProblemSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows no buttons', () => {
+      it('shows no buttons', async () => {
+        await screen.findByText(/no submissions/i);
         expect(document.querySelectorAll('.action-buttons button')).toHaveLength(0);
       });
     });
@@ -98,9 +103,8 @@ describe('ChapterProblemSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows action buttons', () => {
-        const buttons = document.querySelectorAll('.action-buttons button');
-        expect([...buttons].map(button => button.textContent)).toEqual(['Regrade all pages']);
+      it('shows action buttons', async () => {
+        expect(await screen.findByRole('button', { name: /regrade all pages/i })).toBeInTheDocument();
       });
     });
   });
@@ -113,8 +117,8 @@ describe('ChapterProblemSubmissionsPage', () => {
         await renderComponent();
       });
 
-      it('shows placeholder text and no submissions', () => {
-        expect(screen.getByText(/no submissions/i)).toBeInTheDocument();
+      it('shows placeholder text and no submissions', async () => {
+        expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
         expect(screen.queryByRole('row')).not.toBeInTheDocument();
       });
     });
@@ -153,7 +157,11 @@ describe('ChapterProblemSubmissionsPage', () => {
           await renderComponent();
         });
 
-        it('shows the submissions', () => {
+        it('shows the submissions', async () => {
+          await waitFor(() => {
+            expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
+          });
+
           const rows = screen.getAllByRole('row').slice(1);
           expect(rows).toHaveLength(2);
 
@@ -176,7 +184,11 @@ describe('ChapterProblemSubmissionsPage', () => {
           await renderComponent();
         });
 
-        it('shows the submissions', () => {
+        it('shows the submissions', async () => {
+          await waitFor(() => {
+            expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
+          });
+
           const rows = screen.getAllByRole('row').slice(1);
           expect(
             rows.map(row =>

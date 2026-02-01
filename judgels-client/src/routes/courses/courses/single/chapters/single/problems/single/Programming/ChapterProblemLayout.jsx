@@ -1,8 +1,10 @@
-import { Outlet } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Outlet, useParams } from '@tanstack/react-router';
 import { useSelector } from 'react-redux';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
-import { selectCourse } from '../../../../../../modules/courseSelectors';
+import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
 import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { ChapterProblemContext } from '../ChapterProblemContext';
 import ChapterProblemStatementPage from './ChapterProblemStatementPage/ChapterProblemStatementPage';
@@ -11,7 +13,9 @@ import './ChapterProblemLayout.scss';
 import './ChapterProblemStatementLayout.scss';
 
 export default function ChapterProblemLayout({ worksheet, renderNavigation }) {
-  const course = useSelector(selectCourse);
+  const { courseSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const problemAlias = worksheet?.problem?.alias;
 

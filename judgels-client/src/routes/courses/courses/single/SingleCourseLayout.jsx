@@ -1,41 +1,25 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
+import { courseBySlugQueryOptions } from '../../../../modules/queries/course';
+import { selectToken } from '../../../../modules/session/sessionSelectors';
 import { createDocumentTitle } from '../../../../utils/title';
-import { selectCourse } from '../modules/courseSelectors';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
-
-import * as courseActions from '../modules/courseActions';
 
 import './SingleCourseLayout.scss';
 
 export default function SingleCourseLayout() {
   const { courseSlug } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const course = useSelector(selectCourse);
-
-  const loadCourse = async () => {
-    const loadedCourse = await dispatch(courseActions.getCourseBySlug(courseSlug));
-    document.title = createDocumentTitle(loadedCourse.name);
-  };
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
 
   useEffect(() => {
-    loadCourse();
-
-    return () => {
-      dispatch(courseActions.clearCourse());
-    };
-  }, [courseSlug]);
-
-  // Optimization:
-  // We wait until we get the course from the backend only if the current slug is different from the persisted one.
-  if (!course || course.slug !== courseSlug) {
-    return <LoadingState large />;
-  }
+    document.title = createDocumentTitle(course.name);
+  }, [courseSlug, course.name]);
 
   return (
     <FullWidthPageLayout>

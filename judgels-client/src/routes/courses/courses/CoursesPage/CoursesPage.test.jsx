@@ -5,7 +5,6 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
-import courseReducer from '../modules/courseReducer';
 import CoursesPage from './CoursesPage';
 
 import * as courseActions from '../modules/courseActions';
@@ -32,10 +31,7 @@ describe('CoursesPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({ jerahmeel: combineReducers({ course: courseReducer }) }),
-      applyMiddleware(thunk)
-    );
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () =>
       render(

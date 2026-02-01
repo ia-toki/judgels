@@ -12,7 +12,8 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsReducer';
-import courseReducer, { PutCourse } from '../../../../../../modules/courseReducer';
+import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
+import { nockJerahmeel } from '../../../../../../../../../utils/nock';
 import courseChapterReducer, { PutCourseChapter } from '../../../../modules/courseChapterReducer';
 import chapterProblemReducer from '../modules/chapterProblemReducer';
 import ChapterProblemLayout from './ChapterProblemLayout';
@@ -46,18 +47,18 @@ describe('ChapterProblemLayout', () => {
     };
     const renderNavigation = () => null;
 
+    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
         jerahmeel: combineReducers({
-          course: courseReducer,
           courseChapter: courseChapterReducer,
           chapterProblem: chapterProblemReducer,
         }),
       }),
       applyMiddleware(thunk)
     );
-    store.dispatch(PutCourse({ jid: 'courseJid', slug: 'courseSlug' }));
     store.dispatch(
       PutCourseChapter({
         jid: 'chapterJid',
@@ -71,7 +72,7 @@ describe('ChapterProblemLayout', () => {
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({
       getParentRoute: () => rootRoute,
-      path: '/test',
+      path: '/courses/$courseSlug',
       component: () => <ChapterProblemLayout worksheet={worksheet} renderNavigation={renderNavigation} />,
     });
     const childRoute = createRoute({
@@ -82,29 +83,31 @@ describe('ChapterProblemLayout', () => {
     const routeTree = rootRoute.addChildren([layoutRoute.addChildren([childRoute])]);
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/test'] }),
+      history: createMemoryHistory({ initialEntries: ['/courses/courseSlug'] }),
       defaultPendingMinMs: 0,
     });
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <RouterProvider router={router} />
-        </Provider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <RouterProvider router={router} />
+          </Provider>
+        </QueryClientProviderWrapper>
       )
     );
   });
 
-  test('renders problem statement', () => {
-    expect(screen.getByText('This is problem description')).toBeInTheDocument();
+  test('renders problem statement', async () => {
+    expect(await screen.findByText('This is problem description')).toBeInTheDocument();
   });
 
-  test('renders topbar navigation', () => {
-    expect(screen.getByText('Code')).toBeInTheDocument();
+  test('renders topbar navigation', async () => {
+    expect(await screen.findByText('Code')).toBeInTheDocument();
     expect(screen.getByText('Submissions')).toBeInTheDocument();
   });
 
-  test('renders outlet content', () => {
-    expect(screen.getByText('Child content')).toBeInTheDocument();
+  test('renders outlet content', async () => {
+    expect(await screen.findByText('Child content')).toBeInTheDocument();
   });
 });

@@ -1,3 +1,5 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,8 +8,9 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectCourse } from '../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
@@ -17,7 +20,9 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 
 export default function ChapterProblemWorkspacePage() {
   const { worksheet, renderNavigation } = useChapterProblemContext();
-  const course = useSelector(selectCourse);
+  const { courseSlug } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const gradingLanguage = useSelector(selectGradingLanguage);
   const dispatch = useDispatch();

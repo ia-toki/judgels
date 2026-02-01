@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,9 +9,9 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
-import { selectMaybeUserJid } from '../../../../../../../../../../../modules/session/sessionSelectors';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import { selectMaybeUserJid, selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectCourse } from '../../../../../../../../modules/courseSelectors';
 import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
@@ -18,10 +19,11 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
-  const { problemAlias } = useParams({ strict: false });
+  const { courseSlug, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
-  const course = useSelector(selectCourse);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapter = useSelector(selectCourseChapter);
   const language = useSelector(selectStatementLanguage);
 
