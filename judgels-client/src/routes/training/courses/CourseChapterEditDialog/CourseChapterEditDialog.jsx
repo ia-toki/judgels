@@ -1,81 +1,82 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { Alias } from '../../../../components/forms/validations';
 import CourseChapterEditForm from '../CourseChapterEditForm/CourseChapterEditForm';
 import { CourseChaptersTable } from '../CourseChaptersTable/CourseChaptersTable';
 
-export class CourseChapterEditDialog extends Component {
-  state = {
+export function CourseChapterEditDialog({ isOpen, course, onGetChapters, onSetChapters, onCloseDialog }) {
+  const [state, setState] = useState({
     response: undefined,
     isEditing: false,
+  });
+
+  const refreshChapters = async () => {
+    if (isOpen) {
+      setState(prevState => ({ ...prevState, response: undefined }));
+      const response = await onGetChapters(course.jid);
+      setState(prevState => ({ ...prevState, response }));
+    }
   };
 
-  componentDidMount() {
-    this.refreshChapters();
-  }
+  useEffect(() => {
+    refreshChapters();
+  }, [course]);
 
-  async componentDidUpdate(prevProps) {
-    if (prevProps.course !== this.props.course) {
-      this.refreshChapters();
-    }
-  }
-
-  render() {
-    const { isOpen } = this.props;
+  const render = () => {
     return (
       <div className="content-card__section">
-        <Dialog isOpen={isOpen} onClose={this.closeDialog} title="Edit course chapters" canOutsideClickClose={false}>
-          {this.renderDialogContent()}
+        <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit course chapters" canOutsideClickClose={false}>
+          {renderDialogContent()}
         </Dialog>
       </div>
     );
-  }
-
-  closeDialog = () => {
-    this.props.onCloseDialog();
-    this.setState({ isEditing: false });
   };
 
-  renderDialogContent = () => {
-    const { response, isEditing } = this.state;
+  const closeDialog = () => {
+    onCloseDialog();
+    setState(prevState => ({ ...prevState, isEditing: false }));
+  };
+
+  const renderDialogContent = () => {
+    const { response, isEditing } = state;
     if (!response) {
-      return this.renderDialogForm(<LoadingState />, null);
+      return renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
       const props = {
-        validator: this.validateChapters,
-        renderFormComponents: this.renderDialogForm,
-        onSubmit: this.updateChapters,
-        initialValues: { chapters: this.serializeChapters(response.data) },
+        validator: validateChapters,
+        renderFormComponents: renderDialogForm,
+        onSubmit: updateChapters,
+        initialValues: { chapters: serializeChapters(response.data) },
       };
       return <CourseChapterEditForm {...props} />;
     } else {
       const content = <CourseChaptersTable response={response} />;
-      const submitButton = <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={this.toggleEditing} />;
-      return this.renderDialogForm(content, submitButton);
+      const submitButton = <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={toggleEditing} />;
+      return renderDialogForm(content, submitButton);
     }
   };
 
-  renderDialogForm = (content, submitButton) => (
+  const renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
-        {this.renderInstructions()}
+        {renderInstructions()}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.closeDialog} />
+          <Button text="Cancel" onClick={closeDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  renderInstructions = () => {
-    if (!this.state.isEditing) {
+  const renderInstructions = () => {
+    if (!state.isEditing) {
       return null;
     }
 
@@ -92,32 +93,25 @@ export class CourseChapterEditDialog extends Component {
     );
   };
 
-  refreshChapters = async () => {
-    if (this.props.isOpen) {
-      this.setState({ response: undefined });
-      const response = await this.props.onGetChapters(this.props.course.jid);
-      this.setState({ response });
-    }
-  };
-
-  toggleEditing = () => {
-    this.setState(prevState => ({
+  const toggleEditing = () => {
+    setState(prevState => ({
+      ...prevState,
       isEditing: !prevState.isEditing,
     }));
   };
 
-  updateChapters = async data => {
-    const chapters = this.deserializeChapters(data.chapters);
-    await this.props.onSetChapters(this.props.course.jid, chapters);
-    await this.refreshChapters();
-    this.toggleEditing();
+  const updateChapters = async data => {
+    const chapters = deserializeChapters(data.chapters);
+    await onSetChapters(course.jid, chapters);
+    await refreshChapters();
+    toggleEditing();
   };
 
-  serializeChapters = chapters => {
+  const serializeChapters = chapters => {
     return chapters.map(c => `${c.alias},${c.chapterJid}`).join('\n');
   };
 
-  deserializeChapters = chapters => {
+  const deserializeChapters = chapters => {
     return chapters
       .split('\n')
       .map(s => s.trim())
@@ -130,7 +124,7 @@ export class CourseChapterEditDialog extends Component {
       }));
   };
 
-  validateChapters = value => {
+  const validateChapters = value => {
     const chapters = value
       .split('\n')
       .map(s => s.trim())
@@ -166,4 +160,6 @@ export class CourseChapterEditDialog extends Component {
 
     return undefined;
   };
+
+  return render();
 }

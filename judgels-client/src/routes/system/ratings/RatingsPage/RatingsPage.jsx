@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
@@ -8,34 +8,41 @@ import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/Contes
 
 import * as ratingActions from '../modules/ratingActions';
 
-class RatingsPage extends Component {
-  state = {
+export default function RatingsPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
     selectedContest: undefined,
     isApplyingRatingChanges: false,
+  });
+
+  const refreshContestsPendingRating = async () => {
+    const response = await dispatch(ratingActions.getContestsPendingRating());
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  componentDidMount() {
-    this.refreshContestsPendingRating();
-  }
+  useEffect(() => {
+    refreshContestsPendingRating();
+  }, []);
 
-  render() {
-    return <Card title="Ratings">{this.renderContestsPendingRating()}</Card>;
-  }
+  const render = () => {
+    return <Card title="Ratings">{renderContestsPendingRating()}</Card>;
+  };
 
-  renderContestsPendingRating = () => {
+  const renderContestsPendingRating = () => {
     return (
       <ContentCard>
         <h4>Contests pending rating changes</h4>
         <hr />
-        {this.renderContestsPendingRatingTable()}
-        {this.renderContestRatingChangesDialog()}
+        {renderContestsPendingRatingTable()}
+        {renderContestRatingChangesDialog()}
       </ContentCard>
     );
   };
 
-  renderContestsPendingRatingTable = () => {
-    const { response } = this.state;
+  const renderContestsPendingRatingTable = () => {
+    const { response } = state;
     if (!response) {
       return null;
     }
@@ -52,14 +59,14 @@ class RatingsPage extends Component {
     return (
       <ContestsPendingRatingTable
         contests={contests}
-        onClickView={this.selectContest}
-        isContestViewed={!!this.state.selectedContest}
+        onClickView={selectContest}
+        isContestViewed={!!state.selectedContest}
       />
     );
   };
 
-  renderContestRatingChangesDialog = () => {
-    const { response, selectedContest } = this.state;
+  const renderContestRatingChangesDialog = () => {
+    const { response, selectedContest } = state;
     if (!response || !selectedContest) {
       return null;
     }
@@ -68,44 +75,36 @@ class RatingsPage extends Component {
       <ContestRatingChangesDialog
         contest={selectedContest}
         ratingChanges={response.ratingChangesMap[selectedContest.jid]}
-        onClose={this.closeContestRatingChangesDialog}
-        onApply={this.applyRatingChanges}
-        isApplying={this.state.isApplyingRatingChanges}
+        onClose={closeContestRatingChangesDialog}
+        onApply={applyRatingChanges}
+        isApplying={state.isApplyingRatingChanges}
       />
     );
   };
 
-  closeContestRatingChangesDialog = () => {
-    this.selectContest(undefined);
+  const closeContestRatingChangesDialog = () => {
+    selectContest(undefined);
   };
 
-  selectContest = contest => {
-    this.setState({ selectedContest: contest });
+  const selectContest = contest => {
+    setState(prevState => ({ ...prevState, selectedContest: contest }));
   };
 
-  refreshContestsPendingRating = async () => {
-    const response = await this.props.onGetContestsPendingRating();
-    this.setState({ response });
+  const applyRatingChanges = async () => {
+    setState(prevState => ({ ...prevState, isApplyingRatingChanges: true }));
+
+    const { response, selectedContest } = state;
+    await dispatch(
+      ratingActions.updateRatings({
+        eventJid: selectedContest.jid,
+        time: selectedContest.beginTime + selectedContest.duration,
+        ratingsMap: response.ratingChangesMap[selectedContest.jid].ratingsMap,
+      })
+    );
+
+    setState(prevState => ({ ...prevState, selectedContest: undefined, isApplyingRatingChanges: false }));
+    await refreshContestsPendingRating();
   };
 
-  applyRatingChanges = async () => {
-    this.setState({ isApplyingRatingChanges: true });
-
-    const { response, selectedContest } = this.state;
-    await this.props.onUpdateRatings({
-      eventJid: selectedContest.jid,
-      time: selectedContest.beginTime + selectedContest.duration,
-      ratingsMap: response.ratingChangesMap[selectedContest.jid].ratingsMap,
-    });
-
-    this.setState({ selectedContest: undefined, isApplyingRatingChanges: false });
-    await this.refreshContestsPendingRating();
-  };
+  return render();
 }
-
-const mapDispatchToProps = {
-  onGetContestsPendingRating: ratingActions.getContestsPendingRating,
-  onUpdateRatings: ratingActions.updateRatings,
-};
-
-export default connect(undefined, mapDispatchToProps)(RatingsPage);

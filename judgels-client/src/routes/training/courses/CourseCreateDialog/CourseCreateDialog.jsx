@@ -1,66 +1,63 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import CourseCreateForm from '../CourseCreateForm/CourseCreateForm';
 
-export class CourseCreateDialog extends Component {
-  state = {
+export function CourseCreateDialog({ onCreateCourse }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
         New course
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderDialog = () => {
+  const renderDialog = () => {
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.createCourse,
+      renderFormComponents: renderDialogForm,
+      onSubmit: createCourse,
     };
     return (
-      <Dialog
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
-        title="Create new course"
-        canOutsideClickClose={false}
-      >
+      <Dialog isOpen={state.isDialogOpen} onClose={toggleDialog} title="Create new course" canOutsideClickClose={false}>
         <CourseCreateForm {...props} />
       </Dialog>
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  createCourse = async data => {
-    await this.props.onCreateCourse(data);
-    this.setState({ isDialogOpen: false });
+  const createCourse = async data => {
+    await onCreateCourse(data);
+    setState(prevState => ({ ...prevState, isDialogOpen: false }));
   };
+
+  return render();
 }

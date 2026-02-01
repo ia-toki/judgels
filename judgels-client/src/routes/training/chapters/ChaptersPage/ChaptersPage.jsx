@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -11,82 +11,84 @@ import { ChaptersTable } from '../ChaptersTable/ChaptersTable';
 
 import * as chapterActions from '../modules/chapterActions';
 
-class ChaptersPage extends Component {
-  state = {
+export default function ChaptersPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
     isEditLessonsDialogOpen: false,
     isEditProblemsDialogOpen: false,
     editedChapter: undefined,
+  });
+
+  const refreshChapters = async () => {
+    const response = await dispatch(chapterActions.getChapters());
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  componentDidMount() {
-    this.refreshChapters();
-  }
+  useEffect(() => {
+    refreshChapters();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Chapters</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderEditDialog()}
-        {this.renderEditLessonsDialog()}
-        {this.renderEditProblemsDialog()}
-        {this.renderChapters()}
+        {renderCreateDialog()}
+        {renderEditDialog()}
+        {renderEditLessonsDialog()}
+        {renderEditProblemsDialog()}
+        {renderChapters()}
       </ContentCard>
     );
-  }
-
-  refreshChapters = async () => {
-    const response = await this.props.onGetChapters();
-    this.setState({ response });
   };
 
-  renderCreateDialog = () => {
-    return <ChapterCreateDialog onCreateChapter={this.createChapter} />;
+  const renderCreateDialog = () => {
+    return <ChapterCreateDialog onCreateChapter={createChapter} />;
   };
 
-  renderEditDialog = () => {
-    const { isEditDialogOpen, editedChapter } = this.state;
+  const renderEditDialog = () => {
+    const { isEditDialogOpen, editedChapter } = state;
     return (
       <ChapterEditDialog
         isOpen={isEditDialogOpen}
         chapter={editedChapter}
-        onUpdateChapter={this.updateChapter}
-        onCloseDialog={() => this.editChapter(undefined)}
+        onUpdateChapter={updateChapter}
+        onCloseDialog={() => editChapter(undefined)}
       />
     );
   };
 
-  renderEditLessonsDialog = () => {
-    const { isEditLessonsDialogOpen, editedChapter } = this.state;
+  const renderEditLessonsDialog = () => {
+    const { isEditLessonsDialogOpen, editedChapter } = state;
     return (
       <ChapterLessonEditDialog
         isOpen={isEditLessonsDialogOpen}
         chapter={editedChapter}
-        onGetLessons={this.props.onGetLessons}
-        onSetLessons={this.props.onSetLessons}
-        onCloseDialog={() => this.editChapterLessons(undefined)}
+        onGetLessons={chapterJid => dispatch(chapterActions.getLessons(chapterJid))}
+        onSetLessons={(chapterJid, data) => dispatch(chapterActions.setLessons(chapterJid, data))}
+        onCloseDialog={() => editChapterLessons(undefined)}
       />
     );
   };
 
-  renderEditProblemsDialog = () => {
-    const { isEditProblemsDialogOpen, editedChapter } = this.state;
+  const renderEditProblemsDialog = () => {
+    const { isEditProblemsDialogOpen, editedChapter } = state;
     return (
       <ChapterProblemEditDialog
         isOpen={isEditProblemsDialogOpen}
         chapter={editedChapter}
-        onGetProblems={this.props.onGetProblems}
-        onSetProblems={this.props.onSetProblems}
-        onCloseDialog={() => this.editChapterProblems(undefined)}
+        onGetProblems={chapterJid => dispatch(chapterActions.getProblems(chapterJid))}
+        onSetProblems={(chapterJid, data) => dispatch(chapterActions.setProblems(chapterJid, data))}
+        onCloseDialog={() => editChapterProblems(undefined)}
       />
     );
   };
 
-  renderChapters = () => {
-    const { response } = this.state;
+  const renderChapters = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -103,53 +105,47 @@ class ChaptersPage extends Component {
     return (
       <ChaptersTable
         chapters={chapters}
-        onEditChapter={this.editChapter}
-        onEditChapterLessons={this.editChapterLessons}
-        onEditChapterProblems={this.editChapterProblems}
+        onEditChapter={editChapter}
+        onEditChapterLessons={editChapterLessons}
+        onEditChapterProblems={editChapterProblems}
       />
     );
   };
 
-  createChapter = async data => {
-    await this.props.onCreateChapter(data);
-    await this.refreshChapters();
+  const createChapter = async data => {
+    await dispatch(chapterActions.createChapter(data));
+    await refreshChapters();
   };
 
-  editChapter = async chapter => {
-    this.setState({
+  const editChapter = async chapter => {
+    setState(prevState => ({
+      ...prevState,
       isEditDialogOpen: !!chapter,
       editedChapter: chapter,
-    });
+    }));
   };
 
-  updateChapter = async (chapterJid, data) => {
-    await this.props.onUpdateChapter(chapterJid, data);
-    this.editChapter(undefined);
-    await this.refreshChapters();
+  const updateChapter = async (chapterJid, data) => {
+    await dispatch(chapterActions.updateChapter(chapterJid, data));
+    editChapter(undefined);
+    await refreshChapters();
   };
 
-  editChapterLessons = async chapter => {
-    this.setState({
+  const editChapterLessons = async chapter => {
+    setState(prevState => ({
+      ...prevState,
       isEditLessonsDialogOpen: !!chapter,
       editedChapter: chapter,
-    });
+    }));
   };
 
-  editChapterProblems = async chapter => {
-    this.setState({
+  const editChapterProblems = async chapter => {
+    setState(prevState => ({
+      ...prevState,
       isEditProblemsDialogOpen: !!chapter,
       editedChapter: chapter,
-    });
+    }));
   };
-}
 
-const mapDispatchToProps = {
-  onGetChapters: chapterActions.getChapters,
-  onCreateChapter: chapterActions.createChapter,
-  onUpdateChapter: chapterActions.updateChapter,
-  onGetLessons: chapterActions.getLessons,
-  onSetLessons: chapterActions.setLessons,
-  onGetProblems: chapterActions.getProblems,
-  onSetProblems: chapterActions.setProblems,
-};
-export default connect(undefined, mapDispatchToProps)(ChaptersPage);
+  return render();
+}

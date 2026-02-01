@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -10,67 +10,69 @@ import { CoursesTable } from '../CoursesTable/CoursesTable';
 
 import * as courseActions from '../modules/courseActions';
 
-class CoursesPage extends Component {
-  state = {
+export default function CoursesPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
     isEditChaptersDialogOpen: false,
     editedCourse: undefined,
+  });
+
+  const refreshCourses = async () => {
+    const response = await dispatch(courseActions.getCourses());
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  componentDidMount() {
-    this.refreshCourses();
-  }
+  useEffect(() => {
+    refreshCourses();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Courses</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderEditDialog()}
-        {this.renderEditChaptersDialog()}
-        {this.renderCourses()}
+        {renderCreateDialog()}
+        {renderEditDialog()}
+        {renderEditChaptersDialog()}
+        {renderCourses()}
       </ContentCard>
     );
-  }
-
-  refreshCourses = async () => {
-    const response = await this.props.onGetCourses();
-    this.setState({ response });
   };
 
-  renderCreateDialog = () => {
-    return <CourseCreateDialog onCreateCourse={this.createCourse} />;
+  const renderCreateDialog = () => {
+    return <CourseCreateDialog onCreateCourse={createCourse} />;
   };
 
-  renderEditDialog = () => {
-    const { isEditDialogOpen, editedCourse } = this.state;
+  const renderEditDialog = () => {
+    const { isEditDialogOpen, editedCourse } = state;
     return (
       <CourseEditDialog
         isOpen={isEditDialogOpen}
         course={editedCourse}
-        onUpdateCourse={this.updateCourse}
-        onCloseDialog={() => this.editCourse(undefined)}
+        onUpdateCourse={updateCourse}
+        onCloseDialog={() => editCourse(undefined)}
       />
     );
   };
 
-  renderEditChaptersDialog = () => {
-    const { isEditChaptersDialogOpen, editedCourse } = this.state;
+  const renderEditChaptersDialog = () => {
+    const { isEditChaptersDialogOpen, editedCourse } = state;
     return (
       <CourseChapterEditDialog
         isOpen={isEditChaptersDialogOpen}
         course={editedCourse}
-        onGetChapters={this.props.onGetChapters}
-        onSetChapters={this.props.onSetChapters}
-        onCloseDialog={() => this.editCourseChapters(undefined)}
+        onGetChapters={chapterJid => dispatch(courseActions.getChapters(chapterJid))}
+        onSetChapters={(courseJid, data) => dispatch(courseActions.setChapters(courseJid, data))}
+        onCloseDialog={() => editCourseChapters(undefined)}
       />
     );
   };
 
-  renderCourses = () => {
-    const { response } = this.state;
+  const renderCourses = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -84,42 +86,35 @@ class CoursesPage extends Component {
       );
     }
 
-    return (
-      <CoursesTable courses={courses} onEditCourse={this.editCourse} onEditCourseChapters={this.editCourseChapters} />
-    );
+    return <CoursesTable courses={courses} onEditCourse={editCourse} onEditCourseChapters={editCourseChapters} />;
   };
 
-  createCourse = async data => {
-    await this.props.onCreateCourse(data);
-    await this.refreshCourses();
+  const createCourse = async data => {
+    await dispatch(courseActions.createCourse(data));
+    await refreshCourses();
   };
 
-  editCourse = async course => {
-    this.setState({
+  const editCourse = async course => {
+    setState(prevState => ({
+      ...prevState,
       isEditDialogOpen: !!course,
       editedCourse: course,
-    });
+    }));
   };
 
-  updateCourse = async (courseJid, data) => {
-    await this.props.onUpdateCourse(courseJid, data);
-    this.editCourse(undefined);
-    await this.refreshCourses();
+  const updateCourse = async (courseJid, data) => {
+    await dispatch(courseActions.updateCourse(courseJid, data));
+    editCourse(undefined);
+    await refreshCourses();
   };
 
-  editCourseChapters = async course => {
-    this.setState({
+  const editCourseChapters = async course => {
+    setState(prevState => ({
+      ...prevState,
       isEditChaptersDialogOpen: !!course,
       editedCourse: course,
-    });
+    }));
   };
-}
 
-const mapDispatchToProps = {
-  onGetCourses: courseActions.getCourses,
-  onCreateCourse: courseActions.createCourse,
-  onUpdateCourse: courseActions.updateCourse,
-  onGetChapters: courseActions.getChapters,
-  onSetChapters: courseActions.setChapters,
-};
-export default connect(undefined, mapDispatchToProps)(CoursesPage);
+  return render();
+}

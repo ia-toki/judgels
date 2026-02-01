@@ -1,5 +1,5 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { Alias } from '../../../../components/forms/validations';
@@ -7,81 +7,77 @@ import { ProblemType } from '../../../../modules/api/sandalphon/problem';
 import ProblemSetProblemEditForm from '../ProblemSetProblemEditForm/ProblemSetProblemEditForm';
 import { ProblemSetProblemsTable } from '../ProblemSetProblemsTable/ProblemSetProblemsTable';
 
-export class ProblemSetProblemEditDialog extends Component {
-  state = {
+export function ProblemSetProblemEditDialog({ isOpen, problemSet, onGetProblems, onSetProblems, onCloseDialog }) {
+  const [state, setState] = useState({
     response: undefined,
     isEditing: false,
+  });
+
+  const refreshProblems = async () => {
+    if (isOpen) {
+      setState(prevState => ({ ...prevState, response: undefined }));
+      const response = await onGetProblems(problemSet.jid);
+      setState(prevState => ({ ...prevState, response }));
+    }
   };
 
-  componentDidMount() {
-    this.refreshProblems();
-  }
+  useEffect(() => {
+    refreshProblems();
+  }, [problemSet]);
 
-  async componentDidUpdate(prevProps) {
-    if (prevProps.problemSet !== this.props.problemSet) {
-      this.refreshProblems();
-    }
-  }
-
-  render() {
-    const { isOpen } = this.props;
+  const render = () => {
     return (
       <div className="content-card__section">
-        <Dialog
-          isOpen={isOpen}
-          onClose={this.closeDialog}
-          title="Edit problemset problems"
-          canOutsideClickClose={false}
-        >
-          {this.renderDialogContent()}
+        <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit problemset problems" canOutsideClickClose={false}>
+          {renderDialogContent()}
         </Dialog>
       </div>
     );
-  }
-
-  closeDialog = () => {
-    this.props.onCloseDialog();
-    this.setState({ isEditing: false });
   };
 
-  renderDialogContent = () => {
-    const { response, isEditing } = this.state;
+  const closeDialog = () => {
+    onCloseDialog();
+    setState(prevState => ({ ...prevState, isEditing: false }));
+  };
+
+  const renderDialogContent = () => {
+    const { response, isEditing } = state;
     if (!response) {
-      return this.renderDialogForm(<LoadingState />, null);
+      return renderDialogForm(<LoadingState />, null);
     }
 
     if (isEditing) {
       const props = {
-        validator: this.validateProblems,
-        renderFormComponents: this.renderDialogForm,
-        onSubmit: this.updateProblems,
-        initialValues: { problems: this.serializeProblems(response.data, response.problemsMap, response.contestsMap) },
+        validator: validateProblems,
+        renderFormComponents: renderDialogForm,
+        onSubmit: updateProblems,
+        initialValues: { problems: serializeProblems(response.data, response.problemsMap, response.contestsMap) },
       };
       return <ProblemSetProblemEditForm {...props} />;
     } else {
       const content = <ProblemSetProblemsTable response={response} />;
-      const submitButton = <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={this.toggleEditing} />;
-      return this.renderDialogForm(content, submitButton);
+      const submitButton = <Button data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={toggleEditing} />;
+      return renderDialogForm(content, submitButton);
     }
   };
 
-  renderDialogForm = (content, submitButton) => (
+  const renderDialogForm = (content, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>
         {content}
-        {this.renderInstructions()}
+        {renderInstructions()}
       </div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.closeDialog} />
+          <Button text="Cancel" onClick={closeDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  renderInstructions = () => {
-    if (!this.state.isEditing) {
+  const renderInstructions = () => {
+    if (!state.isEditing) {
       return null;
     }
 
@@ -98,28 +94,21 @@ export class ProblemSetProblemEditDialog extends Component {
     );
   };
 
-  refreshProblems = async () => {
-    if (this.props.isOpen) {
-      this.setState({ response: undefined });
-      const response = await this.props.onGetProblems(this.props.problemSet.jid);
-      this.setState({ response });
-    }
-  };
-
-  toggleEditing = () => {
-    this.setState(prevState => ({
+  const toggleEditing = () => {
+    setState(prevState => ({
+      ...prevState,
       isEditing: !prevState.isEditing,
     }));
   };
 
-  updateProblems = async data => {
-    const problems = this.deserializeProblems(data.problems);
-    await this.props.onSetProblems(this.props.problemSet.jid, problems);
-    await this.refreshProblems();
-    this.toggleEditing();
+  const updateProblems = async data => {
+    const problems = deserializeProblems(data.problems);
+    await onSetProblems(problemSet.jid, problems);
+    await refreshProblems();
+    toggleEditing();
   };
 
-  serializeProblems = (problems, problemsMap, contestsMap) => {
+  const serializeProblems = (problems, problemsMap, contestsMap) => {
     return problems
       .map(p => {
         if (p.contestJids.length > 0) {
@@ -138,7 +127,7 @@ export class ProblemSetProblemEditDialog extends Component {
       .join('\n');
   };
 
-  deserializeProblems = problems => {
+  const deserializeProblems = problems => {
     return problems
       .split('\n')
       .map(s => s.trim())
@@ -156,7 +145,7 @@ export class ProblemSetProblemEditDialog extends Component {
       }));
   };
 
-  validateProblems = value => {
+  const validateProblems = value => {
     const problems = value
       .split('\n')
       .map(s => s.trim())
@@ -192,4 +181,6 @@ export class ProblemSetProblemEditDialog extends Component {
 
     return undefined;
   };
+
+  return render();
 }
