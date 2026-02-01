@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -13,69 +13,59 @@ import { selectProblemSet } from '../../../modules/problemSetSelectors';
 
 import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
-export class ProblemSetProblemsPage extends Component {
-  state = {
+export default function ProblemSetProblemsPage() {
+  const problemSet = useSelector(selectProblemSet);
+  const statementLanguage = useSelector(selectStatementLanguage);
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
     defaultLanguage: undefined,
     uniqueLanguages: undefined,
-  };
+  });
 
-  async componentDidMount() {
-    const response = await this.props.onGetProblems(this.props.problemSet.jid);
-    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
-      response.problemsMap,
-      this.props.statementLanguage
-    );
+  const refreshProblems = async () => {
+    const response = await dispatch(problemSetProblemActions.getProblems(problemSet.jid));
+    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemsMap, statementLanguage);
 
-    this.setState({
+    setState({
       response,
       defaultLanguage,
       uniqueLanguages,
     });
-  }
+  };
 
-  async componentDidUpdate(prevProps) {
-    const { response } = this.state;
-    if (this.props.statementLanguage !== prevProps.statementLanguage && response) {
-      const { defaultLanguage, uniqueLanguages } = consolidateLanguages(
-        response.problemsMap,
-        this.props.statementLanguage
-      );
+  useEffect(() => {
+    refreshProblems();
+  }, [statementLanguage]);
 
-      this.setState({
-        defaultLanguage,
-        uniqueLanguages,
-      });
-    }
-  }
-
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Problems</h3>
         <hr />
-        {this.renderHeader()}
-        {this.renderProblems()}
+        {renderHeader()}
+        {renderProblems()}
       </ContentCard>
     );
-  }
+  };
 
-  renderHeader = () => {
+  const renderHeader = () => {
     return (
       <>
-        <div className="float-left">{this.renderProblemSpoilerWidget()}</div>
-        <div className="float-right">{this.renderStatementLanguageWidget()}</div>
+        <div className="float-left">{renderProblemSpoilerWidget()}</div>
+        <div className="float-right">{renderStatementLanguageWidget()}</div>
         <div className="clearfix" />
       </>
     );
   };
 
-  renderProblemSpoilerWidget = () => {
+  const renderProblemSpoilerWidget = () => {
     return <ProblemSpoilerWidget />;
   };
 
-  renderStatementLanguageWidget = () => {
-    const { defaultLanguage, uniqueLanguages } = this.state;
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, uniqueLanguages } = state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
@@ -87,8 +77,8 @@ export class ProblemSetProblemsPage extends Component {
     return <StatementLanguageWidget {...props} />;
   };
 
-  renderProblems = () => {
-    const { response } = this.state;
+  const renderProblems = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -105,10 +95,10 @@ export class ProblemSetProblemsPage extends Component {
 
     return problems.map(problem => {
       const props = {
-        problemSet: this.props.problemSet,
+        problemSet,
         problem,
         showAlias: true,
-        problemName: getProblemName(problemsMap[problem.problemJid], this.state.defaultLanguage),
+        problemName: getProblemName(problemsMap[problem.problemJid], state.defaultLanguage),
         metadata: problemMetadatasMap[problem.problemJid],
         difficulty: problemDifficultiesMap[problem.problemJid],
         progress: problemProgressesMap[problem.problemJid],
@@ -116,15 +106,6 @@ export class ProblemSetProblemsPage extends Component {
       return <ProblemSetProblemCard key={problem.problemJid} {...props} />;
     });
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  problemSet: selectProblemSet(state),
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onGetProblems: problemSetProblemActions.getProblems,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemSetProblemsPage);
