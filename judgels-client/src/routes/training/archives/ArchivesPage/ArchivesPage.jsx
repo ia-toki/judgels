@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -9,52 +9,54 @@ import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
 
 import * as archiveActions from '../modules/archiveActions';
 
-class ArchivesPage extends Component {
-  state = {
+export default function ArchivesPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
     editedArchive: undefined,
+  });
+
+  const refreshArchives = async () => {
+    const response = await dispatch(archiveActions.getArchives());
+    setState(prevState => ({ ...prevState, response }));
   };
 
-  componentDidMount() {
-    this.refreshArchives();
-  }
+  useEffect(() => {
+    refreshArchives();
+  }, []);
 
-  render() {
+  const render = () => {
     return (
       <ContentCard>
         <h3>Archives</h3>
         <hr />
-        {this.renderCreateDialog()}
-        {this.renderEditDialog()}
-        {this.renderArchives()}
+        {renderCreateDialog()}
+        {renderEditDialog()}
+        {renderArchives()}
       </ContentCard>
     );
-  }
-
-  refreshArchives = async () => {
-    const response = await this.props.onGetArchives();
-    this.setState({ response });
   };
 
-  renderCreateDialog = () => {
-    return <ArchiveCreateDialog onCreateArchive={this.createArchive} />;
+  const renderCreateDialog = () => {
+    return <ArchiveCreateDialog onCreateArchive={createArchive} />;
   };
 
-  renderEditDialog = () => {
-    const { isEditDialogOpen, editedArchive } = this.state;
+  const renderEditDialog = () => {
+    const { isEditDialogOpen, editedArchive } = state;
     return (
       <ArchiveEditDialog
         isOpen={isEditDialogOpen}
         archive={editedArchive}
-        onUpdateArchive={this.updateArchive}
-        onCloseDialog={() => this.editArchive(undefined)}
+        onUpdateArchive={updateArchive}
+        onCloseDialog={() => editArchive(undefined)}
       />
     );
   };
 
-  renderArchives = () => {
-    const { response } = this.state;
+  const renderArchives = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -68,31 +70,27 @@ class ArchivesPage extends Component {
       );
     }
 
-    return <ArchivesTable archives={archives} onEditArchive={this.editArchive} />;
+    return <ArchivesTable archives={archives} onEditArchive={editArchive} />;
   };
 
-  createArchive = async data => {
-    await this.props.onCreateArchive(data);
-    await this.refreshArchives();
+  const createArchive = async data => {
+    await dispatch(archiveActions.createArchive(data));
+    await refreshArchives();
   };
 
-  editArchive = async archive => {
-    this.setState({
+  const editArchive = async archive => {
+    setState(prevState => ({
+      ...prevState,
       isEditDialogOpen: !!archive,
       editedArchive: archive,
-    });
+    }));
   };
 
-  updateArchive = async (archiveJid, data) => {
-    await this.props.onUpdateArchive(archiveJid, data);
-    this.editArchive(undefined);
-    await this.refreshArchives();
+  const updateArchive = async (archiveJid, data) => {
+    await dispatch(archiveActions.updateArchive(archiveJid, data));
+    editArchive(undefined);
+    await refreshArchives();
   };
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onGetArchives: archiveActions.getArchives,
-  onCreateArchive: archiveActions.createArchive,
-  onUpdateArchive: archiveActions.updateArchive,
-};
-export default connect(undefined, mapDispatchToProps)(ArchivesPage);

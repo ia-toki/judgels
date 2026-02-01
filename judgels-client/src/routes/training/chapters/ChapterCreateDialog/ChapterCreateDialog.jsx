@@ -1,44 +1,44 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import ChapterCreateForm from '../ChapterCreateForm/ChapterCreateForm';
 
-export class ChapterCreateDialog extends Component {
-  state = {
+export function ChapterCreateDialog({ onCreateChapter }) {
+  const [state, setState] = useState({
     isDialogOpen: false,
-  };
+  });
 
-  render() {
+  const render = () => {
     return (
       <div className="content-card__section">
-        {this.renderButton()}
-        {this.renderDialog()}
+        {renderButton()}
+        {renderDialog()}
       </div>
     );
-  }
+  };
 
-  renderButton = () => {
+  const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={this.toggleDialog} disabled={this.state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
         New chapter
       </Button>
     );
   };
 
-  toggleDialog = () => {
-    this.setState(prevState => ({ isDialogOpen: !prevState.isDialogOpen }));
+  const toggleDialog = () => {
+    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
   };
 
-  renderDialog = () => {
+  const renderDialog = () => {
     const props = {
-      renderFormComponents: this.renderDialogForm,
-      onSubmit: this.createChapter,
+      renderFormComponents: renderDialogForm,
+      onSubmit: createChapter,
     };
     return (
       <Dialog
-        isOpen={this.state.isDialogOpen}
-        onClose={this.toggleDialog}
+        isOpen={state.isDialogOpen}
+        onClose={toggleDialog}
         title="Create new chapter"
         canOutsideClickClose={false}
       >
@@ -47,20 +47,22 @@ export class ChapterCreateDialog extends Component {
     );
   };
 
-  renderDialogForm = (fields, submitButton) => (
+  const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={this.toggleDialog} />
+          <Button text="Cancel" onClick={toggleDialog} />
           {submitButton}
         </div>
       </div>
     </>
   );
 
-  createChapter = async data => {
-    await this.props.onCreateChapter(data);
-    this.setState({ isDialogOpen: false });
+  const createChapter = async data => {
+    await onCreateChapter(data);
+    setState(prevState => ({ ...prevState, isDialogOpen: false }));
   };
+
+  return render();
 }
