@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
@@ -12,43 +12,41 @@ import * as profileActions from '../../modules/profileActions';
 
 import './ProfileSummaryPage.scss';
 
-class ProfileSummaryPage extends Component {
-  state = {
+export default function ProfileSummaryPage() {
+  const userJid = useSelector(selectUserJid);
+  const username = useSelector(selectUsername);
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     avatarUrl: undefined,
     basicProfile: undefined,
     userStats: undefined,
+  });
+
+  const refreshSummary = async () => {
+    const [avatarUrl, basicProfile, userStats] = await Promise.all([
+      dispatch(avatarActions.renderAvatar(userJid)),
+      dispatch(profileActions.getBasicProfile(userJid)),
+      getUserStats(username),
+    ]);
+    setState(prevState => ({ ...prevState, avatarUrl, basicProfile, userStats }));
   };
 
-  async componentDidMount() {
-    await this.refreshSummary();
-  }
+  useEffect(() => {
+    refreshSummary();
+  }, [userJid]);
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.userJid !== prevProps.userJid) {
-      await this.refreshSummary();
-    }
-  }
-
-  render() {
+  const render = () => {
     return (
       <>
-        {this.renderBasicProfile()}
-        {this.renderProblemStats()}
+        {renderBasicProfile()}
+        {renderProblemStats()}
       </>
     );
-  }
-
-  refreshSummary = async () => {
-    const [avatarUrl, basicProfile, userStats] = await Promise.all([
-      this.props.onRenderAvatar(this.props.userJid),
-      this.props.onGetBasicProfile(this.props.userJid),
-      this.getUserStats(this.props.username),
-    ]);
-    this.setState({ avatarUrl, basicProfile, userStats });
   };
 
-  renderBasicProfile = () => {
-    const { avatarUrl, basicProfile } = this.state;
+  const renderBasicProfile = () => {
+    const { avatarUrl, basicProfile } = state;
     if (!avatarUrl || !basicProfile) {
       return <LoadingState />;
     }
@@ -56,8 +54,8 @@ class ProfileSummaryPage extends Component {
     return <BasicProfilePanel basicProfile={basicProfile} avatarUrl={avatarUrl} />;
   };
 
-  renderProblemStats = () => {
-    const { userStats } = this.state;
+  const renderProblemStats = () => {
+    const { userStats } = state;
     if (!isTLX()) {
       return null;
     }
@@ -68,22 +66,12 @@ class ProfileSummaryPage extends Component {
     return <ProblemStatsPanel userStats={userStats} />;
   };
 
-  getUserStats = username => {
+  const getUserStats = usernameArg => {
     if (!isTLX()) {
       return Promise.resolve(null);
     }
-    return this.props.onGetUserStats(username);
+    return dispatch(profileActions.getUserStats(usernameArg));
   };
+
+  return render();
 }
-
-const mapStateToProps = state => ({
-  userJid: selectUserJid(state),
-  username: selectUsername(state),
-});
-const mapDispatchToProps = {
-  onRenderAvatar: avatarActions.renderAvatar,
-  onGetBasicProfile: profileActions.getBasicProfile,
-  onGetUserStats: profileActions.getUserStats,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileSummaryPage);

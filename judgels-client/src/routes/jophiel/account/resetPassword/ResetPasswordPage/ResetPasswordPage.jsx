@@ -1,22 +1,24 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
 import * as resetPasswordActions from '../modules/resetPasswordActions';
 
-export class ResetPasswordPage extends Component {
-  state = {
+export default function ResetPasswordPage() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     submitted: false,
+  });
+
+  const render = () => {
+    return <Card title="Reset password">{renderContent()}</Card>;
   };
 
-  render() {
-    return <Card title="Reset password">{this.renderContent()}</Card>;
-  }
-
-  renderContent = () => {
-    if (this.state.submitted) {
+  const renderContent = () => {
+    if (state.submitted) {
       return (
         <div>
           <p data-key="instruction">An email has been sent to your email with instruction to reset your password.</p>
@@ -24,17 +26,13 @@ export class ResetPasswordPage extends Component {
         </div>
       );
     }
-    return <ResetPasswordForm onSubmit={this.resetPassword} />;
+    return <ResetPasswordForm onSubmit={resetPassword} />;
   };
 
-  resetPassword = async () => {
-    await this.props.onResetPassword();
-    this.setState({ submitted: true });
+  const resetPassword = async () => {
+    await dispatch(resetPasswordActions.requestToResetPassword());
+    setState(prevState => ({ ...prevState, submitted: true }));
   };
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onResetPassword: resetPasswordActions.requestToResetPassword,
-};
-
-export default connect(undefined, mapDispatchToProps)(ResetPasswordPage);

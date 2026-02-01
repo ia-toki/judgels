@@ -1,6 +1,6 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
@@ -10,31 +10,37 @@ import * as widgetActions from '../../modules/widgetActions';
 
 import './TopScorersWidget.scss';
 
-class TopScorersWidget extends Component {
-  state = {
+export default function TopScorersWidget() {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
     response: undefined,
+  });
+
+  const refreshTopUserStats = async () => {
+    const response = await getTopUserStats(1, 5);
+    setState({ response });
   };
 
-  async componentDidMount() {
-    const response = await this.props.onGetTopUserStats(1, 5);
-    this.setState({ response });
-  }
+  useEffect(() => {
+    refreshTopUserStats();
+  }, []);
 
-  render() {
-    const { response } = this.state;
+  const render = () => {
+    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
     return (
       <Card className="top-scorers-widget" title="Top scorers">
-        {this.renderTable()}
+        {renderTable()}
       </Card>
     );
-  }
+  };
 
-  renderTable = () => {
-    const { data, profilesMap } = this.state.response;
+  const renderTable = () => {
+    const { data, profilesMap } = state.response;
     if (data.page.length === 0) {
       return (
         <div className="top-scorers-widget__empty">
@@ -66,9 +72,6 @@ class TopScorersWidget extends Component {
       </HTMLTable>
     );
   };
-}
 
-const mapDispatchToProps = {
-  onGetTopUserStats: widgetActions.getTopUserStats,
-};
-export default connect(undefined, mapDispatchToProps)(TopScorersWidget);
+  return render();
+}

@@ -1,19 +1,18 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import * as logoutActions from '../modules/logoutActions';
 
-class LogoutPage extends Component {
-  componentDidMount() {
-    this.props.onLogOut();
-  }
+export default function LogoutPage() {
+  const dispatch = useDispatch();
 
-  render() {
+  useEffect(() => {
+    dispatch(logoutActions.logOut(window.location.href));
+  }, []);
+
+  const render = () => {
     return null;
-  }
-}
+  };
 
-const mapDispatchToProps = {
-  onLogOut: () => logoutActions.logOut(window.location.href),
-};
-export default connect(undefined, mapDispatchToProps)(LogoutPage);
+  return render();
+}

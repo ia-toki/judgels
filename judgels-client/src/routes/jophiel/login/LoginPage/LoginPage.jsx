@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
@@ -10,29 +10,29 @@ import * as loginActions from '../modules/loginActions';
 
 import './LoginPage.scss';
 
-class LoginPage extends Component {
-  state = {
-    isInternalAuthEnabled: true,
-  };
+export default function LoginPage() {
+  const dispatch = useDispatch();
 
-  render() {
+  const [state, setState] = useState({
+    isInternalAuthEnabled: true,
+  });
+
+  const render = () => {
     return (
       <SingleColumnLayout>
         <Card title="Log in" className="card-login">
-          <GoogleAuth onToggleInternalAuth={this.toggleInternalAuth} />
-          {this.state.isInternalAuthEnabled && <LoginForm onSubmit={this.props.onLogIn} />}
+          <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
+          {state.isInternalAuthEnabled && <LoginForm onSubmit={onLogIn} />}
         </Card>
       </SingleColumnLayout>
     );
-  }
-
-  toggleInternalAuth = () => {
-    this.setState(prevState => ({ isInternalAuthEnabled: !prevState.isInternalAuthEnabled }));
   };
+
+  const toggleInternalAuth = () => {
+    setState(prevState => ({ ...prevState, isInternalAuthEnabled: !prevState.isInternalAuthEnabled }));
+  };
+
+  const onLogIn = data => dispatch(loginActions.logIn(data.usernameOrEmail, data.password));
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onLogIn: data => loginActions.logIn(data.usernameOrEmail, data.password),
-};
-
-export default connect(undefined, mapDispatchToProps)(LoginPage);

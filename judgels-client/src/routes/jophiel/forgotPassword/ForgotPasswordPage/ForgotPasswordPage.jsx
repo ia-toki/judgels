@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
@@ -7,15 +7,17 @@ import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
-export class ForgotPasswordPage extends Component {
-  state = {
-    submitted: false,
-  };
+export default function ForgotPasswordPage() {
+  const dispatch = useDispatch();
 
-  render() {
+  const [state, setState] = useState({
+    submitted: false,
+  });
+
+  const render = () => {
     let content;
 
-    if (this.state.submitted) {
+    if (state.submitted) {
       content = (
         <div>
           <p data-key="instruction">An email has been sent to your email with instruction to reset your password.</p>
@@ -23,23 +25,19 @@ export class ForgotPasswordPage extends Component {
         </div>
       );
     } else {
-      content = <ForgotPasswordForm onSubmit={this.onForgetPassword} />;
+      content = <ForgotPasswordForm onSubmit={onForgetPassword} />;
     }
     return (
       <SingleColumnLayout>
         <Card title="Forgot password">{content}</Card>
       </SingleColumnLayout>
     );
-  }
-
-  onForgetPassword = async data => {
-    await this.props.onForgetPassword(data.email);
-    this.setState({ submitted: true });
   };
+
+  const onForgetPassword = async data => {
+    await dispatch(forgotPasswordActions.requestToResetPassword(data.email));
+    setState(prevState => ({ ...prevState, submitted: true }));
+  };
+
+  return render();
 }
-
-const mapDispatchToProps = {
-  onForgetPassword: forgotPasswordActions.requestToResetPassword,
-};
-
-export default connect(undefined, mapDispatchToProps)(ForgotPasswordPage);
