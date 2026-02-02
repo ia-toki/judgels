@@ -152,7 +152,7 @@ export default function SingleContestLayout() {
           <div className="single-contest-routes__action">
             <ContestEditDialog
               contest={contest}
-              canaManage={contestWebConfig.canManage}
+              canManage={contestWebConfig.canManage}
               initiallyOpen={isEditingContest}
             />
           </div>
