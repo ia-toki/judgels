@@ -8,6 +8,7 @@ generated_tests/
 
 data/
 
+.devcontainer/*
 .idea/
 .ideaDataSources/
 *.iml
