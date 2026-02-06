@@ -97,6 +97,10 @@ public class SubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
+        if (!containerJid.isPresent()) {
+            throw new IllegalArgumentException("blocking for time being as this is expensive");
+        }
+
         boolean canManage = submissionRoleChecker.canManage(actorJid);
 
         Page<Submission> submissions = submissionStore.getSubmissions(
