@@ -23,13 +23,15 @@ export default function SubmissionsPage() {
   });
 
   const render = () => {
-    return (
-      <>
-        {renderUserFilter()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </>
-    );
+    // return (
+    //   <>
+    //     {renderUserFilter()}
+    //     {renderSubmissions()}
+    //     {renderPagination()}
+    //   </>
+    // );
+
+    return <small>This page is under maintenance.</small>;
   };
 
   const renderUserFilter = () => {
