@@ -8,20 +8,22 @@ import { ButtonLink } from '../../../../../../../../../../../../components/Butto
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { courseBySlugQueryOptions } from '../../../../../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+} from '../../../../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
-import { selectCourseChapter } from '../../../../../../../modules/courseChapterSelectors';
 
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemSubmissionPage() {
-  const { courseSlug, problemAlias, submissionId } = useParams({ strict: false });
+  const { courseSlug, chapterAlias, problemAlias, submissionId } = useParams({ strict: false });
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const statementLanguage = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({
@@ -43,7 +45,7 @@ export default function ChapterProblemSubmissionPage() {
         <ButtonLink
           small
           icon={<ChevronLeft />}
-          to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}/submissions`}
+          to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`}
         >
           Back
         </ButtonLink>
@@ -80,7 +82,7 @@ export default function ChapterProblemSubmissionPage() {
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
         profile={profile}
-        problemUrl={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
+        problemUrl={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
         hideSource={!!!submissionWithSource.source}
         hideSourceFilename
         showLoaderWhenPending

@@ -8,11 +8,10 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
-import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
-import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 
@@ -21,11 +20,11 @@ import * as chapterLessonActions from '../modules/chapterLessonActions';
 import './ChapterLessonPage.scss';
 
 export default function ChapterLessonPage() {
-  const { courseSlug, lessonAlias } = useParams({ strict: false });
+  const { courseSlug, chapterAlias, lessonAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const chapters = useSelector(selectCourseChapters);
   const statementLanguage = useSelector(selectStatementLanguage);
 
@@ -42,7 +41,7 @@ export default function ChapterLessonPage() {
       response,
     });
 
-    document.title = createDocumentTitle(`${chapter.alias} / ${response.lesson.alias}`);
+    document.title = createDocumentTitle(`${chapterAlias} / ${response.lesson.alias}`);
   };
 
   useEffect(() => {
@@ -71,8 +70,8 @@ export default function ChapterLessonPage() {
           &nbsp;
           <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
           &nbsp;
-          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-            {chapter.alias}. {chapter.name}
+          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapterAlias}`}>
+            {chapterAlias}. {chapter.name}
           </Link>
           &nbsp;
           <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
@@ -121,7 +120,7 @@ export default function ChapterLessonPage() {
     return (
       <ChapterNavigation
         courseSlug={course.slug}
-        chapterAlias={chapter.alias}
+        chapterAlias={chapterAlias}
         previousResourcePath={previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}

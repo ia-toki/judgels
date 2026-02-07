@@ -8,7 +8,6 @@ import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../m
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../utils/nock';
-import courseChapterReducer, { PutCourseChapter } from '../../../modules/courseChapterReducer';
 import ChapterResourcesPage from './ChapterResourcesPage';
 
 import * as chapterResourceActions from '../modules/chapterResourceActions';
@@ -59,22 +58,16 @@ describe('ChapterResourcesPage', () => {
       ])
     );
 
-    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockJerahmeel()
+      .get('/courses/slug/courseSlug')
+      .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
+    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
-        jerahmeel: combineReducers({ courseChapter: courseChapterReducer }),
       }),
       applyMiddleware(thunk)
-    );
-    store.dispatch(
-      PutCourseChapter({
-        jid: 'chapterJid',
-        name: 'Chapter 1',
-        alias: 'chapter-1',
-        courseSlug: 'courseSlug',
-      })
     );
     store.dispatch(PutStatementLanguage('en'));
 

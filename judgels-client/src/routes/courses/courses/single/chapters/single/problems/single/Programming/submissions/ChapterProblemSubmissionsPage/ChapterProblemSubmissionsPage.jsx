@@ -8,14 +8,16 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
-import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+} from '../../../../../../../../../../../modules/queries/course';
 import {
   selectMaybeUserJid,
   selectMaybeUsername,
   selectToken,
 } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
-import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
 import { useChapterProblemContext } from '../../../ChapterProblemContext';
 import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
 
@@ -26,7 +28,7 @@ const PAGE_SIZE = 20;
 export default function ChapterProblemSubmissionsPage() {
   const { worksheet } = useChapterProblemContext();
   const problemAlias = worksheet?.problem?.alias;
-  const { courseSlug } = useParams({ strict: false });
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ export default function ChapterProblemSubmissionsPage() {
   const userJid = useSelector(selectMaybeUserJid);
   const username = useSelector(selectMaybeUsername);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
   const [state, setState] = useState({
     response: undefined,
@@ -106,7 +108,7 @@ export default function ChapterProblemSubmissionsPage() {
     return (
       <ChapterProblemSubmissionsTable
         course={course}
-        chapter={chapter}
+        chapterAlias={chapterAlias}
         problemAlias={problemAlias}
         submissions={submissions.page}
         canManage={config.canManage}

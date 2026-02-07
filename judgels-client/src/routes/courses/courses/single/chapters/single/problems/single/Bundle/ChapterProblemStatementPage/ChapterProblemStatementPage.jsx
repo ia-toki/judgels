@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,17 +8,24 @@ import StatementLanguageWidget from '../../../../../../../../../../components/La
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { VerdictCode } from '../../../../../../../../../../modules/api/gabriel/verdict';
-import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+} from '../../../../../../../../../../modules/queries/course';
+import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
 
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 import './ChapterProblemStatementPage.scss';
 
 export default function ChapterProblemStatementPage(props) {
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const chapter = useSelector(selectCourseChapter);
+  const token = useSelector(selectToken);
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
   const [state, setState] = useState({
     latestSubmissions: undefined,

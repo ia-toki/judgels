@@ -8,10 +8,12 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
-import { courseBySlugQueryOptions } from '../../../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+} from '../../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
 import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectCourseChapter } from '../../../../../modules/courseChapterSelectors';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
@@ -20,10 +22,10 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 
 export default function ChapterProblemWorkspacePage() {
   const { worksheet, renderNavigation } = useChapterProblemContext();
-  const { courseSlug } = useParams({ strict: false });
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const gradingLanguage = useSelector(selectGradingLanguage);
   const dispatch = useDispatch();
 
@@ -61,7 +63,7 @@ export default function ChapterProblemWorkspacePage() {
     );
     return {
       submission,
-      submissionUrl: `/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}/submissions/${submission.id}`,
+      submissionUrl: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}/submissions/${submission.id}`,
     };
   };
 

@@ -11,7 +11,7 @@ import './ChapterProblemCard.scss';
 
 export function ChapterProblemCard({
   course,
-  chapter,
+  chapterAlias,
   problem,
   problemName,
   problemSetProblemPaths,
@@ -41,7 +41,7 @@ export function ChapterProblemCard({
   return (
     <ContentCardLink
       className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
-      to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problem.alias}`}
+      to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}`}
     >
       <div className="chapter-problem-card__heading">
         {problem.type === ProblemType.Programming ? <Code /> : <Form />}
