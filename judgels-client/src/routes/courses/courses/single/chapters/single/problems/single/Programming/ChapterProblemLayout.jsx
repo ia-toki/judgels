@@ -3,9 +3,8 @@ import { Outlet, useParams } from '@tanstack/react-router';
 import { useSelector } from 'react-redux';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
-import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
-import { selectCourseChapter } from '../../../../modules/courseChapterSelectors';
 import { ChapterProblemContext } from '../ChapterProblemContext';
 import ChapterProblemStatementPage from './ChapterProblemStatementPage/ChapterProblemStatementPage';
 
@@ -13,10 +12,10 @@ import './ChapterProblemLayout.scss';
 import './ChapterProblemStatementLayout.scss';
 
 export default function ChapterProblemLayout({ worksheet, renderNavigation }) {
-  const { courseSlug } = useParams({ strict: false });
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const problemAlias = worksheet?.problem?.alias;
 
   const topbarItems = [
@@ -30,7 +29,7 @@ export default function ChapterProblemLayout({ worksheet, renderNavigation }) {
     },
   ];
 
-  const basePath = `/courses/${course?.slug}/chapters/${chapter?.alias}/problems/${problemAlias}`;
+  const basePath = `/courses/${courseSlug}/chapters/${chapter?.alias}/problems/${problemAlias}`;
 
   return (
     <div className="chapter-programming-problem-page">

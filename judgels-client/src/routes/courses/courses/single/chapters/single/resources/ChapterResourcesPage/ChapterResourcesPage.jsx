@@ -8,9 +8,8 @@ import { LoadingContentCard } from '../../../../../../../../components/LoadingCo
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
-import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 
@@ -19,11 +18,11 @@ import * as chapterResourcesActions from '../modules/chapterResourceActions';
 import './ChapterResourcesPage.scss';
 
 export default function ChapterResourcesPage() {
-  const { courseSlug } = useParams({ strict: false });
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
   const [state, setState] = useState({
     response: undefined,
@@ -75,7 +74,7 @@ export default function ChapterResourcesPage() {
         &nbsp;
         <ChevronRight className="chapter-resources-page__title--chevron" size={20} />
         &nbsp;
-        {chapter.alias}. {chapter.name}
+        {chapterAlias}. {chapter.name}
       </h3>
     );
   };
@@ -132,7 +131,7 @@ export default function ChapterResourcesPage() {
 
     const props = {
       course,
-      chapter,
+      chapterAlias,
       lesson,
       lessonName: getLessonName(lessonsMap[lesson.lessonJid], undefined),
     };
@@ -144,7 +143,7 @@ export default function ChapterResourcesPage() {
 
     const props = {
       course,
-      chapter,
+      chapterAlias,
       problem,
       problemName: getProblemName(problemsMap[problem.problemJid], undefined),
       problemSetProblemPaths: problemSetProblemPathsMap[problem.problemJid],

@@ -1,6 +1,6 @@
 import { Popover, Position } from '@blueprintjs/core';
 import { Menu } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -10,7 +10,6 @@ import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
-import { PutCourseChapter } from '../chapters/modules/courseChapterReducer';
 import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
 
 import * as courseChapterActions from '../chapters/modules/courseChapterActions';
@@ -21,6 +20,7 @@ export default function CourseChaptersSidebar() {
   const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
@@ -91,14 +91,10 @@ export default function CourseChaptersSidebar() {
         })}
         to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}
         onClick={() => {
-          dispatch(
-            PutCourseChapter({
-              jid: courseChapter.chapterJid,
-              name: chaptersMap[courseChapter.chapterJid].name,
-              alias: courseChapter.alias,
-              courseSlug: course.slug,
-            })
-          );
+          queryClient.setQueryData(['course-chapter', course.jid, courseChapter.alias], {
+            jid: courseChapter.chapterJid,
+            name: chaptersMap[courseChapter.chapterJid].name,
+          });
 
           if (state.isResponsivePopoverOpen) {
             onResponsiveItemClick();

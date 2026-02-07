@@ -9,22 +9,24 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
-import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+} from '../../../../../../../../../../../modules/queries/course';
 import { selectMaybeUserJid, selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectCourseChapter } from '../../../../../../modules/courseChapterSelectors';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
 import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
-  const { courseSlug, problemAlias } = useParams({ strict: false });
+  const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const language = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({
@@ -67,7 +69,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
         <ButtonLink
           small
           intent={Intent.PRIMARY}
-          to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}`}
+          to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
         >
           Retake
         </ButtonLink>

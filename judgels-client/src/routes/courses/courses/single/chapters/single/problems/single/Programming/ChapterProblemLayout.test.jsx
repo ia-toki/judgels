@@ -14,7 +14,6 @@ import thunk from 'redux-thunk';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
 import { nockJerahmeel } from '../../../../../../../../../utils/nock';
-import courseChapterReducer, { PutCourseChapter } from '../../../../modules/courseChapterReducer';
 import chapterProblemReducer from '../modules/chapterProblemReducer';
 import ChapterProblemLayout from './ChapterProblemLayout';
 
@@ -48,31 +47,23 @@ describe('ChapterProblemLayout', () => {
     const renderNavigation = () => null;
 
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
         jerahmeel: combineReducers({
-          courseChapter: courseChapterReducer,
           chapterProblem: chapterProblemReducer,
         }),
       }),
       applyMiddleware(thunk)
-    );
-    store.dispatch(
-      PutCourseChapter({
-        jid: 'chapterJid',
-        name: 'Chapter 1',
-        alias: 'chapter-1',
-        courseSlug: 'courseSlug',
-      })
     );
     store.dispatch(PutStatementLanguage('en'));
 
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({
       getParentRoute: () => rootRoute,
-      path: '/courses/$courseSlug',
+      path: '/courses/$courseSlug/chapters/$chapterAlias',
       component: () => <ChapterProblemLayout worksheet={worksheet} renderNavigation={renderNavigation} />,
     });
     const childRoute = createRoute({
@@ -83,7 +74,7 @@ describe('ChapterProblemLayout', () => {
     const routeTree = rootRoute.addChildren([layoutRoute.addChildren([childRoute])]);
     const router = createRouter({
       routeTree,
-      history: createMemoryHistory({ initialEntries: ['/courses/courseSlug'] }),
+      history: createMemoryHistory({ initialEntries: ['/courses/courseSlug/chapters/chapter-1'] }),
       defaultPendingMinMs: 0,
     });
 

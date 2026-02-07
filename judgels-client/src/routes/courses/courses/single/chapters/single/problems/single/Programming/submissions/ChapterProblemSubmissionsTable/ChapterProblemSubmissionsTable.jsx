@@ -11,7 +11,7 @@ import '../../../../../../../../../../../components/SubmissionsTable/Programming
 
 export function ChapterProblemSubmissionsTable({
   course,
-  chapter,
+  chapterAlias,
   problemAlias,
   submissions,
   canManage,
@@ -58,7 +58,7 @@ export function ChapterProblemSubmissionsTable({
         <td className="col-fit">
           <Link
             className="action"
-            to={`/courses/${course.slug}/chapters/${chapter.alias}/problems/${problemAlias}/submissions/${submission.id}`}
+            to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions/${submission.id}`}
           >
             <Search title="search" />
           </Link>

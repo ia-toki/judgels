@@ -8,7 +8,6 @@ import sessionReducer, { PutUser } from '../../../../../../../../../../../module
 import { QueryClientProviderWrapper } from '../../../../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
-import courseChapterReducer, { PutCourseChapter } from '../../../../../../modules/courseChapterReducer';
 import { ChapterProblemContext } from '../../../ChapterProblemContext';
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 
@@ -44,23 +43,15 @@ describe('ChapterProblemSubmissionsPage', () => {
     chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image.url'));
 
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     const store = createStore(
       combineReducers({
         session: sessionReducer,
-        jerahmeel: combineReducers({ courseChapter: courseChapterReducer }),
       }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutUser({ jid: 'userJid1', username: 'username' }));
-    store.dispatch(
-      PutCourseChapter({
-        jid: 'chapterJid',
-        name: 'Chapter 1',
-        alias: 'chapter-1',
-        courseSlug: 'courseSlug',
-      })
-    );
 
     await act(async () =>
       render(

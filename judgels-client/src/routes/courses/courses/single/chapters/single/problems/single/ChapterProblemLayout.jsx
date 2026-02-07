@@ -9,11 +9,10 @@ import { ChapterProblemProgressTag } from '../../../../../../../../components/Ve
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-import { selectCourseChapter } from '../../../modules/courseChapterSelectors';
 import { selectCourseChapters } from '../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
@@ -25,11 +24,11 @@ import * as chapterProblemActions from './modules/chapterProblemActions';
 import './ChapterProblemLayout.scss';
 
 export default function ChapterProblemLayout() {
-  const { courseSlug, problemAlias } = useParams({ strict: false });
+  const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapter = useSelector(selectCourseChapter);
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const chapters = useSelector(selectCourseChapters);
   const reloadKey = useSelector(selectChapterProblemReloadKey);
   const statementLanguage = useSelector(selectStatementLanguage);
@@ -73,7 +72,7 @@ export default function ChapterProblemLayout() {
       response,
     });
 
-    document.title = createDocumentTitle(`${chapter.alias} / ${response.problem.alias}`);
+    document.title = createDocumentTitle(`${chapterAlias} / ${response.problem.alias}`);
 
     sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
     sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });
@@ -106,8 +105,8 @@ export default function ChapterProblemLayout() {
           &nbsp;
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
           &nbsp;
-          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapter.alias}`}>
-            {chapter.alias}
+          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapterAlias}`}>
+            {chapterAlias}
           </Link>
           &nbsp;
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
@@ -145,7 +144,7 @@ export default function ChapterProblemLayout() {
     return (
       <ChapterNavigation
         courseSlug={course.slug}
-        chapterAlias={chapter.alias}
+        chapterAlias={chapterAlias}
         previousResourcePath={hidePrev ? null : previousResourcePath}
         nextResourcePath={nextResourcePath}
         chapters={chapters}
