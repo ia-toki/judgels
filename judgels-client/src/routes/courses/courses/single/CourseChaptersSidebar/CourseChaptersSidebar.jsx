@@ -4,39 +4,30 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { ProgressBar } from '../../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
-import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
 import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
-
-import * as courseChapterActions from '../chapters/modules/courseChapterActions';
 
 import './CourseChaptersSidebar.scss';
 
 export default function CourseChaptersSidebar() {
   const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
+  const {
+    data: { data: courseChapters, chaptersMap, chapterProgressesMap },
+  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
   const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isResponsivePopoverOpen: false,
-  });
-
-  const refreshChapters = async () => {
-    const response = await dispatch(courseChapterActions.getChapters(course.jid));
-    setState(prevState => ({ ...prevState, response }));
-  };
+  const [isResponsivePopoverOpen, setIsResponsivePopoverOpen] = useState(false);
 
   useEffect(() => {
-    refreshChapters();
+    queryClient.invalidateQueries({ queryKey: ['course-chapters', course.jid] });
   }, [chapterProblemReloadKey]);
 
   const render = () => {
@@ -59,7 +50,7 @@ export default function CourseChaptersSidebar() {
           <Popover
             content={renderChapters({ showName: true })}
             position={Position.BOTTOM_LEFT}
-            isOpen={state.isResponsivePopoverOpen}
+            isOpen={isResponsivePopoverOpen}
             onInteraction={onResponsivePopoverInteraction}
             usePortal={false}
           >
@@ -74,12 +65,6 @@ export default function CourseChaptersSidebar() {
   };
 
   const renderChapters = ({ showName }) => {
-    const { response } = state;
-    if (!course || !response) {
-      return null;
-    }
-
-    const { data: courseChapters, chaptersMap, chapterProgressesMap } = response;
     const firstUnsolvedChapterIndex = getFirstUnsolvedChapterIndex(courseChapters, chapterProgressesMap);
 
     return courseChapters.map((courseChapter, idx) => (
@@ -96,7 +81,7 @@ export default function CourseChaptersSidebar() {
             name: chaptersMap[courseChapter.chapterJid].name,
           });
 
-          if (state.isResponsivePopoverOpen) {
+          if (isResponsivePopoverOpen) {
             onResponsiveItemClick();
           }
         }}
@@ -137,12 +122,6 @@ export default function CourseChaptersSidebar() {
     );
   };
 
-  const renderProgressBar = progress => {
-    if (!progress) {
-      return null;
-    }
-    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
-  };
   const getFirstUnsolvedChapterIndex = (courseChapters, chapterProgressesMap) => {
     for (let i = courseChapters.length - 1; i >= 0; i--) {
       const progress = chapterProgressesMap[courseChapters[i].chapterJid];
@@ -171,12 +150,12 @@ export default function CourseChaptersSidebar() {
   };
 
   const onResponsivePopoverInteraction = state => {
-    setState(prevState => ({ ...prevState, isResponsivePopoverOpen: state }));
+    setIsResponsivePopoverOpen(state);
   };
 
   const onResponsiveItemClick = () => {
     setTimeout(() => {
-      setState(prevState => ({ ...prevState, isResponsivePopoverOpen: false }));
+      setIsResponsivePopoverOpen(false);
     }, 200);
   };
 

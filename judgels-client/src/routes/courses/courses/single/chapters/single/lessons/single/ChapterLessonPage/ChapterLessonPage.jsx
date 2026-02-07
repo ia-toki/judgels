@@ -8,11 +8,14 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
-import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+  courseChaptersQueryOptions,
+} from '../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
-import { selectCourseChapters } from '../../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
 
 import * as chapterLessonActions from '../modules/chapterLessonActions';
@@ -25,7 +28,9 @@ export default function ChapterLessonPage() {
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
-  const chapters = useSelector(selectCourseChapters);
+  const {
+    data: { data: chapters },
+  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
   const statementLanguage = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({

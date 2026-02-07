@@ -9,11 +9,14 @@ import { ChapterProblemProgressTag } from '../../../../../../../../components/Ve
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+  courseChaptersQueryOptions,
+} from '../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-import { selectCourseChapters } from '../../../modules/courseChaptersSelectors';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
@@ -29,7 +32,9 @@ export default function ChapterProblemLayout() {
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
-  const chapters = useSelector(selectCourseChapters);
+  const {
+    data: { data: chapters },
+  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
   const reloadKey = useSelector(selectChapterProblemReloadKey);
   const statementLanguage = useSelector(selectStatementLanguage);
 
