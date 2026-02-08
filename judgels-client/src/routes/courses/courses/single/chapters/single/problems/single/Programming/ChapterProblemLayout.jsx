@@ -7,7 +7,7 @@ import ChapterProblemStatementPage from './ChapterProblemStatementPage/ChapterPr
 import './ChapterProblemLayout.scss';
 import './ChapterProblemStatementLayout.scss';
 
-export default function ChapterProblemLayout({ worksheet, renderNavigation }) {
+export default function ChapterProblemLayout({ worksheet, renderNavigation, reloadProblem }) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const problemAlias = worksheet?.problem?.alias;
 
@@ -28,7 +28,7 @@ export default function ChapterProblemLayout({ worksheet, renderNavigation }) {
     <div className="chapter-programming-problem-page">
       <ChapterProblemStatementPage worksheet={worksheet} />
       <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath}>
-        <ChapterProblemContext.Provider value={{ worksheet, renderNavigation }}>
+        <ChapterProblemContext.Provider value={{ worksheet, renderNavigation, reloadProblem }}>
           <Outlet />
         </ChapterProblemContext.Provider>
       </ContentWithTopbar>

@@ -1,5 +1,5 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,6 @@ import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
-import { selectChapterProblemReloadKey } from './modules/chapterProblemSelectors';
 
 import * as chapterProblemActions from './modules/chapterProblemActions';
 
@@ -29,15 +28,16 @@ import './ChapterProblemLayout.scss';
 export default function ChapterProblemLayout() {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const {
     data: { data: chapters },
   } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
-  const reloadKey = useSelector(selectChapterProblemReloadKey);
   const statementLanguage = useSelector(selectStatementLanguage);
 
+  const [reloadKey, setReloadKey] = useState(0);
   const [state, setState] = useState({
     response: undefined,
   });
@@ -54,6 +54,11 @@ export default function ChapterProblemLayout() {
       prevProgressRef.current = state.response.progress;
     }
   }, [reloadKey, state.response]);
+
+  const reloadProblem = () => {
+    setReloadKey(k => k + 1);
+    queryClient.invalidateQueries({ queryKey: courseChaptersQueryOptions(token, course.jid).queryKey });
+  };
 
   const render = () => {
     return (
@@ -176,7 +181,13 @@ export default function ChapterProblemLayout() {
       return <BundleChapterProblemPage worksheet={worksheet} renderNavigation={renderNavigation} />;
     }
 
-    return <ChapterProblemProgrammingLayout worksheet={worksheet} renderNavigation={renderNavigation} />;
+    return (
+      <ChapterProblemProgrammingLayout
+        worksheet={worksheet}
+        renderNavigation={renderNavigation}
+        reloadProblem={reloadProblem}
+      />
+    );
   };
 
   return render();
