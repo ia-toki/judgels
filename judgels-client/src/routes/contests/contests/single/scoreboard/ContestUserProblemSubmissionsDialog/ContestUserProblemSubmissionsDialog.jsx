@@ -54,6 +54,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
 
   const loadSubmissionSource = async submissionId => {
     setState(prevState => ({
+      ...prevState,
       submissionSourcesById: {
         ...prevState.submissionSourcesById,
         [submissionId]: null,
@@ -65,6 +66,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
     );
 
     setState(prevState => ({
+      ...prevState,
       submissionSourcesById: {
         ...prevState.submissionSourcesById,
         [submissionId]: submissionWithSource.data.source,

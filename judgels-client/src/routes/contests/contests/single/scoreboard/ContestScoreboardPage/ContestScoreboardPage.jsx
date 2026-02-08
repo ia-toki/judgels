@@ -80,11 +80,12 @@ function ContestScoreboardPage() {
   };
 
   const toggleSubmissionImageDialog = () => {
-    setState(prevState => ({ isSubmissionImageDialogOpen: !prevState.isSubmissionImageDialogOpen }));
+    setState(prevState => ({ ...prevState, isSubmissionImageDialogOpen: !prevState.isSubmissionImageDialogOpen }));
   };
 
   const toggleSubmissionsDialog = props => {
     setState(prevState => ({
+      ...prevState,
       isSubmissionsDialogOpen: !prevState.isSubmissionsDialogOpen,
       submissionsDialogProps: props,
     }));
