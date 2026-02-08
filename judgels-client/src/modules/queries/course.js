@@ -9,8 +9,14 @@ export const courseBySlugQueryOptions = (token, courseSlug) =>
     queryFn: () => courseAPI.getCourseBySlug(token, courseSlug),
   });
 
+export const courseChaptersQueryOptions = (token, courseJid) =>
+  queryOptions({
+    queryKey: ['course', courseJid, 'chapters'],
+    queryFn: () => courseChapterAPI.getChapters(token, courseJid),
+  });
+
 export const courseChapterQueryOptions = (token, courseJid, chapterAlias) =>
   queryOptions({
-    queryKey: ['course-chapter', courseJid, chapterAlias],
+    queryKey: ['course', courseJid, 'chapter', chapterAlias],
     queryFn: async () => courseChapterAPI.getChapter(token, courseJid, chapterAlias),
   });

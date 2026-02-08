@@ -6,9 +6,8 @@ import { useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
-import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
-import { selectCourseChapters } from '../chapters/modules/courseChaptersSelectors';
 
 import './CourseOverview.scss';
 
@@ -16,7 +15,9 @@ export default function CourseOverview() {
   const { courseSlug } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const chapters = useSelector(selectCourseChapters);
+  const {
+    data: { data: chapters },
+  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
 
   const renderStartButton = () => {
     if (!chapters || chapters.length === 0) {
