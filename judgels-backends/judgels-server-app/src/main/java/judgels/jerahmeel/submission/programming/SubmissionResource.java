@@ -97,7 +97,7 @@ public class SubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
-        if (!containerJid.isPresent() && !username.isPresent()) {
+        if (!containerJid.isPresent() && !username.isPresent() && !problemJid.isPresent() && !problemAlias.isPresent()) {
             throw new IllegalArgumentException("blocking for time being as this is expensive");
         }
 
