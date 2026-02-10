@@ -1,5 +1,6 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createProblemsRoutes = appRoute => {
@@ -13,46 +14,50 @@ export const createProblemsRoutes = appRoute => {
   const problemsIndexRoute = createRoute({
     getParentRoute: () => problemsRoute,
     id: 'problems-index',
-    component: lazyRouteComponent(() => import('./ProblemsIndexLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./ProblemsIndexLayout'))),
   });
 
   const problemsProblemsRoute = createRoute({
     getParentRoute: () => problemsIndexRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./problems/ProblemsPage/ProblemsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
   });
 
   const problemSetsRoute = createRoute({
     getParentRoute: () => problemsIndexRoute,
     path: 'problemsets',
-    component: lazyRouteComponent(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
   });
 
   const problemSetRoute = createRoute({
     getParentRoute: () => problemsRoute,
     path: '$problemSetSlug',
-    component: lazyRouteComponent(() => import('./problemsets/single/SingleProblemSetLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./problemsets/single/SingleProblemSetLayout'))),
   });
 
   const problemSetIndexRoute = createRoute({
     getParentRoute: () => problemSetRoute,
     path: '/',
     component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/ProblemSetProblemsPage/ProblemSetProblemsPage')
+      retryImport(() => import('./problemsets/single/problems/ProblemSetProblemsPage/ProblemSetProblemsPage'))
     ),
   });
 
   const problemSetProblemRoute = createRoute({
     getParentRoute: () => problemsRoute,
     path: '$problemSetSlug/$problemAlias',
-    component: lazyRouteComponent(() => import('./problemsets/single/problems/single/SingleProblemSetProblemLayout')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./problemsets/single/problems/single/SingleProblemSetProblemLayout'))
+    ),
   });
 
   const problemSetProblemIndexRoute = createRoute({
     getParentRoute: () => problemSetProblemRoute,
     path: '/',
     component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/single/statement/ProblemStatementPage/ProblemStatementPage')
+      retryImport(
+        () => import('./problemsets/single/problems/single/statement/ProblemStatementPage/ProblemStatementPage')
+      )
     ),
   });
 
@@ -67,7 +72,9 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemSubmissionsRoute,
     path: '/',
     component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      retryImport(
+        () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      )
     ),
   });
 
@@ -75,7 +82,9 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemSubmissionsRoute,
     path: 'mine',
     component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      retryImport(
+        () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      )
     ),
   });
 
@@ -83,8 +92,10 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemSubmissionsRoute,
     path: '$submissionId',
     component: lazyRouteComponent(
-      () =>
-        import('./problemsets/single/problems/single/submissions/single/ProblemSubmissionPage/ProblemSubmissionPage')
+      retryImport(
+        () =>
+          import('./problemsets/single/problems/single/submissions/single/ProblemSubmissionPage/ProblemSubmissionPage')
+      )
     ),
   });
 
@@ -99,8 +110,12 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemResultsRoute,
     path: '/',
     component: lazyRouteComponent(
-      () =>
-        import('./problemsets/single/problems/single/results/ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage')
+      retryImport(
+        () =>
+          import(
+            './problemsets/single/problems/single/results/ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage'
+          )
+      )
     ),
   });
 
@@ -108,7 +123,9 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemResultsRoute,
     path: 'all',
     component: lazyRouteComponent(
-      () => import('./problemsets/single/problems/single/results/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      retryImport(
+        () => import('./problemsets/single/problems/single/results/ProblemSubmissionsPage/ProblemSubmissionsPage')
+      )
     ),
   });
 
@@ -116,8 +133,12 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemResultsRoute,
     path: 'users/$username',
     component: lazyRouteComponent(
-      () =>
-        import('./problemsets/single/problems/single/results/ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage')
+      retryImport(
+        () =>
+          import(
+            './problemsets/single/problems/single/results/ProblemSubmissionSummaryPage/ProblemSubmissionSummaryPage'
+          )
+      )
     ),
   });
 

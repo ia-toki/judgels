@@ -89,7 +89,12 @@ export default function ChapterProblemLayout() {
   };
 
   const checkEditorial = (oldProgress, newProgress) => {
-    if (oldProgress && oldProgress.verdict !== VerdictCode.AC && newProgress?.verdict == VerdictCode.AC && state.response.editorial) {
+    if (
+      oldProgress &&
+      oldProgress.verdict !== VerdictCode.AC &&
+      newProgress?.verdict == VerdictCode.AC &&
+      state.response.editorial
+    ) {
       const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
       if (problemEditorialEl) {
         problemEditorialEl.scrollIntoView({ behavior: 'smooth' });

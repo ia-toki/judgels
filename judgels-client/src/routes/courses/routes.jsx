@@ -1,5 +1,6 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createCoursesRoutes = appRoute => {
@@ -13,32 +14,34 @@ export const createCoursesRoutes = appRoute => {
   const coursesIndexRoute = createRoute({
     getParentRoute: () => coursesRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./CoursesIndexPage')),
+    component: lazyRouteComponent(retryImport(() => import('./CoursesIndexPage'))),
   });
 
   const courseRoute = createRoute({
     getParentRoute: () => coursesRoute,
     path: '$courseSlug',
-    component: lazyRouteComponent(() => import('./courses/single/SingleCourseLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./courses/single/SingleCourseLayout'))),
   });
 
   const courseIndexRoute = createRoute({
     getParentRoute: () => courseRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./courses/single/CourseOverview/CourseOverview')),
+    component: lazyRouteComponent(retryImport(() => import('./courses/single/CourseOverview/CourseOverview'))),
   });
 
   const courseChapterRoute = createRoute({
     getParentRoute: () => courseRoute,
     path: 'chapters/$chapterAlias',
-    component: lazyRouteComponent(() => import('./courses/single/chapters/single/SingleCourseChapterLayout')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./courses/single/chapters/single/SingleCourseChapterLayout'))
+    ),
   });
 
   const courseChapterResourcesRoute = createRoute({
     getParentRoute: () => courseChapterRoute,
     path: '/',
     component: lazyRouteComponent(
-      () => import('./courses/single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage')
+      retryImport(() => import('./courses/single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage'))
     ),
   });
 
@@ -52,7 +55,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterLessonsRoute,
     path: '$lessonAlias',
     component: lazyRouteComponent(
-      () => import('./courses/single/chapters/single/lessons/single/ChapterLessonPage/ChapterLessonPage')
+      retryImport(() => import('./courses/single/chapters/single/lessons/single/ChapterLessonPage/ChapterLessonPage'))
     ),
   });
 
@@ -66,7 +69,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemsRoute,
     path: '$problemAlias',
     component: lazyRouteComponent(
-      () => import('./courses/single/chapters/single/problems/single/ChapterProblemLayout')
+      retryImport(() => import('./courses/single/chapters/single/problems/single/ChapterProblemLayout'))
     ),
   });
 
@@ -74,10 +77,12 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemRoute,
     path: '/',
     component: lazyRouteComponent(
-      () =>
-        import(
-          './courses/single/chapters/single/problems/single/Programming/ChapterProblemWorkspacePage/ChapterProblemWorkspacePage'
-        )
+      retryImport(
+        () =>
+          import(
+            './courses/single/chapters/single/problems/single/Programming/ChapterProblemWorkspacePage/ChapterProblemWorkspacePage'
+          )
+      )
     ),
   });
 
@@ -85,10 +90,12 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemRoute,
     path: 'submissions',
     component: lazyRouteComponent(
-      () =>
-        import(
-          './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
-        )
+      retryImport(
+        () =>
+          import(
+            './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
+          )
+      )
     ),
   });
 
@@ -96,10 +103,12 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemRoute,
     path: 'submissions/all',
     component: lazyRouteComponent(
-      () =>
-        import(
-          './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
-        )
+      retryImport(
+        () =>
+          import(
+            './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
+          )
+      )
     ),
   });
 
@@ -107,10 +116,12 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemRoute,
     path: 'submissions/$submissionId',
     component: lazyRouteComponent(
-      () =>
-        import(
-          './courses/single/chapters/single/problems/single/Programming/submissions/single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage'
-        )
+      retryImport(
+        () =>
+          import(
+            './courses/single/chapters/single/problems/single/Programming/submissions/single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage'
+          )
+      )
     ),
   });
 

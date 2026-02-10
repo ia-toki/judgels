@@ -1,6 +1,7 @@
 import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createSystemRoutes = appRoute => {
@@ -11,7 +12,7 @@ export const createSystemRoutes = appRoute => {
   const systemRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'system',
-    component: lazyRouteComponent(() => import('./SystemLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./SystemLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('System') }] }),
   });
 
@@ -24,7 +25,7 @@ export const createSystemRoutes = appRoute => {
   const systemRatingsRoute = createRoute({
     getParentRoute: () => systemRoute,
     path: 'ratings',
-    component: lazyRouteComponent(() => import('./ratings/RatingsPage/RatingsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./ratings/RatingsPage/RatingsPage'))),
   });
 
   return systemRoute.addChildren([systemIndexRoute, systemRatingsRoute]);

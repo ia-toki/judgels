@@ -1,5 +1,6 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createContestsRoutes = appRoute => {
@@ -13,26 +14,28 @@ export const createContestsRoutes = appRoute => {
   const contestsIndexRoute = createRoute({
     getParentRoute: () => contestsRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./ContestsIndexPage')),
+    component: lazyRouteComponent(retryImport(() => import('./ContestsIndexPage'))),
   });
 
   const contestRoute = createRoute({
     getParentRoute: () => contestsRoute,
     path: '$contestSlug',
-    component: lazyRouteComponent(() => import('./contests/single/SingleContestLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./contests/single/SingleContestLayout'))),
   });
 
   const contestOverviewRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./contests/single/overview/ContestOverviewPage/ContestOverviewPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/overview/ContestOverviewPage/ContestOverviewPage'))
+    ),
   });
 
   const contestAnnouncementsRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'announcements',
     component: lazyRouteComponent(
-      () => import('./contests/single/announcements/ContestAnnouncementsPage/ContestAnnouncementsPage')
+      retryImport(() => import('./contests/single/announcements/ContestAnnouncementsPage/ContestAnnouncementsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Announcements') }] }),
   });
@@ -40,7 +43,9 @@ export const createContestsRoutes = appRoute => {
   const contestProblemsRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'problems',
-    component: lazyRouteComponent(() => import('./contests/single/problems/ContestProblemsPage/ContestProblemsPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/problems/ContestProblemsPage/ContestProblemsPage'))
+    ),
     head: () => ({ meta: [{ title: createDocumentTitle('Problems') }] }),
   });
 
@@ -48,7 +53,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'problems/$problemAlias',
     component: lazyRouteComponent(
-      () => import('./contests/single/problems/single/ContestProblemPage/ContestProblemPage')
+      retryImport(() => import('./contests/single/problems/single/ContestProblemPage/ContestProblemPage'))
     ),
   });
 
@@ -56,7 +61,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'editorial',
     component: lazyRouteComponent(
-      () => import('./contests/single/editorial/ContestEditorialPage/ContestEditorialPage')
+      retryImport(() => import('./contests/single/editorial/ContestEditorialPage/ContestEditorialPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Editorial') }] }),
   });
@@ -65,7 +70,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'contestants',
     component: lazyRouteComponent(
-      () => import('./contests/single/contestants/ContestContestantsPage/ContestContestantsPage')
+      retryImport(() => import('./contests/single/contestants/ContestContestantsPage/ContestContestantsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Contestants') }] }),
   });
@@ -74,7 +79,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'supervisors',
     component: lazyRouteComponent(
-      () => import('./contests/single/supervisors/ContestSupervisorsPage/ContestSupervisorsPage')
+      retryImport(() => import('./contests/single/supervisors/ContestSupervisorsPage/ContestSupervisorsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Supervisors') }] }),
   });
@@ -82,7 +87,9 @@ export const createContestsRoutes = appRoute => {
   const contestManagersRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'managers',
-    component: lazyRouteComponent(() => import('./contests/single/managers/ContestManagersPage/ContestManagersPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/managers/ContestManagersPage/ContestManagersPage'))
+    ),
     head: () => ({ meta: [{ title: createDocumentTitle('Managers') }] }),
   });
 
@@ -96,14 +103,16 @@ export const createContestsRoutes = appRoute => {
   const contestSubmissionsIndexRoute = createRoute({
     getParentRoute: () => contestSubmissionsRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./contests/single/submissions/ContestSubmissionsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./contests/single/submissions/ContestSubmissionsPage'))),
   });
 
   const contestSubmissionRoute = createRoute({
     getParentRoute: () => contestSubmissionsRoute,
     path: '$submissionId',
     component: lazyRouteComponent(
-      () => import('./contests/single/submissions/Programming/single/ContestSubmissionPage/ContestSubmissionPage')
+      retryImport(
+        () => import('./contests/single/submissions/Programming/single/ContestSubmissionPage/ContestSubmissionPage')
+      )
     ),
   });
 
@@ -111,7 +120,9 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSubmissionsRoute,
     path: 'users/$username',
     component: lazyRouteComponent(
-      () => import('./contests/single/submissions/Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage')
+      retryImport(
+        () => import('./contests/single/submissions/Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage')
+      )
     ),
   });
 
@@ -119,7 +130,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'clarifications',
     component: lazyRouteComponent(
-      () => import('./contests/single/clarifications/ContestClarificationsPage/ContestClarificationsPage')
+      retryImport(() => import('./contests/single/clarifications/ContestClarificationsPage/ContestClarificationsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Clarifications') }] }),
   });
@@ -128,7 +139,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'scoreboard',
     component: lazyRouteComponent(
-      () => import('./contests/single/scoreboard/ContestScoreboardPage/ContestScoreboardPage')
+      retryImport(() => import('./contests/single/scoreboard/ContestScoreboardPage/ContestScoreboardPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Scoreboard') }] }),
   });
@@ -136,14 +147,16 @@ export const createContestsRoutes = appRoute => {
   const contestFilesRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'files',
-    component: lazyRouteComponent(() => import('./contests/single/files/ContestFilesPage/ContestFilesPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/files/ContestFilesPage/ContestFilesPage'))
+    ),
     head: () => ({ meta: [{ title: createDocumentTitle('Files') }] }),
   });
 
   const contestLogsRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'logs',
-    component: lazyRouteComponent(() => import('./contests/single/logs/ContestLogsPage/ContestLogsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./contests/single/logs/ContestLogsPage/ContestLogsPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Logs') }] }),
   });
 

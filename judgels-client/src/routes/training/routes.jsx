@@ -1,12 +1,13 @@
 import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createTrainingRoutes = appRoute => {
   const trainingRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'training',
-    component: lazyRouteComponent(() => import('./TrainingLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./TrainingLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Training') }] }),
   });
 
@@ -19,25 +20,25 @@ export const createTrainingRoutes = appRoute => {
   const trainingCoursesRoute = createRoute({
     getParentRoute: () => trainingRoute,
     path: 'courses',
-    component: lazyRouteComponent(() => import('./courses/CoursesPage/CoursesPage')),
+    component: lazyRouteComponent(retryImport(() => import('./courses/CoursesPage/CoursesPage'))),
   });
 
   const trainingChaptersRoute = createRoute({
     getParentRoute: () => trainingRoute,
     path: 'chapters',
-    component: lazyRouteComponent(() => import('./chapters/ChaptersPage/ChaptersPage')),
+    component: lazyRouteComponent(retryImport(() => import('./chapters/ChaptersPage/ChaptersPage'))),
   });
 
   const trainingArchivesRoute = createRoute({
     getParentRoute: () => trainingRoute,
     path: 'archives',
-    component: lazyRouteComponent(() => import('./archives/ArchivesPage/ArchivesPage')),
+    component: lazyRouteComponent(retryImport(() => import('./archives/ArchivesPage/ArchivesPage'))),
   });
 
   const trainingProblemSetsRoute = createRoute({
     getParentRoute: () => trainingRoute,
     path: 'problemsets',
-    component: lazyRouteComponent(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage')),
+    component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
   });
 
   return trainingRoute.addChildren([

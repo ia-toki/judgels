@@ -3,6 +3,7 @@ import { Navigate, Outlet, createRoute, lazyRouteComponent } from '@tanstack/rea
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
 import { isTLX } from '../../conf';
+import { retryImport } from '../../lazy';
 import { createDocumentTitle } from '../../utils/title';
 import HomePage from '../home/HomePage/HomePage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
@@ -107,7 +108,7 @@ export const createJophielRoutes = appRoute => {
   const accountRoute = createRoute({
     getParentRoute: () => jophielRoute,
     path: 'account',
-    component: lazyRouteComponent(() => import('./account/AccountLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./account/AccountLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('My account') }] }),
   });
 
@@ -120,42 +121,48 @@ export const createJophielRoutes = appRoute => {
   const accountInfoRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'info',
-    component: lazyRouteComponent(() => import('./account/info/InfoPage/InfoPage')),
+    component: lazyRouteComponent(retryImport(() => import('./account/info/InfoPage/InfoPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Info') }] }),
   });
 
   const accountAvatarRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'avatar',
-    component: lazyRouteComponent(() => import('./account/changeAvatar/ChangeAvatarPage/ChangeAvatarPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./account/changeAvatar/ChangeAvatarPage/ChangeAvatarPage'))
+    ),
     head: () => ({ meta: [{ title: createDocumentTitle('Change avatar') }] }),
   });
 
   const accountPasswordRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'password',
-    component: lazyRouteComponent(() => import('./account/resetPassword/ResetPasswordPage/ResetPasswordPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./account/resetPassword/ResetPasswordPage/ResetPasswordPage'))
+    ),
     head: () => ({ meta: [{ title: createDocumentTitle('Change password') }] }),
   });
 
   const profilesRoute = createRoute({
     getParentRoute: () => jophielRoute,
     path: 'profiles/$username',
-    component: lazyRouteComponent(() => import('./profiles/ProfilesLayout')),
+    component: lazyRouteComponent(retryImport(() => import('./profiles/ProfilesLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Profiles') }] }),
   });
 
   const profileIndexRoute = createRoute({
     getParentRoute: () => profilesRoute,
     path: '/',
-    component: lazyRouteComponent(() => import('./profiles/single/summary/ProfileSummaryPage/ProfileSummaryPage')),
+    component: lazyRouteComponent(
+      retryImport(() => import('./profiles/single/summary/ProfileSummaryPage/ProfileSummaryPage'))
+    ),
   });
 
   const profileContestHistoryRoute = createRoute({
     getParentRoute: () => profilesRoute,
     path: 'contest-history',
     component: lazyRouteComponent(
-      () => import('./profiles/single/contestHistory/ContestHistoryPage/ContestHistoryPage')
+      retryImport(() => import('./profiles/single/contestHistory/ContestHistoryPage/ContestHistoryPage'))
     ),
   });
 
@@ -164,7 +171,7 @@ export const createJophielRoutes = appRoute => {
         getParentRoute: () => profilesRoute,
         path: 'submission-history',
         component: lazyRouteComponent(
-          () => import('./profiles/single/submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage')
+          retryImport(() => import('./profiles/single/submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage'))
         ),
       })
     : null;
