@@ -1,10 +1,8 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { parse, stringify } from 'query-string';
-import { useEffect } from 'react';
 
 import { LoadingState } from '../components/LoadingState/LoadingState';
 import { APP_CONFIG } from '../conf';
-import { isChunkLoadError } from '../lazy';
 import App from './App';
 import Root from './Root';
 import { createContestsRoutes } from './contests/routes';
@@ -39,17 +37,7 @@ const appChildren = [
 
 const routeTree = rootRoute.addChildren([appRoute.addChildren(appChildren)]);
 
-function DefaultErrorComponent({ error }) {
-  useEffect(() => {
-    if (isChunkLoadError(error)) {
-      window.location.reload();
-    }
-  }, [error]);
-
-  if (isChunkLoadError(error)) {
-    return null;
-  }
-
+function DefaultErrorComponent() {
   return (
     <div style={{ padding: 20, textAlign: 'center' }}>
       <p>Something went wrong.</p>
