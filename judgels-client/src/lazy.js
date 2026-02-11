@@ -32,19 +32,21 @@ export function isChunkLoadError(error) {
 
 // For use with TanStack Router's lazyRouteComponent()
 export const retryImport = importFn => () => {
-  return importFn().then(module => {
-    window.sessionStorage.setItem('retry-lazy-refreshed', 'false');
-    return module;
-  }).catch(error => {
-    if (!isChunkLoadError(error)) throw error;
+  return importFn()
+    .then(module => {
+      window.sessionStorage.setItem('retry-lazy-refreshed', 'false');
+      return module;
+    })
+    .catch(error => {
+      if (!isChunkLoadError(error)) throw error;
 
-    const hasRefreshed = JSON.parse(window.sessionStorage.getItem('retry-lazy-refreshed') || 'false');
-    if (!hasRefreshed) {
-      window.sessionStorage.setItem('retry-lazy-refreshed', 'true');
-      window.location.reload();
-      return new Promise(() => {}); // never resolves; page will reload
-    }
-    window.sessionStorage.setItem('retry-lazy-refreshed', 'false');
-    throw error;
-  });
+      const hasRefreshed = JSON.parse(window.sessionStorage.getItem('retry-lazy-refreshed') || 'false');
+      if (!hasRefreshed) {
+        window.sessionStorage.setItem('retry-lazy-refreshed', 'true');
+        window.location.reload();
+        return new Promise(() => {}); // never resolves; page will reload
+      }
+      window.sessionStorage.setItem('retry-lazy-refreshed', 'false');
+      throw error;
+    });
 };
