@@ -32,7 +32,10 @@ export function isChunkLoadError(error) {
 
 // For use with TanStack Router's lazyRouteComponent()
 export const retryImport = importFn => () => {
-  return importFn().catch(error => {
+  return importFn().then(module => {
+    window.sessionStorage.setItem('retry-lazy-refreshed', 'false');
+    return module;
+  }).catch(error => {
     if (!isChunkLoadError(error)) throw error;
 
     const hasRefreshed = JSON.parse(window.sessionStorage.getItem('retry-lazy-refreshed') || 'false');
