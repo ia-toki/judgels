@@ -1,52 +1,35 @@
-import { Alignment, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
+import { Alignment, Menu, MenuDivider, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { isTLX } from '../../conf';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
-import { selectIsUserWebConfigLoaded, selectUserProfile } from '../../routes/jophiel/modules/userWebSelectors';
+import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
+import { selectToken } from '../../modules/session/sessionSelectors';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
 import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
 
 import './UserWidget.scss';
 
-export class UserWidget extends PureComponent {
-  state = { avatarUrl: undefined };
+export function UserWidget({ user, profile, items, homeRoute, onRenderAvatar }) {
+  const [avatarUrl, setAvatarUrl] = useState(undefined);
 
-  componentDidMount() {
-    this.refreshUser();
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.user !== prevProps.user) {
-      this.refreshUser();
-    }
-  }
-
-  render() {
-    const { isWebConfigLoaded, profile } = this.props;
-    if (!isWebConfigLoaded) {
-      return null;
-    }
-    if (profile) {
-      return this.renderForUser(this.state.avatarUrl, profile);
-    } else {
-      return this.renderForGuest();
-    }
-  }
-
-  refreshUser = async () => {
-    const { user, onRenderAvatar } = this.props;
+  const refreshUser = async () => {
     if (user) {
-      const avatarUrl = await onRenderAvatar(user.jid);
-      this.setState({ avatarUrl });
+      const url = await onRenderAvatar(user.jid);
+      setAvatarUrl(url);
     }
   };
 
-  renderForUser = (avatarUrl, profile) => {
+  useEffect(() => {
+    refreshUser();
+  }, [user]);
+
+  const renderForUser = () => {
     const menuItems = (
       <>
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
@@ -72,8 +55,8 @@ export class UserWidget extends PureComponent {
 
     const responsiveMenu = (
       <Menu>
-        <MenuItemLink text={this.props.homeRoute.title} to="/" />
-        {this.props.items.map(item => (
+        <MenuItemLink text={homeRoute.title} to="/" />
+        {items.map(item => (
           <MenuItemLink key={item.route.path} text={item.title} to={item.route.path} />
         ))}
         <MenuDivider className="widget-user__menu-helper" />
@@ -103,7 +86,7 @@ export class UserWidget extends PureComponent {
     );
   };
 
-  renderForGuest = () => {
+  const renderForGuest = () => {
     return (
       <Navbar.Group align={Alignment.RIGHT}>
         <div className="widget-user__link">
@@ -118,16 +101,16 @@ export class UserWidget extends PureComponent {
             </Link>
           </div>
         )}
-        {this.renderGuestResponsiveMenu()}
+        {renderGuestResponsiveMenu()}
       </Navbar.Group>
     );
   };
 
-  renderGuestResponsiveMenu = () => {
+  const renderGuestResponsiveMenu = () => {
     const menu = (
       <Menu className="widget-user__menu">
-        <MenuItemLink text={this.props.homeRoute.title} to="/" />
-        {this.props.items.map(item => (
+        <MenuItemLink text={homeRoute.title} to="/" />
+        {items.map(item => (
           <MenuItemLink text={item.title} to={item.route.path} />
         ))}
       </Menu>
@@ -139,16 +122,28 @@ export class UserWidget extends PureComponent {
       </Popover>
     );
   };
+
+  if (profile) {
+    return renderForUser();
+  }
+  return renderForGuest();
 }
 
-const mapStateToProps = state => ({
-  user: state.session.user,
-  isWebConfigLoaded: selectIsUserWebConfigLoaded(state),
-  profile: selectUserProfile(state),
-});
+function UserWidgetContainer({ items, homeRoute }) {
+  const dispatch = useDispatch();
+  const token = useSelector(selectToken);
+  const user = useSelector(state => state.session.user);
+  const { data } = useSuspenseQuery(userWebConfigQueryOptions(token));
 
-const mapDispatchToProps = {
-  onRenderAvatar: avatarActions.renderAvatar,
-};
+  return (
+    <UserWidget
+      user={user}
+      profile={data.profile}
+      items={items}
+      homeRoute={homeRoute}
+      onRenderAvatar={jid => dispatch(avatarActions.renderAvatar(jid))}
+    />
+  );
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserWidget);
+export default UserWidgetContainer;

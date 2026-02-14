@@ -11,7 +11,6 @@ describe('UserWidget', () => {
   const renderComponent = async () => {
     const props = {
       user,
-      isWebConfigLoaded: true,
       profile,
       items: [],
       homeRoute: { title: 'Home' },

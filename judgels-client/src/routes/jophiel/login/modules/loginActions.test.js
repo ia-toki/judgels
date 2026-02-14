@@ -2,9 +2,9 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { queryClient } from '../../../../modules/queryClient';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../../utils/nock';
-import { PutWebConfig } from '../../modules/userWebReducer';
 
 import * as loginActions from './loginActions';
 
@@ -26,6 +26,7 @@ describe('loginActions', () => {
 
   afterEach(function () {
     nock.cleanAll();
+    queryClient.clear();
   });
 
   describe('logIn()', () => {
@@ -50,7 +51,7 @@ describe('loginActions', () => {
         await store.dispatch(loginActions.logIn(usernameOrEmail, password));
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
-        expect(store.getActions()).toContainEqual(PutWebConfig(config));
+        expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
 

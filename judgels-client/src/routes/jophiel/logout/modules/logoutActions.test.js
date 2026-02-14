@@ -2,9 +2,9 @@ import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { queryClient } from '../../../../modules/queryClient';
 import { DelSession } from '../../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../../utils/nock';
-import { PutWebConfig } from '../../modules/userWebReducer';
 
 import * as logoutActions from './logoutActions';
 
@@ -20,6 +20,7 @@ describe('logoutActions', () => {
 
   afterEach(function () {
     nock.cleanAll();
+    queryClient.clear();
   });
 
   describe('logOut()', () => {
@@ -30,7 +31,7 @@ describe('logoutActions', () => {
         await store.dispatch(logoutActions.logOut(path));
 
         expect(store.getActions()).toContainEqual(DelSession());
-        expect(store.getActions()).toContainEqual(PutWebConfig({ role: {} }));
+        expect(queryClient.getQueryData(['user-web-config', undefined])).toEqual({ role: {} });
       });
     });
 

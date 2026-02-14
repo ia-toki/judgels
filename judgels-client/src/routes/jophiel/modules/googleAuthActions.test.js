@@ -4,9 +4,9 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { SubmissionError } from '../../../modules/form/submissionError';
+import { queryClient } from '../../../modules/queryClient';
 import { PutToken, PutUser } from '../../../modules/session/sessionReducer';
 import { nockJophiel } from '../../../utils/nock';
-import { PutWebConfig } from '../modules/userWebReducer';
 
 import * as googleAuthActions from './googleAuthActions';
 
@@ -40,6 +40,7 @@ describe('googleAuthActions', () => {
 
   afterEach(function () {
     nock.cleanAll();
+    queryClient.clear();
   });
 
   describe('logIn()', () => {
@@ -64,7 +65,7 @@ describe('googleAuthActions', () => {
         await store.dispatch(googleAuthActions.logIn(idToken));
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
-        expect(store.getActions()).toContainEqual(PutWebConfig(config));
+        expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
 
@@ -105,7 +106,7 @@ describe('googleAuthActions', () => {
         expect(mockPush).toHaveBeenCalledWith('/registered?source=google');
         expect(store.getActions()).toContainEqual(PutToken(token));
         expect(store.getActions()).toContainEqual(PutUser(user));
-        expect(store.getActions()).toContainEqual(PutWebConfig(config));
+        expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
 
