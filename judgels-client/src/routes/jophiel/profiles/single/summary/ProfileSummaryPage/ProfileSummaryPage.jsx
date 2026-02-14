@@ -1,9 +1,11 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
-import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
+import { userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
 
@@ -13,8 +15,8 @@ import * as profileActions from '../../modules/profileActions';
 import './ProfileSummaryPage.scss';
 
 export default function ProfileSummaryPage() {
-  const userJid = useSelector(selectUserJid);
-  const username = useSelector(selectUsername);
+  const { username } = useParams({ strict: false });
+  const { data: userJid } = useSuspenseQuery(userJidByUsernameQueryOptions(username));
   const dispatch = useDispatch();
 
   const [state, setState] = useState({
