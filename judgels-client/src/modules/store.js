@@ -3,7 +3,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 
-import jerahmeelReducer from './jerahmeel/jerahmeelReducer';
 import jophielReducer from './jophiel/jophielReducer';
 import sessionReducer from './session/sessionReducer';
 import toastMiddleware from './toast/toastMiddleware';
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
   session: persistReducer({ key: 'session', storage }, sessionReducer),
   webPrefs: persistReducer({ key: 'webPrefs', storage }, webPrefsReducer),
   jophiel: jophielReducer,
-  jerahmeel: jerahmeelReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -1,4 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -11,8 +12,11 @@ import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/P
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
-import { selectProblemSet } from '../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../modules/problemSetProblemSelectors';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../modules/queries/problemSet';
+import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
@@ -22,10 +26,11 @@ import './ProblemReportWidget.scss';
 const TOP_STATS_SIZE = 5;
 
 export default function ProblemReportWidget() {
-  const { problemAlias } = useParams({ strict: false });
+  const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const token = useSelector(selectToken);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
   const [state, setState] = useState({
     response: undefined,

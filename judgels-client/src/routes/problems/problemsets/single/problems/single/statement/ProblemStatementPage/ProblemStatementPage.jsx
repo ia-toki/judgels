@@ -1,20 +1,27 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../../modules/queries/problemSet';
+import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
 
 import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
 export default function ProblemStatementPage() {
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const { problemSetSlug, problemAlias } = useParams({ strict: false });
+  const token = useSelector(selectToken);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const statementLanguage = useSelector(selectStatementLanguage);
   const dispatch = useDispatch();
 

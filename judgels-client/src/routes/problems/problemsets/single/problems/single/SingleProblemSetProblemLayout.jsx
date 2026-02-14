@@ -1,69 +1,37 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
-import { Link, Outlet, useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
-import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../modules/queries/problemSet';
+import { selectToken } from '../../../../../../modules/session/sessionSelectors';
 import { createDocumentTitle } from '../../../../../../utils/title';
-import { selectProblemSet } from '../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../modules/problemSetProblemSelectors';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
-
-import * as problemSetActions from '../../../modules/problemSetActions';
-import * as problemSetProblemActions from '../modules/problemSetProblemActions';
 
 import './SingleProblemSetProblemLayout.scss';
 
 export default function SingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const { pathname } = useLocation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const token = useSelector(selectToken);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
-  // Load problem set
   useEffect(() => {
-    const loadProblemSet = async () => {
-      await dispatch(problemSetActions.getProblemSetBySlug(problemSetSlug));
-    };
-    loadProblemSet();
-
-    return () => {
-      dispatch(problemSetActions.clearProblemSet());
-    };
-  }, [problemSetSlug]);
-
-  // Load problem (depends on problemSet being loaded)
-  useEffect(() => {
-    if (!problemSet || problemSet.slug !== problemSetSlug) {
-      return;
-    }
-
-    const loadProblem = async () => {
-      await dispatch(problemSetProblemActions.getProblem(problemSet.jid, problemAlias));
-      document.title = createDocumentTitle(`${problemSet.name} / ${problemAlias}`);
-    };
-    loadProblem();
-
-    return () => {
-      dispatch(problemSetProblemActions.clearProblem());
-    };
-  }, [problemSet?.jid, problemAlias]);
+    document.title = createDocumentTitle(`${problemSet.name} / ${problemAlias}`);
+  }, [problemSet.name, problemAlias]);
 
   const clickBack = () => {
     navigate({ to: `/problems/${problemSet.slug}` });
   };
-
-  // Optimization:
-  // We wait until we get the problem from the backend only if the current problem is different from the persisted one.
-  if (!problemSet || !problem || problemSet.slug !== problemSetSlug || problem.alias !== problemAlias) {
-    return <LoadingState large />;
-  }
 
   const sidebarItems = [
     {

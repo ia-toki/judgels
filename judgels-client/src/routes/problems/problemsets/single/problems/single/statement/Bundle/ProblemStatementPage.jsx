@@ -1,19 +1,21 @@
-import { useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
 
 export default function ProblemStatementPage(props) {
+  const { problemSetSlug } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
-  const problemSet = useSelector(selectProblemSet);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
 
   const [state, setState] = useState({
     latestSubmissions: undefined,

@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,20 +8,23 @@ import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSub
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../../modules/queries/problemSet';
+import { selectMaybeUserJid, selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
 export default function ProblemSubmissionSummaryPage() {
-  const { username } = useParams({ strict: false });
+  const { problemSetSlug, problemAlias, username } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const language = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({
