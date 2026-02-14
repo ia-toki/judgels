@@ -15,7 +15,7 @@ import {
   courseChaptersQueryOptions,
 } from '../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
@@ -35,7 +35,7 @@ export default function ChapterProblemLayout() {
   const {
     data: { data: chapters },
   } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [reloadKey, setReloadKey] = useState(0);
   const [state, setState] = useState({

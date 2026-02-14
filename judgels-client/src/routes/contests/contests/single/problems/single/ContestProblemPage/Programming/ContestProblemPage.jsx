@@ -9,11 +9,9 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
-import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
-import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
@@ -24,8 +22,7 @@ export default function ContestProblemPage() {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const statementLanguage = useSelector(selectStatementLanguage);
-  const gradingLanguage = useSelector(selectGradingLanguage);
+  const { statementLanguage, gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     defaultLanguage: undefined,
@@ -71,7 +68,7 @@ export default function ContestProblemPage() {
 
   const createSubmission = async data => {
     const problem = state.problem;
-    dispatch(webPrefsActions.updateGradingLanguage(data.gradingLanguage));
+    setGradingLanguage(data.gradingLanguage);
     return await dispatch(
       contestSubmissionActions.createSubmission(contest.jid, contest.slug, problem.problemJid, data)
     );

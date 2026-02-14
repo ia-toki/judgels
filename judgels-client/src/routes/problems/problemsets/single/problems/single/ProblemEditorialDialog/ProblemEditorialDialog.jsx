@@ -11,7 +11,7 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
 import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
-import { selectEditorialLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
@@ -23,7 +23,7 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   const token = useSelector(selectToken);
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
-  const editorialLanguage = useSelector(selectEditorialLanguage);
+  const { editorialLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     isDialogOpen: false,

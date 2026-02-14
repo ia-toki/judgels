@@ -11,7 +11,7 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
 
@@ -22,7 +22,7 @@ export default function ProblemStatementPage() {
   const token = useSelector(selectToken);
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
   const dispatch = useDispatch();
 
   const [state, setState] = useState({

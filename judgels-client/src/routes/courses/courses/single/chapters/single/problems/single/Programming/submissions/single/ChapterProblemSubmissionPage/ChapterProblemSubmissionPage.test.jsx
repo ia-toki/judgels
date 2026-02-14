@@ -5,9 +5,7 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../../../../../modules/api/gabriel/language';
-import webPrefsReducer, {
-  PutStatementLanguage,
-} from '../../../../../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../../../../../utils/nock';
@@ -38,26 +36,22 @@ describe('ChapterProblemSubmissionPage', () => {
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(
-      combineReducers({
-        webPrefs: webPrefsReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutStatementLanguage('en'));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
-              path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
-            >
-              <ChapterProblemSubmissionPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
+                path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
+              >
+                <ChapterProblemSubmissionPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
   };

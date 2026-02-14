@@ -1,21 +1,14 @@
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
-import { selectStatementLanguage } from '../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../modules/webPrefs';
 import LanguageForm from './LanguageForm/LanguageForm';
-
-import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
 
 import './LanguageWidget.scss';
 
-function StatementLanguageWidget({
-  className,
-  defaultLanguage,
-  statementLanguages,
-  statementLanguage,
-  onChangeLanguage,
-}) {
+export default function StatementLanguageWidget({ className, defaultLanguage, statementLanguages }) {
+  const { statementLanguage, setStatementLanguage } = useWebPrefs();
+
   let initialLanguage;
   if (statementLanguages.indexOf(statementLanguage) !== -1) {
     initialLanguage = statementLanguage;
@@ -33,19 +26,9 @@ function StatementLanguageWidget({
   return (
     <div className={classNames('language-widget', className)}>
       <div className="language-widget__right">
-        <LanguageForm onSubmit={onChangeLanguage} {...formProps} />
+        <LanguageForm onSubmit={data => setStatementLanguage(data.language)} {...formProps} />
       </div>
       <div className="clearfix" />
     </div>
   );
 }
-
-const mapStateToProps = state => ({
-  statementLanguage: selectStatementLanguage(state),
-});
-
-const mapDispatchToProps = {
-  onChangeLanguage: data => webPrefsActions.switchStatementLanguage(data.language),
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(StatementLanguageWidget);

@@ -6,19 +6,17 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
-import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
 import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 vi.mock('../../../modules/contestProblemActions');
 vi.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
-vi.mock('../../../../../../../../modules/webPrefs/webPrefsActions');
 
 describe('ProgrammingContestProblemPage', () => {
   beforeEach(async () => {
@@ -49,7 +47,6 @@ describe('ProgrammingContestProblemPage', () => {
       })
     );
 
-    webPrefsActions.updateGradingLanguage.mockReturnValue(() => Promise.resolve({}));
     contestSubmissionActions.createSubmission.mockReturnValue(() => Promise.resolve({}));
 
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
@@ -57,20 +54,22 @@ describe('ProgrammingContestProblemPage', () => {
       slug: 'contest-slug',
     });
 
-    const store = createStore(combineReducers({ webPrefs: webPrefsReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () => {
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/problems/C']}
-              path="/contests/$contestSlug/problems/$problemAlias"
-            >
-              <ContestProblemPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/contests/contest-slug/problems/C']}
+                path="/contests/$contestSlug/problems/$problemAlias"
+              >
+                <ContestProblemPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       );
     });
   });
@@ -99,7 +98,6 @@ describe('ProgrammingContestProblemPage', () => {
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
 
-    expect(webPrefsActions.updateGradingLanguage).toHaveBeenCalledWith('Cpp11');
     expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-slug', 'problemJid', {
       gradingLanguage: 'Cpp11',
       sourceFiles: {

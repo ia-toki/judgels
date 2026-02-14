@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import createMockStore from 'redux-mock-store';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { WebPrefsProvider } from '../../../../../modules/webPrefs';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { ItemStatementCard } from './ItemStatementCard';
 
 describe('ItemStatementCard', () => {
@@ -19,9 +21,13 @@ describe('ItemStatementCard', () => {
   beforeEach(() => {
     const store = createMockStore()({});
     render(
-      <Provider store={store}>
-        <ItemStatementCard {...props} />
-      </Provider>
+      <WebPrefsProvider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <ItemStatementCard {...props} />
+          </Provider>
+        </QueryClientProviderWrapper>
+      </WebPrefsProvider>
     );
   });
 

@@ -11,7 +11,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
 import { nockJerahmeel } from '../../../../../../../../../utils/nock';
 import ChapterProblemLayout from './ChapterProblemLayout';
@@ -48,13 +48,7 @@ describe('ChapterProblemLayout', () => {
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(
-      combineReducers({
-        webPrefs: webPrefsReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutStatementLanguage('en'));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({
@@ -76,11 +70,13 @@ describe('ChapterProblemLayout', () => {
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <RouterProvider router={router} />
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <RouterProvider router={router} />
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
   });

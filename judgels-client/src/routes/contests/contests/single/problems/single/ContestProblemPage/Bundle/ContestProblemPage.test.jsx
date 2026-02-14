@@ -8,7 +8,7 @@ import { vi } from 'vitest';
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
-import webPrefsReducer from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
@@ -67,20 +67,22 @@ describe('BundleContestProblemPage', () => {
       style: ContestStyle.Bundle,
     });
 
-    const store = createStore(combineReducers({ webPrefs: webPrefsReducer }), applyMiddleware(thunk));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/problems/C']}
-              path="/contests/$contestSlug/problems/$problemAlias"
-            >
-              <ContestProblemPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/contests/contest-slug/problems/C']}
+                path="/contests/$contestSlug/problems/$problemAlias"
+              >
+                <ContestProblemPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
   });

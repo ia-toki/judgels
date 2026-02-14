@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
-import webPrefsReducer, { PutStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -60,22 +60,22 @@ describe('ContestProblemsPage', () => {
     const store = createStore(
       combineReducers({
         session: sessionReducer,
-        webPrefs: webPrefsReducer,
       }),
       applyMiddleware(thunk)
     );
     store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutStatementLanguage('en'));
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug/problems']} path="/contests/$contestSlug/problems">
-              <ContestProblemsPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter initialEntries={['/contests/contest-slug/problems']} path="/contests/$contestSlug/problems">
+                <ContestProblemsPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
 

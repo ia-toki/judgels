@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
-import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
@@ -34,21 +34,22 @@ describe('ContestSubmissionPage', () => {
       slug: 'contest-slug',
     });
 
-    const store = createStore(combineReducers({ webPrefs: webPrefsReducer }), applyMiddleware(thunk));
-    store.dispatch(PutStatementLanguage('en'));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () => {
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/submissions/10']}
-              path="/contests/$contestSlug/submissions/$submissionId"
-            >
-              <ContestSubmissionPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/contests/contest-slug/submissions/10']}
+                path="/contests/$contestSlug/submissions/$submissionId"
+              >
+                <ContestSubmissionPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       );
     });
   });

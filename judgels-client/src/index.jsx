@@ -10,6 +10,7 @@ import 'typeface-roboto';
 import { initGA } from './ga';
 import { queryClient } from './modules/queryClient';
 import { persistor, store } from './modules/store';
+import { WebPrefsProvider } from './modules/webPrefs';
 import { router } from './routes/router';
 
 import './styles/index.scss';
@@ -26,7 +27,9 @@ root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
-        <RouterProvider router={router} />
+        <WebPrefsProvider>
+          <RouterProvider router={router} />
+        </WebPrefsProvider>
       </PersistQueryClientProvider>
     </PersistGate>
   </Provider>

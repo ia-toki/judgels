@@ -13,7 +13,7 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import { selectMaybeUserJid, selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
@@ -25,7 +25,7 @@ export default function ProblemSubmissionSummaryPage() {
   const userJid = useSelector(selectMaybeUserJid);
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
-  const language = useSelector(selectStatementLanguage);
+  const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({
     config: undefined,

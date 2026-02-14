@@ -11,7 +11,7 @@ import { getProblemName } from '../../../../../../modules/api/sandalphon/problem
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../modules/webPrefs';
 import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
 
@@ -22,7 +22,7 @@ export default function ContestProblemsPage() {
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     response: undefined,

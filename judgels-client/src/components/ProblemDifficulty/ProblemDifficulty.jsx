@@ -1,12 +1,14 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 
 import { ProblemType } from '../../modules/api/sandalphon/problem';
-import { selectShowProblemDifficulty } from '../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../modules/webPrefs';
 
 import './ProblemDifficulty.scss';
 
-function ProblemDifficulty({ problem, difficulty, showProblemDifficulty }) {
+export default function ProblemDifficulty({ problem, difficulty }) {
+  const { hideProblemDifficulty } = useWebPrefs();
+  const showProblemDifficulty = !hideProblemDifficulty;
+
   const renderLevel = ({ level }) => {
     if (!level) {
       return null;
@@ -42,9 +44,3 @@ function ProblemDifficulty({ problem, difficulty, showProblemDifficulty }) {
     </div>
   );
 }
-
-const mapStateToProps = state => ({
-  showProblemDifficulty: selectShowProblemDifficulty(state),
-});
-
-export default connect(mapStateToProps)(ProblemDifficulty);

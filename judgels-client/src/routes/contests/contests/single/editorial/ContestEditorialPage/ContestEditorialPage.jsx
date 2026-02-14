@@ -12,7 +12,7 @@ import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/l
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { selectEditorialLanguage } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
@@ -21,7 +21,7 @@ export default function ContestEditorialPage() {
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const dispatch = useDispatch();
-  const editorialLanguage = useSelector(selectEditorialLanguage);
+  const { editorialLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     response: undefined,

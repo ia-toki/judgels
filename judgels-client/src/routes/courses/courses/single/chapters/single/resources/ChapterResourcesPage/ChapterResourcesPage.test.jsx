@@ -4,7 +4,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsReducer';
+import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../utils/nock';
@@ -63,26 +63,22 @@ describe('ChapterResourcesPage', () => {
       .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(
-      combineReducers({
-        webPrefs: webPrefsReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutStatementLanguage('en'));
+    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/courses/courseSlug/chapter/chapter-1']}
-              path="/courses/$courseSlug/chapter/$chapterAlias"
-            >
-              <ChapterResourcesPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/courses/courseSlug/chapter/chapter-1']}
+                path="/courses/$courseSlug/chapter/$chapterAlias"
+              >
+                <ChapterResourcesPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
   };

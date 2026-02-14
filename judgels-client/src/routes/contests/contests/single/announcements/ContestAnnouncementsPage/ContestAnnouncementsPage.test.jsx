@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -46,16 +47,18 @@ describe('ContestAnnouncementsPage', () => {
 
     await act(async () =>
       render(
-        <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/announcements']}
-              path="/contests/$contestSlug/announcements"
-            >
-              <ContestAnnouncementsPage />
-            </TestRouter>
-          </Provider>
-        </QueryClientProviderWrapper>
+        <WebPrefsProvider>
+          <QueryClientProviderWrapper>
+            <Provider store={store}>
+              <TestRouter
+                initialEntries={['/contests/contest-slug/announcements']}
+                path="/contests/$contestSlug/announcements"
+              >
+                <ContestAnnouncementsPage />
+              </TestRouter>
+            </Provider>
+          </QueryClientProviderWrapper>
+        </WebPrefsProvider>
       )
     );
   };

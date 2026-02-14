@@ -1,23 +1,19 @@
 import { Alignment, Switch } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 
-import { selectShowProblemDifficulty, selectShowProblemTopicTags } from '../../modules/webPrefs/webPrefsSelectors';
-
-import * as webPrefsActions from '../../modules/webPrefs/webPrefsActions';
+import { useWebPrefs } from '../../modules/webPrefs';
 
 import './ProblemSpoilerWidget.scss';
 
-function ProblemSpoilerWidget({
-  showProblemDifficulty,
-  showProblemTopicTags,
-  onChangeShowProblemDifficulty,
-  onChangeShowProblemTopicTags,
-}) {
+export default function ProblemSpoilerWidget() {
+  const { hideProblemDifficulty, showProblemTopicTags, setShowProblemDifficulty, setShowProblemTopicTags } =
+    useWebPrefs();
+  const showProblemDifficulty = !hideProblemDifficulty;
+
   const changeShowProblemDifficulty = ({ target }) => {
-    onChangeShowProblemDifficulty(target.checked);
+    setShowProblemDifficulty(target.checked);
   };
   const changeShowProblemTopicTags = ({ target }) => {
-    onChangeShowProblemTopicTags(target.checked);
+    setShowProblemTopicTags(target.checked);
   };
 
   return (
@@ -39,15 +35,3 @@ function ProblemSpoilerWidget({
     </>
   );
 }
-
-const mapStateToProps = state => ({
-  showProblemDifficulty: selectShowProblemDifficulty(state),
-  showProblemTopicTags: selectShowProblemTopicTags(state),
-});
-
-const mapDispatchToProps = {
-  onChangeShowProblemDifficulty: webPrefsActions.switchShowProblemDifficulty,
-  onChangeShowProblemTopicTags: webPrefsActions.switchShowProblemTopicTags,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemSpoilerWidget);

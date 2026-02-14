@@ -8,7 +8,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
 import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
@@ -18,7 +18,7 @@ export default function ContestSubmissionPage() {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     submissionWithSource: undefined,
