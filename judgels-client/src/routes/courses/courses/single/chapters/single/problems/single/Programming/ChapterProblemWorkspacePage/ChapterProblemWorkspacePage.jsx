@@ -17,11 +17,10 @@ import { selectGradingLanguage } from '../../../../../../../../../../modules/web
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
 import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
-import * as chapterProblemActions from '../../modules/chapterProblemActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemWorkspacePage() {
-  const { worksheet, renderNavigation } = useChapterProblemContext();
+  const { worksheet, renderNavigation, reloadProblem } = useChapterProblemContext();
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
@@ -68,8 +67,6 @@ export default function ChapterProblemWorkspacePage() {
   };
 
   const getSubmission = submissionJid => dispatch(chapterProblemSubmissionActions.getSubmission(submissionJid));
-
-  const reloadProblem = () => dispatch(chapterProblemActions.reloadProblem());
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {

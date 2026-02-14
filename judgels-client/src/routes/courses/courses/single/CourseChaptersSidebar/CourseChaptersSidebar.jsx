@@ -3,13 +3,12 @@ import { Menu } from '@blueprintjs/icons';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
 import { selectToken } from '../../../../../modules/session/sessionSelectors';
-import { selectChapterProblemReloadKey } from '../chapters/single/problems/single/modules/chapterProblemSelectors';
 
 import './CourseChaptersSidebar.scss';
 
@@ -22,13 +21,8 @@ export default function CourseChaptersSidebar() {
   const {
     data: { data: courseChapters, chaptersMap, chapterProgressesMap },
   } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
-  const chapterProblemReloadKey = useSelector(selectChapterProblemReloadKey);
 
   const [isResponsivePopoverOpen, setIsResponsivePopoverOpen] = useState(false);
-
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['course-chapters', course.jid] });
-  }, [chapterProblemReloadKey]);
 
   const render = () => {
     return (

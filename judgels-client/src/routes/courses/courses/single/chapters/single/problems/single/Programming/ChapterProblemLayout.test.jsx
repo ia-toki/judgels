@@ -14,7 +14,6 @@ import thunk from 'redux-thunk';
 import webPrefsReducer, { PutStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsReducer';
 import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
 import { nockJerahmeel } from '../../../../../../../../../utils/nock';
-import chapterProblemReducer from '../modules/chapterProblemReducer';
 import ChapterProblemLayout from './ChapterProblemLayout';
 
 describe('ChapterProblemLayout', () => {
@@ -52,9 +51,6 @@ describe('ChapterProblemLayout', () => {
     const store = createStore(
       combineReducers({
         webPrefs: webPrefsReducer,
-        jerahmeel: combineReducers({
-          chapterProblem: chapterProblemReducer,
-        }),
       }),
       applyMiddleware(thunk)
     );
