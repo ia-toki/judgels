@@ -1,4 +1,5 @@
-import { useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,10 +8,16 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { selectMaybeUserJid, selectMaybeUsername } from '../../../../../../../../modules/session/sessionSelectors';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../../modules/queries/problemSet';
+import {
+  selectMaybeUserJid,
+  selectMaybeUsername,
+  selectToken,
+} from '../../../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
-import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
@@ -18,12 +25,14 @@ import * as problemSetSubmissionActions from '../modules/problemSetSubmissionAct
 const PAGE_SIZE = 20;
 
 export default function ProblemSubmissionsPage() {
+  const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
   const username = useSelector(selectMaybeUsername);
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
   const [state, setState] = useState({
     response: undefined,

@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { Link, useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -12,10 +13,12 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import { selectMaybeUserJid } from '../../../../../../../../modules/session/sessionSelectors';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../../modules/queries/problemSet';
+import { selectMaybeUserJid, selectToken } from '../../../../../../../../modules/session/sessionSelectors';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
-import { selectProblemSet } from '../../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../../modules/problemSetProblemSelectors';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
 
@@ -24,11 +27,13 @@ import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissio
 const PAGE_SIZE = 20;
 
 export default function ProblemSubmissionsPage() {
+  const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
   const dispatch = useDispatch();
+  const token = useSelector(selectToken);
   const userJid = useSelector(selectMaybeUserJid);
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
   const [state, setState] = useState({
     response: undefined,

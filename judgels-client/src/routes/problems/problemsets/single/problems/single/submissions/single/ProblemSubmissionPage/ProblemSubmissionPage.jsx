@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,19 +7,23 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+} from '../../../../../../../../../modules/queries/problemSet';
+import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
 import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
-import { selectProblemSet } from '../../../../../../modules/problemSetSelectors';
-import { selectProblemSetProblem } from '../../../../modules/problemSetProblemSelectors';
 
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
 import * as problemSetSubmissionActions from '../../modules/problemSetSubmissionActions';
 
 export default function ProblemSubmissionPage() {
-  const { submissionId } = useParams({ strict: false });
+  const { problemSetSlug, problemAlias, submissionId } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const problemSet = useSelector(selectProblemSet);
-  const problem = useSelector(selectProblemSetProblem);
+  const token = useSelector(selectToken);
+  const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const statementLanguage = useSelector(selectStatementLanguage);
 
   const [state, setState] = useState({
