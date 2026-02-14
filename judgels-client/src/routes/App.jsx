@@ -1,29 +1,29 @@
 import { PortalProvider } from '@blueprintjs/core';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Announcements from '../components/Announcements/Announcements';
 import { AppContent } from '../components/AppContent/AppContent';
 import { Footer } from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
 import { setGAUser } from '../ga';
-import { selectMaybeUserJid } from '../modules/session/sessionSelectors';
+import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
+import { selectMaybeUserJid, selectToken } from '../modules/session/sessionSelectors';
 import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
 import { getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
-import { selectRole } from './jophiel/modules/userWebSelectors';
-
-import * as userWebActions from './jophiel/modules/userWebActions';
 
 export default function App() {
-  const dispatch = useDispatch();
   const isDarkMode = useSelector(selectIsDarkMode);
   const userJid = useSelector(selectMaybeUserJid);
-  const role = useSelector(selectRole);
+  const token = useSelector(selectToken);
+  const {
+    data: { role },
+  } = useSuspenseQuery(userWebConfigQueryOptions(token));
 
   useEffect(() => {
-    dispatch(userWebActions.getWebConfig());
     setGAUser(userJid);
   }, []);
 

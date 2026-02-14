@@ -4,8 +4,8 @@ import { sessionAPI } from '../../../../modules/api/jophiel/session';
 import { userAPI } from '../../../../modules/api/jophiel/user';
 import { userWebAPI } from '../../../../modules/api/jophiel/userWeb';
 import { getNavigationRef } from '../../../../modules/navigation/navigationRef';
+import { queryClient } from '../../../../modules/queryClient';
 import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
-import { PutWebConfig } from '../../modules/userWebReducer';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -42,6 +42,6 @@ export function afterLogin(session) {
     toastActions.showToast(`Welcome, ${user.username}.`);
     dispatch(PutToken(session.token));
     dispatch(PutUser(user));
-    dispatch(PutWebConfig(config));
+    queryClient.setQueryData(['user-web-config', token], config);
   };
 }
