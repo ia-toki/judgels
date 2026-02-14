@@ -1,18 +1,16 @@
+import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
-import { selectUsername } from '../../../../modules/profileSelectors';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 import * as profileActions from '../../modules/profileActions';
 
 export default function SubmissionHistoryPage() {
-  const username = useSelector(selectUsername);
-  const sessionUserJid = useSelector(selectMaybeUserJid);
+  const { username } = useParams({ strict: false });
   const dispatch = useDispatch();
 
   const [state, setState] = useState({

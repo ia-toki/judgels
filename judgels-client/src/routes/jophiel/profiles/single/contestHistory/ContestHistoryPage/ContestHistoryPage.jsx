@@ -1,20 +1,19 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
-import { selectUserJid, selectUsername } from '../../../../modules/profileSelectors';
 
 import * as profileActions from '../../modules/profileActions';
 
 import './ContestHistoryPage.scss';
 
 export default function ContestHistoryPage() {
-  const userJid = useSelector(selectUserJid);
-  const username = useSelector(selectUsername);
+  const { username } = useParams({ strict: false });
   const dispatch = useDispatch();
 
   const [state, setState] = useState({
