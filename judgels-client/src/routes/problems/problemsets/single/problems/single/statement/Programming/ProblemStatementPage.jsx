@@ -12,9 +12,8 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectGradingLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
-import * as webPrefsActions from '../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
 
 export default function ProblemStatementPage({ worksheet }) {
@@ -23,7 +22,7 @@ export default function ProblemStatementPage({ worksheet }) {
   const token = useSelector(selectToken);
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
-  const gradingLanguage = useSelector(selectGradingLanguage);
+  const { gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = worksheet;
@@ -52,7 +51,7 @@ export default function ProblemStatementPage({ worksheet }) {
   };
 
   const createSubmission = async data => {
-    dispatch(webPrefsActions.updateGradingLanguage(data.gradingLanguage));
+    setGradingLanguage(data.gradingLanguage);
 
     sendGAEvent({ category: 'Problems', action: 'Submit problemset problem', label: problemSet.name });
     sendGAEvent({

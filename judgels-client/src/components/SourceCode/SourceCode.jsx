@@ -1,5 +1,3 @@
-import { connect } from 'react-redux';
-
 import c from 'react-syntax-highlighter/languages/prism/c';
 import cpp from 'react-syntax-highlighter/languages/prism/cpp';
 import go from 'react-syntax-highlighter/languages/prism/go';
@@ -11,7 +9,7 @@ import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/pr
 import coy from 'react-syntax-highlighter/styles/prism/coy';
 import tomorrow from 'react-syntax-highlighter/styles/prism/tomorrow';
 
-import { selectIsDarkMode } from '../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../modules/webPrefs';
 
 import './SourceCode.scss';
 
@@ -44,8 +42,7 @@ export function SourceCode({ isDarkMode, language, showLineNumbers = true, child
   );
 }
 
-const mapStateToProps = state => ({
-  isDarkMode: selectIsDarkMode(state),
-});
-
-export default connect(mapStateToProps)(SourceCode);
+export default function ConnectedSourceCode(props) {
+  const { isDarkMode } = useWebPrefs();
+  return <SourceCode isDarkMode={isDarkMode} {...props} />;
+}

@@ -14,7 +14,7 @@ import {
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../modules/queries/course';
 import { selectMaybeUserJid, selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../../../../modules/webPrefs';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
 
@@ -27,7 +27,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
   const userJid = useSelector(selectMaybeUserJid);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
-  const language = useSelector(selectStatementLanguage);
+  const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({
     config: undefined,

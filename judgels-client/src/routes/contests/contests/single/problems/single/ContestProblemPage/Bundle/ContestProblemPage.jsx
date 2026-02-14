@@ -9,7 +9,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
 import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
@@ -20,7 +20,7 @@ export default function ContestProblemPage() {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
   const [state, setState] = useState({
     defaultLanguage: undefined,
     languages: undefined,

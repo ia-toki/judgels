@@ -8,7 +8,7 @@ import { SubmissionDetails } from '../../../../../../../components/SubmissionDet
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
@@ -17,7 +17,7 @@ export default function ContestSubmissionSummaryPage() {
   const dispatch = useDispatch();
   const token = useSelector(selectToken);
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const language = useSelector(selectStatementLanguage);
+  const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({
     config: undefined,

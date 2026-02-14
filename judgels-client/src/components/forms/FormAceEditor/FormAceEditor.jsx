@@ -1,6 +1,5 @@
 import { FormGroup } from '@blueprintjs/core';
 import AceEditor from 'react-ace';
-import { connect } from 'react-redux';
 
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-c_cpp';
@@ -9,13 +8,15 @@ import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/theme-tomorrow_night';
 
 import { getGradingLanguageFamily } from '../../../modules/api/gabriel/language';
-import { selectIsDarkMode } from '../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../modules/webPrefs';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 import { getIntent } from '../meta';
 
 import './FormAceEditor.scss';
 
-function FormAceEditor({ input, meta, autoFocus, isDarkMode, gradingLanguage }) {
+export default function FormAceEditor({ input, meta, autoFocus, gradingLanguage }) {
+  const { isDarkMode } = useWebPrefs();
+
   return (
     <FormGroup intent={getIntent(meta)} className="form-group-editor">
       <AceEditor
@@ -36,9 +37,3 @@ function FormAceEditor({ input, meta, autoFocus, isDarkMode, gradingLanguage }) 
     </FormGroup>
   );
 }
-
-const mapStateToProps = state => ({
-  isDarkMode: selectIsDarkMode(state),
-});
-
-export default connect(mapStateToProps)(FormAceEditor);

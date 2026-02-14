@@ -4,6 +4,8 @@ import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { WebPrefsProvider } from '../../../../../modules/webPrefs';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { ItemEssayCard } from './ItemEssayCard';
 
 describe('ItemEssayCard', () => {
@@ -24,9 +26,13 @@ describe('ItemEssayCard', () => {
   beforeEach(() => {
     const store = createMockStore()({});
     render(
-      <Provider store={store}>
-        <ItemEssayCard {...props} />
-      </Provider>
+      <WebPrefsProvider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <ItemEssayCard {...props} />
+          </Provider>
+        </QueryClientProviderWrapper>
+      </WebPrefsProvider>
     );
   });
 

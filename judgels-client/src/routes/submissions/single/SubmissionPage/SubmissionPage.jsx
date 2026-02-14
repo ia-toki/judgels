@@ -1,12 +1,12 @@
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
-import { selectStatementLanguage } from '../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../utils/title';
 
 import * as submissionActions from '../../modules/submissionActions';
@@ -14,7 +14,7 @@ import * as submissionActions from '../../modules/submissionActions';
 export default function SubmissionPage() {
   const { submissionId } = useParams({ strict: false });
   const dispatch = useDispatch();
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     submissionWithSource: undefined,

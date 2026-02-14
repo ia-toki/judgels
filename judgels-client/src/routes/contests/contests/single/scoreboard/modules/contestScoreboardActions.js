@@ -2,7 +2,7 @@ import { NotFoundError } from '../../../../../../modules/api/error';
 import { contestScoreboardAPI } from '../../../../../../modules/api/uriel/contestScoreboard';
 import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import { selectToken } from '../../../../../../modules/session/sessionSelectors';
-import { selectIsDarkMode } from '../../../../../../modules/webPrefs/webPrefsSelectors';
+import { getWebPrefs } from '../../../../../../modules/webPrefs';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
@@ -23,7 +23,7 @@ export function refreshScoreboard(contestJid) {
 
 export function getSubmissionSourceImage(contestJid, userJid, problemJid) {
   return async (dispatch, getState) => {
-    const isDarkMode = selectIsDarkMode(getState());
+    const { isDarkMode } = getWebPrefs();
     return await contestSubmissionProgrammingAPI.getSubmissionSourceImage(contestJid, userJid, problemJid, isDarkMode);
   };
 }

@@ -13,7 +13,7 @@ import {
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 
 import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSubmissionActions';
@@ -24,7 +24,7 @@ export default function ChapterProblemSubmissionPage() {
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     submissionWithSource: undefined,

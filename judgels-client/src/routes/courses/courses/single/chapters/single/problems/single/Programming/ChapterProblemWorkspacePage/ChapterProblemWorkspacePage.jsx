@@ -13,10 +13,9 @@ import {
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
 import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
-import { selectGradingLanguage } from '../../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
-import * as webPrefsActions from '../../../../../../../../../../modules/webPrefs/webPrefsActions';
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemWorkspacePage() {
@@ -25,7 +24,7 @@ export default function ChapterProblemWorkspacePage() {
   const token = useSelector(selectToken);
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
-  const gradingLanguage = useSelector(selectGradingLanguage);
+  const { gradingLanguage, setGradingLanguage } = useWebPrefs();
   const dispatch = useDispatch();
 
   const [state, setState] = useState({
@@ -40,7 +39,7 @@ export default function ChapterProblemWorkspacePage() {
 
   const createSubmission = async data => {
     const { problem } = worksheet;
-    dispatch(webPrefsActions.updateGradingLanguage(data.gradingLanguage));
+    setGradingLanguage(data.gradingLanguage);
 
     sendGAEvent({ category: 'Courses', action: 'Submit course problem', label: course.name });
     sendGAEvent({ category: 'Courses', action: 'Submit chapter problem', label: chapter.name });

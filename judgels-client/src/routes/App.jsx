@@ -12,11 +12,11 @@ import Header from '../components/Header/Header';
 import { setGAUser } from '../ga';
 import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
 import { selectMaybeUserJid, selectToken } from '../modules/session/sessionSelectors';
-import { selectIsDarkMode } from '../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../modules/webPrefs';
 import { getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 
 export default function App() {
-  const isDarkMode = useSelector(selectIsDarkMode);
+  const { isDarkMode } = useWebPrefs();
   const userJid = useSelector(selectMaybeUserJid);
   const token = useSelector(selectToken);
   const {

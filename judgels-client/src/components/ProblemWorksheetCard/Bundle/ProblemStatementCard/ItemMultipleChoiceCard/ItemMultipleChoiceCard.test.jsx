@@ -5,6 +5,8 @@ import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { WebPrefsProvider } from '../../../../../modules/webPrefs';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 
 describe('ItemMultipleChoiceCard', () => {
@@ -40,9 +42,13 @@ describe('ItemMultipleChoiceCard', () => {
     const store = createMockStore()({});
     const props = multipleChoiceCardProps;
     render(
-      <Provider store={store}>
-        <ItemMultipleChoiceCard {...props} />
-      </Provider>
+      <WebPrefsProvider>
+        <QueryClientProviderWrapper>
+          <Provider store={store}>
+            <ItemMultipleChoiceCard {...props} />
+          </Provider>
+        </QueryClientProviderWrapper>
+      </WebPrefsProvider>
     );
   });
 

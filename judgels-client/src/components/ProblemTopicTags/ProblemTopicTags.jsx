@@ -1,8 +1,7 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 
-import { selectShowProblemTopicTags } from '../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../modules/webPrefs';
 
 import './ProblemTopicTags.scss';
 
@@ -14,7 +13,9 @@ function isParent(tag, tags) {
   return tags.some(t => t !== tag && t.startsWith(tag));
 }
 
-function ProblemTopicTags({ showProblemTopicTags, tags, alignLeft }) {
+export default function ProblemTopicTags({ tags, alignLeft }) {
+  const { showProblemTopicTags } = useWebPrefs();
+
   if (!showProblemTopicTags) {
     return null;
   }
@@ -36,9 +37,3 @@ function ProblemTopicTags({ showProblemTopicTags, tags, alignLeft }) {
       </Tag>
     ));
 }
-
-const mapStateToProps = state => ({
-  showProblemTopicTags: selectShowProblemTopicTags(state),
-});
-
-export default connect(mapStateToProps)(ProblemTopicTags);

@@ -12,7 +12,7 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../../modules/queries/problemSet';
 import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
-import { selectStatementLanguage } from '../../../../../../../../../modules/webPrefs/webPrefsSelectors';
+import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 
 import * as toastActions from '../../../../../../../../../modules/toast/toastActions';
@@ -24,7 +24,7 @@ export default function ProblemSubmissionPage() {
   const token = useSelector(selectToken);
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
-  const statementLanguage = useSelector(selectStatementLanguage);
+  const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
     submissionWithSource: undefined,
