@@ -9,7 +9,6 @@ import { getLessonName } from '../../../../../../../../modules/api/sandalphon/le
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
 import { callAction } from '../../../../../../../../modules/callAction';
 import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
-import { useSession } from '../../../../../../../../modules/session';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 
@@ -19,9 +18,8 @@ import './ChapterResourcesPage.scss';
 
 export default function ChapterResourcesPage() {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
   const [state, setState] = useState({
     response: undefined,

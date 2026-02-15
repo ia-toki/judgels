@@ -7,7 +7,6 @@ import { useState } from 'react';
 
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
-import { useSession } from '../../../../../modules/session';
 
 import './CourseChaptersSidebar.scss';
 
@@ -15,11 +14,10 @@ export default function CourseChaptersSidebar() {
   const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
   const queryClient = useQueryClient();
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const {
     data: { data: courseChapters, chaptersMap, chapterProgressesMap },
-  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
+  } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
 
   const [isResponsivePopoverOpen, setIsResponsivePopoverOpen] = useState(false);
 

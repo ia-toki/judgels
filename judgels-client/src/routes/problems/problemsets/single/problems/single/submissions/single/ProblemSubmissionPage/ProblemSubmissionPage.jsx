@@ -11,7 +11,6 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 
@@ -20,9 +19,8 @@ import * as problemSetSubmissionActions from '../../modules/problemSetSubmission
 
 export default function ProblemSubmissionPage() {
   const { problemSetSlug, problemAlias, submissionId } = useParams({ strict: false });
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

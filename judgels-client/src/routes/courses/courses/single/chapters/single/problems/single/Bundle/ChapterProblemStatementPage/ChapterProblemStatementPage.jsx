@@ -12,7 +12,6 @@ import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
-import { useSession } from '../../../../../../../../../../modules/session';
 
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
@@ -22,9 +21,8 @@ export default function ChapterProblemStatementPage(props) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
   const [state, setState] = useState({
     latestSubmissions: undefined,

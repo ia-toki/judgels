@@ -8,7 +8,6 @@ import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTa
 import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
@@ -17,8 +16,7 @@ import './ContestUserProblemSubmissionsDialog.scss';
 
 export default function ContestUserProblemSubmissionsDialog({ userJid, problemJid, title, onClose }) {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

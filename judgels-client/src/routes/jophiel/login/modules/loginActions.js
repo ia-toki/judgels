@@ -38,5 +38,5 @@ export async function afterLogin(session) {
 
   toastActions.showToast(`Welcome, ${user.username}.`);
   setSession(session.token, user);
-  queryClient.setQueryData(['user-web-config', token], config);
+  queryClient.setQueryData(['user-web-config'], config);
 }

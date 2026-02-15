@@ -12,7 +12,6 @@ import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
-import { useSession } from '../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
@@ -21,9 +20,8 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 export default function ChapterProblemWorkspacePage() {
   const { worksheet, renderNavigation, reloadProblem } = useChapterProblemContext();
   const { courseSlug, chapterAlias } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

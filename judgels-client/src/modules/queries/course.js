@@ -2,21 +2,22 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { courseAPI } from '../api/jerahmeel/course';
 import { courseChapterAPI } from '../api/jerahmeel/courseChapter';
+import { getToken } from '../session';
 
-export const courseBySlugQueryOptions = (token, courseSlug) =>
+export const courseBySlugQueryOptions = courseSlug =>
   queryOptions({
     queryKey: ['course-by-slug', courseSlug],
-    queryFn: () => courseAPI.getCourseBySlug(token, courseSlug),
+    queryFn: () => courseAPI.getCourseBySlug(getToken(), courseSlug),
   });
 
-export const courseChaptersQueryOptions = (token, courseJid) =>
+export const courseChaptersQueryOptions = courseJid =>
   queryOptions({
     queryKey: ['course', courseJid, 'chapters'],
-    queryFn: () => courseChapterAPI.getChapters(token, courseJid),
+    queryFn: () => courseChapterAPI.getChapters(getToken(), courseJid),
   });
 
-export const courseChapterQueryOptions = (token, courseJid, chapterAlias) =>
+export const courseChapterQueryOptions = (courseJid, chapterAlias) =>
   queryOptions({
     queryKey: ['course', courseJid, 'chapter', chapterAlias],
-    queryFn: async () => courseChapterAPI.getChapter(token, courseJid, chapterAlias),
+    queryFn: async () => courseChapterAPI.getChapter(getToken(), courseJid, chapterAlias),
   });

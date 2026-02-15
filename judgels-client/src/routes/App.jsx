@@ -16,11 +16,11 @@ import { getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 
 export default function App() {
   const { isDarkMode } = useWebPrefs();
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
   const {
     data: { role },
-  } = useSuspenseQuery(userWebConfigQueryOptions(token));
+  } = useSuspenseQuery(userWebConfigQueryOptions());
 
   useEffect(() => {
     setGAUser(userJid);

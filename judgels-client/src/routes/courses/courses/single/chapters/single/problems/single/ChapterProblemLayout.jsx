@@ -14,7 +14,6 @@ import {
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
 } from '../../../../../../../../modules/queries/course';
-import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
@@ -28,12 +27,11 @@ import './ChapterProblemLayout.scss';
 export default function ChapterProblemLayout() {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
   const queryClient = useQueryClient();
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
   const {
     data: { data: chapters },
-  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
+  } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
   const { statementLanguage } = useWebPrefs();
 
   const [reloadKey, setReloadKey] = useState(0);
@@ -56,7 +54,7 @@ export default function ChapterProblemLayout() {
 
   const reloadProblem = () => {
     setReloadKey(k => k + 1);
-    queryClient.invalidateQueries({ queryKey: courseChaptersQueryOptions(token, course.jid).queryKey });
+    queryClient.invalidateQueries({ queryKey: courseChaptersQueryOptions(course.jid).queryKey });
   };
 
   const render = () => {

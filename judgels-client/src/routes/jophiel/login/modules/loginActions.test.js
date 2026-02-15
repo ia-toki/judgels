@@ -42,7 +42,7 @@ describe('loginActions', () => {
         await loginActions.logIn(usernameOrEmail, password);
         expect(getToken()).toBe(token);
         expect(getUser()).toEqual(user);
-        expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
+        expect(queryClient.getQueryData(['user-web-config'])).toEqual(config);
       });
     });
 

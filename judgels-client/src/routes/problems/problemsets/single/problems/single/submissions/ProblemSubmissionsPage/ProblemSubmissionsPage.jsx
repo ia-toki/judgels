@@ -23,11 +23,11 @@ const PAGE_SIZE = 20;
 export default function ProblemSubmissionsPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
   const username = user?.username;
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
   const [state, setState] = useState({
     response: undefined,

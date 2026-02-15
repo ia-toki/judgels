@@ -8,7 +8,6 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 
 import * as contestLogActions from '../modules/contestLogActions';
@@ -19,9 +18,8 @@ function ContestLogsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
 
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;

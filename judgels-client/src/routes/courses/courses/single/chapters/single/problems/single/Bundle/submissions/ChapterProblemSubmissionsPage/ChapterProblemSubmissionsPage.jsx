@@ -22,10 +22,10 @@ import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
   const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({

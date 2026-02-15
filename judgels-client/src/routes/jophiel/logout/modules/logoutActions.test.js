@@ -24,7 +24,7 @@ describe('logoutActions', () => {
         await logoutActions.logOut();
 
         expect(getToken()).toBeUndefined();
-        expect(queryClient.getQueryData(['user-web-config', undefined])).toEqual({ role: {} });
+        expect(queryClient.getQueryData(['user-web-config'])).toEqual({ role: {} });
       });
     });
 

@@ -8,7 +8,6 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -17,8 +16,7 @@ import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
   const [state, setState] = useState({
     defaultLanguage: undefined,

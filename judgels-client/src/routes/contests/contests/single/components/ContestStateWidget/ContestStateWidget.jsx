@@ -10,16 +10,14 @@ import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-import { useSession } from '../../../../../../modules/session';
 
 import * as contestActions from '../../../modules/contestActions';
 
 // TODO(fushar): unit tests
 export default function ContestStateWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
   const queryClient = useQueryClient();
 
   const contestState = webConfig.state;

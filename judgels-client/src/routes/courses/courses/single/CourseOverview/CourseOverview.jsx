@@ -6,17 +6,15 @@ import { useParams } from '@tanstack/react-router';
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
-import { useSession } from '../../../../../modules/session';
 
 import './CourseOverview.scss';
 
 export default function CourseOverview() {
   const { courseSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const {
     data: { data: chapters },
-  } = useSuspenseQuery(courseChaptersQueryOptions(token, course.jid));
+  } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
 
   const renderStartButton = () => {
     if (!chapters || chapters.length === 0) {

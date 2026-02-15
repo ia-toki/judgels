@@ -6,7 +6,6 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploadCard';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
 
@@ -14,8 +13,7 @@ import * as contestFileActions from '../modules/contestFileActions';
 
 export default function ContestFilesPage() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const [state, setState] = useState({
     response: undefined,

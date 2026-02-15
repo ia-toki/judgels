@@ -8,7 +8,6 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { callAction } from '../../../../../../modules/callAction';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
@@ -19,8 +18,7 @@ const PAGE_SIZE = 20;
 
 export default function ContestAnnouncementsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const [state, setState] = useState({
     response: undefined,

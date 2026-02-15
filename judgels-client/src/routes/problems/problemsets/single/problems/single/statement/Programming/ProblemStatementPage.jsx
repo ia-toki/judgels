@@ -11,16 +11,14 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
 
 export default function ProblemStatementPage({ worksheet }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const renderStatementLanguageWidget = () => {
