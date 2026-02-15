@@ -1,21 +1,12 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../utils/nock';
 
 import * as contestModuleActions from './contestModuleActions';
 
 const contestJid = 'contestJid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestModuleActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -26,7 +17,7 @@ describe('contestModuleActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/modules`).reply(200, responseBody);
 
-      const response = await store.dispatch(contestModuleActions.getModules(contestJid));
+      const response = await contestModuleActions.getModules(contestJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -39,7 +30,7 @@ describe('contestModuleActions', () => {
         .put(`/contests/${contestJid}/modules/REGISTRATION`)
         .reply(200);
 
-      await store.dispatch(contestModuleActions.enableModule(contestJid, 'REGISTRATION'));
+      await contestModuleActions.enableModule(contestJid, 'REGISTRATION');
     });
   });
 
@@ -51,7 +42,7 @@ describe('contestModuleActions', () => {
         .delete(`/contests/${contestJid}/modules/REGISTRATION`)
         .reply(200);
 
-      await store.dispatch(contestModuleActions.disableModule(contestJid, 'REGISTRATION'));
+      await contestModuleActions.disableModule(contestJid, 'REGISTRATION');
     });
   });
 
@@ -63,7 +54,7 @@ describe('contestModuleActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/modules/config`).reply(200, responseBody);
 
-      const response = await store.dispatch(contestModuleActions.getConfig(contestJid));
+      const response = await contestModuleActions.getConfig(contestJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -80,7 +71,7 @@ describe('contestModuleActions', () => {
         .put(`/contests/${contestJid}/modules/config`, config)
         .reply(200);
 
-      await store.dispatch(contestModuleActions.upsertConfig(contestJid, config));
+      await contestModuleActions.upsertConfig(contestJid, config);
     });
   });
 });

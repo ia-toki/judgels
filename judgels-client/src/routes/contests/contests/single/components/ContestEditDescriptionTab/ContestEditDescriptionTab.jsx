@@ -3,22 +3,21 @@ import { Edit } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
 
 import * as contestActions from '../../../modules/contestActions';
 
 export default function ContestEditDescriptionTab() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     isEditing: false,
@@ -26,7 +25,7 @@ export default function ContestEditDescriptionTab() {
   });
 
   const refreshContestDescription = async () => {
-    const response = await dispatch(contestActions.getContestDescription(contest.jid));
+    const response = await callAction(contestActions.getContestDescription(contest.jid));
     setState(prevState => ({ ...prevState, response }));
   };
 
@@ -92,7 +91,7 @@ export default function ContestEditDescriptionTab() {
   };
 
   const updateContestDescription = async data => {
-    await dispatch(contestActions.updateContestDescription(contest.jid, data.description));
+    await callAction(contestActions.updateContestDescription(contest.jid, data.description));
     await refreshContestDescription();
     toggleEdit();
   };

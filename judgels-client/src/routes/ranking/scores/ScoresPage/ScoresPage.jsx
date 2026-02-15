@@ -1,12 +1,12 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../modules/callAction';
 
 import * as rankingActions from '../../modules/rankingActions';
 
@@ -16,7 +16,6 @@ const PAGE_SIZE = 50;
 
 export default function ScoresPage() {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -66,7 +65,7 @@ export default function ScoresPage() {
   };
 
   const onChangePage = async nextPage => {
-    const response = await dispatch(rankingActions.getTopUserStats(nextPage, PAGE_SIZE));
+    const response = await callAction(rankingActions.getTopUserStats(nextPage, PAGE_SIZE));
     setState({ response });
     return response.data.totalCount;
   };

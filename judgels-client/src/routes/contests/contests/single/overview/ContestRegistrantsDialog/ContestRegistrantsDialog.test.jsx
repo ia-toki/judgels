@@ -1,10 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -16,12 +13,14 @@ vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrantsDialog', () => {
   beforeEach(async () => {
+    setSession('token', { jid: 'userJid' });
+
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    contestContestantActions.getApprovedContestants.mockReturnValue(() =>
+    contestContestantActions.getApprovedContestants.mockReturnValue(
       Promise.resolve({
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],
         profilesMap: {
@@ -35,17 +34,12 @@ describe('ContestRegistrantsDialog', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-              <ContestRegistrantsDialog />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <ContestRegistrantsDialog />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

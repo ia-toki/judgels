@@ -1,11 +1,8 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -16,6 +13,10 @@ import * as contestFileActions from '../modules/contestFileActions';
 vi.mock('../modules/contestFileActions');
 
 describe('ContestFilesPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let files;
 
   const renderComponent = async () => {
@@ -24,25 +25,20 @@ describe('ContestFilesPage', () => {
       slug: 'contest-slug',
     });
 
-    contestFileActions.uploadFile.mockReturnValue(() => Promise.resolve({}));
-    contestFileActions.getFiles.mockReturnValue(() =>
+    contestFileActions.uploadFile.mockReturnValue(Promise.resolve({}));
+    contestFileActions.getFiles.mockReturnValue(
       Promise.resolve({
         data: files,
         config: { canManage: true },
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug/files']} path="/contests/$contestSlug/files">
-              <ContestFilesPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug/files']} path="/contests/$contestSlug/files">
+            <ContestFilesPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

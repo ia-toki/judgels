@@ -1,12 +1,12 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
+import { callAction } from '../../../../../../modules/callAction';
 
 import * as profileActions from '../../modules/profileActions';
 
@@ -14,14 +14,13 @@ import './ContestHistoryPage.scss';
 
 export default function ContestHistoryPage() {
   const { username } = useParams({ strict: false });
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
   });
 
   const refreshContestHistory = async () => {
-    const response = await dispatch(profileActions.getContestPublicHistory(username));
+    const response = await callAction(profileActions.getContestPublicHistory(username));
     setState(prevState => ({ ...prevState, response }));
   };
 

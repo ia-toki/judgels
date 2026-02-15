@@ -3,13 +3,13 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { getCountryName } from '../../../../../../assets/data/countries';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
@@ -17,16 +17,15 @@ import './ContestRegistrantsDialog.scss';
 
 export default function ContestRegistrantsDialog({ onClose }) {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
   });
 
   const refreshRegistrants = async () => {
-    const response = await dispatch(contestContestantActions.getApprovedContestants(contest.jid));
+    const response = await callAction(contestContestantActions.getApprovedContestants(contest.jid));
     setState(prevState => ({ ...prevState, response }));
   };
 

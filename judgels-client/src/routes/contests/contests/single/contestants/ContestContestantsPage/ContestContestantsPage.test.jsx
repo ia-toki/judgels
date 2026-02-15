@@ -1,10 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -15,6 +12,10 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 vi.mock('../../modules/contestContestantActions');
 
 describe('ContestContestantsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let contestants;
   let canManage;
 
@@ -24,7 +25,7 @@ describe('ContestContestantsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestContestantActions.getContestants.mockReturnValue(() =>
+    contestContestantActions.getContestants.mockReturnValue(
       Promise.resolve({
         data: {
           page: contestants,
@@ -39,20 +40,12 @@ describe('ContestContestantsPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/contestants']}
-              path="/contests/$contestSlug/contestants"
-            >
-              <ContestContestantsPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug/contestants']} path="/contests/$contestSlug/contestants">
+            <ContestContestantsPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ArchiveEditDialog } from './ArchiveEditDialog';
@@ -19,9 +17,7 @@ describe('ArchiveEditDialog', () => {
   let onUpdateArchive;
 
   beforeEach(() => {
-    onUpdateArchive = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onUpdateArchive = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       isOpen: true,
@@ -29,11 +25,7 @@ describe('ArchiveEditDialog', () => {
       onCloseDialog: vi.fn(),
       onUpdateArchive,
     };
-    render(
-      <Provider store={store}>
-        <ArchiveEditDialog {...props} />
-      </Provider>
-    );
+    render(<ArchiveEditDialog {...props} />);
   });
 
   test('edit dialog form', async () => {

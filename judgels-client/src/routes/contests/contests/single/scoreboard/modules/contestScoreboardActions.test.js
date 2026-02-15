@@ -1,21 +1,12 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { nockUriel } from '../../../../../../utils/nock';
 
 import * as contestScoreboardActions from './contestScoreboardActions';
 
 const contestJid = 'contest-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestScoreboardActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -34,9 +25,7 @@ describe('contestScoreboardActions', () => {
         .query({ frozen, showClosedProblems, page })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestScoreboardActions.getScoreboard(contestJid, frozen, showClosedProblems, page)
-      );
+      const response = await contestScoreboardActions.getScoreboard(contestJid, frozen, showClosedProblems, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -45,7 +34,7 @@ describe('contestScoreboardActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/${contestJid}/scoreboard/refresh`).reply(200);
 
-      await store.dispatch(contestScoreboardActions.refreshScoreboard(contestJid));
+      await contestScoreboardActions.refreshScoreboard(contestJid);
     });
   });
 
@@ -62,9 +51,7 @@ describe('contestScoreboardActions', () => {
         .query({ contestJid, userJid, problemJid })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestScoreboardActions.getSubmissionInfo(contestJid, userJid, problemJid)
-      );
+      const response = await contestScoreboardActions.getSubmissionInfo(contestJid, userJid, problemJid);
       expect(response).toEqual(responseBody);
     });
   });

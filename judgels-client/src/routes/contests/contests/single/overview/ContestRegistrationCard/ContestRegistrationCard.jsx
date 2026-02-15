@@ -3,12 +3,12 @@ import { BanCircle, People, Tick } from '@blueprintjs/icons';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectIsLoggedIn, selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
@@ -17,11 +17,9 @@ import './ContestRegistrationCard.scss';
 
 export default function ContestRegistrationCard() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token, isLoggedIn } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const [state, setState] = useState({
     contestantState: undefined,
@@ -52,8 +50,8 @@ export default function ContestRegistrationCard() {
     }
 
     const [contestantState, contestantsCount] = await Promise.all([
-      dispatch(contestContestantActions.getMyContestantState(contest.jid)),
-      dispatch(contestContestantActions.getApprovedContestantsCount(contest.jid)),
+      callAction(contestContestantActions.getMyContestantState(contest.jid)),
+      callAction(contestContestantActions.getApprovedContestantsCount(contest.jid)),
       queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
     ]);
     setState(prevState => ({ ...prevState, contestantState, contestantsCount }));
@@ -150,14 +148,14 @@ export default function ContestRegistrationCard() {
 
   const register = async () => {
     setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
-    await dispatch(contestContestantActions.registerMyselfAsContestant(contest.jid));
+    await callAction(contestContestantActions.registerMyselfAsContestant(contest.jid));
     setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
     await refresh();
   };
 
   const unregister = async () => {
     setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
-    await dispatch(contestContestantActions.unregisterMyselfAsContestant(contest.jid));
+    await callAction(contestContestantActions.unregisterMyselfAsContestant(contest.jid));
     setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
     await refresh();
   };

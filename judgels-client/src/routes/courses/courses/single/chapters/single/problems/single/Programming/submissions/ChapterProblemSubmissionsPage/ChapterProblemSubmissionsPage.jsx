@@ -2,21 +2,17 @@ import { Switch } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { callAction } from '../../../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../modules/queries/course';
-import {
-  selectMaybeUserJid,
-  selectMaybeUsername,
-  selectToken,
-} from '../../../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
 import { useChapterProblemContext } from '../../../ChapterProblemContext';
 import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
@@ -31,10 +27,9 @@ export default function ChapterProblemSubmissionsPage() {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
-  const username = useSelector(selectMaybeUsername);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
+  const username = user?.username;
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
@@ -130,7 +125,7 @@ export default function ChapterProblemSubmissionsPage() {
 
   const refreshSubmissions = async page => {
     const usernameFilter = isFilterShowAllChecked() ? undefined : username;
-    const response = await dispatch(
+    const response = await callAction(
       chapterProblemSubmissionActions.getSubmissions(chapter.jid, problemAlias, usernameFilter, page)
     );
     setState({ response });
@@ -138,13 +133,13 @@ export default function ChapterProblemSubmissionsPage() {
   };
 
   const onRegradeSubmission = async submissionJid => {
-    await dispatch(chapterProblemSubmissionActions.regradeSubmission(submissionJid));
+    await callAction(chapterProblemSubmissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 
   const onRegradeSubmissions = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await dispatch(chapterProblemSubmissionActions.regradeSubmissions(chapter.jid, undefined, problemAlias));
+      await callAction(chapterProblemSubmissionActions.regradeSubmissions(chapter.jid, undefined, problemAlias));
       await refreshSubmissions(location.search.page);
     }
   };

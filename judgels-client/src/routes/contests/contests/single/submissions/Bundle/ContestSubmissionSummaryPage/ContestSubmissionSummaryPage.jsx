@@ -1,21 +1,20 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export default function ContestSubmissionSummaryPage() {
   const { contestSlug, username } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { statementLanguage: language } = useWebPrefs();
 
@@ -26,7 +25,7 @@ export default function ContestSubmissionSummaryPage() {
   });
 
   const refreshSubmissions = async () => {
-    const response = await dispatch(contestSubmissionActions.getSubmissionSummary(contest.jid, username, language));
+    const response = await callAction(contestSubmissionActions.getSubmissionSummary(contest.jid, username, language));
 
     const problemSummaries = response.config.problemJids.map(problemJid => ({
       name: response.problemNamesMap[problemJid] || '-',
@@ -68,7 +67,7 @@ export default function ContestSubmissionSummaryPage() {
     const { userJids } = state.config;
     const userJid = userJids[0];
 
-    await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, userJid, problemJid));
+    await callAction(contestSubmissionActions.regradeSubmissions(contest.jid, userJid, problemJid));
     await refreshSubmissions();
   };
 

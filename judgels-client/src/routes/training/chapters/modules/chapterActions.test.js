@@ -1,21 +1,12 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
 
 import * as chapterActions from './chapterActions';
 
 const chapterJid = 'chapter-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('chapterActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -31,7 +22,7 @@ describe('chapterActions', () => {
         .post(`/chapters`, params)
         .reply(200);
 
-      await store.dispatch(chapterActions.createChapter(params));
+      await chapterActions.createChapter(params);
     });
   });
 
@@ -46,7 +37,7 @@ describe('chapterActions', () => {
         .post(`/chapters/${chapterJid}`, params)
         .reply(200);
 
-      await store.dispatch(chapterActions.updateChapter(chapterJid, params));
+      await chapterActions.updateChapter(chapterJid, params);
     });
   });
 
@@ -61,7 +52,7 @@ describe('chapterActions', () => {
         .get(`/chapters`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(chapterActions.getChapters());
+      const response = await chapterActions.getChapters();
       expect(response).toEqual(responseBody);
     });
   });
@@ -77,7 +68,7 @@ describe('chapterActions', () => {
         .get(`/chapters/${chapterJid}/problems`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(chapterActions.getProblems(chapterJid));
+      const response = await chapterActions.getProblems(chapterJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -93,7 +84,7 @@ describe('chapterActions', () => {
         .put(`/chapters/${chapterJid}/problems`, params)
         .reply(200);
 
-      await store.dispatch(chapterActions.setProblems(chapterJid, params));
+      await chapterActions.setProblems(chapterJid, params);
     });
   });
 
@@ -108,7 +99,7 @@ describe('chapterActions', () => {
         .get(`/chapters/${chapterJid}/lessons`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(chapterActions.getLessons(chapterJid));
+      const response = await chapterActions.getLessons(chapterJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -124,7 +115,7 @@ describe('chapterActions', () => {
         .put(`/chapters/${chapterJid}/lessons`, params)
         .reply(200);
 
-      await store.dispatch(chapterActions.setLessons(chapterJid, params));
+      await chapterActions.setLessons(chapterJid, params);
     });
   });
 });

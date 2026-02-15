@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestErrors } from '../../../../modules/api/uriel/contest';
@@ -20,13 +18,9 @@ vi.mock('../../../../modules/navigation/navigationRef', () => ({
 }));
 
 const contestJid = 'contestJid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestActions', () => {
-  let store;
-
   beforeEach(() => {
-    store = mockStore({});
     mockPush.mockClear();
     mockReplace.mockClear();
   });
@@ -42,7 +36,7 @@ describe('contestActions', () => {
       it('calls API', async () => {
         nockUriel().post(`/contests`, params).reply(200);
 
-        await store.dispatch(contestActions.createContest(params));
+        await contestActions.createContest(params);
 
         expect(mockPush).toHaveBeenCalledWith('/contests/new-contest', { isEditingContest: true });
       });
@@ -52,7 +46,7 @@ describe('contestActions', () => {
       it('throws SubmissionError', async () => {
         nockUriel().post(`/contests`, params).reply(400, { message: ContestErrors.SlugAlreadyExists });
 
-        await expect(store.dispatch(contestActions.createContest(params))).rejects.toEqual(
+        await expect(contestActions.createContest(params)).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
         );
       });
@@ -68,7 +62,7 @@ describe('contestActions', () => {
       it('calls API', async () => {
         nockUriel().post(`/contests/${contestJid}`, params).reply(200);
 
-        await store.dispatch(contestActions.updateContest(contestJid, slug, params));
+        await contestActions.updateContest(contestJid, slug, params);
       });
     });
 
@@ -79,7 +73,7 @@ describe('contestActions', () => {
         it('calls API', async () => {
           nockUriel().post(`/contests/${contestJid}`, params).reply(200);
 
-          await store.dispatch(contestActions.updateContest(contestJid, slug, params));
+          await contestActions.updateContest(contestJid, slug, params);
 
           expect(mockPush).toHaveBeenCalledWith('/contests/new-slug');
         });
@@ -89,7 +83,7 @@ describe('contestActions', () => {
         it('throws SubmissionError', async () => {
           nockUriel().post(`/contests/${contestJid}`, params).reply(400, { message: ContestErrors.SlugAlreadyExists });
 
-          await expect(store.dispatch(contestActions.updateContest(contestJid, slug, params))).rejects.toEqual(
+          await expect(contestActions.updateContest(contestJid, slug, params)).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
           );
         });
@@ -109,7 +103,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests`).query({ name, page }).reply(200, responseBody);
 
-      const response = await store.dispatch(contestActions.getContests(name, page));
+      const response = await contestActions.getContests(name, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -122,7 +116,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/active`).reply(200, responseBody);
 
-      const response = await store.dispatch(contestActions.getActiveContests());
+      const response = await contestActions.getActiveContests();
       expect(response).toEqual(responseBody);
     });
   });
@@ -133,7 +127,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/slug/ioi`).reply(200, contest);
 
-      const response = await store.dispatch(contestActions.getContestBySlug('ioi'));
+      const response = await contestActions.getContestBySlug('ioi');
       expect(response).toEqual(contest);
     });
   });
@@ -142,7 +136,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/${contestJid}/virtual`).reply(200);
 
-      await store.dispatch(contestActions.startVirtualContest(contestJid));
+      await contestActions.startVirtualContest(contestJid);
     });
   });
 
@@ -154,7 +148,7 @@ describe('contestActions', () => {
         .put(`/contests/${contestJid}/virtual/reset`)
         .reply(200);
 
-      await store.dispatch(contestActions.resetVirtualContest(contestJid));
+      await contestActions.resetVirtualContest(contestJid);
     });
   });
 
@@ -164,7 +158,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/description`).reply(200, { description });
 
-      const response = await store.dispatch(contestActions.getContestDescription(contestJid));
+      const response = await contestActions.getContestDescription(contestJid);
       expect(response).toEqual({ description });
     });
   });
@@ -175,7 +169,7 @@ describe('contestActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/${contestJid}/description`, { description }).reply(200, { description });
 
-      await store.dispatch(contestActions.updateContestDescription(contestJid, description));
+      await contestActions.updateContestDescription(contestJid, description);
     });
   });
 });

@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { callAction } from '../../../../modules/callAction';
 import { ContestRatingChangesDialog } from '../ContestRatingChangesDialog/ContestRatingChangesDialog';
 import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/ContestsPendingRatingTable';
 
 import * as ratingActions from '../modules/ratingActions';
 
 export default function RatingsPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
     selectedContest: undefined,
@@ -18,7 +16,7 @@ export default function RatingsPage() {
   });
 
   const refreshContestsPendingRating = async () => {
-    const response = await dispatch(ratingActions.getContestsPendingRating());
+    const response = await callAction(ratingActions.getContestsPendingRating());
     setState(prevState => ({ ...prevState, response }));
   };
 
@@ -94,7 +92,7 @@ export default function RatingsPage() {
     setState(prevState => ({ ...prevState, isApplyingRatingChanges: true }));
 
     const { response, selectedContest } = state;
-    await dispatch(
+    await callAction(
       ratingActions.updateRatings({
         eventJid: selectedContest.jid,
         time: selectedContest.beginTime + selectedContest.duration,

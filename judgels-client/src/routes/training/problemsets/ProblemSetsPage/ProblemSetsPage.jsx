@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../modules/callAction';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
 import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/ProblemSetProblemEditDialog';
@@ -14,8 +14,6 @@ import * as problemSetActions from '../modules/problemSetActions';
 const PAGE_SIZE = 20;
 
 export default function ProblemSetsPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
@@ -55,8 +53,8 @@ export default function ProblemSetsPage() {
     );
   };
 
-  const getProblems = problemSetJid => dispatch(problemSetActions.getProblems(problemSetJid));
-  const setProblems = (problemSetJid, data) => dispatch(problemSetActions.setProblems(problemSetJid, data));
+  const getProblems = problemSetJid => callAction(problemSetActions.getProblems(problemSetJid));
+  const setProblems = (problemSetJid, data) => callAction(problemSetActions.setProblems(problemSetJid, data));
 
   const renderEditProblemsDialog = () => {
     const { isEditProblemsDialogOpen, editedProblemSet } = state;
@@ -101,13 +99,13 @@ export default function ProblemSetsPage() {
   };
 
   const onChangePage = async nextPage => {
-    const response = await dispatch(problemSetActions.getProblemSets(nextPage));
+    const response = await callAction(problemSetActions.getProblemSets(nextPage));
     setState(prevState => ({ ...prevState, response }));
     return response.data.totalCount;
   };
 
   const createProblemSet = async data => {
-    await dispatch(problemSetActions.createProblemSet(data));
+    await callAction(problemSetActions.createProblemSet(data));
   };
 
   const editProblemSet = problemSet => {
@@ -119,7 +117,7 @@ export default function ProblemSetsPage() {
   };
 
   const updateProblemSet = async (problemSetJid, data) => {
-    await dispatch(problemSetActions.updateProblemSet(problemSetJid, data));
+    await callAction(problemSetActions.updateProblemSet(problemSetJid, data));
     editProblemSet(undefined);
   };
 

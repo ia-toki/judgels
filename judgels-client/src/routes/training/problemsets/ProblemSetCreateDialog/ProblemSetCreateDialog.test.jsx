@@ -1,7 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -12,9 +10,7 @@ describe('ProblemSetCreateDialog', () => {
   let onGetProblemSetConfig;
   let onCreateProblemSet;
   beforeEach(async () => {
-    onCreateProblemSet = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onCreateProblemSet = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       onGetProblemSetConfig,
@@ -22,11 +18,9 @@ describe('ProblemSetCreateDialog', () => {
     };
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ProblemSetCreateDialog {...props} />
-          </TestRouter>
-        </Provider>
+        <TestRouter>
+          <ProblemSetCreateDialog {...props} />
+        </TestRouter>
       )
     );
   });

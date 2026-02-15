@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -9,15 +7,8 @@ import * as contestAnnouncementActions from './contestAnnouncementActions';
 
 const contestJid = 'contestJid';
 const announcementJid = 'announcementJid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestAnnouncementActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -33,7 +24,7 @@ describe('contestAnnouncementActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/announcements`).query({ page }).reply(200, responseBody);
 
-      const response = await store.dispatch(contestAnnouncementActions.getAnnouncements(contestJid, page));
+      const response = await contestAnnouncementActions.getAnnouncements(contestJid, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -48,7 +39,7 @@ describe('contestAnnouncementActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/${contestJid}/announcements`, params).reply(200);
 
-      await store.dispatch(contestAnnouncementActions.createAnnouncement(contestJid, params));
+      await contestAnnouncementActions.createAnnouncement(contestJid, params);
     });
   });
 
@@ -66,7 +57,7 @@ describe('contestAnnouncementActions', () => {
         .put(`/contests/${contestJid}/announcements/${announcementJid}`, params)
         .reply(200);
 
-      await store.dispatch(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, params));
+      await contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, params);
     });
   });
 });

@@ -1,18 +1,18 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { VerdictCode } from '../../../../../../../../../../modules/api/gabriel/verdict';
+import { callAction } from '../../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../../modules/session';
 
 import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
@@ -22,8 +22,7 @@ export default function ChapterProblemStatementPage(props) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
@@ -40,7 +39,7 @@ export default function ChapterProblemStatementPage(props) {
       }
     }
 
-    const latestSubmissions = await dispatch(
+    const latestSubmissions = await callAction(
       chapterProblemSubmissionActions.getLatestSubmissions(chapter.jid, props.worksheet.problem.alias)
     );
     setState({
@@ -108,7 +107,7 @@ export default function ChapterProblemStatementPage(props) {
 
   const createSubmission = async (itemJid, answer) => {
     const { problem } = props.worksheet;
-    return await dispatch(
+    return await callAction(
       chapterProblemSubmissionActions.createItemSubmission(chapter.jid, problem.problemJid, itemJid, answer)
     );
   };

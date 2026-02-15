@@ -1,7 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -9,8 +8,9 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
@@ -19,9 +19,8 @@ import * as contestProblemActions from '../modules/contestProblemActions';
 
 export default function ContestProblemsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
@@ -31,7 +30,7 @@ export default function ContestProblemsPage() {
   });
 
   const refreshProblems = async () => {
-    const response = await dispatch(contestProblemActions.getProblems(contest.jid));
+    const response = await callAction(contestProblemActions.getProblems(contest.jid));
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemsMap, statementLanguage);
 
     setState({
@@ -145,7 +144,7 @@ export default function ContestProblemsPage() {
   };
 
   const setProblems = async (contestJid, data) => {
-    const response = await dispatch(contestProblemActions.setProblems(contestJid, data));
+    const response = await callAction(contestProblemActions.setProblems(contestJid, data));
     await refreshProblems();
     return response;
   };

@@ -1,10 +1,9 @@
 import { Navigate } from '@tanstack/react-router';
-import { useSelector } from 'react-redux';
 
-import { selectIsLoggedIn } from '../../modules/session/sessionSelectors';
+import { useSession } from '../../modules/session';
 
 export default function GuestRoute({ children }) {
-  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const { isLoggedIn } = useSession();
 
   if (isLoggedIn) {
     return <Navigate to="/" />;

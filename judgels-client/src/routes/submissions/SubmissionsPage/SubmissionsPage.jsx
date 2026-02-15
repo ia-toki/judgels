@@ -1,11 +1,11 @@
 import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { selectMaybeUserJid, selectMaybeUsername } from '../../../modules/session/sessionSelectors';
+import { callAction } from '../../../modules/callAction';
+import { useSession } from '../../../modules/session';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 import * as submissionActions from '../modules/submissionActions';
@@ -14,9 +14,9 @@ const PAGE_SIZE = 20;
 
 export default function SubmissionsPage() {
   const location = useLocation();
-  const dispatch = useDispatch();
-  const userJid = useSelector(selectMaybeUserJid);
-  const username = useSelector(selectMaybeUsername);
+  const { user } = useSession();
+  const userJid = user?.jid;
+  const username = user?.username;
 
   const [state, setState] = useState({
     response: undefined,
@@ -90,13 +90,13 @@ export default function SubmissionsPage() {
 
   const refreshSubmissions = async page => {
     const usernameFilter = isUserFilterMine() ? username : undefined;
-    const response = await dispatch(submissionActions.getSubmissions(undefined, usernameFilter, undefined, page));
+    const response = await callAction(submissionActions.getSubmissions(undefined, usernameFilter, undefined, page));
     setState({ response });
     return response.data;
   };
 
   const onRegrade = async submissionJid => {
-    await dispatch(submissionActions.regradeSubmission(submissionJid));
+    await callAction(submissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 

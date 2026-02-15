@@ -1,7 +1,4 @@
 import { act, render, screen, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -15,7 +12,7 @@ describe('CoursesPage', () => {
   let courses;
 
   const renderComponent = async () => {
-    courseActions.getCourses.mockReturnValue(() =>
+    courseActions.getCourses.mockReturnValue(
       Promise.resolve({
         data: courses,
         curriculum: {
@@ -31,15 +28,11 @@ describe('CoursesPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter initialEntries={['/courses']}>
-            <CoursesPage />
-          </TestRouter>
-        </Provider>
+        <TestRouter initialEntries={['/courses']}>
+          <CoursesPage />
+        </TestRouter>
       )
     );
   };

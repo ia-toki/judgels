@@ -1,11 +1,11 @@
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
+import { callAction } from '../../../../modules/callAction';
 import { useWebPrefs } from '../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../utils/title';
 
@@ -13,7 +13,6 @@ import * as submissionActions from '../../modules/submissionActions';
 
 export default function SubmissionPage() {
   const { submissionId } = useParams({ strict: false });
-  const dispatch = useDispatch();
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
@@ -27,12 +26,12 @@ export default function SubmissionPage() {
   });
 
   const loadSubmission = async () => {
-    const { data, profile, problemName, problemAlias, containerPath, containerName } = await dispatch(
+    const { data, profile, problemName, problemAlias, containerPath, containerName } = await callAction(
       submissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
     const sourceImageUrl = data.source
       ? undefined
-      : await dispatch(submissionActions.getSubmissionSourceImage(data.submission.jid));
+      : await callAction(submissionActions.getSubmissionSourceImage(data.submission.jid));
 
     document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 

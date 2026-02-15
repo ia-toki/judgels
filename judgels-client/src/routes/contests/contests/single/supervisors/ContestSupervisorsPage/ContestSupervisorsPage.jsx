@@ -1,13 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/ContestSupervisorAddDialog';
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
@@ -20,9 +20,8 @@ const PAGE_SIZE = 250;
 
 export default function ContestSupervisorsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -71,7 +70,7 @@ export default function ContestSupervisorsPage() {
   };
 
   const refreshSupervisors = async page => {
-    const response = await dispatch(contestSupervisorActions.getSupervisors(contest.jid, page));
+    const response = await callAction(contestSupervisorActions.getSupervisors(contest.jid, page));
     setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
@@ -91,13 +90,13 @@ export default function ContestSupervisorsPage() {
   };
 
   const upsertSupervisors = async (contestJid, data) => {
-    const response = await dispatch(contestSupervisorActions.upsertSupervisors(contestJid, data));
+    const response = await callAction(contestSupervisorActions.upsertSupervisors(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshSupervisorsTime: new Date().getTime() }));
     return response;
   };
 
   const deleteSupervisors = async (contestJid, data) => {
-    const response = await dispatch(contestSupervisorActions.deleteSupervisors(contestJid, data));
+    const response = await callAction(contestSupervisorActions.deleteSupervisors(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshSupervisorsTime: new Date().getTime() }));
     return response;
   };

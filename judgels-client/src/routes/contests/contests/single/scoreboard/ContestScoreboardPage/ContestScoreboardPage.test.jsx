@@ -1,12 +1,9 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -17,6 +14,10 @@ import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 vi.mock('../modules/contestScoreboardActions');
 
 describe('ContestScoreboardPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let scoreboard;
 
   const renderComponent = async () => {
@@ -26,19 +27,14 @@ describe('ContestScoreboardPage', () => {
       style: ContestStyle.ICPC,
     });
 
-    contestScoreboardActions.getScoreboard.mockReturnValue(() => Promise.resolve(scoreboard));
-
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
+    contestScoreboardActions.getScoreboard.mockReturnValue(Promise.resolve(scoreboard));
 
     await act(async () => {
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug/scoreboard']} path="/contests/$contestSlug/scoreboard">
-              <ContestScoreboardPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug/scoreboard']} path="/contests/$contestSlug/scoreboard">
+            <ContestScoreboardPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       );
     });

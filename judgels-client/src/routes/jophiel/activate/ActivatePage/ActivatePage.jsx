@@ -1,23 +1,22 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import { callAction } from '../../../../modules/callAction';
 
 import * as activateActions from '../modules/activateActions';
 
 export default function ActivatePage() {
   const { emailCode } = useParams({ strict: false });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const activate = async () => {
-      await dispatch(activateActions.activateUser(emailCode));
+      await callAction(activateActions.activateUser(emailCode));
       navigate({ to: '/registered', search: { source: 'internal' } });
     };
     activate();
-  }, [emailCode, navigate, dispatch]);
+  }, [emailCode, navigate]);
 
   return <SingleColumnLayout></SingleColumnLayout>;
 }

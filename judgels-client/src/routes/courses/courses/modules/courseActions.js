@@ -1,9 +1,7 @@
 import { courseAPI } from '../../../../modules/api/jerahmeel/course';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { getToken } from '../../../../modules/session';
 
-export function getCourses() {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await courseAPI.getCourses(token);
-  };
+export async function getCourses() {
+  const token = getToken();
+  return await courseAPI.getCourses(token);
 }

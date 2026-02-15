@@ -3,13 +3,13 @@ import { Refresh } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../utils/confirmation';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
@@ -24,9 +24,8 @@ const PAGE_SIZE = 1000;
 
 export default function ContestContestantsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -83,7 +82,7 @@ export default function ContestContestantsPage() {
   };
 
   const refreshContestants = async page => {
-    const response = await dispatch(contestContestantActions.getContestants(contest.jid, page));
+    const response = await callAction(contestContestantActions.getContestants(contest.jid, page));
     setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
@@ -119,19 +118,19 @@ export default function ContestContestantsPage() {
 
   const onResetVirtualContest = async () => {
     if (reallyConfirm('Are you sure to reset all contestant virtual start times?')) {
-      await dispatch(contestActions.resetVirtualContest(contest.jid));
+      await callAction(contestActions.resetVirtualContest(contest.jid));
       setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     }
   };
 
   const upsertContestants = async (contestJid, data) => {
-    const response = await dispatch(contestContestantActions.upsertContestants(contestJid, data));
+    const response = await callAction(contestContestantActions.upsertContestants(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     return response;
   };
 
   const deleteContestants = async (contestJid, data) => {
-    const response = await dispatch(contestContestantActions.deleteContestants(contestJid, data));
+    const response = await callAction(contestContestantActions.deleteContestants(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshContestantsTime: new Date().getTime() }));
     return response;
   };

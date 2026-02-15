@@ -1,6 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -30,15 +28,11 @@ describe('ProblemSubmissionCard', () => {
       preferredGradingLanguage,
     };
 
-    const store = createMockStore()({});
-
     return await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <ProblemSubmissionCard {...props} />
-          </TestRouter>
-        </Provider>
+        <TestRouter>
+          <ProblemSubmissionCard {...props} />
+        </TestRouter>
       )
     );
   };

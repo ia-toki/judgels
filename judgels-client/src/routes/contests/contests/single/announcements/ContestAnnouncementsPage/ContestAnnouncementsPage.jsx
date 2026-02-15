@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../../../modules/callAction';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
@@ -19,9 +19,8 @@ const PAGE_SIZE = 20;
 
 export default function ContestAnnouncementsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -90,18 +89,18 @@ export default function ContestAnnouncementsPage() {
   };
 
   const refreshAnnouncements = async page => {
-    const response = await dispatch(contestAnnouncementActions.getAnnouncements(contest.jid, page));
+    const response = await callAction(contestAnnouncementActions.getAnnouncements(contest.jid, page));
     setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
 
   const createAnnouncement = async (contestJid, data) => {
-    await dispatch(contestAnnouncementActions.createAnnouncement(contestJid, data));
+    await callAction(contestAnnouncementActions.createAnnouncement(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
   };
 
   const updateAnnouncement = async (contestJid, announcementJid, data) => {
-    await dispatch(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, data));
+    await callAction(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, data));
     setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
   };
 

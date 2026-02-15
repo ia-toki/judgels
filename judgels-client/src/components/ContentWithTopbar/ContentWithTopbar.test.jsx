@@ -1,13 +1,9 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 
 import { TestRouter } from '../../test/RouterWrapper';
 import ContentWithTopbar from './ContentWithTopbar';
 
 describe('ContentWithTopbar', () => {
-  let store;
-
   const renderComponent = async (childPath, firstPath) => {
     const items = [
       { path: firstPath || '', title: 'First' },
@@ -17,13 +13,11 @@ describe('ContentWithTopbar', () => {
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter initialEntries={['/parent' + childPath]}>
-            <ContentWithTopbar title="Content with Topbar" basePath="/parent" items={items}>
-              <div>Content</div>
-            </ContentWithTopbar>
-          </TestRouter>
-        </Provider>
+        <TestRouter initialEntries={['/parent' + childPath]}>
+          <ContentWithTopbar title="Content with Topbar" basePath="/parent" items={items}>
+            <div>Content</div>
+          </ContentWithTopbar>
+        </TestRouter>
       )
     );
 
@@ -31,10 +25,6 @@ describe('ContentWithTopbar', () => {
       expect(screen.getAllByRole('link')).toHaveLength(3);
     });
   };
-
-  beforeEach(() => {
-    store = createMockStore()({});
-  });
 
   describe('when the first item has a path', () => {
     it('shows topbar items with correct texts', async () => {

@@ -2,18 +2,17 @@ import { Intent } from '@blueprintjs/core';
 import { SendMessage } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../modules/session';
 
 import './CourseOverview.scss';
 
 export default function CourseOverview() {
   const { courseSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const {
     data: { data: chapters },

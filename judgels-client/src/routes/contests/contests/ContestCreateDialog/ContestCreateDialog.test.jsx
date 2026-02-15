@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestCreateDialog } from './ContestCreateDialog';
@@ -10,18 +8,12 @@ describe('ContestCreateDialog', () => {
   let onCreateContest;
 
   beforeEach(() => {
-    onCreateContest = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = createMockStore()({});
+    onCreateContest = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       onCreateContest,
     };
-    render(
-      <Provider store={store}>
-        <ContestCreateDialog {...props} />
-      </Provider>
-    );
+    render(<ContestCreateDialog {...props} />);
   });
 
   test('form', async () => {

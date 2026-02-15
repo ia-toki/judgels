@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
 
@@ -8,15 +6,8 @@ import * as chapterProblemSubmissionActions from './chapterProblemSubmissionActi
 
 const chapterJid = 'chapter-jid';
 const submissionId = 10;
-const mockStore = configureMockStore([thunk]);
 
 describe('chapterProblemSubmissionActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -35,9 +26,7 @@ describe('chapterProblemSubmissionActions', () => {
         .query({ containerJid: chapterJid, problemAlias, username, page })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        chapterProblemSubmissionActions.getSubmissions(chapterJid, problemAlias, username, page)
-      );
+      const response = await chapterProblemSubmissionActions.getSubmissions(chapterJid, problemAlias, username, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -51,9 +40,7 @@ describe('chapterProblemSubmissionActions', () => {
     it('calls API', async () => {
       nockJerahmeel().get(`/submissions/programming/id/${submissionId}`).query({ language }).reply(200, responseBody);
 
-      const response = await store.dispatch(
-        chapterProblemSubmissionActions.getSubmissionWithSource(submissionId, language)
-      );
+      const response = await chapterProblemSubmissionActions.getSubmissionWithSource(submissionId, language);
       expect(response).toEqual(responseBody);
     });
   });

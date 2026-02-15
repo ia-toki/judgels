@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { InfoPanel } from './InfoPanel';
@@ -24,13 +22,7 @@ describe('InfoPanel', () => {
       institutionCity: 'My City',
     };
 
-    const store = configureMockStore()({});
-
-    render(
-      <Provider store={store}>
-        <InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />
-      </Provider>
-    );
+    render(<InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />);
   });
 
   test('form', async () => {

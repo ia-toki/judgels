@@ -1,7 +1,5 @@
 import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 
-export function activateUser(emailCode) {
-  return async () => {
-    await userAccountAPI.activateUser(emailCode);
-  };
+export async function activateUser(emailCode) {
+  await userAccountAPI.activateUser(emailCode);
 }

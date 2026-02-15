@@ -1,9 +1,9 @@
 import { Classes, Dialog } from '@blueprintjs/core';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { APP_CONFIG } from '../../../../conf';
+import { callAction } from '../../../../modules/callAction';
 import GoogleAuthRegisterForm from '../GoogleAuthRegisterForm/GoogleAuthRegisterForm';
 
 import * as googleAuthActions from '../../modules/googleAuthActions';
@@ -11,8 +11,6 @@ import * as googleAuthActions from '../../modules/googleAuthActions';
 import './GoogleAuth.scss';
 
 export default function GoogleAuth({ onToggleInternalAuth }) {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     email: undefined,
     idToken: undefined,
@@ -86,14 +84,14 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
       isAuthorizing: true,
     }));
 
-    const isLoggedIn = await dispatch(googleAuthActions.logIn(credential));
+    const isLoggedIn = await callAction(googleAuthActions.logIn(credential));
     if (!isLoggedIn) {
       toggleDialog();
     }
   };
 
   const register = async data => {
-    await dispatch(
+    await callAction(
       googleAuthActions.register({
         idToken: state.idToken,
         username: data.username,

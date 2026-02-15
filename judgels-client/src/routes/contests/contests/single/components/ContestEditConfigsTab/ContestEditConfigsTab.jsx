@@ -3,12 +3,12 @@ import { Edit } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
@@ -17,9 +17,8 @@ import * as contestModuleActions from '../../modules/contestModuleActions';
 
 export default function ContestEditConfigsTab() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     config: undefined,
@@ -27,7 +26,7 @@ export default function ContestEditConfigsTab() {
   });
 
   const refreshConfig = async () => {
-    const config = await dispatch(contestModuleActions.getConfig(contest.jid));
+    const config = await callAction(contestModuleActions.getConfig(contest.jid));
     setState(prevState => ({ ...prevState, config }));
   };
 
@@ -275,7 +274,7 @@ export default function ContestEditConfigsTab() {
       config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
     }
 
-    await dispatch(contestModuleActions.upsertConfig(contest.jid, config));
+    await callAction(contestModuleActions.upsertConfig(contest.jid, config));
     await refreshConfig();
     toggleEdit();
   };

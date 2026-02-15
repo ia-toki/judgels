@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+
+import { callAction } from '../../../../modules/callAction';
 
 import * as logoutActions from '../modules/logoutActions';
 
 export default function LogoutPage() {
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(logoutActions.logOut(window.location.href));
+    callAction(logoutActions.logOut(window.location.href));
   }, []);
 
   const render = () => {

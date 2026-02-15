@@ -1,10 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
@@ -16,11 +13,15 @@ import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmi
 vi.mock('../modules/chapterProblemSubmissionActions');
 
 describe('ChapterProblemSubmissionsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let submissions;
   let canManage;
 
   const renderComponent = async () => {
-    chapterProblemSubmissionActions.getSubmissions.mockReturnValue(() =>
+    chapterProblemSubmissionActions.getSubmissions.mockReturnValue(
       Promise.resolve({
         data: {
           page: submissions,
@@ -40,32 +41,22 @@ describe('ChapterProblemSubmissionsPage', () => {
       })
     );
 
-    chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image.url'));
+    chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(Promise.resolve('image.url'));
 
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutUser({ jid: 'userJid1', username: 'username' }));
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}
-              path="/courses/$courseSlug/chapter/$chapterAlias/problems/$problemAlias/submissions"
-            >
-              <ChapterProblemContext.Provider value={{ worksheet: null, renderNavigation: () => null }}>
-                <ChapterProblemSubmissionsPage />
-              </ChapterProblemContext.Provider>
-            </TestRouter>
-          </Provider>
+          <TestRouter
+            initialEntries={['/courses/courseSlug/chapter/chapter-1/problems/A/submissions']}
+            path="/courses/$courseSlug/chapter/$chapterAlias/problems/$problemAlias/submissions"
+          >
+            <ChapterProblemContext.Provider value={{ worksheet: null, renderNavigation: () => null }}>
+              <ChapterProblemSubmissionsPage />
+            </ChapterProblemContext.Provider>
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

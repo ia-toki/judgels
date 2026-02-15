@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 
 import * as contestLogActions from '../modules/contestLogActions';
@@ -18,9 +18,8 @@ const PAGE_SIZE = 100;
 function ContestLogsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
 
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
@@ -98,7 +97,7 @@ function ContestLogsPage() {
   };
 
   const refreshLogs = async page => {
-    const response = await dispatch(contestLogActions.getLogs(contest.jid, username, problemAlias, page));
+    const response = await callAction(contestLogActions.getLogs(contest.jid, username, problemAlias, page));
     setState({ response, isFilterLoading: false });
     return response.data;
   };

@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
 import { CourseErrors } from '../../../../modules/api/jerahmeel/course';
@@ -9,15 +7,8 @@ import { SubmissionError } from '../../../../modules/form/submissionError';
 import * as courseActions from './courseActions';
 
 const courseJid = 'course-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('courseActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -34,7 +25,7 @@ describe('courseActions', () => {
           .post(`/courses`, params)
           .reply(200);
 
-        await store.dispatch(courseActions.createCourse(params));
+        await courseActions.createCourse(params);
       });
     });
 
@@ -47,7 +38,7 @@ describe('courseActions', () => {
           .post(`/courses`, params)
           .reply(400, { message: CourseErrors.SlugAlreadyExists });
 
-        await expect(store.dispatch(courseActions.createCourse(params))).rejects.toEqual(
+        await expect(courseActions.createCourse(params)).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
         );
       });
@@ -68,7 +59,7 @@ describe('courseActions', () => {
           .post(`/courses/${courseJid}`, params)
           .reply(200);
 
-        await store.dispatch(courseActions.updateCourse(courseJid, params));
+        await courseActions.updateCourse(courseJid, params);
       });
     });
 
@@ -84,7 +75,7 @@ describe('courseActions', () => {
             .post(`/courses/${courseJid}`, params)
             .reply(200);
 
-          await store.dispatch(courseActions.updateCourse(courseJid, params));
+          await courseActions.updateCourse(courseJid, params);
         });
       });
 
@@ -97,7 +88,7 @@ describe('courseActions', () => {
             .post(`/courses/${courseJid}`, params)
             .reply(400, { message: CourseErrors.SlugAlreadyExists });
 
-          await expect(store.dispatch(courseActions.updateCourse(courseJid, params))).rejects.toEqual(
+          await expect(courseActions.updateCourse(courseJid, params)).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
           );
         });
@@ -116,7 +107,7 @@ describe('courseActions', () => {
         .get(`/courses`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(courseActions.getCourses());
+      const response = await courseActions.getCourses();
       expect(response).toEqual(responseBody);
     });
   });
@@ -132,7 +123,7 @@ describe('courseActions', () => {
         .get(`/courses/${courseJid}/chapters`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(courseActions.getChapters(courseJid));
+      const response = await courseActions.getChapters(courseJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -148,7 +139,7 @@ describe('courseActions', () => {
         .put(`/courses/${courseJid}/chapters`, params)
         .reply(200);
 
-      await store.dispatch(courseActions.setChapters(courseJid, params));
+      await courseActions.setChapters(courseJid, params);
     });
   });
 });

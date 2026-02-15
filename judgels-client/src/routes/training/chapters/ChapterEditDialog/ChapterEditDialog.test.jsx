@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ChapterEditDialog } from './ChapterEditDialog';
@@ -16,9 +14,7 @@ describe('ChapterEditDialog', () => {
   let onUpdateChapter;
 
   beforeEach(() => {
-    onUpdateChapter = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onUpdateChapter = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       isOpen: true,
@@ -26,11 +22,7 @@ describe('ChapterEditDialog', () => {
       onCloseDialog: vi.fn(),
       onUpdateChapter,
     };
-    render(
-      <Provider store={store}>
-        <ChapterEditDialog {...props} />
-      </Provider>
-    );
+    render(<ChapterEditDialog {...props} />);
   });
 
   test('edit dialog form', async () => {

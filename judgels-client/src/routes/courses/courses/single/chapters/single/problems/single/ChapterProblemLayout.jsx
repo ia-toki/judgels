@@ -2,19 +2,19 @@ import { ChevronRight, Home } from '@blueprintjs/icons';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
 } from '../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
@@ -27,9 +27,8 @@ import './ChapterProblemLayout.scss';
 
 export default function ChapterProblemLayout() {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const {
@@ -74,7 +73,7 @@ export default function ChapterProblemLayout() {
       response: undefined,
     });
 
-    const response = await dispatch(
+    const response = await callAction(
       chapterProblemActions.getProblemWorksheet(chapter.jid, problemAlias, statementLanguage)
     );
 

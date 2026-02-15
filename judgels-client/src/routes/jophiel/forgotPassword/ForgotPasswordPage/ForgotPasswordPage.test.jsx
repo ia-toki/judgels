@@ -1,8 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import ForgotPasswordPage from './ForgotPasswordPage';
@@ -13,15 +10,9 @@ vi.mock('../modules/forgotPasswordActions');
 
 describe('ForgotPasswordPage', () => {
   beforeEach(() => {
-    forgotPasswordActions.requestToResetPassword.mockReturnValue(() => Promise.resolve());
+    forgotPasswordActions.requestToResetPassword.mockReturnValue(Promise.resolve());
 
-    const store = configureMockStore([thunk])({});
-
-    render(
-      <Provider store={store}>
-        <ForgotPasswordPage />
-      </Provider>
-    );
+    render(<ForgotPasswordPage />);
   });
 
   test('form', async () => {

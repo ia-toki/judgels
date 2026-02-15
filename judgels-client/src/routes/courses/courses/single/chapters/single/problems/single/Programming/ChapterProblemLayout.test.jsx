@@ -7,9 +7,6 @@ import {
   createRouter,
 } from '@tanstack/react-router';
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 
 import { WebPrefsProvider } from '../../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
@@ -48,8 +45,6 @@ describe('ChapterProblemLayout', () => {
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({
       getParentRoute: () => rootRoute,
@@ -72,9 +67,7 @@ describe('ChapterProblemLayout', () => {
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <RouterProvider router={router} />
-            </Provider>
+            <RouterProvider router={router} />
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

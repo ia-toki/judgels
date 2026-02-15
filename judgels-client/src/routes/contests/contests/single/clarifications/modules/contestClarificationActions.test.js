@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -9,15 +7,8 @@ import * as contestClarificationActions from './contestClarificationActions';
 
 const contestJid = 'contestJid';
 const clarificationJid = 'clarificationJid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestClarificationActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -32,7 +23,7 @@ describe('contestClarificationActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/${contestJid}/clarifications`, params).reply(200);
 
-      await store.dispatch(contestClarificationActions.createClarification(contestJid, params));
+      await contestClarificationActions.createClarification(contestJid, params);
     });
   });
 
@@ -49,9 +40,7 @@ describe('contestClarificationActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/clarifications`).query({ language, page }).reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestClarificationActions.getClarifications(contestJid, status, language, page)
-      );
+      const response = await contestClarificationActions.getClarifications(contestJid, status, language, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -67,7 +56,7 @@ describe('contestClarificationActions', () => {
           .put(`/contests/${contestJid}/clarifications/${clarificationJid}/answer`, { answer })
           .reply(200);
 
-        await store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer));
+        await contestClarificationActions.answerClarification(contestJid, clarificationJid, answer);
       });
     });
     describe('when the clarification has already been answered', () => {
@@ -79,7 +68,7 @@ describe('contestClarificationActions', () => {
           .reply(400, { message: ContestErrors.ClarificationAlreadyAnswered });
 
         await expect(
-          store.dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, answer))
+          contestClarificationActions.answerClarification(contestJid, clarificationJid, answer)
         ).rejects.toEqual(new Error('This clarification has already been answered. Please refresh this page.'));
       });
     });

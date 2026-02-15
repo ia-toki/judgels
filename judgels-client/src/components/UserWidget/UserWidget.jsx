@@ -3,12 +3,12 @@ import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { isTLX } from '../../conf';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
+import { callAction } from '../../modules/callAction';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
-import { selectToken } from '../../modules/session/sessionSelectors';
+import { useSession } from '../../modules/session';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
 import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
@@ -130,9 +130,7 @@ export function UserWidget({ user, profile, items, homeRoute, onRenderAvatar }) 
 }
 
 function UserWidgetContainer({ items, homeRoute }) {
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const user = useSelector(state => state.session.user);
+  const { token, user } = useSession();
   const { data } = useSuspenseQuery(userWebConfigQueryOptions(token));
 
   return (
@@ -141,7 +139,7 @@ function UserWidgetContainer({ items, homeRoute }) {
       profile={data.profile}
       items={items}
       homeRoute={homeRoute}
-      onRenderAvatar={jid => dispatch(avatarActions.renderAvatar(jid))}
+      onRenderAvatar={jid => callAction(avatarActions.renderAvatar(jid))}
     />
   );
 }

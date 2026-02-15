@@ -1,7 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestManagerAddDialog } from './ContestManagerAddDialog';
@@ -14,17 +12,11 @@ describe('ContestManagerAddDialog', () => {
       .fn()
       .mockReturnValue(Promise.resolve({ insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} }));
 
-    const store = configureMockStore()({});
-
     const props = {
       contest: { jid: 'contestJid' },
       onUpsertManagers,
     };
-    render(
-      <Provider store={store}>
-        <ContestManagerAddDialog {...props} />
-      </Provider>
-    );
+    render(<ContestManagerAddDialog {...props} />);
   });
 
   test('form', async () => {

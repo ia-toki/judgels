@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { callAction } from '../../../../../../../../modules/callAction';
 import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 
 import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
@@ -14,7 +14,6 @@ import * as problemSetSubmissionActions from '../../results/modules/problemSetSu
 export default function ProblemStatementPage(props) {
   const { problemSetSlug } = useParams({ strict: false });
   const location = useLocation();
-  const dispatch = useDispatch();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
 
   const [state, setState] = useState({
@@ -22,7 +21,7 @@ export default function ProblemStatementPage(props) {
   });
 
   const refreshSubmissions = async () => {
-    const latestSubmissions = await dispatch(
+    const latestSubmissions = await callAction(
       problemSetSubmissionActions.getLatestSubmissions(problemSet.jid, props.worksheet.problem.alias)
     );
     setState({ latestSubmissions });
@@ -81,7 +80,7 @@ export default function ProblemStatementPage(props) {
 
   const createSubmission = async (itemJid, answer) => {
     const { problem } = props.worksheet;
-    return await dispatch(
+    return await callAction(
       problemSetSubmissionActions.createItemSubmission(problemSet.jid, problem.problemJid, itemJid, answer)
     );
   };

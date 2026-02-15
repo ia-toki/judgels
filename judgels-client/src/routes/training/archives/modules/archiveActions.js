@@ -1,43 +1,37 @@
 import { BadRequestError } from '../../../../modules/api/error';
 import { ArchiveErrors, archiveAPI } from '../../../../modules/api/jerahmeel/archive';
 import { SubmissionError } from '../../../../modules/form/submissionError';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { getToken } from '../../../../modules/session';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function createArchive(data) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    try {
-      await archiveAPI.createArchive(token, data);
-    } catch (error) {
-      if (error instanceof BadRequestError && error.message === ArchiveErrors.SlugAlreadyExists) {
-        throw new SubmissionError({ slug: 'Slug already exists' });
-      }
-      throw error;
+export async function createArchive(data) {
+  const token = getToken();
+  try {
+    await archiveAPI.createArchive(token, data);
+  } catch (error) {
+    if (error instanceof BadRequestError && error.message === ArchiveErrors.SlugAlreadyExists) {
+      throw new SubmissionError({ slug: 'Slug already exists' });
     }
-    toastActions.showSuccessToast('Archive created.');
-  };
+    throw error;
+  }
+  toastActions.showSuccessToast('Archive created.');
 }
 
-export function updateArchive(archiveJid, data) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    try {
-      await archiveAPI.updateArchive(token, archiveJid, data);
-    } catch (error) {
-      if (error instanceof BadRequestError && error.message === ArchiveErrors.SlugAlreadyExists) {
-        throw new SubmissionError({ slug: 'Slug already exists' });
-      }
-      throw error;
+export async function updateArchive(archiveJid, data) {
+  const token = getToken();
+  try {
+    await archiveAPI.updateArchive(token, archiveJid, data);
+  } catch (error) {
+    if (error instanceof BadRequestError && error.message === ArchiveErrors.SlugAlreadyExists) {
+      throw new SubmissionError({ slug: 'Slug already exists' });
     }
-    toastActions.showSuccessToast('Archive updated.');
-  };
+    throw error;
+  }
+  toastActions.showSuccessToast('Archive updated.');
 }
 
-export function getArchives() {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await archiveAPI.getArchives(token);
-  };
+export async function getArchives() {
+  const token = getToken();
+  return await archiveAPI.getArchives(token);
 }

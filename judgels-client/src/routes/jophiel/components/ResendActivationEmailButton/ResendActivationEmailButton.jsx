@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+
+import { callAction } from '../../../../modules/callAction';
 
 import * as userAccountActions from '../../modules/userAccountActions';
 
 export default function ResendActivationEmailButton({ email }) {
-  const dispatch = useDispatch();
   const timerRef = useRef(null);
 
   const [state, setState] = useState({
@@ -36,7 +36,7 @@ export default function ResendActivationEmailButton({ email }) {
   };
 
   const onResendEmail = async () => {
-    await dispatch(userAccountActions.resendActivationEmail(email));
+    await callAction(userAccountActions.resendActivationEmail(email));
     setState(prevState => ({ ...prevState, timeRemainingResendEmail: 5 }));
     timerRef.current = setInterval(countDown, 1000);
   };

@@ -3,7 +3,6 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 import Announcements from '../components/Announcements/Announcements';
 import { AppContent } from '../components/AppContent/AppContent';
@@ -11,14 +10,14 @@ import { Footer } from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
 import { setGAUser } from '../ga';
 import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
-import { selectMaybeUserJid, selectToken } from '../modules/session/sessionSelectors';
+import { useSession } from '../modules/session';
 import { useWebPrefs } from '../modules/webPrefs';
 import { getHomeRoute, getVisibleAppRoutes } from './AppRoutes';
 
 export default function App() {
   const { isDarkMode } = useWebPrefs();
-  const userJid = useSelector(selectMaybeUserJid);
-  const token = useSelector(selectToken);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
   const {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions(token));

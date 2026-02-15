@@ -1,7 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -10,17 +9,17 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { ProblemEditorial } from '../../../../../../components/ProblemEditorial/ProblemEditorial';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
 import * as contestEditorialActions from '../modules/contestEditorialActions';
 
 export default function ContestEditorialPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const { editorialLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
@@ -30,7 +29,7 @@ export default function ContestEditorialPage() {
   });
 
   const loadEditorial = async () => {
-    const response = await dispatch(contestEditorialActions.getEditorial(contest.jid, editorialLanguage));
+    const response = await callAction(contestEditorialActions.getEditorial(contest.jid, editorialLanguage));
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemEditorialsMap, editorialLanguage);
 
     setState({

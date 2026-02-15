@@ -1,11 +1,8 @@
 import { act, render, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -17,13 +14,17 @@ import * as contestEditorialActions from '../modules/contestEditorialActions';
 vi.mock('../modules/contestEditorialActions');
 
 describe('ContestEditorialPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    contestEditorialActions.getEditorial.mockReturnValue(() =>
+    contestEditorialActions.getEditorial.mockReturnValue(
       Promise.resolve({
         preface: '<p>Thanks for participating.</p>',
         problems: [
@@ -98,23 +99,13 @@ describe('ContestEditorialPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <WebPrefsProvider initialPrefs={{ editorialLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter initialEntries={['/contests/contest-slug/editorial']} path="/contests/$contestSlug/editorial">
-                <ContestEditorialPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter initialEntries={['/contests/contest-slug/editorial']} path="/contests/$contestSlug/editorial">
+              <ContestEditorialPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

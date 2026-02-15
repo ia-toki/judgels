@@ -1,7 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../../../../../modules/api/gabriel/language';
@@ -19,7 +16,7 @@ describe('ChapterProblemSubmissionPage', () => {
   let source = {};
 
   const renderComponent = async () => {
-    chapterProblemSubmissionActions.getSubmissionWithSource.mockReturnValue(() =>
+    chapterProblemSubmissionActions.getSubmissionWithSource.mockReturnValue(
       Promise.resolve({
         data: {
           submission: {
@@ -31,25 +28,21 @@ describe('ChapterProblemSubmissionPage', () => {
         },
       })
     );
-    chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(() => Promise.resolve('image url'));
+    chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(Promise.resolve('image url'));
 
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
-
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
 
     await act(async () =>
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
-                path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
-              >
-                <ChapterProblemSubmissionPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/courses/courseSlug/chapters/chapter-1/problems/A/submissions/10']}
+              path="/courses/$courseSlug/chapters/$chapterAlias/problems/$problemAlias/submissions/$submissionId"
+            >
+              <ChapterProblemSubmissionPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

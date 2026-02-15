@@ -1,11 +1,11 @@
 import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
+import { callAction } from '../../../../modules/callAction';
 import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 
@@ -15,7 +15,6 @@ const PAGE_SIZE = 20;
 
 export default function ContestsPage() {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const name = location.search.name;
 
@@ -70,7 +69,7 @@ export default function ContestsPage() {
     );
   };
 
-  const createContest = data => dispatch(contestActions.createContest(data));
+  const createContest = data => callAction(contestActions.createContest(data));
 
   const renderCreateDialog = () => {
     const { response } = state;
@@ -117,7 +116,7 @@ export default function ContestsPage() {
     if (state.response) {
       setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
     }
-    const response = await dispatch(contestActions.getContests(name, nextPage));
+    const response = await callAction(contestActions.getContests(name, nextPage));
     setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };

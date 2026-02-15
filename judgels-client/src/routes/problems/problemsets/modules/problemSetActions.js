@@ -1,9 +1,7 @@
 import { problemSetAPI } from '../../../../modules/api/jerahmeel/problemSet';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { getToken } from '../../../../modules/session';
 
-export function getProblemSets(archiveSlug, name, page) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await problemSetAPI.getProblemSets(token, archiveSlug, name, page);
-  };
+export async function getProblemSets(archiveSlug, name, page) {
+  const token = getToken();
+  return await problemSetAPI.getProblemSets(token, archiveSlug, name, page);
 }

@@ -1,8 +1,5 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -17,23 +14,19 @@ describe('RatingsPage', () => {
   let ratingChangesMap;
 
   const renderComponent = async () => {
-    ratingActions.getContestsPendingRating.mockReturnValue(() =>
+    ratingActions.getContestsPendingRating.mockReturnValue(
       Promise.resolve({
         data: contests,
         ratingChangesMap,
       })
     );
-    ratingActions.updateRatings.mockReturnValue(() => Promise.resolve());
-
-    const store = createStore(() => {}, applyMiddleware(thunk));
+    ratingActions.updateRatings.mockReturnValue(Promise.resolve());
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <RatingsPage />
-          </TestRouter>
-        </Provider>
+        <TestRouter>
+          <RatingsPage />
+        </TestRouter>
       )
     );
   };

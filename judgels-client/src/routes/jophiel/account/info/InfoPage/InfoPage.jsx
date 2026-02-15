@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
+import { callAction } from '../../../../../modules/callAction';
+import { useSession } from '../../../../../modules/session';
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 
 import * as infoActions from '../../../modules/infoActions';
 import * as userActions from '../../../modules/userActions';
 
 export default function InfoPage() {
-  const userJid = useSelector(selectUserJid);
-  const dispatch = useDispatch();
+  const { user } = useSession();
+  const userJid = user.jid;
 
   const [state, setState] = useState({
     user: undefined,
@@ -19,8 +19,8 @@ export default function InfoPage() {
 
   const refreshInfo = async () => {
     const [user, info] = await Promise.all([
-      dispatch(userActions.getUser(userJid)),
-      dispatch(infoActions.getInfo(userJid)),
+      callAction(userActions.getUser(userJid)),
+      callAction(infoActions.getInfo(userJid)),
     ]);
     setState(prevState => ({ ...prevState, user, info }));
   };
@@ -38,7 +38,7 @@ export default function InfoPage() {
   };
 
   const onUpdateInfo = async info => {
-    await dispatch(infoActions.updateInfo(userJid, info));
+    await callAction(infoActions.updateInfo(userJid, info));
     await refreshInfo();
   };
 

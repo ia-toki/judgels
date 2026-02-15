@@ -1,7 +1,10 @@
 import '@testing-library/jest-dom/vitest';
 import nock from 'nock';
 import { TextDecoder, TextEncoder } from 'node:util';
+import { afterEach } from 'vitest';
 import { vi } from 'vitest';
+
+import { clearSession } from './modules/session';
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
@@ -36,3 +39,7 @@ window.conf = {
 window.scrollTo = function () {
   return;
 };
+
+afterEach(() => {
+  clearSession();
+});

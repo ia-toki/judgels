@@ -1,43 +1,44 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestOverviewPage from './ContestOverviewPage';
 
 import * as contestActions from '../../../modules/contestActions';
+import * as contestContestantActions from '../../modules/contestContestantActions';
 
 vi.mock('../../../modules/contestActions');
+vi.mock('../../modules/contestContestantActions');
 
 describe('ContestOverviewPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    contestActions.getContestDescription.mockReturnValue(() =>
+    contestActions.getContestDescription.mockReturnValue(
       Promise.resolve({
         description: 'Contest description',
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
+    contestContestantActions.getMyContestantState.mockReturnValue(Promise.resolve('NONE'));
+    contestContestantActions.getApprovedContestantsCount.mockReturnValue(Promise.resolve(0));
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-              <ContestOverviewPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <ContestOverviewPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

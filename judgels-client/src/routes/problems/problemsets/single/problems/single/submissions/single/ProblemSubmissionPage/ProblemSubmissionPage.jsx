@@ -1,17 +1,17 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
+import { callAction } from '../../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../../modules/queries/problemSet';
-import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 
@@ -20,8 +20,7 @@ import * as problemSetSubmissionActions from '../../modules/problemSetSubmission
 
 export default function ProblemSubmissionPage() {
   const { problemSetSlug, problemAlias, submissionId } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
@@ -36,7 +35,7 @@ export default function ProblemSubmissionPage() {
   });
 
   const loadSubmission = async () => {
-    const { data, profile, problemName, problemAlias, containerName } = await dispatch(
+    const { data, profile, problemName, problemAlias, containerName } = await callAction(
       problemSetSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
     if (data.submission.problemJid !== problem.problemJid) {
@@ -47,7 +46,7 @@ export default function ProblemSubmissionPage() {
 
     const sourceImageUrl = data.source
       ? undefined
-      : await dispatch(problemSetSubmissionActions.getSubmissionSourceImage(data.submission.jid));
+      : await callAction(problemSetSubmissionActions.getSubmissionSourceImage(data.submission.jid));
 
     document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 

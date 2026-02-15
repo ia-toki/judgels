@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
 import { ProblemSetErrors } from '../../../../modules/api/jerahmeel/problemSet';
@@ -9,15 +7,8 @@ import { SubmissionError } from '../../../../modules/form/submissionError';
 import * as problemSetActions from './problemSetActions';
 
 const problemSetJid = 'problemSet-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('problemSetActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -34,7 +25,7 @@ describe('problemSetActions', () => {
           .post(`/problemsets`, params)
           .reply(200);
 
-        await store.dispatch(problemSetActions.createProblemSet(params));
+        await problemSetActions.createProblemSet(params);
       });
     });
 
@@ -47,7 +38,7 @@ describe('problemSetActions', () => {
           .post(`/problemsets`, params)
           .reply(400, { message: ProblemSetErrors.SlugAlreadyExists });
 
-        await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
+        await expect(problemSetActions.createProblemSet(params)).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
         );
       });
@@ -62,7 +53,7 @@ describe('problemSetActions', () => {
           .post(`/problemsets`, params)
           .reply(400, { message: ProblemSetErrors.ArchiveSlugNotFound });
 
-        await expect(store.dispatch(problemSetActions.createProblemSet(params))).rejects.toEqual(
+        await expect(problemSetActions.createProblemSet(params)).rejects.toEqual(
           new SubmissionError({ archiveSlug: 'Archive slug not found' })
         );
       });
@@ -81,7 +72,7 @@ describe('problemSetActions', () => {
           .post(`/problemsets/${problemSetJid}`, params)
           .reply(200);
 
-        await store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params));
+        await problemSetActions.updateProblemSet(problemSetJid, params);
       });
     });
 
@@ -97,7 +88,7 @@ describe('problemSetActions', () => {
             .post(`/problemsets/${problemSetJid}`, params)
             .reply(200);
 
-          await store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params));
+          await problemSetActions.updateProblemSet(problemSetJid, params);
         });
       });
 
@@ -110,7 +101,7 @@ describe('problemSetActions', () => {
             .post(`/problemsets/${problemSetJid}`, params)
             .reply(400, { message: ProblemSetErrors.SlugAlreadyExists });
 
-          await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
+          await expect(problemSetActions.updateProblemSet(problemSetJid, params)).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
           );
         });
@@ -128,7 +119,7 @@ describe('problemSetActions', () => {
             .post(`/problemsets/${problemSetJid}`, params)
             .reply(400, { message: ProblemSetErrors.ArchiveSlugNotFound });
 
-          await expect(store.dispatch(problemSetActions.updateProblemSet(problemSetJid, params))).rejects.toEqual(
+          await expect(problemSetActions.updateProblemSet(problemSetJid, params)).rejects.toEqual(
             new SubmissionError({ archiveSlug: 'Archive slug not found' })
           );
         });
@@ -148,7 +139,7 @@ describe('problemSetActions', () => {
         .query({ page: 1 })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(problemSetActions.getProblemSets(1));
+      const response = await problemSetActions.getProblemSets(1);
       expect(response).toEqual(responseBody);
     });
   });
@@ -164,7 +155,7 @@ describe('problemSetActions', () => {
         .get(`/problemsets/${problemSetJid}/problems`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(problemSetActions.getProblems(problemSetJid));
+      const response = await problemSetActions.getProblems(problemSetJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -181,7 +172,7 @@ describe('problemSetActions', () => {
           .put(`/problemsets/${problemSetJid}/problems`, params)
           .reply(200);
 
-        await store.dispatch(problemSetActions.setProblems(problemSetJid, params));
+        await problemSetActions.setProblems(problemSetJid, params);
       });
     });
 
@@ -197,7 +188,7 @@ describe('problemSetActions', () => {
             args: { contestSlugs: ['foo', 'bar'] },
           });
 
-        await expect(store.dispatch(problemSetActions.setProblems(problemSetJid, params))).rejects.toEqual(
+        await expect(problemSetActions.setProblems(problemSetJid, params)).rejects.toEqual(
           new SubmissionError({ problems: 'Contests not found/allowed: foo,bar' })
         );
       });

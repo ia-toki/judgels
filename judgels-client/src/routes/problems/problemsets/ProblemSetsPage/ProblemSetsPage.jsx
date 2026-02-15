@@ -1,11 +1,11 @@
 import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
+import { callAction } from '../../../../modules/callAction';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
 
 import * as problemSetActions from '../modules/problemSetActions';
@@ -14,7 +14,6 @@ const PAGE_SIZE = 20;
 
 export default function ProblemSetsPage() {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const archiveSlug = location.search.archive;
   const name = location.search.name;
@@ -132,7 +131,7 @@ export default function ProblemSetsPage() {
     if (state.response) {
       setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
     }
-    const response = await dispatch(problemSetActions.getProblemSets(archiveSlug, name, nextPage));
+    const response = await callAction(problemSetActions.getProblemSets(archiveSlug, name, nextPage));
     setState({ response, isFilterLoading: false });
     return response.data.totalCount;
   };

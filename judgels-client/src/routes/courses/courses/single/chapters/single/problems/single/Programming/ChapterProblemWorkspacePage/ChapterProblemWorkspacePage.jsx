@@ -1,18 +1,18 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
+import { callAction } from '../../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
@@ -21,11 +21,10 @@ import * as chapterProblemSubmissionActions from '../submissions/modules/chapter
 export default function ChapterProblemWorkspacePage() {
   const { worksheet, renderNavigation, reloadProblem } = useChapterProblemContext();
   const { courseSlug, chapterAlias } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     shouldResetEditor: false,
@@ -56,7 +55,7 @@ export default function ChapterProblemWorkspacePage() {
       });
     }
 
-    const submission = await dispatch(
+    const submission = await callAction(
       chapterProblemSubmissionActions.createSubmission(chapter.jid, problem.problemJid, data)
     );
     return {
@@ -65,7 +64,7 @@ export default function ChapterProblemWorkspacePage() {
     };
   };
 
-  const getSubmission = submissionJid => dispatch(chapterProblemSubmissionActions.getSubmission(submissionJid));
+  const getSubmission = submissionJid => callAction(chapterProblemSubmissionActions.getSubmission(submissionJid));
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {

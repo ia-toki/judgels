@@ -2,15 +2,14 @@ import { Navbar } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import HTMLReactParser from 'html-react-parser';
-import { useSelector } from 'react-redux';
 
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
-import { selectToken } from '../../modules/session/sessionSelectors';
+import { useSession } from '../../modules/session';
 
 import './Announcements.scss';
 
 export default function Announcements() {
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data } = useSuspenseQuery(userWebConfigQueryOptions(token));
   const announcements = data.announcements;
 

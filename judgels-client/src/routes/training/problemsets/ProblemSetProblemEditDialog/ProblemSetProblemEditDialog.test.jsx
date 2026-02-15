@@ -1,7 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
@@ -48,9 +46,7 @@ describe('ProblemSetProblemEditDialog', () => {
 
   beforeEach(async () => {
     onGetProblems = vi.fn().mockReturnValue(Promise.resolve({ data: problems, problemsMap, contestsMap }));
-    onSetProblems = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onSetProblems = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       isOpen: true,
@@ -59,13 +55,7 @@ describe('ProblemSetProblemEditDialog', () => {
       onGetProblems,
       onSetProblems,
     };
-    await act(async () =>
-      render(
-        <Provider store={store}>
-          <ProblemSetProblemEditDialog {...props} />
-        </Provider>
-      )
-    );
+    await act(async () => render(<ProblemSetProblemEditDialog {...props} />));
   });
 
   test('edit problems dialog form', async () => {

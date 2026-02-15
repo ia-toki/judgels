@@ -1,10 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -15,6 +12,10 @@ import * as contestLogActions from '../modules/contestLogActions';
 vi.mock('../modules/contestLogActions');
 
 describe('ContestLogsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let logs;
 
   const renderComponent = async () => {
@@ -23,7 +24,7 @@ describe('ContestLogsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestLogActions.getLogs.mockReturnValue(() =>
+    contestLogActions.getLogs.mockReturnValue(
       Promise.resolve({
         data: {
           page: logs,
@@ -43,16 +44,12 @@ describe('ContestLogsPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug/logs']} path="/contests/$contestSlug/logs">
-              <ContestLogsPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug/logs']} path="/contests/$contestSlug/logs">
+            <ContestLogsPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
