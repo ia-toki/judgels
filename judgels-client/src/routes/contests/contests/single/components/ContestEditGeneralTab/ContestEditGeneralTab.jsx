@@ -3,10 +3,10 @@ import { Edit } from '@blueprintjs/icons';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
@@ -15,9 +15,8 @@ import * as contestActions from '../../../modules/contestActions';
 
 export default function ContestEditGeneralTab() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   const [state, setState] = useState({
@@ -72,7 +71,7 @@ export default function ContestEditGeneralTab() {
       beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
-    await dispatch(contestActions.updateContest(contest.jid, contest.slug, updateData));
+    await callAction(contestActions.updateContest(contest.jid, contest.slug, updateData));
     await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug] });
     toggleEdit();
   };

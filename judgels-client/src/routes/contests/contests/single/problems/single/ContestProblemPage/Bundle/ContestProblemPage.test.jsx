@@ -1,8 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
@@ -22,7 +19,7 @@ vi.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
 
 describe('BundleContestProblemPage', () => {
   beforeEach(async () => {
-    contestProblemActions.getBundleProblemWorksheet.mockReturnValue(() =>
+    contestProblemActions.getBundleProblemWorksheet.mockReturnValue(
       Promise.resolve({
         defaultLanguage: 'fakelang',
         languages: ['fakelang'],
@@ -58,8 +55,8 @@ describe('BundleContestProblemPage', () => {
       })
     );
 
-    contestSubmissionActions.createItemSubmission.mockReturnValue(() => Promise.resolve({}));
-    contestSubmissionActions.getLatestSubmissions.mockReturnValue(() => Promise.resolve({}));
+    contestSubmissionActions.createItemSubmission.mockReturnValue(Promise.resolve({}));
+    contestSubmissionActions.getLatestSubmissions.mockReturnValue(Promise.resolve({}));
 
     nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
@@ -67,20 +64,16 @@ describe('BundleContestProblemPage', () => {
       style: ContestStyle.Bundle,
     });
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     await act(async () =>
       render(
         <WebPrefsProvider>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/contests/contest-slug/problems/C']}
-                path="/contests/$contestSlug/problems/$problemAlias"
-              >
-                <ContestProblemPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/problems/C']}
+              path="/contests/$contestSlug/problems/$problemAlias"
+            >
+              <ContestProblemPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

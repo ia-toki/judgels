@@ -1,18 +1,18 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { selectMaybeUserJid, selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
@@ -20,9 +20,8 @@ import * as problemSetSubmissionActions from '../modules/problemSetSubmissionAct
 export default function ProblemSubmissionSummaryPage() {
   const { problemSetSlug, problemAlias, username } = useParams({ strict: false });
   const location = useLocation();
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const { statementLanguage: language } = useWebPrefs();
@@ -39,7 +38,7 @@ export default function ProblemSubmissionSummaryPage() {
       return;
     }
 
-    const response = await dispatch(
+    const response = await callAction(
       problemSetSubmissionActions.getSubmissionSummary(problemSet.jid, problem.problemJid, username, language)
     );
 
@@ -102,7 +101,7 @@ export default function ProblemSubmissionSummaryPage() {
     const { userJids } = state.config;
     const userJid = userJids[0];
 
-    await dispatch(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, userJid, problemJid));
+    await callAction(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, userJid, problemJid));
     await refreshSubmissions();
   };
 

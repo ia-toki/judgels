@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import { callAction } from '../../../../modules/callAction';
 import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 import ResendActivationEmailButton from '../../components/ResendActivationEmailButton/ResendActivationEmailButton';
 import RegisterForm from '../RegisterForm/RegisterForm';
@@ -12,8 +12,6 @@ import * as registerActions from '../modules/registerActions';
 import './RegisterPage.scss';
 
 export default function RegisterPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     config: undefined,
     registeredUser: undefined,
@@ -21,7 +19,7 @@ export default function RegisterPage() {
   });
 
   const refreshWebConfig = async () => {
-    const config = await dispatch(registerActions.getWebConfig());
+    const config = await callAction(registerActions.getWebConfig());
     setState(prevState => ({ ...prevState, config }));
   };
 
@@ -74,7 +72,7 @@ export default function RegisterPage() {
       name: data.name,
       recaptchaResponse: data.recaptchaResponse,
     };
-    await dispatch(registerActions.registerUser(userRegistrationData));
+    await callAction(registerActions.registerUser(userRegistrationData));
     setState(prevState => ({
       ...prevState,
       registeredUser: {

@@ -1,20 +1,16 @@
 import { contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { getToken } from '../../../../../../modules/session';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-export function getFiles(contestJid) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await contestFileAPI.getFiles(token, contestJid);
-  };
+export async function getFiles(contestJid) {
+  const token = getToken();
+  return await contestFileAPI.getFiles(token, contestJid);
 }
 
-export function uploadFile(contestJid, file) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    await contestFileAPI.uploadFile(token, contestJid, file);
+export async function uploadFile(contestJid, file) {
+  const token = getToken();
+  await contestFileAPI.uploadFile(token, contestJid, file);
 
-    toastActions.showSuccessToast('File uploaded.');
-  };
+  toastActions.showSuccessToast('File uploaded.');
 }

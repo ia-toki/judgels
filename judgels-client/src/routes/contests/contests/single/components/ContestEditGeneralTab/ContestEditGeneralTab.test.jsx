@@ -1,12 +1,9 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../../../utils/datetime';
@@ -20,6 +17,7 @@ vi.mock('../../../modules/contestActions');
 
 describe('ContestEditGeneralTab', () => {
   beforeEach(async () => {
+    setSession('token', { jid: 'userJid' });
     nockUriel()
       .get('/contests/slug/contest-a')
       .reply(200, {
@@ -31,19 +29,14 @@ describe('ContestEditGeneralTab', () => {
       });
     nockUriel().get('/contests/slug/contest-a/config').reply(200, {});
 
-    contestActions.updateContest.mockReturnValue(() => Promise.resolve({}));
-
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
+    contestActions.updateContest.mockReturnValue(Promise.resolve({}));
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-a']} path="/contests/$contestSlug">
-              <ContestEditGeneralTab />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-a']} path="/contests/$contestSlug">
+            <ContestEditGeneralTab />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

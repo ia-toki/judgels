@@ -2,20 +2,19 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
 
 export default function ContestClarificationsWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const clarificationCount = webConfig.clarificationCount;
   const clarificationStatus = webConfig.clarificationStatus;
   const prevClarificationCountRef = useRef(clarificationCount);
@@ -25,7 +24,7 @@ export default function ContestClarificationsWidget() {
       // TODO(lungsin): change the notification tag to be more proper, e.g. using clarification JID.
       const timestamp = Math.floor(Date.now() / REFRESH_WEB_CONFIG_INTERVAL);
       const notificationTag = `clarification_${contestSlug}_timestamp_${timestamp}`;
-      dispatch(contestClarificationActions.alertNewClarifications(clarificationStatus, notificationTag));
+      callAction(contestClarificationActions.alertNewClarifications(clarificationStatus, notificationTag));
     }
     prevClarificationCountRef.current = clarificationCount;
   }, [clarificationCount]);

@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
@@ -11,19 +9,13 @@ describe('ContestAnnouncementCreateDialog', () => {
   let onCreateAnnouncement;
 
   beforeEach(() => {
-    onCreateAnnouncement = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = createMockStore()({});
+    onCreateAnnouncement = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       contest: { jid: 'contestJid' },
       onCreateAnnouncement,
     };
-    render(
-      <Provider store={store}>
-        <ContestAnnouncementCreateDialog {...props} />
-      </Provider>
-    );
+    render(<ContestAnnouncementCreateDialog {...props} />);
   });
 
   test('form', async () => {

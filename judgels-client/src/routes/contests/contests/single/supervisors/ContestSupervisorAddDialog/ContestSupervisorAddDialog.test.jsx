@@ -1,7 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
@@ -15,17 +13,11 @@ describe('ContestSupervisorAddDialog', () => {
       .fn()
       .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
 
-    const store = configureMockStore()({});
-
     const props = {
       contest: { jid: 'contestJid' },
       onUpsertSupervisors: onUpsertSupervisors,
     };
-    render(
-      <Provider store={store}>
-        <ContestSupervisorAddDialog {...props} />
-      </Provider>
-    );
+    render(<ContestSupervisorAddDialog {...props} />);
   });
 
   test('form', async () => {

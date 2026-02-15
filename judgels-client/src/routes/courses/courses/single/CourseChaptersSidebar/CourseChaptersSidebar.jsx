@@ -4,11 +4,10 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
-import { selectToken } from '../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../modules/session';
 
 import './CourseChaptersSidebar.scss';
 
@@ -16,7 +15,7 @@ export default function CourseChaptersSidebar() {
   const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
   const queryClient = useQueryClient();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const {
     data: { data: courseChapters, chaptersMap, chapterProgressesMap },

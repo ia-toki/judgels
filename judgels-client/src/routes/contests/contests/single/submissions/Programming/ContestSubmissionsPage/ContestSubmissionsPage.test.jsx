@@ -1,11 +1,8 @@
 import { act, render, screen, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
-import sessionReducer from '../../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../utils/nock';
@@ -16,6 +13,10 @@ import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 vi.mock('../modules/contestSubmissionActions');
 
 describe('ContestSubmissionsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let submissions;
   let canSupervise;
   let canManage;
@@ -27,7 +28,7 @@ describe('ContestSubmissionsPage', () => {
       style: ContestStyle.ICPC,
     });
 
-    contestSubmissionActions.getSubmissions.mockReturnValue(() =>
+    contestSubmissionActions.getSubmissions.mockReturnValue(
       Promise.resolve({
         data: { page: submissions },
         config: {
@@ -47,19 +48,12 @@ describe('ContestSubmissionsPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-
     await act(async () => {
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter
-              initialEntries={['/contests/contest-slug/submissions']}
-              path="/contests/$contestSlug/submissions"
-            >
-              <ContestSubmissionsPage />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug/submissions']} path="/contests/$contestSlug/submissions">
+            <ContestSubmissionsPage />
+          </TestRouter>
         </QueryClientProviderWrapper>
       );
     });

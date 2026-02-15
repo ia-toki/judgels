@@ -1,17 +1,18 @@
 import { Intent } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
 import { APP_CONFIG, isTLX } from '../../../conf';
-import { selectIsLoggedIn } from '../../../modules/session/sessionSelectors';
+import { useSession } from '../../../modules/session';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 
 import './HomePage.scss';
 
-function HomePage({ isLoggedIn }) {
+export default function HomePage() {
+  const { isLoggedIn } = useSession();
+
   const renderBanner = () => {
     if (isLoggedIn) {
       return null;
@@ -62,9 +63,3 @@ function HomePage({ isLoggedIn }) {
     </>
   );
 }
-
-const mapStateToProps = state => ({
-  isLoggedIn: selectIsLoggedIn(state),
-});
-
-export default connect(mapStateToProps)(HomePage);

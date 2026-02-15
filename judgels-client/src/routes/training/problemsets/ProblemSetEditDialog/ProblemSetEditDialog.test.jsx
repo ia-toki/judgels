@@ -1,7 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { parseDateTime } from '../../../../utils/datetime';
@@ -21,9 +19,7 @@ describe('ProblemSetEditDialog', () => {
   let onUpdateProblemSet;
 
   beforeEach(async () => {
-    onUpdateProblemSet = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onUpdateProblemSet = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       isOpen: true,
@@ -32,13 +28,7 @@ describe('ProblemSetEditDialog', () => {
       onCloseDialog: vi.fn(),
       onUpdateProblemSet,
     };
-    await act(async () =>
-      render(
-        <Provider store={store}>
-          <ProblemSetEditDialog {...props} />
-        </Provider>
-      )
-    );
+    await act(async () => render(<ProblemSetEditDialog {...props} />));
   });
 
   test('edit dialog form', async () => {

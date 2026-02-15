@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
+import { callAction } from '../../../../modules/callAction';
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 
 import * as forgotPasswordActions from '../modules/forgotPasswordActions';
 
 export default function ForgotPasswordPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     submitted: false,
   });
@@ -35,7 +33,7 @@ export default function ForgotPasswordPage() {
   };
 
   const onForgetPassword = async data => {
-    await dispatch(forgotPasswordActions.requestToResetPassword(data.email));
+    await callAction(forgotPasswordActions.requestToResetPassword(data.email));
     setState(prevState => ({ ...prevState, submitted: true }));
   };
 

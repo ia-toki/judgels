@@ -1,7 +1,5 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
@@ -41,20 +39,14 @@ describe('ContestProblemEditDialog', () => {
   ];
 
   beforeEach(() => {
-    onSetProblems = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onSetProblems = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       contest: { jid: 'contestJid' },
       problems,
       onSetProblems,
     };
-    render(
-      <Provider store={store}>
-        <ContestProblemEditDialog {...props} />
-      </Provider>
-    );
+    render(<ContestProblemEditDialog {...props} />);
   });
 
   test('form', async () => {

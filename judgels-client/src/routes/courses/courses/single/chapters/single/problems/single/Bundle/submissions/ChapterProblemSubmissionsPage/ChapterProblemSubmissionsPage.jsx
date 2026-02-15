@@ -2,18 +2,18 @@ import { Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { callAction } from '../../../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../modules/queries/course';
-import { selectMaybeUserJid, selectToken } from '../../../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../../modules/webPrefs';
 
 import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
@@ -22,9 +22,8 @@ import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const { statementLanguage: language } = useWebPrefs();
@@ -41,7 +40,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
       return;
     }
 
-    const response = await dispatch(
+    const response = await callAction(
       chapterProblemSubmissionActions.getSubmissionSummary(chapter.jid, problemAlias, language)
     );
 

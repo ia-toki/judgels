@@ -1,8 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
@@ -20,7 +17,7 @@ vi.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
 
 describe('ProgrammingContestProblemPage', () => {
   beforeEach(async () => {
-    contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(() =>
+    contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(
       Promise.resolve({
         problem: {
           problemJid: 'problemJid',
@@ -47,27 +44,23 @@ describe('ProgrammingContestProblemPage', () => {
       })
     );
 
-    contestSubmissionActions.createSubmission.mockReturnValue(() => Promise.resolve({}));
+    contestSubmissionActions.createSubmission.mockReturnValue(Promise.resolve({}));
 
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     await act(async () => {
       render(
         <WebPrefsProvider>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/contests/contest-slug/problems/C']}
-                path="/contests/$contestSlug/problems/$problemAlias"
-              >
-                <ContestProblemPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/problems/C']}
+              path="/contests/$contestSlug/problems/$problemAlias"
+            >
+              <ContestProblemPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       );

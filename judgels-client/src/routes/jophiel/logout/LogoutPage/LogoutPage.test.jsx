@@ -1,7 +1,4 @@
 import { act, render } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -13,17 +10,13 @@ vi.mock('../modules/logoutActions');
 
 describe('LogoutPage', () => {
   beforeEach(async () => {
-    logoutActions.logOut.mockReturnValue(() => Promise.resolve());
-
-    const store = createStore(() => {}, applyMiddleware(thunk));
+    logoutActions.logOut.mockReturnValue(Promise.resolve());
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <LogoutPage />
-          </TestRouter>
-        </Provider>
+        <TestRouter>
+          <LogoutPage />
+        </TestRouter>
       )
     );
   });

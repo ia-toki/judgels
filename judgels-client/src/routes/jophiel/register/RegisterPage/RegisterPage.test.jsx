@@ -1,8 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -14,18 +11,14 @@ vi.mock('../modules/registerActions');
 
 describe('RegisterPage', () => {
   beforeEach(async () => {
-    registerActions.getWebConfig.mockReturnValue(() => Promise.resolve({ useRecaptcha: false }));
-    registerActions.registerUser.mockReturnValue(() => Promise.resolve());
-
-    const store = createStore(() => {}, applyMiddleware(thunk));
+    registerActions.getWebConfig.mockReturnValue(Promise.resolve({ useRecaptcha: false }));
+    registerActions.registerUser.mockReturnValue(Promise.resolve());
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter>
-            <RegisterPage />
-          </TestRouter>
-        </Provider>
+        <TestRouter>
+          <RegisterPage />
+        </TestRouter>
       )
     );
   });

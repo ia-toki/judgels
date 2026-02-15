@@ -1,15 +1,15 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../../../modules/callAction';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
@@ -21,9 +21,8 @@ const PAGE_SIZE = 20;
 function ContestClarificationsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { statementLanguage } = useWebPrefs();
 
@@ -61,7 +60,7 @@ function ContestClarificationsPage() {
   };
 
   const refreshClarifications = async page => {
-    const response = await dispatch(
+    const response = await callAction(
       contestClarificationActions.getClarifications(contest.jid, status, statementLanguage, page)
     );
     setState(prevState => ({
@@ -150,14 +149,14 @@ function ContestClarificationsPage() {
   };
 
   const createClarification = async (contestJid, data) => {
-    await dispatch(contestClarificationActions.createClarification(contestJid, data));
+    await callAction(contestClarificationActions.createClarification(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshClarificationsTime: new Date().getTime() }));
   };
 
   const answerClarification = async (contestJid, clarificationJid, data) => {
     setState(prevState => ({ ...prevState, isAnswerBoxLoading: true }));
     try {
-      await dispatch(contestClarificationActions.answerClarification(contestJid, clarificationJid, data));
+      await callAction(contestClarificationActions.answerClarification(contestJid, clarificationJid, data));
       setState(prevState => ({ ...prevState, lastRefreshClarificationsTime: new Date().getTime() }));
       toggleAnswerBox();
     } catch (err) {

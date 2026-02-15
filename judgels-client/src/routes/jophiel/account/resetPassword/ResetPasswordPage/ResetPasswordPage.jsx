@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
+import { callAction } from '../../../../../modules/callAction';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
 import * as resetPasswordActions from '../modules/resetPasswordActions';
 
 export default function ResetPasswordPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     submitted: false,
   });
@@ -30,7 +28,7 @@ export default function ResetPasswordPage() {
   };
 
   const resetPassword = async () => {
-    await dispatch(resetPasswordActions.requestToResetPassword());
+    await callAction(resetPasswordActions.requestToResetPassword());
     setState(prevState => ({ ...prevState, submitted: true }));
   };
 

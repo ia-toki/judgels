@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { callAction } from '../../../../modules/callAction';
 import { ArchiveCreateDialog } from '../ArchiveCreateDialog/ArchiveCreateDialog';
 import { ArchiveEditDialog } from '../ArchiveEditDialog/ArchiveEditDialog';
 import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
@@ -10,8 +10,6 @@ import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
 import * as archiveActions from '../modules/archiveActions';
 
 export default function ArchivesPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
@@ -19,7 +17,7 @@ export default function ArchivesPage() {
   });
 
   const refreshArchives = async () => {
-    const response = await dispatch(archiveActions.getArchives());
+    const response = await callAction(archiveActions.getArchives());
     setState(prevState => ({ ...prevState, response }));
   };
 
@@ -74,7 +72,7 @@ export default function ArchivesPage() {
   };
 
   const createArchive = async data => {
-    await dispatch(archiveActions.createArchive(data));
+    await callAction(archiveActions.createArchive(data));
     await refreshArchives();
   };
 
@@ -87,7 +85,7 @@ export default function ArchivesPage() {
   };
 
   const updateArchive = async (archiveJid, data) => {
-    await dispatch(archiveActions.updateArchive(archiveJid, data));
+    await callAction(archiveActions.updateArchive(archiveJid, data));
     editArchive(undefined);
     await refreshArchives();
   };

@@ -2,9 +2,9 @@ import { Checkbox } from '@blueprintjs/core';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { callAction } from '../../../../modules/callAction';
 
 import * as problemActions from '../modules/problemActions';
 
@@ -13,7 +13,6 @@ import './ProblemTagFilter.scss';
 export default function ProblemTagFilter() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const parseTags = queryTags => {
     let tags = queryTags || [];
@@ -31,7 +30,7 @@ export default function ProblemTagFilter() {
   });
 
   const loadTags = async () => {
-    const response = await dispatch(problemActions.getProblemTags());
+    const response = await callAction(problemActions.getProblemTags());
     const allTags = [].concat(response.data.map(c => c.options.map(opt => opt.value))).flat();
     setState(prevState => ({ ...prevState, response, allTags }));
   };

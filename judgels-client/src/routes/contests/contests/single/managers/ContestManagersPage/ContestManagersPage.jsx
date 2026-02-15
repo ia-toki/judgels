@@ -1,13 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
 import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
@@ -20,9 +20,8 @@ const PAGE_SIZE = 250;
 
 export default function ContestManagersPage() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -72,7 +71,7 @@ export default function ContestManagersPage() {
   };
 
   const refreshManagers = async page => {
-    const response = await dispatch(contestManagerActions.getManagers(contest.jid, page));
+    const response = await callAction(contestManagerActions.getManagers(contest.jid, page));
     setState(prevState => ({ ...prevState, response }));
     return response.data;
   };
@@ -95,13 +94,13 @@ export default function ContestManagersPage() {
   };
 
   const upsertManagers = async (contestJid, data) => {
-    const response = await dispatch(contestManagerActions.upsertManagers(contestJid, data));
+    const response = await callAction(contestManagerActions.upsertManagers(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
     return response;
   };
 
   const deleteManagers = async (contestJid, data) => {
-    const response = await dispatch(contestManagerActions.deleteManagers(contestJid, data));
+    const response = await callAction(contestManagerActions.deleteManagers(contestJid, data));
     setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
     return response;
   };

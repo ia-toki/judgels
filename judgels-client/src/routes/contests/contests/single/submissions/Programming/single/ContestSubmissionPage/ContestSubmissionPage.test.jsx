@@ -1,7 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
@@ -17,7 +14,7 @@ vi.mock('../../modules/contestSubmissionActions');
 
 describe('ContestSubmissionPage', () => {
   beforeEach(async () => {
-    contestSubmissionActions.getSubmissionWithSource.mockReturnValue(() =>
+    contestSubmissionActions.getSubmissionWithSource.mockReturnValue(
       Promise.resolve({
         data: {
           submission: {
@@ -34,20 +31,16 @@ describe('ContestSubmissionPage', () => {
       slug: 'contest-slug',
     });
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     await act(async () => {
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/contests/contest-slug/submissions/10']}
-                path="/contests/$contestSlug/submissions/$submissionId"
-              >
-                <ContestSubmissionPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/submissions/10']}
+              path="/contests/$contestSlug/submissions/$submissionId"
+            >
+              <ContestSubmissionPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       );

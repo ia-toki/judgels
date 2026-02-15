@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -19,8 +19,7 @@ import './ContestProblemPage.scss';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { statementLanguage, gradingLanguage, setGradingLanguage } = useWebPrefs();
 
@@ -38,7 +37,7 @@ export default function ContestProblemPage() {
       worksheet: undefined,
     }));
 
-    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await dispatch(
+    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await callAction(
       contestProblemActions.getProgrammingProblemWorksheet(contest.jid, problemAlias, statementLanguage)
     );
 
@@ -69,7 +68,7 @@ export default function ContestProblemPage() {
   const createSubmission = async data => {
     const problem = state.problem;
     setGradingLanguage(data.gradingLanguage);
-    return await dispatch(
+    return await callAction(
       contestSubmissionActions.createSubmission(contest.jid, contest.slug, problem.problemJid, data)
     );
   };

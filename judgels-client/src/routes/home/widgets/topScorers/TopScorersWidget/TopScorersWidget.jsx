@@ -1,24 +1,22 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../modules/callAction';
 
 import * as widgetActions from '../../modules/widgetActions';
 
 import './TopScorersWidget.scss';
 
 export default function TopScorersWidget() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
   });
 
   const refreshTopUserStats = async () => {
-    const response = await getTopUserStats(1, 5);
+    const response = await callAction(widgetActions.getTopUserStats(1, 5));
     setState({ response });
   };
 

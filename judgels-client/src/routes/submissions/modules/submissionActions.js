@@ -1,44 +1,34 @@
 import { submissionProgrammingAPI } from '../../../modules/api/jerahmeel/submissionProgramming';
-import { selectToken } from '../../../modules/session/sessionSelectors';
+import { getToken } from '../../../modules/session';
 import { getWebPrefs } from '../../../modules/webPrefs';
 
 import { toastActions } from '../../../modules/toast/toastActions';
 
-export function getSubmissions(containerJid, userJid, problemJid, page) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await submissionProgrammingAPI.getSubmissions(token, containerJid, userJid, problemJid, undefined, page);
-  };
+export async function getSubmissions(containerJid, userJid, problemJid, page) {
+  const token = getToken();
+  return await submissionProgrammingAPI.getSubmissions(token, containerJid, userJid, problemJid, undefined, page);
 }
 
-export function getSubmissionWithSource(submissionId, language) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
-  };
+export async function getSubmissionWithSource(submissionId, language) {
+  const token = getToken();
+  return await submissionProgrammingAPI.getSubmissionWithSource(token, submissionId, language);
 }
 
-export function regradeSubmission(submissionJid) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    await submissionProgrammingAPI.regradeSubmission(token, submissionJid);
+export async function regradeSubmission(submissionJid) {
+  const token = getToken();
+  await submissionProgrammingAPI.regradeSubmission(token, submissionJid);
 
-    toastActions.showSuccessToast('Submission regraded.');
-  };
+  toastActions.showSuccessToast('Submission regraded.');
 }
 
-export function regradeSubmissions(containerJid, userJid, problemJid) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    await submissionProgrammingAPI.regradeSubmissions(token, containerJid, userJid, problemJid, undefined);
+export async function regradeSubmissions(containerJid, userJid, problemJid) {
+  const token = getToken();
+  await submissionProgrammingAPI.regradeSubmissions(token, containerJid, userJid, problemJid, undefined);
 
-    toastActions.showSuccessToast('Regrade in progress.');
-  };
+  toastActions.showSuccessToast('Regrade in progress.');
 }
 
-export function getSubmissionSourceImage(submissionJid) {
-  return async (dispatch, getState) => {
-    const { isDarkMode } = getWebPrefs();
-    return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid, isDarkMode);
-  };
+export async function getSubmissionSourceImage(submissionJid) {
+  const { isDarkMode } = getWebPrefs();
+  return await submissionProgrammingAPI.getSubmissionSourceImage(submissionJid, isDarkMode);
 }

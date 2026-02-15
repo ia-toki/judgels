@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
@@ -12,7 +11,7 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../modules/queries/problemSet';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { createDocumentTitle } from '../../../../../../utils/title';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
 
@@ -21,7 +20,7 @@ import './SingleProblemSetProblemLayout.scss';
 export default function SingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const navigate = useNavigate();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 

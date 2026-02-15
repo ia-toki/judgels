@@ -1,7 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
@@ -16,7 +13,7 @@ describe('ContestsPage', () => {
   let contests;
 
   const renderComponent = () => {
-    contestActions.getContests.mockReturnValue(() =>
+    contestActions.getContests.mockReturnValue(
       Promise.resolve({
         data: {
           page: contests,
@@ -31,14 +28,10 @@ describe('ContestsPage', () => {
       })
     );
 
-    const store = createStore(state => state, applyMiddleware(thunk));
-
     return render(
-      <Provider store={store}>
-        <TestRouter initialEntries={['/contests']}>
-          <ContestsPage />
-        </TestRouter>
-      </Provider>
+      <TestRouter initialEntries={['/contests']}>
+        <ContestsPage />
+      </TestRouter>
     );
   };
 

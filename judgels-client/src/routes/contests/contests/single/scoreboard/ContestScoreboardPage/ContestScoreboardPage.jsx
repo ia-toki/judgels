@@ -3,7 +3,6 @@ import { Pause, Refresh } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { Fragment, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
@@ -12,9 +11,9 @@ import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectMaybeUserJid } from '../../../../../../modules/session/sessionSelectors';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardTable';
 import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
@@ -31,10 +30,9 @@ const PAGE_SIZE = 250;
 function ContestScoreboardPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const frozen = !!location.search.frozen;
@@ -101,7 +99,7 @@ function ContestScoreboardPage() {
   };
 
   const refreshScoreboard = async nextPage => {
-    const response = await dispatch(
+    const response = await callAction(
       contestScoreboardActions.getScoreboard(contest.jid, frozen, showClosedProblems, nextPage)
     );
     setState(prevState => ({ ...prevState, response: response ? [response] : [] }));
@@ -202,7 +200,7 @@ function ContestScoreboardPage() {
 
   const forceRefreshScoreboard = async () => {
     setState(prevState => ({ ...prevState, isForceRefreshButtonLoading: true }));
-    await dispatch(contestScoreboardActions.refreshScoreboard(contest.jid));
+    await callAction(contestScoreboardActions.refreshScoreboard(contest.jid));
     setState(prevState => ({ ...prevState, isForceRefreshButtonLoading: false }));
   };
 
@@ -248,8 +246,8 @@ function ContestScoreboardPage() {
     const problemAlias = scoreboard.state.problemAliases[problemIndex];
 
     const [info, submissionImageUrl] = await Promise.all([
-      dispatch(contestScoreboardActions.getSubmissionInfo(contest.jid, contestantJid, problemJid)),
-      dispatch(contestScoreboardActions.getSubmissionSourceImage(contest.jid, contestantJid, problemJid)),
+      callAction(contestScoreboardActions.getSubmissionInfo(contest.jid, contestantJid, problemJid)),
+      callAction(contestScoreboardActions.getSubmissionSourceImage(contest.jid, contestantJid, problemJid)),
     ]);
     const submissionDialogTitle = `Submission #${info.id} by ${info.profile.username} for problem ${problemAlias}`;
     setState(prevState => ({ ...prevState, submissionImageUrl, submissionDialogTitle }));

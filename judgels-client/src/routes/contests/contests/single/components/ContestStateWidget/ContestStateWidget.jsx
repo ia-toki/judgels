@@ -3,24 +3,23 @@ import { InfoSign, Time } from '@blueprintjs/icons';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 
 import * as contestActions from '../../../modules/contestActions';
 
 // TODO(fushar): unit tests
 export default function ContestStateWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   const contestState = webConfig.state;
@@ -187,7 +186,7 @@ export default function ContestStateWidget() {
 
   const startVirtualContest = async () => {
     setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true }));
-    await dispatch(contestActions.startVirtualContest(contest.jid));
+    await callAction(contestActions.startVirtualContest(contest.jid));
     await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] });
     setState(prevState => ({ ...prevState, isVirtualContestButtonLoading: false }));
   };
@@ -195,7 +194,7 @@ export default function ContestStateWidget() {
   const searchProblemSet = async () => {
     if (contestState === ContestState.Finished) {
       if (state.problemSet === undefined) {
-        const problemSet = await dispatch(contestActions.searchProblemSet(contest.jid));
+        const problemSet = await callAction(contestActions.searchProblemSet(contest.jid));
         setState(prevState => ({ ...prevState, problemSet }));
       }
     }

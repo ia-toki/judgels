@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ArchiveCreateDialog } from './ArchiveCreateDialog';
@@ -11,19 +9,13 @@ describe('ArchiveCreateDialog', () => {
   let onCreateArchive;
 
   beforeEach(() => {
-    onCreateArchive = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onCreateArchive = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       onGetArchiveConfig,
       onCreateArchive,
     };
-    render(
-      <Provider store={store}>
-        <ArchiveCreateDialog {...props} />
-      </Provider>
-    );
+    render(<ArchiveCreateDialog {...props} />);
   });
 
   test('create dialog form', async () => {

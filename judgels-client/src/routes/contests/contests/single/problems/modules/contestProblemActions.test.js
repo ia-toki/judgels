@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { ContestErrors } from '../../../../../../modules/api/uriel/contest';
 import { SubmissionError } from '../../../../../../modules/form/submissionError';
@@ -9,15 +7,8 @@ import { nockUriel } from '../../../../../../utils/nock';
 import * as contestProblemActions from './contestProblemActions';
 
 const contestJid = 'contest-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('contestProblemActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -30,7 +21,7 @@ describe('contestProblemActions', () => {
     it('calls API', async () => {
       nockUriel().get(`/contests/${contestJid}/problems`).reply(200, responseBody);
 
-      const response = await store.dispatch(contestProblemActions.getProblems(contestJid));
+      const response = await contestProblemActions.getProblems(contestJid);
       expect(response).toEqual(responseBody);
     });
   });
@@ -46,7 +37,7 @@ describe('contestProblemActions', () => {
           .put(`/contests/${contestJid}/problems`, data)
           .reply(200);
 
-        await store.dispatch(contestProblemActions.setProblems(contestJid, data));
+        await contestProblemActions.setProblems(contestJid, data);
       });
     });
 
@@ -61,7 +52,7 @@ describe('contestProblemActions', () => {
             args: { slugs: 'slug2, slug4' },
           });
 
-        await expect(store.dispatch(contestProblemActions.setProblems(contestJid, data))).rejects.toEqual(
+        await expect(contestProblemActions.setProblems(contestJid, data)).rejects.toEqual(
           new SubmissionError({ problems: 'Problems not found/allowed: slug2, slug4' })
         );
       });
@@ -81,9 +72,7 @@ describe('contestProblemActions', () => {
         .query({ language })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestProblemActions.getBundleProblemWorksheet(contestJid, problemAlias, language)
-      );
+      const response = await contestProblemActions.getBundleProblemWorksheet(contestJid, problemAlias, language);
       expect(response).toEqual(responseBody);
     });
   });
@@ -101,9 +90,7 @@ describe('contestProblemActions', () => {
         .query({ language })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestProblemActions.getProgrammingProblemWorksheet(contestJid, problemAlias, language)
-      );
+      const response = await contestProblemActions.getProgrammingProblemWorksheet(contestJid, problemAlias, language);
       expect(response).toEqual(responseBody);
     });
   });

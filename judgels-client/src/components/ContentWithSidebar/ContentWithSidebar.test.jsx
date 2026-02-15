@@ -1,13 +1,9 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 
 import { TestRouter } from '../../test/RouterWrapper';
 import ContentWithSidebar from './ContentWithSidebar';
 
 describe('ContentWithSidebar', () => {
-  let store;
-
   const renderComponent = async (childPath, firstPath) => {
     const items = [
       { path: firstPath || '', title: 'First' },
@@ -17,13 +13,11 @@ describe('ContentWithSidebar', () => {
 
     await act(async () =>
       render(
-        <Provider store={store}>
-          <TestRouter initialEntries={['/parent' + childPath]}>
-            <ContentWithSidebar title="Content with Sidebar" basePath="/parent" items={items}>
-              <div>Content</div>
-            </ContentWithSidebar>
-          </TestRouter>
-        </Provider>
+        <TestRouter initialEntries={['/parent' + childPath]}>
+          <ContentWithSidebar title="Content with Sidebar" basePath="/parent" items={items}>
+            <div>Content</div>
+          </ContentWithSidebar>
+        </TestRouter>
       )
     );
 
@@ -31,10 +25,6 @@ describe('ContentWithSidebar', () => {
       expect(screen.getAllByRole('tab')).toHaveLength(3);
     });
   };
-
-  beforeEach(() => {
-    store = createMockStore()({});
-  });
 
   describe('when the first item has a path', () => {
     it('shows sidebar items with correct texts', async () => {

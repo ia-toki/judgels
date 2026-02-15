@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { callAction } from '../../../../modules/callAction';
 import { CourseChapterEditDialog } from '../CourseChapterEditDialog/CourseChapterEditDialog';
 import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 import { CourseEditDialog } from '../CourseEditDialog/CourseEditDialog';
@@ -11,8 +11,6 @@ import { CoursesTable } from '../CoursesTable/CoursesTable';
 import * as courseActions from '../modules/courseActions';
 
 export default function CoursesPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
@@ -21,7 +19,7 @@ export default function CoursesPage() {
   });
 
   const refreshCourses = async () => {
-    const response = await dispatch(courseActions.getCourses());
+    const response = await callAction(courseActions.getCourses());
     setState(prevState => ({ ...prevState, response }));
   };
 
@@ -64,8 +62,8 @@ export default function CoursesPage() {
       <CourseChapterEditDialog
         isOpen={isEditChaptersDialogOpen}
         course={editedCourse}
-        onGetChapters={chapterJid => dispatch(courseActions.getChapters(chapterJid))}
-        onSetChapters={(courseJid, data) => dispatch(courseActions.setChapters(courseJid, data))}
+        onGetChapters={chapterJid => callAction(courseActions.getChapters(chapterJid))}
+        onSetChapters={(courseJid, data) => callAction(courseActions.setChapters(courseJid, data))}
         onCloseDialog={() => editCourseChapters(undefined)}
       />
     );
@@ -90,7 +88,7 @@ export default function CoursesPage() {
   };
 
   const createCourse = async data => {
-    await dispatch(courseActions.createCourse(data));
+    await callAction(courseActions.createCourse(data));
     await refreshCourses();
   };
 
@@ -103,7 +101,7 @@ export default function CoursesPage() {
   };
 
   const updateCourse = async (courseJid, data) => {
-    await dispatch(courseActions.updateCourse(courseJid, data));
+    await callAction(courseActions.updateCourse(courseJid, data));
     editCourse(undefined);
     await refreshCourses();
   };

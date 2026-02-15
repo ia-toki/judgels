@@ -1,9 +1,7 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { queryClient } from '../../../../modules/queryClient';
-import { PutToken, PutUser } from '../../../../modules/session/sessionReducer';
+import { getToken, getUser } from '../../../../modules/session';
 import { nockJophiel } from '../../../../utils/nock';
 
 import * as loginActions from './loginActions';
@@ -15,15 +13,8 @@ const userJid = 'userJid';
 const token = 'token123';
 const user = { jid: userJid, username: usernameOrEmail, email: 'email' };
 const config = { role: {} };
-const mockStore = configureMockStore([thunk]);
 
 describe('loginActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
     queryClient.clear();
@@ -48,9 +39,9 @@ describe('loginActions', () => {
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, config);
 
-        await store.dispatch(loginActions.logIn(usernameOrEmail, password));
-        expect(store.getActions()).toContainEqual(PutToken(token));
-        expect(store.getActions()).toContainEqual(PutUser(user));
+        await loginActions.logIn(usernameOrEmail, password);
+        expect(getToken()).toBe(token);
+        expect(getUser()).toEqual(user);
         expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
@@ -59,7 +50,7 @@ describe('loginActions', () => {
       it('throws a more descriptive error', async () => {
         nockJophiel().post(`/session/login`, { usernameOrEmail, password }).reply(403);
 
-        await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
+        await expect(loginActions.logIn(usernameOrEmail, password)).rejects.toEqual(
           new Error('Invalid username/password.')
         );
       });
@@ -71,7 +62,7 @@ describe('loginActions', () => {
           .post(`/session/login`, { usernameOrEmail, password })
           .reply(403, { message: 'Jophiel:UserMaxConcurrentSessionsExceeded' });
 
-        await expect(store.dispatch(loginActions.logIn(usernameOrEmail, password))).rejects.toEqual(
+        await expect(loginActions.logIn(usernameOrEmail, password)).rejects.toEqual(
           new Error('Login failed because you are trying to log in from too many places at once.')
         );
       });

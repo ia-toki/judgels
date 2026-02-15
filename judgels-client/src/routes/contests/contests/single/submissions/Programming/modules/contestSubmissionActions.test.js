@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { NotFoundError } from '../../../../../../../modules/api/error';
@@ -23,13 +21,9 @@ const username = 'username';
 const problemJid = 'problem-jid';
 const problemAlias = 'problem-alias';
 const submissionId = 2;
-const mockStore = configureMockStore([thunk]);
 
 describe('contestSubmissionProgrammingActions', () => {
-  let store;
-
   beforeEach(() => {
-    store = mockStore({});
     mockPush.mockClear();
     mockReplace.mockClear();
   });
@@ -50,9 +44,7 @@ describe('contestSubmissionProgrammingActions', () => {
         .query({ contestJid, username, problemAlias, page })
         .reply(200, responseBody);
 
-      const response = await store.dispatch(
-        contestSubmissionActions.getSubmissions(contestJid, username, problemAlias, page)
-      );
+      const response = await contestSubmissionActions.getSubmissions(contestJid, username, problemAlias, page);
       expect(response).toEqual(responseBody);
     });
   });
@@ -75,9 +67,7 @@ describe('contestSubmissionProgrammingActions', () => {
           .query({ language })
           .reply(200, responseBody);
 
-        const response = await store.dispatch(
-          contestSubmissionActions.getSubmissionWithSource(contestJid, submissionId, language)
-        );
+        const response = await contestSubmissionActions.getSubmissionWithSource(contestJid, submissionId, language);
         expect(response).toEqual(responseBody);
       });
     });
@@ -98,7 +88,7 @@ describe('contestSubmissionProgrammingActions', () => {
           .reply(200, responseBody);
 
         await expect(
-          store.dispatch(contestSubmissionActions.getSubmissionWithSource(contestJid, submissionId, language))
+          contestSubmissionActions.getSubmissionWithSource(contestJid, submissionId, language)
         ).rejects.toBeInstanceOf(NotFoundError);
       });
     });
@@ -119,7 +109,7 @@ describe('contestSubmissionProgrammingActions', () => {
     it('calls API', async () => {
       nockUriel().post(`/contests/submissions/programming`).reply(200);
 
-      await store.dispatch(contestSubmissionActions.createSubmission(contestJid, contestSlug, problemJid, data));
+      await contestSubmissionActions.createSubmission(contestJid, contestSlug, problemJid, data);
       expect(mockPush).toHaveBeenCalledWith(`/contests/contest-a/submissions`);
     });
   });

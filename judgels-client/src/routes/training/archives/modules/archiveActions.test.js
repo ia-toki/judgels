@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import { APP_CONFIG } from '../../../../conf';
 import { ArchiveErrors } from '../../../../modules/api/jerahmeel/archive';
@@ -9,15 +7,8 @@ import { SubmissionError } from '../../../../modules/form/submissionError';
 import * as archiveActions from './archiveActions';
 
 const archiveJid = 'archive-jid';
-const mockStore = configureMockStore([thunk]);
 
 describe('archiveActions', () => {
-  let store;
-
-  beforeEach(() => {
-    store = mockStore({});
-  });
-
   afterEach(function () {
     nock.cleanAll();
   });
@@ -34,7 +25,7 @@ describe('archiveActions', () => {
           .post(`/archives`, params)
           .reply(200);
 
-        await store.dispatch(archiveActions.createArchive(params));
+        await archiveActions.createArchive(params);
       });
     });
 
@@ -47,7 +38,7 @@ describe('archiveActions', () => {
           .post(`/archives`, params)
           .reply(400, { message: ArchiveErrors.SlugAlreadyExists });
 
-        await expect(store.dispatch(archiveActions.createArchive(params))).rejects.toEqual(
+        await expect(archiveActions.createArchive(params)).rejects.toEqual(
           new SubmissionError({ slug: 'Slug already exists' })
         );
       });
@@ -66,7 +57,7 @@ describe('archiveActions', () => {
           .post(`/archives/${archiveJid}`, params)
           .reply(200);
 
-        await store.dispatch(archiveActions.updateArchive(archiveJid, params));
+        await archiveActions.updateArchive(archiveJid, params);
       });
     });
 
@@ -82,7 +73,7 @@ describe('archiveActions', () => {
             .post(`/archives/${archiveJid}`, params)
             .reply(200);
 
-          await store.dispatch(archiveActions.updateArchive(archiveJid, params));
+          await archiveActions.updateArchive(archiveJid, params);
         });
       });
 
@@ -95,7 +86,7 @@ describe('archiveActions', () => {
             .post(`/archives/${archiveJid}`, params)
             .reply(400, { message: ArchiveErrors.SlugAlreadyExists });
 
-          await expect(store.dispatch(archiveActions.updateArchive(archiveJid, params))).rejects.toEqual(
+          await expect(archiveActions.updateArchive(archiveJid, params)).rejects.toEqual(
             new SubmissionError({ slug: 'Slug already exists' })
           );
         });
@@ -114,7 +105,7 @@ describe('archiveActions', () => {
         .get(`/archives`)
         .reply(200, responseBody);
 
-      const response = await store.dispatch(archiveActions.getArchives());
+      const response = await archiveActions.getArchives();
       expect(response).toEqual(responseBody);
     });
   });

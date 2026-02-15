@@ -2,15 +2,15 @@ import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
+import { callAction } from '../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
@@ -19,8 +19,7 @@ import './ProblemEditorialDialog.scss';
 
 export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const { editorialLanguage } = useWebPrefs();
@@ -33,7 +32,7 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   const loadEditorial = async () => {
     setState(prevState => ({ ...prevState, response: undefined }));
 
-    const response = await dispatch(
+    const response = await callAction(
       problemSetProblemActions.getProblemEditorial(problemSet.jid, problemAlias, editorialLanguage)
     );
 

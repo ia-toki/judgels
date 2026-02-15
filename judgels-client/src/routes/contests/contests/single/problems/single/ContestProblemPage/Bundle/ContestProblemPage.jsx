@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -17,8 +17,7 @@ import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { statementLanguage } = useWebPrefs();
   const [state, setState] = useState({
@@ -35,11 +34,13 @@ export default function ContestProblemPage() {
       worksheet: undefined,
     }));
 
-    const { defaultLanguage, languages, problem, worksheet } = await dispatch(
+    const { defaultLanguage, languages, problem, worksheet } = await callAction(
       contestProblemActions.getBundleProblemWorksheet(contest.jid, problemAlias, statementLanguage)
     );
 
-    const latestSubmissions = await dispatch(contestSubmissionActions.getLatestSubmissions(contest.jid, problem.alias));
+    const latestSubmissions = await callAction(
+      contestSubmissionActions.getLatestSubmissions(contest.jid, problem.alias)
+    );
 
     setState({
       latestSubmissions,
@@ -67,7 +68,7 @@ export default function ContestProblemPage() {
 
   const onCreateSubmission = async (itemJid, answer) => {
     const problem = state.problem;
-    return await dispatch(
+    return await callAction(
       contestSubmissionActions.createItemSubmission(contest.jid, problem.problemJid, itemJid, answer)
     );
   };

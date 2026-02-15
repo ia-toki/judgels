@@ -1,6 +1,5 @@
 import { useLocation } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
@@ -8,6 +7,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemType, getProblemName } from '../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../modules/callAction';
 
 import * as problemActions from '../modules/problemActions';
 
@@ -23,7 +23,6 @@ const parseTags = queryTags => {
 
 export default function ProblemsPage() {
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const tags = parseTags(location.search.tags);
 
@@ -98,7 +97,7 @@ export default function ProblemsPage() {
   };
 
   const refreshProblems = async page => {
-    const response = await dispatch(problemActions.getProblems(tags, page));
+    const response = await callAction(problemActions.getProblems(tags, page));
     setState({ response });
     return response.data;
   };

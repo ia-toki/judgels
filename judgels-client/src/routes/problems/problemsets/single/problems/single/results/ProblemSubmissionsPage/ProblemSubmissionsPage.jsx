@@ -3,7 +3,6 @@ import { Refresh, Search } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -13,11 +12,12 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { selectMaybeUserJid, selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 
 import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
@@ -29,9 +29,8 @@ const PAGE_SIZE = 20;
 export default function ProblemSubmissionsPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
@@ -123,7 +122,7 @@ export default function ProblemSubmissionsPage() {
   };
 
   const refreshSubmissions = async page => {
-    const response = await dispatch(
+    const response = await callAction(
       problemSetSubmissionActions.getSubmissions(problemSet.jid, undefined, problem.alias, page)
     );
     setState({ response });
@@ -136,13 +135,13 @@ export default function ProblemSubmissionsPage() {
   };
 
   const onRegrade = async submissionJid => {
-    await dispatch(problemSetSubmissionActions.regradeSubmission(submissionJid));
+    await callAction(problemSetSubmissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await dispatch(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, undefined, problem.problemJid));
+      await callAction(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, undefined, problem.problemJid));
       await refreshSubmissions(location.search.page);
     }
   };

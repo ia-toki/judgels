@@ -1,9 +1,7 @@
 import { userAPI } from '../../../modules/api/jophiel/user';
-import { selectToken } from '../../../modules/session/sessionSelectors';
+import { getToken } from '../../../modules/session';
 
-export function getUser(userJid) {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await userAPI.getUser(token, userJid);
-  };
+export async function getUser(userJid) {
+  const token = getToken();
+  return await userAPI.getUser(token, userJid);
 }

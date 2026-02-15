@@ -2,17 +2,17 @@ import { ChevronLeft } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { callAction } from '../../../../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 
@@ -20,8 +20,7 @@ import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSu
 
 export default function ChapterProblemSubmissionPage() {
   const { courseSlug, chapterAlias, problemAlias, submissionId } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const { statementLanguage } = useWebPrefs();
@@ -57,7 +56,7 @@ export default function ChapterProblemSubmissionPage() {
   };
 
   const refreshSubmission = async () => {
-    const { data, profile, problemName, containerName } = await dispatch(
+    const { data, profile, problemName, containerName } = await callAction(
       chapterProblemSubmissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
     );
     document.title = createDocumentTitle(`Submission #${data.submission.id}`);

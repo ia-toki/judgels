@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
@@ -10,9 +8,7 @@ describe('ContestClarificationCreateDialog', () => {
   let onCreateClarification;
 
   beforeEach(() => {
-    onCreateClarification = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = createMockStore()({});
+    onCreateClarification = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -22,11 +18,7 @@ describe('ContestClarificationCreateDialog', () => {
       statementLanguage: 'en',
       onCreateClarification,
     };
-    render(
-      <Provider store={store}>
-        <ContestClarificationCreateDialog {...props} />
-      </Provider>
-    );
+    render(<ContestClarificationCreateDialog {...props} />);
   });
 
   test('form', async () => {

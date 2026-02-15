@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import createMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
@@ -10,9 +8,7 @@ describe('ContestClarificationAnswerBox', () => {
   let onAnswerClarification;
 
   beforeEach(() => {
-    onAnswerClarification = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = createMockStore()({});
+    onAnswerClarification = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       contest: { jid: 'contestJid' },
@@ -24,11 +20,7 @@ describe('ContestClarificationAnswerBox', () => {
       },
       onAnswerClarification,
     };
-    render(
-      <Provider store={store}>
-        <ContestClarificationAnswerBox {...props} />
-      </Provider>
-    );
+    render(<ContestClarificationAnswerBox {...props} />);
   });
 
   test('form', async () => {

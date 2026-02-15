@@ -1,7 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ChapterLessonEditDialog } from './ChapterLessonEditDialog';
@@ -31,9 +29,7 @@ describe('ChapterLessonEditDialog', () => {
 
   beforeEach(async () => {
     onGetLessons = vi.fn().mockReturnValue(Promise.resolve({ data: lessons, lessonsMap }));
-    onSetLessons = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onSetLessons = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       isOpen: true,
@@ -42,13 +38,7 @@ describe('ChapterLessonEditDialog', () => {
       onGetLessons,
       onSetLessons,
     };
-    await act(async () =>
-      render(
-        <Provider store={store}>
-          <ChapterLessonEditDialog {...props} />
-        </Provider>
-      )
-    );
+    await act(async () => render(<ChapterLessonEditDialog {...props} />));
   });
 
   test('edit lessons dialog form', async () => {

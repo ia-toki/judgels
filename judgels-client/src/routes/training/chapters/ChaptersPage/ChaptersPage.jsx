@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { callAction } from '../../../../modules/callAction';
 import { ChapterCreateDialog } from '../ChapterCreateDialog/ChapterCreateDialog';
 import { ChapterEditDialog } from '../ChapterEditDialog/ChapterEditDialog';
 import { ChapterLessonEditDialog } from '../ChapterLessonEditDialog/ChapterLessonEditDialog';
@@ -12,8 +12,6 @@ import { ChaptersTable } from '../ChaptersTable/ChaptersTable';
 import * as chapterActions from '../modules/chapterActions';
 
 export default function ChaptersPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
     isEditDialogOpen: false,
@@ -23,7 +21,7 @@ export default function ChaptersPage() {
   });
 
   const refreshChapters = async () => {
-    const response = await dispatch(chapterActions.getChapters());
+    const response = await callAction(chapterActions.getChapters());
     setState(prevState => ({ ...prevState, response }));
   };
 
@@ -67,8 +65,8 @@ export default function ChaptersPage() {
       <ChapterLessonEditDialog
         isOpen={isEditLessonsDialogOpen}
         chapter={editedChapter}
-        onGetLessons={chapterJid => dispatch(chapterActions.getLessons(chapterJid))}
-        onSetLessons={(chapterJid, data) => dispatch(chapterActions.setLessons(chapterJid, data))}
+        onGetLessons={chapterJid => callAction(chapterActions.getLessons(chapterJid))}
+        onSetLessons={(chapterJid, data) => callAction(chapterActions.setLessons(chapterJid, data))}
         onCloseDialog={() => editChapterLessons(undefined)}
       />
     );
@@ -80,8 +78,8 @@ export default function ChaptersPage() {
       <ChapterProblemEditDialog
         isOpen={isEditProblemsDialogOpen}
         chapter={editedChapter}
-        onGetProblems={chapterJid => dispatch(chapterActions.getProblems(chapterJid))}
-        onSetProblems={(chapterJid, data) => dispatch(chapterActions.setProblems(chapterJid, data))}
+        onGetProblems={chapterJid => callAction(chapterActions.getProblems(chapterJid))}
+        onSetProblems={(chapterJid, data) => callAction(chapterActions.setProblems(chapterJid, data))}
         onCloseDialog={() => editChapterProblems(undefined)}
       />
     );
@@ -113,7 +111,7 @@ export default function ChaptersPage() {
   };
 
   const createChapter = async data => {
-    await dispatch(chapterActions.createChapter(data));
+    await callAction(chapterActions.createChapter(data));
     await refreshChapters();
   };
 
@@ -126,7 +124,7 @@ export default function ChaptersPage() {
   };
 
   const updateChapter = async (chapterJid, data) => {
-    await dispatch(chapterActions.updateChapter(chapterJid, data));
+    await callAction(chapterActions.updateChapter(chapterJid, data));
     editChapter(undefined);
     await refreshChapters();
   };

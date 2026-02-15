@@ -3,7 +3,6 @@ import { Refresh, Search } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
@@ -13,8 +12,9 @@ import { FormattedAnswer } from '../../../../../../../components/SubmissionDetai
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
@@ -26,9 +26,8 @@ const PAGE_SIZE = 20;
 function ContestSubmissionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const username = location.search.username;
@@ -117,7 +116,9 @@ function ContestSubmissionsPage() {
   };
 
   const refreshSubmissions = async page => {
-    const response = await dispatch(contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page));
+    const response = await callAction(
+      contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page)
+    );
     setState({ response, isFilterLoading: false });
     return response;
   };
@@ -129,7 +130,7 @@ function ContestSubmissionsPage() {
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
+      await callAction(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
       await refreshSubmissions(location.search.page);
     }
   };

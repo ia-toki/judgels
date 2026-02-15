@@ -1,9 +1,7 @@
 import { archiveAPI } from '../../../../modules/api/jerahmeel/archive';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { getToken } from '../../../../modules/session';
 
-export function getArchives() {
-  return async (dispatch, getState) => {
-    const token = selectToken(getState());
-    return await archiveAPI.getArchives(token);
-  };
+export async function getArchives() {
+  const token = getToken();
+  return await archiveAPI.getArchives(token);
 }

@@ -1,16 +1,16 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
@@ -19,11 +19,10 @@ import * as problemSetProblemActions from '../../../modules/problemSetProblemAct
 
 export default function ProblemStatementPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -32,7 +31,7 @@ export default function ProblemStatementPage() {
   const loadWorksheet = async () => {
     setState({ response: undefined });
 
-    const response = await dispatch(
+    const response = await callAction(
       problemSetProblemActions.getProblemWorksheet(problemSet.jid, problem.alias, statementLanguage)
     );
 

@@ -2,10 +2,10 @@ import { Radio, RadioGroup } from '@blueprintjs/core';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { sendGAEvent } from '../../../../ga';
+import { callAction } from '../../../../modules/callAction';
 
 import * as archiveActions from '../modules/archiveActions';
 
@@ -14,7 +14,6 @@ import './ProblemSetArchiveFilter.scss';
 export default function ProblemSetArchiveFilter() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const archiveSlug = location.search.archive || '';
 
@@ -24,7 +23,7 @@ export default function ProblemSetArchiveFilter() {
   });
 
   const loadArchives = async () => {
-    const response = await dispatch(archiveActions.getArchives());
+    const response = await callAction(archiveActions.getArchives());
     setState(prevState => ({ ...prevState, response }));
   };
 

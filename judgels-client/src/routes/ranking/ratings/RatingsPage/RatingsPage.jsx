@@ -1,12 +1,12 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
+import { callAction } from '../../../../modules/callAction';
 
 import * as profileActions from '../../../jophiel/modules/profileActions';
 
@@ -17,7 +17,6 @@ const PAGE_SIZE = 50;
 export default function RatingsPage() {
   const [profiles, setProfiles] = useState();
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     profiles: undefined,
@@ -65,7 +64,7 @@ export default function RatingsPage() {
   };
 
   const onChangePage = async nextPage => {
-    const profiles = await dispatch(profileActions.getTopRatedProfiles(nextPage, PAGE_SIZE));
+    const profiles = await callAction(profileActions.getTopRatedProfiles(nextPage, PAGE_SIZE));
     setState({ profiles });
     return profiles.totalCount;
   };

@@ -1,6 +1,4 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { nockJophiel } from '../../../../utils/nock';
@@ -19,13 +17,9 @@ vi.mock('../../../../modules/navigation/navigationRef', () => ({
 
 const emailCode = 'code123';
 const newPassword = 'pass';
-const mockStore = configureMockStore([thunk]);
 
 describe('resetPasswordActions', () => {
-  let store;
-
   beforeEach(() => {
-    store = mockStore({});
     mockPush.mockClear();
     mockReplace.mockClear();
   });
@@ -39,7 +33,7 @@ describe('resetPasswordActions', () => {
       it('succeeds', async () => {
         nockJophiel().post(`/user-account/reset-password`, { emailCode, newPassword }).reply(200);
 
-        await store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword));
+        await resetPasswordActions.resetPassword(emailCode, newPassword);
 
         expect(mockPush).toHaveBeenCalledWith('/login');
       });
@@ -49,7 +43,7 @@ describe('resetPasswordActions', () => {
       it('throws a more descriptive error', async () => {
         nockJophiel().post(`/user-account/reset-password`, { emailCode, newPassword }).reply(400);
 
-        await expect(store.dispatch(resetPasswordActions.resetPassword(emailCode, newPassword))).rejects.toEqual(
+        await expect(resetPasswordActions.resetPassword(emailCode, newPassword)).rejects.toEqual(
           new Error('Invalid code.')
         );
       });

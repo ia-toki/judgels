@@ -1,12 +1,9 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -18,6 +15,10 @@ import * as contestProblemActions from '../modules/contestProblemActions';
 vi.mock('../modules/contestProblemActions');
 
 describe('ContestProblemsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let problems;
   let canManage;
 
@@ -27,7 +28,7 @@ describe('ContestProblemsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestProblemActions.getProblems.mockReturnValue(() =>
+    contestProblemActions.getProblems.mockReturnValue(
       Promise.resolve({
         data: problems,
         problemsMap: {
@@ -57,23 +58,13 @@ describe('ContestProblemsPage', () => {
       })
     );
 
-    const store = createStore(
-      combineReducers({
-        session: sessionReducer,
-      }),
-      applyMiddleware(thunk)
-    );
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter initialEntries={['/contests/contest-slug/problems']} path="/contests/$contestSlug/problems">
-                <ContestProblemsPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter initialEntries={['/contests/contest-slug/problems']} path="/contests/$contestSlug/problems">
+              <ContestProblemsPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

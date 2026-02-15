@@ -1,11 +1,9 @@
 import nock from 'nock';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { SubmissionError } from '../../../modules/form/submissionError';
 import { queryClient } from '../../../modules/queryClient';
-import { PutToken, PutUser } from '../../../modules/session/sessionReducer';
+import { getToken, getUser } from '../../../modules/session';
 import { nockJophiel } from '../../../utils/nock';
 
 import * as googleAuthActions from './googleAuthActions';
@@ -27,13 +25,9 @@ const idToken = 'google-id-token';
 const username = 'user';
 const user = { jid: userJid, username, email: 'email' };
 const config = { role: {} };
-const mockStore = configureMockStore([thunk]);
 
 describe('googleAuthActions', () => {
-  let store;
-
   beforeEach(() => {
-    store = mockStore({});
     mockPush.mockClear();
     mockReplace.mockClear();
   });
@@ -62,9 +56,9 @@ describe('googleAuthActions', () => {
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, config);
 
-        await store.dispatch(googleAuthActions.logIn(idToken));
-        expect(store.getActions()).toContainEqual(PutToken(token));
-        expect(store.getActions()).toContainEqual(PutUser(user));
+        await googleAuthActions.logIn(idToken);
+        expect(getToken()).toBe(token);
+        expect(getUser()).toEqual(user);
         expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
@@ -73,7 +67,7 @@ describe('googleAuthActions', () => {
       it('returns false', async () => {
         nockJophiel().post(`/session/login-google`, { idToken }).reply(403);
 
-        const isLoggedIn = await store.dispatch(googleAuthActions.logIn(idToken));
+        const isLoggedIn = await googleAuthActions.logIn(idToken);
         expect(isLoggedIn).toBeFalsy();
       });
     });
@@ -102,10 +96,10 @@ describe('googleAuthActions', () => {
           .matchHeader('authorization', `Bearer ${token}`)
           .reply(200, config);
 
-        await store.dispatch(googleAuthActions.register({ idToken, username }));
+        await googleAuthActions.register({ idToken, username });
         expect(mockPush).toHaveBeenCalledWith('/registered?source=google');
-        expect(store.getActions()).toContainEqual(PutToken(token));
-        expect(store.getActions()).toContainEqual(PutUser(user));
+        expect(getToken()).toBe(token);
+        expect(getUser()).toEqual(user);
         expect(queryClient.getQueryData(['user-web-config', token])).toEqual(config);
       });
     });
@@ -114,7 +108,7 @@ describe('googleAuthActions', () => {
       it('throws SubmissionError', async () => {
         nockJophiel().get(`/user-search/username-exists/${username}`).reply(200, 'true');
 
-        await expect(store.dispatch(googleAuthActions.register({ idToken, username }))).rejects.toEqual(
+        await expect(googleAuthActions.register({ idToken, username })).rejects.toEqual(
           new SubmissionError({ username: 'Username already exists' })
         );
       });

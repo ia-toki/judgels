@@ -1,11 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -17,29 +14,25 @@ vi.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
   beforeEach(async () => {
+    setSession('token', { jid: 'userJid' });
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    contestActions.getContestDescription.mockReturnValue(() =>
+    contestActions.getContestDescription.mockReturnValue(
       Promise.resolve({
         description: 'current description',
       })
     );
-    contestActions.updateContestDescription.mockReturnValue(() => Promise.resolve({}));
-
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
+    contestActions.updateContestDescription.mockReturnValue(Promise.resolve({}));
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-              <ContestEditDescriptionTab />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <ContestEditDescriptionTab />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

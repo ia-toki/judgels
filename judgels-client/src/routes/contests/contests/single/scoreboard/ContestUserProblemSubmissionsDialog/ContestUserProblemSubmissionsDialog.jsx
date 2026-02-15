@@ -2,13 +2,13 @@ import { Classes, Dialog } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
 import * as contestScoreboardActions from '../modules/contestScoreboardActions';
@@ -17,9 +17,8 @@ import './ContestUserProblemSubmissionsDialog.scss';
 
 export default function ContestUserProblemSubmissionsDialog({ userJid, problemJid, title, onClose }) {
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const dispatch = useDispatch();
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({
@@ -28,7 +27,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
   });
 
   const refreshUserProblemSubmissions = async () => {
-    const response = await dispatch(
+    const response = await callAction(
       contestScoreboardActions.getUserProblemSubmissions(contest.jid, userJid, problemJid)
     );
 
@@ -61,7 +60,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
       },
     }));
 
-    const submissionWithSource = await dispatch(
+    const submissionWithSource = await callAction(
       contestScoreboardActions.getSubmissionWithSource(contest.jid, submissionId, statementLanguage)
     );
 

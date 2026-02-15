@@ -3,7 +3,6 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
@@ -12,11 +11,12 @@ import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/P
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
+import { callAction } from '../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../modules/session';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
@@ -27,8 +27,7 @@ const TOP_STATS_SIZE = 5;
 
 export default function ProblemReportWidget() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
@@ -37,7 +36,7 @@ export default function ProblemReportWidget() {
   });
 
   const loadReport = async () => {
-    const response = await dispatch(problemSetProblemActions.getProblemReport(problemSet.jid, problemAlias));
+    const response = await callAction(problemSetProblemActions.getProblemReport(problemSet.jid, problemAlias));
     setState({ response });
   };
 

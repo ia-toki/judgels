@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
+import { callAction } from '../../../../../../modules/callAction';
 import { userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
@@ -17,7 +17,6 @@ import './ProfileSummaryPage.scss';
 export default function ProfileSummaryPage() {
   const { username } = useParams({ strict: false });
   const { data: userJid } = useSuspenseQuery(userJidByUsernameQueryOptions(username));
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     avatarUrl: undefined,
@@ -27,8 +26,8 @@ export default function ProfileSummaryPage() {
 
   const refreshSummary = async () => {
     const [avatarUrl, basicProfile, userStats] = await Promise.all([
-      dispatch(avatarActions.renderAvatar(userJid)),
-      dispatch(profileActions.getBasicProfile(userJid)),
+      callAction(avatarActions.renderAvatar(userJid)),
+      callAction(profileActions.getBasicProfile(userJid)),
       getUserStats(username),
     ]);
     setState(prevState => ({ ...prevState, avatarUrl, basicProfile, userStats }));
@@ -72,7 +71,7 @@ export default function ProfileSummaryPage() {
     if (!isTLX()) {
       return Promise.resolve(null);
     }
-    return dispatch(profileActions.getUserStats(usernameArg));
+    return callAction(profileActions.getUserStats(usernameArg));
   };
 
   return render();

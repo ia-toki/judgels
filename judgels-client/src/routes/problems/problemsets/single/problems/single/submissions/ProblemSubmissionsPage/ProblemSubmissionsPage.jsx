@@ -1,22 +1,18 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
+import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import {
-  selectMaybeUserJid,
-  selectMaybeUsername,
-  selectToken,
-} from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
 
@@ -27,10 +23,9 @@ const PAGE_SIZE = 20;
 export default function ProblemSubmissionsPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
-  const userJid = useSelector(selectMaybeUserJid);
-  const username = useSelector(selectMaybeUsername);
+  const { token, user } = useSession();
+  const userJid = user?.jid;
+  const username = user?.username;
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
 
@@ -109,7 +104,7 @@ export default function ProblemSubmissionsPage() {
 
   const refreshSubmissions = async page => {
     const usernameFilter = isUserFilterMine() ? username : undefined;
-    const response = await dispatch(
+    const response = await callAction(
       problemSetSubmissionActions.getSubmissions(undefined, usernameFilter, problem.problemJid, page)
     );
     setState({ response });
@@ -117,13 +112,13 @@ export default function ProblemSubmissionsPage() {
   };
 
   const onRegrade = async submissionJid => {
-    await dispatch(problemSetSubmissionActions.regradeSubmission(submissionJid));
+    await callAction(problemSetSubmissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await dispatch(problemSetSubmissionActions.regradeSubmissions(undefined, undefined, problem.problemJid));
+      await callAction(problemSetSubmissionActions.regradeSubmissions(undefined, undefined, problem.problemJid));
       await refreshSubmissions(location.search.page);
     }
   };

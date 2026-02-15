@@ -2,14 +2,14 @@ import { ChevronRight } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../../../../../modules/callAction';
 import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 
@@ -19,8 +19,7 @@ import './ChapterResourcesPage.scss';
 
 export default function ChapterResourcesPage() {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
 
@@ -33,7 +32,7 @@ export default function ChapterResourcesPage() {
       response: undefined,
     });
 
-    const response = await dispatch(chapterResourcesActions.getResources(chapter.jid));
+    const response = await callAction(chapterResourcesActions.getResources(chapter.jid));
     const [lessonsResponse, problemsResponse] = response;
     const { data: lessons, lessonsMap } = lessonsResponse;
     const { data: problems, problemsMap, problemSetProblemPathsMap, problemProgressesMap } = problemsResponse;

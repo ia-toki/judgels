@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { selectUserJid } from '../../../../../modules/session/sessionSelectors';
+import { callAction } from '../../../../../modules/callAction';
+import { useSession } from '../../../../../modules/session';
 import ChangeAvatarForm from './ChangeAvatarForm';
 
 import * as avatarActions from '../../../modules/avatarActions';
@@ -12,8 +12,8 @@ import * as avatarActions from '../../../modules/avatarActions';
 import './ChangeAvatarPanel.scss';
 
 export default function ChangeAvatarPage() {
-  const userJid = useSelector(selectUserJid);
-  const dispatch = useDispatch();
+  const { user } = useSession();
+  const userJid = user.jid;
 
   const [state, setState] = useState({
     avatarExists: undefined,
@@ -22,8 +22,8 @@ export default function ChangeAvatarPage() {
 
   const refreshAvatar = async () => {
     const [avatarExists, avatarUrl] = await Promise.all([
-      dispatch(avatarActions.avatarExists(userJid)),
-      dispatch(avatarActions.renderAvatar(userJid)),
+      callAction(avatarActions.avatarExists(userJid)),
+      callAction(avatarActions.renderAvatar(userJid)),
     ]);
     setState(prevState => ({ ...prevState, avatarExists, avatarUrl }));
   };
@@ -68,12 +68,12 @@ export default function ChangeAvatarPage() {
   };
 
   const deleteAvatar = async () => {
-    await dispatch(avatarActions.deleteAvatar(userJid));
+    await callAction(avatarActions.deleteAvatar(userJid));
     window.location.reload();
   };
 
   const uploadAvatar = async data => {
-    await dispatch(avatarActions.updateAvatar(userJid, data.file));
+    await callAction(avatarActions.updateAvatar(userJid, data.file));
     window.location.reload();
   };
 

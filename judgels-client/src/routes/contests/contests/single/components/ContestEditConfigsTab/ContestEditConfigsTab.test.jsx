@@ -1,11 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDuration } from '../../../../../../utils/duration';
@@ -17,6 +14,10 @@ import * as contestModuleActions from '../../modules/contestModuleActions';
 vi.mock('../../modules/contestModuleActions');
 
 describe('ContestEditConfigsTab', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let config;
 
   const renderComponent = async () => {
@@ -25,20 +26,15 @@ describe('ContestEditConfigsTab', () => {
       slug: 'contest-slug',
     });
 
-    contestModuleActions.getConfig.mockReturnValue(() => Promise.resolve(config));
-    contestModuleActions.upsertConfig.mockReturnValue(() => Promise.resolve({}));
-
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
+    contestModuleActions.getConfig.mockReturnValue(Promise.resolve(config));
+    contestModuleActions.upsertConfig.mockReturnValue(Promise.resolve({}));
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-              <ContestEditConfigsTab />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <ContestEditConfigsTab />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );

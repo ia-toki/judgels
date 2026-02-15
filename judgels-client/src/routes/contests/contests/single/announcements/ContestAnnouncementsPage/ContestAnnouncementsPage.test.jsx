@@ -1,10 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -16,6 +13,10 @@ import * as contestAnnouncementActions from '../modules/contestAnnouncementActio
 vi.mock('../modules/contestAnnouncementActions');
 
 describe('ContestAnnouncementsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let announcements;
   let canSupervise;
   let canManage;
@@ -26,7 +27,7 @@ describe('ContestAnnouncementsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestAnnouncementActions.getAnnouncements.mockReturnValue(() =>
+    contestAnnouncementActions.getAnnouncements.mockReturnValue(
       Promise.resolve({
         data: {
           page: announcements,
@@ -42,21 +43,16 @@ describe('ContestAnnouncementsPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <WebPrefsProvider>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/contests/contest-slug/announcements']}
-                path="/contests/$contestSlug/announcements"
-              >
-                <ContestAnnouncementsPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/announcements']}
+              path="/contests/$contestSlug/announcements"
+            >
+              <ContestAnnouncementsPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

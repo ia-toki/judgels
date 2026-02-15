@@ -1,7 +1,5 @@
 import { contestEditorialAPI } from '../../../../../../modules/api/uriel/contestEditorial';
 
-export function getEditorial(contestJid, language) {
-  return async () => {
-    return await contestEditorialAPI.getEditorial(contestJid, language);
-  };
+export async function getEditorial(contestJid, language) {
+  return await contestEditorialAPI.getEditorial(contestJid, language);
 }

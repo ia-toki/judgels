@@ -1,15 +1,15 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 
@@ -20,9 +20,8 @@ const PAGE_SIZE = 20;
 function ContestSubmissionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { contestSlug } = useParams({ strict: false });
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
 
   const username = location.search.username;
@@ -131,20 +130,22 @@ function ContestSubmissionsPage() {
   };
 
   const refreshSubmissions = async page => {
-    const response = await dispatch(contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page));
+    const response = await callAction(
+      contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page)
+    );
     setState(prevState => ({ ...prevState, response, isFilterLoading: false }));
     return response.data;
   };
 
   const onRegrade = async submissionJid => {
-    await dispatch(contestSubmissionActions.regradeSubmission(submissionJid));
+    await callAction(contestSubmissionActions.regradeSubmission(submissionJid));
     await refreshSubmissions(location.search.page);
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
       setState(prevState => ({ ...prevState, isRegradingAll: true }));
-      await dispatch(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
+      await callAction(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
       setState(prevState => ({ ...prevState, isRegradingAll: false }));
       await refreshSubmissions(location.search.page);
     }

@@ -2,7 +2,6 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
@@ -11,7 +10,7 @@ import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/Sc
 import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../modules/queries/contestWeb';
-import { selectToken } from '../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../modules/session';
 import { createDocumentTitle } from '../../../../utils/title';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
@@ -25,7 +24,7 @@ export default function SingleContestLayout() {
   const { contestSlug } = useParams({ strict: false });
   const location = useLocation();
   const isEditingContest = location.state?.isEditingContest;
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
 

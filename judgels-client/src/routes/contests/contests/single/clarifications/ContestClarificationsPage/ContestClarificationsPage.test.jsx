@@ -1,11 +1,8 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
-import sessionReducer, { PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -17,6 +14,10 @@ import * as contestClarificationActions from '../modules/contestClarificationAct
 vi.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   let clarifications;
   let canCreate;
   let canSupervise;
@@ -27,7 +28,7 @@ describe('ContestClarificationsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestClarificationActions.getClarifications.mockReturnValue(() =>
+    contestClarificationActions.getClarifications.mockReturnValue(
       Promise.resolve({
         data: {
           page: clarifications,
@@ -48,21 +49,16 @@ describe('ContestClarificationsPage', () => {
       })
     );
 
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-
     await act(async () =>
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/contests/contest-slug/clarifications']}
-                path="/contests/$contestSlug/clarifications"
-              >
-                <ContestClarificationsPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/contests/contest-slug/clarifications']}
+              path="/contests/$contestSlug/clarifications"
+            >
+              <ContestClarificationsPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

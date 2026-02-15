@@ -1,7 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -10,6 +9,7 @@ import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetPr
 import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { callAction } from '../../../../../../modules/callAction';
 import { problemSetBySlugQueryOptions } from '../../../../../../modules/queries/problemSet';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
@@ -19,7 +19,6 @@ export default function ProblemSetProblemsPage() {
   const { problemSetSlug } = useParams({ strict: false });
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { statementLanguage } = useWebPrefs();
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     response: undefined,
@@ -28,7 +27,7 @@ export default function ProblemSetProblemsPage() {
   });
 
   const refreshProblems = async () => {
-    const response = await dispatch(problemSetProblemActions.getProblems(problemSet.jid));
+    const response = await callAction(problemSetProblemActions.getProblems(problemSet.jid));
     const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemsMap, statementLanguage);
 
     setState({

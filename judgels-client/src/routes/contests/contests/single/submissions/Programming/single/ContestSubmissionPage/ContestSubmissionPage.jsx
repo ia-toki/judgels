@@ -1,13 +1,13 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { selectToken } from '../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -15,8 +15,7 @@ import * as contestSubmissionActions from '../../modules/contestSubmissionAction
 
 export default function ContestSubmissionPage() {
   const { contestSlug, submissionId } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
   const { statementLanguage } = useWebPrefs();
 
@@ -29,7 +28,7 @@ export default function ContestSubmissionPage() {
   });
 
   const loadSubmission = async () => {
-    const { data, profile, problemName, problemAlias, containerName } = await dispatch(
+    const { data, profile, problemName, problemAlias, containerName } = await callAction(
       contestSubmissionActions.getSubmissionWithSource(contest.jid, +submissionId, statementLanguage)
     );
 
@@ -80,7 +79,7 @@ export default function ContestSubmissionPage() {
 
   const downloadSubmission = () => {
     const { submissionWithSource } = state;
-    dispatch(contestSubmissionActions.downloadSubmission(submissionWithSource.submission.jid));
+    callAction(contestSubmissionActions.downloadSubmission(submissionWithSource.submission.jid));
   };
 
   return render();

@@ -1,7 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
@@ -19,7 +16,7 @@ describe('ChapterResourcesPage', () => {
   let problems;
 
   const renderComponent = async () => {
-    chapterResourceActions.getResources.mockReturnValue(() =>
+    chapterResourceActions.getResources.mockReturnValue(
       Promise.resolve([
         {
           data: lessons,
@@ -63,20 +60,16 @@ describe('ChapterResourcesPage', () => {
       .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    const store = createStore(combineReducers({}), applyMiddleware(thunk));
-
     await act(async () =>
       render(
         <WebPrefsProvider initialPrefs={{ statementLanguage: 'en' }}>
           <QueryClientProviderWrapper>
-            <Provider store={store}>
-              <TestRouter
-                initialEntries={['/courses/courseSlug/chapter/chapter-1']}
-                path="/courses/$courseSlug/chapter/$chapterAlias"
-              >
-                <ChapterResourcesPage />
-              </TestRouter>
-            </Provider>
+            <TestRouter
+              initialEntries={['/courses/courseSlug/chapter/chapter-1']}
+              path="/courses/$courseSlug/chapter/$chapterAlias"
+            >
+              <ChapterResourcesPage />
+            </TestRouter>
           </QueryClientProviderWrapper>
         </WebPrefsProvider>
       )

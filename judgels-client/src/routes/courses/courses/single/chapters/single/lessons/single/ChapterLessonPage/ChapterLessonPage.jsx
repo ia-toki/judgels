@@ -2,18 +2,18 @@ import { ChevronRight } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { callAction } from '../../../../../../../../../modules/callAction';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
 } from '../../../../../../../../../modules/queries/course';
-import { selectToken } from '../../../../../../../../../modules/session/sessionSelectors';
+import { useSession } from '../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
@@ -24,8 +24,7 @@ import './ChapterLessonPage.scss';
 
 export default function ChapterLessonPage() {
   const { courseSlug, chapterAlias, lessonAlias } = useParams({ strict: false });
-  const dispatch = useDispatch();
-  const token = useSelector(selectToken);
+  const { token } = useSession();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
   const {
@@ -38,7 +37,7 @@ export default function ChapterLessonPage() {
   });
 
   const refreshLesson = async () => {
-    const response = await dispatch(
+    const response = await callAction(
       chapterLessonActions.getLessonStatement(chapter.jid, lessonAlias, statementLanguage)
     );
 

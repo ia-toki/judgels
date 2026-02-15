@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { vi } from 'vitest';
 
 import { ChapterCreateDialog } from './ChapterCreateDialog';
@@ -11,19 +9,13 @@ describe('ChapterCreateDialog', () => {
   let onCreateChapter;
 
   beforeEach(async () => {
-    onCreateChapter = vi.fn().mockReturnValue(() => Promise.resolve({}));
-
-    const store = configureMockStore()({});
+    onCreateChapter = vi.fn().mockReturnValue(Promise.resolve({}));
 
     const props = {
       onGetChapterConfig,
       onCreateChapter,
     };
-    render(
-      <Provider store={store}>
-        <ChapterCreateDialog {...props} />
-      </Provider>
-    );
+    render(<ChapterCreateDialog {...props} />);
   });
 
   test('create dialog form', async () => {

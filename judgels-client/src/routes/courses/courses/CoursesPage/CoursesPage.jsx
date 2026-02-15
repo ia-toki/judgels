@@ -1,9 +1,9 @@
 import { Callout, Intent } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { callAction } from '../../../../modules/callAction';
 import { CourseCard } from '../CourseCard/CourseCard';
 
 import * as courseActions from '../modules/courseActions';
@@ -11,14 +11,12 @@ import * as courseActions from '../modules/courseActions';
 import './CoursesPage.scss';
 
 export default function CoursesPage() {
-  const dispatch = useDispatch();
-
   const [state, setState] = useState({
     response: undefined,
   });
 
   const refreshCourses = async () => {
-    const response = await dispatch(courseActions.getCourses());
+    const response = await callAction(courseActions.getCourses());
     setState({ response });
   };
 

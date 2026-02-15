@@ -1,37 +1,24 @@
 import { Link } from '@tanstack/react-router';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
+import { callAction } from '../../../../../modules/callAction';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
 
 import * as contestActions from '../../../../contests/contests/modules/contestActions';
 
-class ActiveContestsWidget extends PureComponent {
-  state = {
-    response: undefined,
-  };
+export default function ActiveContestsWidget() {
+  const [response, setResponse] = useState(undefined);
 
-  async componentDidMount() {
-    const response = await this.props.onGetActiveContests();
-    this.setState({ response });
-  }
+  useEffect(() => {
+    (async () => {
+      const resp = await callAction(contestActions.getActiveContests());
+      setResponse(resp);
+    })();
+  }, []);
 
-  render() {
-    return (
-      <Card title="Active contests" className="active-contests-widget">
-        {this.renderActiveContests()}
-
-        <small>
-          <Link to={'/contests'}>See all contests...</Link>
-        </small>
-      </Card>
-    );
-  }
-
-  renderActiveContests = () => {
-    const { response } = this.state;
+  const renderActiveContests = () => {
     if (!response) {
       return <LoadingActiveContestCard />;
     }
@@ -48,9 +35,14 @@ class ActiveContestsWidget extends PureComponent {
       <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
     ));
   };
-}
 
-const mapDispatchToProps = {
-  onGetActiveContests: contestActions.getActiveContests,
-};
-export default connect(undefined, mapDispatchToProps)(ActiveContestsWidget);
+  return (
+    <Card title="Active contests" className="active-contests-widget">
+      {renderActiveContests()}
+
+      <small>
+        <Link to={'/contests'}>See all contests...</Link>
+      </small>
+    </Card>
+  );
+}

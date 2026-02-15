@@ -1,11 +1,8 @@
 import { act, render, waitFor } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { vi } from 'vitest';
 
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
-import sessionReducer, { PutToken, PutUser } from '../../../../../../modules/session/sessionReducer';
+import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
@@ -16,6 +13,10 @@ import * as contestContestantActions from '../../modules/contestContestantAction
 vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrationCard', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
   const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
@@ -23,20 +24,14 @@ describe('ContestRegistrationCard', () => {
     });
     nockUriel().get('/contests/slug/contest-slug/config').reply(200, {});
 
-    contestContestantActions.getApprovedContestantsCount.mockReturnValue(() => Promise.resolve(10));
-
-    const store = createStore(combineReducers({ session: sessionReducer }), applyMiddleware(thunk));
-    store.dispatch(PutUser({ jid: 'userJid' }));
-    store.dispatch(PutToken('token'));
+    contestContestantActions.getApprovedContestantsCount.mockReturnValue(Promise.resolve(10));
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <Provider store={store}>
-            <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-              <ContestRegistrationCard />
-            </TestRouter>
-          </Provider>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <ContestRegistrationCard />
+          </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
@@ -50,7 +45,7 @@ describe('ContestRegistrationCard', () => {
     ${ContestContestantState.Contestant}               | ${[' Registered']} | ${[]}
   `('text', ({ contestantState, stateText, actionText }) => {
     beforeEach(async () => {
-      contestContestantActions.getMyContestantState.mockReturnValue(() => Promise.resolve(contestantState));
+      contestContestantActions.getMyContestantState.mockReturnValue(Promise.resolve(contestantState));
       await renderComponent();
     });
 
