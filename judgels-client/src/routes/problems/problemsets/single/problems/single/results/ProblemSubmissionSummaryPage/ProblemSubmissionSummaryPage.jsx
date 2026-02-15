@@ -20,10 +20,10 @@ import * as problemSetSubmissionActions from '../modules/problemSetSubmissionAct
 export default function ProblemSubmissionSummaryPage() {
   const { problemSetSlug, problemAlias, username } = useParams({ strict: false });
   const location = useLocation();
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({

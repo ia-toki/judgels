@@ -9,7 +9,6 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../utils/confirmation';
 import { ContestContestantAddDialog } from '../ContestContestantAddDialog/ContestContestantAddDialog';
 import { ContestContestantRemoveDialog } from '../ContestContestantRemoveDialog/ContestContestantRemoveDialog';
@@ -24,8 +23,7 @@ const PAGE_SIZE = 1000;
 
 export default function ContestContestantsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const [state, setState] = useState({
     response: undefined,

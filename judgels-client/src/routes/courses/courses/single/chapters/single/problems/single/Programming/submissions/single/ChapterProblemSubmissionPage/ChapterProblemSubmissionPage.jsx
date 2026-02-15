@@ -12,7 +12,6 @@ import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../../../modules/queries/course';
-import { useSession } from '../../../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 
@@ -20,9 +19,8 @@ import * as chapterProblemSubmissionActions from '../../modules/chapterProblemSu
 
 export default function ChapterProblemSubmissionPage() {
   const { courseSlug, chapterAlias, problemAlias, submissionId } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

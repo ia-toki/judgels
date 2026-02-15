@@ -6,14 +6,12 @@ import { useEffect, useRef } from 'react';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-import { useSession } from '../../../../../../modules/session';
 
 import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
 
 export default function ContestAnnouncementsWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
   const announcementCount = webConfig.announcementCount;
   const prevAnnouncementCountRef = useRef(announcementCount);
 

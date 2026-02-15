@@ -7,15 +7,13 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { allModules } from '../../../../../../modules/api/uriel/contestModule';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
 
 import * as contestModuleActions from '../../modules/contestModuleActions';
 
 export default function ContestEditModulesTab() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const queryClient = useQueryClient();
 
   const [state, setState] = useState({

@@ -10,7 +10,6 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
@@ -19,9 +18,8 @@ import './ProblemEditorialDialog.scss';
 
 export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { editorialLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

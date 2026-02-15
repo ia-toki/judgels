@@ -18,5 +18,5 @@ export async function logOut() {
     }
   }
   clearSession();
-  queryClient.setQueryData(['user-web-config', undefined], { role: {} });
+  queryClient.setQueryData(['user-web-config'], { role: {} });
 }

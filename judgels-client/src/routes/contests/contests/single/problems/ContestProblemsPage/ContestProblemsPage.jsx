@@ -10,7 +10,6 @@ import { getProblemName } from '../../../../../../modules/api/sandalphon/problem
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
@@ -19,8 +18,7 @@ import * as contestProblemActions from '../modules/contestProblemActions';
 
 export default function ContestProblemsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

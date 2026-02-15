@@ -17,8 +17,8 @@ import './ContestRegistrationCard.scss';
 
 export default function ContestRegistrationCard() {
   const { contestSlug } = useParams({ strict: false });
-  const { token, isLoggedIn } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { isLoggedIn } = useSession();
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const queryClient = useQueryClient();
 
   const [state, setState] = useState({

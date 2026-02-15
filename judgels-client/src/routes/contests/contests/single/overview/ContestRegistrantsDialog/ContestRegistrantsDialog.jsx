@@ -9,7 +9,6 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
@@ -17,8 +16,7 @@ import './ContestRegistrantsDialog.scss';
 
 export default function ContestRegistrantsDialog({ onClose }) {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const [state, setState] = useState({
     response: undefined,

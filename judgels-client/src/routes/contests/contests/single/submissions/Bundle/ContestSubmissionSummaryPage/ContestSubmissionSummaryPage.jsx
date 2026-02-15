@@ -7,15 +7,13 @@ import { SubmissionDetails } from '../../../../../../../components/SubmissionDet
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
 
 export default function ContestSubmissionSummaryPage() {
   const { contestSlug, username } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage: language } = useWebPrefs();
 
   const [state, setState] = useState({

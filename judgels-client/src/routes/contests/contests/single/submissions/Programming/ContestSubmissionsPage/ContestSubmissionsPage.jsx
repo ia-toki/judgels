@@ -9,7 +9,6 @@ import { RegradeAllButton } from '../../../../../../../components/RegradeAllButt
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 
@@ -21,8 +20,7 @@ function ContestSubmissionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;

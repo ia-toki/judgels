@@ -27,11 +27,11 @@ export default function ChapterProblemSubmissionsPage() {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
   const username = user?.username;
-  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(token, courseSlug));
-  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(token, course.jid, chapterAlias));
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
   const [state, setState] = useState({
     response: undefined,

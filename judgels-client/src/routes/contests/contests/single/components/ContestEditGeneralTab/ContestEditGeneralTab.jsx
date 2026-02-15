@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
@@ -15,8 +14,7 @@ import * as contestActions from '../../../modules/contestActions';
 
 export default function ContestEditGeneralTab() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const queryClient = useQueryClient();
 
   const [state, setState] = useState({

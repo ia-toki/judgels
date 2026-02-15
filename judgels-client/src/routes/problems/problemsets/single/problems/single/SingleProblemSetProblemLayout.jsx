@@ -11,7 +11,6 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../modules/session';
 import { createDocumentTitle } from '../../../../../../utils/title';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
 
@@ -20,9 +19,8 @@ import './SingleProblemSetProblemLayout.scss';
 export default function SingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const navigate = useNavigate();
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
   useEffect(() => {
     document.title = createDocumentTitle(`${problemSet.name} / ${problemAlias}`);

@@ -7,14 +7,12 @@ import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-import { useSession } from '../../../../../../modules/session';
 
 import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
 
 export default function ContestClarificationsWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
   const clarificationCount = webConfig.clarificationCount;
   const clarificationStatus = webConfig.clarificationStatus;
   const prevClarificationCountRef = useRef(clarificationCount);

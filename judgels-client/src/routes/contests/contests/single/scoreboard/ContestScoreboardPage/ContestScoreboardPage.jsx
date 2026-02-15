@@ -31,9 +31,9 @@ function ContestScoreboardPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { contestSlug } = useParams({ strict: false });
-  const { token, user } = useSession();
+  const { user } = useSession();
   const userJid = user?.jid;
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const frozen = !!location.search.frozen;
   const showClosedProblems = !!location.search.showClosedProblems;

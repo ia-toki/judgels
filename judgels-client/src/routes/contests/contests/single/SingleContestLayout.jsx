@@ -10,7 +10,6 @@ import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/Sc
 import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../modules/queries/contestWeb';
-import { useSession } from '../../../../modules/session';
 import { createDocumentTitle } from '../../../../utils/title';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
@@ -24,9 +23,8 @@ export default function SingleContestLayout() {
   const { contestSlug } = useParams({ strict: false });
   const location = useLocation();
   const isEditingContest = location.state?.isEditingContest;
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
-  const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
 
   useEffect(() => {
     document.title = createDocumentTitle(contest.name);

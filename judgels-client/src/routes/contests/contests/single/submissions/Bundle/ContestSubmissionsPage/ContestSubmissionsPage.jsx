@@ -14,7 +14,6 @@ import { SubmissionFilterWidget } from '../../../../../../../components/Submissi
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 
 import * as contestSubmissionActions from '../modules/contestSubmissionActions';
@@ -27,8 +26,7 @@ function ContestSubmissionsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;

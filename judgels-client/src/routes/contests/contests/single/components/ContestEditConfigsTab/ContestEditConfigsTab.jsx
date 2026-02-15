@@ -8,7 +8,6 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
 import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { useSession } from '../../../../../../modules/session';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
@@ -17,8 +16,7 @@ import * as contestModuleActions from '../../modules/contestModuleActions';
 
 export default function ContestEditConfigsTab() {
   const { contestSlug } = useParams({ strict: false });
-  const { token } = useSession();
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(token, contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
   const [state, setState] = useState({
     config: undefined,

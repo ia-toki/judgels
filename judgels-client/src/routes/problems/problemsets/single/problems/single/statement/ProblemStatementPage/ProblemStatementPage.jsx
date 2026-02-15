@@ -10,7 +10,6 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
@@ -19,9 +18,8 @@ import * as problemSetProblemActions from '../../../modules/problemSetProblemAct
 
 export default function ProblemStatementPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
 
   const [state, setState] = useState({

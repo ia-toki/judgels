@@ -130,8 +130,8 @@ export function UserWidget({ user, profile, items, homeRoute, onRenderAvatar }) 
 }
 
 function UserWidgetContainer({ items, homeRoute }) {
-  const { token, user } = useSession();
-  const { data } = useSuspenseQuery(userWebConfigQueryOptions(token));
+  const { user } = useSession();
+  const { data } = useSuspenseQuery(userWebConfigQueryOptions());
 
   return (
     <UserWidget

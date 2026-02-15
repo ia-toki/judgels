@@ -16,7 +16,6 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
-import { useSession } from '../../../../../../../modules/session';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 
 import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
@@ -27,9 +26,8 @@ const TOP_STATS_SIZE = 5;
 
 export default function ProblemReportWidget() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const { token } = useSession();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
-  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(token, problemSet.jid, problemAlias));
+  const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
   const [state, setState] = useState({
     response: undefined,
