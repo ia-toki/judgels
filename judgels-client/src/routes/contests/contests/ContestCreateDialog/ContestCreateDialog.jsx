@@ -1,11 +1,25 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { createContestMutationOptions } from '../../../../modules/queries/contest';
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
-export function ContestCreateDialog({ onCreateContest }) {
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function ContestCreateDialog() {
+  const navigate = useNavigate();
   const [state, setState] = useState({ isDialogOpen: false });
+
+  const createContestMutation = useMutation({
+    ...createContestMutationOptions,
+    onSuccess: (_data, { slug }) => {
+      navigate({ to: `/contests/${slug}`, state: { isEditingContest: true } });
+      toastActions.showSuccessToast('Contest created.');
+    },
+  });
 
   const render = () => {
     return (
@@ -58,7 +72,7 @@ export function ContestCreateDialog({ onCreateContest }) {
   );
 
   const createContest = async data => {
-    await onCreateContest(data);
+    await createContestMutation.mutateAsync(data);
     setState(prevState => ({ ...prevState, isDialogOpen: false }));
   };
 
