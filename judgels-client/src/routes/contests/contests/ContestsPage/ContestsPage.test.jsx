@@ -1,37 +1,38 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestRole } from '../../../../modules/api/uriel/contestWeb';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../utils/nock';
 import ContestsPage from './ContestsPage';
-
-import * as contestActions from '../modules/contestActions';
-
-vi.mock('../modules/contestActions');
 
 describe('ContestsPage', () => {
   let contests;
 
   const renderComponent = () => {
-    contestActions.getContests.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: contests,
+          totalCount: contests.length,
         },
         rolesMap: {
-          contestJid1: ContestRole.Contestant,
-          contestJid2: ContestRole.None,
+          contestJid1: 'CONTESTANT',
+          contestJid2: 'NONE',
         },
         config: {
           canAdminister: false,
         },
-      })
-    );
+      });
 
     return render(
-      <TestRouter initialEntries={['/contests']}>
-        <ContestsPage />
-      </TestRouter>
+      <QueryClientProviderWrapper>
+        <TestRouter initialEntries={['/contests']}>
+          <ContestsPage />
+        </TestRouter>
+      </QueryClientProviderWrapper>
     );
   };
 
@@ -43,8 +44,8 @@ describe('ContestsPage', () => {
       });
     });
 
-    it('shows placeholder text and no contests', () => {
-      expect(screen.getByText('No contests.')).toBeInTheDocument();
+    it('shows placeholder text and no contests', async () => {
+      expect(await screen.findByText('No contests.')).toBeInTheDocument();
       expect(screen.queryByRole('link', { name: /contest/i })).not.toBeInTheDocument();
     });
   });
@@ -68,8 +69,8 @@ describe('ContestsPage', () => {
       });
     });
 
-    it('shows the contests', () => {
-      const links = screen.getAllByRole('link');
+    it('shows the contests', async () => {
+      const links = await screen.findAllByRole('link');
       expect(links).toHaveLength(2);
       expect(links[0]).toHaveTextContent('Contest 1CONTESTANT');
       expect(links[0]).toHaveAttribute('href', '/contests/contest-1');

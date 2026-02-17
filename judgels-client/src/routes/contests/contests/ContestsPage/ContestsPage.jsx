@@ -1,15 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import Pagination from '../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
-import { callAction } from '../../../../modules/callAction';
+import { contestsQueryOptions } from '../../../../modules/queries/contest';
 import { ContestCard } from '../ContestCard/ContestCard';
 import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
-
-import * as contestActions from '../modules/contestActions';
 
 const PAGE_SIZE = 20;
 
@@ -17,27 +15,9 @@ export default function ContestsPage() {
   const location = useLocation();
 
   const name = location.search.name;
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isFilterLoading: false,
-  });
-
-  useEffect(() => {
-    if (name) {
-      setState(prevState => ({ ...prevState, isFilterLoading: true }));
-    }
-  }, [name]);
-
-  const render = () => {
-    return (
-      <Card title="Contests">
-        {renderHeader()}
-        {renderContests()}
-        {renderPagination()}
-      </Card>
-    );
-  };
+  const { data: response, isLoading } = useQuery(contestsQueryOptions({ name, page }));
 
   const renderHeader = () => {
     return (
@@ -65,14 +45,11 @@ export default function ContestsPage() {
 
   const renderFilter = () => {
     return (
-      <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={state.isFilterLoading} />
+      <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={isLoading && !!name} />
     );
   };
 
-  const createContest = data => callAction(contestActions.createContest(data));
-
   const renderCreateDialog = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -80,11 +57,10 @@ export default function ContestsPage() {
     if (!config.canAdminister) {
       return null;
     }
-    return <ContestCreateDialog onCreateContest={createContest} />;
+    return <ContestCreateDialog />;
   };
 
   const renderContests = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -109,21 +85,21 @@ export default function ContestsPage() {
   };
 
   const renderPagination = () => {
-    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={name || ''} />;
-  };
-
-  const onChangePage = async nextPage => {
-    if (state.response) {
-      setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
+    if (!response) {
+      return null;
     }
-    const response = await callAction(contestActions.getContests(name, nextPage));
-    setState({ response, isFilterLoading: false });
-    return response.data.totalCount;
+    return <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />;
   };
 
   const searchBoxUpdateQueries = (name, queries) => {
     return { ...queries, page: undefined, name };
   };
 
-  return render();
+  return (
+    <Card title="Contests">
+      {renderHeader()}
+      {renderContests()}
+      {renderPagination()}
+    </Card>
+  );
 }

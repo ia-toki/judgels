@@ -142,12 +142,14 @@ describe('ContestProblemsPage', () => {
         await renderComponent();
       });
 
-      it('shows the problems', () => {
-        const cards = document.querySelectorAll('div.contest-problem-card');
-        expect([...cards].map(card => card.textContent)).toEqual([
-          'B. Problem B [100 points]8 submissions left',
-          'A. Problem ACLOSED',
-        ]);
+      it('shows the problems', async () => {
+        await waitFor(() => {
+          const cards = document.querySelectorAll('div.contest-problem-card');
+          expect([...cards].map(card => card.textContent)).toEqual([
+            'B. Problem B [100 points]8 submissions left',
+            'A. Problem ACLOSED',
+          ]);
+        });
       });
     });
   });

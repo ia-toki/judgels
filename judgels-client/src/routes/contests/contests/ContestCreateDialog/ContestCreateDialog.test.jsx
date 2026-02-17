@@ -1,19 +1,21 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../utils/nock';
 import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
-  let onCreateContest;
-
   beforeEach(() => {
-    onCreateContest = vi.fn().mockReturnValue(Promise.resolve({}));
-
-    const props = {
-      onCreateContest,
-    };
-    render(<ContestCreateDialog {...props} />);
+    render(
+      <QueryClientProviderWrapper>
+        <TestRouter>
+          <ContestCreateDialog />
+        </TestRouter>
+      </QueryClientProviderWrapper>
+    );
   });
 
   test('form', async () => {
@@ -25,9 +27,13 @@ describe('ContestCreateDialog', () => {
     const slug = screen.getByRole('textbox');
     await user.type(slug, 'new-contest');
 
-    const submitButton = screen.getByRole('button', { name: /create/i });
-    await user.click(submitButton);
+    nockUriel().post('/contests', { slug: 'new-contest' }).reply(200);
 
-    expect(onCreateContest).toHaveBeenCalledWith({ slug: 'new-contest' });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    await act(async () => {
+      await user.click(submitButton);
+    });
+
+    expect(nock.isDone()).toBe(true);
   });
 });
