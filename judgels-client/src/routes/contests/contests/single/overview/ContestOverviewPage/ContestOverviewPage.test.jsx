@@ -1,5 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { act, render, screen } from '@testing-library/react';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -7,10 +6,8 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestOverviewPage from './ContestOverviewPage';
 
-import * as contestActions from '../../../modules/contestActions';
 import * as contestContestantActions from '../../modules/contestContestantActions';
 
-vi.mock('../../../modules/contestActions');
 vi.mock('../../modules/contestContestantActions');
 
 describe('ContestOverviewPage', () => {
@@ -24,11 +21,9 @@ describe('ContestOverviewPage', () => {
       slug: 'contest-slug',
     });
 
-    contestActions.getContestDescription.mockReturnValue(
-      Promise.resolve({
-        description: 'Contest description',
-      })
-    );
+    nockUriel().get('/contests/contestJid/description').reply(200, {
+      description: 'Contest description',
+    });
 
     contestContestantActions.getMyContestantState.mockReturnValue(Promise.resolve('NONE'));
     contestContestantActions.getApprovedContestantsCount.mockReturnValue(Promise.resolve(0));

@@ -30,3 +30,9 @@ export const contestBySlugQueryOptions = contestSlug =>
     queryKey: ['contest-by-slug', contestSlug],
     queryFn: () => contestAPI.getContestBySlug(getToken(), contestSlug),
   });
+
+export const contestDescriptionQueryOptions = contestJid =>
+  queryOptions({
+    queryKey: ['contest', contestJid, 'description'],
+    queryFn: () => contestAPI.getContestDescription(getToken(), contestJid),
+  });
