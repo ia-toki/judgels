@@ -1,53 +1,24 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { callAction } from '../../../../../../modules/callAction';
-import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestBySlugQueryOptions, contestDescriptionQueryOptions } from '../../../../../../modules/queries/contest';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-
-import * as contestActions from '../../../modules/contestActions';
 
 import './ContestOverviewPage.scss';
 
 export default function ContestOverviewPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const loadDescription = async () => {
-    const response = await callAction(contestActions.getContestDescription(contest.jid));
-    setState({
-      response,
-    });
-  };
-
-  useEffect(() => {
-    loadDescription();
-  }, []);
-
-  const render = () => {
-    return (
-      <>
-        {renderRegistration()}
-        {renderDescription()}
-      </>
-    );
-  };
+  const { data: response } = useQuery(contestDescriptionQueryOptions(contest.jid));
 
   const renderRegistration = () => {
     return <ContestRegistrationCard />;
   };
 
   const renderDescription = () => {
-    const { response } = state;
-
     if (response === undefined) {
       return <LoadingState />;
     }
@@ -64,5 +35,10 @@ export default function ContestOverviewPage() {
     );
   };
 
-  return render();
+  return (
+    <>
+      {renderRegistration()}
+      {renderDescription()}
+    </>
+  );
 }
