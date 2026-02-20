@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
@@ -8,13 +8,15 @@ import { nockUriel } from '../../../../utils/nock';
 import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
-  beforeEach(() => {
-    render(
-      <QueryClientProviderWrapper>
-        <TestRouter>
-          <ContestCreateDialog />
-        </TestRouter>
-      </QueryClientProviderWrapper>
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestCreateDialog />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
     );
   });
 
@@ -30,10 +32,8 @@ describe('ContestCreateDialog', () => {
     nockUriel().post('/contests', { slug: 'new-contest' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /create/i });
-    await act(async () => {
-      await user.click(submitButton);
-    });
+    await user.click(submitButton);
 
-    expect(nock.isDone()).toBe(true);
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });
