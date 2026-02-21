@@ -1,45 +1,29 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../components/Pagination/Pagination';
-import { callAction } from '../../../../../../modules/callAction';
+import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestManagersQueryOptions } from '../../../../../../modules/queries/contestManager';
 import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
 import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
-
-import * as contestManagerActions from '../modules/contestManagerActions';
 
 import './ContestManagersPage.scss';
 
 const PAGE_SIZE = 250;
 
 export default function ContestManagersPage() {
+  const location = useLocation();
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const [state, setState] = useState({
-    response: undefined,
-    lastRefreshManagersTime: 0,
-  });
+  const page = +(location.search.page || 1);
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Managers</h3>
-        <hr />
-        {renderAddRemoveDialogs()}
-        {renderManagers()}
-        {renderPagination()}
-      </ContentCard>
-    );
-  };
+  const { data: response } = useQuery(contestManagersQueryOptions(contest.jid, { page }));
 
   const renderManagers = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -56,26 +40,7 @@ export default function ContestManagersPage() {
     return <ContestManagersTable managers={managers.page} profilesMap={profilesMap} />;
   };
 
-  const renderPagination = () => {
-    const { lastRefreshManagersTime } = state;
-    const key = lastRefreshManagersTime || 0;
-
-    return <Pagination key={key} currentPage={1} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshManagers(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshManagers = async page => {
-    const response = await callAction(contestManagerActions.getManagers(contest.jid, page));
-    setState(prevState => ({ ...prevState, response }));
-    return response.data;
-  };
-
   const renderAddRemoveDialogs = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -84,24 +49,20 @@ export default function ContestManagersPage() {
     }
     return (
       <div className="content-card__header">
-        <ContestManagerAddDialog contest={contest} onUpsertManagers={upsertManagers} />
-        <ContestManagerRemoveDialog contest={contest} onDeleteManagers={deleteManagers} />
+        <ContestManagerAddDialog contest={contest} />
+        <ContestManagerRemoveDialog contest={contest} />
         <div className="clearfix" />
       </div>
     );
   };
 
-  const upsertManagers = async (contestJid, data) => {
-    const response = await callAction(contestManagerActions.upsertManagers(contestJid, data));
-    setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
-    return response;
-  };
-
-  const deleteManagers = async (contestJid, data) => {
-    const response = await callAction(contestManagerActions.deleteManagers(contestJid, data));
-    setState(prevState => ({ ...prevState, lastRefreshManagersTime: new Date().getTime() }));
-    return response;
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h3>Managers</h3>
+      <hr />
+      {renderAddRemoveDialogs()}
+      {renderManagers()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }

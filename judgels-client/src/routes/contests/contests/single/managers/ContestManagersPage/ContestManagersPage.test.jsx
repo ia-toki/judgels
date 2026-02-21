@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -7,13 +7,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestManagersPage from './ContestManagersPage';
 
-import * as contestManagerActions from '../modules/contestManagerActions';
-
-vi.mock('../modules/contestManagerActions');
-
 describe('ContestManagersPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let managers;
@@ -25,10 +25,13 @@ describe('ContestManagersPage', () => {
       slug: 'contest-slug',
     });
 
-    contestManagerActions.getManagers.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/managers')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: managers,
+          totalCount: managers.length,
         },
         profilesMap: {
           userJid1: { username: 'username1' },
@@ -37,8 +40,7 @@ describe('ContestManagersPage', () => {
         config: {
           canManage,
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(
