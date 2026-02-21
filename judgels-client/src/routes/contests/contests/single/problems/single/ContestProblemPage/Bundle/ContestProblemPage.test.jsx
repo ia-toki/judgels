@@ -1,32 +1,35 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
-import { ContestStyle } from '../../../../../../../../modules/api/uriel/contest';
-import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
-import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
-
-vi.mock('../../../modules/contestProblemActions');
-vi.mock('../../../../submissions/Bundle/modules/contestSubmissionActions');
-
 describe('BundleContestProblemPage', () => {
   beforeEach(async () => {
-    contestProblemActions.getBundleProblemWorksheet.mockReturnValue(
-      Promise.resolve({
+    setSession('token', { jid: 'userJid' });
+
+    nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+      style: 'BUNDLE',
+    });
+
+    nockUriel()
+      .get('/contests/contestJid/problems/C/bundle/worksheet')
+      .query({ language: 'id' })
+      .reply(200, {
         defaultLanguage: 'fakelang',
         languages: ['fakelang'],
         problem: {
           problemJid: 'problemJid',
           alias: 'C',
-          status: ContestProblemStatus.Open,
+          status: 'OPEN',
           submissionsLimit: 0,
         },
         totalSubmissions: 0,
@@ -52,17 +55,12 @@ describe('BundleContestProblemPage', () => {
             },
           ],
         },
-      })
-    );
+      });
 
-    contestSubmissionActions.createItemSubmission.mockReturnValue(Promise.resolve({}));
-    contestSubmissionActions.getLatestSubmissions.mockReturnValue(Promise.resolve({}));
-
-    nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
-      jid: 'contestJid',
-      slug: 'contest-slug',
-      style: ContestStyle.Bundle,
-    });
+    nockUriel()
+      .get('/contests/submissions/bundle/answers')
+      .query({ contestJid: 'contestJid', problemAlias: 'C' })
+      .reply(200, {});
 
     await act(async () =>
       render(
@@ -80,19 +78,29 @@ describe('BundleContestProblemPage', () => {
     );
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   test('form', async () => {
     await screen.findByText('somestatement');
+
+    const createSubmission = nockUriel()
+      .post('/contests/submissions/bundle', {
+        containerJid: 'contestJid',
+        problemJid: 'problemJid',
+        itemJid: 'fakeitemjid',
+        answer: 'a',
+      })
+      .reply(200);
 
     const user = userEvent.setup();
 
     const input = document.querySelector('.problem-multiple-choice-item-choice input');
     await user.click(input);
 
-    expect(contestSubmissionActions.createItemSubmission).toHaveBeenCalledWith(
-      'contestJid',
-      'problemJid',
-      'fakeitemjid',
-      'a'
-    );
+    await waitFor(() => {
+      expect(createSubmission.isDone()).toBe(true);
+    });
   });
 });

@@ -1,6 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -8,57 +8,27 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestProblemsQueryOptions } from '../../../../../../modules/queries/contestProblem';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
 import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
-
-import * as contestProblemActions from '../modules/contestProblemActions';
 
 export default function ContestProblemsPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    response: undefined,
-    defaultLanguage: undefined,
-    uniqueLanguages: undefined,
-  });
+  const { data: response } = useQuery(contestProblemsQueryOptions(contest.jid));
 
-  const refreshProblems = async () => {
-    const response = await callAction(contestProblemActions.getProblems(contest.jid));
-    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemsMap, statementLanguage);
-
-    setState({
-      response,
-      defaultLanguage,
-      uniqueLanguages,
-    });
-  };
-
-  useEffect(() => {
-    refreshProblems();
-  }, [statementLanguage]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Problems</h3>
-        <hr />
-        <div className="content-card__header">
-          {renderSetDialog()}
-          {renderStatementLanguageWidget()}
-          <div className="clearfix" />
-        </div>
-        {renderProblems()}
-      </ContentCard>
-    );
-  };
+  const { defaultLanguage, uniqueLanguages } = useMemo(() => {
+    if (!response) {
+      return {};
+    }
+    return consolidateLanguages(response.problemsMap, statementLanguage);
+  }, [response, statementLanguage]);
 
   const renderSetDialog = () => {
-    const { response } = state;
     if (!response || !response.config.canManage) {
       return null;
     }
@@ -70,24 +40,18 @@ export default function ContestProblemsPage() {
       submissionsLimit: p.submissionsLimit,
       points: p.points,
     }));
-    return <ContestProblemEditDialog contest={contest} problems={problems} onSetProblems={setProblems} />;
+    return <ContestProblemEditDialog contest={contest} problems={problems} />;
   };
 
   const renderStatementLanguageWidget = () => {
-    const { defaultLanguage, uniqueLanguages } = state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
 
-    const props = {
-      defaultLanguage,
-      statementLanguages: uniqueLanguages,
-    };
-    return <StatementLanguageWidget {...props} />;
+    return <StatementLanguageWidget defaultLanguage={defaultLanguage} statementLanguages={uniqueLanguages} />;
   };
 
   const renderProblems = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -134,18 +98,23 @@ export default function ContestProblemsPage() {
       const props = {
         contest,
         problem,
-        problemName: getProblemName(state.response.problemsMap[problem.problemJid], state.defaultLanguage),
+        problemName: getProblemName(response.problemsMap[problem.problemJid], defaultLanguage),
         totalSubmissions: totalSubmissionsMap[problem.problemJid],
       };
       return <ContestProblemCard key={problem.problemJid} {...props} />;
     });
   };
 
-  const setProblems = async (contestJid, data) => {
-    const response = await callAction(contestProblemActions.setProblems(contestJid, data));
-    await refreshProblems();
-    return response;
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h3>Problems</h3>
+      <hr />
+      <div className="content-card__header">
+        {renderSetDialog()}
+        {renderStatementLanguageWidget()}
+        <div className="clearfix" />
+      </div>
+      {renderProblems()}
+    </ContentCard>
+  );
 }

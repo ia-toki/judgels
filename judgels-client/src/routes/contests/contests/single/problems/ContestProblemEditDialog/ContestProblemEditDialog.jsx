@@ -1,74 +1,24 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import { setContestProblemsMutationOptions } from '../../../../../../modules/queries/contestProblem';
 import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEditForm';
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
 
+import * as toastActions from '../../../../../../modules/toast/toastActions';
+
 import './ContestProblemEditDialog.scss';
 
-export function ContestProblemEditDialog({ contest, problems, onSetProblems }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-    editor: getContestProblemEditor(contest.style),
-  });
-
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
-
-  useEffect(() => {
-    setState(prevState => ({ ...prevState, editor: getContestProblemEditor(contest.style) }));
-  }, [contest.style]);
-
-  const renderButton = () => {
-    return (
-      <Button
-        className="contest-problem-set-dialog__button"
-        intent={Intent.PRIMARY}
-        icon={<Edit />}
-        onClick={toggleDialog}
-        disabled={state.isDialogOpen}
-      >
-        Edit problems
-      </Button>
-    );
-  };
+export function ContestProblemEditDialog({ contest, problems }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const editor = useMemo(() => getContestProblemEditor(contest.style), [contest.style]);
+  const setProblemsMutation = useMutation(setContestProblemsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
-  const renderDialog = () => {
-    return (
-      <Dialog
-        className="contest-problem-set-dialog"
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title="Edit problems"
-        canOutsideClickClose={false}
-        enforceFocus={false}
-      >
-        {renderDialogSetForm()}
-      </Dialog>
-    );
-  };
-
-  const renderDialogSetForm = () => {
-    const editProblems = state.editor.serializer(problems);
-    const props = {
-      renderFormComponents: renderDialogForm,
-      validator: state.editor.validator,
-      onSubmit: setProblems,
-      initialValues: { problems: editProblems },
-    };
-    return <ContestProblemEditForm {...props} />;
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -90,22 +40,58 @@ export function ContestProblemEditDialog({ contest, problems, onSetProblems }) {
     return (
       <Callout icon={null}>
         <p>
-          <strong>Format:</strong> {state.editor.format}
+          <strong>Format:</strong> {editor.format}
         </p>
         <p>
           <strong>Example:</strong>
         </p>
-        {state.editor.example}
+        {editor.example}
       </Callout>
     );
   };
 
   const setProblems = async data => {
-    const deserializedProblems = state.editor.deserializer(data.problems);
+    const deserializedProblems = editor.deserializer(data.problems);
 
-    await onSetProblems(contest.jid, deserializedProblems);
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await setProblemsMutation.mutateAsync(deserializedProblems, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Problems updated.');
+      },
+      onSettled: () => {
+        setIsDialogOpen(false);
+      },
+    });
   };
 
-  return render();
+  const editProblems = editor.serializer(problems);
+  const formProps = {
+    renderFormComponents: renderDialogForm,
+    validator: editor.validator,
+    onSubmit: setProblems,
+    initialValues: { problems: editProblems },
+  };
+
+  return (
+    <div className="content-card__section">
+      <Button
+        className="contest-problem-set-dialog__button"
+        intent={Intent.PRIMARY}
+        icon={<Edit />}
+        onClick={toggleDialog}
+        disabled={isDialogOpen}
+      >
+        Edit problems
+      </Button>
+      <Dialog
+        className="contest-problem-set-dialog"
+        isOpen={isDialogOpen}
+        onClose={toggleDialog}
+        title="Edit problems"
+        canOutsideClickClose={false}
+        enforceFocus={false}
+      >
+        <ContestProblemEditForm {...formProps} />
+      </Dialog>
+    </div>
+  );
 }

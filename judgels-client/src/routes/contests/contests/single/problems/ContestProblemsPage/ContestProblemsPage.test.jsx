@@ -1,8 +1,6 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import nock from 'nock';
 
-import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -10,13 +8,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestProblemsPage from './ContestProblemsPage';
 
-import * as contestProblemActions from '../modules/contestProblemActions';
-
-vi.mock('../modules/contestProblemActions');
-
 describe('ContestProblemsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let problems;
@@ -28,13 +26,14 @@ describe('ContestProblemsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestProblemActions.getProblems.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/problems')
+      .reply(200, {
         data: problems,
         problemsMap: {
           problemJid1: {
             slug: 'problem-a',
-            type: ProblemType.PROGRAMMING,
+            type: 'PROGRAMMING',
             defaultLanguage: 'id',
             titlesByLanguage: {
               id: 'Soal A',
@@ -43,7 +42,7 @@ describe('ContestProblemsPage', () => {
           },
           problemJid2: {
             slug: 'problem-b',
-            type: ProblemType.PROGRAMMING,
+            type: 'PROGRAMMING',
             defaultLanguage: 'id',
             titlesByLanguage: {
               id: 'Soal B',
@@ -55,8 +54,7 @@ describe('ContestProblemsPage', () => {
         config: {
           canManage,
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(
@@ -69,8 +67,6 @@ describe('ContestProblemsPage', () => {
         </WebPrefsProvider>
       )
     );
-
-    await waitFor(() => expect(contestProblemActions.getProblems).toHaveBeenCalled());
   };
 
   describe('action buttons', () => {
