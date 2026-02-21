@@ -1,20 +1,19 @@
 import { act, render, screen, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
 import { setSession } from '../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../utils/nock';
 import ContestSubmissionsPage from './ContestSubmissionsPage';
 
-import * as contestSubmissionActions from '../modules/contestSubmissionActions';
-
-vi.mock('../modules/contestSubmissionActions');
-
 describe('ContestSubmissionsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let submissions;
@@ -25,12 +24,14 @@ describe('ContestSubmissionsPage', () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
-      style: ContestStyle.ICPC,
+      style: 'ICPC',
     });
 
-    contestSubmissionActions.getSubmissions.mockReturnValue(
-      Promise.resolve({
-        data: { page: submissions },
+    nockUriel()
+      .get('/contests/submissions/programming')
+      .query({ contestJid: 'contestJid', page: 1 })
+      .reply(200, {
+        data: { page: submissions, totalCount: submissions.length },
         config: {
           canSupervise,
           canManage,
@@ -45,8 +46,7 @@ describe('ContestSubmissionsPage', () => {
           problemJid1: 'A',
           problemJid2: 'B',
         },
-      })
-    );
+      });
 
     await act(async () => {
       render(
@@ -62,6 +62,8 @@ describe('ContestSubmissionsPage', () => {
   describe('when there are no submissions', () => {
     beforeEach(async () => {
       submissions = [];
+      canSupervise = false;
+      canManage = false;
       await renderComponent();
     });
 

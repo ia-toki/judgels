@@ -1,22 +1,24 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../../components/PaginationV2/PaginationV2';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
+import {
+  contestBundleSubmissionsQueryOptions,
+  regradeBundleSubmissionsMutationOptions,
+} from '../../../../../../../modules/queries/contestSubmissionBundle';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 
-import * as contestSubmissionActions from '../modules/contestSubmissionActions';
+import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
 import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
@@ -30,33 +32,15 @@ function ContestSubmissionsPage() {
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isFilterLoading: false,
-  });
+  const { data: response, isLoading } = useQuery(
+    contestBundleSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
+  );
 
-  useEffect(() => {
-    if (username || problemAlias) {
-      setState(prevState => ({ ...prevState, isFilterLoading: true }));
-    }
-  }, [username, problemAlias]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Submissions</h3>
-        <hr />
-        {renderRegradeAllButton()}
-        {renderFilterWidget()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </ContentCard>
-    );
-  };
+  const regradeSubmissionsMutation = useMutation(regradeBundleSubmissionsMutationOptions(contest.jid));
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -108,33 +92,19 @@ function ContestSubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    const key = '' + username + problemAlias;
-    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const refreshSubmissions = async page => {
-    const response = await callAction(
-      contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page)
-    );
-    setState({ response, isFilterLoading: false });
-    return response;
-  };
-
-  const onChangePage = async nextPage => {
-    const response = await refreshSubmissions(nextPage);
-    return response.data.totalCount;
-  };
-
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      await callAction(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
-      await refreshSubmissions(location.search.page);
+      await regradeSubmissionsMutation.mutateAsync(
+        { username, problemAlias },
+        {
+          onSuccess: () => toastActions.showSuccessToast('Regraded.'),
+        }
+      );
     }
   };
 
   const renderRegradeAllButton = () => {
-    if (!state.response || !state.response.config.canManage) {
+    if (!response || !response.config.canManage) {
       return null;
     }
 
@@ -151,7 +121,6 @@ function ContestSubmissionsPage() {
   };
 
   const renderFilterWidget = () => {
-    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
@@ -168,7 +137,7 @@ function ContestSubmissionsPage() {
         username={username}
         problemAlias={problemAlias}
         onFilter={onFilter}
-        isLoading={!!isFilterLoading}
+        isLoading={isLoading && !!(username || problemAlias)}
       />
     );
   };
@@ -177,7 +146,16 @@ function ContestSubmissionsPage() {
     navigate({ search: filter });
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Submissions</h3>
+      <hr />
+      {renderRegradeAllButton()}
+      {renderFilterWidget()}
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }
 
 export default ContestSubmissionsPage;

@@ -1,35 +1,41 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { OutputOnlyOverrides } from '../../../../../../../../modules/api/gabriel/language';
+import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestSubmissionPage from './ContestSubmissionPage';
 
-import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
-
-vi.mock('../../modules/contestSubmissionActions');
-
 describe('ContestSubmissionPage', () => {
-  beforeEach(async () => {
-    contestSubmissionActions.getSubmissionWithSource.mockReturnValue(
-      Promise.resolve({
-        data: {
-          submission: {
-            id: 10,
-            gradingEngine: OutputOnlyOverrides.KEY,
-          },
-          source: {},
-        },
-      })
-    );
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  beforeEach(async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
+
+    nockUriel()
+      .get('/contests/submissions/programming/id/10')
+      .query({ language: 'en' })
+      .reply(200, {
+        data: {
+          submission: {
+            id: 10,
+            containerJid: 'contestJid',
+            gradingEngine: 'OutputOnly',
+          },
+          source: {},
+        },
+      });
 
     await act(async () => {
       render(

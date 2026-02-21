@@ -1,18 +1,21 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../../components/PaginationV2/PaginationV2';
 import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { callAction } from '../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
+import {
+  contestProgrammingSubmissionsQueryOptions,
+  regradeProgrammingSubmissionMutationOptions,
+  regradeProgrammingSubmissionsMutationOptions,
+} from '../../../../../../../modules/queries/contestSubmissionProgramming';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 
-import * as contestSubmissionActions from '../modules/contestSubmissionActions';
+import * as toastActions from '../../../../../../../modules/toast/toastActions';
 
 const PAGE_SIZE = 20;
 
@@ -24,30 +27,14 @@ function ContestSubmissionsPage() {
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isFilterLoading: false,
-    isRegradingAll: false,
-  });
+  const { data: response, isLoading } = useQuery(
+    contestProgrammingSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
+  );
 
-  useEffect(() => {
-    if (username || problemAlias) {
-      setState(prevState => ({ ...prevState, isFilterLoading: true }));
-    }
-  }, [username, problemAlias]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Submissions</h3>
-        <hr />
-        {renderHeader()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </ContentCard>
-    );
-  };
+  const regradeSubmissionMutation = useMutation(regradeProgrammingSubmissionMutationOptions(contest.jid));
+  const regradeSubmissionsMutation = useMutation(regradeProgrammingSubmissionsMutationOptions(contest.jid));
 
   const renderHeader = () => {
     return (
@@ -60,14 +47,13 @@ function ContestSubmissionsPage() {
   };
 
   const renderRegradeAllButton = () => {
-    if (!state.response || !state.response.config.canManage) {
+    if (!response || !response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={onRegradeAll} isRegradingAll={state.isRegradingAll} />;
+    return <RegradeAllButton onRegradeAll={onRegradeAll} isRegradingAll={regradeSubmissionsMutation.isPending} />;
   };
 
   const renderFilterWidget = () => {
-    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
@@ -84,13 +70,12 @@ function ContestSubmissionsPage() {
         username={username}
         problemAlias={problemAlias}
         onFilter={onFilter}
-        isLoading={!!isFilterLoading}
+        isLoading={isLoading && !!(username || problemAlias)}
       />
     );
   };
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -117,35 +102,20 @@ function ContestSubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    const key = '' + username + problemAlias;
-    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshSubmissions = async page => {
-    const response = await callAction(
-      contestSubmissionActions.getSubmissions(contest.jid, username, problemAlias, page)
-    );
-    setState(prevState => ({ ...prevState, response, isFilterLoading: false }));
-    return response.data;
-  };
-
   const onRegrade = async submissionJid => {
-    await callAction(contestSubmissionActions.regradeSubmission(submissionJid));
-    await refreshSubmissions(location.search.page);
+    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+      onSuccess: () => toastActions.showSuccessToast('Regrade in progress.'),
+    });
   };
 
   const onRegradeAll = async () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      setState(prevState => ({ ...prevState, isRegradingAll: true }));
-      await callAction(contestSubmissionActions.regradeSubmissions(contest.jid, username, problemAlias));
-      setState(prevState => ({ ...prevState, isRegradingAll: false }));
-      await refreshSubmissions(location.search.page);
+      await regradeSubmissionsMutation.mutateAsync(
+        { username, problemAlias },
+        {
+          onSuccess: () => toastActions.showSuccessToast('Regrade in progress.'),
+        }
+      );
     }
   };
 
@@ -153,7 +123,15 @@ function ContestSubmissionsPage() {
     navigate({ search: filter });
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Submissions</h3>
+      <hr />
+      {renderHeader()}
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }
 
 export default ContestSubmissionsPage;

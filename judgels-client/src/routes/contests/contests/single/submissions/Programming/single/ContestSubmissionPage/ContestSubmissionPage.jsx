@@ -1,66 +1,35 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { callAction } from '../../../../../../../../modules/callAction';
+import { contestSubmissionProgrammingAPI } from '../../../../../../../../modules/api/uriel/contestSubmissionProgramming';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
+import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
+import { getToken } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-
-import * as contestSubmissionActions from '../../modules/contestSubmissionActions';
 
 export default function ContestSubmissionPage() {
   const { contestSlug, submissionId } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    submissionWithSource: undefined,
-    profile: undefined,
-    problemName: undefined,
-    problemAlias: undefined,
-    containerName: undefined,
-  });
+  const { data: response } = useQuery(
+    contestSubmissionWithSourceQueryOptions(contest.jid, +submissionId, statementLanguage)
+  );
 
-  const loadSubmission = async () => {
-    const { data, profile, problemName, problemAlias, containerName } = await callAction(
-      contestSubmissionActions.getSubmissionWithSource(contest.jid, +submissionId, statementLanguage)
-    );
-
-    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
-
-    setState({
-      submissionWithSource: data,
-      profile,
-      problemName,
-      problemAlias,
-      containerName,
-    });
-  };
-
-  useEffect(() => {
-    loadSubmission();
-  }, []);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Submission #{submissionId}</h3>
-        <hr />
-        {renderSubmission()}
-      </ContentCard>
-    );
-  };
+  if (response) {
+    document.title = createDocumentTitle(`Submission #${response.data.submission.id}`);
+  }
 
   const renderSubmission = () => {
-    const { submissionWithSource, profile, problemName, problemAlias } = state;
-
-    if (!submissionWithSource) {
+    if (!response) {
       return <LoadingState />;
     }
+
+    const { data: submissionWithSource, profile, problemName, problemAlias } = response;
 
     return (
       <SubmissionDetails
@@ -76,9 +45,14 @@ export default function ContestSubmissionPage() {
   };
 
   const downloadSubmission = () => {
-    const { submissionWithSource } = state;
-    callAction(contestSubmissionActions.downloadSubmission(submissionWithSource.submission.jid));
+    contestSubmissionProgrammingAPI.downloadSubmission(getToken(), response.data.submission.jid);
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Submission #{submissionId}</h3>
+      <hr />
+      {renderSubmission()}
+    </ContentCard>
+  );
 }

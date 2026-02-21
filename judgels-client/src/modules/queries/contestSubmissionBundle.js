@@ -4,6 +4,22 @@ import { contestSubmissionBundleAPI } from '../api/uriel/contestSubmissionBundle
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
+export const contestBundleSubmissionsQueryOptions = (contestJid, params) => {
+  const { username, problemAlias, page } = params || {};
+  return queryOptions({
+    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'list', ...(params ? [params] : [])],
+    queryFn: () => contestSubmissionBundleAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
+  });
+};
+
+export const contestBundleSubmissionSummaryQueryOptions = (contestJid, params) => {
+  const { username, language } = params || {};
+  return queryOptions({
+    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
+    queryFn: () => contestSubmissionBundleAPI.getSubmissionSummary(getToken(), contestJid, username, language),
+  });
+};
+
 export const contestBundleLatestSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', problemAlias],
@@ -22,5 +38,14 @@ export const createBundleItemSubmissionMutationOptions = (contestJid, problemAli
   },
   onSuccess: () => {
     queryClient.invalidateQueries(contestBundleLatestSubmissionsQueryOptions(contestJid, problemAlias));
+  },
+});
+
+export const regradeBundleSubmissionsMutationOptions = contestJid => ({
+  mutationFn: ({ username, problemAlias } = {}) =>
+    contestSubmissionBundleAPI.regradeSubmissions(getToken(), contestJid, username, undefined, problemAlias),
+  onSuccess: () => {
+    queryClient.invalidateQueries(contestBundleSubmissionsQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestBundleSubmissionSummaryQueryOptions(contestJid));
   },
 });
