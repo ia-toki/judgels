@@ -13,7 +13,7 @@ export function ContestCreateDialog() {
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const createContestMutation = useMutation(createContestMutationOptions);
+  const createContestMutation = useMutation(createContestMutationOptions());
 
   const render = () => {
     return (

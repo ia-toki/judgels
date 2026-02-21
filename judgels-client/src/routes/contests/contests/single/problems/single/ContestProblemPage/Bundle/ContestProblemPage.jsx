@@ -21,7 +21,7 @@ export default function ContestProblemPage() {
   const { statementLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(
-    contestBundleProblemWorksheetQueryOptions(contest.jid, problemAlias, statementLanguage)
+    contestBundleProblemWorksheetQueryOptions(contest.jid, problemAlias, { language: statementLanguage })
   );
 
   const { data: latestSubmissions } = useQuery({

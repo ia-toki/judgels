@@ -19,5 +19,5 @@ export const courseChaptersQueryOptions = courseJid =>
 export const courseChapterQueryOptions = (courseJid, chapterAlias) =>
   queryOptions({
     queryKey: ['course', courseJid, 'chapter', chapterAlias],
-    queryFn: async () => courseChapterAPI.getChapter(getToken(), courseJid, chapterAlias),
+    queryFn: () => courseChapterAPI.getChapter(getToken(), courseJid, chapterAlias),
   });

@@ -7,7 +7,7 @@ import { getToken } from '../session';
 export const contestBundleSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'list', ...(params ? [params] : [])],
+    queryKey: ['contest', contestJid, 'submissions', ...(params ? [params] : [])],
     queryFn: () => contestSubmissionBundleAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
 };
@@ -15,14 +15,14 @@ export const contestBundleSubmissionsQueryOptions = (contestJid, params) => {
 export const contestBundleSubmissionSummaryQueryOptions = (contestJid, params) => {
   const { username, language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
+    queryKey: ['contest', contestJid, 'submissions', 'summary', ...(params ? [params] : [])],
     queryFn: () => contestSubmissionBundleAPI.getSubmissionSummary(getToken(), contestJid, username, language),
   });
 };
 
 export const contestBundleLatestSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', problemAlias],
+    queryKey: ['contest', contestJid, 'submissions', problemAlias],
     queryFn: () => contestSubmissionBundleAPI.getLatestSubmissions(getToken(), contestJid, problemAlias),
   });
 };

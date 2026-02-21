@@ -31,16 +31,18 @@ export const setContestProblemsMutationOptions = contestJid => ({
   },
 });
 
-export const contestProgrammingProblemWorksheetQueryOptions = (contestJid, problemAlias, language) => {
+export const contestProgrammingProblemWorksheetQueryOptions = (contestJid, problemAlias, params) => {
+  const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'problems', problemAlias, 'programming', 'worksheet', language],
+    queryKey: ['contest', contestJid, 'problems', problemAlias, 'worksheet', ...[params ? [params] : []]],
     queryFn: () => contestProblemAPI.getProgrammingProblemWorksheet(getToken(), contestJid, problemAlias, language),
   });
 };
 
-export const contestBundleProblemWorksheetQueryOptions = (contestJid, problemAlias, language) => {
+export const contestBundleProblemWorksheetQueryOptions = (contestJid, problemAlias, params) => {
+  const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'problems', problemAlias, 'bundle', 'worksheet', language],
+    queryKey: ['contest', contestJid, 'problems', problemAlias, 'worksheet', ...[params ? [params] : []]],
     queryFn: () => contestProblemAPI.getBundleProblemWorksheet(getToken(), contestJid, problemAlias, language),
   });
 };
