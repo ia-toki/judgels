@@ -22,22 +22,6 @@ describe('contestContestantActions', () => {
     });
   });
 
-  describe('getContestants()', () => {
-    const page = 3;
-    const responseBody = {
-      data: {
-        page: [{ jid: 'jid' }],
-      },
-    };
-
-    it('calls API', async () => {
-      nockUriel().get(`/contests/${contestJid}/contestants`).query({ page }).reply(200, responseBody);
-
-      const response = await contestContestantActions.getContestants(contestJid, page);
-      expect(response).toEqual(responseBody);
-    });
-  });
-
   describe('getApprovedContestantsCount()', () => {
     const responseBody = 3;
 
@@ -81,34 +65,6 @@ describe('contestContestantActions', () => {
         .reply(200);
 
       await contestContestantActions.unregisterMyselfAsContestant(contestJid);
-    });
-  });
-
-  describe('upsertContestants()', () => {
-    const usernames = ['username1'];
-    const responseBody = {
-      insertedContestantProfilesMap: {},
-    };
-
-    it('calls API', async () => {
-      nockUriel().post(`/contests/${contestJid}/contestants/batch-upsert`, usernames).reply(200, responseBody);
-
-      const response = await contestContestantActions.upsertContestants(contestJid, usernames);
-      expect(response).toEqual(responseBody);
-    });
-  });
-
-  describe('deleteContestants()', () => {
-    const usernames = ['username1'];
-    const responseBody = {
-      deletedContestantProfilesMap: {},
-    };
-
-    it('calls API', async () => {
-      nockUriel().post(`/contests/${contestJid}/contestants/batch-delete`, usernames).reply(200, responseBody);
-
-      const response = await contestContestantActions.deleteContestants(contestJid, usernames);
-      expect(response).toEqual(responseBody);
     });
   });
 });

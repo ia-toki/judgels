@@ -1,89 +1,24 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
+import { upsertContestContestantsMutationOptions } from '../../../../../../modules/queries/contestContestant';
 import ContestContestantAddForm from '../ContestContestantAddForm/ContestContestantAddForm';
 import { ContestContestantAddResultTable } from '../ContestContestantAddResultTable/ContestContestantAddResultTable';
 
-export function ContestContestantAddDialog({ contest, onUpsertContestants }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-    submitted: undefined,
-  });
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
+export function ContestContestantAddDialog({ contest }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(undefined);
 
-  const renderButton = () => {
-    return (
-      <Button
-        className="contest-contestant-dialog-button"
-        intent={Intent.PRIMARY}
-        icon={<Plus />}
-        onClick={toggleDialog}
-        disabled={state.isDialogOpen}
-      >
-        Add contestants
-      </Button>
-    );
-  };
+  const upsertContestantsMutation = useMutation(upsertContestContestantsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
-  };
-
-  const renderDialog = () => {
-    const dialogBody = state.submitted !== undefined ? renderDialogAddResultTable() : renderDialogAddForm();
-    const dialogTitle = state.submitted !== undefined ? 'Add contestants results' : 'Add contestants';
-
-    return (
-      <Dialog
-        className="contest-contestant-dialog"
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title={dialogTitle}
-        canOutsideClickClose={false}
-        enforceFocus={false}
-      >
-        {dialogBody}
-      </Dialog>
-    );
-  };
-
-  const renderDialogAddForm = () => {
-    const props = {
-      renderFormComponents: renderDialogForm,
-      onSubmit: addContestants,
-    };
-    return <ContestContestantAddForm {...props} />;
-  };
-
-  const renderDialogAddResultTable = () => {
-    const { usernames, response } = state.submitted;
-    const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
-    return (
-      <>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-contestant-dialog-result-body')}>
-          <ContestContestantAddResultTable
-            usernames={usernames}
-            insertedContestantProfilesMap={insertedContestantProfilesMap}
-            alreadyContestantProfilesMap={alreadyContestantProfilesMap}
-          />
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Done" intent={Intent.PRIMARY} onClick={toggleDialog} />
-          </div>
-        </div>
-      </>
-    );
+    setIsDialogOpen(open => !open);
+    setSubmitted(undefined);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -103,13 +38,65 @@ export function ContestContestantAddDialog({ contest, onUpsertContestants }) {
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
-    const response = await onUpsertContestants(contest.jid, usernames);
-    if (usernames.length !== Object.keys(response.insertedContestantProfilesMap).length) {
-      setState(prevState => ({ ...prevState, submitted: { usernames, response } }));
+    const response = await upsertContestantsMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.insertedContestantProfilesMap).length) {
+      toastActions.showSuccessToast('Contestants added.');
+      setIsDialogOpen(false);
     } else {
-      setState(prevState => ({ ...prevState, isDialogOpen: false }));
+      setSubmitted({ usernames, response });
     }
   };
 
-  return render();
+  const renderDialogAddResultTable = () => {
+    const { usernames, response } = submitted;
+    const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
+    return (
+      <>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-contestant-dialog-result-body')}>
+          <ContestContestantAddResultTable
+            usernames={usernames}
+            insertedContestantProfilesMap={insertedContestantProfilesMap}
+            alreadyContestantProfilesMap={alreadyContestantProfilesMap}
+          />
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button text="Done" intent={Intent.PRIMARY} onClick={toggleDialog} />
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const dialogBody =
+    submitted !== undefined ? (
+      renderDialogAddResultTable()
+    ) : (
+      <ContestContestantAddForm renderFormComponents={renderDialogForm} onSubmit={addContestants} />
+    );
+  const dialogTitle = submitted !== undefined ? 'Add contestants results' : 'Add contestants';
+
+  return (
+    <div className="content-card__section">
+      <Button
+        className="contest-contestant-dialog-button"
+        intent={Intent.PRIMARY}
+        icon={<Plus />}
+        onClick={toggleDialog}
+        disabled={isDialogOpen}
+      >
+        Add contestants
+      </Button>
+      <Dialog
+        className="contest-contestant-dialog"
+        isOpen={isDialogOpen}
+        onClose={toggleDialog}
+        title={dialogTitle}
+        canOutsideClickClose={false}
+        enforceFocus={false}
+      >
+        {dialogBody}
+      </Dialog>
+    </div>
+  );
 }

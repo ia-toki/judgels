@@ -140,18 +140,6 @@ describe('contestActions', () => {
     });
   });
 
-  describe('resetVirtualContest()', () => {
-    it('calls API', async () => {
-      nockUriel()
-        .options(`/contests/${contestJid}/virtual/reset`)
-        .reply(200)
-        .put(`/contests/${contestJid}/virtual/reset`)
-        .reply(200);
-
-      await contestActions.resetVirtualContest(contestJid);
-    });
-  });
-
   describe('getContestDescription()', () => {
     const description = 'This is a contest';
 

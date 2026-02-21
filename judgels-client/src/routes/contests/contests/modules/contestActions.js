@@ -60,12 +60,6 @@ export async function startVirtualContest(contestId) {
   await contestAPI.startVirtualContest(token, contestId);
 }
 
-export async function resetVirtualContest(contestId) {
-  const token = getToken();
-  await contestAPI.resetVirtualContest(token, contestId);
-  toastActions.showSuccessToast('All contestant virtual start time has been reset.');
-}
-
 export async function getContestDescription(contestJid) {
   const token = getToken();
   return await contestAPI.getContestDescription(token, contestJid);
