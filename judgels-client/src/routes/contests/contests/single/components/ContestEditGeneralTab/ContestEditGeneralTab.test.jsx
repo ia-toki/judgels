@@ -1,8 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -10,10 +9,6 @@ import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditGeneralTab from './ContestEditGeneralTab';
-
-import * as contestActions from '../../../modules/contestActions';
-
-vi.mock('../../../modules/contestActions');
 
 describe('ContestEditGeneralTab', () => {
   beforeEach(async () => {
@@ -24,12 +19,10 @@ describe('ContestEditGeneralTab', () => {
         jid: 'contestJid',
         slug: 'contest-a',
         name: 'Contest A',
-        style: ContestStyle.ICPC,
+        style: 'ICPC',
         beginTime: parseDateTime('2018-09-10 13:00').getTime(),
       });
     nockUriel().get('/contests/slug/contest-a/config').reply(200, {});
-
-    contestActions.updateContest.mockReturnValue(Promise.resolve({}));
 
     await act(async () =>
       render(
@@ -40,6 +33,10 @@ describe('ContestEditGeneralTab', () => {
         </QueryClientProviderWrapper>
       )
     );
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('form', async () => {
@@ -66,14 +63,16 @@ describe('ContestEditGeneralTab', () => {
     await user.clear(duration);
     await user.type(duration, '6h');
 
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    nockUriel()
+      .post('/contests/contestJid', {
+        slug: 'contest-b',
+        name: 'Contest B',
+        style: 'ICPC',
+        beginTime: parseDateTime('2018-09-10 17:00').getTime(),
+        duration: parseDuration('6h'),
+      })
+      .reply(200);
 
-    expect(contestActions.updateContest).toHaveBeenCalledWith('contestJid', 'contest-a', {
-      slug: 'contest-b',
-      name: 'Contest B',
-      style: ContestStyle.ICPC,
-      beginTime: parseDateTime('2018-09-10 17:00').getTime(),
-      duration: parseDuration('6h'),
-    });
+    await user.click(screen.getByRole('button', { name: /save/i }));
   });
 });

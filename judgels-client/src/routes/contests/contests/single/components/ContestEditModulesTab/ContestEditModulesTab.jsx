@@ -1,47 +1,27 @@
 import { Intent } from '@blueprintjs/core';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { allModules } from '../../../../../../modules/api/uriel/contestModule';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestModulesQueryOptions,
+  disableContestModuleMutationOptions,
+  enableContestModuleMutationOptions,
+} from '../../../../../../modules/queries/contestModule';
 import { ContestModuleCard } from '../ContestModuleCard/ContestModuleCard';
-
-import * as contestModuleActions from '../../modules/contestModuleActions';
 
 export default function ContestEditModulesTab() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const queryClient = useQueryClient();
 
-  const [state, setState] = useState({
-    modules: undefined,
-  });
+  const { data: modules } = useQuery(contestModulesQueryOptions(contest.jid));
 
-  const refreshModules = async () => {
-    const modules = await callAction(contestModuleActions.getModules(contest.jid));
-    setState(prevState => ({ ...prevState, modules }));
-  };
-
-  useEffect(() => {
-    refreshModules();
-  }, []);
-
-  const render = () => {
-    return (
-      <>
-        <h4>Modules settings</h4>
-        <hr />
-        {renderContent()}
-      </>
-    );
-  };
+  const enableModuleMutation = useMutation(enableContestModuleMutationOptions(contest.jid, contestSlug));
+  const disableModuleMutation = useMutation(disableContestModuleMutationOptions(contest.jid, contestSlug));
 
   const renderContent = () => {
-    const { modules } = state;
-
     if (!modules) {
       return <LoadingState />;
     }
@@ -74,8 +54,8 @@ export default function ContestEditModulesTab() {
         intent={Intent.PRIMARY}
         buttonIntent={Intent.NONE}
         buttonText={'Disable'}
-        buttonOnClick={disableModule}
-        buttonIsLoading={false}
+        buttonOnClick={type => disableModuleMutation.mutateAsync(type)}
+        buttonIsLoading={disableModuleMutation.isPending}
         buttonIsDisabled={false}
       />
     ));
@@ -97,28 +77,18 @@ export default function ContestEditModulesTab() {
         intent={Intent.NONE}
         buttonIntent={Intent.PRIMARY}
         buttonText={'Enable'}
-        buttonOnClick={enableModule}
-        buttonIsLoading={false}
+        buttonOnClick={type => enableModuleMutation.mutateAsync(type)}
+        buttonIsLoading={enableModuleMutation.isPending}
         buttonIsDisabled={false}
       />
     ));
   };
 
-  const enableModule = async type => {
-    await callAction(contestModuleActions.enableModule(contest.jid, type));
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
-      refreshModules(),
-    ]);
-  };
-
-  const disableModule = async type => {
-    await callAction(contestModuleActions.disableModule(contest.jid, type));
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
-      refreshModules(),
-    ]);
-  };
-
-  return render();
+  return (
+    <>
+      <h4>Modules settings</h4>
+      <hr />
+      {renderContent()}
+    </>
+  );
 }

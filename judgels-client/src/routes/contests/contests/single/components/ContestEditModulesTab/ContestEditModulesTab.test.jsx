@@ -1,15 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditModulesTab from './ContestEditModulesTab';
-
-import * as contestModuleActions from '../../modules/contestModuleActions';
-
-vi.mock('../../modules/contestModuleActions');
 
 describe('ContestEditModulesTab', () => {
   beforeEach(async () => {
@@ -18,9 +14,8 @@ describe('ContestEditModulesTab', () => {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
-    nockUriel().get('/contests/slug/contest-slug/config').reply(200, {});
 
-    contestModuleActions.getModules.mockReturnValue(Promise.resolve(['REGISTRATION', 'CLARIFICATION', 'FILE']));
+    nockUriel().get('/contests/contestJid/modules').reply(200, ['REGISTRATION', 'CLARIFICATION', 'FILE']);
 
     await act(async () =>
       render(
@@ -31,6 +26,10 @@ describe('ContestEditModulesTab', () => {
         </QueryClientProviderWrapper>
       )
     );
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('tab', async () => {

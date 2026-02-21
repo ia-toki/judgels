@@ -1,4 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -6,13 +7,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestOverviewPage from './ContestOverviewPage';
 
-import * as contestContestantActions from '../../modules/contestContestantActions';
-
-vi.mock('../../modules/contestContestantActions');
-
 describe('ContestOverviewPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   const renderComponent = async () => {
@@ -25,8 +26,8 @@ describe('ContestOverviewPage', () => {
       description: 'Contest description',
     });
 
-    contestContestantActions.getMyContestantState.mockReturnValue(Promise.resolve('NONE'));
-    contestContestantActions.getApprovedContestantsCount.mockReturnValue(Promise.resolve(0));
+    nockUriel().get('/contests/contestJid/contestants/me/state').reply(200, JSON.stringify('NONE'));
+    nockUriel().get('/contests/contestJid/contestants/approved/count').reply(200, 0);
 
     await act(async () =>
       render(

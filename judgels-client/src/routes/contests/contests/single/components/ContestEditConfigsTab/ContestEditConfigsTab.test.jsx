@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -9,13 +9,13 @@ import { parseDuration } from '../../../../../../utils/duration';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
 
-import * as contestModuleActions from '../../modules/contestModuleActions';
-
-vi.mock('../../modules/contestModuleActions');
-
 describe('ContestEditConfigsTab', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let config;
@@ -26,8 +26,7 @@ describe('ContestEditConfigsTab', () => {
       slug: 'contest-slug',
     });
 
-    contestModuleActions.getConfig.mockReturnValue(Promise.resolve(config));
-    contestModuleActions.upsertConfig.mockReturnValue(Promise.resolve({}));
+    nockUriel().get('/contests/contestJid/modules/config').reply(200, config);
 
     await act(async () =>
       render(
@@ -132,41 +131,43 @@ describe('ContestEditConfigsTab', () => {
         await user.clear(editorialPreface);
         await user.type(editorialPreface, '<p>Thank you for your participation.</p>');
 
+        nockUriel()
+          .put('/contests/contestJid/modules/config', {
+            icpcStyle: {
+              languageRestriction: { allowedLanguageNames: [] },
+              wrongSubmissionPenalty: 25,
+            },
+            scoreboard: {
+              isIncognitoScoreboard: true,
+            },
+            clarificationTimeLimit: {
+              clarificationDuration: 7500000,
+            },
+            division: {
+              division: 2,
+            },
+            frozenScoreboard: {
+              isOfficialScoreboardAllowed: true,
+              scoreboardFreezeTime: 3900000,
+            },
+            mergedScoreboard: {
+              previousContestJid: 'JIDCONT12345',
+            },
+            externalScoreboard: {
+              receiverUrl: 'http://new.external.scoreboard',
+              receiverSecret: 'the_new_secret',
+            },
+            virtual: {
+              virtualDuration: 18300000,
+            },
+            editorial: {
+              preface: '<p>Thank you for your participation.</p>',
+            },
+          })
+          .reply(200);
+
         const submitButton = screen.getByRole('button', { name: /save/i });
         await user.click(submitButton);
-
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
-          icpcStyle: {
-            languageRestriction: { allowedLanguageNames: [] },
-            wrongSubmissionPenalty: 25,
-          },
-          scoreboard: {
-            isIncognitoScoreboard: true,
-          },
-          clarificationTimeLimit: {
-            clarificationDuration: 7500000,
-          },
-          division: {
-            division: 2,
-          },
-          frozenScoreboard: {
-            isOfficialScoreboardAllowed: true,
-            scoreboardFreezeTime: 3900000,
-          },
-          mergedScoreboard: {
-            previousContestJid: 'JIDCONT12345',
-          },
-          externalScoreboard: {
-            receiverUrl: 'http://new.external.scoreboard',
-            receiverSecret: 'the_new_secret',
-          },
-          virtual: {
-            virtualDuration: 18300000,
-          },
-          editorial: {
-            preface: '<p>Thank you for your participation.</p>',
-          },
-        });
       });
     });
 
@@ -191,16 +192,18 @@ describe('ContestEditConfigsTab', () => {
         const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
         await user.click(icpcAllowAllLanguages);
 
+        nockUriel()
+          .put('/contests/contestJid/modules/config', {
+            icpcStyle: {
+              languageRestriction: { allowedLanguageNames: [] },
+              wrongSubmissionPenalty: 20,
+            },
+            scoreboard: { isIncognitoScoreboard: false },
+          })
+          .reply(200);
+
         const submitButton = screen.getByRole('button', { name: /save/i });
         await user.click(submitButton);
-
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
-          icpcStyle: {
-            languageRestriction: { allowedLanguageNames: [] },
-            wrongSubmissionPenalty: 20,
-          },
-          scoreboard: { isIncognitoScoreboard: false },
-        });
       });
     });
 
@@ -231,16 +234,18 @@ describe('ContestEditConfigsTab', () => {
         const icpcAllowedLanguagesPython3 = screen.getByRole('checkbox', { name: /python 3/i });
         await user.click(icpcAllowedLanguagesPython3);
 
+        nockUriel()
+          .put('/contests/contestJid/modules/config', {
+            icpcStyle: {
+              languageRestriction: { allowedLanguageNames: ['Pascal', 'Python3'] },
+              wrongSubmissionPenalty: 20,
+            },
+            scoreboard: { isIncognitoScoreboard: false },
+          })
+          .reply(200);
+
         const submitButton = screen.getByRole('button', { name: /save/i });
         await user.click(submitButton);
-
-        expect(contestModuleActions.upsertConfig).toHaveBeenCalledWith('contestJid', {
-          icpcStyle: {
-            languageRestriction: { allowedLanguageNames: ['Pascal', 'Python3'] },
-            wrongSubmissionPenalty: 20,
-          },
-          scoreboard: { isIncognitoScoreboard: false },
-        });
       });
     });
   });
