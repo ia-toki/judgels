@@ -1,23 +1,12 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Comment } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 
+import { answerContestClarificationMutationOptions } from '../../../../../../modules/queries/contestClarification';
 import ContestClarificationAnswerForm from '../ContestClarificationAnswerForm/ContestClarificationAnswerForm';
 
-export function ContestClarificationAnswerBox({
-  contest,
-  clarification,
-  isBoxOpen,
-  isBoxLoading,
-  onToggleBox,
-  onAnswerClarification,
-}) {
-  const renderButton = () => {
-    return (
-      <Button intent={Intent.PRIMARY} icon={<Comment />} onClick={showBox}>
-        Answer
-      </Button>
-    );
-  };
+export function ContestClarificationAnswerBox({ contest, clarification, isBoxOpen, onToggleBox }) {
+  const answerMutation = useMutation(answerContestClarificationMutationOptions(contest.jid, clarification.jid));
 
   const showBox = () => {
     onToggleBox(clarification);
@@ -27,22 +16,27 @@ export function ContestClarificationAnswerBox({
     onToggleBox();
   };
 
-  const renderBox = () => {
-    const props = {
-      onSubmit: answerClarification,
-      onCancel: hideBox,
-      isLoading: isBoxLoading,
-    };
-    return <ContestClarificationAnswerForm {...props} />;
-  };
-
-  const answerClarification = data => {
-    onAnswerClarification(contest.jid, clarification.jid, data.answer);
+  const answerClarification = async data => {
+    await answerMutation.mutateAsync(data.answer, {
+      onSuccess: () => {
+        onToggleBox();
+      },
+    });
   };
 
   if (isBoxOpen) {
-    return renderBox();
+    return (
+      <ContestClarificationAnswerForm
+        onSubmit={answerClarification}
+        onCancel={hideBox}
+        isLoading={answerMutation.isPending}
+      />
+    );
   } else {
-    return renderButton();
+    return (
+      <Button intent={Intent.PRIMARY} icon={<Comment />} onClick={showBox}>
+        Answer
+      </Button>
+    );
   }
 }

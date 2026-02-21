@@ -16,9 +16,7 @@ export function ContestClarificationCard({
   problemAlias,
   problemName,
   isAnswerBoxOpen,
-  isAnswerBoxLoading,
   onToggleAnswerBox,
-  onAnswerClarification,
 }) {
   const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
   const asker = canSupervise && (
@@ -45,9 +43,7 @@ export function ContestClarificationCard({
             contest={contest}
             clarification={clarification}
             isBoxOpen={isAnswerBoxOpen}
-            isBoxLoading={isAnswerBoxLoading}
             onToggleBox={onToggleAnswerBox}
-            onAnswerClarification={onAnswerClarification}
           />
         );
       }

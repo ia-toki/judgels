@@ -1,24 +1,28 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
 describe('ContestClarificationCreateDialog', () => {
-  let onCreateClarification;
-
-  beforeEach(() => {
-    onCreateClarification = vi.fn().mockReturnValue(Promise.resolve({}));
-
-    const props = {
-      contest: { jid: 'contestJid' },
-      problemJids: ['problemJid1', 'problemJid2'],
-      problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },
-      problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
-      statementLanguage: 'en',
-      onCreateClarification,
-    };
-    render(<ContestClarificationCreateDialog {...props} />);
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestClarificationCreateDialog
+              contest={{ jid: 'contestJid' }}
+              problemJids={['problemJid1', 'problemJid2']}
+              problemAliasesMap={{ problemJid1: 'A', problemJid2: 'B' }}
+              problemNamesMap={{ problemJid1: 'Problem 1', problemJid2: 'Problem 2' }}
+            />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -41,13 +45,17 @@ describe('ContestClarificationCreateDialog', () => {
     const question = screen.getByRole('textbox', { name: /question/i });
     await user.type(question, 'Is snack provided?');
 
+    nockUriel()
+      .post('/contests/contestJid/clarifications', {
+        topicJid: 'contestJid',
+        title: 'Snack',
+        question: 'Is snack provided?',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
 
-    expect(onCreateClarification).toHaveBeenCalledWith('contestJid', {
-      topicJid: 'contestJid',
-      title: 'Snack',
-      question: 'Is snack provided?',
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

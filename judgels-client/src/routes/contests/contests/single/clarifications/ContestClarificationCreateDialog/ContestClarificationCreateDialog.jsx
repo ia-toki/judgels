@@ -1,63 +1,19 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { createContestClarificationMutationOptions } from '../../../../../../modules/queries/contestClarification';
 import ContestClarificationCreateForm from '../ContestClarificationCreateForm/ContestClarificationCreateForm';
 
-export function ContestClarificationCreateDialog({
-  contest,
-  problemJids,
-  problemAliasesMap,
-  problemNamesMap,
-  onCreateClarification,
-}) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-  });
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
-
-  const renderButton = () => {
-    return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
-        New clarification
-      </Button>
-    );
-  };
+export function ContestClarificationCreateDialog({ contest, problemJids, problemAliasesMap, problemNamesMap }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const createClarificationMutation = useMutation(createContestClarificationMutationOptions(contest.jid));
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
-  const renderDialog = () => {
-    const props = {
-      contestJid: contest.jid,
-      problemJids,
-      problemAliasesMap,
-      problemNamesMap,
-      renderFormComponents: renderDialogForm,
-      onSubmit: createClarification,
-      initialValues: {
-        topicJid: contest.jid,
-      },
-    };
-    return (
-      <Dialog
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title="Submit new clarification"
-        canOutsideClickClose={false}
-      >
-        <ContestClarificationCreateForm {...props} />
-      </Dialog>
-    );
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -73,9 +29,41 @@ export function ContestClarificationCreateDialog({
   );
 
   const createClarification = async data => {
-    await onCreateClarification(contest.jid, data);
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await createClarificationMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Clarification submitted.');
+      },
+      onSettled: () => {
+        setIsDialogOpen(false);
+      },
+    });
   };
 
-  return render();
+  const props = {
+    contestJid: contest.jid,
+    problemJids,
+    problemAliasesMap,
+    problemNamesMap,
+    renderFormComponents: renderDialogForm,
+    onSubmit: createClarification,
+    initialValues: {
+      topicJid: contest.jid,
+    },
+  };
+
+  return (
+    <div className="content-card__section">
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+        New clarification
+      </Button>
+      <Dialog
+        isOpen={isDialogOpen}
+        onClose={toggleDialog}
+        title="Submit new clarification"
+        canOutsideClickClose={false}
+      >
+        <ContestClarificationCreateForm {...props} />
+      </Dialog>
+    </div>
+  );
 }
