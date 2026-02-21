@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -7,13 +7,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestSupervisorsPage from './ContestSupervisorsPage';
 
-import * as contestSupervisorActions from '../../modules/contestSupervisorActions';
-
-vi.mock('../../modules/contestSupervisorActions');
-
 describe('ContestSupervisorsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let supervisors;
@@ -24,17 +24,19 @@ describe('ContestSupervisorsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestSupervisorActions.getSupervisors.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/supervisors')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: supervisors,
+          totalCount: supervisors.length,
         },
         profilesMap: {
           userJid1: { username: 'username1' },
           userJid2: { username: 'username2' },
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(
