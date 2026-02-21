@@ -1,95 +1,63 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
+import { contestBundleProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
+import {
+  contestBundleLatestSubmissionsQueryOptions,
+  createBundleItemSubmissionMutationOptions,
+} from '../../../../../../../../modules/queries/contestSubmissionBundle';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-
-import * as contestSubmissionActions from '../../../../submissions/Bundle/modules/contestSubmissionActions';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
-  const [state, setState] = useState({
-    defaultLanguage: undefined,
-    languages: undefined,
-    problem: undefined,
-    latestSubmissions: undefined,
-    worksheet: undefined,
+
+  const { data: response } = useQuery(
+    contestBundleProblemWorksheetQueryOptions(contest.jid, problemAlias, statementLanguage)
+  );
+
+  const { data: latestSubmissions } = useQuery({
+    ...contestBundleLatestSubmissionsQueryOptions(contest.jid, response?.problem?.alias),
+    enabled: !!response,
   });
 
-  const loadWorksheet = async () => {
-    setState(prevState => ({
-      ...prevState,
-      worksheet: undefined,
-    }));
-
-    const { defaultLanguage, languages, problem, worksheet } = await callAction(
-      contestProblemActions.getBundleProblemWorksheet(contest.jid, problemAlias, statementLanguage)
-    );
-
-    const latestSubmissions = await callAction(
-      contestSubmissionActions.getLatestSubmissions(contest.jid, problem.alias)
-    );
-
-    setState({
-      latestSubmissions,
-      defaultLanguage,
-      languages,
-      problem,
-      worksheet,
-    });
-
-    document.title = createDocumentTitle(`Problem ${problem.alias}`);
-  };
+  const createSubmissionMutation = useMutation(createBundleItemSubmissionMutationOptions(contest.jid, problemAlias));
 
   useEffect(() => {
-    loadWorksheet();
-  }, [statementLanguage]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        {renderStatementLanguageWidget()}
-        {renderStatement()}
-      </ContentCard>
-    );
-  };
+    if (response) {
+      document.title = createDocumentTitle(`Problem ${response.problem.alias}`);
+    }
+  }, [response?.problem?.alias]);
 
   const onCreateSubmission = async (itemJid, answer) => {
-    const problem = state.problem;
-    return await callAction(
-      contestSubmissionActions.createItemSubmission(contest.jid, problem.problemJid, itemJid, answer)
-    );
+    await createSubmissionMutation.mutateAsync({
+      problemJid: response.problem.problemJid,
+      itemJid,
+      answer,
+    });
   };
 
   const renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = state;
-    if (!defaultLanguage || !languages) {
+    if (!response) {
       return null;
     }
-    const props = {
-      defaultLanguage: defaultLanguage,
-      statementLanguages: languages,
-    };
     return (
       <div className="language-widget-wrapper">
-        <StatementLanguageWidget {...props} />
+        <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
       </div>
     );
   };
 
   const renderStatement = () => {
-    const { problem, worksheet, latestSubmissions } = state;
-    if (!problem || !worksheet) {
+    if (!response) {
       return <LoadingState />;
     }
 
@@ -99,13 +67,18 @@ export default function ContestProblemPage() {
 
     return (
       <ProblemWorksheetCard
-        alias={problem.alias}
+        alias={response.problem.alias}
         latestSubmissions={latestSubmissions}
         onAnswerItem={onCreateSubmission}
-        worksheet={worksheet}
+        worksheet={response.worksheet}
       />
     );
   };
 
-  return render();
+  return (
+    <ContentCard>
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }

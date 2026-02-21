@@ -1,28 +1,33 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestProblemStatus } from '../../../../../../../../modules/api/uriel/contestProblem';
+import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
-import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
-
-vi.mock('../../../modules/contestProblemActions');
-vi.mock('../../../../submissions/Programming/modules/contestSubmissionActions');
-
 describe('ProgrammingContestProblemPage', () => {
   beforeEach(async () => {
-    contestProblemActions.getProgrammingProblemWorksheet.mockReturnValue(
-      Promise.resolve({
+    setSession('token', { jid: 'userJid' });
+
+    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
+    nockUriel()
+      .get('/contests/contestJid/problems/C/programming/worksheet')
+      .query({ language: 'id' })
+      .reply(200, {
+        defaultLanguage: 'en',
+        languages: ['en'],
         problem: {
           problemJid: 'problemJid',
           alias: 'C',
-          status: ContestProblemStatus.Open,
+          status: 'OPEN',
           submissionsLimit: 0,
         },
         totalSubmissions: 2,
@@ -41,15 +46,7 @@ describe('ProgrammingContestProblemPage', () => {
             gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11', 'Pascal'] },
           },
         },
-      })
-    );
-
-    contestSubmissionActions.createSubmission.mockReturnValue(Promise.resolve({}));
-
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
-      jid: 'contestJid',
-      slug: 'contest-slug',
-    });
+      });
 
     await act(async () => {
       render(
@@ -67,8 +64,14 @@ describe('ProgrammingContestProblemPage', () => {
     });
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   test('form', async () => {
     await screen.findByText('Lorem ipsum');
+
+    const createSubmission = nockUriel().post('/contests/submissions/programming').reply(200);
 
     const user = userEvent.setup();
 
@@ -91,12 +94,8 @@ describe('ProgrammingContestProblemPage', () => {
     const submitButton = screen.getByRole('button', { name: /submit/i });
     await user.click(submitButton);
 
-    expect(contestSubmissionActions.createSubmission).toHaveBeenCalledWith('contestJid', 'contest-slug', 'problemJid', {
-      gradingLanguage: 'Cpp11',
-      sourceFiles: {
-        encoder: expect.objectContaining({ name: 'encoder.cpp' }),
-        decoder: expect.objectContaining({ name: 'decoder.cpp' }),
-      },
+    await waitFor(() => {
+      expect(createSubmission.isDone()).toBe(true);
     });
   });
 });

@@ -1,97 +1,69 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { useEffect } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { callAction } from '../../../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
+import { contestProgrammingProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
+import { createProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
-import * as contestSubmissionActions from '../../../../submissions/Programming/modules/contestSubmissionActions';
-import * as contestProblemActions from '../../../modules/contestProblemActions';
+import * as toastActions from '../../../../../../../../modules/toast/toastActions';
 
 import './ContestProblemPage.scss';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
+  const navigate = useNavigate();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage, gradingLanguage, setGradingLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    defaultLanguage: undefined,
-    languages: undefined,
-    problem: undefined,
-    totalSubmissions: undefined,
-    worksheet: undefined,
-  });
+  const { data: response } = useQuery(
+    contestProgrammingProblemWorksheetQueryOptions(contest.jid, problemAlias, statementLanguage)
+  );
 
-  const loadWorksheet = async () => {
-    setState(prevState => ({
-      ...prevState,
-      worksheet: undefined,
-    }));
-
-    const { defaultLanguage, languages, problem, totalSubmissions, worksheet } = await callAction(
-      contestProblemActions.getProgrammingProblemWorksheet(contest.jid, problemAlias, statementLanguage)
-    );
-
-    setState({
-      defaultLanguage,
-      languages,
-      problem,
-      totalSubmissions,
-      worksheet,
-    });
-
-    document.title = createDocumentTitle(`Problem ${problem.alias}`);
-  };
+  const createSubmissionMutation = useMutation(
+    createProgrammingSubmissionMutationOptions(contest.jid, response?.problem?.problemJid)
+  );
 
   useEffect(() => {
-    loadWorksheet();
-  }, [statementLanguage]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        {renderStatementLanguageWidget()}
-        {renderStatement()}
-      </ContentCard>
-    );
-  };
+    if (response) {
+      document.title = createDocumentTitle(`Problem ${response.problem.alias}`);
+    }
+  }, [response?.problem?.alias]);
 
   const createSubmission = async data => {
-    const problem = state.problem;
     setGradingLanguage(data.gradingLanguage);
-    return await callAction(
-      contestSubmissionActions.createSubmission(contest.jid, contest.slug, problem.problemJid, data)
-    );
+    await createSubmissionMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Solution submitted.');
+        window.scrollTo(0, 0);
+        navigate({ to: `/contests/${contestSlug}/submissions` });
+      },
+    });
   };
 
   const renderStatementLanguageWidget = () => {
-    const { defaultLanguage, languages } = state;
-    if (!defaultLanguage || !languages) {
+    if (!response) {
       return null;
     }
-    const props = {
-      defaultLanguage: defaultLanguage,
-      statementLanguages: languages,
-    };
     return (
       <div className="contest-programming-problem-page__widget">
-        <StatementLanguageWidget {...props} />
+        <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
       </div>
     );
   };
 
   const renderStatement = () => {
-    const { problem, totalSubmissions, worksheet } = state;
-    if (!problem || !worksheet) {
+    if (!response) {
       return <LoadingState />;
     }
+
+    const { problem, totalSubmissions, worksheet } = response;
 
     let submissionWarning;
     if (!!problem.submissionsLimit) {
@@ -110,5 +82,10 @@ export default function ContestProblemPage() {
     );
   };
 
-  return render();
+  return (
+    <ContentCard>
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }
