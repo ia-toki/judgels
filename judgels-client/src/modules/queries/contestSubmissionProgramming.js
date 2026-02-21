@@ -3,7 +3,16 @@ import { queryOptions } from '@tanstack/react-query';
 import { NotFoundError } from '../api/error';
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gabriel/language';
 import { contestSubmissionProgrammingAPI } from '../api/uriel/contestSubmissionProgramming';
+import { queryClient } from '../queryClient';
 import { getToken } from '../session';
+
+export const contestProgrammingSubmissionsQueryOptions = (contestJid, params) => {
+  const { username, problemAlias, page } = params || {};
+  return queryOptions({
+    queryKey: ['contest', contestJid, 'submissions', 'programming', ...(params ? [params] : [])],
+    queryFn: () => contestSubmissionProgrammingAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
+  });
+};
 
 export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, problemJid) => {
   return queryOptions({
@@ -58,5 +67,20 @@ export const createProgrammingSubmissionMutationOptions = (contestJid, problemJi
       data.gradingLanguage,
       sources
     );
+  },
+});
+
+export const regradeProgrammingSubmissionMutationOptions = contestJid => ({
+  mutationFn: submissionJid => contestSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  onSuccess: () => {
+    queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
+  },
+});
+
+export const regradeProgrammingSubmissionsMutationOptions = contestJid => ({
+  mutationFn: ({ username, problemAlias } = {}) =>
+    contestSubmissionProgrammingAPI.regradeSubmissions(getToken(), contestJid, username, problemAlias),
+  onSuccess: () => {
+    queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
   },
 });
