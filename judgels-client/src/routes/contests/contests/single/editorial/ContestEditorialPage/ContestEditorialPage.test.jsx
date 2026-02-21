@@ -1,7 +1,6 @@
 import { act, render, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -9,13 +8,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditorialPage from './ContestEditorialPage';
 
-import * as contestEditorialActions from '../modules/contestEditorialActions';
-
-vi.mock('../modules/contestEditorialActions');
-
 describe('ContestEditorialPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   const renderComponent = async () => {
@@ -24,8 +23,10 @@ describe('ContestEditorialPage', () => {
       slug: 'contest-slug',
     });
 
-    contestEditorialActions.getEditorial.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/editorial')
+      .query({ language: 'en' })
+      .reply(200, {
         preface: '<p>Thanks for participating.</p>',
         problems: [
           {
@@ -47,7 +48,7 @@ describe('ContestEditorialPage', () => {
         problemsMap: {
           problemJid1: {
             slug: 'problem-a',
-            type: ProblemType.PROGRAMMING,
+            type: 'Programming',
             defaultLanguage: 'id',
             titlesByLanguage: {
               id: 'Soal A',
@@ -55,7 +56,7 @@ describe('ContestEditorialPage', () => {
           },
           problemJid2: {
             slug: 'problem-b',
-            type: ProblemType.PROGRAMMING,
+            type: 'Programming',
             defaultLanguage: 'id',
             titlesByLanguage: {
               id: 'Soal B',
@@ -64,7 +65,7 @@ describe('ContestEditorialPage', () => {
           },
           problemJid3: {
             slug: 'problem-c',
-            type: ProblemType.PROGRAMMING,
+            type: 'Programming',
             defaultLanguage: 'en',
             titlesByLanguage: {
               id: 'Soal C',
@@ -96,8 +97,7 @@ describe('ContestEditorialPage', () => {
             settersMap: {},
           },
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(

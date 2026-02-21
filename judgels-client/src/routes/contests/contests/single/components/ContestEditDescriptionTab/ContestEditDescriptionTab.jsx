@@ -1,53 +1,41 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { callAction } from '../../../../../../modules/callAction';
-import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestBySlugQueryOptions,
+  contestDescriptionQueryOptions,
+  updateContestDescriptionMutationOptions,
+} from '../../../../../../modules/queries/contest';
 import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
 
-import * as contestActions from '../../../modules/contestActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestEditDescriptionTab() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const [state, setState] = useState({
-    isEditing: false,
-    response: undefined,
-  });
+  const { data: response } = useQuery(contestDescriptionQueryOptions(contest.jid));
 
-  const refreshContestDescription = async () => {
-    const response = await callAction(contestActions.getContestDescription(contest.jid));
-    setState(prevState => ({ ...prevState, response }));
-  };
+  const updateDescriptionMutation = useMutation(updateContestDescriptionMutationOptions(contest.jid));
 
-  useEffect(() => {
-    refreshContestDescription();
-  }, [contest.jid]);
-
-  const render = () => {
-    return (
-      <>
-        <h4>
-          Description settings
-          {renderEditButton()}
-        </h4>
-        <hr />
-        {renderContent()}
-      </>
-    );
-  };
+  const [isEditing, setIsEditing] = useState(false);
 
   const renderEditButton = () => {
     return (
-      !state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
+      !isEditing && (
+        <Button
+          small
+          className="right-action-button"
+          intent={Intent.PRIMARY}
+          icon={<Edit />}
+          onClick={() => setIsEditing(true)}
+        >
           Edit
         </Button>
       )
@@ -55,7 +43,6 @@ export default function ContestEditDescriptionTab() {
   };
 
   const renderContent = () => {
-    const { isEditing, response } = state;
     if (response === undefined) {
       return <LoadingState />;
     }
@@ -64,7 +51,7 @@ export default function ContestEditDescriptionTab() {
         description: response.description,
       };
       const formProps = {
-        onCancel: toggleEdit,
+        onCancel: () => setIsEditing(false),
       };
       return (
         <ContestEditDescriptionForm initialValues={initialValues} onSubmit={updateContestDescription} {...formProps} />
@@ -89,14 +76,20 @@ export default function ContestEditDescriptionTab() {
   };
 
   const updateContestDescription = async data => {
-    await callAction(contestActions.updateContestDescription(contest.jid, data.description));
-    await refreshContestDescription();
-    toggleEdit();
+    await updateDescriptionMutation.mutateAsync(data.description, {
+      onSuccess: () => toastActions.showSuccessToast('Description updated.'),
+    });
+    setIsEditing(false);
   };
 
-  const toggleEdit = () => {
-    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
-  };
-
-  return render();
+  return (
+    <>
+      <h4>
+        Description settings
+        {renderEditButton()}
+      </h4>
+      <hr />
+      {renderContent()}
+    </>
+  );
 }

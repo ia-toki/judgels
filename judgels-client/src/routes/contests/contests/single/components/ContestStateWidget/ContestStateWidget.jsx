@@ -1,17 +1,18 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import { InfoSign, Time } from '@blueprintjs/icons';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 
 import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
-import { callAction } from '../../../../../../modules/callAction';
-import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestBySlugQueryOptions,
+  searchProblemSetQueryOptions,
+  startVirtualContestMutationOptions,
+} from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
-
-import * as contestActions from '../../../modules/contestActions';
 
 // TODO(fushar): unit tests
 export default function ContestStateWidget() {
@@ -23,13 +24,18 @@ export default function ContestStateWidget() {
   const contestState = webConfig.state;
   const remainingStateDuration = webConfig.remainingStateDuration;
 
+  const startVirtualMutation = useMutation(startVirtualContestMutationOptions(contest.jid));
+
+  const { data: problemSet } = useQuery({
+    ...searchProblemSetQueryOptions(contest.jid),
+    enabled: contestState === ContestState.Finished,
+  });
+
   const [state, setState] = useState({
     baseRemainingDuration: undefined,
     baseTimeForRemainingDuration: undefined,
     remainingDuration: undefined,
     isVirtualContestAlertOpen: undefined,
-    isVirtualContestButtonLoading: undefined,
-    problemSet: undefined,
   });
 
   const currentTimeoutRef = useRef(null);
@@ -49,22 +55,6 @@ export default function ContestStateWidget() {
     setUpBaseRemainingDuration();
   }, [remainingStateDuration]);
 
-  useEffect(() => {
-    searchProblemSet();
-  }, [contestState]);
-
-  const render = () => {
-    const { leftComponent, rightComponent } = getWidgetComponents();
-    return (
-      <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
-        <div className="float-left">{leftComponent}</div>
-        <div className="float-right">{rightComponent}</div>
-        <div className="clearfix" />
-        {renderVirtualContestAlert()}
-      </Callout>
-    );
-  };
-
   const renderVirtualContestAlert = () => (
     <Alert
       isOpen={state.isVirtualContestAlertOpen || false}
@@ -80,7 +70,6 @@ export default function ContestStateWidget() {
   );
 
   const renderUpsolveButton = () => {
-    const { problemSet } = state;
     if (!problemSet) {
       return null;
     }
@@ -104,12 +93,7 @@ export default function ContestStateWidget() {
     if (contestState === ContestState.Begun) {
       return {
         leftComponent: (
-          <Button
-            small
-            intent={Intent.WARNING}
-            onClick={alertVirtualContest}
-            loading={state.isVirtualContestButtonLoading}
-          >
+          <Button small intent={Intent.WARNING} onClick={alertVirtualContest} loading={startVirtualMutation.isPending}>
             Click here to start your participation
           </Button>
         ),
@@ -157,7 +141,7 @@ export default function ContestStateWidget() {
       );
 
       if (remainingDuration === 0 && prevRemainingDuration !== 0) {
-        queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] });
+        queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
       }
 
       return { ...prevState, remainingDuration };
@@ -179,24 +163,22 @@ export default function ContestStateWidget() {
   };
 
   const cancelVirtualContest = () => {
-    setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: false }));
+    setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false }));
   };
 
   const startVirtualContest = async () => {
-    setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false, isVirtualContestButtonLoading: true }));
-    await callAction(contestActions.startVirtualContest(contest.jid));
-    await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] });
-    setState(prevState => ({ ...prevState, isVirtualContestButtonLoading: false }));
+    setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false }));
+    await startVirtualMutation.mutateAsync();
+    await queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
   };
 
-  const searchProblemSet = async () => {
-    if (contestState === ContestState.Finished) {
-      if (state.problemSet === undefined) {
-        const problemSet = await callAction(contestActions.searchProblemSet(contest.jid));
-        setState(prevState => ({ ...prevState, problemSet }));
-      }
-    }
-  };
-
-  return render();
+  const { leftComponent, rightComponent } = getWidgetComponents();
+  return (
+    <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
+      <div className="float-left">{leftComponent}</div>
+      <div className="float-right">{rightComponent}</div>
+      <div className="clearfix" />
+      {renderVirtualContestAlert()}
+    </Callout>
+  );
 }

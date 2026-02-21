@@ -4,10 +4,10 @@ import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
-import { callAction } from '../../../../../../modules/callAction';
+import { showDesktopNotification } from '../../../../../../modules/notification/notification';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
 
-import * as contestAnnouncementActions from '../../announcements/modules/contestAnnouncementActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestAnnouncementsWidget() {
   const { contestSlug } = useParams({ strict: false });
@@ -20,7 +20,9 @@ export default function ContestAnnouncementsWidget() {
       // TODO(lungsin): change the notification tag to be more proper, e.g. using announcement JID.
       const timestamp = Math.floor(Date.now() / REFRESH_WEB_CONFIG_INTERVAL); // Use timestamp for notification tag
       const notificationTag = `announcement_${contestSlug}_timestamp_${timestamp}`;
-      callAction(contestAnnouncementActions.alertNewAnnouncements(notificationTag));
+      const message = 'You have new announcement(s).';
+      toastActions.showAlertToast(message);
+      showDesktopNotification('New announcement(s)', notificationTag, message);
     }
     prevAnnouncementCountRef.current = announcementCount;
   }, [announcementCount]);

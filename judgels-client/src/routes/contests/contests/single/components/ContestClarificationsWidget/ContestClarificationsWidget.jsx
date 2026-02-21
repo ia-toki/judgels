@@ -5,10 +5,10 @@ import { useEffect, useRef } from 'react';
 
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
-import { callAction } from '../../../../../../modules/callAction';
+import { showDesktopNotification } from '../../../../../../modules/notification/notification';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
 
-import * as contestClarificationActions from '../../clarifications/modules/contestClarificationActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestClarificationsWidget() {
   const { contestSlug } = useParams({ strict: false });
@@ -22,7 +22,17 @@ export default function ContestClarificationsWidget() {
       // TODO(lungsin): change the notification tag to be more proper, e.g. using clarification JID.
       const timestamp = Math.floor(Date.now() / REFRESH_WEB_CONFIG_INTERVAL);
       const notificationTag = `clarification_${contestSlug}_timestamp_${timestamp}`;
-      callAction(contestClarificationActions.alertNewClarifications(clarificationStatus, notificationTag));
+
+      let title, message;
+      if (clarificationStatus === ContestClarificationStatus.Answered) {
+        title = 'New answered clarification(s)';
+        message = 'You have new answered clarification(s).';
+      } else {
+        title = 'New clarification(s)';
+        message = 'You have new clarification(s).';
+      }
+      toastActions.showAlertToast(message);
+      showDesktopNotification(title, notificationTag, message);
     }
     prevClarificationCountRef.current = clarificationCount;
   }, [clarificationCount]);

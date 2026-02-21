@@ -1,16 +1,13 @@
 import { Button, Classes, Dialog, HTMLTable } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 
 import { getCountryName } from '../../../../../../assets/data/countries';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-
-import * as contestContestantActions from '../../modules/contestContestantActions';
+import { approvedContestantsQueryOptions } from '../../../../../../modules/queries/contestContestant';
 
 import './ContestRegistrantsDialog.scss';
 
@@ -18,37 +15,11 @@ export default function ContestRegistrantsDialog({ onClose }) {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const { data: response } = useQuery(approvedContestantsQueryOptions(contest.jid));
 
-  const refreshRegistrants = async () => {
-    const response = await callAction(contestContestantActions.getApprovedContestants(contest.jid));
-    setState(prevState => ({ ...prevState, response }));
-  };
-
-  useEffect(() => {
-    refreshRegistrants();
-  }, []);
-
-  const render = () => {
-    const { response } = state;
-    const contestantsCount = response ? ` (${response.data.length})` : '';
-
-    return (
-      <Dialog isOpen onClose={onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>{renderRegistrants()}</div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button text="Close" onClick={onClose} />
-          </div>
-        </div>
-      </Dialog>
-    );
-  };
+  const contestantsCount = response ? ` (${response.data.length})` : '';
 
   const renderRegistrants = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -94,5 +65,14 @@ export default function ContestRegistrantsDialog({ onClose }) {
     );
   };
 
-  return render();
+  return (
+    <Dialog isOpen onClose={onClose} title={`Registrants${contestantsCount}`} canOutsideClickClose={false}>
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-registrants-dialog__body')}>{renderRegistrants()}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+          <Button text="Close" onClick={onClose} />
+        </div>
+      </div>
+    </Dialog>
+  );
 }

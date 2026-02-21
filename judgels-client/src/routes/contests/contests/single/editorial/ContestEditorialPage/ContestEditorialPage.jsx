@@ -1,6 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
@@ -9,51 +9,25 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { ProblemEditorial } from '../../../../../../components/ProblemEditorial/ProblemEditorial';
 import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
 import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestEditorialQueryOptions } from '../../../../../../modules/queries/contestEditorial';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
-
-import * as contestEditorialActions from '../modules/contestEditorialActions';
 
 export default function ContestEditorialPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { editorialLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    response: undefined,
-    defaultLanguage: undefined,
-    uniqueLanguages: undefined,
-  });
+  const { data: response } = useQuery(contestEditorialQueryOptions(contest.jid, { language: editorialLanguage }));
 
-  const loadEditorial = async () => {
-    const response = await callAction(contestEditorialActions.getEditorial(contest.jid, editorialLanguage));
-    const { defaultLanguage, uniqueLanguages } = consolidateLanguages(response.problemEditorialsMap, editorialLanguage);
-
-    setState({
-      response,
-      defaultLanguage,
-      uniqueLanguages,
-    });
-  };
-
-  useEffect(() => {
-    loadEditorial();
-  }, [editorialLanguage]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Editorial</h3>
-        <hr />
-        {renderEditorialLanguageWidget()}
-        {renderEditorial()}
-      </ContentCard>
-    );
-  };
+  const { defaultLanguage, uniqueLanguages } = useMemo(() => {
+    if (!response) {
+      return {};
+    }
+    return consolidateLanguages(response.problemEditorialsMap, editorialLanguage);
+  }, [response, editorialLanguage]);
 
   const renderEditorialLanguageWidget = () => {
-    const { defaultLanguage, uniqueLanguages } = state;
     if (!defaultLanguage || !uniqueLanguages) {
       return null;
     }
@@ -66,7 +40,6 @@ export default function ContestEditorialPage() {
   };
 
   const renderEditorial = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -104,9 +77,9 @@ export default function ContestEditorialPage() {
 
   const renderProblemEditorial = (problem, problemInfo, editorial, metadata, profilesMap) => {
     return (
-      <ContentCard key={problem.problemJid + state.defaultLanguage}>
+      <ContentCard key={problem.problemJid + defaultLanguage}>
         <ProblemEditorial
-          title={`${problem.alias}. ${getProblemName(problemInfo, state.defaultLanguage)}`}
+          title={`${problem.alias}. ${getProblemName(problemInfo, defaultLanguage)}`}
           settersMap={metadata.settersMap}
           profilesMap={profilesMap}
         >
@@ -116,5 +89,12 @@ export default function ContestEditorialPage() {
     );
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Editorial</h3>
+      <hr />
+      {renderEditorialLanguageWidget()}
+      {renderEditorial()}
+    </ContentCard>
+  );
 }

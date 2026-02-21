@@ -1,43 +1,35 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { callAction } from '../../../../../../modules/callAction';
-import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestBySlugQueryOptions, updateContestMutationOptions } from '../../../../../../modules/queries/contest';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditGeneralForm from '../ContestEditGeneralForm/ContestEditGeneralForm';
 import { ContestEditGeneralTable } from '../ContestEditGeneralTable/ContestEditGeneralTable';
 
-import * as contestActions from '../../../modules/contestActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestEditGeneralTab() {
+  const navigate = useNavigate();
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const queryClient = useQueryClient();
 
-  const [state, setState] = useState({
-    isEditing: false,
-  });
+  const updateContestMutation = useMutation(updateContestMutationOptions(contest.jid, contestSlug));
 
-  const render = () => {
-    return (
-      <>
-        <h4>
-          General settings
-          {renderEditButton()}
-        </h4>
-        <hr />
-        {renderContent()}
-      </>
-    );
-  };
+  const [isEditing, setIsEditing] = useState(false);
 
   const renderEditButton = () => {
     return (
-      !state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
+      !isEditing && (
+        <Button
+          small
+          className="right-action-button"
+          intent={Intent.PRIMARY}
+          icon={<Edit />}
+          onClick={() => setIsEditing(true)}
+        >
           Edit
         </Button>
       )
@@ -45,7 +37,7 @@ export default function ContestEditGeneralTab() {
   };
 
   const renderContent = () => {
-    if (state.isEditing) {
+    if (isEditing) {
       const initialValues = {
         slug: contest.slug,
         name: contest.name,
@@ -54,7 +46,7 @@ export default function ContestEditGeneralTab() {
         duration: formatDuration(contest.duration),
       };
       const formProps = {
-        onCancel: toggleEdit,
+        onCancel: () => setIsEditing(false),
       };
       return <ContestEditGeneralForm initialValues={initialValues} onSubmit={updateContest} {...formProps} />;
     }
@@ -69,14 +61,24 @@ export default function ContestEditGeneralTab() {
       beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
-    await callAction(contestActions.updateContest(contest.jid, contest.slug, updateData));
-    await queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug] });
-    toggleEdit();
+    await updateContestMutation.mutateAsync(updateData, {
+      onSuccess: () => toastActions.showSuccessToast('Contest updated.'),
+    });
+    setIsEditing(false);
+
+    if (updateData.slug && updateData.slug !== contestSlug) {
+      navigate({ to: `/contests/${updateData.slug}` });
+    }
   };
 
-  const toggleEdit = () => {
-    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
-  };
-
-  return render();
+  return (
+    <>
+      <h4>
+        General settings
+        {renderEditButton()}
+      </h4>
+      <hr />
+      {renderContent()}
+    </>
+  );
 }

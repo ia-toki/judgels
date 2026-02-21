@@ -1,54 +1,42 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestModuleConfigQueryOptions,
+  upsertContestModuleConfigMutationOptions,
+} from '../../../../../../modules/queries/contestModule';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
 import { ContestEditConfigsTable } from '../ContestEditConfigsTable/ContestEditConfigsTable';
 
-import * as contestModuleActions from '../../modules/contestModuleActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestEditConfigsTab() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const [state, setState] = useState({
-    config: undefined,
-    isEditing: false,
-  });
+  const { data: config } = useQuery(contestModuleConfigQueryOptions(contest.jid));
 
-  const refreshConfig = async () => {
-    const config = await callAction(contestModuleActions.getConfig(contest.jid));
-    setState(prevState => ({ ...prevState, config }));
-  };
+  const upsertConfigMutation = useMutation(upsertContestModuleConfigMutationOptions(contest.jid));
 
-  useEffect(() => {
-    refreshConfig();
-  }, []);
-
-  const render = () => {
-    return (
-      <>
-        <h4>
-          Configs settings
-          {renderEditButton()}
-        </h4>
-        <hr />
-        {renderContent()}
-      </>
-    );
-  };
+  const [isEditing, setIsEditing] = useState(false);
 
   const renderEditButton = () => {
     return (
-      !state.isEditing && (
-        <Button small className="right-action-button" intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleEdit}>
+      !isEditing && (
+        <Button
+          small
+          className="right-action-button"
+          intent={Intent.PRIMARY}
+          icon={<Edit />}
+          onClick={() => setIsEditing(true)}
+        >
           Edit
         </Button>
       )
@@ -56,7 +44,6 @@ export default function ContestEditConfigsTab() {
   };
 
   const renderContent = () => {
-    const { config, isEditing } = state;
     if (config === undefined) {
       return <LoadingState />;
     }
@@ -156,7 +143,7 @@ export default function ContestEditConfigsTab() {
 
       const formProps = {
         config,
-        onCancel: toggleEdit,
+        onCancel: () => setIsEditing(false),
       };
       return <ContestEditConfigsForm initialValues={initialValues} onSubmit={upsertConfig} {...formProps} />;
     }
@@ -176,17 +163,17 @@ export default function ContestEditConfigsTab() {
       mergedScoreboard,
       externalScoreboard,
       virtual,
-    } = state.config;
+    } = config;
 
-    let config = {
+    let newConfig = {
       scoreboard: {
         isIncognitoScoreboard: data.scoreboardIsIncognito,
       },
     };
     if (trocStyle) {
       const allowedLanguageNames = data.trocAllowAllLanguages ? [] : toLanguageRestriction(data.trocAllowedLanguages);
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         trocStyle: {
           languageRestriction: { allowedLanguageNames },
           wrongSubmissionPenalty: +data.trocWrongSubmissionPenalty,
@@ -195,8 +182,8 @@ export default function ContestEditConfigsTab() {
     }
     if (icpcStyle) {
       const allowedLanguageNames = data.icpcAllowAllLanguages ? [] : toLanguageRestriction(data.icpcAllowedLanguages);
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         icpcStyle: {
           languageRestriction: { allowedLanguageNames },
           wrongSubmissionPenalty: +data.icpcWrongSubmissionPenalty,
@@ -205,8 +192,8 @@ export default function ContestEditConfigsTab() {
     }
     if (ioiStyle) {
       const allowedLanguageNames = data.ioiAllowAllLanguages ? [] : toLanguageRestriction(data.ioiAllowedLanguages);
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         ioiStyle: {
           languageRestriction: { allowedLanguageNames },
           usingLastAffectingPenalty: data.ioiUsingLastAffectingPenalty,
@@ -216,8 +203,8 @@ export default function ContestEditConfigsTab() {
     }
     if (gcjStyle) {
       const allowedLanguageNames = data.gcjAllowAllLanguages ? [] : toLanguageRestriction(data.gcjAllowedLanguages);
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         gcjStyle: {
           languageRestriction: { allowedLanguageNames },
           wrongSubmissionPenalty: +data.gcjWrongSubmissionPenalty,
@@ -225,26 +212,26 @@ export default function ContestEditConfigsTab() {
       };
     }
     if (clarificationTimeLimit) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         clarificationTimeLimit: { clarificationDuration: parseDuration(data.clarificationTimeLimitDuration) },
       };
     }
     if (division) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         division: { division: +data.divisionDivision },
       };
     }
     if (editorial) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         editorial: { preface: data.editorialPreface },
       };
     }
     if (frozenScoreboard) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         frozenScoreboard: {
           scoreboardFreezeTime: parseDuration(data.frozenScoreboardFreezeTime),
           isOfficialScoreboardAllowed: data.frozenScoreboardIsOfficialAllowed,
@@ -252,16 +239,16 @@ export default function ContestEditConfigsTab() {
       };
     }
     if (mergedScoreboard) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         mergedScoreboard: {
           previousContestJid: data.mergedScoreboardPreviousContestJid,
         },
       };
     }
     if (externalScoreboard) {
-      config = {
-        ...config,
+      newConfig = {
+        ...newConfig,
         externalScoreboard: {
           receiverUrl: data.externalScoreboardReceiverUrl,
           receiverSecret: data.externalScoreboardReceiverSecret,
@@ -269,12 +256,13 @@ export default function ContestEditConfigsTab() {
       };
     }
     if (virtual) {
-      config = { ...config, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
+      newConfig = { ...newConfig, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
     }
 
-    await callAction(contestModuleActions.upsertConfig(contest.jid, config));
-    await refreshConfig();
-    toggleEdit();
+    await upsertConfigMutation.mutateAsync(newConfig, {
+      onSuccess: () => toastActions.showSuccessToast('Configs updated.'),
+    });
+    setIsEditing(false);
   };
 
   const fromLanguageRestriction = r => {
@@ -285,9 +273,14 @@ export default function ContestEditConfigsTab() {
     return Object.keys(r).filter(l => r[l]);
   };
 
-  const toggleEdit = () => {
-    setState(prevState => ({ ...prevState, isEditing: !prevState.isEditing }));
-  };
-
-  return render();
+  return (
+    <>
+      <h4>
+        Configs settings
+        {renderEditButton()}
+      </h4>
+      <hr />
+      {renderContent()}
+    </>
+  );
 }

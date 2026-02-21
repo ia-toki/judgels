@@ -1,22 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
-import { callAction } from '../../../../../modules/callAction';
+import { activeContestsQueryOptions } from '../../../../../modules/queries/contest';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
 
-import * as contestActions from '../../../../contests/contests/modules/contestActions';
-
 export default function ActiveContestsWidget() {
-  const [response, setResponse] = useState(undefined);
-
-  useEffect(() => {
-    (async () => {
-      const resp = await callAction(contestActions.getActiveContests());
-      setResponse(resp);
-    })();
-  }, []);
+  const { data: response } = useQuery(activeContestsQueryOptions());
 
   const renderActiveContests = () => {
     if (!response) {

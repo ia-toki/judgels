@@ -1,15 +1,11 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestRegistrantsDialog from './ContestRegistrantsDialog';
-
-import * as contestContestantActions from '../../modules/contestContestantActions';
-
-vi.mock('../../modules/contestContestantActions');
 
 describe('ContestRegistrantsDialog', () => {
   beforeEach(async () => {
@@ -20,8 +16,9 @@ describe('ContestRegistrantsDialog', () => {
       slug: 'contest-slug',
     });
 
-    contestContestantActions.getApprovedContestants.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/contestants/approved')
+      .reply(200, {
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],
         profilesMap: {
           userJid1: { country: 'TH', username: 'username1', rating: { publicRating: 2000 } },
@@ -31,8 +28,7 @@ describe('ContestRegistrantsDialog', () => {
           userJid5: { country: 'ID', username: 'username5', rating: { publicRating: 1000 } },
           userJid6: { username: 'username6' },
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(
@@ -43,6 +39,10 @@ describe('ContestRegistrantsDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('table', async () => {

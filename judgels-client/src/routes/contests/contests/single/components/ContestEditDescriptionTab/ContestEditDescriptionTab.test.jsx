@@ -1,16 +1,12 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
-
-import * as contestActions from '../../../modules/contestActions';
-
-vi.mock('../../../modules/contestActions');
 
 describe('ContestEditDescriptionTab', () => {
   beforeEach(async () => {
@@ -20,12 +16,9 @@ describe('ContestEditDescriptionTab', () => {
       slug: 'contest-slug',
     });
 
-    contestActions.getContestDescription.mockReturnValue(
-      Promise.resolve({
-        description: 'current description',
-      })
-    );
-    contestActions.updateContestDescription.mockReturnValue(Promise.resolve({}));
+    nockUriel().get('/contests/contestJid/description').reply(200, {
+      description: 'current description',
+    });
 
     await act(async () =>
       render(
@@ -36,6 +29,10 @@ describe('ContestEditDescriptionTab', () => {
         </QueryClientProviderWrapper>
       )
     );
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('contest edit description tab form', async () => {
@@ -49,9 +46,9 @@ describe('ContestEditDescriptionTab', () => {
     await user.clear(description);
     await user.type(description, 'new description');
 
+    nockUriel().post('/contests/contestJid/description', { description: 'new description' }).reply(200);
+
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
-
-    expect(contestActions.updateContestDescription).toHaveBeenCalledWith('contestJid', 'new description');
   });
 });

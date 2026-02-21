@@ -1,17 +1,22 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle, People, Tick } from '@blueprintjs/icons';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  approvedContestantsCountQueryOptions,
+  myContestantStateQueryOptions,
+  registerMyselfMutationOptions,
+  unregisterMyselfMutationOptions,
+} from '../../../../../../modules/queries/contestContestant';
 import { useSession } from '../../../../../../modules/session';
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 
-import * as contestContestantActions from '../../modules/contestContestantActions';
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 import './ContestRegistrationCard.scss';
 
@@ -19,51 +24,32 @@ export default function ContestRegistrationCard() {
   const { contestSlug } = useParams({ strict: false });
   const { isLoggedIn } = useSession();
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const queryClient = useQueryClient();
 
-  const [state, setState] = useState({
-    contestantState: undefined,
-    contestantsCount: undefined,
-    isActionButtonLoading: false,
-    isRegistrantsDialogOpen: false,
+  const { data: contestantState } = useQuery({
+    ...myContestantStateQueryOptions(contest.jid),
+    enabled: isLoggedIn,
   });
 
-  const render = () => {
-    if (!isLoggedIn) {
-      return (
-        <Callout icon={<BanCircle />} className="contest-registration-card--error secondary-info">
-          Please log in to register.
-        </Callout>
-      );
-    }
+  const { data: contestantsCount } = useQuery({
+    ...approvedContestantsCountQueryOptions(contest.jid),
+    enabled: isLoggedIn,
+  });
 
+  const registerMutation = useMutation(registerMyselfMutationOptions(contest.jid, contestSlug));
+  const unregisterMutation = useMutation(unregisterMyselfMutationOptions(contest.jid, contestSlug));
+
+  const [isRegistrantsDialogOpen, setIsRegistrantsDialogOpen] = useState(false);
+
+  if (!isLoggedIn) {
     return (
-      <Callout className="contest-registration-card" icon={null}>
-        {renderCard()}
+      <Callout icon={<BanCircle />} className="contest-registration-card--error secondary-info">
+        Please log in to register.
       </Callout>
     );
-  };
-
-  const refresh = async () => {
-    if (!isLoggedIn) {
-      return;
-    }
-
-    const [contestantState, contestantsCount] = await Promise.all([
-      callAction(contestContestantActions.getMyContestantState(contest.jid)),
-      callAction(contestContestantActions.getApprovedContestantsCount(contest.jid)),
-      queryClient.invalidateQueries({ queryKey: ['contest-by-slug', contestSlug, 'web-config'] }),
-    ]);
-    setState(prevState => ({ ...prevState, contestantState, contestantsCount }));
-  };
-
-  useEffect(() => {
-    refresh();
-  }, []);
+  }
 
   const renderCard = () => {
-    const { contestantState, contestantsCount } = state;
-    if (!contestantState || contestantsCount === undefined) {
+    if (contestantState === undefined || contestantsCount === undefined) {
       return <LoadingState />;
     }
 
@@ -110,7 +96,7 @@ export default function ContestRegistrationCard() {
           intent={Intent.PRIMARY}
           text="Register"
           onClick={register}
-          loading={state.isActionButtonLoading}
+          loading={registerMutation.isPending}
         />
       );
     }
@@ -121,7 +107,7 @@ export default function ContestRegistrationCard() {
           intent={Intent.DANGER}
           text="Unregister"
           onClick={unregister}
-          loading={state.isActionButtonLoading}
+          loading={unregisterMutation.isPending}
         />
       );
     }
@@ -134,38 +120,33 @@ export default function ContestRegistrationCard() {
         className="contest-registration-card__item"
         icon={<People />}
         text={`View registrants (${contestantsCount})`}
-        onClick={toggleRegistrantsDialog}
+        onClick={() => setIsRegistrantsDialogOpen(true)}
       />
     );
   };
 
   const renderRegistrantsDialog = () => {
-    if (!state.isRegistrantsDialogOpen) {
+    if (!isRegistrantsDialogOpen) {
       return null;
     }
-    return <ContestRegistrantsDialog onClose={toggleRegistrantsDialog} />;
+    return <ContestRegistrantsDialog onClose={() => setIsRegistrantsDialogOpen(false)} />;
   };
 
   const register = async () => {
-    setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
-    await callAction(contestContestantActions.registerMyselfAsContestant(contest.jid));
-    setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
-    await refresh();
+    await registerMutation.mutateAsync(undefined, {
+      onSuccess: () => toastActions.showSuccessToast('Successfully registered to the contest.'),
+    });
   };
 
   const unregister = async () => {
-    setState(prevState => ({ ...prevState, isActionButtonLoading: true }));
-    await callAction(contestContestantActions.unregisterMyselfAsContestant(contest.jid));
-    setState(prevState => ({ ...prevState, isActionButtonLoading: false }));
-    await refresh();
+    await unregisterMutation.mutateAsync(undefined, {
+      onSuccess: () => toastActions.showSuccessToast('Successfully unregistered from the contest.'),
+    });
   };
 
-  const toggleRegistrantsDialog = () => {
-    setState(prevState => ({
-      ...prevState,
-      isRegistrantsDialogOpen: !prevState.isRegistrantsDialogOpen,
-    }));
-  };
-
-  return render();
+  return (
+    <Callout className="contest-registration-card" icon={null}>
+      {renderCard()}
+    </Callout>
+  );
 }
