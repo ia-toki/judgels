@@ -1,16 +1,13 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
 import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestLogsQueryOptions } from '../../../../../../modules/queries/contestLog';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
-
-import * as contestLogActions from '../modules/contestLogActions';
 
 const PAGE_SIZE = 100;
 
@@ -23,32 +20,13 @@ function ContestLogsPage() {
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isFilterLoading: false,
-  });
-
-  useEffect(() => {
-    if (username || problemAlias) {
-      setState(prevState => ({ ...prevState, isFilterLoading: true }));
-    }
-  }, [username, problemAlias]);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Logs</h3>
-        <hr />
-        {renderFilterWidget()}
-        {renderLogs()}
-        {renderPagination()}
-      </ContentCard>
-    );
-  };
+  const { data: response, isLoading } = useQuery(
+    contestLogsQueryOptions(contest.jid, { username, problemAlias, page })
+  );
 
   const renderFilterWidget = () => {
-    const { response, isFilterLoading } = state;
     if (!response) {
       return null;
     }
@@ -61,13 +39,12 @@ function ContestLogsPage() {
         username={username}
         problemAlias={problemAlias}
         onFilter={onFilter}
-        isLoading={!!isFilterLoading}
+        isLoading={isLoading && !!(username || problemAlias)}
       />
     );
   };
 
   const renderLogs = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -84,27 +61,19 @@ function ContestLogsPage() {
     return <ContestLogsTable logs={logs.page} profilesMap={profilesMap} problemAliasesMap={problemAliasesMap} />;
   };
 
-  const renderPagination = () => {
-    const key = '' + username + problemAlias;
-    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshLogs(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshLogs = async page => {
-    const response = await callAction(contestLogActions.getLogs(contest.jid, username, problemAlias, page));
-    setState({ response, isFilterLoading: false });
-    return response.data;
-  };
-
   const onFilter = async newFilter => {
     navigate({ search: newFilter });
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Logs</h3>
+      <hr />
+      {renderFilterWidget()}
+      {renderLogs()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }
 
 export default ContestLogsPage;

@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -7,13 +7,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestLogsPage from './ContestLogsPage';
 
-import * as contestLogActions from '../modules/contestLogActions';
-
-vi.mock('../modules/contestLogActions');
-
 describe('ContestLogsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let logs;
@@ -24,10 +24,13 @@ describe('ContestLogsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestLogActions.getLogs.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/logs')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: logs,
+          totalCount: logs.length,
         },
         config: {
           userJids: [],
@@ -41,8 +44,7 @@ describe('ContestLogsPage', () => {
           problemJid1: 'A',
           problemJid2: 'B',
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(

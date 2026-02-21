@@ -71,7 +71,19 @@ describe('ProgrammingContestProblemPage', () => {
   test('form', async () => {
     await screen.findByText('Lorem ipsum');
 
-    const createSubmission = nockUriel().post('/contests/submissions/programming').reply(200);
+    const createSubmission = nockUriel()
+      .post('/contests/submissions/programming', body => {
+        return (
+          body.includes('name="contestJid"\r\n\r\ncontestJid\r\n') &&
+          body.includes('name="problemJid"\r\n\r\nproblemJid\r\n') &&
+          body.includes('name="gradingLanguage"\r\n\r\nCpp11\r\n') &&
+          body.includes('name="sourceFiles.encoder"') &&
+          body.includes('Content-Type: text/plain\r\n\r\nencoder content\r\n') &&
+          body.includes('name="sourceFiles.decoder"') &&
+          body.includes('Content-Type: text/plain\r\n\r\ndecoder content\r\n')
+        );
+      })
+      .reply(200);
 
     const user = userEvent.setup();
 
