@@ -18,7 +18,7 @@ import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/
 export default function ContestStateWidget() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
   const queryClient = useQueryClient();
 
   const contestState = webConfig.state;
@@ -141,7 +141,7 @@ export default function ContestStateWidget() {
       );
 
       if (remainingDuration === 0 && prevRemainingDuration !== 0) {
-        queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+        queryClient.invalidateQueries(contestWebConfigQueryOptions(contest.jid));
       }
 
       return { ...prevState, remainingDuration };
@@ -169,7 +169,7 @@ export default function ContestStateWidget() {
   const startVirtualContest = async () => {
     setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false }));
     await startVirtualMutation.mutateAsync();
-    await queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+    await queryClient.invalidateQueries(contestWebConfigQueryOptions(contest.jid));
   };
 
   const { leftComponent, rightComponent } = getWidgetComponents();

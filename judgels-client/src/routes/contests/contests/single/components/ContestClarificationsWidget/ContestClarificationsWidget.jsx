@@ -6,13 +6,15 @@ import { useEffect, useRef } from 'react';
 import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { showDesktopNotification } from '../../../../../../modules/notification/notification';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestClarificationsWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
   const clarificationCount = webConfig.clarificationCount;
   const clarificationStatus = webConfig.clarificationStatus;
   const prevClarificationCountRef = useRef(clarificationCount);

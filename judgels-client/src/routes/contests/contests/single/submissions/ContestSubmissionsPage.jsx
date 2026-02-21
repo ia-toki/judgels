@@ -12,7 +12,7 @@ import ProgrammingContestSubmissionsPage from './Programming/ContestSubmissionsP
 export default function ContestSubmissionsPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
 
   if (contest.style === ContestStyle.Bundle) {
     if (webConfig.role === ContestRole.Contestant) {

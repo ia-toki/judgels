@@ -24,7 +24,7 @@ export default function SingleContestLayout() {
   const location = useLocation();
   const isEditingContest = location.state?.isEditingContest;
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
-  const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
+  const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
 
   useEffect(() => {
     document.title = createDocumentTitle(contest.name);

@@ -5,13 +5,15 @@ import { useEffect, useRef } from 'react';
 
 import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
 import { showDesktopNotification } from '../../../../../../modules/notification/notification';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
 export default function ContestAnnouncementsWidget() {
   const { contestSlug } = useParams({ strict: false });
-  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contestSlug));
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { data: webConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
   const announcementCount = webConfig.announcementCount;
   const prevAnnouncementCountRef = useRef(announcementCount);
 

@@ -45,20 +45,20 @@ export const approvedContestantsQueryOptions = contestJid =>
     queryFn: () => contestContestantAPI.getApprovedContestants(getToken(), contestJid),
   });
 
-export const registerMyselfMutationOptions = (contestJid, contestSlug) => ({
+export const registerMyselfMutationOptions = contestJid => ({
   mutationFn: () => contestContestantAPI.registerMyselfAsContestant(getToken(), contestJid),
   onSuccess: () => {
     queryClient.invalidateQueries(myContestantStateQueryOptions(contestJid));
     queryClient.invalidateQueries(approvedContestantsCountQueryOptions(contestJid));
-    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
 
-export const unregisterMyselfMutationOptions = (contestJid, contestSlug) => ({
+export const unregisterMyselfMutationOptions = contestJid => ({
   mutationFn: () => contestContestantAPI.unregisterMyselfAsContestant(getToken(), contestJid),
   onSuccess: () => {
     queryClient.invalidateQueries(myContestantStateQueryOptions(contestJid));
     queryClient.invalidateQueries(approvedContestantsCountQueryOptions(contestJid));
-    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
