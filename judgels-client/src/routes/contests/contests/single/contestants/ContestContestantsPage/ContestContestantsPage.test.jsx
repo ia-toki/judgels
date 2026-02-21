@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -7,13 +7,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestContestantsPage from './ContestContestantsPage';
 
-import * as contestContestantActions from '../../modules/contestContestantActions';
-
-vi.mock('../../modules/contestContestantActions');
-
 describe('ContestContestantsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let contestants;
@@ -25,10 +25,13 @@ describe('ContestContestantsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestContestantActions.getContestants.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/contestants')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: contestants,
+          totalCount: contestants.length,
         },
         profilesMap: {
           userJid1: { username: 'username1' },
@@ -37,8 +40,7 @@ describe('ContestContestantsPage', () => {
         config: {
           canManage,
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(

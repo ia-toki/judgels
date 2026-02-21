@@ -3,6 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { BadRequestError } from '../api/error';
 import { ContestErrors, contestAPI } from '../api/uriel/contest';
 import { SubmissionError } from '../form/submissionError';
+import { contestContestantsQueryOptions } from '../queries/contestContestant';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -41,3 +42,10 @@ export const contestDescriptionQueryOptions = contestJid =>
     queryKey: ['contest', contestJid, 'description'],
     queryFn: () => contestAPI.getContestDescription(getToken(), contestJid),
   });
+
+export const resetVirtualContestMutationOptions = contestJid => ({
+  mutationFn: () => contestAPI.resetVirtualContest(getToken(), contestJid),
+  onSuccess: () => {
+    queryClient.invalidateQueries(contestContestantsQueryOptions(contestJid));
+  },
+});
