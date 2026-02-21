@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -8,13 +8,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestFilesPage from './ContestFilesPage';
 
-import * as contestFileActions from '../modules/contestFileActions';
-
-vi.mock('../modules/contestFileActions');
-
 describe('ContestFilesPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let files;
@@ -25,13 +25,12 @@ describe('ContestFilesPage', () => {
       slug: 'contest-slug',
     });
 
-    contestFileActions.uploadFile.mockReturnValue(Promise.resolve({}));
-    contestFileActions.getFiles.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/files')
+      .reply(200, {
         data: files,
         config: { canManage: true },
-      })
-    );
+      });
 
     await act(async () =>
       render(
@@ -98,16 +97,17 @@ describe('ContestFilesPage', () => {
       const fileInput = await screen.findByLabelText(/file/i);
       await user.upload(fileInput, file);
 
+      nockUriel()
+        .post(
+          '/contests/contestJid/files',
+          body => body.includes('name="file"') && body.includes('Content-Type: text/plain\r\n\r\ncontent\r\n')
+        )
+        .reply(200);
+
       const submitButton = screen.getByRole('button', { name: /upload/i });
       await user.click(submitButton);
 
-      expect(contestFileActions.uploadFile).toHaveBeenCalledWith(
-        'contestJid',
-        expect.objectContaining({
-          name: 'editorial.txt',
-          size: 1000,
-        })
-      );
+      await waitFor(() => expect(nock.isDone()).toBe(true));
     });
   });
 });

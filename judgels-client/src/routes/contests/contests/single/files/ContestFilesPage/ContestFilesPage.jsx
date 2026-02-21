@@ -1,48 +1,20 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestFilesQueryOptions } from '../../../../../../modules/queries/contestFile';
 import { ContestFileUploadCard } from '../ContestFileUploadCard/ContestFileUploadCard';
 import { ContestFilesTable } from '../ContestFilesTable/ContestFilesTable';
-
-import * as contestFileActions from '../modules/contestFileActions';
 
 export default function ContestFilesPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const refreshFiles = async () => {
-    const data = await callAction(contestFileActions.getFiles(contest.jid));
-    setState({
-      response: data,
-    });
-  };
-
-  useEffect(() => {
-    refreshFiles();
-  }, []);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Files</h3>
-        <hr />
-        {renderUploadCard()}
-        {renderFiles()}
-      </ContentCard>
-    );
-  };
+  const { data: response } = useQuery(contestFilesQueryOptions(contest.jid));
 
   const renderUploadCard = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -50,11 +22,10 @@ export default function ContestFilesPage() {
     if (!config.canManage) {
       return null;
     }
-    return <ContestFileUploadCard onSubmit={uploadFile} />;
+    return <ContestFileUploadCard contest={contest} />;
   };
 
   const renderFiles = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -71,10 +42,12 @@ export default function ContestFilesPage() {
     return <ContestFilesTable contest={contest} files={files} />;
   };
 
-  const uploadFile = async data => {
-    await callAction(contestFileActions.uploadFile(contest.jid, data.file));
-    await refreshFiles();
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h3>Files</h3>
+      <hr />
+      {renderUploadCard()}
+      {renderFiles()}
+    </ContentCard>
+  );
 }
