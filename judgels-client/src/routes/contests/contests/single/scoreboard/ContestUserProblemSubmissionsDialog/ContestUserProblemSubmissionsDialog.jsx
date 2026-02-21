@@ -1,16 +1,18 @@
 import { Classes, Dialog } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { callAction } from '../../../../../../modules/callAction';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestSubmissionWithSourceQueryOptions,
+  contestUserProblemSubmissionsQueryOptions,
+} from '../../../../../../modules/queries/contestSubmissionProgramming';
+import { queryClient } from '../../../../../../modules/queryClient';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
-
-import * as contestScoreboardActions from '../modules/contestScoreboardActions';
 
 import './ContestUserProblemSubmissionsDialog.scss';
 
@@ -19,60 +21,34 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    submissions: undefined,
-    submissionSourcesById: {},
-  });
+  const { data: response } = useQuery(contestUserProblemSubmissionsQueryOptions(contest.jid, userJid, problemJid));
 
-  const refreshUserProblemSubmissions = async () => {
-    const response = await callAction(
-      contestScoreboardActions.getUserProblemSubmissions(contest.jid, userJid, problemJid)
-    );
+  const [submissionSourcesById, setSubmissionSourcesById] = useState({});
 
-    const { data: submissions, latestSubmissionSource } = response;
-
-    setState({
-      submissions,
-    });
-
-    if (submissions.length > 0) {
-      setState({
-        submissions,
-        submissionSourcesById: {
-          [submissions[0].id]: latestSubmissionSource,
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    refreshUserProblemSubmissions();
-  }, []);
+  const submissions = response?.data;
+  const latestSubmissionSource = response?.latestSubmissionSource;
 
   const loadSubmissionSource = async submissionId => {
-    setState(prevState => ({
-      ...prevState,
-      submissionSourcesById: {
-        ...prevState.submissionSourcesById,
-        [submissionId]: null,
-      },
-    }));
+    setSubmissionSourcesById(prev => ({ ...prev, [submissionId]: null }));
 
-    const submissionWithSource = await callAction(
-      contestScoreboardActions.getSubmissionWithSource(contest.jid, submissionId, statementLanguage)
+    const submissionWithSource = await queryClient.fetchQuery(
+      contestSubmissionWithSourceQueryOptions(contest.jid, submissionId, statementLanguage)
     );
 
-    setState(prevState => ({
-      ...prevState,
-      submissionSourcesById: {
-        ...prevState.submissionSourcesById,
-        [submissionId]: submissionWithSource.data.source,
-      },
-    }));
+    setSubmissionSourcesById(prev => ({ ...prev, [submissionId]: submissionWithSource.data.source }));
+  };
+
+  const getSource = (submissionId, idx) => {
+    if (submissionSourcesById[submissionId] !== undefined) {
+      return submissionSourcesById[submissionId];
+    }
+    if (idx === 0 && latestSubmissionSource) {
+      return latestSubmissionSource;
+    }
+    return undefined;
   };
 
   const renderContent = () => {
-    const { submissions } = state;
     if (!submissions) {
       return null;
     }
@@ -90,7 +66,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
           <div className="details-content">
             <SubmissionDetails
               submission={submission}
-              source={state.submissionSourcesById[submission.id]}
+              source={getSource(submission.id, idx)}
               onClickViewSource={() => loadSubmissionSource(submission.id)}
             />
           </div>

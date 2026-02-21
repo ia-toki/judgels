@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
@@ -9,13 +9,13 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestScoreboardPage from './ContestScoreboardPage';
 
-import * as contestScoreboardActions from '../modules/contestScoreboardActions';
-
-vi.mock('../modules/contestScoreboardActions');
-
 describe('ContestScoreboardPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let scoreboard;
@@ -27,7 +27,10 @@ describe('ContestScoreboardPage', () => {
       style: ContestStyle.ICPC,
     });
 
-    contestScoreboardActions.getScoreboard.mockReturnValue(Promise.resolve(scoreboard));
+    nockUriel()
+      .get('/contests/contestJid/scoreboard')
+      .query({ frozen: false, showClosedProblems: false, page: 1 })
+      .reply(200, scoreboard);
 
     await act(async () => {
       render(
@@ -42,6 +45,7 @@ describe('ContestScoreboardPage', () => {
 
   describe('when there is no scoreboard', () => {
     beforeEach(async () => {
+      scoreboard = undefined;
       await renderComponent();
     });
 
