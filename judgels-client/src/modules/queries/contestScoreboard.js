@@ -16,6 +16,6 @@ export const contestScoreboardQueryOptions = (contestJid, params) => {
 export const refreshContestScoreboardMutationOptions = contestJid => ({
   mutationFn: () => contestScoreboardAPI.refreshScoreboard(getToken(), contestJid),
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['contest', contestJid, 'scoreboard'] });
+    queryClient.invalidateQueries(contestScoreboardQueryOptions(contestJid));
   },
 });

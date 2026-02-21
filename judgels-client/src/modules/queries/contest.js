@@ -9,12 +9,6 @@ import { contestContestantsQueryOptions } from '../queries/contestContestant';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const activeContestsQueryOptions = () =>
-  queryOptions({
-    queryKey: ['contests', 'active'],
-    queryFn: () => contestAPI.getActiveContests(getToken()),
-  });
-
 export const contestsQueryOptions = params => {
   const { name, page } = params || {};
   return queryOptions({
@@ -23,7 +17,7 @@ export const contestsQueryOptions = params => {
   });
 };
 
-export const createContestMutationOptions = {
+export const createContestMutationOptions = () => ({
   mutationFn: async data => {
     try {
       await contestAPI.createContest(getToken(), data);
@@ -37,19 +31,7 @@ export const createContestMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(contestsQueryOptions());
   },
-};
-
-export const contestBySlugQueryOptions = contestSlug =>
-  queryOptions({
-    queryKey: ['contest-by-slug', contestSlug],
-    queryFn: () => contestAPI.getContestBySlug(getToken(), contestSlug),
-  });
-
-export const contestDescriptionQueryOptions = contestJid =>
-  queryOptions({
-    queryKey: ['contest', contestJid, 'description'],
-    queryFn: () => contestAPI.getContestDescription(getToken(), contestJid),
-  });
+});
 
 export const updateContestMutationOptions = (contestJid, contestSlug) => ({
   mutationFn: async data => {
@@ -66,6 +48,24 @@ export const updateContestMutationOptions = (contestJid, contestSlug) => ({
     queryClient.invalidateQueries(contestBySlugQueryOptions(contestSlug));
   },
 });
+
+export const activeContestsQueryOptions = () =>
+  queryOptions({
+    queryKey: ['contests', 'active'],
+    queryFn: () => contestAPI.getActiveContests(getToken()),
+  });
+
+export const contestBySlugQueryOptions = contestSlug =>
+  queryOptions({
+    queryKey: ['contest-by-slug', contestSlug],
+    queryFn: () => contestAPI.getContestBySlug(getToken(), contestSlug),
+  });
+
+export const contestDescriptionQueryOptions = contestJid =>
+  queryOptions({
+    queryKey: ['contest', contestJid, 'description'],
+    queryFn: () => contestAPI.getContestDescription(getToken(), contestJid),
+  });
 
 export const updateContestDescriptionMutationOptions = contestJid => ({
   mutationFn: description => contestAPI.updateContestDescription(getToken(), contestJid, { description }),

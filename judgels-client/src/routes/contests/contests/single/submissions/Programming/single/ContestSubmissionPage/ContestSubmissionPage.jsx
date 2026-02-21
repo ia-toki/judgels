@@ -17,7 +17,7 @@ export default function ContestSubmissionPage() {
   const { statementLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(
-    contestSubmissionWithSourceQueryOptions(contest.jid, +submissionId, statementLanguage)
+    contestSubmissionWithSourceQueryOptions(contest.jid, +submissionId, { language: statementLanguage })
   );
 
   if (response) {

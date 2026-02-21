@@ -23,7 +23,7 @@ export default function ContestProblemPage() {
   const { statementLanguage, gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(
-    contestProgrammingProblemWorksheetQueryOptions(contest.jid, problemAlias, statementLanguage)
+    contestProgrammingProblemWorksheetQueryOptions(contest.jid, problemAlias, { language: statementLanguage })
   );
 
   const createSubmissionMutation = useMutation(

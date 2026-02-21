@@ -9,22 +9,23 @@ import { getToken } from '../session';
 export const contestProgrammingSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'programming', ...(params ? [params] : [])],
+    queryKey: ['contest', contestJid, 'submissions', ...(params ? [params] : [])],
     queryFn: () => contestSubmissionProgrammingAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
 };
 
 export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, problemJid) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'user-problem', userJid, problemJid],
+    queryKey: ['contest', contestJid, 'submissions', userJid, problemJid],
     queryFn: () =>
       contestSubmissionProgrammingAPI.getUserProblemSubmissions(getToken(), contestJid, userJid, problemJid),
   });
 };
 
-export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId, language) => {
+export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId, params) => {
+  const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', submissionId, 'source', language],
+    queryKey: ['contest', contestJid, 'submissions', submissionId, 'source', ...[params ? [params] : []]],
     queryFn: async () => {
       const submissionWithSource = await contestSubmissionProgrammingAPI.getSubmissionWithSource(
         getToken(),
@@ -41,7 +42,7 @@ export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId
 
 export const contestSubmissionInfoQueryOptions = (contestJid, userJid, problemJid) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'info', userJid, problemJid],
+    queryKey: ['contest', contestJid, 'submissions', userJid, problemJid, 'info'],
     queryFn: () => contestSubmissionProgrammingAPI.getSubmissionInfo(contestJid, userJid, problemJid),
   });
 };
