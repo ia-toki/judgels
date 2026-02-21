@@ -1,20 +1,32 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestSupervisorRemoveDialog } from './ContestSupervisorRemoveDialog';
 
 describe('ContestSupervisorRemoveDialog', () => {
-  let onDeleteSupervisors;
-
   beforeEach(() => {
-    onDeleteSupervisors = vi.fn().mockReturnValue(Promise.resolve({ deletedSupervisorProfilesMap: {} }));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      contest: { jid: 'contestJid' },
-      onDeleteSupervisors: onDeleteSupervisors,
-    };
-    render(<ContestSupervisorRemoveDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestSupervisorRemoveDialog contest={{ jid: 'contestJid' }} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -26,9 +38,13 @@ describe('ContestSupervisorRemoveDialog', () => {
     const usernames = screen.getByRole('textbox');
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
+    nockUriel()
+      .post('/contests/contestJid/supervisors/batch-delete', ['andi', 'budi', 'caca'])
+      .reply(200, { deletedSupervisorProfilesMap: {} });
+
     const submitButton = screen.getByRole('button', { name: /remove$/i });
     await user.click(submitButton);
 
-    expect(onDeleteSupervisors).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

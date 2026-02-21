@@ -1,23 +1,32 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
+import { setSession } from '../../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
 
 describe('ContestSupervisorAddDialog', () => {
-  let onUpsertSupervisors;
-
   beforeEach(() => {
-    onUpsertSupervisors = vi
-      .fn()
-      .mockReturnValue(Promise.resolve({ upsertedSupervisorProfilesMap: {}, alreadySupervisorProfilesMap: {} }));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      contest: { jid: 'contestJid' },
-      onUpsertSupervisors: onUpsertSupervisors,
-    };
-    render(<ContestSupervisorAddDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestSupervisorAddDialog contest={{ jid: 'contestJid' }} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -35,16 +44,17 @@ describe('ContestSupervisorAddDialog', () => {
     const clarificationPermission = document.querySelector('input[name="managementPermissions.Clarifications"]');
     await user.click(clarificationPermission);
 
+    nockUriel()
+      .post('/contests/contestJid/supervisors/batch-upsert', {
+        usernames: ['andi', 'budi', 'caca'],
+        managementPermissions: ['ANNOUNCEMENT', 'CLARIFICATION'],
+      })
+      .reply(200, { upsertedSupervisorProfilesMap: {} });
+
     const dialog = screen.getByRole('dialog');
     const submitButton = within(dialog).getByRole('button', { name: /add\/update/i });
     await user.click(submitButton);
 
-    expect(onUpsertSupervisors).toHaveBeenCalledWith('contestJid', {
-      managementPermissions: [
-        SupervisorManagementPermission.Announcements,
-        SupervisorManagementPermission.Clarifications,
-      ],
-      usernames: ['andi', 'budi', 'caca'],
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

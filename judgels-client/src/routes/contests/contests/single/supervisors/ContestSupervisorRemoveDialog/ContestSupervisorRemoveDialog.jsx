@@ -1,72 +1,54 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Trash } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
+import { deleteContestSupervisorsMutationOptions } from '../../../../../../modules/queries/contestSupervisor';
 import ContestSupervisorRemoveForm from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
 
-export function ContestSupervisorRemoveDialog({ contest, onDeleteSupervisors }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-    submitted: undefined,
-  });
+import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
+export function ContestSupervisorRemoveDialog({ contest }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(undefined);
 
-  const renderButton = () => {
-    return (
-      <Button
-        className="contest-supervisor-dialog-button"
-        intent={Intent.DANGER}
-        icon={<Trash />}
-        onClick={toggleDialog}
-        disabled={state.isDialogOpen}
-      >
-        Remove supervisors
-      </Button>
-    );
-  };
+  const deleteSupervisorsMutation = useMutation(deleteContestSupervisorsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen, submitted: undefined }));
+    setIsDialogOpen(open => !open);
+    setSubmitted(undefined);
   };
 
-  const renderDialog = () => {
-    const dialogBody = state.submitted !== undefined ? renderDialogRemoveResultTable() : renderDialogRemoveForm();
-    const dialogTitle = state.submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
+  const renderDialogForm = (fields, submitButton) => (
+    <>
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
+      <div className={Classes.DIALOG_FOOTER}>
+        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+          <Button text="Cancel" onClick={toggleDialog} />
+          {submitButton}
+        </div>
+      </div>
+    </>
+  );
 
-    return (
-      <Dialog
-        className="contest-supervisor-dialog"
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title={dialogTitle}
-        canOutsideClickClose={false}
-        enforceFocus={false}
-      >
-        {dialogBody}
-      </Dialog>
-    );
-  };
-
-  const renderDialogRemoveForm = () => {
-    const props = {
-      renderFormComponents: renderDialogForm,
-      onSubmit: addSupervisors,
-    };
-    return <ContestSupervisorRemoveForm {...props} />;
+  const removeSupervisors = async data => {
+    const usernames = data.usernames
+      .split('\n')
+      .filter(s => s.length > 0)
+      .map(s => s.trim());
+    const response = await deleteSupervisorsMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.deletedSupervisorProfilesMap).length) {
+      toastActions.showSuccessToast('Supervisors removed.');
+      setIsDialogOpen(false);
+    } else {
+      setSubmitted({ usernames, response });
+    }
   };
 
   const renderDialogRemoveResultTable = () => {
-    const { usernames, response } = state.submitted;
+    const { usernames, response } = submitted;
     const { deletedSupervisorProfilesMap } = response;
     return (
       <>
@@ -85,30 +67,35 @@ export function ContestSupervisorRemoveDialog({ contest, onDeleteSupervisors }) 
     );
   };
 
-  const renderDialogForm = (fields, submitButton) => (
-    <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
-      <div className={Classes.DIALOG_FOOTER}>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button text="Cancel" onClick={toggleDialog} />
-          {submitButton}
-        </div>
-      </div>
-    </>
+  const dialogBody =
+    submitted !== undefined ? (
+      renderDialogRemoveResultTable()
+    ) : (
+      <ContestSupervisorRemoveForm renderFormComponents={renderDialogForm} onSubmit={removeSupervisors} />
+    );
+  const dialogTitle = submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
+
+  return (
+    <div className="content-card__section">
+      <Button
+        className="contest-supervisor-dialog-button"
+        intent={Intent.DANGER}
+        icon={<Trash />}
+        onClick={toggleDialog}
+        disabled={isDialogOpen}
+      >
+        Remove supervisors
+      </Button>
+      <Dialog
+        className="contest-supervisor-dialog"
+        isOpen={isDialogOpen}
+        onClose={toggleDialog}
+        title={dialogTitle}
+        canOutsideClickClose={false}
+        enforceFocus={false}
+      >
+        {dialogBody}
+      </Dialog>
+    </div>
   );
-
-  const addSupervisors = async data => {
-    const usernames = data.usernames
-      .split('\n')
-      .filter(s => s.length > 0)
-      .map(s => s.trim());
-    const response = await onDeleteSupervisors(contest.jid, usernames);
-    if (usernames.length !== Object.keys(response.deletedSupervisorProfilesMap).length) {
-      setState(prevState => ({ ...prevState, submitted: { usernames, response } }));
-    } else {
-      setState(prevState => ({ ...prevState, isDialogOpen: false }));
-    }
-  };
-
-  return render();
 }
