@@ -17,19 +17,19 @@ export const contestModuleConfigQueryOptions = contestJid =>
     queryFn: () => contestModuleAPI.getConfig(getToken(), contestJid),
   });
 
-export const enableContestModuleMutationOptions = (contestJid, contestSlug) => ({
+export const enableContestModuleMutationOptions = contestJid => ({
   mutationFn: type => contestModuleAPI.enableModule(getToken(), contestJid, type),
   onSuccess: () => {
     queryClient.invalidateQueries(contestModulesQueryOptions(contestJid));
-    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
 
-export const disableContestModuleMutationOptions = (contestJid, contestSlug) => ({
+export const disableContestModuleMutationOptions = contestJid => ({
   mutationFn: type => contestModuleAPI.disableModule(getToken(), contestJid, type),
   onSuccess: () => {
     queryClient.invalidateQueries(contestModulesQueryOptions(contestJid));
-    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestSlug));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
 

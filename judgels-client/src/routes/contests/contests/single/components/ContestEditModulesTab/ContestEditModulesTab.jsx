@@ -18,8 +18,8 @@ export default function ContestEditModulesTab() {
 
   const { data: modules } = useQuery(contestModulesQueryOptions(contest.jid));
 
-  const enableModuleMutation = useMutation(enableContestModuleMutationOptions(contest.jid, contestSlug));
-  const disableModuleMutation = useMutation(disableContestModuleMutationOptions(contest.jid, contestSlug));
+  const enableModuleMutation = useMutation(enableContestModuleMutationOptions(contest.jid));
+  const disableModuleMutation = useMutation(disableContestModuleMutationOptions(contest.jid));
 
   const renderContent = () => {
     if (!modules) {

@@ -35,8 +35,8 @@ export default function ContestRegistrationCard() {
     enabled: isLoggedIn,
   });
 
-  const registerMutation = useMutation(registerMyselfMutationOptions(contest.jid, contestSlug));
-  const unregisterMutation = useMutation(unregisterMyselfMutationOptions(contest.jid, contestSlug));
+  const registerMutation = useMutation(registerMyselfMutationOptions(contest.jid));
+  const unregisterMutation = useMutation(unregisterMyselfMutationOptions(contest.jid));
 
   const [isRegistrantsDialogOpen, setIsRegistrantsDialogOpen] = useState(false);
 

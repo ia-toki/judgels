@@ -47,10 +47,6 @@ export const contestWebAPI = {
   getWebConfig: (token, contestJid) => {
     return get(`${baseURL}/${contestJid}/config`, token);
   },
-
-  getWebConfigBySlug: (token, contestSlug) => {
-    return get(`${baseURL}/slug/${contestSlug}/config`, token);
-  },
 };
 
 export const REFRESH_WEB_CONFIG_INTERVAL = 20000; // 20 seconds

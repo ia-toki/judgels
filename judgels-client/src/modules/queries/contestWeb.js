@@ -3,9 +3,9 @@ import { queryOptions } from '@tanstack/react-query';
 import { contestWebAPI } from '../api/uriel/contestWeb';
 import { getToken } from '../session';
 
-export const contestWebConfigQueryOptions = contestSlug =>
+export const contestWebConfigQueryOptions = contestJid =>
   queryOptions({
-    queryKey: ['contest-by-slug', contestSlug, 'web-config'],
-    queryFn: () => contestWebAPI.getWebConfigBySlug(getToken(), contestSlug),
+    queryKey: ['contest', contestJid, 'web-config'],
+    queryFn: () => contestWebAPI.getWebConfig(getToken(), contestJid),
     refetchInterval: 20000,
   });
