@@ -1,22 +1,32 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestManagerAddDialog } from './ContestManagerAddDialog';
 
 describe('ContestManagerAddDialog', () => {
-  let onUpsertManagers;
-
   beforeEach(() => {
-    onUpsertManagers = vi
-      .fn()
-      .mockReturnValue(Promise.resolve({ insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} }));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      contest: { jid: 'contestJid' },
-      onUpsertManagers,
-    };
-    render(<ContestManagerAddDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestManagerAddDialog contest={{ jid: 'contestJid' }} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -28,9 +38,13 @@ describe('ContestManagerAddDialog', () => {
     const usernames = screen.getByRole('textbox');
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
+    nockUriel()
+      .post('/contests/contestJid/managers/batch-upsert', ['andi', 'budi', 'caca'])
+      .reply(200, { insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} });
+
     const submitButton = screen.getByRole('button', { name: /^add$/i });
     await user.click(submitButton);
 
-    expect(onUpsertManagers).toHaveBeenCalledWith('contestJid', ['andi', 'budi', 'caca']);
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });
