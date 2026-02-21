@@ -115,8 +115,8 @@ describe('ContestProblemsPage', () => {
         await renderComponent();
       });
 
-      it('shows placeholder text and no problems', () => {
-        expect(screen.getByText(/no problems/i)).toBeInTheDocument();
+      it('shows placeholder text and no problems', async () => {
+        expect(await screen.findByText(/no problems/i)).toBeInTheDocument();
         const cards = document.querySelectorAll('div.contest-problem-card');
         expect(cards).toHaveLength(0);
       });

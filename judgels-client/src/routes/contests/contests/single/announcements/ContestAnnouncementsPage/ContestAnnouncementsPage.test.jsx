@@ -1,5 +1,4 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { vi } from 'vitest';
 
 import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
@@ -7,10 +6,6 @@ import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientPr
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestAnnouncementsPage from './ContestAnnouncementsPage';
-
-import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
-
-vi.mock('../modules/contestAnnouncementActions');
 
 describe('ContestAnnouncementsPage', () => {
   beforeEach(() => {
@@ -27,8 +22,10 @@ describe('ContestAnnouncementsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestAnnouncementActions.getAnnouncements.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/announcements')
+      .query({ page: 1 })
+      .reply(200, {
         data: {
           page: announcements,
         },
@@ -40,8 +37,7 @@ describe('ContestAnnouncementsPage', () => {
           userJid1: { username: 'username1' },
           userJid2: { username: 'username2' },
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(

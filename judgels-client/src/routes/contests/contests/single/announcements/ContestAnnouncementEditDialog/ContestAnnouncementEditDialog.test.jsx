@@ -1,34 +1,38 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
 
 describe('ContestAnnouncementEditDialog', () => {
-  let onUpdateAnnouncement;
-
   const announcement = {
     jid: 'announcementJid123',
     title: 'Snack',
     content: 'Snack is provided.',
-    status: ContestAnnouncementStatus.Published,
+    status: 'PUBLISHED',
   };
 
   beforeEach(async () => {
-    onUpdateAnnouncement = vi.fn().mockReturnValue(Promise.resolve({}));
-
     const onToggleEditDialog = () => {
       return;
     };
 
-    const props = {
-      contest: { jid: 'contestJid' },
-      announcement,
-      onToggleEditDialog,
-      onUpdateAnnouncement,
-    };
-    await act(async () => render(<ContestAnnouncementEditDialog {...props} />));
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestAnnouncementEditDialog
+              contest={{ jid: 'contestJid' }}
+              announcement={announcement}
+              onToggleEditDialog={onToggleEditDialog}
+            />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -50,13 +54,17 @@ describe('ContestAnnouncementEditDialog', () => {
     await user.clear(content);
     await user.type(content, 'Snack is NOT provided.');
 
+    nockUriel()
+      .put('/contests/contestJid/announcements/announcementJid123', {
+        title: 'Snack edited',
+        content: 'Snack is NOT provided.',
+        status: 'PUBLISHED',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
 
-    expect(onUpdateAnnouncement).toHaveBeenCalledWith('contestJid', 'announcementJid123', {
-      title: 'Snack edited',
-      content: 'Snack is NOT provided.',
-      status: ContestAnnouncementStatus.Published,
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

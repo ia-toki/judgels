@@ -1,50 +1,34 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../components/Pagination/Pagination';
-import { callAction } from '../../../../../../modules/callAction';
+import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import { contestAnnouncementsQueryOptions } from '../../../../../../modules/queries/contestAnnouncement';
 import { ContestAnnouncementCard } from '../ContestAnnouncementCard/ContestAnnouncementCard';
 import { ContestAnnouncementCreateDialog } from '../ContestAnnouncementCreateDialog/ContestAnnouncementCreateDialog';
 import { ContestAnnouncementEditDialog } from '../ContestAnnouncementEditDialog/ContestAnnouncementEditDialog';
-
-import * as contestAnnouncementActions from '../modules/contestAnnouncementActions';
 
 const PAGE_SIZE = 20;
 
 export default function ContestAnnouncementsPage() {
   const { contestSlug } = useParams({ strict: false });
-  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const location = useLocation();
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    lastRefreshAnnouncementsTime: 0,
-    openEditDialogAnnouncement: undefined,
-  });
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { data: response } = useQuery(contestAnnouncementsQueryOptions(contest.jid, { page }));
+
+  const [openEditDialogAnnouncement, setOpenEditDialogAnnouncement] = useState(undefined);
 
   useEffect(() => {
     askDesktopNotificationPermission();
   }, []);
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Announcements</h3>
-        <hr />
-        {renderCreateDialog()}
-        {renderAnnouncements()}
-        {renderPagination()}
-        {renderEditDialog()}
-      </ContentCard>
-    );
-  };
-
   const renderAnnouncements = () => {
-    const { response, openEditDialogAnnouncement } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -75,35 +59,7 @@ export default function ContestAnnouncementsPage() {
     ));
   };
 
-  const renderPagination = () => {
-    const { lastRefreshAnnouncementsTime } = state;
-
-    return <Pagination key={lastRefreshAnnouncementsTime} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshAnnouncements(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshAnnouncements = async page => {
-    const response = await callAction(contestAnnouncementActions.getAnnouncements(contest.jid, page));
-    setState(prevState => ({ ...prevState, response }));
-    return response.data;
-  };
-
-  const createAnnouncement = async (contestJid, data) => {
-    await callAction(contestAnnouncementActions.createAnnouncement(contestJid, data));
-    setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
-  };
-
-  const updateAnnouncement = async (contestJid, announcementJid, data) => {
-    await callAction(contestAnnouncementActions.updateAnnouncement(contestJid, announcementJid, data));
-    setState(prevState => ({ ...prevState, lastRefreshAnnouncementsTime: new Date().getTime() }));
-  };
-
   const renderCreateDialog = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -111,11 +67,10 @@ export default function ContestAnnouncementsPage() {
       return null;
     }
 
-    return <ContestAnnouncementCreateDialog contest={contest} onCreateAnnouncement={createAnnouncement} />;
+    return <ContestAnnouncementCreateDialog contest={contest} />;
   };
 
   const renderEditDialog = () => {
-    const { response, openEditDialogAnnouncement } = state;
     if (!response) {
       return null;
     }
@@ -128,14 +83,22 @@ export default function ContestAnnouncementsPage() {
         contest={contest}
         announcement={openEditDialogAnnouncement}
         onToggleEditDialog={toggleEditDialog}
-        onUpdateAnnouncement={updateAnnouncement}
       />
     );
   };
 
   const toggleEditDialog = announcement => {
-    setState(prevState => ({ ...prevState, openEditDialogAnnouncement: announcement }));
+    setOpenEditDialogAnnouncement(announcement);
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Announcements</h3>
+      <hr />
+      {renderCreateDialog()}
+      {renderAnnouncements()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {renderEditDialog()}
+    </ContentCard>
+  );
 }

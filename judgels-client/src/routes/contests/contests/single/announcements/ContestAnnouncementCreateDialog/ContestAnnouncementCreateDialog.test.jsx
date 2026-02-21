@@ -1,21 +1,23 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
-import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
 
 describe('ContestAnnouncementCreateDialog', () => {
-  let onCreateAnnouncement;
-
-  beforeEach(() => {
-    onCreateAnnouncement = vi.fn().mockReturnValue(Promise.resolve({}));
-
-    const props = {
-      contest: { jid: 'contestJid' },
-      onCreateAnnouncement,
-    };
-    render(<ContestAnnouncementCreateDialog {...props} />);
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestAnnouncementCreateDialog contest={{ jid: 'contestJid' }} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -36,13 +38,17 @@ describe('ContestAnnouncementCreateDialog', () => {
     const content = screen.getByRole('textbox', { name: /content/i });
     await user.type(content, 'Snack is provided.');
 
+    nockUriel()
+      .post('/contests/contestJid/announcements', {
+        title: 'Snack',
+        content: 'Snack is provided.',
+        status: 'PUBLISHED',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);
 
-    expect(onCreateAnnouncement).toHaveBeenCalledWith('contestJid', {
-      title: 'Snack',
-      content: 'Snack is provided.',
-      status: ContestAnnouncementStatus.Published,
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

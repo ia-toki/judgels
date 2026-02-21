@@ -11,15 +11,9 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function ContestCreateDialog() {
   const navigate = useNavigate();
-  const [state, setState] = useState({ isDialogOpen: false });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const createContestMutation = useMutation({
-    ...createContestMutationOptions,
-    onSuccess: (_data, { slug }) => {
-      navigate({ to: `/contests/${slug}`, state: { isEditingContest: true } });
-      toastActions.showSuccessToast('Contest created.');
-    },
-  });
+  const createContestMutation = useMutation(createContestMutationOptions);
 
   const render = () => {
     return (
@@ -32,14 +26,14 @@ export function ContestCreateDialog() {
 
   const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New contest
       </Button>
     );
   };
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialog = () => {
@@ -48,12 +42,7 @@ export function ContestCreateDialog() {
       onSubmit: createContest,
     };
     return (
-      <Dialog
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title="Create new contest"
-        canOutsideClickClose={false}
-      >
+      <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new contest" canOutsideClickClose={false}>
         <ContestCreateForm {...props} />
       </Dialog>
     );
@@ -72,8 +61,15 @@ export function ContestCreateDialog() {
   );
 
   const createContest = async data => {
-    await createContestMutation.mutateAsync(data);
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await createContestMutation.mutateAsync(data, {
+      onSuccess: (_data, { slug }) => {
+        navigate({ to: `/contests/${slug}`, state: { isEditingContest: true } });
+        toastActions.showSuccessToast('Contest created.');
+      },
+      onSettled: () => {
+        setIsDialogOpen(false);
+      },
+    });
   };
 
   return render();
