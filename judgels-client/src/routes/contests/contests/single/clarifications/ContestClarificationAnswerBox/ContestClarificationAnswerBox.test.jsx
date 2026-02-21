@@ -1,26 +1,28 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../../test/RouterWrapper';
+import { nockUriel } from '../../../../../../utils/nock';
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
 describe('ContestClarificationAnswerBox', () => {
-  let onAnswerClarification;
-
-  beforeEach(() => {
-    onAnswerClarification = vi.fn().mockReturnValue(Promise.resolve({}));
-
-    const props = {
-      contest: { jid: 'contestJid' },
-      clarification: { jid: 'clarificationJid123' },
-      isBoxOpen: true,
-      isBoxLoading: false,
-      onToggleBox: () => {
-        return;
-      },
-      onAnswerClarification,
-    };
-    render(<ContestClarificationAnswerBox {...props} />);
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestClarificationAnswerBox
+              contest={{ jid: 'contestJid' }}
+              clarification={{ jid: 'clarificationJid123' }}
+              isBoxOpen={true}
+              onToggleBox={() => {}}
+            />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -29,9 +31,11 @@ describe('ContestClarificationAnswerBox', () => {
     const answer = screen.getByRole('textbox');
     await user.type(answer, 'Yes.');
 
+    nockUriel().put('/contests/contestJid/clarifications/clarificationJid123/answer', { answer: 'Yes.' }).reply(200);
+
     const submitButton = screen.getByRole('button', { name: /answer/i });
     await user.click(submitButton);
 
-    expect(onAnswerClarification).toHaveBeenCalledWith('contestJid', 'clarificationJid123', 'Yes.');
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

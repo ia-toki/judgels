@@ -1,17 +1,11 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { vi } from 'vitest';
 
-import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
 import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockUriel } from '../../../../../../utils/nock';
 import ContestClarificationsPage from './ContestClarificationsPage';
-
-import * as contestClarificationActions from '../modules/contestClarificationActions';
-
-vi.mock('../modules/contestClarificationActions');
 
 describe('ContestClarificationsPage', () => {
   beforeEach(() => {
@@ -28,8 +22,10 @@ describe('ContestClarificationsPage', () => {
       slug: 'contest-slug',
     });
 
-    contestClarificationActions.getClarifications.mockReturnValue(
-      Promise.resolve({
+    nockUriel()
+      .get('/contests/contestJid/clarifications')
+      .query({ language: 'en', page: 1 })
+      .reply(200, {
         data: {
           page: clarifications,
         },
@@ -46,8 +42,7 @@ describe('ContestClarificationsPage', () => {
         },
         problemAliasesMap: { problemJid1: 'A', problemJid2: 'B' },
         problemNamesMap: { problemJid1: 'Problem 1', problemJid2: 'Problem 2' },
-      })
-    );
+      });
 
     await act(async () =>
       render(
@@ -116,7 +111,7 @@ describe('ContestClarificationsPage', () => {
             topicJid: 'contestJid',
             title: 'Title 1',
             question: 'Question 1',
-            status: ContestClarificationStatus.Answered,
+            status: 'ANSWERED',
             answer: 'Answer 1',
             answererJid: 'userJid3',
             time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
@@ -128,7 +123,7 @@ describe('ContestClarificationsPage', () => {
             topicJid: 'problemJid1',
             title: 'Title 2',
             question: 'Question 2',
-            status: ContestClarificationStatus.Asked,
+            status: 'ASKED',
             time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
           },
         ];
