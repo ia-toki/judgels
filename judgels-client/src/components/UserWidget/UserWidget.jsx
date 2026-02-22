@@ -1,33 +1,22 @@
 import { Alignment, Menu, MenuDivider, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { isTLX } from '../../conf';
 import { getRatingClass } from '../../modules/api/jophiel/userRating';
-import { callAction } from '../../modules/callAction';
+import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 import { useSession } from '../../modules/session';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
-import * as avatarActions from '../../routes/jophiel/modules/avatarActions';
-
 import './UserWidget.scss';
 
-export function UserWidget({ user, profile, items, homeRoute, onRenderAvatar }) {
-  const [avatarUrl, setAvatarUrl] = useState(undefined);
-
-  const refreshUser = async () => {
-    if (user) {
-      const url = await onRenderAvatar(user.jid);
-      setAvatarUrl(url);
-    }
-  };
-
-  useEffect(() => {
-    refreshUser();
-  }, [user]);
+export function UserWidget({ user, profile, items, homeRoute }) {
+  const { data: avatarUrl } = useQuery({
+    ...avatarUrlQueryOptions(user?.jid),
+    enabled: !!user,
+  });
 
   const renderForUser = () => {
     const menuItems = (
@@ -133,15 +122,7 @@ function UserWidgetContainer({ items, homeRoute }) {
   const { user } = useSession();
   const { data } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  return (
-    <UserWidget
-      user={user}
-      profile={data.profile}
-      items={items}
-      homeRoute={homeRoute}
-      onRenderAvatar={jid => callAction(avatarActions.renderAvatar(jid))}
-    />
-  );
+  return <UserWidget user={user} profile={data.profile} items={items} homeRoute={homeRoute} />;
 }
 
 export default UserWidgetContainer;

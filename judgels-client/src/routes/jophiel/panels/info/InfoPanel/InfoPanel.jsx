@@ -8,41 +8,31 @@ import { InfoTable } from '../InfoTable/InfoTable';
 import './InfoPanel.scss';
 
 export function InfoPanel({ email, info, onUpdateInfo }) {
-  const [state, setState] = useState({
-    isEditing: false,
-  });
+  const [isEditing, setIsEditing] = useState(false);
 
-  const render = () => {
-    const action = state.isEditing ? undefined : (
-      <Button small data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={toggleEdit} />
-    );
-
-    return (
-      <Card title="Info" action={action} className="info-panel-card">
-        {renderContent()}
-      </Card>
-    );
+  const toggleEdit = () => {
+    setIsEditing(prev => !prev);
   };
 
+  const onSave = async infoData => {
+    await onUpdateInfo(infoData);
+    setIsEditing(false);
+  };
+
+  const action = isEditing ? undefined : (
+    <Button small data-key="edit" text="Edit" intent={Intent.PRIMARY} onClick={toggleEdit} />
+  );
+
   const renderContent = () => {
-    if (state.isEditing) {
-      const onCancel = { onCancel: toggleEdit };
-      return <InfoForm onSubmit={onSave} initialValues={info} {...onCancel} />;
+    if (isEditing) {
+      return <InfoForm onSubmit={onSave} initialValues={info} onCancel={toggleEdit} />;
     }
     return <InfoTable email={email} info={info} />;
   };
 
-  const toggleEdit = () => {
-    setState(prevState => ({
-      ...prevState,
-      isEditing: !prevState.isEditing,
-    }));
-  };
-
-  const onSave = async info => {
-    await onUpdateInfo(info);
-    setState(prevState => ({ ...prevState, isEditing: false }));
-  };
-
-  return render();
+  return (
+    <Card title="Info" action={action} className="info-panel-card">
+      {renderContent()}
+    </Card>
+  );
 }

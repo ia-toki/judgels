@@ -1,32 +1,20 @@
-import { useParams } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../components/Pagination/Pagination';
-import { callAction } from '../../../../../../modules/callAction';
+import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
+import { profileSubmissionsQueryOptions } from '../../../../../../modules/queries/profile';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
-
-import * as profileActions from '../../modules/profileActions';
 
 export default function SubmissionHistoryPage() {
   const { username } = useParams({ strict: false });
+  const location = useLocation();
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const render = () => {
-    return (
-      <Card title="Submission history">
-        {renderSubmissions()}
-        {renderPagination()}
-      </Card>
-    );
-  };
+  const { data: response } = useQuery(profileSubmissionsQueryOptions(username, { page }));
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -59,20 +47,10 @@ export default function SubmissionHistoryPage() {
     );
   };
 
-  const renderPagination = () => {
-    return <Pagination key={1} pageSize={20} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshSubmissions = async page => {
-    const response = await callAction(profileActions.getSubmissions(username, page));
-    setState(prevState => ({ ...prevState, response }));
-    return response.data;
-  };
-
-  return render();
+  return (
+    <Card title="Submission history">
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={20} totalCount={response.data.totalCount} />}
+    </Card>
+  );
 }

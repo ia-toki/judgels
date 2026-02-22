@@ -1,27 +1,31 @@
-import { act, render } from '@testing-library/react';
-import { vi } from 'vitest';
+import { act, render, waitFor } from '@testing-library/react';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel } from '../../../../utils/nock';
 import ActivatePage from './ActivatePage';
 
-import * as activateActions from '../modules/activateActions';
-
-vi.mock('../modules/activateActions');
-
 describe('ActivatePage', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   beforeEach(async () => {
-    activateActions.activateUser.mockReturnValue(Promise.resolve());
+    nockJophiel().post('/user-account/activate/code123').reply(200);
 
     await act(async () =>
       render(
-        <TestRouter initialEntries={['/activate/code123']} path="/activate/$emailCode">
-          <ActivatePage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter initialEntries={['/activate/code123']} path="/activate/$emailCode">
+            <ActivatePage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   });
 
-  test('activate', () => {
-    expect(activateActions.activateUser).toHaveBeenCalledWith('code123');
+  test('activate', async () => {
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

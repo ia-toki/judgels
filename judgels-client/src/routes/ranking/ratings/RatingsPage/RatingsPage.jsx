@@ -1,43 +1,28 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../modules/callAction';
-
-import * as profileActions from '../../../jophiel/modules/profileActions';
+import { topRatedProfilesQueryOptions } from '../../../../modules/queries/profile';
 
 import './RatingsPage.scss';
 
 const PAGE_SIZE = 50;
 
 export default function RatingsPage() {
-  const [profiles, setProfiles] = useState();
   const location = useLocation();
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    profiles: undefined,
-  });
-
-  const render = () => {
-    return (
-      <Card title="Top ratings">
-        {renderRatings()}
-        <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} />
-      </Card>
-    );
-  };
+  const { data: profiles } = useQuery(topRatedProfilesQueryOptions({ page, pageSize: PAGE_SIZE }));
 
   const renderRatings = () => {
-    const { profiles } = state;
     if (!profiles) {
       return <LoadingState />;
     }
 
-    const page = +(location.search.page || '1');
     const baseRank = (page - 1) * PAGE_SIZE + 1;
     const rows = profiles.page.map((profile, idx) => (
       <tr key={profile.username}>
@@ -63,11 +48,10 @@ export default function RatingsPage() {
     );
   };
 
-  const onChangePage = async nextPage => {
-    const profiles = await callAction(profileActions.getTopRatedProfiles(nextPage, PAGE_SIZE));
-    setState({ profiles });
-    return profiles.totalCount;
-  };
-
-  return render();
+  return (
+    <Card title="Top ratings">
+      {renderRatings()}
+      {profiles && <PaginationV2 pageSize={PAGE_SIZE} totalCount={profiles.totalCount} />}
+    </Card>
+  );
 }

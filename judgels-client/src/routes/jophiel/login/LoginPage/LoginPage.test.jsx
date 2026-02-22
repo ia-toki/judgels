@@ -1,23 +1,25 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel } from '../../../../utils/nock';
 import LoginPage from './LoginPage';
 
-import * as loginActions from '../modules/loginActions';
-
-vi.mock('../modules/loginActions');
-
 describe('LoginPage', () => {
-  beforeEach(async () => {
-    loginActions.logIn.mockReturnValue(Promise.resolve());
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
+  beforeEach(async () => {
     await act(async () =>
       render(
-        <TestRouter>
-          <LoginPage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <LoginPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   });
@@ -31,9 +33,14 @@ describe('LoginPage', () => {
     const password = document.querySelector('input[name="password"]');
     await user.type(password, 'pass');
 
+    nockJophiel()
+      .post('/session/login', { usernameOrEmail: 'user', password: 'pass' })
+      .reply(200, { token: 'token123' });
+    nockJophiel().get('/users/me').reply(200, { jid: 'userJid', username: 'user' });
+
     const submitButton = screen.getByRole('button', { name: /log in/i });
     await user.click(submitButton);
 
-    expect(loginActions.logIn).toHaveBeenCalled();
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

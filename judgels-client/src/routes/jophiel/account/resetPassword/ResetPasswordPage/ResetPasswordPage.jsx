@@ -1,22 +1,24 @@
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
-import { callAction } from '../../../../../modules/callAction';
+import { requestResetPasswordMutationOptions } from '../../../../../modules/queries/userAccount';
+import { getUser } from '../../../../../modules/session';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
-import * as resetPasswordActions from '../modules/resetPasswordActions';
-
 export default function ResetPasswordPage() {
-  const [state, setState] = useState({
-    submitted: false,
-  });
+  const [submitted, setSubmitted] = useState(false);
 
-  const render = () => {
-    return <Card title="Reset password">{renderContent()}</Card>;
+  const resetPasswordMutation = useMutation(requestResetPasswordMutationOptions);
+
+  const resetPassword = async () => {
+    const email = getUser().email;
+    await resetPasswordMutation.mutateAsync(email);
+    setSubmitted(true);
   };
 
   const renderContent = () => {
-    if (state.submitted) {
+    if (submitted) {
       return (
         <div>
           <p data-key="instruction">An email has been sent to your email with instruction to reset your password.</p>
@@ -27,10 +29,5 @@ export default function ResetPasswordPage() {
     return <ResetPasswordForm onSubmit={resetPassword} />;
   };
 
-  const resetPassword = async () => {
-    await callAction(resetPasswordActions.requestToResetPassword());
-    setState(prevState => ({ ...prevState, submitted: true }));
-  };
-
-  return render();
+  return <Card title="Reset password">{renderContent()}</Card>;
 }

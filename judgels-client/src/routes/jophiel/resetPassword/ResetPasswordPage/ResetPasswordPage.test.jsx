@@ -1,23 +1,25 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel } from '../../../../utils/nock';
 import ResetPasswordPage from './ResetPasswordPage';
 
-import * as resetPasswordActions from '../modules/resetPasswordActions';
-
-vi.mock('../modules/resetPasswordActions');
-
 describe('ResetPasswordPage', () => {
-  beforeEach(async () => {
-    resetPasswordActions.resetPassword.mockReturnValue(Promise.resolve());
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
+  beforeEach(async () => {
     await act(async () =>
       render(
-        <TestRouter initialEntries={['/reset-password/code123']} path="/reset-password/$emailCode">
-          <ResetPasswordPage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter initialEntries={['/reset-password/code123']} path="/reset-password/$emailCode">
+            <ResetPasswordPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   });
@@ -31,9 +33,11 @@ describe('ResetPasswordPage', () => {
     const confirmPassword = document.querySelector('input[name="confirmPassword"]');
     await user.type(confirmPassword, 'pass');
 
+    nockJophiel().post('/user-account/reset-password', { emailCode: 'code123', newPassword: 'pass' }).reply(200);
+
     const submitButton = screen.getByRole('button', { name: /reset password/i });
     await user.click(submitButton);
 
-    expect(resetPasswordActions.resetPassword).toHaveBeenCalledWith('code123', 'pass');
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

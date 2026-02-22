@@ -1,15 +1,17 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
-import { callAction } from '../../../../modules/callAction';
+import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
 
-import * as userAccountActions from '../../modules/userAccountActions';
+import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ResendActivationEmailButton({ email }) {
   const timerRef = useRef(null);
+  const [timeRemaining, setTimeRemaining] = useState(5);
 
-  const [state, setState] = useState({
-    timeRemainingResendEmail: 5,
+  const resendMutation = useMutation({
+    mutationFn: () => userAccountAPI.resendActivationEmail(email),
   });
 
   useEffect(() => {
@@ -22,34 +24,33 @@ export default function ResendActivationEmailButton({ email }) {
     };
   }, []);
 
-  const render = () => {
-    const { timeRemainingResendEmail } = state;
-    return (
-      <Button
-        type="submit"
-        text={`Resend activation email${timeRemainingResendEmail > 0 ? ` (${timeRemainingResendEmail})` : ''}`}
-        intent={Intent.PRIMARY}
-        onClick={onResendEmail}
-        disabled={timeRemainingResendEmail > 0}
-      />
-    );
-  };
-
   const onResendEmail = async () => {
-    await callAction(userAccountActions.resendActivationEmail(email));
-    setState(prevState => ({ ...prevState, timeRemainingResendEmail: 5 }));
+    await resendMutation.mutateAsync(undefined, {
+      onSuccess: () => {
+        toastActions.showToast('Email has been sent');
+      },
+    });
+    setTimeRemaining(5);
     timerRef.current = setInterval(countDown, 1000);
   };
 
   const countDown = () => {
-    setState(prevState => {
-      const seconds = prevState.timeRemainingResendEmail - 1;
+    setTimeRemaining(prev => {
+      const seconds = prev - 1;
       if (seconds === 0 && timerRef.current) {
         clearInterval(timerRef.current);
       }
-      return { ...prevState, timeRemainingResendEmail: seconds };
+      return seconds;
     });
   };
 
-  return render();
+  return (
+    <Button
+      type="submit"
+      text={`Resend activation email${timeRemaining > 0 ? ` (${timeRemaining})` : ''}`}
+      intent={Intent.PRIMARY}
+      onClick={onResendEmail}
+      disabled={timeRemaining > 0}
+    />
+  );
 }

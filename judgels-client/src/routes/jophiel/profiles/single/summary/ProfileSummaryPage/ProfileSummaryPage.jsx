@@ -1,16 +1,13 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
-import { callAction } from '../../../../../../modules/callAction';
-import { userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
+import { basicProfileQueryOptions, userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
+import { userStatsQueryOptions } from '../../../../../../modules/queries/stats';
+import { avatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
-
-import * as avatarActions from '../../../../modules/avatarActions';
-import * as profileActions from '../../modules/profileActions';
 
 import './ProfileSummaryPage.scss';
 
@@ -18,36 +15,14 @@ export default function ProfileSummaryPage() {
   const { username } = useParams({ strict: false });
   const { data: userJid } = useSuspenseQuery(userJidByUsernameQueryOptions(username));
 
-  const [state, setState] = useState({
-    avatarUrl: undefined,
-    basicProfile: undefined,
-    userStats: undefined,
+  const { data: avatarUrl } = useQuery(avatarUrlQueryOptions(userJid));
+  const { data: basicProfile } = useQuery(basicProfileQueryOptions(userJid));
+  const { data: userStats } = useQuery({
+    ...userStatsQueryOptions(username),
+    enabled: isTLX(),
   });
 
-  const refreshSummary = async () => {
-    const [avatarUrl, basicProfile, userStats] = await Promise.all([
-      callAction(avatarActions.renderAvatar(userJid)),
-      callAction(profileActions.getBasicProfile(userJid)),
-      getUserStats(username),
-    ]);
-    setState(prevState => ({ ...prevState, avatarUrl, basicProfile, userStats }));
-  };
-
-  useEffect(() => {
-    refreshSummary();
-  }, [userJid]);
-
-  const render = () => {
-    return (
-      <>
-        {renderBasicProfile()}
-        {renderProblemStats()}
-      </>
-    );
-  };
-
   const renderBasicProfile = () => {
-    const { avatarUrl, basicProfile } = state;
     if (!avatarUrl || !basicProfile) {
       return <LoadingState />;
     }
@@ -56,7 +31,6 @@ export default function ProfileSummaryPage() {
   };
 
   const renderProblemStats = () => {
-    const { userStats } = state;
     if (!isTLX()) {
       return null;
     }
@@ -67,12 +41,10 @@ export default function ProfileSummaryPage() {
     return <ProblemStatsPanel userStats={userStats} />;
   };
 
-  const getUserStats = usernameArg => {
-    if (!isTLX()) {
-      return Promise.resolve(null);
-    }
-    return callAction(profileActions.getUserStats(usernameArg));
-  };
-
-  return render();
+  return (
+    <>
+      {renderBasicProfile()}
+      {renderProblemStats()}
+    </>
+  );
 }
