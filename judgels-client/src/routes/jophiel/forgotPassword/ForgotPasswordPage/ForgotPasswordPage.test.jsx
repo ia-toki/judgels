@@ -1,18 +1,27 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel } from '../../../../utils/nock';
 import ForgotPasswordPage from './ForgotPasswordPage';
 
-import * as forgotPasswordActions from '../modules/forgotPasswordActions';
-
-vi.mock('../modules/forgotPasswordActions');
-
 describe('ForgotPasswordPage', () => {
-  beforeEach(() => {
-    forgotPasswordActions.requestToResetPassword.mockReturnValue(Promise.resolve());
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
-    render(<ForgotPasswordPage />);
+  beforeEach(async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ForgotPasswordPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
   });
 
   test('form', async () => {
@@ -21,10 +30,14 @@ describe('ForgotPasswordPage', () => {
     const email = screen.getByRole('textbox');
     await user.type(email, 'email@domain.com');
 
+    nockJophiel().post('/user-account/request-reset-password/email@domain.com').reply(200);
+
     const submitButton = screen.getByRole('button', { name: /request to reset password/i });
     await user.click(submitButton);
 
-    expect(forgotPasswordActions.requestToResetPassword).toHaveBeenCalledWith('email@domain.com');
-    expect(document.querySelector('[data-key="instruction"]')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(nock.isDone()).toBe(true);
+      expect(document.querySelector('[data-key="instruction"]')).toBeInTheDocument();
+    });
   });
 });

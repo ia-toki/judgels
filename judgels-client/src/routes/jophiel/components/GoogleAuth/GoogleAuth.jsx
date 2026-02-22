@@ -1,16 +1,18 @@
 import { Classes, Dialog } from '@blueprintjs/core';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { APP_CONFIG } from '../../../../conf';
-import { callAction } from '../../../../modules/callAction';
+import { googleLogInMutationOptions, googleRegisterMutationOptions } from '../../../../modules/queries/googleAuth';
+import { afterLogin } from '../../../../modules/queries/session';
 import GoogleAuthRegisterForm from '../GoogleAuthRegisterForm/GoogleAuthRegisterForm';
-
-import * as googleAuthActions from '../../modules/googleAuthActions';
 
 import './GoogleAuth.scss';
 
 export default function GoogleAuth({ onToggleInternalAuth }) {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     email: undefined,
     idToken: undefined,
@@ -18,19 +20,12 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
     isRegisterDialogOpen: false,
   });
 
-  const render = () => {
-    if (!APP_CONFIG.googleAuth) {
-      return null;
-    }
+  const googleLogInMutation = useMutation(googleLogInMutationOptions);
+  const googleRegisterMutation = useMutation(googleRegisterMutationOptions);
 
-    return (
-      <GoogleOAuthProvider clientId={APP_CONFIG.googleAuth.clientId}>
-        <GoogleLogin onSuccess={logIn} className="google-auth" />
-        <hr />
-        {renderDialog()}
-      </GoogleOAuthProvider>
-    );
-  };
+  if (!APP_CONFIG.googleAuth) {
+    return null;
+  }
 
   const toggleDialog = () => {
     setState(prevState => ({ ...prevState, isRegisterDialogOpen: !prevState.isRegisterDialogOpen }));
@@ -84,22 +79,31 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
       isAuthorizing: true,
     }));
 
-    const isLoggedIn = await callAction(googleAuthActions.logIn(credential));
-    if (!isLoggedIn) {
+    const session = await googleLogInMutation.mutateAsync(credential);
+    if (!session) {
       toggleDialog();
     }
   };
 
   const register = async data => {
-    await callAction(
-      googleAuthActions.register({
-        idToken: state.idToken,
-        username: data.username,
-      })
-    );
+    await googleRegisterMutation.mutateAsync({
+      idToken: state.idToken,
+      username: data.username,
+    });
+    navigate({ to: '/registered', search: { source: 'google' } });
+    const session = await googleLogInMutation.mutateAsync(state.idToken);
+    if (session) {
+      await afterLogin(session);
+    }
   };
 
-  return render();
+  return (
+    <GoogleOAuthProvider clientId={APP_CONFIG.googleAuth.clientId}>
+      <GoogleLogin onSuccess={logIn} className="google-auth" />
+      <hr />
+      {renderDialog()}
+    </GoogleOAuthProvider>
+  );
 }
 
 function decodeJwtResponse(token) {

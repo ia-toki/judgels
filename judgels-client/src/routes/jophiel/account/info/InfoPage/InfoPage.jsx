@@ -1,46 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
-import { callAction } from '../../../../../modules/callAction';
+import { userQueryOptions } from '../../../../../modules/queries/user';
+import { updateUserInfoMutationOptions, userInfoQueryOptions } from '../../../../../modules/queries/userInfo';
 import { useSession } from '../../../../../modules/session';
 import { InfoPanel } from '../../../panels/info/InfoPanel/InfoPanel';
 
-import * as infoActions from '../../../modules/infoActions';
-import * as userActions from '../../../modules/userActions';
+import * as toastActions from '../../../../../modules/toast/toastActions';
 
 export default function InfoPage() {
-  const { user } = useSession();
-  const userJid = user.jid;
+  const { user: sessionUser } = useSession();
+  const userJid = sessionUser.jid;
 
-  const [state, setState] = useState({
-    user: undefined,
-    info: undefined,
-  });
+  const { data: user } = useQuery(userQueryOptions(userJid));
+  const { data: info } = useQuery(userInfoQueryOptions(userJid));
 
-  const refreshInfo = async () => {
-    const [user, info] = await Promise.all([
-      callAction(userActions.getUser(userJid)),
-      callAction(infoActions.getInfo(userJid)),
-    ]);
-    setState(prevState => ({ ...prevState, user, info }));
+  const updateInfoMutation = useMutation(updateUserInfoMutationOptions(userJid));
+
+  const onUpdateInfo = async infoData => {
+    await updateInfoMutation.mutateAsync(infoData, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Info updated.');
+      },
+    });
   };
 
-  useEffect(() => {
-    refreshInfo();
-  }, []);
-
-  const render = () => {
-    const { user, info } = state;
-    if (!user || !info) {
-      return <LoadingState />;
-    }
-    return <InfoPanel email={user.email} info={info} onUpdateInfo={onUpdateInfo} />;
-  };
-
-  const onUpdateInfo = async info => {
-    await callAction(infoActions.updateInfo(userJid, info));
-    await refreshInfo();
-  };
-
-  return render();
+  if (!user || !info) {
+    return <LoadingState />;
+  }
+  return <InfoPanel email={user.email} info={info} onUpdateInfo={onUpdateInfo} />;
 }

@@ -1,27 +1,36 @@
 import { act, render } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel } from '../../../../utils/nock';
 import LogoutPage from './LogoutPage';
 
-import * as logoutActions from '../modules/logoutActions';
-
-vi.mock('../modules/logoutActions');
-
 describe('LogoutPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   beforeEach(async () => {
-    logoutActions.logOut.mockReturnValue(Promise.resolve());
+    nockJophiel().post('/session/logout').reply(200);
 
     await act(async () =>
       render(
-        <TestRouter>
-          <LogoutPage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <LogoutPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   });
 
   it('logs out immediately', () => {
-    expect(logoutActions.logOut).toHaveBeenCalled();
+    expect(nock.isDone()).toBe(true);
   });
 });

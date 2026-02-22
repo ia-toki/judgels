@@ -8,7 +8,7 @@ describe('InfoPanel', () => {
   let onUpdateInfo;
 
   beforeEach(() => {
-    onUpdateInfo = vi.fn().mockReturnValue({ type: 'mock-update', then: fn => fn() });
+    onUpdateInfo = vi.fn().mockReturnValue(Promise.resolve());
 
     const info = {
       name: 'My Name',

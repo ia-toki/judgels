@@ -1,36 +1,43 @@
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { callAction } from '../../../../modules/callAction';
+import { afterLogin, logInMutationOptions } from '../../../../modules/queries/session';
 import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 import LoginForm from '../LoginForm/LoginForm';
-
-import * as loginActions from '../modules/loginActions';
 
 import './LoginPage.scss';
 
 export default function LoginPage() {
-  const [state, setState] = useState({
-    isInternalAuthEnabled: true,
-  });
+  const navigate = useNavigate();
+  const [isInternalAuthEnabled, setIsInternalAuthEnabled] = useState(true);
 
-  const render = () => {
-    return (
-      <SingleColumnLayout>
-        <Card title="Log in" className="card-login">
-          <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
-          {state.isInternalAuthEnabled && <LoginForm onSubmit={onLogIn} />}
-        </Card>
-      </SingleColumnLayout>
-    );
-  };
+  const logInMutation = useMutation(logInMutationOptions);
 
   const toggleInternalAuth = () => {
-    setState(prevState => ({ ...prevState, isInternalAuthEnabled: !prevState.isInternalAuthEnabled }));
+    setIsInternalAuthEnabled(prev => !prev);
   };
 
-  const onLogIn = data => callAction(loginActions.logIn(data.usernameOrEmail, data.password));
+  const onLogIn = async data => {
+    const result = await logInMutation.mutateAsync({
+      usernameOrEmail: data.usernameOrEmail,
+      password: data.password,
+    });
+    if (result.redirect) {
+      navigate({ to: result.redirect, search: { email: result.email } });
+      return;
+    }
+    await afterLogin(result);
+  };
 
-  return render();
+  return (
+    <SingleColumnLayout>
+      <Card title="Log in" className="card-login">
+        <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
+        {isInternalAuthEnabled && <LoginForm onSubmit={onLogIn} />}
+      </Card>
+    </SingleColumnLayout>
+  );
 }

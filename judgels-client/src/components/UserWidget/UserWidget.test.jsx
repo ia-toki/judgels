@@ -1,12 +1,17 @@
 import { act, render } from '@testing-library/react';
+import nock from 'nock';
 
+import { QueryClientProviderWrapper } from '../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../test/RouterWrapper';
 import { UserWidget } from './UserWidget';
 
 describe('UserWidget', () => {
   let user;
   let profile;
-  let onRenderAvatar = () => Promise.resolve('url');
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
   const renderComponent = async () => {
     const props = {
@@ -14,14 +19,15 @@ describe('UserWidget', () => {
       profile,
       items: [],
       homeRoute: { title: 'Home' },
-      onRenderAvatar,
     };
 
     return await act(async () =>
       render(
-        <TestRouter>
-          <UserWidget {...props} />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <UserWidget {...props} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   };

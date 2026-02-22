@@ -1,17 +1,14 @@
+import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { callAction } from '../../../../modules/callAction';
-
-import * as logoutActions from '../modules/logoutActions';
+import { logOutMutationOptions } from '../../../../modules/queries/session';
 
 export default function LogoutPage() {
+  const logOutMutation = useMutation(logOutMutationOptions);
+
   useEffect(() => {
-    callAction(logoutActions.logOut(window.location.href));
+    logOutMutation.mutate();
   }, []);
 
-  const render = () => {
-    return null;
-  };
-
-  return render();
+  return null;
 }
