@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../../../../../test/QueryClientProviderWrapper';
@@ -8,23 +8,29 @@ import { nockJerahmeel } from '../../../../../../../../../../../utils/nock';
 import { ChapterProblemContext } from '../../../ChapterProblemContext';
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 
-import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
-
-vi.mock('../modules/chapterProblemSubmissionActions');
-
 describe('ChapterProblemSubmissionsPage', () => {
   beforeEach(() => {
-    setSession('token', { jid: 'userJid' });
+    setSession('token', { jid: 'userJid', username: 'username' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   let submissions;
   let canManage;
 
   const renderComponent = async () => {
-    chapterProblemSubmissionActions.getSubmissions.mockReturnValue(
-      Promise.resolve({
+    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+
+    nockJerahmeel()
+      .get('/submissions/programming')
+      .query(true)
+      .reply(200, {
         data: {
           page: submissions,
+          totalCount: submissions.length,
         },
         profilesMap: {
           userJid1: { username: 'username1' },
@@ -38,13 +44,7 @@ describe('ChapterProblemSubmissionsPage', () => {
           userJids: ['userJid1', 'userJid2'],
           problemJids: ['problemJid1'],
         },
-      })
-    );
-
-    chapterProblemSubmissionActions.getSubmissionSourceImage.mockReturnValue(Promise.resolve('image.url'));
-
-    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
-    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+      });
 
     await act(async () =>
       render(

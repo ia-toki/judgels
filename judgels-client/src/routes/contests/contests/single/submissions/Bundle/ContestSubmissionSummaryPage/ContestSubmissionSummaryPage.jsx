@@ -18,7 +18,7 @@ export default function ContestSubmissionSummaryPage() {
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage: language } = useWebPrefs();
 
-  const { data: response } = useQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, { username, language }));
+  const { data: response } = useQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, username, { language }));
 
   const regradeSubmissionsMutation = useMutation(regradeBundleSubmissionsMutationOptions(contest.jid));
 

@@ -1,13 +1,16 @@
 import { Switch } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../../../../../../components/PaginationV2/PaginationV2';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
-import { callAction } from '../../../../../../../../../../../modules/callAction';
+import {
+  chapterProgrammingSubmissionsQueryOptions,
+  regradeChapterProgrammingSubmissionMutationOptions,
+  regradeChapterProgrammingSubmissionsMutationOptions,
+} from '../../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -17,7 +20,7 @@ import { reallyConfirm } from '../../../../../../../../../../../utils/confirmati
 import { useChapterProblemContext } from '../../../ChapterProblemContext';
 import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTable/ChapterProblemSubmissionsTable';
 
-import * as chapterProblemSubmissionActions from '../modules/chapterProblemSubmissionActions';
+import * as toastActions from '../../../../../../../../../../../modules/toast/toastActions';
 
 const PAGE_SIZE = 20;
 
@@ -33,19 +36,45 @@ export default function ChapterProblemSubmissionsPage() {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const page = +(location.search.page || 1);
+  const isShowAll = (location.pathname + '/').includes('/all/');
+  const usernameFilter = isShowAll ? undefined : username;
 
-  const render = () => {
-    return (
-      <ContentCard>
-        {renderFilter()}
-        {renderHeader()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </ContentCard>
-    );
+  const { data: response } = useQuery(
+    chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias, username: usernameFilter, page })
+  );
+
+  const regradeSubmissionMutation = useMutation(regradeChapterProgrammingSubmissionMutationOptions(chapter.jid));
+  const regradeSubmissionsMutation = useMutation(regradeChapterProgrammingSubmissionsMutationOptions(chapter.jid));
+
+  const onChangeFilterShowAll = ({ target }) => {
+    if (target.checked) {
+      navigate({ to: (location.pathname + '/all').replace('//', '/') });
+    } else {
+      const idx = location.pathname.lastIndexOf('/all');
+      navigate({ to: location.pathname.substring(0, idx) });
+    }
+  };
+
+  const onRegradeSubmission = async submissionJid => {
+    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Regrade in progress.');
+      },
+    });
+  };
+
+  const onRegradeSubmissions = async () => {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
+      await regradeSubmissionsMutation.mutateAsync(
+        { problemAlias },
+        {
+          onSuccess: () => {
+            toastActions.showSuccessToast('Regrade in progress.');
+          },
+        }
+      );
+    }
   };
 
   const renderHeader = () => {
@@ -58,35 +87,17 @@ export default function ChapterProblemSubmissionsPage() {
   };
 
   const renderFilter = () => {
-    return (
-      userJid && (
-        <Switch label="Show all submissions" checked={isFilterShowAllChecked()} onChange={onChangeFilterShowAll} />
-      )
-    );
-  };
-
-  const isFilterShowAllChecked = () => {
-    return (location.pathname + '/').includes('/all/');
-  };
-
-  const onChangeFilterShowAll = ({ target }) => {
-    if (target.checked) {
-      navigate({ to: (location.pathname + '/all').replace('//', '/') });
-    } else {
-      const idx = location.pathname.lastIndexOf('/all');
-      navigate({ to: location.pathname.substring(0, idx) });
-    }
+    return userJid && <Switch label="Show all submissions" checked={isShowAll} onChange={onChangeFilterShowAll} />;
   };
 
   const renderRegradeAllButton = () => {
-    if (!state.response || !state.response.config.canManage) {
+    if (!response || !response.config.canManage) {
       return null;
     }
     return <RegradeAllButton onRegradeAll={onRegradeSubmissions} />;
   };
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -113,36 +124,12 @@ export default function ChapterProblemSubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    const key = '' + isFilterShowAllChecked();
-    return <Pagination key={key} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshSubmissions = async page => {
-    const usernameFilter = isFilterShowAllChecked() ? undefined : username;
-    const response = await callAction(
-      chapterProblemSubmissionActions.getSubmissions(chapter.jid, problemAlias, usernameFilter, page)
-    );
-    setState({ response });
-    return response.data;
-  };
-
-  const onRegradeSubmission = async submissionJid => {
-    await callAction(chapterProblemSubmissionActions.regradeSubmission(submissionJid));
-    await refreshSubmissions(location.search.page);
-  };
-
-  const onRegradeSubmissions = async () => {
-    if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await callAction(chapterProblemSubmissionActions.regradeSubmissions(chapter.jid, undefined, problemAlias));
-      await refreshSubmissions(location.search.page);
-    }
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      {renderFilter()}
+      {renderHeader()}
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }
