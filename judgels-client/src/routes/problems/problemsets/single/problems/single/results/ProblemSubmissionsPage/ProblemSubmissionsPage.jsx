@@ -1,26 +1,29 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../../../components/PaginationV2/PaginationV2';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
+import {
+  problemSetBundleSubmissionsQueryOptions,
+  regradeProblemSetBundleSubmissionMutationOptions,
+  regradeProblemSetBundleSubmissionsMutationOptions,
+} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 
-import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
+import * as toastActions from '../../../../../../../../modules/toast/toastActions';
 
 import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
@@ -34,29 +37,37 @@ export default function ProblemSubmissionsPage() {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const page = +(location.search.page || 1);
 
-  useEffect(() => {
-    refreshSubmissions();
-  }, []);
+  const { data: response } = useQuery(
+    problemSetBundleSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias, page })
+  );
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Results</h3>
-        <hr />
-        <ItemSubmissionUserFilter />
-        {renderRegradeAllButton()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </ContentCard>
-    );
+  const regradeSubmissionMutation = useMutation(regradeProblemSetBundleSubmissionMutationOptions(problemSet.jid));
+  const regradeSubmissionsMutation = useMutation(regradeProblemSetBundleSubmissionsMutationOptions(problemSet.jid));
+
+  const onRegrade = async submissionJid => {
+    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Submission regraded.');
+      },
+    });
+  };
+
+  const onRegradeAll = async () => {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
+      await regradeSubmissionsMutation.mutateAsync(
+        { problemJid: problem.problemJid },
+        {
+          onSuccess: () => {
+            toastActions.showSuccessToast('Regrade in progress.');
+          },
+        }
+      );
+    }
   };
 
   const renderSubmissions = () => {
-    const response = state.response;
     if (!response) {
       return <LoadingState />;
     }
@@ -117,37 +128,8 @@ export default function ProblemSubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const refreshSubmissions = async page => {
-    const response = await callAction(
-      problemSetSubmissionActions.getSubmissions(problemSet.jid, undefined, problem.alias, page)
-    );
-    setState({ response });
-    return response.data;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const onRegrade = async submissionJid => {
-    await callAction(problemSetSubmissionActions.regradeSubmission(submissionJid));
-    await refreshSubmissions(location.search.page);
-  };
-
-  const onRegradeAll = async () => {
-    if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await callAction(problemSetSubmissionActions.regradeSubmissions(problemSet.jid, undefined, problem.problemJid));
-      await refreshSubmissions(location.search.page);
-    }
-  };
-
   const renderRegradeAllButton = () => {
-    if (!state.response || !state.response.config.canManage) {
+    if (!response || !response.config.canManage) {
       return null;
     }
 
@@ -163,5 +145,14 @@ export default function ProblemSubmissionsPage() {
     );
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Results</h3>
+      <hr />
+      <ItemSubmissionUserFilter />
+      {renderRegradeAllButton()}
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }

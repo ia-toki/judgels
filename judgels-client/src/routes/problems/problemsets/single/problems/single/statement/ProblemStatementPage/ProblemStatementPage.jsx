@@ -1,20 +1,18 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
+  problemSetProblemWorksheetQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
-
-import * as problemSetProblemActions from '../../../modules/problemSetProblemActions';
 
 export default function ProblemStatementPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
@@ -22,43 +20,29 @@ export default function ProblemStatementPage() {
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const loadWorksheet = async () => {
-    setState({ response: undefined });
-
-    const response = await callAction(
-      problemSetProblemActions.getProblemWorksheet(problemSet.jid, problem.alias, statementLanguage)
-    );
-
-    setState({ response });
-
-    sendGAEvent({ category: 'Problems', action: 'View problemset problem', label: problemSet.name });
-    sendGAEvent({
-      category: 'Problems',
-      action: 'View problem',
-      label: problemSet.name + ': ' + problem.alias,
-    });
-  };
+  const { data: response } = useQuery(
+    problemSetProblemWorksheetQueryOptions(problemSet.jid, problem.alias, { language: statementLanguage })
+  );
 
   useEffect(() => {
-    loadWorksheet();
-  }, [statementLanguage]);
-
-  const render = () => {
-    const { response } = state;
-    if (!response) {
-      return <LoadingState />;
+    if (response) {
+      sendGAEvent({ category: 'Problems', action: 'View problemset problem', label: problemSet.name });
+      sendGAEvent({
+        category: 'Problems',
+        action: 'View problem',
+        label: problemSet.name + ': ' + problem.alias,
+      });
     }
-    const { problem } = response;
-    if (problem.type === ProblemType.Programming) {
-      return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
-    } else {
-      return <ProblemSetProblemBundleStatementPage worksheet={response} />;
-    }
-  };
+  }, [response]);
 
-  return render();
+  if (!response) {
+    return <LoadingState />;
+  }
+
+  const { problem: problemData } = response;
+  if (problemData.type === ProblemType.Programming) {
+    return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
+  } else {
+    return <ProblemSetProblemBundleStatementPage worksheet={response} />;
+  }
 }

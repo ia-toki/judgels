@@ -1,13 +1,11 @@
 import { Radio, RadioGroup } from '@blueprintjs/core';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { sendGAEvent } from '../../../../ga';
-import { callAction } from '../../../../modules/callAction';
-
-import * as archiveActions from '../modules/archiveActions';
+import { archivesQueryOptions } from '../../../../modules/queries/archive';
 
 import './ProblemSetArchiveFilter.scss';
 
@@ -17,36 +15,10 @@ export default function ProblemSetArchiveFilter() {
 
   const archiveSlug = location.search.archive || '';
 
-  const [state, setState] = useState({
-    response: undefined,
-    archiveSlug,
-  });
-
-  const loadArchives = async () => {
-    const response = await callAction(archiveActions.getArchives());
-    setState(prevState => ({ ...prevState, response }));
-  };
-
-  useEffect(() => {
-    loadArchives();
-  }, []);
-
-  const render = () => {
-    const { response } = state;
-    if (!response) {
-      return null;
-    }
-    return (
-      <ContentCard>
-        <h4>Filter problemset</h4>
-        <hr />
-        {renderArchiveCategories()}
-      </ContentCard>
-    );
-  };
+  const { data: response } = useQuery(archivesQueryOptions());
 
   const renderArchiveCategories = () => {
-    const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...state.response.data];
+    const archives = [{ slug: '', name: '(All problemsets)', category: '' }, ...response.data];
     const archivesByCategory = {};
     archives.forEach(archive => {
       if (archivesByCategory[archive.category]) {
@@ -91,7 +63,6 @@ export default function ProblemSetArchiveFilter() {
         archive: archiveSlug === '' ? undefined : archiveSlug,
       },
     });
-    setState(prevState => ({ ...prevState, archiveSlug }));
 
     sendGAEvent({
       category: 'Problems',
@@ -100,5 +71,15 @@ export default function ProblemSetArchiveFilter() {
     });
   };
 
-  return render();
+  if (!response) {
+    return null;
+  }
+
+  return (
+    <ContentCard>
+      <h4>Filter problemset</h4>
+      <hr />
+      {renderArchiveCategories()}
+    </ContentCard>
+  );
 }
