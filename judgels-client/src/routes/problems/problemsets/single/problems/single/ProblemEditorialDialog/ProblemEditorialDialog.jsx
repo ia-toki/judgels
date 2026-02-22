@@ -1,18 +1,16 @@
 import { Button, Card, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
-import { callAction } from '../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
+  problemSetProblemEditorialQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
-
-import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemEditorialDialog.scss';
 
@@ -22,34 +20,15 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { editorialLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    isDialogOpen: false,
-    response: undefined,
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const { data: response } = useQuery({
+    ...problemSetProblemEditorialQueryOptions(problemSet.jid, problemAlias, { language: editorialLanguage }),
+    enabled: isDialogOpen,
   });
 
-  const loadEditorial = async () => {
-    setState(prevState => ({ ...prevState, response: undefined }));
-
-    const response = await callAction(
-      problemSetProblemActions.getProblemEditorial(problemSet.jid, problemAlias, editorialLanguage)
-    );
-
-    setState(prevState => ({ ...prevState, response }));
-  };
-
-  useEffect(() => {
-    if (state.isDialogOpen) {
-      loadEditorial();
-    }
-  }, [editorialLanguage, state.isDialogOpen]);
-
-  const render = () => {
-    return (
-      <div>
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
+  const toggleDialog = () => {
+    setIsDialogOpen(prev => !prev);
   };
 
   const renderButton = () => {
@@ -59,7 +38,7 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
         intent={Intent.WARNING}
         small
         onClick={toggleDialog}
-        disabled={state.isDialogOpen}
+        disabled={isDialogOpen}
       >
         View editorial
       </Button>
@@ -67,7 +46,6 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   };
 
   const renderDialog = () => {
-    const { isDialogOpen } = state;
     return (
       <Dialog className="problem-editorial-dialog" isOpen={isDialogOpen} onClose={toggleDialog} title="Editorial">
         <div className={Classes.DIALOG_BODY}>
@@ -79,7 +57,6 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
   };
 
   const renderEditorial = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -97,12 +74,7 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
     );
   };
 
-  const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
   const renderEditorialLanguageWidget = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -121,5 +93,10 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
     );
   };
 
-  return render();
+  return (
+    <div>
+      {renderButton()}
+      {renderDialog()}
+    </div>
+  );
 }

@@ -1,14 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import Pagination from '../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
-import { callAction } from '../../../../modules/callAction';
+import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
-
-import * as problemSetActions from '../modules/problemSetActions';
 
 const PAGE_SIZE = 20;
 
@@ -17,27 +15,9 @@ export default function ProblemSetsPage() {
 
   const archiveSlug = location.search.archive;
   const name = location.search.name;
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-    isFilterLoading: false,
-  });
-
-  useEffect(() => {
-    if (archiveSlug || name) {
-      setState(prevState => ({ ...prevState, isFilterLoading: true }));
-    }
-  }, [archiveSlug, name]);
-
-  const render = () => {
-    return (
-      <Card title="Browse problemsets">
-        {renderHeader()}
-        {renderProblemSets()}
-        {renderPagination()}
-      </Card>
-    );
-  };
+  const { data: response, isFetching } = useQuery(problemSetsQueryOptions({ archiveSlug, name, page }));
 
   const renderHeader = () => {
     return (
@@ -57,7 +37,6 @@ export default function ProblemSetsPage() {
       return <>Most recently added problemsets:</>;
     }
 
-    const { response } = state;
     const archiveName = response && response.archiveName;
 
     if (archiveName && !name) {
@@ -89,13 +68,10 @@ export default function ProblemSetsPage() {
   };
 
   const renderFilter = () => {
-    return (
-      <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={state.isFilterLoading} />
-    );
+    return <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={isFetching} />;
   };
 
   const renderProblemSets = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -123,22 +99,15 @@ export default function ProblemSetsPage() {
     ));
   };
 
-  const renderPagination = () => {
-    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={'' + archiveSlug + name} />;
-  };
-
-  const onChangePage = async nextPage => {
-    if (state.response) {
-      setState(prevState => ({ ...prevState, response: { ...state.response, data: undefined } }));
-    }
-    const response = await callAction(problemSetActions.getProblemSets(archiveSlug, name, nextPage));
-    setState({ response, isFilterLoading: false });
-    return response.data.totalCount;
-  };
-
   const searchBoxUpdateQueries = (name, queries) => {
     return { ...queries, page: undefined, name };
   };
 
-  return render();
+  return (
+    <Card title="Browse problemsets">
+      {renderHeader()}
+      {renderProblemSets()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </Card>
+  );
 }

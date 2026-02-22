@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
@@ -6,20 +6,25 @@ import StatementLanguageWidget from '../../../../../../../../components/Language
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
-import { callAction } from '../../../../../../../../modules/callAction';
+import { getNavigationRef } from '../../../../../../../../modules/navigation/navigationRef';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
+import { createProblemSetProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmissionProgramming';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
-import * as problemSetSubmissionActions from '../../submissions/modules/problemSetSubmissionActions';
+import { toastActions } from '../../../../../../../../modules/toast/toastActions';
 
 export default function ProblemStatementPage({ worksheet }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
+
+  const createSubmissionMutation = useMutation(
+    createProblemSetProgrammingSubmissionMutationOptions(problemSet.jid, worksheet.problem.problemJid)
+  );
 
   const renderStatementLanguageWidget = () => {
     const { defaultLanguage, languages } = worksheet;
@@ -64,15 +69,13 @@ export default function ProblemStatementPage({ worksheet }) {
       });
     }
 
-    return await callAction(
-      problemSetSubmissionActions.createSubmission(
-        problemSet.slug,
-        problemSet.jid,
-        problem.alias,
-        worksheet.problem.problemJid,
-        data
-      )
-    );
+    await createSubmissionMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Solution submitted.');
+        window.scrollTo(0, 0);
+        getNavigationRef().push(`/problems/${problemSet.slug}/${problem.alias}/submissions/mine`);
+      },
+    });
   };
 
   return (

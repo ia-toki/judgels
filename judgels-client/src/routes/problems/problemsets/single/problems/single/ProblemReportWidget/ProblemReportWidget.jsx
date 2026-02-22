@@ -1,8 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import ProblemDifficulty from '../../../../../../../components/ProblemDifficulty/ProblemDifficulty';
@@ -11,14 +10,12 @@ import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/P
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
-import { callAction } from '../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
+  problemSetProblemReportQueryOptions,
 } from '../../../../../../../modules/queries/problemSet';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
-
-import * as problemSetProblemActions from '../../modules/problemSetProblemActions';
 
 import './ProblemReportWidget.scss';
 
@@ -29,34 +26,11 @@ export default function ProblemReportWidget() {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const { data: response } = useQuery(problemSetProblemReportQueryOptions(problemSet.jid, problemAlias));
 
-  const loadReport = async () => {
-    const response = await callAction(problemSetProblemActions.getProblemReport(problemSet.jid, problemAlias));
-    setState({ response });
-  };
-
-  useEffect(() => {
-    loadReport();
-  }, []);
-
-  const render = () => {
-    const { response } = state;
-    if (!response) {
-      return null;
-    }
-
-    return (
-      <div className="problem-report-widget">
-        {renderContests(response)}
-        {renderProgress(response)}
-        {renderSpoilers(response)}
-        {renderTopStats(response)}
-      </div>
-    );
-  };
+  if (!response) {
+    return null;
+  }
 
   const renderContests = ({ contests }) => {
     if (contests.length === 0) {
@@ -189,5 +163,12 @@ export default function ProblemReportWidget() {
     );
   };
 
-  return render();
+  return (
+    <div className="problem-report-widget">
+      {renderContests(response)}
+      {renderProgress(response)}
+      {renderSpoilers(response)}
+      {renderTopStats(response)}
+    </div>
+  );
 }

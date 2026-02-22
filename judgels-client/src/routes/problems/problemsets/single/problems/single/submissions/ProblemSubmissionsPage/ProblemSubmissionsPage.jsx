@@ -1,22 +1,25 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../../../../../components/PaginationV2/PaginationV2';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { callAction } from '../../../../../../../../modules/callAction';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
+import {
+  problemSetProgrammingSubmissionsQueryOptions,
+  regradeProblemSetProgrammingSubmissionMutationOptions,
+  regradeProblemSetProgrammingSubmissionsMutationOptions,
+} from '../../../../../../../../modules/queries/problemSetSubmissionProgramming';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
 
-import * as problemSetSubmissionActions from '../modules/problemSetSubmissionActions';
+import * as toastActions from '../../../../../../../../modules/toast/toastActions';
 
 const PAGE_SIZE = 20;
 
@@ -29,29 +32,41 @@ export default function ProblemSubmissionsPage() {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const page = +(location.search.page || 1);
+  const isUserFilterMine = (location.pathname + '/').includes('/mine/');
+  const usernameFilter = isUserFilterMine ? username : undefined;
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Submissions</h3>
-        <hr />
-        {renderUserFilter()}
-        {renderHeader()}
-        {renderSubmissions()}
-        {renderPagination()}
-      </ContentCard>
-    );
+  const { data: response } = useQuery(
+    problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, page })
+  );
+
+  const regradeSubmissionMutation = useMutation(
+    regradeProblemSetProgrammingSubmissionMutationOptions(problem.problemJid)
+  );
+  const regradeSubmissionsMutation = useMutation(
+    regradeProblemSetProgrammingSubmissionsMutationOptions(problem.problemJid)
+  );
+
+  const onRegrade = async submissionJid => {
+    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Regrade in progress.');
+      },
+    });
+  };
+
+  const onRegradeAll = async () => {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
+      await regradeSubmissionsMutation.mutateAsync(undefined, {
+        onSuccess: () => {
+          toastActions.showSuccessToast('Regrade in progress.');
+        },
+      });
+    }
   };
 
   const renderUserFilter = () => {
     return userJid && <SubmissionUserFilter />;
-  };
-
-  const isUserFilterMine = () => {
-    return (location.pathname + '/').includes('/mine/');
   };
 
   const renderHeader = () => {
@@ -59,14 +74,13 @@ export default function ProblemSubmissionsPage() {
   };
 
   const renderRegradeAllButton = () => {
-    if (!state.response || !state.response.config.canManage) {
+    if (!response || !response.config.canManage) {
       return null;
     }
     return <RegradeAllButton onRegradeAll={onRegradeAll} />;
   };
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -93,35 +107,14 @@ export default function ProblemSubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    return <Pagination key={'' + isUserFilterMine()} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshSubmissions = async page => {
-    const usernameFilter = isUserFilterMine() ? username : undefined;
-    const response = await callAction(
-      problemSetSubmissionActions.getSubmissions(undefined, usernameFilter, problem.problemJid, page)
-    );
-    setState({ response });
-    return response.data;
-  };
-
-  const onRegrade = async submissionJid => {
-    await callAction(problemSetSubmissionActions.regradeSubmission(submissionJid));
-    await refreshSubmissions(location.search.page);
-  };
-
-  const onRegradeAll = async () => {
-    if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await callAction(problemSetSubmissionActions.regradeSubmissions(undefined, undefined, problem.problemJid));
-      await refreshSubmissions(location.search.page);
-    }
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h3>Submissions</h3>
+      <hr />
+      {renderUserFilter()}
+      {renderHeader()}
+      {renderSubmissions()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }

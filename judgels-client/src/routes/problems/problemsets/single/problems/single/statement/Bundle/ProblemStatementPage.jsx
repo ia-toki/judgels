@@ -1,43 +1,32 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { callAction } from '../../../../../../../../modules/callAction';
 import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
-
-import * as problemSetSubmissionActions from '../../results/modules/problemSetSubmissionActions';
+import {
+  createProblemSetBundleItemSubmissionMutationOptions,
+  problemSetBundleLatestSubmissionsQueryOptions,
+} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
 
 export default function ProblemStatementPage(props) {
   const { problemSetSlug } = useParams({ strict: false });
   const location = useLocation();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
 
-  const [state, setState] = useState({
-    latestSubmissions: undefined,
-  });
+  const { data: latestSubmissions } = useQuery(
+    problemSetBundleLatestSubmissionsQueryOptions(problemSet.jid, props.worksheet.problem.alias)
+  );
 
-  const refreshSubmissions = async () => {
-    const latestSubmissions = await callAction(
-      problemSetSubmissionActions.getLatestSubmissions(problemSet.jid, props.worksheet.problem.alias)
-    );
-    setState({ latestSubmissions });
-  };
+  const createItemSubmissionMutation = useMutation(
+    createProblemSetBundleItemSubmissionMutationOptions(problemSet.jid, props.worksheet.problem.alias)
+  );
 
-  useEffect(() => {
-    refreshSubmissions();
-  }, []);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        {renderStatementLanguageWidget()}
-        {renderStatement()}
-      </ContentCard>
-    );
+  const createSubmission = async (itemJid, answer) => {
+    const { problem } = props.worksheet;
+    await createItemSubmissionMutation.mutateAsync({ problemJid: problem.problemJid, itemJid, answer });
   };
 
   const renderStatementLanguageWidget = () => {
@@ -62,7 +51,6 @@ export default function ProblemStatementPage(props) {
       return <LoadingState />;
     }
 
-    const { latestSubmissions } = state;
     if (!latestSubmissions) {
       return <LoadingState />;
     }
@@ -78,12 +66,10 @@ export default function ProblemStatementPage(props) {
     );
   };
 
-  const createSubmission = async (itemJid, answer) => {
-    const { problem } = props.worksheet;
-    return await callAction(
-      problemSetSubmissionActions.createItemSubmission(problemSet.jid, problem.problemJid, itemJid, answer)
-    );
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }
