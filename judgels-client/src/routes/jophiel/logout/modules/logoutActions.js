@@ -1,4 +1,4 @@
-import { ForbiddenError, UnauthorizedError } from '../../../../modules/api/error';
+import { ForbiddenError } from '../../../../modules/api/error';
 import { sessionAPI } from '../../../../modules/api/jophiel/session';
 import { SessionErrors } from '../../../../modules/api/jophiel/session';
 import { queryClient } from '../../../../modules/queryClient';
@@ -13,9 +13,7 @@ export async function logOut() {
         throw new Error('Logout is currently disabled.');
       }
     }
-    if (!(error instanceof UnauthorizedError)) {
-      throw error;
-    }
+    throw error;
   }
   clearSession();
   queryClient.setQueryData(['user-web-config'], { role: {} });

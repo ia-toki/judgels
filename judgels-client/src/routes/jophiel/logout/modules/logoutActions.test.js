@@ -28,16 +28,6 @@ describe('logoutActions', () => {
       });
     });
 
-    describe('when the current token is already invalid', () => {
-      it('ends the session anyway', async () => {
-        nockJophiel().post(`/session/logout`).reply(401);
-
-        await logoutActions.logOut();
-
-        expect(getToken()).toBeUndefined();
-      });
-    });
-
     describe('when logout is disabled', () => {
       it('does not log out', async () => {
         nockJophiel().post(`/session/logout`).reply(403, { message: 'Jophiel:LogoutDisabled' });
