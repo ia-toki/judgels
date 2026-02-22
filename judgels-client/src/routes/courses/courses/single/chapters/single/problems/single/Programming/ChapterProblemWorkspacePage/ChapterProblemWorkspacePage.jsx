@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
@@ -7,15 +7,14 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
-import { callAction } from '../../../../../../../../../../modules/callAction';
+import { submissionProgrammingAPI } from '../../../../../../../../../../modules/api/jerahmeel/submissionProgramming';
+import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
 import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
-
-import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 export default function ChapterProblemWorkspacePage() {
   const { worksheet, renderNavigation, reloadProblem } = useChapterProblemContext();
@@ -24,15 +23,17 @@ export default function ChapterProblemWorkspacePage() {
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    shouldResetEditor: false,
-  });
+  const [shouldResetEditor, setShouldResetEditor] = useState(false);
 
   useEffect(() => {
-    if (state.shouldResetEditor === null) {
-      setState(prevState => ({ ...prevState, shouldResetEditor: true }));
+    if (shouldResetEditor === null) {
+      setShouldResetEditor(true);
     }
-  }, [state.shouldResetEditor]);
+  }, [shouldResetEditor]);
+
+  const createSubmissionMutation = useMutation(
+    createChapterProgrammingSubmissionMutationOptions(chapter.jid, worksheet?.problem?.problemJid)
+  );
 
   const createSubmission = async data => {
     const { problem } = worksheet;
@@ -53,60 +54,53 @@ export default function ChapterProblemWorkspacePage() {
       });
     }
 
-    const submission = await callAction(
-      chapterProblemSubmissionActions.createSubmission(chapter.jid, problem.problemJid, data)
-    );
+    const submission = await createSubmissionMutation.mutateAsync(data);
     return {
       submission,
       submissionUrl: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}/submissions/${submission.id}`,
     };
   };
 
-  const getSubmission = submissionJid => callAction(chapterProblemSubmissionActions.getSubmission(submissionJid));
+  const getSubmission = submissionJid => submissionProgrammingAPI.getSubmission(submissionJid);
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {
-      setState(prevState => ({ ...prevState, shouldResetEditor: null }));
+      setShouldResetEditor(null);
     }
   };
 
-  const render = () => {
-    const { skeletons, lastSubmission, lastSubmissionSource } = worksheet;
-    const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
-    const { shouldResetEditor } = state;
+  const { skeletons, lastSubmission, lastSubmissionSource } = worksheet;
+  const { submissionConfig, reasonNotAllowedToSubmit } = worksheet.worksheet;
 
-    if (shouldResetEditor === null) {
-      return null;
-    }
+  if (shouldResetEditor === null) {
+    return null;
+  }
 
-    if (isOutputOnly(submissionConfig.gradingEngine)) {
-      return (
-        <ProblemSubmissionCard
-          config={submissionConfig}
-          onSubmit={createSubmission}
-          reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
-          preferredGradingLanguage={gradingLanguage}
-        />
-      );
-    }
-
+  if (isOutputOnly(submissionConfig.gradingEngine)) {
     return (
-      <ProblemSubmissionEditor
-        skeletons={skeletons}
-        lastSubmission={lastSubmission}
-        lastSubmissionSource={lastSubmissionSource}
+      <ProblemSubmissionCard
         config={submissionConfig}
+        onSubmit={createSubmission}
         reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
         preferredGradingLanguage={gradingLanguage}
-        shouldReset={shouldResetEditor}
-        onSubmit={createSubmission}
-        onReset={resetEditor}
-        onGetSubmission={getSubmission}
-        onReloadProblem={reloadProblem}
-        renderNavigation={renderNavigation}
       />
     );
-  };
+  }
 
-  return render();
+  return (
+    <ProblemSubmissionEditor
+      skeletons={skeletons}
+      lastSubmission={lastSubmission}
+      lastSubmissionSource={lastSubmissionSource}
+      config={submissionConfig}
+      reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
+      preferredGradingLanguage={gradingLanguage}
+      shouldReset={shouldResetEditor}
+      onSubmit={createSubmission}
+      onReset={resetEditor}
+      onGetSubmission={getSubmission}
+      onReloadProblem={reloadProblem}
+      renderNavigation={renderNavigation}
+    />
+  );
 }

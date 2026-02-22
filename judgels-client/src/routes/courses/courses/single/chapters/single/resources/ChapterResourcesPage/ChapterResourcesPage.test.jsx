@@ -1,64 +1,70 @@
 import { act, render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
 import { nockJerahmeel } from '../../../../../../../../utils/nock';
 import ChapterResourcesPage from './ChapterResourcesPage';
 
-import * as chapterResourceActions from '../modules/chapterResourceActions';
-
-vi.mock('../modules/chapterResourceActions');
-
 describe('ChapterResourcesPage', () => {
   let lessons;
   let problems;
 
-  const renderComponent = async () => {
-    chapterResourceActions.getResources.mockReturnValue(
-      Promise.resolve([
-        {
-          data: lessons,
-          lessonsMap: {
-            lessonJid1: {
-              slug: 'lesson-x',
-              titlesByLanguage: { en: 'Lesson X' },
-              defaultLanguage: 'en',
-            },
-            lessonJid2: {
-              slug: 'lesson-y',
-              titlesByLanguage: { en: 'Lesson Y' },
-              defaultLanguage: 'en',
-            },
-          },
-        },
-        {
-          data: problems,
-          problemsMap: {
-            problemJid1: {
-              slug: 'problem-a',
-              titlesByLanguage: { en: 'Problem A' },
-              defaultLanguage: 'en',
-            },
-            problemJid2: {
-              slug: 'problem-b',
-              titlesByLanguage: { en: 'Problem B' },
-              defaultLanguage: 'en',
-            },
-          },
-          problemSetProblemPathsMap: {},
-          problemProgressesMap: {
-            problemJid1: { verdict: 'AC', score: 100 },
-          },
-        },
-      ])
-    );
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const renderComponent = async () => {
     nockJerahmeel()
       .get('/courses/slug/courseSlug')
       .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+
+    nockJerahmeel()
+      .get('/chapters/chapterJid/lessons')
+      .reply(200, {
+        data: lessons,
+        lessonsMap: {
+          lessonJid1: {
+            slug: 'lesson-x',
+            titlesByLanguage: { en: 'Lesson X' },
+            defaultLanguage: 'en',
+          },
+          lessonJid2: {
+            slug: 'lesson-y',
+            titlesByLanguage: { en: 'Lesson Y' },
+            defaultLanguage: 'en',
+          },
+        },
+      });
+
+    nockJerahmeel()
+      .get('/chapters/chapterJid/problems')
+      .reply(200, {
+        data: problems,
+        problemsMap: {
+          problemJid1: {
+            slug: 'problem-a',
+            titlesByLanguage: { en: 'Problem A' },
+            defaultLanguage: 'en',
+          },
+          problemJid2: {
+            slug: 'problem-b',
+            titlesByLanguage: { en: 'Problem B' },
+            defaultLanguage: 'en',
+          },
+        },
+        problemSetProblemPathsMap: {},
+        problemProgressesMap: {
+          problemJid1: { verdict: 'AC', score: 100 },
+        },
+      });
 
     await act(async () =>
       render(
@@ -108,7 +114,7 @@ describe('ChapterResourcesPage', () => {
       expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
         ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
         ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
-        ['A. Problem Asolved  ', '/courses/courseSlug/chapters/chapter-1/problems/A'],
+        [`A. Problem Asolved\xa0\xa0`, '/courses/courseSlug/chapters/chapter-1/problems/A'],
         ['B. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
       ]);
     });

@@ -1,14 +1,14 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
-import { callAction } from '../../../../../../../../modules/callAction';
+import { chapterProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -19,8 +19,6 @@ import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
-
-import * as chapterProblemActions from './modules/chapterProblemActions';
 
 import './ChapterProblemLayout.scss';
 
@@ -34,60 +32,36 @@ export default function ChapterProblemLayout() {
   } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
   const { statementLanguage } = useWebPrefs();
 
-  const [reloadKey, setReloadKey] = useState(0);
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const { data: response } = useQuery(
+    chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language: statementLanguage })
+  );
 
-  const prevProgressRef = useRef(state.response?.progress);
-
-  useEffect(() => {
-    refreshProblem();
-  }, [statementLanguage, reloadKey, problemAlias]);
+  const prevProgressRef = useRef(response?.progress);
 
   useEffect(() => {
-    if (state.response) {
-      checkEditorial(prevProgressRef.current, state.response.progress);
-      prevProgressRef.current = state.response.progress;
+    if (response) {
+      document.title = createDocumentTitle(`${chapterAlias} / ${response.problem.alias}`);
+
+      sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
+      sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });
+      sendGAEvent({
+        category: 'Courses',
+        action: 'View problem',
+        label: chapter.name + ': ' + problemAlias,
+      });
     }
-  }, [reloadKey, state.response]);
+  }, [response?.problem?.alias]);
+
+  useEffect(() => {
+    if (response) {
+      checkEditorial(prevProgressRef.current, response.progress);
+      prevProgressRef.current = response.progress;
+    }
+  }, [response?.progress]);
 
   const reloadProblem = () => {
-    setReloadKey(k => k + 1);
-    queryClient.invalidateQueries({ queryKey: courseChaptersQueryOptions(course.jid).queryKey });
-  };
-
-  const render = () => {
-    return (
-      <div className="chapter-problem-page">
-        {renderHeader()}
-        {renderContent()}
-      </div>
-    );
-  };
-
-  const refreshProblem = async () => {
-    setState({
-      response: undefined,
-    });
-
-    const response = await callAction(
-      chapterProblemActions.getProblemWorksheet(chapter.jid, problemAlias, statementLanguage)
-    );
-
-    setState({
-      response,
-    });
-
-    document.title = createDocumentTitle(`${chapterAlias} / ${response.problem.alias}`);
-
-    sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
-    sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });
-    sendGAEvent({
-      category: 'Courses',
-      action: 'View problem',
-      label: chapter.name + ': ' + problemAlias,
-    });
+    queryClient.invalidateQueries(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias));
+    queryClient.invalidateQueries(courseChaptersQueryOptions(course.jid));
   };
 
   const checkEditorial = (oldProgress, newProgress) => {
@@ -95,7 +69,7 @@ export default function ChapterProblemLayout() {
       oldProgress &&
       oldProgress.verdict !== VerdictCode.AC &&
       newProgress?.verdict == VerdictCode.AC &&
-      state.response.editorial
+      response.editorial
     ) {
       const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
       if (problemEditorialEl) {
@@ -105,7 +79,6 @@ export default function ChapterProblemLayout() {
   };
 
   const renderHeader = () => {
-    const { response } = state;
     const problemTitle = response && response.worksheet.statement.title;
 
     return (
@@ -133,7 +106,6 @@ export default function ChapterProblemLayout() {
   };
 
   const renderProgress = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -147,7 +119,6 @@ export default function ChapterProblemLayout() {
   };
 
   const renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -166,7 +137,6 @@ export default function ChapterProblemLayout() {
   };
 
   const renderContent = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -187,5 +157,10 @@ export default function ChapterProblemLayout() {
     );
   };
 
-  return render();
+  return (
+    <div className="chapter-problem-page">
+      {renderHeader()}
+      {renderContent()}
+    </div>
+  );
 }

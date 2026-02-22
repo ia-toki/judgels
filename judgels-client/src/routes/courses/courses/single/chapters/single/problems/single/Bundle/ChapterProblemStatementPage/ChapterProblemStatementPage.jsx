@@ -1,19 +1,19 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { VerdictCode } from '../../../../../../../../../../modules/api/gabriel/verdict';
-import { callAction } from '../../../../../../../../../../modules/callAction';
+import {
+  chapterBundleLatestSubmissionsQueryOptions,
+  createChapterBundleItemSubmissionMutationOptions,
+} from '../../../../../../../../../../modules/queries/chapterSubmissionBundle';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
-
-import * as chapterProblemSubmissionActions from '../submissions/modules/chapterProblemSubmissionActions';
 
 import './ChapterProblemStatementPage.scss';
 
@@ -24,38 +24,29 @@ export default function ChapterProblemStatementPage(props) {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
-  const [state, setState] = useState({
-    latestSubmissions: undefined,
-  });
-
-  const loadLatestSubmissions = async () => {
-    if (!isInSubmissionsPath()) {
-      const { progress } = props.worksheet;
-      if (progress && progress.verdict !== VerdictCode.PND) {
-        const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
-        navigate(resultsUrl, { replace: true });
-      }
-    }
-
-    const latestSubmissions = await callAction(
-      chapterProblemSubmissionActions.getLatestSubmissions(chapter.jid, props.worksheet.problem.alias)
-    );
-    setState({
-      latestSubmissions,
-    });
+  const isInSubmissionsPath = () => {
+    return (location.pathname + '/').includes('/submissions/');
   };
 
-  useEffect(() => {
-    loadLatestSubmissions();
-  }, []);
+  if (!isInSubmissionsPath()) {
+    const { progress } = props.worksheet;
+    if (progress && progress.verdict !== VerdictCode.PND) {
+      const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
+      navigate(resultsUrl, { replace: true });
+    }
+  }
 
-  const render = () => {
-    return (
-      <ContentCard className="chapter-bundle-problem-statement-page">
-        {renderStatementLanguageWidget()}
-        {renderStatement()}
-      </ContentCard>
-    );
+  const { data: latestSubmissions } = useQuery(
+    chapterBundleLatestSubmissionsQueryOptions(chapter.jid, props.worksheet.problem.alias)
+  );
+
+  const createItemSubmissionMutation = useMutation(
+    createChapterBundleItemSubmissionMutationOptions(chapter.jid, props.worksheet.problem.alias)
+  );
+
+  const createSubmission = async (itemJid, answer) => {
+    const { problem } = props.worksheet;
+    await createItemSubmissionMutation.mutateAsync({ problemJid: problem.problemJid, itemJid, answer });
   };
 
   const renderStatementLanguageWidget = () => {
@@ -80,7 +71,6 @@ export default function ChapterProblemStatementPage(props) {
       return <LoadingState />;
     }
 
-    const { latestSubmissions } = state;
     if (!latestSubmissions) {
       return <LoadingState />;
     }
@@ -103,16 +93,10 @@ export default function ChapterProblemStatementPage(props) {
     );
   };
 
-  const createSubmission = async (itemJid, answer) => {
-    const { problem } = props.worksheet;
-    return await callAction(
-      chapterProblemSubmissionActions.createItemSubmission(chapter.jid, problem.problemJid, itemJid, answer)
-    );
-  };
-
-  const isInSubmissionsPath = () => {
-    return (location.pathname + '/').includes('/submissions/');
-  };
-
-  return render();
+  return (
+    <ContentCard className="chapter-bundle-problem-statement-page">
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
 }

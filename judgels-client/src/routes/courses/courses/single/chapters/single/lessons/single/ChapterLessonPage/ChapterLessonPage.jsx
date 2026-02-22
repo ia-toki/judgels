@@ -1,13 +1,13 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
-import { callAction } from '../../../../../../../../../modules/callAction';
+import { chapterLessonStatementQueryOptions } from '../../../../../../../../../modules/queries/chapterLesson';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -16,8 +16,6 @@ import {
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
-
-import * as chapterLessonActions from '../modules/chapterLessonActions';
 
 import './ChapterLessonPage.scss';
 
@@ -30,37 +28,15 @@ export default function ChapterLessonPage() {
   } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
   const { statementLanguage } = useWebPrefs();
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const refreshLesson = async () => {
-    const response = await callAction(
-      chapterLessonActions.getLessonStatement(chapter.jid, lessonAlias, statementLanguage)
-    );
-
-    setState({
-      response,
-    });
-
-    document.title = createDocumentTitle(`${chapterAlias} / ${response.lesson.alias}`);
-  };
+  const { data: response } = useQuery(
+    chapterLessonStatementQueryOptions(chapter.jid, lessonAlias, { language: statementLanguage })
+  );
 
   useEffect(() => {
-    refreshLesson();
-  }, [statementLanguage, lessonAlias]);
-
-  const render = () => {
-    return (
-      <div className="chapter-lesson-page">
-        {renderHeader()}
-        <ContentCard>
-          {renderStatementLanguageWidget()}
-          {renderStatement()}
-        </ContentCard>
-      </div>
-    );
-  };
+    if (response) {
+      document.title = createDocumentTitle(`${chapterAlias} / ${response.lesson.alias}`);
+    }
+  }, [response, chapterAlias]);
 
   const renderHeader = () => {
     return (
@@ -87,7 +63,6 @@ export default function ChapterLessonPage() {
   };
 
   const renderStatementLanguageWidget = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -104,7 +79,6 @@ export default function ChapterLessonPage() {
   };
 
   const renderStatement = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -113,7 +87,6 @@ export default function ChapterLessonPage() {
   };
 
   const renderPrevAndNextResourcePaths = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -130,5 +103,13 @@ export default function ChapterLessonPage() {
     );
   };
 
-  return render();
+  return (
+    <div className="chapter-lesson-page">
+      {renderHeader()}
+      <ContentCard>
+        {renderStatementLanguageWidget()}
+        {renderStatement()}
+      </ContentCard>
+    </div>
+  );
 }

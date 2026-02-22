@@ -1,19 +1,27 @@
 import { act, render, screen, within } from '@testing-library/react';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJerahmeel } from '../../../../utils/nock';
 import CoursesPage from './CoursesPage';
-
-import * as courseActions from '../modules/courseActions';
-
-vi.mock('../modules/courseActions');
 
 describe('CoursesPage', () => {
   let courses;
 
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   const renderComponent = async () => {
-    courseActions.getCourses.mockReturnValue(
-      Promise.resolve({
+    nockJerahmeel()
+      .get('/courses')
+      .reply(200, {
         data: courses,
         curriculum: {
           name: 'Curriculum 1',
@@ -25,14 +33,15 @@ describe('CoursesPage', () => {
             totalProblems: 6,
           },
         },
-      })
-    );
+      });
 
     await act(async () =>
       render(
-        <TestRouter initialEntries={['/courses']}>
-          <CoursesPage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter initialEntries={['/courses']}>
+            <CoursesPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -43,8 +52,8 @@ describe('CoursesPage', () => {
       await renderComponent();
     });
 
-    it('shows placeholder text and no courses', () => {
-      expect(screen.getByText(/no courses/i)).toBeInTheDocument();
+    it('shows placeholder text and no courses', async () => {
+      expect(await screen.findByText(/no courses/i)).toBeInTheDocument();
       expect(screen.queryByRole('link')).not.toBeInTheDocument();
     });
   });
@@ -68,8 +77,8 @@ describe('CoursesPage', () => {
       await renderComponent();
     });
 
-    it('shows the courses', () => {
-      const links = screen.getAllByRole('link');
+    it('shows the courses', async () => {
+      const links = await screen.findAllByRole('link');
       expect(links).toHaveLength(2);
 
       expect(within(links[0]).getByRole('heading', { level: 4 })).toHaveTextContent('Course 1');

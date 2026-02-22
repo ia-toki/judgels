@@ -1,59 +1,41 @@
 import { Callout, Intent } from '@blueprintjs/core';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { callAction } from '../../../../modules/callAction';
+import { coursesQueryOptions } from '../../../../modules/queries/course';
 import { CourseCard } from '../CourseCard/CourseCard';
-
-import * as courseActions from '../modules/courseActions';
 
 import './CoursesPage.scss';
 
 export default function CoursesPage() {
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const { data: response } = useQuery(coursesQueryOptions());
 
-  const refreshCourses = async () => {
-    const response = await callAction(courseActions.getCourses());
-    setState({ response });
-  };
+  if (!response) {
+    return <LoadingContentCard />;
+  }
 
-  useEffect(() => {
-    refreshCourses();
-  }, []);
+  const { data: courses, curriculum, courseProgressesMap } = response;
 
-  const render = () => {
-    const { response } = state;
-    if (!response) {
-      return <LoadingContentCard />;
-    }
-
-    const { data: courses, curriculum, courseProgressesMap } = response;
-
-    if (courses.length === 0) {
-      return (
-        <p>
-          <small>No courses.</small>
-        </p>
-      );
-    }
-
+  if (courses.length === 0) {
     return (
-      <>
-        <Callout intent={Intent.PRIMARY} icon={null}>
-          <HtmlText>{curriculum.description}</HtmlText>
-        </Callout>
-        <hr />
-        <div className="courses">
-          {courses.map(course => (
-            <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
-          ))}
-        </div>
-      </>
+      <p>
+        <small>No courses.</small>
+      </p>
     );
-  };
+  }
 
-  return render();
+  return (
+    <>
+      <Callout intent={Intent.PRIMARY} icon={null}>
+        <HtmlText>{curriculum.description}</HtmlText>
+      </Callout>
+      <hr />
+      <div className="courses">
+        {courses.map(course => (
+          <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
+        ))}
+      </div>
+    </>
+  );
 }

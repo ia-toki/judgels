@@ -1,18 +1,16 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
 import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
-import { callAction } from '../../../../../../../../modules/callAction';
+import { chapterLessonsQueryOptions } from '../../../../../../../../modules/queries/chapterLesson';
+import { chapterProblemsQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
 import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
-
-import * as chapterResourcesActions from '../modules/chapterResourceActions';
 
 import './ChapterResourcesPage.scss';
 
@@ -21,46 +19,31 @@ export default function ChapterResourcesPage() {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const { data: lessonsResponse } = useQuery(chapterLessonsQueryOptions(chapter.jid));
+  const { data: problemsResponse } = useQuery(chapterProblemsQueryOptions(chapter.jid));
 
-  const refreshResources = async () => {
-    setState({
-      response: undefined,
-    });
+  const lessons = lessonsResponse?.data;
+  const lessonsMap = lessonsResponse?.lessonsMap;
+  const problems = problemsResponse?.data;
+  const problemsMap = problemsResponse?.problemsMap;
+  const problemSetProblemPathsMap = problemsResponse?.problemSetProblemPathsMap;
+  const problemProgressesMap = problemsResponse?.problemProgressesMap;
 
-    const response = await callAction(chapterResourcesActions.getResources(chapter.jid));
-    const [lessonsResponse, problemsResponse] = response;
-    const { data: lessons, lessonsMap } = lessonsResponse;
-    const { data: problems, problemsMap, problemSetProblemPathsMap, problemProgressesMap } = problemsResponse;
-
-    const firstUnsolvedProblemIndex = getFirstUnsolvedProblemIndex(problems, problemProgressesMap);
-
-    setState({
-      response,
-      lessons,
-      lessonsMap,
-      problems,
-      problemsMap,
-      problemSetProblemPathsMap,
-      problemProgressesMap,
-      firstUnsolvedProblemIndex,
-    });
+  const getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
+    for (let i = problems.length - 1; i >= 0; i--) {
+      const progress = problemProgressesMap[problems[i].problemJid];
+      if (!progress) {
+        continue;
+      }
+      if (progress.verdict !== VerdictCode.PND) {
+        return i + 1;
+      }
+    }
+    return 0;
   };
 
-  useEffect(() => {
-    refreshResources();
-  }, [chapter.jid]);
-
-  const render = () => {
-    return (
-      <div className="chapter-resources-page">
-        {renderHeader()}
-        {renderResources()}
-      </div>
-    );
-  };
+  const firstUnsolvedProblemIndex =
+    problems && problemProgressesMap ? getFirstUnsolvedProblemIndex(problems, problemProgressesMap) : 0;
 
   const renderHeader = () => {
     return (
@@ -77,8 +60,7 @@ export default function ChapterResourcesPage() {
   };
 
   const renderResources = () => {
-    const { response, lessons, problems, problemSetProblemPathsMap } = state;
-    if (!response) {
+    if (!lessonsResponse || !problemsResponse) {
       return <LoadingContentCard />;
     }
 
@@ -124,8 +106,6 @@ export default function ChapterResourcesPage() {
   };
 
   const renderLesson = lesson => {
-    const { lessonsMap } = state;
-
     const props = {
       course,
       chapterAlias,
@@ -136,8 +116,6 @@ export default function ChapterResourcesPage() {
   };
 
   const renderProblem = (problem, idx) => {
-    const { problemsMap, problemSetProblemPathsMap, problemProgressesMap, firstUnsolvedProblemIndex } = state;
-
     const props = {
       course,
       chapterAlias,
@@ -150,18 +128,10 @@ export default function ChapterResourcesPage() {
     return <ChapterProblemCard key={problem.problemJid} {...props} />;
   };
 
-  const getFirstUnsolvedProblemIndex = (problems, problemProgressesMap) => {
-    for (let i = problems.length - 1; i >= 0; i--) {
-      const progress = problemProgressesMap[problems[i].problemJid];
-      if (!progress) {
-        continue;
-      }
-      if (progress.verdict !== VerdictCode.PND) {
-        return i + 1;
-      }
-    }
-    return 0;
-  };
-
-  return render();
+  return (
+    <div className="chapter-resources-page">
+      {renderHeader()}
+      {renderResources()}
+    </div>
+  );
 }

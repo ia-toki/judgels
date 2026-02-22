@@ -4,6 +4,12 @@ import { courseAPI } from '../api/jerahmeel/course';
 import { courseChapterAPI } from '../api/jerahmeel/courseChapter';
 import { getToken } from '../session';
 
+export const coursesQueryOptions = () =>
+  queryOptions({
+    queryKey: ['courses'],
+    queryFn: () => courseAPI.getCourses(getToken()),
+  });
+
 export const courseBySlugQueryOptions = courseSlug =>
   queryOptions({
     queryKey: ['course-by-slug', courseSlug],
