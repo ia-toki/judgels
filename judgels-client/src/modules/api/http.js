@@ -1,4 +1,5 @@
-import { BadRequestError, ForbiddenError, NotFoundError, RemoteError, UnauthorizedError } from './error';
+import { clearSession } from '../session';
+import { BadRequestError, ForbiddenError, NotFoundError, RemoteError } from './error';
 
 async function call(url, init) {
   let response;
@@ -16,7 +17,9 @@ async function call(url, init) {
     throw new BadRequestError(await json);
   }
   if (response.status === 401) {
-    throw new UnauthorizedError();
+    clearSession();
+    window.location.replace('/');
+    return new Promise(() => {});
   }
   if (response.status === 403) {
     throw new ForbiddenError(await json);
