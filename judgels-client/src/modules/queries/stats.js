@@ -7,3 +7,11 @@ export const userStatsQueryOptions = username =>
     queryKey: ['user-stats', username],
     queryFn: () => statsAPI.getUserStats(username),
   });
+
+export const topUserStatsQueryOptions = params => {
+  const { page, pageSize } = params || {};
+  return queryOptions({
+    queryKey: ['user-stats', 'top', ...(params ? [params] : [])],
+    queryFn: () => statsAPI.getTopUserStats(page, pageSize),
+  });
+};
