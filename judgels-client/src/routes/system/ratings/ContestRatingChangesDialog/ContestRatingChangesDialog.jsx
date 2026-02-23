@@ -1,12 +1,36 @@
 import { Button, Classes, Dialog, HTMLTable, Intent } from '@blueprintjs/core';
+import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
+import { updateRatingsMutationOptions } from '../../../../modules/queries/userRating';
+
+import * as toastActions from '../../../../modules/toast/toastActions';
 
 import './ContestRatingChangesDialog.scss';
 
-export function ContestRatingChangesDialog({ contest, ratingChanges, onClose, onApply, isApplying }) {
+export function ContestRatingChangesDialog({ contest, ratingChanges, onClose }) {
+  const updateRatingsMutation = useMutation(updateRatingsMutationOptions);
+
+  const handleApply = async () => {
+    await updateRatingsMutation.mutateAsync(
+      {
+        eventJid: contest.jid,
+        time: contest.beginTime + contest.duration,
+        ratingsMap: ratingChanges.ratingsMap,
+      },
+      {
+        onSuccess: () => {
+          toastActions.showSuccessToast('Ratings updated.');
+        },
+        onSettled: () => {
+          onClose();
+        },
+      }
+    );
+  };
+
   const renderTable = () => {
     const { ratingsMap, profilesMap } = ratingChanges;
     const userJids = Object.keys(ratingsMap);
@@ -54,9 +78,9 @@ export function ContestRatingChangesDialog({ contest, ratingChanges, onClose, on
           <Button
             intent={Intent.PRIMARY}
             text="Apply rating changes"
-            onClick={onApply}
-            disabled={isApplying}
-            loading={isApplying}
+            onClick={handleApply}
+            disabled={updateRatingsMutation.isPending}
+            loading={updateRatingsMutation.isPending}
           />
         </div>
       </div>

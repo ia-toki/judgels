@@ -1,32 +1,38 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJophiel, nockUriel } from '../../../../utils/nock';
 import RatingsPage from './RatingsPage';
-
-import * as ratingActions from '../modules/ratingActions';
-
-vi.mock('../modules/ratingActions');
 
 describe('RatingsPage', () => {
   let contests;
   let ratingChangesMap;
 
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   const renderComponent = async () => {
-    ratingActions.getContestsPendingRating.mockReturnValue(
-      Promise.resolve({
-        data: contests,
-        ratingChangesMap,
-      })
-    );
-    ratingActions.updateRatings.mockReturnValue(Promise.resolve());
+    nockUriel().get('/contest-rating/pending').reply(200, {
+      data: contests,
+      ratingChangesMap,
+    });
 
     await act(async () =>
       render(
-        <TestRouter>
-          <RatingsPage />
-        </TestRouter>
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <RatingsPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
       )
     );
   };
@@ -38,7 +44,7 @@ describe('RatingsPage', () => {
     });
 
     it('shows placeholder text and no files', async () => {
-      expect(screen.getByText(/no contests/i)).toBeInTheDocument();
+      expect(await screen.findByText(/no contests/i)).toBeInTheDocument();
     });
   });
 
@@ -81,11 +87,11 @@ describe('RatingsPage', () => {
       await renderComponent();
     });
 
-    it('shows the contests', () => {
-      const rows = screen.getAllByRole('row').slice(1);
+    it('shows the contests', async () => {
+      const rows = await screen.findAllByRole('row');
 
       expect(
-        rows.map(row =>
+        rows.slice(1).map(row =>
           within(row)
             .getAllByRole('cell')
             .map(td => td.textContent)
@@ -101,8 +107,8 @@ describe('RatingsPage', () => {
 
       beforeEach(async () => {
         user = userEvent.setup();
-        const rows = screen.getAllByRole('row').slice(1);
-        const viewButton = within(rows[0]).getByRole('button', { name: /view rating changes/i });
+        const rows = await screen.findAllByRole('row');
+        const viewButton = within(rows[1]).getByRole('button', { name: /view rating changes/i });
         await user.click(viewButton);
       });
 
@@ -124,18 +130,22 @@ describe('RatingsPage', () => {
 
       describe('when apply rating changes button is clicked', () => {
         beforeEach(async () => {
+          nockJophiel()
+            .post('/user-rating', {
+              eventJid: 'contestJid1',
+              time: 150,
+              ratingsMap: ratingChangesMap.contestJid1.ratingsMap,
+            })
+            .reply(200);
+
           const dialog = screen.getByRole('dialog');
           const buttons = within(dialog).getAllByRole('button');
           const applyButton = buttons[buttons.length - 1];
           await user.click(applyButton);
         });
 
-        it('calls API', () => {
-          expect(ratingActions.updateRatings).toHaveBeenCalledWith({
-            eventJid: 'contestJid1',
-            time: 150,
-            ratingsMap: ratingChangesMap.contestJid1.ratingsMap,
-          });
+        it('calls API', async () => {
+          await waitFor(() => expect(nock.isDone()).toBe(true));
         });
       });
     });
