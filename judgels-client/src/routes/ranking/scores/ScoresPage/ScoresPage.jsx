@@ -1,14 +1,12 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../modules/callAction';
-
-import * as rankingActions from '../../modules/rankingActions';
+import { topUserStatsQueryOptions } from '../../../../modules/queries/stats';
 
 import './ScoresPage.scss';
 
@@ -16,29 +14,17 @@ const PAGE_SIZE = 50;
 
 export default function ScoresPage() {
   const location = useLocation();
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const render = () => {
-    return (
-      <Card title="Top scorers">
-        {renderScores()}
-        <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} />
-      </Card>
-    );
-  };
+  const { data: response } = useQuery(topUserStatsQueryOptions({ page, pageSize: PAGE_SIZE }));
 
   const renderScores = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
 
     const { data, profilesMap } = response;
 
-    const page = +(location.search.page || '1');
     const baseRank = (page - 1) * PAGE_SIZE + 1;
     const rows = data.page.map((e, idx) => (
       <tr key={e.userJid}>
@@ -64,11 +50,10 @@ export default function ScoresPage() {
     );
   };
 
-  const onChangePage = async nextPage => {
-    const response = await callAction(rankingActions.getTopUserStats(nextPage, PAGE_SIZE));
-    setState({ response });
-    return response.data.totalCount;
-  };
-
-  return render();
+  return (
+    <Card title="Top scorers">
+      {renderScores()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </Card>
+  );
 }
