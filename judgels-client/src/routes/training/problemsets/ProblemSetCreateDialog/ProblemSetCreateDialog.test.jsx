@@ -1,31 +1,34 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../utils/datetime';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 
 describe('ProblemSetCreateDialog', () => {
-  let onGetProblemSetConfig;
-  let onCreateProblemSet;
-  beforeEach(async () => {
-    onCreateProblemSet = vi.fn().mockReturnValue(Promise.resolve({}));
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      onGetProblemSetConfig,
-      onCreateProblemSet,
-    };
-    await act(async () =>
-      render(
-        <TestRouter>
-          <ProblemSetCreateDialog {...props} />
-        </TestRouter>
-      )
-    );
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('create dialog form', async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ProblemSetCreateDialog />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');
@@ -47,15 +50,19 @@ describe('ProblemSetCreateDialog', () => {
     await user.clear(contestTime);
     await user.type(contestTime, '2100-01-01 00:00');
 
+    nockJerahmeel()
+      .post('/problemsets', {
+        slug: 'new-problemSet',
+        name: 'New problemSet',
+        archiveSlug: 'New archive',
+        description: 'New description',
+        contestTime: parseDateTime('2100-01-01 00:00').getTime(),
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);
 
-    expect(onCreateProblemSet).toHaveBeenCalledWith({
-      slug: 'new-problemSet',
-      name: 'New problemSet',
-      archiveSlug: 'New archive',
-      description: 'New description',
-      contestTime: parseDateTime('2100-01-01 00:00').getTime(),
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

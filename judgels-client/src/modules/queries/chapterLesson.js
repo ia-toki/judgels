@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { chapterLessonAPI } from '../api/jerahmeel/chapterLesson';
+import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const chapterLessonsQueryOptions = chapterJid =>
@@ -16,3 +17,10 @@ export const chapterLessonStatementQueryOptions = (chapterJid, lessonAlias, para
     queryFn: () => chapterLessonAPI.getLessonStatement(getToken(), chapterJid, lessonAlias, language),
   });
 };
+
+export const setChapterLessonsMutationOptions = chapterJid => ({
+  mutationFn: data => chapterLessonAPI.setLessons(getToken(), chapterJid, data),
+  onSuccess: () => {
+    queryClient.invalidateQueries(chapterLessonsQueryOptions(chapterJid));
+  },
+});

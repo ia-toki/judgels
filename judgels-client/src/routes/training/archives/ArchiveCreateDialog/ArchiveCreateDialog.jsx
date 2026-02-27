@@ -1,50 +1,20 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { createArchiveMutationOptions } from '../../../../modules/queries/archive';
 import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
 
-export function ArchiveCreateDialog({ onCreateArchive }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-  });
+import * as toastActions from '../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
+export function ArchiveCreateDialog() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const renderButton = () => {
-    return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
-        New archive
-      </Button>
-    );
-  };
+  const createArchiveMutation = useMutation(createArchiveMutationOptions);
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
-  const renderDialog = () => {
-    const props = {
-      renderFormComponents: renderDialogForm,
-      onSubmit: createArchive,
-    };
-    return (
-      <Dialog
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title="Create new archive"
-        canOutsideClickClose={false}
-      >
-        <ArchiveCreateForm {...props} />
-      </Dialog>
-    );
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -60,9 +30,22 @@ export function ArchiveCreateDialog({ onCreateArchive }) {
   );
 
   const createArchive = async data => {
-    await onCreateArchive(data);
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await createArchiveMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Archive created.');
+      },
+    });
+    setIsDialogOpen(false);
   };
 
-  return render();
+  return (
+    <div className="content-card__section">
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+        New archive
+      </Button>
+      <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new archive" canOutsideClickClose={false}>
+        <ArchiveCreateForm renderFormComponents={renderDialogForm} onSubmit={createArchive} />
+      </Dialog>
+    </div>
+  );
 }

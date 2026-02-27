@@ -1,24 +1,33 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { ArchiveCreateDialog } from './ArchiveCreateDialog';
 
 describe('ArchiveCreateDialog', () => {
-  let onGetArchiveConfig;
-  let onCreateArchive;
-
   beforeEach(() => {
-    onCreateArchive = vi.fn().mockReturnValue(Promise.resolve({}));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      onGetArchiveConfig,
-      onCreateArchive,
-    };
-    render(<ArchiveCreateDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('create dialog form', async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ArchiveCreateDialog />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');
@@ -36,14 +45,18 @@ describe('ArchiveCreateDialog', () => {
     const description = document.querySelector('textarea[name="description"]');
     await user.type(description, 'New description');
 
+    nockJerahmeel()
+      .post('/archives', {
+        slug: 'new-archive',
+        name: 'New archive',
+        category: 'New category',
+        description: 'New description',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);
 
-    expect(onCreateArchive).toHaveBeenCalledWith({
-      slug: 'new-archive',
-      name: 'New archive',
-      category: 'New category',
-      description: 'New description',
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

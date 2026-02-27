@@ -1,23 +1,33 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { CourseCreateDialog } from './CourseCreateDialog';
 
 describe('CourseCreateDialog', () => {
-  let onGetCourseConfig;
-  let onCreateCourse;
   beforeEach(() => {
-    onCreateCourse = vi.fn().mockReturnValue(Promise.resolve({}));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      onGetCourseConfig,
-      onCreateCourse,
-    };
-    render(<CourseCreateDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('create dialog form', async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <CourseCreateDialog />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');
@@ -32,13 +42,17 @@ describe('CourseCreateDialog', () => {
     const description = screen.getByRole('textbox', { name: /description/i });
     await user.type(description, 'New description');
 
+    nockJerahmeel()
+      .post('/courses', {
+        slug: 'new-course',
+        name: 'New course',
+        description: 'New description',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);
 
-    expect(onCreateCourse).toHaveBeenCalledWith({
-      slug: 'new-course',
-      name: 'New course',
-      description: 'New description',
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

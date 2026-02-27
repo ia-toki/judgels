@@ -1,7 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { CourseEditDialog } from './CourseEditDialog';
 
 const course = {
@@ -13,21 +17,25 @@ const course = {
 };
 
 describe('CourseEditDialog', () => {
-  let onUpdateCourse;
-
   beforeEach(() => {
-    onUpdateCourse = vi.fn().mockReturnValue(Promise.resolve({}));
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      isOpen: true,
-      course,
-      onCloseDialog: vi.fn(),
-      onUpdateCourse,
-    };
-    render(<CourseEditDialog {...props} />);
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('edit dialog form', async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <CourseEditDialog isOpen={true} course={course} onCloseDialog={() => {}} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
     const slug = screen.getByRole('textbox', { name: /slug/i });
@@ -45,13 +53,17 @@ describe('CourseEditDialog', () => {
     await user.clear(description);
     await user.type(description, 'New description');
 
+    nockJerahmeel()
+      .post('/courses/courseJid', {
+        slug: 'new-course',
+        name: 'New course',
+        description: 'New description',
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /update/i });
     await user.click(submitButton);
 
-    expect(onUpdateCourse).toHaveBeenCalledWith(course.jid, {
-      slug: 'new-course',
-      name: 'New course',
-      description: 'New description',
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

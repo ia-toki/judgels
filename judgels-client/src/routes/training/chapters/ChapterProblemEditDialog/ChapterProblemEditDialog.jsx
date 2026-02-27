@@ -1,47 +1,49 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { Alias } from '../../../../components/forms/validations';
 import { ProblemType } from '../../../../modules/api/sandalphon/problem';
+import {
+  chapterProblemsQueryOptions,
+  setChapterProblemsMutationOptions,
+} from '../../../../modules/queries/chapterProblem';
 import ChapterProblemEditForm from '../ChapterProblemEditForm/ChapterProblemEditForm';
 import { ChapterProblemsTable } from '../ChapterProblemsTable/ChapterProblemsTable';
 
-export function ChapterProblemEditDialog({ isOpen, chapter, onGetProblems, onSetProblems, onCloseDialog }) {
-  const [state, setState] = useState({
-    response: undefined,
-    isEditing: false,
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function ChapterProblemEditDialog({ isOpen, chapter, onCloseDialog }) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { data: response } = useQuery({
+    ...chapterProblemsQueryOptions(chapter?.jid),
+    enabled: isOpen && !!chapter,
   });
 
-  const refreshProblems = async () => {
-    if (isOpen) {
-      setState(prevState => ({ ...prevState, response: undefined }));
-      const response = await onGetProblems(chapter.jid);
-      setState(prevState => ({ ...prevState, response }));
-    }
-  };
-
-  useEffect(() => {
-    refreshProblems();
-  }, [chapter]);
-
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter problems" canOutsideClickClose={false}>
-          {renderDialogContent()}
-        </Dialog>
-      </div>
-    );
-  };
+  const setProblemsMutation = useMutation(setChapterProblemsMutationOptions(chapter?.jid));
 
   const closeDialog = () => {
     onCloseDialog();
-    setState(prevState => ({ ...prevState, isEditing: false }));
+    setIsEditing(false);
+  };
+
+  const toggleEditing = () => {
+    setIsEditing(prev => !prev);
+  };
+
+  const updateProblems = async data => {
+    const problems = deserializeProblems(data.problems);
+    await setProblemsMutation.mutateAsync(problems, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Chapter problems updated.');
+      },
+    });
+    setIsEditing(false);
   };
 
   const renderDialogContent = () => {
-    const { response, isEditing } = state;
     if (!response) {
       return renderDialogForm(<LoadingState />, null);
     }
@@ -77,7 +79,7 @@ export function ChapterProblemEditDialog({ isOpen, chapter, onGetProblems, onSet
   );
 
   const renderInstructions = () => {
-    if (!state.isEditing) {
+    if (!isEditing) {
       return null;
     }
 
@@ -94,82 +96,74 @@ export function ChapterProblemEditDialog({ isOpen, chapter, onGetProblems, onSet
     );
   };
 
-  const toggleEditing = () => {
-    setState(prevState => ({
-      ...prevState,
-      isEditing: !prevState.isEditing,
+  return (
+    <div className="content-card__section">
+      <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter problems" canOutsideClickClose={false}>
+        {renderDialogContent()}
+      </Dialog>
+    </div>
+  );
+}
+
+function serializeProblems(problems, problemsMap) {
+  return problems
+    .map(p => {
+      if (p.type !== ProblemType.Programming) {
+        return `${p.alias},${problemsMap[p.problemJid].slug},${p.type}`;
+      } else {
+        return `${p.alias},${problemsMap[p.problemJid].slug}`;
+      }
+    })
+    .join('\n');
+}
+
+function deserializeProblems(problems) {
+  return problems
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .map(s => s.split(','))
+    .map(s => s.map(t => t.trim()))
+    .map(s => ({
+      alias: s[0],
+      slug: s[1],
+      type: s[2] || ProblemType.Programming,
     }));
-  };
+}
 
-  const updateProblems = async data => {
-    const problems = deserializeProblems(data.problems);
-    await onSetProblems(chapter.jid, problems);
-    await refreshProblems();
-    toggleEditing();
-  };
+function validateProblems(value) {
+  const problems = value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .map(s => s.split(','))
+    .map(s => s.map(t => t.trim()));
 
-  const serializeProblems = (problems, problemsMap) => {
-    return problems
-      .map(p => {
-        if (p.type !== ProblemType.Programming) {
-          return `${p.alias},${problemsMap[p.problemJid].slug},${p.type}`;
-        } else {
-          return `${p.alias},${problemsMap[p.problemJid].slug}`;
-        }
-      })
-      .join('\n');
-  };
+  const aliases = [];
+  const slugs = [];
 
-  const deserializeProblems = problems => {
-    return problems
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.split(','))
-      .map(s => s.map(t => t.trim()))
-      .map(s => ({
-        alias: s[0],
-        slug: s[1],
-        type: s[2] || ProblemType.Programming,
-      }));
-  };
-
-  const validateProblems = value => {
-    const problems = value
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.split(','))
-      .map(s => s.map(t => t.trim()));
-
-    const aliases = [];
-    const slugs = [];
-
-    for (const p of problems) {
-      if (p.length < 2 || p.length > 3) {
-        return 'Each line must contain 2-3 comma-separated elements';
-      }
-      const alias = p[0];
-      const aliasValidation = Alias(alias);
-      if (aliasValidation) {
-        return 'Problem aliases: ' + aliasValidation;
-      }
-
-      const slug = p[1];
-
-      aliases.push(alias);
-      slugs.push(slug);
+  for (const p of problems) {
+    if (p.length < 2 || p.length > 3) {
+      return 'Each line must contain 2-3 comma-separated elements';
+    }
+    const alias = p[0];
+    const aliasValidation = Alias(alias);
+    if (aliasValidation) {
+      return 'Problem aliases: ' + aliasValidation;
     }
 
-    if (new Set(aliases).size !== aliases.length) {
-      return 'Problem aliases must be unique';
-    }
-    if (new Set(slugs).size !== slugs.length) {
-      return 'Problem slugs must be unique';
-    }
+    const slug = p[1];
 
-    return undefined;
-  };
+    aliases.push(alias);
+    slugs.push(slug);
+  }
 
-  return render();
+  if (new Set(aliases).size !== aliases.length) {
+    return 'Problem aliases must be unique';
+  }
+  if (new Set(slugs).size !== slugs.length) {
+    return 'Problem slugs must be unique';
+  }
+
+  return undefined;
 }

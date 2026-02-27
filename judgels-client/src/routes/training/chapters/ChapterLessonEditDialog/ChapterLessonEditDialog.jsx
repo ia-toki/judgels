@@ -1,46 +1,48 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { Alias } from '../../../../components/forms/validations';
+import {
+  chapterLessonsQueryOptions,
+  setChapterLessonsMutationOptions,
+} from '../../../../modules/queries/chapterLesson';
 import ChapterLessonEditForm from '../ChapterLessonEditForm/ChapterLessonEditForm';
 import { ChapterLessonsTable } from '../ChapterLessonsTable/ChapterLessonsTable';
 
-export function ChapterLessonEditDialog({ isOpen, chapter, onGetLessons, onSetLessons, onCloseDialog }) {
-  const [state, setState] = useState({
-    response: undefined,
-    isEditing: false,
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function ChapterLessonEditDialog({ isOpen, chapter, onCloseDialog }) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { data: response } = useQuery({
+    ...chapterLessonsQueryOptions(chapter?.jid),
+    enabled: isOpen && !!chapter,
   });
 
-  const refreshLessons = async () => {
-    if (isOpen) {
-      setState(prevState => ({ ...prevState, response: undefined }));
-      const response = await onGetLessons(chapter.jid);
-      setState(prevState => ({ ...prevState, response }));
-    }
-  };
-
-  useEffect(() => {
-    refreshLessons();
-  }, [chapter]);
-
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter lessons" canOutsideClickClose={false}>
-          {renderDialogContent()}
-        </Dialog>
-      </div>
-    );
-  };
+  const setLessonsMutation = useMutation(setChapterLessonsMutationOptions(chapter?.jid));
 
   const closeDialog = () => {
     onCloseDialog();
-    setState(prevState => ({ ...prevState, isEditing: false }));
+    setIsEditing(false);
+  };
+
+  const toggleEditing = () => {
+    setIsEditing(prev => !prev);
+  };
+
+  const updateLessons = async data => {
+    const lessons = deserializeLessons(data.lessons);
+    await setLessonsMutation.mutateAsync(lessons, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Chapter lessons updated.');
+      },
+    });
+    setIsEditing(false);
   };
 
   const renderDialogContent = () => {
-    const { response, isEditing } = state;
     if (!response) {
       return renderDialogForm(<LoadingState />, null);
     }
@@ -76,7 +78,7 @@ export function ChapterLessonEditDialog({ isOpen, chapter, onGetLessons, onSetLe
   );
 
   const renderInstructions = () => {
-    if (!state.isEditing) {
+    if (!isEditing) {
       return null;
     }
 
@@ -93,73 +95,65 @@ export function ChapterLessonEditDialog({ isOpen, chapter, onGetLessons, onSetLe
     );
   };
 
-  const toggleEditing = () => {
-    setState(prevState => ({
-      ...prevState,
-      isEditing: !prevState.isEditing,
+  return (
+    <div className="content-card__section">
+      <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter lessons" canOutsideClickClose={false}>
+        {renderDialogContent()}
+      </Dialog>
+    </div>
+  );
+}
+
+function serializeLessons(lessons, lessonsMap) {
+  return lessons.map(c => `${c.alias},${lessonsMap[c.lessonJid].slug}`).join('\n');
+}
+
+function deserializeLessons(lessons) {
+  return lessons
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .map(s => s.split(','))
+    .map(s => s.map(t => t.trim()))
+    .map(s => ({
+      alias: s[0],
+      slug: s[1],
     }));
-  };
+}
 
-  const updateLessons = async data => {
-    const lessons = deserializeLessons(data.lessons);
-    await onSetLessons(chapter.jid, lessons);
-    await refreshLessons();
-    toggleEditing();
-  };
+function validateLessons(value) {
+  const lessons = value
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .map(s => s.split(','))
+    .map(s => s.map(t => t.trim()));
 
-  const serializeLessons = (lessons, lessonsMap) => {
-    return lessons.map(c => `${c.alias},${lessonsMap[c.lessonJid].slug}`).join('\n');
-  };
+  const aliases = [];
+  const slugs = [];
 
-  const deserializeLessons = lessons => {
-    return lessons
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.split(','))
-      .map(s => s.map(t => t.trim()))
-      .map(s => ({
-        alias: s[0],
-        slug: s[1],
-      }));
-  };
-
-  const validateLessons = value => {
-    const lessons = value
-      .split('\n')
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.split(','))
-      .map(s => s.map(t => t.trim()));
-
-    const aliases = [];
-    const slugs = [];
-
-    for (const c of lessons) {
-      if (c.length !== 2) {
-        return 'Each line must contain 2 comma-separated elements';
-      }
-      const alias = c[0];
-      const aliasValidation = Alias(alias);
-      if (aliasValidation) {
-        return 'Lesson aliases: ' + aliasValidation;
-      }
-
-      const slug = c[1];
-
-      aliases.push(alias);
-      slugs.push(slug);
+  for (const c of lessons) {
+    if (c.length !== 2) {
+      return 'Each line must contain 2 comma-separated elements';
+    }
+    const alias = c[0];
+    const aliasValidation = Alias(alias);
+    if (aliasValidation) {
+      return 'Lesson aliases: ' + aliasValidation;
     }
 
-    if (new Set(aliases).size !== aliases.length) {
-      return 'Lesson aliases must be unique';
-    }
-    if (new Set(slugs).size !== slugs.length) {
-      return 'Lesson slugs must be unique';
-    }
+    const slug = c[1];
 
-    return undefined;
-  };
+    aliases.push(alias);
+    slugs.push(slug);
+  }
 
-  return render();
+  if (new Set(aliases).size !== aliases.length) {
+    return 'Lesson aliases must be unique';
+  }
+  if (new Set(slugs).size !== slugs.length) {
+    return 'Lesson slugs must be unique';
+  }
+
+  return undefined;
 }

@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { chapterProblemAPI } from '../api/jerahmeel/chapterProblem';
+import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const chapterProblemsQueryOptions = chapterJid =>
@@ -16,3 +17,10 @@ export const chapterProblemWorksheetQueryOptions = (chapterJid, problemAlias, pa
     queryFn: () => chapterProblemAPI.getProblemWorksheet(getToken(), chapterJid, problemAlias, language),
   });
 };
+
+export const setChapterProblemsMutationOptions = chapterJid => ({
+  mutationFn: data => chapterProblemAPI.setProblems(getToken(), chapterJid, data),
+  onSuccess: () => {
+    queryClient.invalidateQueries(chapterProblemsQueryOptions(chapterJid));
+  },
+});

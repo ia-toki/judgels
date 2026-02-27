@@ -1,8 +1,14 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core';
+import { useMutation } from '@tanstack/react-query';
 
+import { updateChapterMutationOptions } from '../../../../modules/queries/chapter';
 import ChapterEditForm from '../ChapterEditForm/ChapterEditForm';
 
-export function ChapterEditDialog({ chapter, isOpen, onCloseDialog, onUpdateChapter }) {
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function ChapterEditDialog({ chapter, isOpen, onCloseDialog }) {
+  const updateChapterMutation = useMutation(updateChapterMutationOptions(chapter?.jid));
+
   const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
@@ -16,22 +22,26 @@ export function ChapterEditDialog({ chapter, isOpen, onCloseDialog, onUpdateChap
   );
 
   const updateChapter = async data => {
-    await onUpdateChapter(chapter.jid, data);
+    await updateChapterMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Chapter updated.');
+      },
+    });
+    onCloseDialog();
   };
 
   const initialValues = chapter && {
     name: chapter.name,
   };
-  const props = {
-    renderFormComponents: renderDialogForm,
-    onSubmit: updateChapter,
-    initialValues,
-  };
 
   return (
     <div className="content-card__section">
       <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit chapter" canOutsideClickClose={false}>
-        <ChapterEditForm {...props} />
+        <ChapterEditForm
+          renderFormComponents={renderDialogForm}
+          onSubmit={updateChapter}
+          initialValues={initialValues}
+        />
       </Dialog>
     </div>
   );

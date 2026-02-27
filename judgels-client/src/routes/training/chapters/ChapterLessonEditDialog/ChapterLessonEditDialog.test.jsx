@@ -1,7 +1,11 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { ChapterLessonEditDialog } from './ChapterLessonEditDialog';
 
 const chapter = {
@@ -9,17 +13,9 @@ const chapter = {
 };
 
 describe('ChapterLessonEditDialog', () => {
-  let onGetLessons;
-  let onSetLessons;
   const lessons = [
-    {
-      alias: 'A',
-      lessonJid: 'jid-1',
-    },
-    {
-      alias: 'B',
-      lessonJid: 'jid-2',
-    },
+    { alias: 'A', lessonJid: 'jid-1' },
+    { alias: 'B', lessonJid: 'jid-2' },
   ];
 
   const lessonsMap = {
@@ -27,24 +23,30 @@ describe('ChapterLessonEditDialog', () => {
     'jid-2': { slug: 'slug-2' },
   };
 
-  beforeEach(async () => {
-    onGetLessons = vi.fn().mockReturnValue(Promise.resolve({ data: lessons, lessonsMap }));
-    onSetLessons = vi.fn().mockReturnValue(Promise.resolve({}));
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
-    const props = {
-      isOpen: true,
-      chapter,
-      onCloseDialog: vi.fn(),
-      onGetLessons,
-      onSetLessons,
-    };
-    await act(async () => render(<ChapterLessonEditDialog {...props} />));
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('edit lessons dialog form', async () => {
+    nockJerahmeel().get('/chapters/chapter-jid/lessons').reply(200, { data: lessons, lessonsMap });
+
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ChapterLessonEditDialog isOpen={true} chapter={chapter} onCloseDialog={() => {}} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
-    const editButton = screen.getByRole('button', { name: /edit/i });
+    const editButton = await screen.findByRole('button', { name: /edit/i });
     await user.click(editButton);
 
     const lessonsField = screen.getByRole('textbox', { name: /lessons/i });
@@ -53,18 +55,16 @@ describe('ChapterLessonEditDialog', () => {
     await user.clear(lessonsField);
     await user.type(lessonsField, 'P, slug-3\n  Q,slug-4  ');
 
+    nockJerahmeel()
+      .put('/chapters/chapter-jid/lessons', [
+        { alias: 'P', slug: 'slug-3' },
+        { alias: 'Q', slug: 'slug-4' },
+      ])
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
 
-    expect(onSetLessons).toHaveBeenCalledWith(chapter.jid, [
-      {
-        alias: 'P',
-        slug: 'slug-3',
-      },
-      {
-        alias: 'Q',
-        slug: 'slug-4',
-      },
-    ]);
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

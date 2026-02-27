@@ -1,76 +1,45 @@
+import { useQuery } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import Pagination from '../../../../components/Pagination/Pagination';
-import { callAction } from '../../../../modules/callAction';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
 import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/ProblemSetProblemEditDialog';
 import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
 
-import * as problemSetActions from '../modules/problemSetActions';
-
 const PAGE_SIZE = 20;
 
 export default function ProblemSetsPage() {
-  const [state, setState] = useState({
-    response: undefined,
-    isEditDialogOpen: false,
-    isEditProblemsDialogOpen: false,
-    editedProblemSet: undefined,
-  });
+  const location = useLocation();
+  const page = +(location.search.page || 1);
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Problemsets</h3>
-        <hr />
-        {renderCreateDialog()}
-        {renderEditDialog()}
-        {renderEditProblemsDialog()}
-        {renderProblemSets()}
-        {renderPagination()}
-      </ContentCard>
-    );
+  const [editedProblemSet, setEditedProblemSet] = useState(undefined);
+  const [editDialogType, setEditDialogType] = useState(undefined);
+
+  const { data: response } = useQuery(problemSetsQueryOptions({ page }));
+
+  const editProblemSet = problemSet => {
+    setEditedProblemSet(problemSet);
+    setEditDialogType(problemSet ? 'edit' : undefined);
   };
 
-  const renderCreateDialog = () => {
-    return <ProblemSetCreateDialog onCreateProblemSet={createProblemSet} />;
+  const editProblemSetProblems = problemSet => {
+    setEditedProblemSet(problemSet);
+    setEditDialogType(problemSet ? 'problems' : undefined);
   };
 
-  const renderEditDialog = () => {
-    const { isEditDialogOpen, editedProblemSet, response } = state;
-    const archiveSlug = response && editedProblemSet && response.archiveSlugsMap[editedProblemSet.archiveJid];
-    return (
-      <ProblemSetEditDialog
-        isOpen={isEditDialogOpen}
-        problemSet={editedProblemSet}
-        archiveSlug={archiveSlug}
-        onUpdateProblemSet={updateProblemSet}
-        onCloseDialog={() => editProblemSet(undefined)}
-      />
-    );
+  const closeDialog = () => {
+    setEditedProblemSet(undefined);
+    setEditDialogType(undefined);
   };
 
-  const getProblems = problemSetJid => callAction(problemSetActions.getProblems(problemSetJid));
-  const setProblems = (problemSetJid, data) => callAction(problemSetActions.setProblems(problemSetJid, data));
-
-  const renderEditProblemsDialog = () => {
-    const { isEditProblemsDialogOpen, editedProblemSet } = state;
-    return (
-      <ProblemSetProblemEditDialog
-        isOpen={isEditProblemsDialogOpen}
-        problemSet={editedProblemSet}
-        onGetProblems={getProblems}
-        onSetProblems={setProblems}
-        onCloseDialog={() => editProblemSetProblems(undefined)}
-      />
-    );
-  };
+  const archiveSlug = response && editedProblemSet && response.archiveSlugsMap[editedProblemSet.archiveJid];
 
   const renderProblemSets = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingContentCard />;
     }
@@ -94,40 +63,24 @@ export default function ProblemSetsPage() {
     );
   };
 
-  const renderPagination = () => {
-    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={1} />;
-  };
-
-  const onChangePage = async nextPage => {
-    const response = await callAction(problemSetActions.getProblemSets(nextPage));
-    setState(prevState => ({ ...prevState, response }));
-    return response.data.totalCount;
-  };
-
-  const createProblemSet = async data => {
-    await callAction(problemSetActions.createProblemSet(data));
-  };
-
-  const editProblemSet = problemSet => {
-    setState(prevState => ({
-      ...prevState,
-      isEditDialogOpen: !!problemSet,
-      editedProblemSet: problemSet,
-    }));
-  };
-
-  const updateProblemSet = async (problemSetJid, data) => {
-    await callAction(problemSetActions.updateProblemSet(problemSetJid, data));
-    editProblemSet(undefined);
-  };
-
-  const editProblemSetProblems = problemSet => {
-    setState(prevState => ({
-      ...prevState,
-      isEditProblemsDialogOpen: !!problemSet,
-      editedProblemSet: problemSet,
-    }));
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h3>Problemsets</h3>
+      <hr />
+      <ProblemSetCreateDialog />
+      <ProblemSetEditDialog
+        isOpen={editDialogType === 'edit'}
+        problemSet={editedProblemSet}
+        archiveSlug={archiveSlug}
+        onCloseDialog={closeDialog}
+      />
+      <ProblemSetProblemEditDialog
+        isOpen={editDialogType === 'problems'}
+        problemSet={editedProblemSet}
+        onCloseDialog={closeDialog}
+      />
+      {renderProblemSets()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
 }
