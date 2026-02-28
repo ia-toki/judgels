@@ -1,54 +1,20 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { createProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
 import ProblemSetCreateForm from '../ProblemSetCreateForm/ProblemSetCreateForm';
 
-export function ProblemSetCreateDialog({ onCreateProblemSet }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-  });
+import * as toastActions from '../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
+export function ProblemSetCreateDialog() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const renderButton = () => {
-    return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
-        New problemset
-      </Button>
-    );
-  };
+  const createProblemSetMutation = useMutation(createProblemSetMutationOptions);
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
-  const renderDialog = () => {
-    const initialValues = {
-      contestTime: new Date().toISOString(),
-    };
-    const props = {
-      renderFormComponents: renderDialogForm,
-      onSubmit: createProblemSet,
-      initialValues,
-    };
-    return (
-      <Dialog
-        isOpen={state.isDialogOpen}
-        onClose={toggleDialog}
-        title="Create new problemset"
-        canOutsideClickClose={false}
-      >
-        <ProblemSetCreateForm {...props} />
-      </Dialog>
-    );
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -64,15 +30,39 @@ export function ProblemSetCreateDialog({ onCreateProblemSet }) {
   );
 
   const createProblemSet = async data => {
-    await onCreateProblemSet({
-      slug: data.slug,
-      name: data.name,
-      archiveSlug: data.archiveSlug,
-      description: data.description,
-      contestTime: new Date(data.contestTime).getTime(),
-    });
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await createProblemSetMutation.mutateAsync(
+      {
+        slug: data.slug,
+        name: data.name,
+        archiveSlug: data.archiveSlug,
+        description: data.description,
+        contestTime: new Date(data.contestTime).getTime(),
+      },
+      {
+        onSuccess: () => {
+          toastActions.showSuccessToast('Problemset created.');
+        },
+      }
+    );
+    setIsDialogOpen(false);
   };
 
-  return render();
+  const initialValues = {
+    contestTime: new Date().toISOString(),
+  };
+
+  return (
+    <div className="content-card__section">
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+        New problemset
+      </Button>
+      <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new problemset" canOutsideClickClose={false}>
+        <ProblemSetCreateForm
+          renderFormComponents={renderDialogForm}
+          onSubmit={createProblemSet}
+          initialValues={initialValues}
+        />
+      </Dialog>
+    </div>
+  );
 }

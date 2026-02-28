@@ -1,45 +1,20 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { createCourseMutationOptions } from '../../../../modules/queries/course';
 import CourseCreateForm from '../CourseCreateForm/CourseCreateForm';
 
-export function CourseCreateDialog({ onCreateCourse }) {
-  const [state, setState] = useState({
-    isDialogOpen: false,
-  });
+import * as toastActions from '../../../../modules/toast/toastActions';
 
-  const render = () => {
-    return (
-      <div className="content-card__section">
-        {renderButton()}
-        {renderDialog()}
-      </div>
-    );
-  };
+export function CourseCreateDialog() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const renderButton = () => {
-    return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={state.isDialogOpen}>
-        New course
-      </Button>
-    );
-  };
+  const createCourseMutation = useMutation(createCourseMutationOptions);
 
   const toggleDialog = () => {
-    setState(prevState => ({ ...prevState, isDialogOpen: !prevState.isDialogOpen }));
-  };
-
-  const renderDialog = () => {
-    const props = {
-      renderFormComponents: renderDialogForm,
-      onSubmit: createCourse,
-    };
-    return (
-      <Dialog isOpen={state.isDialogOpen} onClose={toggleDialog} title="Create new course" canOutsideClickClose={false}>
-        <CourseCreateForm {...props} />
-      </Dialog>
-    );
+    setIsDialogOpen(open => !open);
   };
 
   const renderDialogForm = (fields, submitButton) => (
@@ -55,9 +30,22 @@ export function CourseCreateDialog({ onCreateCourse }) {
   );
 
   const createCourse = async data => {
-    await onCreateCourse(data);
-    setState(prevState => ({ ...prevState, isDialogOpen: false }));
+    await createCourseMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Course created.');
+      },
+    });
+    setIsDialogOpen(false);
   };
 
-  return render();
+  return (
+    <div className="content-card__section">
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+        New course
+      </Button>
+      <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new course" canOutsideClickClose={false}>
+        <CourseCreateForm renderFormComponents={renderDialogForm} onSubmit={createCourse} />
+      </Dialog>
+    </div>
+  );
 }

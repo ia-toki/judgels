@@ -1,8 +1,12 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import nock from 'nock';
 
+import { setSession } from '../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../utils/datetime';
+import { nockJerahmeel } from '../../../../utils/nock';
 import { ProblemSetEditDialog } from './ProblemSetEditDialog';
 
 const problemSet = {
@@ -16,22 +20,30 @@ const problemSet = {
 };
 
 describe('ProblemSetEditDialog', () => {
-  let onUpdateProblemSet;
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
-  beforeEach(async () => {
-    onUpdateProblemSet = vi.fn().mockReturnValue(Promise.resolve({}));
-
-    const props = {
-      isOpen: true,
-      problemSet,
-      archiveSlug: 'archive',
-      onCloseDialog: vi.fn(),
-      onUpdateProblemSet,
-    };
-    await act(async () => render(<ProblemSetEditDialog {...props} />));
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   test('edit dialog form', async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ProblemSetEditDialog
+              isOpen={true}
+              problemSet={problemSet}
+              archiveSlug="archive"
+              onCloseDialog={() => {}}
+            />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+
     const user = userEvent.setup();
 
     const slug = screen.getByRole('textbox', { name: /^slug/i });
@@ -58,15 +70,19 @@ describe('ProblemSetEditDialog', () => {
     await user.clear(contestTime);
     await user.type(contestTime, '2100-01-01 00:00');
 
+    nockJerahmeel()
+      .post('/problemsets/problemSetJid', {
+        slug: 'new-problemset',
+        name: 'New Problem Set',
+        archiveSlug: 'new-archive',
+        description: 'New description',
+        contestTime: parseDateTime('2100-01-01 00:00').getTime(),
+      })
+      .reply(200);
+
     const submitButton = screen.getByRole('button', { name: /update/i });
     await user.click(submitButton);
 
-    expect(onUpdateProblemSet).toHaveBeenCalledWith(problemSet.jid, {
-      slug: 'new-problemset',
-      name: 'New Problem Set',
-      archiveSlug: 'new-archive',
-      description: 'New description',
-      contestTime: parseDateTime('2100-01-01 00:00').getTime(),
-    });
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

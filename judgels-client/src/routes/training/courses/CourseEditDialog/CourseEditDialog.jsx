@@ -1,8 +1,14 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core';
+import { useMutation } from '@tanstack/react-query';
 
+import { updateCourseMutationOptions } from '../../../../modules/queries/course';
 import CourseEditForm from '../CourseEditForm/CourseEditForm';
 
-export function CourseEditDialog({ course, isOpen, onUpdateCourse, onCloseDialog }) {
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function CourseEditDialog({ course, isOpen, onCloseDialog }) {
+  const updateCourseMutation = useMutation(updateCourseMutationOptions(course?.jid));
+
   const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
@@ -16,7 +22,12 @@ export function CourseEditDialog({ course, isOpen, onUpdateCourse, onCloseDialog
   );
 
   const updateCourse = async data => {
-    await onUpdateCourse(course.jid, data);
+    await updateCourseMutation.mutateAsync(data, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Course updated.');
+      },
+    });
+    onCloseDialog();
   };
 
   const initialValues = course && {
@@ -24,16 +35,11 @@ export function CourseEditDialog({ course, isOpen, onUpdateCourse, onCloseDialog
     name: course.name,
     description: course.description,
   };
-  const props = {
-    renderFormComponents: renderDialogForm,
-    onSubmit: updateCourse,
-    initialValues,
-  };
 
   return (
     <div className="content-card__section">
       <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit course" canOutsideClickClose={false}>
-        <CourseEditForm {...props} />
+        <CourseEditForm renderFormComponents={renderDialogForm} onSubmit={updateCourse} initialValues={initialValues} />
       </Dialog>
     </div>
   );

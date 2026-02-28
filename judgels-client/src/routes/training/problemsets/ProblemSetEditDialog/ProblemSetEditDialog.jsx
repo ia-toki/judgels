@@ -1,8 +1,14 @@
 import { Button, Classes, Dialog } from '@blueprintjs/core';
+import { useMutation } from '@tanstack/react-query';
 
+import { updateProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
 import ProblemSetEditForm from '../ProblemSetEditForm/ProblemSetEditForm';
 
-export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseDialog, onUpdateProblemSet }) {
+import * as toastActions from '../../../../modules/toast/toastActions';
+
+export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseDialog }) {
+  const updateProblemSetMutation = useMutation(updateProblemSetMutationOptions(problemSet?.jid));
+
   const renderDialogForm = (fields, submitButton) => (
     <>
       <div className={Classes.DIALOG_BODY}>{fields}</div>
@@ -16,13 +22,21 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
   );
 
   const updateProblemSet = async data => {
-    await onUpdateProblemSet(problemSet.jid, {
-      slug: data.slug,
-      name: data.name,
-      archiveSlug: data.archiveSlug,
-      description: data.description,
-      contestTime: new Date(data.contestTime).getTime(),
-    });
+    await updateProblemSetMutation.mutateAsync(
+      {
+        slug: data.slug,
+        name: data.name,
+        archiveSlug: data.archiveSlug,
+        description: data.description,
+        contestTime: new Date(data.contestTime).getTime(),
+      },
+      {
+        onSuccess: () => {
+          toastActions.showSuccessToast('Problemset updated.');
+        },
+      }
+    );
+    onCloseDialog();
   };
 
   const initialValues = problemSet && {
@@ -32,16 +46,15 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
     description: problemSet.description,
     contestTime: new Date(problemSet.contestTime).toISOString(),
   };
-  const props = {
-    renderFormComponents: renderDialogForm,
-    onSubmit: updateProblemSet,
-    initialValues,
-  };
 
   return (
     <div className="content-card__section">
       <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit problemset" canOutsideClickClose={false}>
-        <ProblemSetEditForm {...props} />
+        <ProblemSetEditForm
+          renderFormComponents={renderDialogForm}
+          onSubmit={updateProblemSet}
+          initialValues={initialValues}
+        />
       </Dialog>
     </div>
   );
