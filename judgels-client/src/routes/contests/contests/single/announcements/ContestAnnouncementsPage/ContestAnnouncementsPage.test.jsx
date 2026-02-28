@@ -24,7 +24,6 @@ describe('ContestAnnouncementsPage', () => {
 
     nockUriel()
       .get('/contests/contestJid/announcements')
-      .query({ page: 1 })
       .reply(200, {
         data: {
           page: announcements,

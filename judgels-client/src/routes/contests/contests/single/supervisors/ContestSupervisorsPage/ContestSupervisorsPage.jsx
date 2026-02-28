@@ -19,7 +19,7 @@ export default function ContestSupervisorsPage() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response } = useQuery(contestSupervisorsQueryOptions(contest.jid, { page }));
 

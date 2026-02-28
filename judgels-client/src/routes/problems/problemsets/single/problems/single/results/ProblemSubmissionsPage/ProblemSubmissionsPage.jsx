@@ -37,7 +37,7 @@ export default function ProblemSubmissionsPage() {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response } = useQuery(
     problemSetBundleSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias, page })

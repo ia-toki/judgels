@@ -15,7 +15,7 @@ export default function ContestsPage() {
   const location = useLocation();
 
   const name = location.search.name;
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(contestsQueryOptions({ name, page }));
 
