@@ -8,10 +8,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import LoginPage from './LoginPage';
 
 describe('LoginPage', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     await act(async () =>
       render(

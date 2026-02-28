@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
@@ -11,10 +10,6 @@ import ContestSubmissionPage from './ContestSubmissionPage';
 describe('ContestSubmissionPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   beforeEach(async () => {

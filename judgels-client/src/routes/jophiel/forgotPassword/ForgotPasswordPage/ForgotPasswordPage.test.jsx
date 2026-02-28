@@ -8,10 +8,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import ForgotPasswordPage from './ForgotPasswordPage';
 
 describe('ForgotPasswordPage', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     await act(async () =>
       render(

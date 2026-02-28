@@ -12,10 +12,6 @@ describe('LogoutPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     nockJophiel().post('/session/logout').reply(200);
 

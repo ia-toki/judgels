@@ -1,6 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
@@ -62,10 +61,6 @@ describe('ProgrammingContestProblemPage', () => {
         </WebPrefsProvider>
       );
     });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   test('form', async () => {

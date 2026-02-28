@@ -22,10 +22,6 @@ describe('ArchiveEditDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('edit dialog form', async () => {
     await act(async () =>
       render(

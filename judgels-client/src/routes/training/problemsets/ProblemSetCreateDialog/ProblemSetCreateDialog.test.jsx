@@ -14,10 +14,6 @@ describe('ProblemSetCreateDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('create dialog form', async () => {
     await act(async () =>
       render(

@@ -13,10 +13,6 @@ describe('ResetPasswordPage', () => {
     setSession('token', { jid: 'userJid', email: 'user@domain.com' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     await act(async () =>
       render(

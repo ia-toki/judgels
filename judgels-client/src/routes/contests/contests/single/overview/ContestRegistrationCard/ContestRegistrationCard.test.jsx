@@ -1,5 +1,4 @@
 import { act, render, waitFor } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -10,10 +9,6 @@ import ContestRegistrationCard from './ContestRegistrationCard';
 describe('ContestRegistrationCard', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   const renderComponent = async contestantState => {

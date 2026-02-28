@@ -34,10 +34,6 @@ describe('ProblemSetProblemEditDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('edit problems dialog form', async () => {
     nockJerahmeel()
       .get('/problemsets/problemSet-jid/problems')

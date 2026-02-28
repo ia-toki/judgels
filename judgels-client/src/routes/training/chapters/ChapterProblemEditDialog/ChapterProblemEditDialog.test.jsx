@@ -27,10 +27,6 @@ describe('ChapterProblemEditDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   test('edit problems dialog form', async () => {
     nockJerahmeel().get('/chapters/chapter-jid/problems').reply(200, { data: problems, problemsMap });
 

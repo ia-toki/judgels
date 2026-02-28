@@ -1,5 +1,4 @@
 import { act, render, screen, within } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
@@ -12,10 +11,6 @@ describe('CoursesPage', () => {
 
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   const renderComponent = async () => {
