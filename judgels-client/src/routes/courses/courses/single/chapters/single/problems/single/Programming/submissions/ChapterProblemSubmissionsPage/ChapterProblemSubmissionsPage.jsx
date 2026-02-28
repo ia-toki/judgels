@@ -3,8 +3,8 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
+import CursorPagination from '../../../../../../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import {
   chapterProgrammingSubmissionsQueryOptions,
@@ -22,8 +22,6 @@ import { ChapterProblemSubmissionsTable } from '../ChapterProblemSubmissionsTabl
 
 import * as toastActions from '../../../../../../../../../../../modules/toast/toastActions';
 
-const PAGE_SIZE = 20;
-
 export default function ChapterProblemSubmissionsPage() {
   const { worksheet } = useChapterProblemContext();
   const problemAlias = worksheet?.problem?.alias;
@@ -36,12 +34,18 @@ export default function ChapterProblemSubmissionsPage() {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
-  const page = +(location.search.page || 1);
+  const beforeId = location.search.before;
+  const afterId = location.search.after;
   const isShowAll = (location.pathname + '/').includes('/all/');
   const usernameFilter = isShowAll ? undefined : username;
 
   const { data: response } = useQuery(
-    chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias, username: usernameFilter, page })
+    chapterProgrammingSubmissionsQueryOptions(chapter.jid, {
+      problemAlias,
+      username: usernameFilter,
+      beforeId,
+      afterId,
+    })
   );
 
   const regradeSubmissionMutation = useMutation(regradeChapterProgrammingSubmissionMutationOptions(chapter.jid));
@@ -129,7 +133,13 @@ export default function ChapterProblemSubmissionsPage() {
       {renderFilter()}
       {renderHeader()}
       {renderSubmissions()}
-      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && (
+        <CursorPagination
+          data={response.data.page}
+          hasPreviousPage={response.data.hasPreviousPage}
+          hasNextPage={response.data.hasNextPage}
+        />
+      )}
     </ContentCard>
   );
 }

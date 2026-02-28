@@ -6,11 +6,19 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const problemSetProgrammingSubmissionsQueryOptions = (problemJid, params) => {
-  const { username, page } = params || {};
+  const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
     queryFn: () =>
-      submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, problemJid, undefined, page),
+      submissionProgrammingAPI.getSubmissions(
+        getToken(),
+        undefined,
+        username,
+        problemJid,
+        undefined,
+        beforeId,
+        afterId
+      ),
   });
 };
 
