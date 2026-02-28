@@ -20,5 +20,7 @@ public interface BaseProgrammingSubmissionDao<M extends AbstractProgrammingSubmi
         BaseProgrammingSubmissionQueryBuilder<M> whereAuthorIs(String userJid);
         BaseProgrammingSubmissionQueryBuilder<M> whereProblemIs(String problemJid);
         BaseProgrammingSubmissionQueryBuilder<M> whereLastSubmissionIs(long submissionId);
+        BaseProgrammingSubmissionQueryBuilder<M> whereIdLessThan(long id);
+        BaseProgrammingSubmissionQueryBuilder<M> whereIdGreaterThan(long id);
     }
 }

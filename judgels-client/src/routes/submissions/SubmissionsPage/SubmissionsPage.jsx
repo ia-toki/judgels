@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
+import CursorPagination from '../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
-import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import {
   regradeSubmissionMutationOptions,
@@ -13,19 +13,18 @@ import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 import * as toastActions from '../../../modules/toast/toastActions';
 
-const PAGE_SIZE = 20;
-
 export default function SubmissionsPage() {
   const location = useLocation();
   const { user } = useSession();
   const userJid = user?.jid;
   const username = user?.username;
 
-  const page = +(location.search.page || 1);
+  const beforeId = location.search.before;
+  const afterId = location.search.after;
   const isUserFilterMine = (location.pathname + '/').includes('/mine/');
   const usernameFilter = isUserFilterMine ? username : undefined;
 
-  const { data: response } = useQuery(submissionsQueryOptions({ username: usernameFilter, page }));
+  const { data: response } = useQuery(submissionsQueryOptions({ username: usernameFilter, beforeId, afterId }));
 
   const regradeMutation = useMutation(regradeSubmissionMutationOptions);
 
@@ -51,7 +50,7 @@ export default function SubmissionsPage() {
       containerNamesMap,
       containerPathsMap,
     } = response;
-    if (submissions.totalCount === 0) {
+    if (submissions.page.length === 0) {
       return (
         <p>
           <small>No submissions.</small>
@@ -73,13 +72,17 @@ export default function SubmissionsPage() {
     );
   };
 
-  // return (
-  //   <>
-  //     {userJid && <SubmissionUserFilter />}
-  //     {renderSubmissions()}
-  //     {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
-  //   </>
-  // );
-
-  return <small>This page is under maintenance.</small>;
+  return (
+    <>
+      {userJid && <SubmissionUserFilter />}
+      {renderSubmissions()}
+      {response && (
+        <CursorPagination
+          data={response.data.page}
+          hasPreviousPage={response.data.hasPreviousPage}
+          hasNextPage={response.data.hasNextPage}
+        />
+      )}
+    </>
+  );
 }

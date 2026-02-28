@@ -10,8 +10,8 @@ export const submissionProgrammingAPI = {
     return get(`${baseSubmissionsURL}/${submissionJid}`);
   },
 
-  getSubmissions: (token, containerJid, username, problemJid, problemAlias, page) => {
-    const params = stringify({ containerJid, username, problemJid, problemAlias, page });
+  getSubmissions: (token, containerJid, username, problemJid, problemAlias, beforeId, afterId) => {
+    const params = stringify({ containerJid, username, problemJid, problemAlias, beforeId, afterId });
     return get(`${baseSubmissionsURL}?${params}`, token);
   },
 

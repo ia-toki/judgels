@@ -14,7 +14,6 @@ import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -46,7 +45,7 @@ import judgels.jerahmeel.submission.SubmissionRoleChecker;
 import judgels.jerahmeel.submission.SubmissionUtils;
 import judgels.jophiel.JophielClient;
 import judgels.jophiel.api.profile.Profile;
-import judgels.persistence.api.Page;
+import judgels.persistence.api.CursorPage;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.sandalphon.api.problem.ProblemInfo;
@@ -93,21 +92,19 @@ public class SubmissionResource {
             @QueryParam("username") Optional<String> username,
             @QueryParam("problemJid") Optional<String> problemJid,
             @QueryParam("problemAlias") Optional<String> problemAlias,
-            @QueryParam("page") @DefaultValue("1") int pageNumber) {
+            @QueryParam("beforeId") Optional<Long> beforeId,
+            @QueryParam("afterId") Optional<Long> afterId) {
 
         String actorJid = actorChecker.check(authHeader);
 
-        if (!containerJid.isPresent() && !username.isPresent() && !problemJid.isPresent() && !problemAlias.isPresent()) {
-            throw new IllegalArgumentException("blocking for time being as this is expensive");
-        }
-
         boolean canManage = submissionRoleChecker.canManage(actorJid);
 
-        Page<Submission> submissions = submissionStore.getSubmissions(
+        CursorPage<Submission> submissions = submissionStore.getSubmissionsCursor(
                 containerJid,
                 byUserJid(username),
                 byProblemJid(containerJid, problemJid, problemAlias),
-                pageNumber,
+                beforeId,
+                afterId,
                 PAGE_SIZE);
 
         var containerJids = Lists.transform(submissions.getPage(), Submission::getContainerJid);

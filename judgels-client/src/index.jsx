@@ -21,7 +21,7 @@ const persister = createAsyncStoragePersister({
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
+  <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: '3' }}>
     <WebPrefsProvider>
       <RouterProvider router={router} />
     </WebPrefsProvider>

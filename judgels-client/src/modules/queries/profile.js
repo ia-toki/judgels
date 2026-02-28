@@ -34,10 +34,11 @@ export const topRatedProfilesQueryOptions = params => {
 };
 
 export const profileSubmissionsQueryOptions = (username, params) => {
-  const { page } = params || {};
+  const { beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['profile', username, 'submissions', ...(params ? [params] : [])],
-    queryFn: () => submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, page),
+    queryFn: () =>
+      submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
 };
 
