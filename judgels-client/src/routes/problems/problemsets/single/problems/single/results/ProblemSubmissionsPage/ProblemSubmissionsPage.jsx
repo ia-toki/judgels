@@ -7,7 +7,7 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
@@ -152,7 +152,7 @@ export default function ProblemSubmissionsPage() {
       <ItemSubmissionUserFilter />
       {renderRegradeAllButton()}
       {renderSubmissions()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
 }

@@ -3,7 +3,7 @@ import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemType, getProblemName } from '../../../../modules/api/sandalphon/problem';
@@ -70,7 +70,7 @@ export default function ProblemsPage() {
       <ProblemSpoilerWidget />
       <hr />
       {renderProblems()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </Card>
   );
 }

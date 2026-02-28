@@ -6,7 +6,7 @@ import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-route
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
@@ -153,7 +153,7 @@ function ContestSubmissionsPage() {
       {renderRegradeAllButton()}
       {renderFilterWidget()}
       {renderSubmissions()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
 }

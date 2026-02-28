@@ -3,7 +3,7 @@ import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { contestsQueryOptions } from '../../../../modules/queries/contest';
 import { ContestCard } from '../ContestCard/ContestCard';
@@ -88,7 +88,7 @@ export default function ContestsPage() {
     if (!response) {
       return null;
     }
-    return <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />;
+    return <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />;
   };
 
   const searchBoxUpdateQueries = (name, queries) => {

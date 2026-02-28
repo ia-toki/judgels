@@ -4,7 +4,7 @@ import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { topUserStatsQueryOptions } from '../../../../modules/queries/stats';
 
@@ -53,7 +53,7 @@ export default function ScoresPage() {
   return (
     <Card title="Top scorers">
       {renderScores()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </Card>
   );
 }

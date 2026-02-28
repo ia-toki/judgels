@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../components/Pagination/Pagination';
 import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
@@ -80,7 +80,7 @@ export default function ProblemSetsPage() {
         onCloseDialog={closeDialog}
       />
       {renderProblemSets()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
 }

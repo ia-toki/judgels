@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { askDesktopNotificationPermission } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestClarificationsQueryOptions } from '../../../../../../modules/queries/contestClarification';
@@ -122,7 +122,7 @@ function ContestClarificationsPage() {
       {renderCreateDialog()}
       {renderFilterWidget()}
       {renderClarifications()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
 }

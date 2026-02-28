@@ -7,7 +7,7 @@ import { Fragment, useState } from 'react';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
@@ -302,7 +302,7 @@ function ContestScoreboardPage() {
       </div>
       {renderFrozenScoreboardNotice()}
       {renderScoreboard()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalEntries} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalEntries} />}
       {isSubmissionImageDialogOpen && (
         <SubmissionImageDialog
           onClose={() => setIsSubmissionImageDialogOpen(false)}
