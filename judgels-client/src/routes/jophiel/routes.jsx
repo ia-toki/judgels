@@ -4,6 +4,8 @@ import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
+import { userJidByUsernameQueryOptions } from '../../modules/queries/profile';
+import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 import HomePage from '../home/HomePage/HomePage';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
@@ -148,6 +150,9 @@ export const createJophielRoutes = appRoute => {
     path: 'profiles/$username',
     component: lazyRouteComponent(retryImport(() => import('./profiles/ProfilesLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Profiles') }] }),
+    loader: async ({ params: { username } }) => {
+      await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
+    },
   });
 
   const profileIndexRoute = createRoute({

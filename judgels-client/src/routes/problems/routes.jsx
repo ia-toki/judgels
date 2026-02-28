@@ -1,6 +1,8 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
+import { problemSetBySlugQueryOptions, problemSetProblemQueryOptions } from '../../modules/queries/problemSet';
+import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createProblemsRoutes = appRoute => {
@@ -33,6 +35,9 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemsRoute,
     path: '$problemSetSlug',
     component: lazyRouteComponent(retryImport(() => import('./problemsets/single/SingleProblemSetLayout'))),
+    loader: async ({ params: { problemSetSlug } }) => {
+      await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+    },
   });
 
   const problemSetIndexRoute = createRoute({
@@ -49,6 +54,10 @@ export const createProblemsRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problemsets/single/problems/single/SingleProblemSetProblemLayout'))
     ),
+    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
+    },
   });
 
   const problemSetProblemIndexRoute = createRoute({

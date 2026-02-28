@@ -1,6 +1,8 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
+import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../modules/queries/course';
+import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createCoursesRoutes = appRoute => {
@@ -21,6 +23,9 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => coursesRoute,
     path: '$courseSlug',
     component: lazyRouteComponent(retryImport(() => import('./courses/single/SingleCourseLayout'))),
+    loader: async ({ params: { courseSlug } }) => {
+      await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+    },
   });
 
   const courseIndexRoute = createRoute({
@@ -35,6 +40,10 @@ export const createCoursesRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./courses/single/chapters/single/SingleCourseChapterLayout'))
     ),
+    loader: async ({ params: { courseSlug, chapterAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+    },
   });
 
   const courseChapterResourcesRoute = createRoute({
