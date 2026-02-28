@@ -5,11 +5,19 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const chapterProgrammingSubmissionsQueryOptions = (chapterJid, params) => {
-  const { problemAlias, username, page } = params || {};
+  const { problemAlias, username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'programming', ...(params ? [params] : [])],
     queryFn: () =>
-      submissionProgrammingAPI.getSubmissions(getToken(), chapterJid, username, undefined, problemAlias, page),
+      submissionProgrammingAPI.getSubmissions(
+        getToken(),
+        chapterJid,
+        username,
+        undefined,
+        problemAlias,
+        beforeId,
+        afterId
+      ),
   });
 };
 

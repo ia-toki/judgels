@@ -2,8 +2,8 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import CursorPagination from '../../../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import {
@@ -21,8 +21,6 @@ import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmi
 
 import * as toastActions from '../../../../../../../../modules/toast/toastActions';
 
-const PAGE_SIZE = 20;
-
 export default function ProblemSubmissionsPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
   const location = useLocation();
@@ -32,12 +30,13 @@ export default function ProblemSubmissionsPage() {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
-  const page = +(location.search.page || 1);
+  const beforeId = location.search.before;
+  const afterId = location.search.after;
   const isUserFilterMine = (location.pathname + '/').includes('/mine/');
   const usernameFilter = isUserFilterMine ? username : undefined;
 
   const { data: response } = useQuery(
-    problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, page })
+    problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, beforeId, afterId })
   );
 
   const regradeSubmissionMutation = useMutation(
@@ -86,7 +85,7 @@ export default function ProblemSubmissionsPage() {
     }
 
     const { data: submissions, config, profilesMap, problemAliasesMap } = response;
-    if (submissions.totalCount === 0) {
+    if (submissions.page.length === 0) {
       return (
         <p>
           <small>No submissions.</small>
@@ -114,7 +113,13 @@ export default function ProblemSubmissionsPage() {
       {renderUserFilter()}
       {renderHeader()}
       {renderSubmissions()}
-      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && (
+        <CursorPagination
+          data={response.data.page}
+          hasPreviousPage={response.data.hasPreviousPage}
+          hasNextPage={response.data.hasNextPage}
+        />
+      )}
     </ContentCard>
   );
 }
