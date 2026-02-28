@@ -1,41 +1,19 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
-import { callAction } from '../../../../../modules/callAction';
-
-import * as widgetActions from '../../modules/widgetActions';
+import { topRatedProfilesQueryOptions } from '../../../../../modules/queries/profile';
 
 import './TopRatingsWidget.scss';
 
 export default function TopRatingsWidget() {
-  const [state, setState] = useState({
-    profiles: undefined,
-  });
+  const { data: response } = useQuery(topRatedProfilesQueryOptions({ page: 1, pageSize: 10 }));
 
-  const refreshTopRatedProfiles = async () => {
-    const profiles = await callAction(widgetActions.getTopRatedProfiles(1, 10));
-    setState({ profiles });
-  };
-
-  useEffect(() => {
-    refreshTopRatedProfiles();
-  }, []);
-
-  const render = () => {
-    const { profiles } = state;
-    if (!profiles) {
-      return <LoadingState />;
-    }
-
-    return (
-      <Card className="top-ratings-widget" title="Top ratings">
-        {renderTable(profiles.page)}
-      </Card>
-    );
-  };
+  if (!response) {
+    return <LoadingState />;
+  }
 
   const renderTable = profiles => {
     if (profiles.length === 0) {
@@ -70,5 +48,9 @@ export default function TopRatingsWidget() {
     );
   };
 
-  return render();
+  return (
+    <Card className="top-ratings-widget" title="Top ratings">
+      {renderTable(response.page)}
+    </Card>
+  );
 }
