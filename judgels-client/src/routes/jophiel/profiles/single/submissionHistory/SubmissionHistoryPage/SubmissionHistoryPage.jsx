@@ -3,7 +3,7 @@ import { useLocation, useParams } from '@tanstack/react-router';
 
 import { Card } from '../../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import { profileSubmissionsQueryOptions } from '../../../../../../modules/queries/profile';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
@@ -50,7 +50,7 @@ export default function SubmissionHistoryPage() {
   return (
     <Card title="Submission history">
       {renderSubmissions()}
-      {response && <PaginationV2 pageSize={20} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={20} totalCount={response.data.totalCount} />}
     </Card>
   );
 }

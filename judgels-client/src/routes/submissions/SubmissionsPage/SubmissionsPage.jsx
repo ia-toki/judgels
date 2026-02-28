@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../components/Pagination/Pagination';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import {
   regradeSubmissionMutationOptions,
@@ -77,7 +77,7 @@ export default function SubmissionsPage() {
   //   <>
   //     {userJid && <SubmissionUserFilter />}
   //     {renderSubmissions()}
-  //     {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+  //     {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
   //   </>
   // );
 

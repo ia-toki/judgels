@@ -5,7 +5,7 @@ import { useLocation, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import PaginationV2 from '../../../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../../../components/Pagination/Pagination';
 import {
   contestBySlugQueryOptions,
   resetVirtualContestMutationOptions,
@@ -102,7 +102,7 @@ export default function ContestContestantsPage() {
       <hr />
       {renderAddRemoveDialogs()}
       {renderContestants()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
 }

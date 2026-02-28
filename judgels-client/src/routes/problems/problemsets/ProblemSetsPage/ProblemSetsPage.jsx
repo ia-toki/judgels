@@ -3,7 +3,7 @@ import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
+import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCard } from '../ProblemSetCard/ProblemSetCard';
@@ -107,7 +107,7 @@ export default function ProblemSetsPage() {
     <Card title="Browse problemsets">
       {renderHeader()}
       {renderProblemSets()}
-      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </Card>
   );
 }
