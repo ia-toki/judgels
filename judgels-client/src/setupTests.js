@@ -41,5 +41,6 @@ window.scrollTo = function () {
 };
 
 afterEach(() => {
+  nock.cleanAll();
   clearSession();
 });

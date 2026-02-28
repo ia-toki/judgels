@@ -1,6 +1,5 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import nock from 'nock';
 
 import { ItemType } from '../../../../../../../../modules/api/sandalphon/problemBundle';
 import { setSession } from '../../../../../../../../modules/session';
@@ -76,10 +75,6 @@ describe('BundleContestProblemPage', () => {
         </WebPrefsProvider>
       )
     );
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   test('form', async () => {

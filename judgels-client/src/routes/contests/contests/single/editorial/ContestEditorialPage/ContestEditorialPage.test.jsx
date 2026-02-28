@@ -1,5 +1,4 @@
 import { act, render, waitFor } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
@@ -11,10 +10,6 @@ import ContestEditorialPage from './ContestEditorialPage';
 describe('ContestEditorialPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   const renderComponent = async () => {

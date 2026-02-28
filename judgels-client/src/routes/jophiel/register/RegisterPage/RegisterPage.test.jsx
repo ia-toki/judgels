@@ -8,10 +8,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import RegisterPage from './RegisterPage';
 
 describe('RegisterPage', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     nockJophiel().get('/users/registration/web/config').reply(200, { useRecaptcha: false });
 

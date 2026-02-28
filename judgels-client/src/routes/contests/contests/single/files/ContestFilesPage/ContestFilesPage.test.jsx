@@ -13,10 +13,6 @@ describe('ContestFilesPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   let files;
 
   const renderComponent = async () => {

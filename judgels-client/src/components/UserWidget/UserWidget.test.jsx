@@ -1,5 +1,4 @@
 import { act, render } from '@testing-library/react';
-import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../test/RouterWrapper';
@@ -8,10 +7,6 @@ import { UserWidget } from './UserWidget';
 describe('UserWidget', () => {
   let user;
   let profile;
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
 
   const renderComponent = async () => {
     const props = {

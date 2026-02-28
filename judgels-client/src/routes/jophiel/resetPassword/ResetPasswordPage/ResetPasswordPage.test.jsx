@@ -8,10 +8,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import ResetPasswordPage from './ResetPasswordPage';
 
 describe('ResetPasswordPage', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     await act(async () =>
       render(

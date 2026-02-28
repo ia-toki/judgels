@@ -1,6 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -29,10 +28,6 @@ describe('ContestEditDescriptionTab', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   test('contest edit description tab form', async () => {

@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -39,10 +38,6 @@ describe('ContestRegistrantsDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   test('table', async () => {

@@ -13,10 +13,6 @@ describe('ContestSupervisorAddDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     await act(async () =>
       render(

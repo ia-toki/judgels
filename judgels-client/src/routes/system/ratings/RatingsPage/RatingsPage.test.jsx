@@ -16,10 +16,6 @@ describe('RatingsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   const renderComponent = async () => {
     nockUriel().get('/contest-rating/pending').reply(200, {
       data: contests,

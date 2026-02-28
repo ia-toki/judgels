@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import nock from 'nock';
 
 import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
@@ -12,10 +11,6 @@ import ContestScoreboardPage from './ContestScoreboardPage';
 describe('ContestScoreboardPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   let scoreboard;

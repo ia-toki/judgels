@@ -1,5 +1,4 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../../../../../test/QueryClientProviderWrapper';
@@ -11,10 +10,6 @@ import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 describe('ChapterProblemSubmissionsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid', username: 'username' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   let submissions;

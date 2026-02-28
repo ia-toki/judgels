@@ -1,5 +1,4 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
-import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -10,10 +9,6 @@ import ContestContestantsPage from './ContestContestantsPage';
 describe('ContestContestantsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   let contestants;

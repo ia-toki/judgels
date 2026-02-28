@@ -7,10 +7,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import ActivatePage from './ActivatePage';
 
 describe('ActivatePage', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
   beforeEach(async () => {
     nockJophiel().post('/user-account/activate/code123').reply(200);
 
