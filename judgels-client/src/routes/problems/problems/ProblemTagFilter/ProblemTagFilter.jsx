@@ -1,56 +1,40 @@
 import { Checkbox } from '@blueprintjs/core';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { callAction } from '../../../../modules/callAction';
-
-import * as problemActions from '../modules/problemActions';
+import { problemTagsQueryOptions } from '../../../../modules/queries/problem';
 
 import './ProblemTagFilter.scss';
+
+const parseTags = queryTags => {
+  let tags = queryTags || [];
+  if (typeof tags === 'string') {
+    tags = [tags];
+  }
+  return tags;
+};
 
 export default function ProblemTagFilter() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const parseTags = queryTags => {
-    let tags = queryTags || [];
-    if (typeof tags === 'string') {
-      tags = [tags];
-    }
-    return tags;
-  };
-
   const tags = parseTags(location.search.tags);
 
-  const [state, setState] = useState({
-    tags,
-    response: undefined,
-  });
+  const [selectedTags, setSelectedTags] = useState(tags);
 
-  const loadTags = async () => {
-    const response = await callAction(problemActions.getProblemTags());
-    const allTags = [].concat(response.data.map(c => c.options.map(opt => opt.value))).flat();
-    setState(prevState => ({ ...prevState, response, allTags }));
-  };
+  const { data: response } = useQuery(problemTagsQueryOptions());
 
-  useEffect(() => {
-    loadTags();
-  }, []);
-
-  const render = () => {
-    return (
-      <ContentCard>
-        <h4>Filter problem</h4>
-        <hr />
-        {renderAvailableTags()}
-      </ContentCard>
-    );
-  };
+  const allTags = useMemo(() => {
+    if (!response) {
+      return [];
+    }
+    return response.data.flatMap(c => c.options.map(opt => opt.value));
+  }, [response]);
 
   const renderAvailableTags = () => {
-    const { response } = state;
     if (!response) {
       return null;
     }
@@ -82,15 +66,15 @@ export default function ProblemTagFilter() {
   };
 
   const isTagSelected = tag => {
-    return state.tags.includes(tag);
+    return selectedTags.includes(tag);
   };
 
   const isTagParentSelected = tag => {
-    return state.tags.some(t => t !== tag && tag.startsWith(t));
+    return selectedTags.some(t => t !== tag && tag.startsWith(t));
   };
 
   const isTagChildSelected = tag => {
-    return state.tags.some(t => t !== tag && t.startsWith(tag));
+    return selectedTags.some(t => t !== tag && t.startsWith(tag));
   };
 
   const isTagChild = tag => {
@@ -101,37 +85,43 @@ export default function ProblemTagFilter() {
     return isTagChild(opt.value) ? opt.label.split(': ')[1] : opt.label;
   };
 
+  const sanitizeTags = tags => {
+    return tags.filter(t => allTags.includes(t));
+  };
+
   const changeTag = e => {
     const tag = e.target.name;
     const checked = e.target.checked;
 
-    let tags = state.tags;
+    let newTags = selectedTags;
     if (checked) {
-      tags = [...new Set([...tags, tag])]
+      newTags = [...new Set([...newTags, tag])]
         .filter(t => !(t !== tag && t.startsWith(tag)))
         .filter(t => !(t !== tag && tag.startsWith(t)));
     } else {
-      let s = new Set(tags);
+      let s = new Set(newTags);
       s.delete(tag);
-      tags = [...s];
+      newTags = [...s];
     }
 
-    tags = sanitizeTags(tags);
+    newTags = sanitizeTags(newTags);
 
     navigate({
       search: {
         ...location.search,
-        tags,
+        tags: newTags,
         page: 1,
       },
     });
 
-    setState(prevState => ({ ...prevState, tags }));
+    setSelectedTags(newTags);
   };
 
-  const sanitizeTags = tags => {
-    return tags.filter(t => state.allTags.includes(t));
-  };
-
-  return render();
+  return (
+    <ContentCard>
+      <h4>Filter problem</h4>
+      <hr />
+      {renderAvailableTags()}
+    </ContentCard>
+  );
 }

@@ -1,15 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import Pagination from '../../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../../components/PaginationV2/PaginationV2';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemType, getProblemName } from '../../../../modules/api/sandalphon/problem';
-import { callAction } from '../../../../modules/callAction';
-
-import * as problemActions from '../modules/problemActions';
+import { problemsQueryOptions } from '../../../../modules/queries/problem';
 
 const PAGE_SIZE = 20;
 
@@ -25,28 +23,11 @@ export default function ProblemsPage() {
   const location = useLocation();
 
   const tags = parseTags(location.search.tags);
+  const page = +(location.search.page || 1);
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
-
-  const render = () => {
-    return (
-      <Card title="Browse problems">
-        {renderHeader()}
-        <hr />
-        {renderProblems()}
-        {renderPagination()}
-      </Card>
-    );
-  };
-
-  const renderHeader = () => {
-    return <ProblemSpoilerWidget />;
-  };
+  const { data: response } = useQuery(problemsQueryOptions({ tags, page }));
 
   const renderProblems = () => {
-    const { response } = state;
     if (!response || !response.data) {
       return <LoadingState />;
     }
@@ -84,23 +65,12 @@ export default function ProblemsPage() {
     });
   };
 
-  const renderPagination = () => {
-    return <Pagination pageSize={PAGE_SIZE} onChangePage={onChangePage} key={JSON.stringify(tags)} />;
-  };
-
-  const onChangePage = async nextPage => {
-    if (state.response) {
-      setState({ response: { ...state.response, data: undefined } });
-    }
-    const data = await refreshProblems(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshProblems = async page => {
-    const response = await callAction(problemActions.getProblems(tags, page));
-    setState({ response });
-    return response.data;
-  };
-
-  return render();
+  return (
+    <Card title="Browse problems">
+      <ProblemSpoilerWidget />
+      <hr />
+      {renderProblems()}
+      {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </Card>
+  );
 }
