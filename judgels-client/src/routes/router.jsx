@@ -3,6 +3,8 @@ import { parse, stringify } from 'query-string';
 
 import { LoadingState } from '../components/LoadingState/LoadingState';
 import { APP_CONFIG } from '../conf';
+import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
+import { queryClient } from '../modules/queryClient';
 import App from './App';
 import Root from './Root';
 import { createContestsRoutes } from './contests/routes';
@@ -22,6 +24,9 @@ export const appRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'app',
   component: App,
+  loader: async () => {
+    await queryClient.ensureQueryData(userWebConfigQueryOptions());
+  },
 });
 
 const appChildren = [

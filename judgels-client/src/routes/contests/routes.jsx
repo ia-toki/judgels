@@ -1,6 +1,9 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
+import { contestBySlugQueryOptions } from '../../modules/queries/contest';
+import { contestWebConfigQueryOptions } from '../../modules/queries/contestWeb';
+import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createContestsRoutes = appRoute => {
@@ -21,6 +24,10 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestsRoute,
     path: '$contestSlug',
     component: lazyRouteComponent(retryImport(() => import('./contests/single/SingleContestLayout'))),
+    loader: async ({ params: { contestSlug } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
+    },
   });
 
   const contestOverviewRoute = createRoute({
