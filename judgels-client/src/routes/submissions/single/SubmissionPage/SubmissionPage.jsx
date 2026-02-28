@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
@@ -5,68 +6,36 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/jerahmeel/submission';
-import { callAction } from '../../../../modules/callAction';
+import { submissionProgrammingAPI } from '../../../../modules/api/jerahmeel/submissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../../../modules/queries/submissionProgramming';
 import { useWebPrefs } from '../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../utils/title';
 
-import * as submissionActions from '../../modules/submissionActions';
-
 export default function SubmissionPage() {
   const { submissionId } = useParams({ strict: false });
-  const { statementLanguage } = useWebPrefs();
+  const { statementLanguage, isDarkMode } = useWebPrefs();
 
-  const [state, setState] = useState({
-    submissionWithSource: undefined,
-    profile: undefined,
-    problemName: undefined,
-    problemAlias: undefined,
-    containerPath: undefined,
-    containerName: undefined,
-    sourceImageUrl: undefined,
-  });
+  const { data: response } = useQuery(submissionWithSourceQueryOptions(+submissionId, { language: statementLanguage }));
 
-  const loadSubmission = async () => {
-    const { data, profile, problemName, problemAlias, containerPath, containerName } = await callAction(
-      submissionActions.getSubmissionWithSource(+submissionId, statementLanguage)
-    );
-    const sourceImageUrl = data.source
-      ? undefined
-      : await callAction(submissionActions.getSubmissionSourceImage(data.submission.jid));
-
-    document.title = createDocumentTitle(`Submission #${data.submission.id}`);
-
-    setState({
-      submissionWithSource: data,
-      profile,
-      problemName,
-      problemAlias,
-      containerPath,
-      containerName,
-      sourceImageUrl,
-    });
-  };
+  const [sourceImageUrl, setSourceImageUrl] = useState(undefined);
 
   useEffect(() => {
-    loadSubmission();
-  }, []);
+    if (response) {
+      const { data } = response;
+      document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
-  const render = () => {
-    return (
-      <ContentCard>
-        <h3>Submission #{submissionId}</h3>
-        <hr />
-        {renderSubmission()}
-      </ContentCard>
-    );
-  };
+      if (!data.source) {
+        submissionProgrammingAPI.getSubmissionSourceImage(data.submission.jid, isDarkMode).then(setSourceImageUrl);
+      }
+    }
+  }, [response]);
 
   const renderSubmission = () => {
-    const { submissionWithSource, profile, problemAlias, problemName, containerPath, containerName, sourceImageUrl } =
-      state;
-
-    if (!submissionWithSource) {
+    if (!response) {
       return <LoadingState />;
     }
+
+    const { data: submissionWithSource, profile, problemName, problemAlias, containerPath, containerName } = response;
 
     return (
       <SubmissionDetails
@@ -82,5 +51,11 @@ export default function SubmissionPage() {
     );
   };
 
-  return render();
+  return (
+    <ContentCard>
+      <h3>Submission #{submissionId}</h3>
+      <hr />
+      {renderSubmission()}
+    </ContentCard>
+  );
 }

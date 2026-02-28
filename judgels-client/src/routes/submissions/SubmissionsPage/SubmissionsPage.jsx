@@ -1,14 +1,17 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
-import Pagination from '../../../components/Pagination/Pagination';
+import PaginationV2 from '../../../components/PaginationV2/PaginationV2';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import { callAction } from '../../../modules/callAction';
+import {
+  regradeSubmissionMutationOptions,
+  submissionsQueryOptions,
+} from '../../../modules/queries/submissionProgramming';
 import { useSession } from '../../../modules/session';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
-import * as submissionActions from '../modules/submissionActions';
+import * as toastActions from '../../../modules/toast/toastActions';
 
 const PAGE_SIZE = 20;
 
@@ -18,32 +21,23 @@ export default function SubmissionsPage() {
   const userJid = user?.jid;
   const username = user?.username;
 
-  const [state, setState] = useState({
-    response: undefined,
-  });
+  const page = +(location.search.page || 1);
+  const isUserFilterMine = (location.pathname + '/').includes('/mine/');
+  const usernameFilter = isUserFilterMine ? username : undefined;
 
-  const render = () => {
-    // return (
-    //   <>
-    //     {renderUserFilter()}
-    //     {renderSubmissions()}
-    //     {renderPagination()}
-    //   </>
-    // );
+  const { data: response } = useQuery(submissionsQueryOptions({ username: usernameFilter, page }));
 
-    return <small>This page is under maintenance.</small>;
-  };
+  const regradeMutation = useMutation(regradeSubmissionMutationOptions);
 
-  const renderUserFilter = () => {
-    return userJid && <SubmissionUserFilter />;
-  };
-
-  const isUserFilterMine = () => {
-    return (location.pathname + '/').includes('/mine/');
+  const onRegrade = async submissionJid => {
+    await regradeMutation.mutateAsync(submissionJid, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Submission regraded.');
+      },
+    });
   };
 
   const renderSubmissions = () => {
-    const { response } = state;
     if (!response) {
       return <LoadingState />;
     }
@@ -79,26 +73,13 @@ export default function SubmissionsPage() {
     );
   };
 
-  const renderPagination = () => {
-    return <Pagination key={'' + isUserFilterMine()} pageSize={PAGE_SIZE} onChangePage={onChangePage} />;
-  };
+  // return (
+  //   <>
+  //     {userJid && <SubmissionUserFilter />}
+  //     {renderSubmissions()}
+  //     {response && <PaginationV2 pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+  //   </>
+  // );
 
-  const onChangePage = async nextPage => {
-    const data = await refreshSubmissions(nextPage);
-    return data.totalCount;
-  };
-
-  const refreshSubmissions = async page => {
-    const usernameFilter = isUserFilterMine() ? username : undefined;
-    const response = await callAction(submissionActions.getSubmissions(undefined, usernameFilter, undefined, page));
-    setState({ response });
-    return response.data;
-  };
-
-  const onRegrade = async submissionJid => {
-    await callAction(submissionActions.regradeSubmission(submissionJid));
-    await refreshSubmissions(location.search.page);
-  };
-
-  return render();
+  return <small>This page is under maintenance.</small>;
 }
