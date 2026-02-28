@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.gabriel.api.GradingResult;
+import judgels.persistence.api.CursorPage;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
 import judgels.sandalphon.api.submission.programming.Submission;
@@ -32,6 +33,13 @@ public interface SubmissionStore {
             Optional<String> userJid,
             Optional<String> problemJid,
             int pageNumber,
+            int pageSize);
+    CursorPage<Submission> getSubmissionsCursor(
+            Optional<String> containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            Optional<Long> beforeId,
+            Optional<Long> afterId,
             int pageSize);
     List<Submission> getUserProblemSubmissions(
             String containerJid,

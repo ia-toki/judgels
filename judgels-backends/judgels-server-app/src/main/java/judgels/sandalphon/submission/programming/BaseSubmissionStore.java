@@ -17,6 +17,7 @@ import judgels.gabriel.api.GradingResultDetails;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.persistence.UnmodifiableModel_;
+import judgels.persistence.api.CursorPage;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
@@ -175,6 +176,78 @@ public class BaseSubmissionStore<
 
         return submissionModels.mapPage(p ->
                 Lists.transform(p, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))));
+    }
+
+    @Override
+    public CursorPage<Submission> getSubmissionsCursor(
+            Optional<String> containerJid,
+            Optional<String> userJid,
+            Optional<String> problemJid,
+            Optional<Long> beforeId,
+            Optional<Long> afterId,
+            int pageSize) {
+
+        if (beforeId.isPresent() && afterId.isPresent()) {
+            throw new IllegalArgumentException("Cannot specify both beforeId and afterId");
+        }
+
+        BaseProgrammingSubmissionQueryBuilder<SM> query = submissionDao.select();
+
+        if (containerJid.isPresent()) {
+            query.whereContainerIs(containerJid.get());
+        }
+        if (userJid.isPresent()) {
+            query.whereAuthorIs(userJid.get());
+        }
+        if (problemJid.isPresent()) {
+            query.whereProblemIs(problemJid.get());
+        }
+
+        boolean isAfter = afterId.isPresent();
+
+        if (beforeId.isPresent()) {
+            query.whereIdLessThan(beforeId.get());
+            query.orderBy(UnmodifiableModel_.ID, OrderDir.DESC);
+        } else if (afterId.isPresent()) {
+            query.whereIdGreaterThan(afterId.get());
+            query.orderBy(UnmodifiableModel_.ID, OrderDir.ASC);
+        } else {
+            query.orderBy(UnmodifiableModel_.ID, OrderDir.DESC);
+        }
+
+        List<SM> submissionModels = query.list(pageSize + 1);
+
+        boolean hasMore = submissionModels.size() > pageSize;
+        if (hasMore) {
+            submissionModels = submissionModels.subList(0, pageSize);
+        }
+
+        if (isAfter) {
+            submissionModels = Lists.reverse(submissionModels);
+        }
+
+        boolean hasNextPage;
+        boolean hasPreviousPage;
+
+        if (beforeId.isPresent()) {
+            hasNextPage = true;
+            hasPreviousPage = hasMore;
+        } else if (afterId.isPresent()) {
+            hasNextPage = hasMore;
+            hasPreviousPage = true;
+        } else {
+            hasNextPage = false;
+            hasPreviousPage = hasMore;
+        }
+
+        var submissionJids = Lists.transform(submissionModels, m -> m.jid);
+        Map<String, GM> gradingModels = gradingDao.selectAllLatestBySubmissionJids(submissionJids);
+
+        return new CursorPage.Builder<Submission>()
+                .page(Lists.transform(submissionModels, sm -> submissionFromModels(sm, gradingModels.get(sm.jid))))
+                .hasNextPage(hasNextPage)
+                .hasPreviousPage(hasPreviousPage)
+                .build();
     }
 
     @Override

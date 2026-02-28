@@ -136,5 +136,17 @@ public abstract class AbstractProgrammingSubmissionHibernateDao<M extends Abstra
             where((cb, cq, root) -> cb.gt(root.get(UnmodifiableModel_.id), submissionId));
             return this;
         }
+
+        @Override
+        public BaseProgrammingSubmissionQueryBuilder<M> whereIdLessThan(long id) {
+            where((cb, cq, root) -> cb.lt(root.get(UnmodifiableModel_.id), id));
+            return this;
+        }
+
+        @Override
+        public BaseProgrammingSubmissionQueryBuilder<M> whereIdGreaterThan(long id) {
+            where((cb, cq, root) -> cb.gt(root.get(UnmodifiableModel_.id), id));
+            return this;
+        }
     }
 }

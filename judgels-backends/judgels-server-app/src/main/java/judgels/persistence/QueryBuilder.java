@@ -14,4 +14,5 @@ public interface QueryBuilder<M> {
     Optional<M> latest();
     List<M> all();
     Page<M> paged(int pageNumber, int pageSize);
+    List<M> list(int maxResults);
 }

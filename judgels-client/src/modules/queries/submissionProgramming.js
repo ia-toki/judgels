@@ -5,10 +5,11 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const submissionsQueryOptions = params => {
-  const { username, page } = params || {};
+  const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['submissions', ...(params ? [params] : [])],
-    queryFn: () => submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, page),
+    queryFn: () =>
+      submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
 };
 

@@ -91,6 +91,11 @@ public class HibernateQueryBuilder<M> implements QueryBuilder<M> {
                 .build();
     }
 
+    @Override
+    public List<M> list(int maxResults) {
+        return list(1, maxResults);
+    }
+
     private List<M> list(int pageNumber, int pageSize) {
         CriteriaBuilder cb = currentSession.getCriteriaBuilder();
         CriteriaQuery<M> cq = cb.createQuery(entityClass);
