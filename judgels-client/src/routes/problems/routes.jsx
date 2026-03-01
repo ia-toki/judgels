@@ -7,10 +7,12 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
   problemSetProblemReportQueryOptions,
+  problemSetProblemWorksheetQueryOptions,
   problemSetProblemsQueryOptions,
   problemSetsQueryOptions,
 } from '../../modules/queries/problemSet';
 import { queryClient } from '../../modules/queryClient';
+import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createProblemsRoutes = appRoute => {
@@ -91,6 +93,11 @@ export const createProblemsRoutes = appRoute => {
         () => import('./problemsets/single/problems/single/statement/ProblemStatementPage/ProblemStatementPage')
       )
     ),
+    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(problemSetProblemWorksheetQueryOptions(problemSet.jid, problemAlias, { language }));
+    },
   });
 
   const problemSetProblemSubmissionsRoute = createRoute({

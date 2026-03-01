@@ -1,6 +1,7 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
+import { ContestStyle } from '../../modules/api/uriel/contest';
 import {
   contestBySlugQueryOptions,
   contestDescriptionQueryOptions,
@@ -11,12 +12,17 @@ import { contestContestantsQueryOptions } from '../../modules/queries/contestCon
 import { contestFilesQueryOptions } from '../../modules/queries/contestFile';
 import { contestLogsQueryOptions } from '../../modules/queries/contestLog';
 import { contestManagersQueryOptions } from '../../modules/queries/contestManager';
-import { contestProblemsQueryOptions } from '../../modules/queries/contestProblem';
+import {
+  contestBundleProblemWorksheetQueryOptions,
+  contestProblemsQueryOptions,
+  contestProgrammingProblemWorksheetQueryOptions,
+} from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
 import { contestProgrammingSubmissionsQueryOptions } from '../../modules/queries/contestSubmissionProgramming';
 import { contestSupervisorsQueryOptions } from '../../modules/queries/contestSupervisor';
 import { contestWebConfigQueryOptions } from '../../modules/queries/contestWeb';
 import { queryClient } from '../../modules/queryClient';
+import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createContestsRoutes = appRoute => {
@@ -90,6 +96,15 @@ export const createContestsRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./contests/single/problems/single/ContestProblemPage/ContestProblemPage'))
     ),
+    loader: async ({ params: { contestSlug, problemAlias } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      const language = getWebPrefs().statementLanguage;
+      const worksheetQueryOptions =
+        contest.style === ContestStyle.Bundle
+          ? contestBundleProblemWorksheetQueryOptions
+          : contestProgrammingProblemWorksheetQueryOptions;
+      queryClient.prefetchQuery(worksheetQueryOptions(contest.jid, problemAlias, { language }));
+    },
   });
 
   const contestEditorialRoute = createRoute({
