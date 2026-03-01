@@ -14,7 +14,7 @@ const PAGE_SIZE = 50;
 
 export default function RatingsPage() {
   const location = useLocation();
-  const page = location.search.page;
+  const page = +(location.search.page || 1);
 
   const { data: profiles } = useQuery(topRatedProfilesQueryOptions({ page, pageSize: PAGE_SIZE }));
 
