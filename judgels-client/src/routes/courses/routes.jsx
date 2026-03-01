@@ -1,7 +1,14 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../modules/queries/course';
+import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
+import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
+import {
+  courseBySlugQueryOptions,
+  courseChapterQueryOptions,
+  courseChaptersQueryOptions,
+  coursesQueryOptions,
+} from '../../modules/queries/course';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -17,6 +24,9 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => coursesRoute,
     path: '/',
     component: lazyRouteComponent(retryImport(() => import('./CoursesIndexPage'))),
+    loader: () => {
+      queryClient.prefetchQuery(coursesQueryOptions());
+    },
   });
 
   const courseRoute = createRoute({
@@ -32,6 +42,10 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseRoute,
     path: '/',
     component: lazyRouteComponent(retryImport(() => import('./courses/single/CourseOverview/CourseOverview'))),
+    loader: async ({ params: { courseSlug } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      queryClient.prefetchQuery(courseChaptersQueryOptions(course.jid));
+    },
   });
 
   const courseChapterRoute = createRoute({
@@ -52,6 +66,12 @@ export const createCoursesRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./courses/single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage'))
     ),
+    loader: async ({ params: { courseSlug, chapterAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+      queryClient.prefetchQuery(chapterLessonsQueryOptions(chapter.jid));
+      queryClient.prefetchQuery(chapterProblemsQueryOptions(chapter.jid));
+    },
   });
 
   const courseChapterLessonsRoute = createRoute({

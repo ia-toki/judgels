@@ -1,7 +1,15 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { problemSetBySlugQueryOptions, problemSetProblemQueryOptions } from '../../modules/queries/problemSet';
+import { archivesQueryOptions } from '../../modules/queries/archive';
+import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/problem';
+import {
+  problemSetBySlugQueryOptions,
+  problemSetProblemQueryOptions,
+  problemSetProblemReportQueryOptions,
+  problemSetProblemsQueryOptions,
+  problemSetsQueryOptions,
+} from '../../modules/queries/problemSet';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -23,12 +31,22 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemsIndexRoute,
     path: '/',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
+    loader: ({ search = {} }) => {
+      queryClient.prefetchQuery(problemsQueryOptions({ tags: search.tags, page: search.page }));
+      queryClient.prefetchQuery(problemTagsQueryOptions());
+    },
   });
 
   const problemSetsRoute = createRoute({
     getParentRoute: () => problemsIndexRoute,
     path: 'problemsets',
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
+    loader: ({ search = {} }) => {
+      queryClient.prefetchQuery(
+        problemSetsQueryOptions({ archiveSlug: search.archive, name: search.name, page: search.page })
+      );
+      queryClient.prefetchQuery(archivesQueryOptions());
+    },
   });
 
   const problemSetRoute = createRoute({
@@ -46,6 +64,10 @@ export const createProblemsRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problemsets/single/problems/ProblemSetProblemsPage/ProblemSetProblemsPage'))
     ),
+    loader: async ({ params: { problemSetSlug } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      queryClient.prefetchQuery(problemSetProblemsQueryOptions(problemSet.jid));
+    },
   });
 
   const problemSetProblemRoute = createRoute({
@@ -57,6 +79,7 @@ export const createProblemsRoutes = appRoute => {
     loader: async ({ params: { problemSetSlug, problemAlias } }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
+      queryClient.prefetchQuery(problemSetProblemReportQueryOptions(problemSet.jid, problemAlias));
     },
   });
 
