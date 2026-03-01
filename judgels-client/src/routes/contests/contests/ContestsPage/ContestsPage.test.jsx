@@ -12,7 +12,6 @@ describe('ContestsPage', () => {
   const renderComponent = () => {
     nockUriel()
       .get('/contests')
-      .query({ page: 1 })
       .reply(200, {
         data: {
           page: contests,

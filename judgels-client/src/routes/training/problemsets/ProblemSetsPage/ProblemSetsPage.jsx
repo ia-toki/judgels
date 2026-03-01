@@ -15,7 +15,7 @@ const PAGE_SIZE = 20;
 
 export default function ProblemSetsPage() {
   const location = useLocation();
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const [editedProblemSet, setEditedProblemSet] = useState(undefined);
   const [editDialogType, setEditDialogType] = useState(undefined);

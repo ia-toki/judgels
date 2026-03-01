@@ -44,7 +44,7 @@ function ContestScoreboardPage() {
 
   const frozen = !!location.search.frozen;
   const showClosedProblems = !!location.search.showClosedProblems;
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(
     contestScoreboardQueryOptions(contest.jid, { frozen, showClosedProblems, page })

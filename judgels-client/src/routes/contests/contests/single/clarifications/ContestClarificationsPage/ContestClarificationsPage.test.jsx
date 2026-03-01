@@ -24,7 +24,7 @@ describe('ContestClarificationsPage', () => {
 
     nockUriel()
       .get('/contests/contestJid/clarifications')
-      .query({ language: 'en', page: 1 })
+      .query({ language: 'en' })
       .reply(200, {
         data: {
           page: clarifications,

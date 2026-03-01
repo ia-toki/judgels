@@ -14,7 +14,7 @@ const PAGE_SIZE = 50;
 
 export default function ScoresPage() {
   const location = useLocation();
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response } = useQuery(topUserStatsQueryOptions({ page, pageSize: PAGE_SIZE }));
 

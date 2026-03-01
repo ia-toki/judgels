@@ -20,7 +20,7 @@ function ContestLogsPage() {
 
   const username = location.search.username;
   const problemAlias = location.search.problemAlias;
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(
     contestLogsQueryOptions(contest.jid, { username, problemAlias, page })

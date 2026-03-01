@@ -15,7 +15,7 @@ export default function ProblemSetsPage() {
 
   const archiveSlug = location.search.archive;
   const name = location.search.name;
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response, isFetching } = useQuery(problemSetsQueryOptions({ archiveSlug, name, page }));
 

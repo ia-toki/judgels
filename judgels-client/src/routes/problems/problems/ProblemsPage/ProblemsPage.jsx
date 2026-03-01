@@ -23,7 +23,7 @@ export default function ProblemsPage() {
   const location = useLocation();
 
   const tags = parseTags(location.search.tags);
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response } = useQuery(problemsQueryOptions({ tags, page }));
 

@@ -24,7 +24,7 @@ describe('ContestSubmissionsPage', () => {
 
     nockUriel()
       .get('/contests/submissions/programming')
-      .query({ contestJid: 'contestJid', page: 1 })
+      .query({ contestJid: 'contestJid' })
       .reply(200, {
         data: { page: submissions, totalCount: submissions.length },
         config: {

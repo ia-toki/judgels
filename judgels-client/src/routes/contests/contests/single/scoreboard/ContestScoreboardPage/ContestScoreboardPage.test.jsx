@@ -24,7 +24,7 @@ describe('ContestScoreboardPage', () => {
 
     nockUriel()
       .get('/contests/contestJid/scoreboard')
-      .query({ frozen: false, showClosedProblems: false, page: 1 })
+      .query({ frozen: false, showClosedProblems: false })
       .reply(200, scoreboard);
 
     await act(async () => {

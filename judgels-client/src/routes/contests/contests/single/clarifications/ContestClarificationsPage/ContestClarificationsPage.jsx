@@ -23,7 +23,7 @@ function ContestClarificationsPage() {
   const { statementLanguage } = useWebPrefs();
 
   const status = location.search.status;
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(
     contestClarificationsQueryOptions(contest.jid, { page, status, language: statementLanguage })

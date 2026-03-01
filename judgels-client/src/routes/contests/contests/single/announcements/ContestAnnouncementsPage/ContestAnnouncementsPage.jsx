@@ -17,7 +17,7 @@ const PAGE_SIZE = 20;
 export default function ContestAnnouncementsPage() {
   const { contestSlug } = useParams({ strict: false });
   const location = useLocation();
-  const page = +(location.search.page || 1);
+  const page = location.search.page;
 
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { data: response } = useQuery(contestAnnouncementsQueryOptions(contest.jid, { page }));
