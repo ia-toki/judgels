@@ -4,7 +4,13 @@ import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
-import { userJidByUsernameQueryOptions } from '../../modules/queries/profile';
+import {
+  basicProfileQueryOptions,
+  profileContestHistoryQueryOptions,
+  profileSubmissionsQueryOptions,
+  userJidByUsernameQueryOptions,
+} from '../../modules/queries/profile';
+import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 import HomePage from '../home/HomePage/HomePage';
@@ -161,6 +167,11 @@ export const createJophielRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./profiles/single/summary/ProfileSummaryPage/ProfileSummaryPage'))
     ),
+    loader: async ({ params: { username } }) => {
+      const userJid = await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
+      queryClient.prefetchQuery(avatarUrlQueryOptions(userJid));
+      queryClient.prefetchQuery(basicProfileQueryOptions(userJid));
+    },
   });
 
   const profileContestHistoryRoute = createRoute({
@@ -169,6 +180,9 @@ export const createJophielRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./profiles/single/contestHistory/ContestHistoryPage/ContestHistoryPage'))
     ),
+    loader: ({ params: { username } }) => {
+      queryClient.prefetchQuery(profileContestHistoryQueryOptions(username));
+    },
   });
 
   const profileSubmissionHistoryRoute = isTLX()
@@ -178,6 +192,11 @@ export const createJophielRoutes = appRoute => {
         component: lazyRouteComponent(
           retryImport(() => import('./profiles/single/submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage'))
         ),
+        loader: ({ params: { username }, search = {} }) => {
+          queryClient.prefetchQuery(
+            profileSubmissionsQueryOptions(username, { beforeId: search.before, afterId: search.after })
+          );
+        },
       })
     : null;
 
