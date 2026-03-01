@@ -18,7 +18,10 @@ import {
   contestProgrammingProblemWorksheetQueryOptions,
 } from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
-import { contestProgrammingSubmissionsQueryOptions } from '../../modules/queries/contestSubmissionProgramming';
+import {
+  contestProgrammingSubmissionsQueryOptions,
+  contestSubmissionWithSourceQueryOptions,
+} from '../../modules/queries/contestSubmissionProgramming';
 import { contestSupervisorsQueryOptions } from '../../modules/queries/contestSupervisor';
 import { contestWebConfigQueryOptions } from '../../modules/queries/contestWeb';
 import { queryClient } from '../../modules/queryClient';
@@ -186,6 +189,11 @@ export const createContestsRoutes = appRoute => {
         () => import('./contests/single/submissions/Programming/single/ContestSubmissionPage/ContestSubmissionPage')
       )
     ),
+    loader: async ({ params: { contestSlug, submissionId } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(contestSubmissionWithSourceQueryOptions(contest.jid, +submissionId, { language }));
+    },
   });
 
   const contestSubmissionUserRoute = createRoute({

@@ -3,12 +3,14 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { retryImport } from '../../lazy';
 import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
+import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionBundle';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
   coursesQueryOptions,
 } from '../../modules/queries/course';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
@@ -106,6 +108,7 @@ export const createCoursesRoutes = appRoute => {
       const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
       const language = getWebPrefs().statementLanguage;
       queryClient.prefetchQuery(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language }));
+      queryClient.prefetchQuery(chapterBundleLatestSubmissionsQueryOptions(chapter.jid, problemAlias));
     },
   });
 
@@ -159,6 +162,10 @@ export const createCoursesRoutes = appRoute => {
           )
       )
     ),
+    loader: ({ params: { submissionId } }) => {
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+    },
   });
 
   return coursesRoute.addChildren([
