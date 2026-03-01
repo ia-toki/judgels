@@ -2,7 +2,7 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
-import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
+import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -10,6 +10,7 @@ import {
   coursesQueryOptions,
 } from '../../modules/queries/course';
 import { queryClient } from '../../modules/queryClient';
+import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createCoursesRoutes = appRoute => {
@@ -100,6 +101,12 @@ export const createCoursesRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./courses/single/chapters/single/problems/single/ChapterProblemLayout'))
     ),
+    loader: async ({ params: { courseSlug, chapterAlias, problemAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language }));
+    },
   });
 
   const courseChapterProblemWorkspaceRoute = createRoute({
