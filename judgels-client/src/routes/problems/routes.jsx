@@ -11,6 +11,7 @@ import {
   problemSetProblemsQueryOptions,
   problemSetsQueryOptions,
 } from '../../modules/queries/problemSet';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
@@ -136,6 +137,10 @@ export const createProblemsRoutes = appRoute => {
           import('./problemsets/single/problems/single/submissions/single/ProblemSubmissionPage/ProblemSubmissionPage')
       )
     ),
+    loader: ({ params: { submissionId } }) => {
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+    },
   });
 
   const problemSetProblemResultsRoute = createRoute({
