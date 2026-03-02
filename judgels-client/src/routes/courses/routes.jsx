@@ -1,9 +1,11 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
+import { ProblemType } from '../../modules/api/sandalphon/problem';
 import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionBundle';
+import { chapterProgrammingSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionProgramming';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -12,6 +14,7 @@ import {
 } from '../../modules/queries/course';
 import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
+import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -107,8 +110,13 @@ export const createCoursesRoutes = appRoute => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language }));
-      queryClient.prefetchQuery(chapterBundleLatestSubmissionsQueryOptions(chapter.jid, problemAlias));
+      queryClient
+        .fetchQuery(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language }))
+        .then(worksheet => {
+          if (worksheet?.problem?.type === ProblemType.Bundle) {
+            queryClient.prefetchQuery(chapterBundleLatestSubmissionsQueryOptions(chapter.jid, problemAlias));
+          }
+        });
     },
   });
 
@@ -136,6 +144,12 @@ export const createCoursesRoutes = appRoute => {
           )
       )
     ),
+    loader: async ({ params: { courseSlug, chapterAlias, problemAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+      const username = getUser()?.username;
+      queryClient.prefetchQuery(chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias, username }));
+    },
   });
 
   const courseChapterProblemSubmissionsAllRoute = createRoute({
@@ -149,6 +163,11 @@ export const createCoursesRoutes = appRoute => {
           )
       )
     ),
+    loader: async ({ params: { courseSlug, chapterAlias, problemAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+      queryClient.prefetchQuery(chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias }));
+    },
   });
 
   const courseChapterProblemSubmissionRoute = createRoute({
