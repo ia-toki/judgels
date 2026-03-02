@@ -1,8 +1,9 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { submissionsQueryOptions } from '../../modules/queries/submissionProgramming';
+import { submissionWithSourceQueryOptions, submissionsQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
+import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createSubmissionsRoutes = appRoute => {
@@ -32,6 +33,10 @@ export const createSubmissionsRoutes = appRoute => {
     getParentRoute: () => submissionsRoute,
     path: '$submissionId',
     component: lazyRouteComponent(retryImport(() => import('./single/SubmissionPage/SubmissionPage'))),
+    loader: ({ params: { submissionId } }) => {
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+    },
   });
 
   return submissionsRoute.addChildren([submissionsIndexRoute, submissionsMineRoute, singleSubmissionRoute]);
