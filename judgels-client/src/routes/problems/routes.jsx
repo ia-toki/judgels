@@ -11,8 +11,10 @@ import {
   problemSetProblemsQueryOptions,
   problemSetsQueryOptions,
 } from '../../modules/queries/problemSet';
+import { problemSetProgrammingSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmissionProgramming';
 import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
+import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -82,7 +84,6 @@ export const createProblemsRoutes = appRoute => {
     loader: async ({ params: { problemSetSlug, problemAlias } }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
-      queryClient.prefetchQuery(problemSetProblemReportQueryOptions(problemSet.jid, problemAlias));
     },
   });
 
@@ -116,6 +117,11 @@ export const createProblemsRoutes = appRoute => {
         () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
       )
     ),
+    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
+      queryClient.prefetchQuery(problemSetProgrammingSubmissionsQueryOptions(problem.problemJid));
+    },
   });
 
   const problemSetProblemSubmissionsMineRoute = createRoute({
@@ -126,6 +132,12 @@ export const createProblemsRoutes = appRoute => {
         () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
       )
     ),
+    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
+      const username = getUser()?.username;
+      queryClient.prefetchQuery(problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username }));
+    },
   });
 
   const problemSetProblemSubmissionRoute = createRoute({
@@ -161,6 +173,10 @@ export const createProblemsRoutes = appRoute => {
           )
       )
     ),
+    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      queryClient.prefetchQuery(problemSetProblemReportQueryOptions(problemSet.jid, problemAlias));
+    },
   });
 
   const problemSetProblemResultsAllRoute = createRoute({
