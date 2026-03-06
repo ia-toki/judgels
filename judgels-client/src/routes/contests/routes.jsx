@@ -2,13 +2,16 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { ContestStyle } from '../../modules/api/uriel/contest';
+import { ContestRole } from '../../modules/api/uriel/contestWeb';
 import {
   contestBySlugQueryOptions,
   contestDescriptionQueryOptions,
   contestsQueryOptions,
 } from '../../modules/queries/contest';
 import { contestAnnouncementsQueryOptions } from '../../modules/queries/contestAnnouncement';
+import { contestClarificationsQueryOptions } from '../../modules/queries/contestClarification';
 import { contestContestantsQueryOptions } from '../../modules/queries/contestContestant';
+import { contestEditorialQueryOptions } from '../../modules/queries/contestEditorial';
 import { contestFilesQueryOptions } from '../../modules/queries/contestFile';
 import { contestLogsQueryOptions } from '../../modules/queries/contestLog';
 import { contestManagersQueryOptions } from '../../modules/queries/contestManager';
@@ -18,6 +21,11 @@ import {
   contestProgrammingProblemWorksheetQueryOptions,
 } from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
+import {
+  contestBundleLatestSubmissionsQueryOptions,
+  contestBundleSubmissionSummaryQueryOptions,
+  contestBundleSubmissionsQueryOptions,
+} from '../../modules/queries/contestSubmissionBundle';
 import {
   contestProgrammingSubmissionsQueryOptions,
   contestSubmissionWithSourceQueryOptions,
@@ -102,11 +110,21 @@ export const createContestsRoutes = appRoute => {
     loader: async ({ params: { contestSlug, problemAlias } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       const language = getWebPrefs().statementLanguage;
-      const worksheetQueryOptions =
-        contest.style === ContestStyle.Bundle
-          ? contestBundleProblemWorksheetQueryOptions
-          : contestProgrammingProblemWorksheetQueryOptions;
-      queryClient.prefetchQuery(worksheetQueryOptions(contest.jid, problemAlias, { language }));
+      if (contest.style === ContestStyle.Bundle) {
+        queryClient
+          .fetchQuery(contestBundleProblemWorksheetQueryOptions(contest.jid, problemAlias, { language }))
+          .then(worksheet => {
+            if (worksheet?.problem?.alias) {
+              queryClient.prefetchQuery(
+                contestBundleLatestSubmissionsQueryOptions(contest.jid, worksheet.problem.alias)
+              );
+            }
+          });
+      } else {
+        queryClient.prefetchQuery(
+          contestProgrammingProblemWorksheetQueryOptions(contest.jid, problemAlias, { language })
+        );
+      }
     },
   });
 
@@ -117,6 +135,11 @@ export const createContestsRoutes = appRoute => {
       retryImport(() => import('./contests/single/editorial/ContestEditorialPage/ContestEditorialPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Editorial') }] }),
+    loader: async ({ params: { contestSlug } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      const language = getWebPrefs().editorialLanguage;
+      queryClient.prefetchQuery(contestEditorialQueryOptions(contest.jid, { language }));
+    },
   });
 
   const contestContestantsRoute = createRoute({
@@ -171,13 +194,29 @@ export const createContestsRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./contests/single/submissions/ContestSubmissionsPage'))),
     loader: async ({ params: { contestSlug }, search = {} }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
-      queryClient.prefetchQuery(
-        contestProgrammingSubmissionsQueryOptions(contest.jid, {
-          username: search.username,
-          problemAlias: search.problemAlias,
-          page: search.page,
-        })
-      );
+      if (contest.style === ContestStyle.Bundle) {
+        const webConfig = await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
+        if (webConfig.role === ContestRole.Contestant) {
+          const language = getWebPrefs().statementLanguage;
+          queryClient.prefetchQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, undefined, { language }));
+        } else {
+          queryClient.prefetchQuery(
+            contestBundleSubmissionsQueryOptions(contest.jid, {
+              username: search.username,
+              problemAlias: search.problemAlias,
+              page: search.page,
+            })
+          );
+        }
+      } else {
+        queryClient.prefetchQuery(
+          contestProgrammingSubmissionsQueryOptions(contest.jid, {
+            username: search.username,
+            problemAlias: search.problemAlias,
+            page: search.page,
+          })
+        );
+      }
     },
   });
 
@@ -204,6 +243,11 @@ export const createContestsRoutes = appRoute => {
         () => import('./contests/single/submissions/Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage')
       )
     ),
+    loader: async ({ params: { contestSlug, username } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, username, { language }));
+    },
   });
 
   const contestClarificationsRoute = createRoute({
@@ -213,6 +257,13 @@ export const createContestsRoutes = appRoute => {
       retryImport(() => import('./contests/single/clarifications/ContestClarificationsPage/ContestClarificationsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Clarifications') }] }),
+    loader: async ({ params: { contestSlug }, search = {} }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(
+        contestClarificationsQueryOptions(contest.jid, { page: search.page, status: search.status, language })
+      );
+    },
   });
 
   const contestScoreboardRoute = createRoute({
