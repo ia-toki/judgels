@@ -2,7 +2,7 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/sandalphon/problem';
-import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
+import { chapterLessonStatementQueryOptions, chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionBundle';
 import { chapterProgrammingSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionProgramming';
@@ -40,7 +40,8 @@ export const createCoursesRoutes = appRoute => {
     path: '$courseSlug',
     component: lazyRouteComponent(retryImport(() => import('./courses/single/SingleCourseLayout'))),
     loader: async ({ params: { courseSlug } }) => {
-      await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      queryClient.prefetchQuery(courseChaptersQueryOptions(course.jid));
     },
   });
 
@@ -92,6 +93,12 @@ export const createCoursesRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./courses/single/chapters/single/lessons/single/ChapterLessonPage/ChapterLessonPage'))
     ),
+    loader: async ({ params: { courseSlug, chapterAlias, lessonAlias } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
+      const language = getWebPrefs().statementLanguage;
+      queryClient.prefetchQuery(chapterLessonStatementQueryOptions(chapter.jid, lessonAlias, { language }));
+    },
   });
 
   const courseChapterProblemsRoute = createRoute({

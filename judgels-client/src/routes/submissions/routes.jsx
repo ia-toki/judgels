@@ -3,6 +3,7 @@ import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 import { retryImport } from '../../lazy';
 import { submissionWithSourceQueryOptions, submissionsQueryOptions } from '../../modules/queries/submissionProgramming';
 import { queryClient } from '../../modules/queryClient';
+import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -27,6 +28,10 @@ export const createSubmissionsRoutes = appRoute => {
     getParentRoute: () => submissionsRoute,
     path: 'mine',
     component: lazyRouteComponent(retryImport(() => import('./SubmissionsPage/SubmissionsPage'))),
+    loader: ({ search = {} }) => {
+      const username = getUser()?.username;
+      queryClient.prefetchQuery(submissionsQueryOptions({ username, beforeId: search.before, afterId: search.after }));
+    },
   });
 
   const singleSubmissionRoute = createRoute({
