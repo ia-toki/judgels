@@ -1,33 +1,26 @@
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { ButtonGroup } from '@blueprintjs/core';
+import { useLocation } from '@tanstack/react-router';
+
+import { ButtonLink } from '../ButtonLink/ButtonLink';
 
 import './ItemSubmissionUserFilter.scss';
 
 export default function ItemSubmissionUserFilter() {
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const isAll = () => {
-    return (location.pathname + '/').includes('/all/');
-  };
+  const isAll = (location.pathname + '/').includes('/all/');
 
-  const clickMine = () => {
-    if (isAll()) {
-      const idx = location.pathname.lastIndexOf('/all');
-      navigate({ to: location.pathname.substring(0, idx) });
-    }
-  };
-
-  const clickAll = () => {
-    if (!isAll()) {
-      navigate({ to: (location.pathname + '/all').replace('//', '/') });
-    }
-  };
+  const basePath = isAll ? location.pathname.substring(0, location.pathname.lastIndexOf('/all')) : location.pathname;
+  const allPath = (basePath + '/all').replace('//', '/');
 
   return (
     <ButtonGroup className="submission-user-filter" fill>
-      <Button active={!isAll()} text="My result" onClick={clickMine} />
-      <Button active={isAll()} text="All submissions" onClick={clickAll} />
+      <ButtonLink to={basePath} active={!isAll}>
+        My result
+      </ButtonLink>
+      <ButtonLink to={allPath} active={isAll}>
+        All submissions
+      </ButtonLink>
     </ButtonGroup>
   );
 }
