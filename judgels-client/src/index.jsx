@@ -21,7 +21,19 @@ const persister = createAsyncStoragePersister({
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: '3' }}>
+  <PersistQueryClientProvider
+    client={queryClient}
+    persistOptions={{
+      persister,
+      buster: '3',
+      dehydrateOptions: {
+        shouldDehydrateQuery: query => {
+          if (query.state.status !== 'success') return false;
+          return !query.queryKey.some(k => k === 'submissions');
+        },
+      },
+    }}
+  >
     <WebPrefsProvider>
       <RouterProvider router={router} />
     </WebPrefsProvider>
