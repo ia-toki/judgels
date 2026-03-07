@@ -37,8 +37,8 @@ export default function ContestProblemPage() {
     }
   }, [response?.problem?.alias]);
 
-  const onCreateSubmission = async (itemJid, answer) => {
-    await createSubmissionMutation.mutateAsync({
+  const onCreateSubmission = (itemJid, answer) => {
+    createSubmissionMutation.mutate({
       problemJid: response.problem.problemJid,
       itemJid,
       answer,

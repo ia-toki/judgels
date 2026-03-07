@@ -60,8 +60,8 @@ export function ContestCreateDialog() {
     </>
   );
 
-  const createContest = async data => {
-    await createContestMutation.mutateAsync(data, {
+  const createContest = data => {
+    createContestMutation.mutate(data, {
       onSuccess: (_data, { slug }) => {
         navigate({ to: `/contests/${slug}`, state: { isEditingContest: true } });
         toastActions.showSuccessToast('Contest created.');

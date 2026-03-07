@@ -150,7 +150,7 @@ export default function ContestEditConfigsTab() {
     return <ContestEditConfigsTable config={config} />;
   };
 
-  const upsertConfig = async data => {
+  const upsertConfig = data => {
     const {
       trocStyle,
       icpcStyle,
@@ -259,7 +259,7 @@ export default function ContestEditConfigsTab() {
       newConfig = { ...newConfig, virtual: { virtualDuration: parseDuration(data.virtualDuration) } };
     }
 
-    await upsertConfigMutation.mutateAsync(newConfig, {
+    upsertConfigMutation.mutate(newConfig, {
       onSuccess: () => toastActions.showSuccessToast('Configs updated.'),
     });
     setIsEditing(false);

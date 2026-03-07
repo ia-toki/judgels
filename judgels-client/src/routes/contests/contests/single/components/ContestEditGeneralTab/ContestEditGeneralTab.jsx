@@ -53,7 +53,7 @@ export default function ContestEditGeneralTab() {
     return <ContestEditGeneralTable contest={contest} />;
   };
 
-  const updateContest = async data => {
+  const updateContest = data => {
     const updateData = {
       slug: data.slug,
       name: data.name,
@@ -61,7 +61,7 @@ export default function ContestEditGeneralTab() {
       beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
-    await updateContestMutation.mutateAsync(updateData, {
+    updateContestMutation.mutate(updateData, {
       onSuccess: () => toastActions.showSuccessToast('Contest updated.'),
     });
     setIsEditing(false);

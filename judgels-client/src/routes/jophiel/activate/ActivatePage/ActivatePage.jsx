@@ -12,8 +12,8 @@ export default function ActivatePage() {
   const activateMutation = useMutation(activateUserMutationOptions);
 
   useEffect(() => {
-    const activate = async () => {
-      await activateMutation.mutateAsync(emailCode);
+    const activate = () => {
+      activateMutation.mutate(emailCode);
       navigate({ to: '/registered', search: { source: 'internal' } });
     };
     activate();

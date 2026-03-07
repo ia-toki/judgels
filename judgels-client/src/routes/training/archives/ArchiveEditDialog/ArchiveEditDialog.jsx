@@ -21,8 +21,8 @@ export function ArchiveEditDialog({ archive, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateArchive = async data => {
-    await updateArchiveMutation.mutateAsync(data, {
+  const updateArchive = data => {
+    updateArchiveMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Archive updated.');
       },

@@ -102,15 +102,15 @@ function ContestSubmissionsPage() {
     );
   };
 
-  const onRegrade = async submissionJid => {
-    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+  const onRegrade = submissionJid => {
+    regradeSubmissionMutation.mutate(submissionJid, {
       onSuccess: () => toastActions.showSuccessToast('Regrade in progress.'),
     });
   };
 
-  const onRegradeAll = async () => {
+  const onRegradeAll = () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      await regradeSubmissionsMutation.mutateAsync(
+      regradeSubmissionsMutation.mutate(
         { username, problemAlias },
         {
           onSuccess: () => toastActions.showSuccessToast('Regrade in progress.'),
@@ -119,7 +119,7 @@ function ContestSubmissionsPage() {
     }
   };
 
-  const onFilter = async filter => {
+  const onFilter = filter => {
     navigate({ search: filter });
   };
 

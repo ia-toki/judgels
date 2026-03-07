@@ -29,8 +29,8 @@ export function ArchiveCreateDialog() {
     </>
   );
 
-  const createArchive = async data => {
-    await createArchiveMutation.mutateAsync(data, {
+  const createArchive = data => {
+    createArchiveMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Archive created.');
       },

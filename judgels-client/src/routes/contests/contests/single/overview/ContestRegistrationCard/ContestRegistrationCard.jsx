@@ -132,14 +132,14 @@ export default function ContestRegistrationCard() {
     return <ContestRegistrantsDialog onClose={() => setIsRegistrantsDialogOpen(false)} />;
   };
 
-  const register = async () => {
-    await registerMutation.mutateAsync(undefined, {
+  const register = () => {
+    registerMutation.mutate(undefined, {
       onSuccess: () => toastActions.showSuccessToast('Successfully registered to the contest.'),
     });
   };
 
-  const unregister = async () => {
-    await unregisterMutation.mutateAsync(undefined, {
+  const unregister = () => {
+    unregisterMutation.mutate(undefined, {
       onSuccess: () => toastActions.showSuccessToast('Successfully unregistered from the contest.'),
     });
   };

@@ -168,7 +168,7 @@ export default function ContestStateWidget() {
 
   const startVirtualContest = async () => {
     setState(prevState => ({ ...prevState, isVirtualContestAlertOpen: false }));
-    await startVirtualMutation.mutateAsync();
+    startVirtualMutation.mutate();
     await queryClient.invalidateQueries(contestWebConfigQueryOptions(contest.jid));
   };
 

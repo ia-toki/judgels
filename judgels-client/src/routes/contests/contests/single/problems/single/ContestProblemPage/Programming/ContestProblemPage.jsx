@@ -36,9 +36,9 @@ export default function ContestProblemPage() {
     }
   }, [response?.problem?.alias]);
 
-  const createSubmission = async data => {
+  const createSubmission = data => {
     setGradingLanguage(data.gradingLanguage);
-    await createSubmissionMutation.mutateAsync(data, {
+    createSubmissionMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Solution submitted.');
         window.scrollTo(0, 0);

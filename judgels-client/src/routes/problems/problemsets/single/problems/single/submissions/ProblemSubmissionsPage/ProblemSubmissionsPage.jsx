@@ -46,17 +46,17 @@ export default function ProblemSubmissionsPage() {
     regradeProblemSetProgrammingSubmissionsMutationOptions(problem.problemJid)
   );
 
-  const onRegrade = async submissionJid => {
-    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+  const onRegrade = submissionJid => {
+    regradeSubmissionMutation.mutate(submissionJid, {
       onSuccess: () => {
         toastActions.showSuccessToast('Regrade in progress.');
       },
     });
   };
 
-  const onRegradeAll = async () => {
+  const onRegradeAll = () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await regradeSubmissionsMutation.mutateAsync(undefined, {
+      regradeSubmissionsMutation.mutate(undefined, {
         onSuccess: () => {
           toastActions.showSuccessToast('Regrade in progress.');
         },

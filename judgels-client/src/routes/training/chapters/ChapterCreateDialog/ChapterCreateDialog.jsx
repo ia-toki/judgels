@@ -29,8 +29,8 @@ export function ChapterCreateDialog() {
     </>
   );
 
-  const createChapter = async data => {
-    await createChapterMutation.mutateAsync(data, {
+  const createChapter = data => {
+    createChapterMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Chapter created.');
       },

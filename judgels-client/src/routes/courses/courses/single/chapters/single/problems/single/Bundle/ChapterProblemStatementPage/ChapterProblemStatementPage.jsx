@@ -44,9 +44,9 @@ export default function ChapterProblemStatementPage(props) {
     createChapterBundleItemSubmissionMutationOptions(chapter.jid, props.worksheet.problem.alias)
   );
 
-  const createSubmission = async (itemJid, answer) => {
+  const createSubmission = (itemJid, answer) => {
     const { problem } = props.worksheet;
-    await createItemSubmissionMutation.mutateAsync({ problemJid: problem.problemJid, itemJid, answer });
+    createItemSubmissionMutation.mutate({ problemJid: problem.problemJid, itemJid, answer });
   };
 
   const renderStatementLanguageWidget = () => {

@@ -92,9 +92,9 @@ function ContestSubmissionsPage() {
     );
   };
 
-  const onRegradeAll = async () => {
+  const onRegradeAll = () => {
     if (reallyConfirm('Regrade all submissions in all pages for the current filter?')) {
-      await regradeSubmissionsMutation.mutateAsync(
+      regradeSubmissionsMutation.mutate(
         { username, problemAlias },
         {
           onSuccess: () => toastActions.showSuccessToast('Regraded.'),
@@ -142,7 +142,7 @@ function ContestSubmissionsPage() {
     );
   };
 
-  const onFilter = async filter => {
+  const onFilter = filter => {
     navigate({ search: filter });
   };
 

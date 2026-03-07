@@ -60,17 +60,17 @@ export default function ChapterProblemSubmissionsPage() {
     }
   };
 
-  const onRegradeSubmission = async submissionJid => {
-    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+  const onRegradeSubmission = submissionJid => {
+    regradeSubmissionMutation.mutate(submissionJid, {
       onSuccess: () => {
         toastActions.showSuccessToast('Regrade in progress.');
       },
     });
   };
 
-  const onRegradeSubmissions = async () => {
+  const onRegradeSubmissions = () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await regradeSubmissionsMutation.mutateAsync(
+      regradeSubmissionsMutation.mutate(
         { problemAlias },
         {
           onSuccess: () => {

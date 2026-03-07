@@ -75,8 +75,8 @@ export default function ContestEditDescriptionTab() {
     );
   };
 
-  const updateContestDescription = async data => {
-    await updateDescriptionMutation.mutateAsync(data.description, {
+  const updateContestDescription = data => {
+    updateDescriptionMutation.mutate(data.description, {
       onSuccess: () => toastActions.showSuccessToast('Description updated.'),
     });
     setIsEditing(false);

@@ -9,8 +9,8 @@ import * as toastActions from '../../../../../../modules/toast/toastActions';
 export function ContestFileUploadCard({ contest }) {
   const uploadFileMutation = useMutation(uploadContestFileMutationOptions(contest.jid));
 
-  const uploadFile = async data => {
-    await uploadFileMutation.mutateAsync(data.file, {
+  const uploadFile = data => {
+    uploadFileMutation.mutate(data.file, {
       onSuccess: () => {
         toastActions.showSuccessToast('File uploaded.');
       },

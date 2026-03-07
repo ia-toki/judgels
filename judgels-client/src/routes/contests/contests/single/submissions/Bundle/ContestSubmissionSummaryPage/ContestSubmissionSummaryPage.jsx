@@ -39,9 +39,9 @@ export default function ContestSubmissionSummaryPage() {
     onRegrade: () => regrade(problemJid),
   }));
 
-  const regrade = async problemJid => {
+  const regrade = problemJid => {
     const userJid = config.userJids[0];
-    await regradeSubmissionsMutation.mutateAsync(
+    regradeSubmissionsMutation.mutate(
       { username: userJid, problemAlias: problemJid },
       {
         onSuccess: () => toastActions.showSuccessToast('Regraded.'),

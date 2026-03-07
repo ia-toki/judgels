@@ -26,8 +26,8 @@ export default function ChangeAvatarPage() {
   const deleteAvatarMutation = useMutation(deleteAvatarMutationOptions(userJid));
   const updateAvatarMutation = useMutation(updateAvatarMutationOptions(userJid));
 
-  const deleteAvatar = async () => {
-    await deleteAvatarMutation.mutateAsync(undefined, {
+  const deleteAvatar = () => {
+    deleteAvatarMutation.mutate(undefined, {
       onSuccess: () => {
         toastActions.showSuccessToast('Avatar removed.');
       },
@@ -35,8 +35,8 @@ export default function ChangeAvatarPage() {
     window.location.reload();
   };
 
-  const uploadAvatar = async data => {
-    await updateAvatarMutation.mutateAsync(data.file, {
+  const uploadAvatar = data => {
+    updateAvatarMutation.mutate(data.file, {
       onSuccess: () => {
         toastActions.showSuccessToast('Avatar updated.');
       },

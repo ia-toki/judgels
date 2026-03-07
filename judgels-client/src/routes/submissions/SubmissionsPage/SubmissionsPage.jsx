@@ -28,8 +28,8 @@ export default function SubmissionsPage() {
 
   const regradeMutation = useMutation(regradeSubmissionMutationOptions);
 
-  const onRegrade = async submissionJid => {
-    await regradeMutation.mutateAsync(submissionJid, {
+  const onRegrade = submissionJid => {
+    regradeMutation.mutate(submissionJid, {
       onSuccess: () => {
         toastActions.showSuccessToast('Submission regraded.');
       },
