@@ -131,10 +131,15 @@ export const createProblemsRoutes = appRoute => {
         () => import('./problemsets/single/problems/single/submissions/ProblemSubmissionsPage/ProblemSubmissionsPage')
       )
     ),
-    loader: async ({ params: { problemSetSlug, problemAlias } }) => {
+    loader: async ({ params: { problemSetSlug, problemAlias }, search = {} }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
-      queryClient.prefetchQuery(problemSetProgrammingSubmissionsQueryOptions(problem.problemJid));
+      queryClient.prefetchQuery(
+        problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, {
+          beforeId: search.before,
+          afterId: search.after,
+        })
+      );
     },
   });
 
