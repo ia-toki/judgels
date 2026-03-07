@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { problemSetBySlugQueryOptions } from '../../../../modules/queries/problemSet';
 import { createDocumentTitle } from '../../../../utils/title';
 
@@ -51,7 +50,6 @@ export default function SingleProblemSetLayout() {
 
   return (
     <FullPageLayout>
-      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>

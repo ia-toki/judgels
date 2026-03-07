@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import { isTLX } from '../../../conf';
 import { userJidByUsernameQueryOptions } from '../../../modules/queries/profile';
 import { createDocumentTitle } from '../../../utils/title';
@@ -49,7 +48,6 @@ export default function ProfilesLayout() {
 
   return (
     <FullPageLayout>
-      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
