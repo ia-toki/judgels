@@ -53,11 +53,11 @@ export default function ProblemSubmissionSummaryPage() {
         }))
       : undefined;
 
-  const regrade = async problemJid => {
+  const regrade = problemJid => {
     const { userJids } = response.config;
     const userJid = userJids[0];
 
-    await regradeSubmissionsMutation.mutateAsync(
+    regradeSubmissionsMutation.mutate(
       { userJid, problemJid },
       {
         onSuccess: () => {

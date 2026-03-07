@@ -33,9 +33,9 @@ export default function ContestContestantsPage() {
 
   const resetVirtualContestMutation = useMutation(resetVirtualContestMutationOptions(contest.jid));
 
-  const onResetVirtualContest = async () => {
+  const onResetVirtualContest = () => {
     if (reallyConfirm('Are you sure to reset all contestant virtual start times?')) {
-      await resetVirtualContestMutation.mutateAsync(undefined, {
+      resetVirtualContestMutation.mutate(undefined, {
         onSuccess: () => {
           toastActions.showSuccessToast('All contestant virtual start time has been reset.');
         },

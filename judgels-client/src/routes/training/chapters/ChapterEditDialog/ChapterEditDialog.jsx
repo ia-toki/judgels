@@ -21,8 +21,8 @@ export function ChapterEditDialog({ chapter, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateChapter = async data => {
-    await updateChapterMutation.mutateAsync(data, {
+  const updateChapter = data => {
+    updateChapterMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Chapter updated.');
       },

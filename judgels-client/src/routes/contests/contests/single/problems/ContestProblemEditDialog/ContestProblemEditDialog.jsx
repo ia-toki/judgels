@@ -50,10 +50,10 @@ export function ContestProblemEditDialog({ contest, problems }) {
     );
   };
 
-  const setProblems = async data => {
+  const setProblems = data => {
     const deserializedProblems = editor.deserializer(data.problems);
 
-    await setProblemsMutation.mutateAsync(deserializedProblems, {
+    setProblemsMutation.mutate(deserializedProblems, {
       onSuccess: () => {
         toastActions.showSuccessToast('Problems updated.');
       },

@@ -29,9 +29,9 @@ export function CourseChapterEditDialog({ isOpen, course, onCloseDialog }) {
     setIsEditing(prev => !prev);
   };
 
-  const updateChapters = async data => {
+  const updateChapters = data => {
     const chapters = deserializeChapters(data.chapters);
-    await setChaptersMutation.mutateAsync(chapters, {
+    setChaptersMutation.mutate(chapters, {
       onSuccess: () => {
         toastActions.showSuccessToast('Course chapters updated.');
       },

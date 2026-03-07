@@ -54,7 +54,7 @@ export default function ContestEditModulesTab() {
         intent={Intent.PRIMARY}
         buttonIntent={Intent.NONE}
         buttonText={'Disable'}
-        buttonOnClick={type => disableModuleMutation.mutateAsync(type)}
+        buttonOnClick={type => disableModuleMutation.mutate(type)}
         buttonIsLoading={disableModuleMutation.isPending}
         buttonIsDisabled={false}
       />
@@ -77,7 +77,7 @@ export default function ContestEditModulesTab() {
         intent={Intent.NONE}
         buttonIntent={Intent.PRIMARY}
         buttonText={'Enable'}
-        buttonOnClick={type => enableModuleMutation.mutateAsync(type)}
+        buttonOnClick={type => enableModuleMutation.mutate(type)}
         buttonIsLoading={enableModuleMutation.isPending}
         buttonIsDisabled={false}
       />

@@ -46,17 +46,17 @@ export default function ProblemSubmissionsPage() {
   const regradeSubmissionMutation = useMutation(regradeProblemSetBundleSubmissionMutationOptions(problemSet.jid));
   const regradeSubmissionsMutation = useMutation(regradeProblemSetBundleSubmissionsMutationOptions(problemSet.jid));
 
-  const onRegrade = async submissionJid => {
-    await regradeSubmissionMutation.mutateAsync(submissionJid, {
+  const onRegrade = submissionJid => {
+    regradeSubmissionMutation.mutate(submissionJid, {
       onSuccess: () => {
         toastActions.showSuccessToast('Submission regraded.');
       },
     });
   };
 
-  const onRegradeAll = async () => {
+  const onRegradeAll = () => {
     if (reallyConfirm('Regrade all submissions in all pages?')) {
-      await regradeSubmissionsMutation.mutateAsync(
+      regradeSubmissionsMutation.mutate(
         { problemJid: problem.problemJid },
         {
           onSuccess: () => {

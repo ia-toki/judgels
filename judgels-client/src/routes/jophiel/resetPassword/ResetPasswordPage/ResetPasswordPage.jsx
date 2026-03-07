@@ -14,8 +14,8 @@ export default function ResetPasswordPage() {
 
   const resetMutation = useMutation(resetPasswordMutationOptions);
 
-  const resetPassword = async data => {
-    await resetMutation.mutateAsync(
+  const resetPassword = data => {
+    resetMutation.mutate(
       { emailCode, newPassword: data.password },
       {
         onSuccess: () => {

@@ -24,8 +24,8 @@ export default function ResendActivationEmailButton({ email }) {
     };
   }, []);
 
-  const onResendEmail = async () => {
-    await resendMutation.mutateAsync(undefined, {
+  const onResendEmail = () => {
+    resendMutation.mutate(undefined, {
       onSuccess: () => {
         toastActions.showToast('Email has been sent');
       },

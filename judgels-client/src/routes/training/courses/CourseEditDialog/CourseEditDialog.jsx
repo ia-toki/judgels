@@ -21,8 +21,8 @@ export function CourseEditDialog({ course, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateCourse = async data => {
-    await updateCourseMutation.mutateAsync(data, {
+  const updateCourse = data => {
+    updateCourseMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Course updated.');
       },

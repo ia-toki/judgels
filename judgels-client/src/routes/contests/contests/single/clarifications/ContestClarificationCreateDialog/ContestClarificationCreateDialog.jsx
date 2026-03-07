@@ -28,8 +28,8 @@ export function ContestClarificationCreateDialog({ contest, problemJids, problem
     </>
   );
 
-  const createClarification = async data => {
-    await createClarificationMutation.mutateAsync(data, {
+  const createClarification = data => {
+    createClarificationMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Clarification submitted.');
       },

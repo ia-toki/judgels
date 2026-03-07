@@ -1,12 +1,11 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
-import { getNavigationRef } from '../../../../../../../../modules/navigation/navigationRef';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
@@ -18,6 +17,7 @@ import { toastActions } from '../../../../../../../../modules/toast/toastActions
 
 export default function ProblemStatementPage({ worksheet }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
+  const navigate = useNavigate();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
@@ -52,7 +52,7 @@ export default function ProblemStatementPage({ worksheet }) {
     );
   };
 
-  const createSubmission = async data => {
+  const createSubmission = data => {
     setGradingLanguage(data.gradingLanguage);
 
     sendGAEvent({ category: 'Problems', action: 'Submit problemset problem', label: problemSet.name });
@@ -69,11 +69,11 @@ export default function ProblemStatementPage({ worksheet }) {
       });
     }
 
-    await createSubmissionMutation.mutateAsync(data, {
+    createSubmissionMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Solution submitted.');
         window.scrollTo(0, 0);
-        getNavigationRef().push(`/problems/${problemSet.slug}/${problem.alias}/submissions/mine`);
+        navigate({ to: `/problems/${problemSet.slug}/${problem.alias}/submissions/mine` });
       },
     });
   };

@@ -147,7 +147,7 @@ function ContestScoreboardPage() {
   };
 
   const forceRefreshScoreboard = async () => {
-    await refreshMutation.mutateAsync(undefined, {
+    refreshMutation.mutate(undefined, {
       onSuccess: () => {
         toastActions.showSuccessToast('Scoreboard refresh requested.');
       },

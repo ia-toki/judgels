@@ -13,8 +13,8 @@ import './ContestRatingChangesDialog.scss';
 export function ContestRatingChangesDialog({ contest, ratingChanges, onClose }) {
   const updateRatingsMutation = useMutation(updateRatingsMutationOptions);
 
-  const handleApply = async () => {
-    await updateRatingsMutation.mutateAsync(
+  const handleApply = () => {
+    updateRatingsMutation.mutate(
       {
         eventJid: contest.jid,
         time: contest.beginTime + contest.duration,

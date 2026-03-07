@@ -33,9 +33,9 @@ export function ProblemSetProblemEditDialog({ isOpen, problemSet, onCloseDialog 
     setIsEditing(prev => !prev);
   };
 
-  const updateProblems = async data => {
+  const updateProblems = data => {
     const problems = deserializeProblems(data.problems);
-    await setProblemsMutation.mutateAsync(problems, {
+    setProblemsMutation.mutate(problems, {
       onSuccess: () => {
         toastActions.showSuccessToast('Problemset problems updated.');
       },

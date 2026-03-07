@@ -11,8 +11,8 @@ export default function ForgotPasswordPage() {
 
   const resetPasswordMutation = useMutation(requestResetPasswordMutationOptions);
 
-  const onForgetPassword = async data => {
-    await resetPasswordMutation.mutateAsync(data.email);
+  const onForgetPassword = data => {
+    resetPasswordMutation.mutate(data.email);
     setSubmitted(true);
   };
 

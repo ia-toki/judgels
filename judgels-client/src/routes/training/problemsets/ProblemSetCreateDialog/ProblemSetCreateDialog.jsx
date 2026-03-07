@@ -29,8 +29,8 @@ export function ProblemSetCreateDialog() {
     </>
   );
 
-  const createProblemSet = async data => {
-    await createProblemSetMutation.mutateAsync(
+  const createProblemSet = data => {
+    createProblemSetMutation.mutate(
       {
         slug: data.slug,
         name: data.name,

@@ -16,8 +16,8 @@ export function ContestClarificationAnswerBox({ contest, clarification, isBoxOpe
     onToggleBox();
   };
 
-  const answerClarification = async data => {
-    await answerMutation.mutateAsync(data.answer, {
+  const answerClarification = data => {
+    answerMutation.mutate(data.answer, {
       onSuccess: () => {
         onToggleBox();
       },

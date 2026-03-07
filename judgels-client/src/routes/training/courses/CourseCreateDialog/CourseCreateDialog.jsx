@@ -29,8 +29,8 @@ export function CourseCreateDialog() {
     </>
   );
 
-  const createCourse = async data => {
-    await createCourseMutation.mutateAsync(data, {
+  const createCourse = data => {
+    createCourseMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Course created.');
       },

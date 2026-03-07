@@ -17,8 +17,8 @@ export default function InfoPage() {
 
   const updateInfoMutation = useMutation(updateUserInfoMutationOptions(userJid));
 
-  const onUpdateInfo = async infoData => {
-    await updateInfoMutation.mutateAsync(infoData, {
+  const onUpdateInfo = infoData => {
+    updateInfoMutation.mutate(infoData, {
       onSuccess: () => {
         toastActions.showSuccessToast('Info updated.');
       },

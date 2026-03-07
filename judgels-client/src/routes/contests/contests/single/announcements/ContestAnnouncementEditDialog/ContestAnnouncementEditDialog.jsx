@@ -30,8 +30,8 @@ export function ContestAnnouncementEditDialog({ contest, announcement, onToggleE
     </>
   );
 
-  const updateAnnouncement = async data => {
-    await updateAnnouncementMutation.mutateAsync(data, {
+  const updateAnnouncement = data => {
+    updateAnnouncementMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Announcement updated.');
       },

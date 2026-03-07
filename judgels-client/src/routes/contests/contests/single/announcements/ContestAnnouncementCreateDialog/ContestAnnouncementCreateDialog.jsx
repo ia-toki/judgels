@@ -40,8 +40,8 @@ export function ContestAnnouncementCreateDialog({ contest }) {
     </>
   );
 
-  const createAnnouncement = async data => {
-    await createAnnouncementMutation.mutateAsync(data, {
+  const createAnnouncement = data => {
+    createAnnouncementMutation.mutate(data, {
       onSuccess: () => {
         toastActions.showSuccessToast('Announcement created.');
       },

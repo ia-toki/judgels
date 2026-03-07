@@ -21,8 +21,8 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
     </>
   );
 
-  const updateProblemSet = async data => {
-    await updateProblemSetMutation.mutateAsync(
+  const updateProblemSet = data => {
+    updateProblemSetMutation.mutate(
       {
         slug: data.slug,
         name: data.name,
