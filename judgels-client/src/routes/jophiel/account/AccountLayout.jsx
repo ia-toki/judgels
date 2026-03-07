@@ -2,7 +2,6 @@ import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 import UserRoute from '../../../components/UserRoute/UserRoute';
 
 export default function AccountLayout() {
@@ -31,7 +30,6 @@ export default function AccountLayout() {
   return (
     <UserRoute>
       <FullPageLayout>
-        <ScrollToTopOnMount />
         <ContentWithSidebar {...contentWithSidebarProps}>
           <Outlet />
         </ContentWithSidebar>

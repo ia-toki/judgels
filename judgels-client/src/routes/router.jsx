@@ -54,6 +54,7 @@ function DefaultErrorComponent() {
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  scrollRestoration: true,
   defaultPendingComponent: () => <LoadingState large />,
   defaultErrorComponent: DefaultErrorComponent,
   parseSearch: searchStr => parse(searchStr),

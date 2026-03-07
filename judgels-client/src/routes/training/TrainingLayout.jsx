@@ -3,7 +3,6 @@ import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import { ScrollToTopOnMount } from '../../components/ScrollToTopOnMount/ScrollToTopOnMount';
 
 export default function TrainingLayout() {
   const sidebarItems = [
@@ -37,7 +36,6 @@ export default function TrainingLayout() {
 
   return (
     <FullPageLayout>
-      <ScrollToTopOnMount />
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
