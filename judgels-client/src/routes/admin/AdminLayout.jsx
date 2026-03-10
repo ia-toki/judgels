@@ -1,4 +1,4 @@
-import { People, Shield, TimelineLineChart } from '@blueprintjs/icons';
+import { Box, PanelStats, People, PredictiveAnalysis, Properties, Shield, TimelineLineChart } from '@blueprintjs/icons';
 import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
@@ -20,6 +20,26 @@ export default function AdminLayout() {
       path: 'ratings',
       titleIcon: <TimelineLineChart />,
       title: 'Ratings',
+    },
+    {
+      path: 'courses',
+      titleIcon: <PredictiveAnalysis />,
+      title: 'Courses',
+    },
+    {
+      path: 'chapters',
+      titleIcon: <Properties />,
+      title: 'Chapters',
+    },
+    {
+      path: 'archives',
+      titleIcon: <Box />,
+      title: 'Archives',
+    },
+    {
+      path: 'problemsets',
+      titleIcon: <PanelStats />,
+      title: 'Problemsets',
     },
   ];
 

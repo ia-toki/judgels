@@ -14,7 +14,6 @@ import { createJophielRoutes } from './jophiel/routes';
 import { createProblemsRoutes } from './problems/routes';
 import { createRankingRoutes } from './ranking/routes';
 import { createSubmissionsRoutes } from './submissions/routes';
-import { createTrainingRoutes } from './training/routes';
 
 const rootRoute = createRootRoute({
   component: Root,
@@ -35,7 +34,6 @@ const appChildren = [
   createContestsRoutes(appRoute),
   createCoursesRoutes(appRoute),
   createProblemsRoutes(appRoute),
-  createTrainingRoutes(appRoute),
   createSubmissionsRoutes(appRoute),
   createRankingRoutes(appRoute),
 ].filter(Boolean);
