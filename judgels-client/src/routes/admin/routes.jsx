@@ -40,5 +40,17 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./roles/RolesPage/RolesPage'))),
   });
 
-  return adminRoute.addChildren([adminIndexRoute, adminUsersRoute, adminUserViewRoute, adminRolesRoute]);
+  const adminRatingsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'ratings',
+    component: lazyRouteComponent(retryImport(() => import('../system/ratings/RatingsPage/RatingsPage'))),
+  });
+
+  return adminRoute.addChildren([
+    adminIndexRoute,
+    adminUsersRoute,
+    adminUserViewRoute,
+    adminRolesRoute,
+    adminRatingsRoute,
+  ]);
 };
