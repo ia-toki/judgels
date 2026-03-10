@@ -1,5 +1,4 @@
 import {
-  Cog,
   Console,
   Home,
   Key,
@@ -21,15 +20,6 @@ const appRoutes = [
     title: 'Admin',
     route: {
       path: '/admin',
-    },
-    visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
-  },
-  {
-    id: 'system',
-    icon: <Cog />,
-    title: 'System',
-    route: {
-      path: '/system',
     },
     visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
   },

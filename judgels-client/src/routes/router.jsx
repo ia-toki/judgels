@@ -14,7 +14,6 @@ import { createJophielRoutes } from './jophiel/routes';
 import { createProblemsRoutes } from './problems/routes';
 import { createRankingRoutes } from './ranking/routes';
 import { createSubmissionsRoutes } from './submissions/routes';
-import { createSystemRoutes } from './system/routes';
 import { createTrainingRoutes } from './training/routes';
 
 const rootRoute = createRootRoute({
@@ -32,7 +31,6 @@ export const appRoute = createRoute({
 
 const appChildren = [
   createAdminRoutes(appRoute),
-  createSystemRoutes(appRoute),
   createJophielRoutes(appRoute),
   createContestsRoutes(appRoute),
   createCoursesRoutes(appRoute),
