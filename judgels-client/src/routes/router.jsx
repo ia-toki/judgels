@@ -7,6 +7,7 @@ import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
 import { queryClient } from '../modules/queryClient';
 import App from './App';
 import Root from './Root';
+import { createAdminRoutes } from './admin/routes';
 import { createContestsRoutes } from './contests/routes';
 import { createCoursesRoutes } from './courses/routes';
 import { createJophielRoutes } from './jophiel/routes';
@@ -30,6 +31,7 @@ export const appRoute = createRoute({
 });
 
 const appChildren = [
+  createAdminRoutes(appRoute),
   createSystemRoutes(appRoute),
   createJophielRoutes(appRoute),
   createContestsRoutes(appRoute),

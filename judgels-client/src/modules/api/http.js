@@ -63,6 +63,10 @@ export async function put(url, token, body) {
   return request('PUT', url, token, { 'Content-Type': 'application/json' }, JSON.stringify(body));
 }
 
+export async function postText(url, token, text) {
+  return request('POST', url, token, { 'Content-Type': 'text/plain' }, text);
+}
+
 export async function postMultipart(url, token, parts) {
   const body = new FormData();
   Object.keys(parts).forEach(part => body.append(part, parts[part]));
