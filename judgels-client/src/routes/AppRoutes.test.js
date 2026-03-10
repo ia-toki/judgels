@@ -1,4 +1,3 @@
-import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
 import { getVisibleAppRoutes } from './AppRoutes';
 
@@ -21,21 +20,9 @@ describe('AppRoutes', () => {
   });
 
   test('Jophiel superadmin', () => {
-    testAppRoutes({ jophiel: JophielRole.Superadmin, jerahmeel: JerahmeelRole.Admin }, [
+    testAppRoutes({ jophiel: JophielRole.Superadmin }, [
       'admin',
       'contests',
-      'training',
-      'courses',
-      'problems',
-      'submissions',
-      'ranking',
-    ]);
-  });
-
-  test('Jerahmeel admin', () => {
-    testAppRoutes({ jerahmeel: JerahmeelRole.Admin }, [
-      'contests',
-      'training',
       'courses',
       'problems',
       'submissions',

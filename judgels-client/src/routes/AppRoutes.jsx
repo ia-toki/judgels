@@ -1,16 +1,6 @@
-import {
-  Console,
-  Home,
-  Key,
-  Layers,
-  Manual,
-  PredictiveAnalysis,
-  Projects,
-  TimelineLineChart,
-} from '@blueprintjs/icons';
+import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
 
 const appRoutes = [
@@ -31,15 +21,6 @@ const appRoutes = [
       path: '/contests',
     },
     visible: () => true,
-  },
-  {
-    id: 'training',
-    icon: <Projects />,
-    title: 'Training',
-    route: {
-      path: '/training',
-    },
-    visible: role => isTLX() && role.jerahmeel === JerahmeelRole.Admin,
   },
   {
     id: 'courses',
