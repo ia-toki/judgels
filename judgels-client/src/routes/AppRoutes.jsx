@@ -2,6 +2,7 @@ import {
   Cog,
   Console,
   Home,
+  Key,
   Layers,
   Manual,
   PredictiveAnalysis,
@@ -14,6 +15,15 @@ import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
 
 const appRoutes = [
+  {
+    id: 'admin',
+    icon: <Key />,
+    title: 'Admin',
+    route: {
+      path: '/admin',
+    },
+    visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
+  },
   {
     id: 'system',
     icon: <Cog />,

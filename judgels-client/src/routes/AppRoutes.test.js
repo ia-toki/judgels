@@ -11,6 +11,7 @@ describe('AppRoutes', () => {
 
   test('Jophiel admin', () => {
     testAppRoutes({ jophiel: JophielRole.Admin }, [
+      'admin',
       'system',
       'contests',
       'courses',
@@ -22,6 +23,7 @@ describe('AppRoutes', () => {
 
   test('Jophiel superadmin', () => {
     testAppRoutes({ jophiel: JophielRole.Superadmin, jerahmeel: JerahmeelRole.Admin }, [
+      'admin',
       'system',
       'contests',
       'training',

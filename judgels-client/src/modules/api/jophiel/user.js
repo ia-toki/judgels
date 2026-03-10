@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../../conf';
-import { get } from '../http';
+import { get, postText } from '../http';
 
 export const baseUsersURL = `${APP_CONFIG.apiUrl}/users`;
 
@@ -21,5 +21,9 @@ export const userAPI = {
   getUsers: (token, page, orderBy, orderDir) => {
     const params = stringify({ page, orderBy, orderDir });
     return get(`${baseUsersURL}?${params}`, token);
+  },
+
+  upsertUsers: (token, csv) => {
+    return postText(`${baseUsersURL}/batch-upsert`, token, csv);
   },
 };
