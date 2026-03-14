@@ -5,7 +5,7 @@ import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../../../../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
 import {
   problemSetBySlugQueryOptions,
@@ -77,10 +77,10 @@ export default function SingleProblemSetProblemLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

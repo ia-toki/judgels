@@ -2,7 +2,7 @@ import { Manual, PanelStats } from '@blueprintjs/icons';
 import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ProblemTagFilter from './problems/ProblemTagFilter/ProblemTagFilter';
 import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
 
@@ -29,10 +29,10 @@ export default function ProblemsIndexLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

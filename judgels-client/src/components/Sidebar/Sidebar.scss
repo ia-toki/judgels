@@ -9,14 +9,12 @@
     padding-bottom: 1px;
   }
 
-  .card__content {
-    padding-top: 0;
-    padding-bottom: 0;
+  .bp6-card.card__content {
+    padding: 0;
   }
 
   .bp6-tab-list {
-    left: -20px;
-    width: 270px;
+    width: 100%;
   }
 
   .bp6-tab-indicator {

@@ -1,7 +1,7 @@
 import { Console } from '@blueprintjs/icons';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 
 export default function ContestsIndexPage() {
@@ -20,10 +20,10 @@ export default function ContestsIndexPage() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <ContestsPage />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

@@ -1,24 +1,29 @@
 @use '../../styles/base' as *;
 
 .menubar {
-  padding-left: 10px;
-  padding-right: 10px;
-
   *:focus {
     outline: none;
   }
 
   .bp6-tab-list {
     column-gap: 0;
+    flex-wrap: nowrap;
   }
 
   .bp6-tab {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 0;
     margin-right: 0;
     line-height: 50px;
     height: 50px;
     color: $primary-color;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    a {
+      display: block;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
   }
 
   .bp6-tab:hover {

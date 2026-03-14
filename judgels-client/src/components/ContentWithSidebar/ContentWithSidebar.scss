@@ -1,16 +1,17 @@
 .content-with-sidebar {
   display: flex;
+  gap: 25px;
 }
 
 .content-with-sidebar__sidebar {
-  width: 270px;
-  margin-right: 25px;
+  width: 320px;
+  flex-shrink: 0;
   margin-bottom: 15px;
 }
 
 .content-with-sidebar__content {
   flex-grow: 1;
-  max-width: 865px;
+  max-width: 920px;
 }
 
 .content-with-sidebar__content--small {
@@ -20,5 +21,11 @@
 @media only screen and (max-width: 750px) {
   .content-with-sidebar {
     display: block;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .content-with-sidebar__sidebar {
+    width: 270px;
   }
 }

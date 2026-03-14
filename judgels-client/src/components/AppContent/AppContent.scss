@@ -1,11 +1,11 @@
 .app-content {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
   padding-top: 35px;
   overflow-x: auto;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 750px) {
   .app-content {
     padding-top: 15px;
   }

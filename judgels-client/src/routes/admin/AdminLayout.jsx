@@ -2,7 +2,7 @@ import { Box, PanelStats, People, PredictiveAnalysis, Properties, Shield, Timeli
 import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 
 export default function AdminLayout() {
   const sidebarItems = [
@@ -50,10 +50,10 @@ export default function AdminLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

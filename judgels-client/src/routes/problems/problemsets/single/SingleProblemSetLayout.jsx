@@ -5,7 +5,7 @@ import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { problemSetBySlugQueryOptions } from '../../../../modules/queries/problemSet';
 import { createDocumentTitle } from '../../../../utils/title';
 
@@ -49,10 +49,10 @@ export default function SingleProblemSetLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

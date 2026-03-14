@@ -2,7 +2,7 @@ import { Property, TimelineLineChart } from '@blueprintjs/icons';
 import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 
 export default function RankingLayout() {
   const sidebarItems = [
@@ -26,10 +26,10 @@ export default function RankingLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }
