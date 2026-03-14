@@ -15,7 +15,7 @@
 .tab-item-with-widget {
   position: absolute;
   display: inline-block;
-  width: 190px;
+  width: 240px;
 }
 
 @media only screen and (max-width: 750px) {
@@ -24,5 +24,11 @@
       font-size: 20px !important;
       line-height: 22px !important;
     }
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .tab-item-with-widget {
+    width: 190px;
   }
 }

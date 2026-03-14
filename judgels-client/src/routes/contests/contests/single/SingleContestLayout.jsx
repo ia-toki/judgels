@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
-import { FullPageLayout } from '../../../../components/FullPageLayout/FullPageLayout';
+import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ContestTab } from '../../../../modules/api/uriel/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../modules/queries/contestWeb';
@@ -159,10 +159,10 @@ export default function SingleContestLayout() {
   };
 
   return (
-    <FullPageLayout>
+    <FullWidthPageLayout>
       <ContentWithSidebar {...contentWithSidebarProps}>
         <Outlet />
       </ContentWithSidebar>
-    </FullPageLayout>
+    </FullWidthPageLayout>
   );
 }

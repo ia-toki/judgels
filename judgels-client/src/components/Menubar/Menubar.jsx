@@ -1,10 +1,12 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { Link, useLocation } from '@tanstack/react-router';
+import { useEffect, useRef } from 'react';
 
 import './Menubar.scss';
 
 export default function Menubar({ items, homeRoute }) {
   const location = useLocation();
+  const menubarRef = useRef(null);
 
   const getActiveItemId = () => {
     const matchingItem = items.find(item => {
@@ -30,8 +32,17 @@ export default function Menubar({ items, homeRoute }) {
 
   const selectedTabId = getActiveItemId();
 
+  useEffect(() => {
+    const el = menubarRef.current;
+    if (!el) return;
+    const activeTab = el.querySelector('.bp6-tab[aria-selected="true"]');
+    if (activeTab && activeTab.scrollIntoView) {
+      activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }, [selectedTabId]);
+
   return (
-    <div className="menubar">
+    <div className="menubar" ref={menubarRef}>
       <Tabs id="menubar" renderActiveTabPanelOnly animate={false} selectedTabId={selectedTabId}>
         {homeRoute ? (
           <Tab key={homeRoute.id} id={homeRoute.id}>
