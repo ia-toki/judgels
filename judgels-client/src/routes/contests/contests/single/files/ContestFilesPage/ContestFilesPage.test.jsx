@@ -42,7 +42,7 @@ describe('ContestFilesPage', () => {
     );
   };
 
-  test('renders placeholder text when there are no files', async () => {
+  test('renders placeholder when there are no files', async () => {
     await renderComponent({ files: [] });
     expect(await screen.findByText(/no files/i)).toBeInTheDocument();
     const rows = screen.getAllByRole('row');

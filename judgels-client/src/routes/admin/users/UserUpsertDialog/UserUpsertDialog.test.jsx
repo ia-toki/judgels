@@ -25,12 +25,12 @@ describe('UserUpsertDialog', () => {
     );
   };
 
-  it('shows the upsert button', async () => {
+  test('renders the upsert button', async () => {
     await renderComponent();
     expect(screen.getByRole('button', { name: /upsert users/i })).toBeInTheDocument();
   });
 
-  it('opens the dialog and shows instructions', async () => {
+  test('opens the dialog and renders instructions', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
@@ -43,7 +43,7 @@ describe('UserUpsertDialog', () => {
     expect(screen.getByText('Example 3:', { exact: false })).toBeInTheDocument();
   });
 
-  it('submits CSV and shows results', async () => {
+  test('submits CSV and renders results', async () => {
     await renderComponent();
     const user = userEvent.setup();
 

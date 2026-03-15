@@ -7,34 +7,32 @@ import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProvi
 import { ItemShortAnswerCard } from './ItemShortAnswerCard';
 
 describe('ItemShortAnswerCard', () => {
-  const itemConfig = {
-    statement: 'statement',
-    score: 4,
-    penalty: -2,
-    inputValidationRegex: '/^d+$/',
-    gradingRegex: '/^d+$/',
-  };
-  const props = {
-    jid: 'jid',
-    type: ItemType.Essay,
-    meta: 'meta',
-    config: itemConfig,
-    disabled: false,
-    onSubmit: vi.fn(),
-    itemNumber: 1,
-  };
-
-  beforeEach(() => {
+  const renderComponent = () => {
     render(
       <WebPrefsProvider>
         <QueryClientProviderWrapper>
-          <ItemShortAnswerCard {...props} />
+          <ItemShortAnswerCard
+            jid="jid"
+            type={ItemType.Essay}
+            meta="meta"
+            config={{
+              statement: 'statement',
+              score: 4,
+              penalty: -2,
+              inputValidationRegex: '/^d+$/',
+              gradingRegex: '/^d+$/',
+            }}
+            disabled={false}
+            onSubmit={vi.fn()}
+            itemNumber={1}
+          />
         </QueryClientProviderWrapper>
       </WebPrefsProvider>
     );
-  });
+  };
 
-  it('should render item statement', () => {
+  test('renders item statement', () => {
+    renderComponent();
     expect(screen.getByText((_, el) => el.textContent === '1.statement')).toBeInTheDocument();
   });
 });

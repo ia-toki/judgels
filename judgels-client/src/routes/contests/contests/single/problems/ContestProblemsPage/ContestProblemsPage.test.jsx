@@ -80,7 +80,7 @@ describe('ContestProblemsPage', () => {
     });
   });
 
-  test('renders placeholder text when there are no problems', async () => {
+  test('renders placeholder when there are no problems', async () => {
     await renderComponent({ problems: [] });
 
     expect(await screen.findByText(/no problems/i)).toBeInTheDocument();

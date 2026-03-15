@@ -26,64 +26,60 @@ describe('ContentWithSidebar', () => {
     });
   };
 
-  describe('when the first item has a path', () => {
-    it('shows sidebar items with correct texts', async () => {
-      await renderComponent('/second', 'first');
+  test('when the first item has a path, renders sidebar items with correct texts', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('tab');
-      expect(items).toHaveLength(3);
-      expect(items[0]).toHaveTextContent('First');
-      expect(items[1]).toHaveTextContent('Second');
-      expect(items[2]).toHaveTextContent('Third');
-    });
-
-    it('marks the matching item as active', async () => {
-      await renderComponent('/second', 'first');
-
-      const items = screen.getAllByRole('tab');
-      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
-      expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-    });
-
-    it('has no active item when at base path (first item has non-empty path)', async () => {
-      await renderComponent('', 'first');
-
-      const items = screen.getAllByRole('tab');
-      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-    });
-
-    it('generates correct links', async () => {
-      await renderComponent('/second', 'first');
-
-      const items = screen.getAllByRole('tab');
-      expect(within(items[2]).getByRole('link')).toHaveAttribute('href', '/parent/third');
-    });
+    const items = screen.getAllByRole('tab');
+    expect(items).toHaveLength(3);
+    expect(items[0]).toHaveTextContent('First');
+    expect(items[1]).toHaveTextContent('Second');
+    expect(items[2]).toHaveTextContent('Third');
   });
 
-  describe('when the first item has empty path', () => {
-    it('marks the matching item as active', async () => {
-      await renderComponent('/second');
+  test('when the first item has a path, marks the matching item as active', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('tab');
-      expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-      expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
-    });
+    const items = screen.getAllByRole('tab');
+    expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
+    expect(within(items[2]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+  });
 
-    it('marks the first item as active when at base path', async () => {
-      await renderComponent('');
+  test('when the first item has a path, has no active item when at base path', async () => {
+    await renderComponent('', 'first');
 
-      const items = screen.getAllByRole('tab');
-      expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
-      expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
-    });
+    const items = screen.getAllByRole('tab');
+    expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+  });
 
-    it('generates correct link for first item', async () => {
-      await renderComponent('/second');
+  test('when the first item has a path, generates correct links', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('tab');
-      expect(within(items[0]).getByRole('link')).toHaveAttribute('href', '/parent');
-    });
+    const items = screen.getAllByRole('tab');
+    expect(within(items[2]).getByRole('link')).toHaveAttribute('href', '/parent/third');
+  });
+
+  test('when the first item has empty path, marks the matching item as active', async () => {
+    await renderComponent('/second');
+
+    const items = screen.getAllByRole('tab');
+    expect(within(items[0]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+    expect(within(items[1]).getByRole('img', { hidden: true })).toBeInTheDocument();
+  });
+
+  test('when the first item has empty path, marks the first item as active when at base path', async () => {
+    await renderComponent('');
+
+    const items = screen.getAllByRole('tab');
+    expect(within(items[0]).getByRole('img', { hidden: true })).toBeInTheDocument();
+    expect(within(items[1]).queryByRole('img', { hidden: true })).not.toBeInTheDocument();
+  });
+
+  test('when the first item has empty path, generates correct link for first item', async () => {
+    await renderComponent('/second');
+
+    const items = screen.getAllByRole('tab');
+    expect(within(items[0]).getByRole('link')).toHaveAttribute('href', '/parent');
   });
 });

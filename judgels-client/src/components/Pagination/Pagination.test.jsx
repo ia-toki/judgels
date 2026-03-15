@@ -14,7 +14,7 @@ describe('Pagination', () => {
     return null;
   };
 
-  const renderComponent = (totalCount, pageQuery) => {
+  const renderComponent = async (totalCount, pageQuery) => {
     const router = createTestRouter(
       () => (
         <>
@@ -25,52 +25,36 @@ describe('Pagination', () => {
       ['/component' + pageQuery]
     );
 
-    render(<RouterProvider router={router} />);
+    await act(async () => render(<RouterProvider router={router} />));
   };
 
-  describe('when totalCount is 0', () => {
-    it('does not show the helper text', async () => {
-      await act(async () => {
-        renderComponent(0, '');
-      });
-      expect(screen.queryByText(/Showing.*results/i)).not.toBeInTheDocument();
-    });
+  test('when totalCount is 0, does not render the helper text', async () => {
+    await renderComponent(0, '');
+    expect(screen.queryByText(/Showing.*results/i)).not.toBeInTheDocument();
   });
 
-  describe('when on page 1', () => {
-    it('shows the helper text', async () => {
-      await act(async () => {
-        renderComponent(14, '');
-      });
-      expect(await screen.findByText(/Showing 1\.\.6 of 14 results/i)).toBeInTheDocument();
-    });
+  test('when on page 1, renders the helper text', async () => {
+    await renderComponent(14, '');
+    expect(await screen.findByText(/Showing 1\.\.6 of 14 results/i)).toBeInTheDocument();
   });
 
-  describe('when on page 3', () => {
-    it('shows the helper text', async () => {
-      await act(async () => {
-        renderComponent(14, '?page=3');
-      });
-      expect(await screen.findByText(/Showing 13\.\.14 of 14 results/i)).toBeInTheDocument();
-    });
+  test('when on page 3, renders the helper text', async () => {
+    await renderComponent(14, '?page=3');
+    expect(await screen.findByText(/Showing 13\.\.14 of 14 results/i)).toBeInTheDocument();
   });
 
-  describe('when page changes', () => {
-    it('navigates URL correctly', async () => {
-      await act(async () => {
-        renderComponent(14, '');
+  test('when page changes, navigates URL correctly', async () => {
+    await renderComponent(14, '');
+
+    const user = userEvent.setup();
+    const pageButtons = screen.getAllByRole('button');
+    const page2Button = pageButtons.find(btn => btn.textContent === '2');
+
+    if (page2Button) {
+      await user.click(page2Button);
+      await waitFor(() => {
+        expect(testLocation.search).toEqual({ page: '2' });
       });
-
-      const user = userEvent.setup();
-      const pageButtons = screen.getAllByRole('button');
-      const page2Button = pageButtons.find(btn => btn.textContent === '2');
-
-      if (page2Button) {
-        await user.click(page2Button);
-        await waitFor(() => {
-          expect(testLocation.search).toEqual({ page: '2' });
-        });
-      }
-    });
+    }
   });
 });

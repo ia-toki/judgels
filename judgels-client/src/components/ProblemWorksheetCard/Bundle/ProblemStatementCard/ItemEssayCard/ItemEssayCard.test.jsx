@@ -7,31 +7,26 @@ import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProvi
 import { ItemEssayCard } from './ItemEssayCard';
 
 describe('ItemEssayCard', () => {
-  const itemConfig = {
-    statement: 'statement',
-    score: 100,
-  };
-  const props = {
-    jid: 'jid',
-    type: ItemType.Essay,
-    meta: 'meta',
-    config: itemConfig,
-    disabled: false,
-    onSubmit: vi.fn(),
-    itemNumber: 1,
-  };
-
-  beforeEach(() => {
+  const renderComponent = () => {
     render(
       <WebPrefsProvider>
         <QueryClientProviderWrapper>
-          <ItemEssayCard {...props} />
+          <ItemEssayCard
+            jid="jid"
+            type={ItemType.Essay}
+            meta="meta"
+            config={{ statement: 'statement', score: 100 }}
+            disabled={false}
+            onSubmit={vi.fn()}
+            itemNumber={1}
+          />
         </QueryClientProviderWrapper>
       </WebPrefsProvider>
     );
-  });
+  };
 
-  it('should render item statement', () => {
+  test('renders item statement', () => {
+    renderComponent();
     expect(screen.getByText((_, el) => el.textContent === '1.statement')).toBeInTheDocument();
   });
 });

@@ -57,7 +57,7 @@ describe('ContestManagersPage', () => {
     expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
   });
 
-  test('renders placeholder text when there are no managers', async () => {
+  test('renders placeholder when there are no managers', async () => {
     await renderComponent();
     expect(await screen.findByText(/no managers/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();

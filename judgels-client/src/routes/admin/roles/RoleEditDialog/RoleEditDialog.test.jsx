@@ -9,10 +9,6 @@ import { nockJophiel } from '../../../../utils/nock';
 import { RoleEditDialog } from './RoleEditDialog';
 
 describe('RoleEditDialog', () => {
-  beforeEach(() => {
-    setSession('token', { jid: 'userJid' });
-  });
-
   const currentData = {
     data: [
       { userJid: 'userJid1', role: { jophiel: 'ADMIN', sandalphon: 'ADMIN', uriel: 'ADMIN', jerahmeel: 'ADMIN' } },
@@ -23,6 +19,10 @@ describe('RoleEditDialog', () => {
       userJid2: { username: 'budi' },
     },
   };
+
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
 
   const renderComponent = async () => {
     await act(async () =>
@@ -36,12 +36,12 @@ describe('RoleEditDialog', () => {
     );
   };
 
-  it('shows the edit button', async () => {
+  test('renders the edit button', async () => {
     await renderComponent();
     expect(screen.getByRole('button', { name: /edit roles/i })).toBeInTheDocument();
   });
 
-  it('opens the dialog with instructions', async () => {
+  test('opens the dialog with instructions', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
@@ -53,7 +53,7 @@ describe('RoleEditDialog', () => {
     expect(screen.getByText('Example', { exact: false })).toBeInTheDocument();
   });
 
-  it('pre-fills the textarea with current roles', async () => {
+  test('pre-fills the textarea with current roles', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
@@ -63,7 +63,7 @@ describe('RoleEditDialog', () => {
     expect(textarea.value).toBe('andi,ADMIN,ADMIN,ADMIN,ADMIN\nbudi,,ADMIN,,');
   });
 
-  it('submits roles', async () => {
+  test('submits roles', async () => {
     await renderComponent();
     const user = userEvent.setup();
 

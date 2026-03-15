@@ -79,7 +79,7 @@ describe('ContestSubmissionsPage', () => {
     });
   };
 
-  test('renders placeholder text when there are no submissions', async () => {
+  test('renders placeholder when there are no submissions', async () => {
     await renderComponent({ submissions: [] });
 
     expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();

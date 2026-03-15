@@ -3,55 +3,22 @@ import { render, screen } from '@testing-library/react';
 import { FormInputValidation } from './FormInputValidation';
 
 describe('FormInputValidation', () => {
-  let touched;
-  let valid;
-  let error;
-
-  const renderComponent = () => {
-    const props = {
-      meta: { touched, valid, error },
-    };
-
-    render(<FormInputValidation {...props} />);
+  const renderComponent = ({ touched = false, valid = false, error = 'Required' } = {}) => {
+    render(<FormInputValidation meta={{ touched, valid, error }} />);
   };
 
-  beforeEach(() => {
-    touched = false;
-    valid = false;
-    error = 'Required';
+  test('when first rendered, does not render any errors', () => {
+    renderComponent();
+    expect(screen.queryByText('Required')).not.toBeInTheDocument();
   });
 
-  describe('when the input is first rendered', () => {
-    beforeEach(() => {
-      renderComponent();
-    });
-
-    it('does not show any errors', () => {
-      expect(screen.queryByText('Required')).not.toBeInTheDocument();
-    });
+  test('when valid, does not render any errors', () => {
+    renderComponent({ touched: true, valid: true });
+    expect(screen.queryByText('Required')).not.toBeInTheDocument();
   });
 
-  describe('when the input is valid', () => {
-    beforeEach(() => {
-      touched = true;
-      valid = true;
-      renderComponent();
-    });
-
-    it('does not show any errors', () => {
-      expect(screen.queryByText('Required')).not.toBeInTheDocument();
-    });
-  });
-
-  describe('when the input is invalid', () => {
-    beforeEach(() => {
-      touched = true;
-      valid = false;
-      renderComponent();
-    });
-
-    it('shows the error', () => {
-      expect(screen.getByText('Required')).toBeInTheDocument();
-    });
+  test('when invalid, renders the error', () => {
+    renderComponent({ touched: true, valid: false });
+    expect(screen.getByText('Required')).toBeInTheDocument();
   });
 });
