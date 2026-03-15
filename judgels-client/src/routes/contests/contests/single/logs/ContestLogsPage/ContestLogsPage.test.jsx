@@ -65,13 +65,13 @@ describe('ContestLogsPage', () => {
     );
   };
 
-  test('shows placeholder text when there are no logs', async () => {
+  test('renders placeholder text when there are no logs', async () => {
     await renderComponent({ logs: [] });
     expect(await screen.findByText(/no logs/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();
   });
 
-  test('shows the logs when there are logs', async () => {
+  test('renders the logs when there are logs', async () => {
     await renderComponent();
     await screen.findAllByRole('row');
     const rows = screen.getAllByRole('row').slice(1);

@@ -28,7 +28,7 @@ describe('ContestContestantAddResultTable', () => {
     );
   };
 
-  test('shows the correct tables', async () => {
+  test('renders the correct tables', async () => {
     await renderComponent();
 
     const tables = screen.getAllByRole('table');

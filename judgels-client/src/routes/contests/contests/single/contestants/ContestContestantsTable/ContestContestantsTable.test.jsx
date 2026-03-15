@@ -41,14 +41,14 @@ describe('ContestContestantsTable', () => {
     );
   };
 
-  test('shows sorted usernames when contest is not virtual', async () => {
+  test('renders sorted usernames when contest is not virtual', async () => {
     await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const usernames = rows.map(row => row.children[1].textContent);
     expect(usernames).toEqual(['userA', 'userB', 'userC', 'userD', 'userE']);
   });
 
-  test('shows correct columns with progress bars when contest is virtual', async () => {
+  test('renders correct columns with progress bars when contest is virtual', async () => {
     await renderComponent({
       now: 70,
       virtualModuleConfig: { virtualDuration: 50 },

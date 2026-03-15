@@ -35,7 +35,7 @@ describe('ContestOverviewPage', () => {
     );
   };
 
-  test('shows the description', async () => {
+  test('renders the description', async () => {
     await renderComponent();
     await screen.findByText('Contest description');
   });

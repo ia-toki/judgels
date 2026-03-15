@@ -52,7 +52,7 @@ describe('ContestSupervisorsPage', () => {
     );
   };
 
-  test('shows action buttons', async () => {
+  test('renders action buttons', async () => {
     await renderComponent();
     expect(await screen.findByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();

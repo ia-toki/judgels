@@ -107,7 +107,7 @@ describe('ContestEditorialPage', () => {
     );
   };
 
-  test('shows the editorial', async () => {
+  test('renders the editorial', async () => {
     await renderComponent();
 
     await waitFor(() => {

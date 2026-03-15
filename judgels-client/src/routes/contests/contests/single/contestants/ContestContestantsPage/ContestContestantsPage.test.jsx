@@ -47,26 +47,26 @@ describe('ContestContestantsPage', () => {
     );
   };
 
-  test('shows no buttons when not canManage', async () => {
+  test('renders no buttons when not canManage', async () => {
     await renderComponent({ contestants: [], canManage: false });
     await screen.findByRole('heading', { name: 'Contestants' });
     expect(screen.queryByRole('button', { name: /add contestants/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /remove contestants/i })).not.toBeInTheDocument();
   });
 
-  test('shows action buttons when canManage', async () => {
+  test('renders action buttons when canManage', async () => {
     await renderComponent({ canManage: true });
     expect(await screen.findByRole('button', { name: /add contestants/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /remove contestants/i })).toBeInTheDocument();
   });
 
-  test('shows placeholder text when there are no contestants', async () => {
+  test('renders placeholder text when there are no contestants', async () => {
     await renderComponent({ contestants: [] });
     expect(await screen.findByText(/no contestants/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();
   });
 
-  test('shows the contestants when there are contestants', async () => {
+  test('renders the contestants when there are contestants', async () => {
     await renderComponent();
     await waitFor(() => {
       expect(screen.getAllByRole('row').length).toBeGreaterThan(1);

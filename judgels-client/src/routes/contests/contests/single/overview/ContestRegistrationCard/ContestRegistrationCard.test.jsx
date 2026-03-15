@@ -38,16 +38,19 @@ describe('ContestRegistrationCard', () => {
     ${'REGISTRABLE'}                | ${[]}              | ${['Register']}
     ${'REGISTRANT'}                 | ${[' Registered']} | ${['Unregister']}
     ${'CONTESTANT'}                 | ${[' Registered']} | ${[]}
-  `('shows correct texts when contestant state is $contestantState', async ({ contestantState, stateText, actionText }) => {
-    await renderComponent({ contestantState });
+  `(
+    'shows correct texts when contestant state is $contestantState',
+    async ({ contestantState, stateText, actionText }) => {
+      await renderComponent({ contestantState });
 
-    await waitFor(() => {
-      const container = document.body;
-      const stateElements = container.querySelectorAll('span.contest-registration-card__state');
-      const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
+      await waitFor(() => {
+        const container = document.body;
+        const stateElements = container.querySelectorAll('span.contest-registration-card__state');
+        const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
 
-      expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
-      expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
-    });
-  });
+        expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
+        expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
+      });
+    }
+  );
 });

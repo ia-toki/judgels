@@ -16,13 +16,16 @@ describe('ContestSupervisorAddResultTable', () => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestSupervisorAddResultTable usernames={usernames} insertedSupervisorProfilesMap={insertedSupervisorProfilesMap} />
+          <ContestSupervisorAddResultTable
+            usernames={usernames}
+            insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
+          />
         </TestRouter>
       )
     );
   };
 
-  test('shows the correct tables', async () => {
+  test('renders the correct tables', async () => {
     await renderComponent();
 
     const tables = screen.getAllByRole('table');

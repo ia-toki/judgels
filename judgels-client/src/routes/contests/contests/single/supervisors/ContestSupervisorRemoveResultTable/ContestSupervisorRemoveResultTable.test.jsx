@@ -14,13 +14,16 @@ describe('ContestSupervisorRemoveResultTable', () => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestSupervisorRemoveResultTable usernames={usernames} deletedSupervisorProfilesMap={deletedSupervisorProfilesMap} />
+          <ContestSupervisorRemoveResultTable
+            usernames={usernames}
+            deletedSupervisorProfilesMap={deletedSupervisorProfilesMap}
+          />
         </TestRouter>
       )
     );
   };
 
-  test('shows the correct tables', async () => {
+  test('renders the correct tables', async () => {
     await renderComponent();
 
     const tables = screen.getAllByRole('table');

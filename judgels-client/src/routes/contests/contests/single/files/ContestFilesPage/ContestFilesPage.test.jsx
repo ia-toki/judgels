@@ -42,14 +42,14 @@ describe('ContestFilesPage', () => {
     );
   };
 
-  test('shows placeholder text when there are no files', async () => {
+  test('renders placeholder text when there are no files', async () => {
     await renderComponent({ files: [] });
     expect(await screen.findByText(/no files/i)).toBeInTheDocument();
     const rows = screen.getAllByRole('row');
     expect(rows).toHaveLength(1 + 0);
   });
 
-  test('shows the files when there are files', async () => {
+  test('renders the files when there are files', async () => {
     await renderComponent();
     await waitFor(() => {
       expect(screen.getAllByRole('row').length).toBeGreaterThan(1);

@@ -12,10 +12,7 @@ describe('ContestProblemsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({
-    problems = [],
-    canManage,
-  } = {}) => {
+  const renderComponent = async ({ problems = [], canManage } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -64,7 +61,7 @@ describe('ContestProblemsPage', () => {
     );
   };
 
-  test('shows no action buttons when not canManage', async () => {
+  test('renders no action buttons when not canManage', async () => {
     await renderComponent({ canManage: false });
 
     const section = document.querySelector('div.content-card__section');
@@ -72,7 +69,7 @@ describe('ContestProblemsPage', () => {
     expect(buttons).toHaveLength(0);
   });
 
-  test('shows action buttons when canManage', async () => {
+  test('renders action buttons when canManage', async () => {
     await renderComponent({ canManage: true });
 
     await waitFor(() => {
@@ -83,7 +80,7 @@ describe('ContestProblemsPage', () => {
     });
   });
 
-  test('shows placeholder text when there are no problems', async () => {
+  test('renders placeholder text when there are no problems', async () => {
     await renderComponent({ problems: [] });
 
     expect(await screen.findByText(/no problems/i)).toBeInTheDocument();
@@ -91,7 +88,7 @@ describe('ContestProblemsPage', () => {
     expect(cards).toHaveLength(0);
   });
 
-  test('shows the problems when there are problems', async () => {
+  test('renders the problems when there are problems', async () => {
     await renderComponent({
       problems: [
         {

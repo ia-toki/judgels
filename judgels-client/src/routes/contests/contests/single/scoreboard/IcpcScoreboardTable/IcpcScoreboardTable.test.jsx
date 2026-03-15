@@ -52,11 +52,19 @@ describe('IcpcScoreboardTable', () => {
     JIDUSER2: { username: 'username2' },
   };
 
-  const renderComponent = async ({ scoreboard = mockScoreboard, profilesMap = mockProfilesMap, onClickSubmissionCell } = {}) => {
+  const renderComponent = async ({
+    scoreboard = mockScoreboard,
+    profilesMap = mockProfilesMap,
+    onClickSubmissionCell,
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <IcpcScoreboardTable scoreboard={scoreboard} profilesMap={profilesMap} onClickSubmissionCell={onClickSubmissionCell} />
+          <IcpcScoreboardTable
+            scoreboard={scoreboard}
+            profilesMap={profilesMap}
+            onClickSubmissionCell={onClickSubmissionCell}
+          />
         </TestRouter>
       )
     );
@@ -113,7 +121,7 @@ describe('IcpcScoreboardTable', () => {
     ]);
   });
 
-  test('shows submission for attempted cell when onClickSubmissionCell is passed', async () => {
+  test('renders submission for attempted cell when onClickSubmissionCell is passed', async () => {
     const onClickSubmissionCell = vi.fn();
     await renderComponent({ onClickSubmissionCell });
 
@@ -126,7 +134,7 @@ describe('IcpcScoreboardTable', () => {
     expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
   });
 
-  test('does not show submission for unattempted cell when onClickSubmissionCell is passed', async () => {
+  test('does not render submission for unattempted cell when onClickSubmissionCell is passed', async () => {
     const onClickSubmissionCell = vi.fn();
     await renderComponent({ onClickSubmissionCell });
 

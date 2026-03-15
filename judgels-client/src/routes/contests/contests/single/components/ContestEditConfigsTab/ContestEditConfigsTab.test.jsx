@@ -92,9 +92,7 @@ describe('ContestEditConfigsTab', () => {
     await user.clear(frozenScoreboardFreezeTime);
     await user.type(frozenScoreboardFreezeTime, '1h 5m');
 
-    const frozenScoreboardIsOfficialAllowed = document.querySelector(
-      'input[name="frozenScoreboardIsOfficialAllowed"]'
-    );
+    const frozenScoreboardIsOfficialAllowed = document.querySelector('input[name="frozenScoreboardIsOfficialAllowed"]');
     await user.click(frozenScoreboardIsOfficialAllowed);
 
     const mergedScoreboardPreviousContestJid = document.querySelector(
@@ -107,9 +105,7 @@ describe('ContestEditConfigsTab', () => {
     await user.clear(externalScoreboardReceiverUrl);
     await user.type(externalScoreboardReceiverUrl, 'http://new.external.scoreboard');
 
-    const externalScoreboardReceiverSecret = document.querySelector(
-      'input[name="externalScoreboardReceiverSecret"]'
-    );
+    const externalScoreboardReceiverSecret = document.querySelector('input[name="externalScoreboardReceiverSecret"]');
     await user.clear(externalScoreboardReceiverSecret);
     await user.type(externalScoreboardReceiverSecret, 'the_new_secret');
 

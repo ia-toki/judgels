@@ -37,11 +37,19 @@ describe('IoiScoreboardTable', () => {
     JIDUSER2: { username: 'username2' },
   };
 
-  const renderComponent = async ({ scoreboard = mockScoreboard, profilesMap = mockProfilesMap, onClickSubmissionCell } = {}) => {
+  const renderComponent = async ({
+    scoreboard = mockScoreboard,
+    profilesMap = mockProfilesMap,
+    onClickSubmissionCell,
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <IoiScoreboardTable scoreboard={scoreboard} profilesMap={profilesMap} onClickSubmissionCell={onClickSubmissionCell} />
+          <IoiScoreboardTable
+            scoreboard={scoreboard}
+            profilesMap={profilesMap}
+            onClickSubmissionCell={onClickSubmissionCell}
+          />
         </TestRouter>
       )
     );
@@ -83,7 +91,7 @@ describe('IoiScoreboardTable', () => {
     ]);
   });
 
-  test('shows submission for attempted cell when onClickSubmissionCell is passed', async () => {
+  test('renders submission for attempted cell when onClickSubmissionCell is passed', async () => {
     const onClickSubmissionCell = vi.fn();
     await renderComponent({ onClickSubmissionCell });
 
@@ -96,7 +104,7 @@ describe('IoiScoreboardTable', () => {
     expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
   });
 
-  test('does not show submission for unattempted cell when onClickSubmissionCell is passed', async () => {
+  test('does not render submission for unattempted cell when onClickSubmissionCell is passed', async () => {
     const onClickSubmissionCell = vi.fn();
     await renderComponent({ onClickSubmissionCell });
 

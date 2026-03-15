@@ -79,7 +79,7 @@ describe('ContestSubmissionsPage', () => {
     });
   };
 
-  test('shows placeholder text when there are no submissions', async () => {
+  test('renders placeholder text when there are no submissions', async () => {
     await renderComponent({ submissions: [] });
 
     expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('ContestSubmissionsPage', () => {
     expect(rows).toHaveLength(0);
   });
 
-  test('shows submissions when not canSupervise', async () => {
+  test('renders submissions when not canSupervise', async () => {
     await renderComponent();
 
     await screen.findAllByRole('row');
@@ -104,7 +104,7 @@ describe('ContestSubmissionsPage', () => {
     ]);
   });
 
-  test('shows submissions with username when canSupervise', async () => {
+  test('renders submissions with username when canSupervise', async () => {
     await renderComponent({ canSupervise: true });
 
     await screen.findAllByRole('row');
@@ -121,7 +121,7 @@ describe('ContestSubmissionsPage', () => {
     ]);
   });
 
-  test('shows submissions with regrade button when canManage', async () => {
+  test('renders submissions with regrade button when canManage', async () => {
     await renderComponent({ canSupervise: true, canManage: true });
 
     await screen.findAllByRole('row');

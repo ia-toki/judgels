@@ -11,10 +11,7 @@ describe('ContestManagersPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({
-    managers = [],
-    canManage = false,
-  } = {}) => {
+  const renderComponent = async ({ managers = [], canManage = false } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -47,31 +44,28 @@ describe('ContestManagersPage', () => {
     );
   };
 
-  test('shows no action buttons when not canManage', async () => {
+  test('renders no action buttons when not canManage', async () => {
     await renderComponent();
     await screen.findByRole('heading', { name: 'Managers' });
     expect(screen.queryByRole('button', { name: /add managers/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /remove managers/i })).not.toBeInTheDocument();
   });
 
-  test('shows action buttons when canManage', async () => {
+  test('renders action buttons when canManage', async () => {
     await renderComponent({ canManage: true });
     expect(await screen.findByRole('button', { name: /add managers/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
   });
 
-  test('shows placeholder text when there are no managers', async () => {
+  test('renders placeholder text when there are no managers', async () => {
     await renderComponent();
     expect(await screen.findByText(/no managers/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();
   });
 
-  test('shows the managers when there are managers', async () => {
+  test('renders the managers when there are managers', async () => {
     await renderComponent({
-      managers: [
-        { userJid: 'userJid1' },
-        { userJid: 'userJid2' },
-      ],
+      managers: [{ userJid: 'userJid1' }, { userJid: 'userJid2' }],
     });
     await waitFor(() => {
       expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
