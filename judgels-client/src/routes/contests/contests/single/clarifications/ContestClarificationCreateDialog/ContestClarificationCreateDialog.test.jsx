@@ -8,7 +8,7 @@ import { nockUriel } from '../../../../../../utils/nock';
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
 describe('ContestClarificationCreateDialog', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -23,9 +23,11 @@ describe('ContestClarificationCreateDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');

@@ -13,9 +13,27 @@ describe('ContestScoreboardPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let scoreboard;
+  const mockScoreboard = {
+    data: {
+      type: ContestScoreboardType.Official,
+      scoreboard: {
+        state: {
+          contestantJids: [],
+          problemJids: [],
+          problemAliases: [],
+        },
+        content: {
+          entries: [],
+        },
+      },
+      totalEntries: 0,
+      updatedTime: 0,
+    },
+    profilesMap: {},
+    config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
+  };
 
-  const renderComponent = async () => {
+  const renderComponent = async ({ scoreboard: sb } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -25,7 +43,7 @@ describe('ContestScoreboardPage', () => {
     nockUriel()
       .get('/contests/contestJid/scoreboard')
       .query({ frozen: false, showClosedProblems: false })
-      .reply(200, scoreboard);
+      .reply(200, sb);
 
     await act(async () => {
       render(
@@ -38,76 +56,28 @@ describe('ContestScoreboardPage', () => {
     });
   };
 
-  describe('when there is no scoreboard', () => {
-    beforeEach(async () => {
-      scoreboard = undefined;
-      await renderComponent();
-    });
-
-    it('shows placeholder text and no scoreboard', async () => {
-      expect(await screen.findByText(/no scoreboard/i)).toBeInTheDocument();
-    });
+  test('renders placeholder when there is no scoreboard', async () => {
+    await renderComponent();
+    expect(await screen.findByText(/no scoreboard/i)).toBeInTheDocument();
   });
 
-  describe('when there is official scoreboard', () => {
-    beforeEach(async () => {
-      scoreboard = {
-        data: {
-          type: ContestScoreboardType.Official,
-          scoreboard: {
-            state: {
-              contestantJids: [],
-              problemJids: [],
-              problemAliases: [],
-            },
-            content: {
-              entries: [],
-            },
-          },
-          totalEntries: 0,
-          updatedTime: 0,
-        },
-        profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
-      };
-
-      await renderComponent();
-    });
-
-    it('shows the scoreboard without frozen notice', async () => {
-      expect(await screen.findByRole('table')).toBeInTheDocument();
-      expect(screen.queryByText(/FROZEN/)).not.toBeInTheDocument();
-    });
+  test('renders scoreboard without frozen notice for official scoreboard', async () => {
+    await renderComponent({ scoreboard: mockScoreboard });
+    expect(await screen.findByRole('table')).toBeInTheDocument();
+    expect(screen.queryByText(/FROZEN/)).not.toBeInTheDocument();
   });
 
-  describe('when there is frozen scoreboard', () => {
-    beforeEach(async () => {
-      scoreboard = {
+  test('renders scoreboard with frozen notice for frozen scoreboard', async () => {
+    await renderComponent({
+      scoreboard: {
+        ...mockScoreboard,
         data: {
+          ...mockScoreboard.data,
           type: ContestScoreboardType.Frozen,
-          scoreboard: {
-            state: {
-              contestantJids: [],
-              problemJids: [],
-              problemAliases: [],
-            },
-            content: {
-              entries: [],
-            },
-          },
-          totalEntries: 0,
-          updatedTime: 0,
         },
-        profilesMap: {},
-        config: { canViewOfficialAndFrozen: false, canViewClosedProblems: false, canRefresh: true, pageSize: 0 },
-      };
-
-      await renderComponent();
+      },
     });
-
-    it('shows the scoreboard with frozen notice', async () => {
-      expect(await screen.findByRole('table')).toBeInTheDocument();
-      expect(screen.getByText(/FROZEN/)).toBeInTheDocument();
-    });
+    expect(await screen.findByRole('table')).toBeInTheDocument();
+    expect(screen.getByText(/FROZEN/)).toBeInTheDocument();
   });
 });

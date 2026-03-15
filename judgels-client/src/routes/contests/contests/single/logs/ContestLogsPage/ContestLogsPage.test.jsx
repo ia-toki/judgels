@@ -11,9 +11,23 @@ describe('ContestLogsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let logs;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    logs = [
+      {
+        contestJid: 'contestJid',
+        userJid: 'userJid1',
+        event: 'OPEN_PROBLEM',
+        problemJid: 'problemJid1',
+        time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      },
+      {
+        contestJid: 'contestJid',
+        userJid: 'userJid2',
+        event: 'OPEN_CLARIFICATIONS',
+        time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      },
+    ],
+  } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -51,45 +65,19 @@ describe('ContestLogsPage', () => {
     );
   };
 
-  describe('when there are no logs', () => {
-    beforeEach(async () => {
-      logs = [];
-      await renderComponent();
-    });
-
-    it('shows placeholder text and no logs', async () => {
-      expect(await screen.findByText(/no logs/i)).toBeInTheDocument();
-      expect(screen.queryByRole('row')).not.toBeInTheDocument();
-    });
+  test('shows placeholder text when there are no logs', async () => {
+    await renderComponent({ logs: [] });
+    expect(await screen.findByText(/no logs/i)).toBeInTheDocument();
+    expect(screen.queryByRole('row')).not.toBeInTheDocument();
   });
 
-  describe('when there are logs', () => {
-    beforeEach(async () => {
-      logs = [
-        {
-          contestJid: 'contestJid',
-          userJid: 'userJid1',
-          event: 'OPEN_PROBLEM',
-          problemJid: 'problemJid1',
-          time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-        },
-        {
-          contestJid: 'contestJid',
-          userJid: 'userJid2',
-          event: 'OPEN_CLARIFICATIONS',
-          time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-        },
-      ];
-      await renderComponent();
-    });
-
-    it('shows the logs', async () => {
-      await screen.findAllByRole('row');
-      const rows = screen.getAllByRole('row').slice(1);
-      expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
-        ['username1', 'OPEN_PROBLEM', 'A', '1 day ago '],
-        ['username2', 'OPEN_CLARIFICATIONS', '', '1 day ago '],
-      ]);
-    });
+  test('shows the logs when there are logs', async () => {
+    await renderComponent();
+    await screen.findAllByRole('row');
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
+      ['username1', 'OPEN_PROBLEM', 'A', '1 day ago '],
+      ['username2', 'OPEN_CLARIFICATIONS', '', '1 day ago '],
+    ]);
   });
 });

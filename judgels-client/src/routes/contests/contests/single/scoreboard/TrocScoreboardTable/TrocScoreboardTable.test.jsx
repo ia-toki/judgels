@@ -1,11 +1,11 @@
-import { act, cleanup, render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { TrocScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { TrocScoreboardTable } from './TrocScoreboardTable';
 
 describe('TrocScoreboardTable', () => {
-  const scoreboard = {
+  const mockScoreboard = {
     state: {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
       problemAliases: ['A', 'B', 'C', 'D'],
@@ -46,57 +46,46 @@ describe('TrocScoreboardTable', () => {
     },
   };
 
-  const profilesMap = {
+  const mockProfilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(async () => {
-    const props = { scoreboard, profilesMap };
+  const renderComponent = async ({ scoreboard = mockScoreboard, profilesMap = mockProfilesMap } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <TrocScoreboardTable {...props} />
+          <TrocScoreboardTable scoreboard={scoreboard} profilesMap={profilesMap} />
         </TestRouter>
       )
     );
-  });
+  };
 
-  test('ranks', () => {
+  test('ranks', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
     expect(ranks).toEqual(['1', '2']);
   });
 
-  describe('incognito ranks', () => {
-    beforeEach(async () => {
-      cleanup();
-      const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
-      const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
-      const props = { scoreboard: incognitoScoreboard, profilesMap };
-      await act(async () =>
-        render(
-          <TestRouter>
-            <TrocScoreboardTable {...props} />
-          </TestRouter>
-        )
-      );
-    });
-
-    it('only shows question marks', () => {
-      const rows = screen.getAllByRole('row').slice(1);
-      const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
-      expect(ranks).toEqual(['?', '?']);
-    });
+  test('incognito ranks only show question marks', async () => {
+    const incognitoEntries = mockScoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
+    const incognitoScoreboard = { ...mockScoreboard, content: { entries: incognitoEntries } };
+    await renderComponent({ scoreboard: incognitoScoreboard });
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
+    expect(ranks).toEqual(['?', '?']);
   });
 
-  test('display names', () => {
+  test('display names', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const names = rows.map(row => within(row).getAllByRole('cell')[1].textContent);
     expect(names).toEqual(['username2', 'username1']);
   });
 
-  test('points', () => {
+  test('points', async () => {
+    await renderComponent();
     const getColor = td =>
       td === 'first-accepted'
         ? 'D '

@@ -35,13 +35,8 @@ describe('ContestOverviewPage', () => {
     );
   };
 
-  describe('description', () => {
-    beforeEach(async () => {
-      await renderComponent();
-    });
-
-    it('shows the description', async () => {
-      await screen.findByText('Contest description');
-    });
+  test('shows the description', async () => {
+    await renderComponent();
+    await screen.findByText('Contest description');
   });
 });

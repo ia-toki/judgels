@@ -8,7 +8,7 @@ import { nockUriel } from '../../../../../../utils/nock';
 import { ContestClarificationAnswerBox } from './ContestClarificationAnswerBox';
 
 describe('ContestClarificationAnswerBox', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -23,9 +23,11 @@ describe('ContestClarificationAnswerBox', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const answer = screen.getByRole('textbox');

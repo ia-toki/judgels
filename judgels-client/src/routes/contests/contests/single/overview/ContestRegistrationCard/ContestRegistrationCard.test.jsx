@@ -11,7 +11,7 @@ describe('ContestRegistrationCard', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async contestantState => {
+  const renderComponent = async ({ contestantState = 'NONE' } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -32,26 +32,22 @@ describe('ContestRegistrationCard', () => {
     );
   };
 
-  describe.each`
+  test.each`
     contestantState                 | stateText          | actionText
     ${'REGISTRABLE_WRONG_DIVISION'} | ${[]}              | ${['Your rating is not allowed for this contest division']}
     ${'REGISTRABLE'}                | ${[]}              | ${['Register']}
     ${'REGISTRANT'}                 | ${[' Registered']} | ${['Unregister']}
     ${'CONTESTANT'}                 | ${[' Registered']} | ${[]}
-  `('text', ({ contestantState, stateText, actionText }) => {
-    beforeEach(async () => {
-      await renderComponent(contestantState);
-    });
+  `('shows correct texts when contestant state is $contestantState', async ({ contestantState, stateText, actionText }) => {
+    await renderComponent({ contestantState });
 
-    it(`shows correct texts when contestant state is ${contestantState}`, async () => {
-      await waitFor(() => {
-        const container = document.body;
-        const stateElements = container.querySelectorAll('span.contest-registration-card__state');
-        const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
+    await waitFor(() => {
+      const container = document.body;
+      const stateElements = container.querySelectorAll('span.contest-registration-card__state');
+      const actionButtons = container.querySelectorAll('button.contest-registration-card__action');
 
-        expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
-        expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
-      });
+      expect([...stateElements].map(el => el.textContent)).toEqual(stateText);
+      expect([...actionButtons].map(el => el.textContent)).toEqual(actionText);
     });
   });
 });

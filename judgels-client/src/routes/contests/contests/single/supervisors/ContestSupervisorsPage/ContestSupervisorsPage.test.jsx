@@ -11,9 +11,18 @@ describe('ContestSupervisorsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let supervisors;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    supervisors = [
+      {
+        userJid: 'userJid1',
+        managementPermissions: ['ANNOUNCEMENT', 'PROBLEM'],
+      },
+      {
+        userJid: 'userJid2',
+        managementPermissions: ['ALL'],
+      },
+    ],
+  } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -43,63 +52,34 @@ describe('ContestSupervisorsPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(async () => {
-      supervisors = [];
-      await renderComponent();
-    });
-
-    it('shows action buttons', async () => {
-      expect(await screen.findByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();
-    });
+  test('shows action buttons', async () => {
+    await renderComponent();
+    expect(await screen.findByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();
   });
 
-  describe('content', () => {
-    describe('when there are no supervisors', () => {
-      beforeEach(async () => {
-        supervisors = [];
-        await renderComponent();
-      });
+  test('renders placeholder when there are no supervisors', async () => {
+    await renderComponent({ supervisors: [] });
+    expect(await screen.findByText(/no supervisors/i)).toBeInTheDocument();
+    const rows = screen.queryAllByRole('row');
+    expect(rows).toHaveLength(0);
+  });
 
-      it('shows placeholder text and no supervisors', async () => {
-        expect(await screen.findByText(/no supervisors/i)).toBeInTheDocument();
-        const rows = screen.queryAllByRole('row');
-        expect(rows).toHaveLength(0);
-      });
+  test('renders supervisors when there are supervisors', async () => {
+    await renderComponent();
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
-
-    describe('when there are supervisors', () => {
-      beforeEach(async () => {
-        supervisors = [
-          {
-            userJid: 'userJid1',
-            managementPermissions: ['ANNOUNCEMENT', 'PROBLEM'],
-          },
-          {
-            userJid: 'userJid2',
-            managementPermissions: ['ALL'],
-          },
-        ];
-        await renderComponent();
-      });
-
-      it('shows the supervisors', async () => {
-        await waitFor(() => {
-          expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-        });
-        const rows = screen.getAllByRole('row').slice(1);
-        expect(
-          rows.map(row =>
-            within(row)
-              .queryAllByRole('cell')
-              .map(cell => cell.textContent)
-          )
-        ).toEqual([
-          ['username1', 'ANNCPROB'],
-          ['username2', 'ALL'],
-        ]);
-      });
-    });
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(
+      rows.map(row =>
+        within(row)
+          .queryAllByRole('cell')
+          .map(cell => cell.textContent)
+      )
+    ).toEqual([
+      ['username1', 'ANNCPROB'],
+      ['username2', 'ALL'],
+    ]);
   });
 });

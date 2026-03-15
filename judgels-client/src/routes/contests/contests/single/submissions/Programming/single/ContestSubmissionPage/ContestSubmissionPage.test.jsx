@@ -12,7 +12,7 @@ describe('ContestSubmissionPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  beforeEach(async () => {
+  const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -46,9 +46,11 @@ describe('ContestSubmissionPage', () => {
         </WebPrefsProvider>
       );
     });
-  });
+  };
 
   test('page', async () => {
+    await renderComponent();
+
     expect(await screen.findByText(/Submission #10/)).toBeInTheDocument();
   });
 });

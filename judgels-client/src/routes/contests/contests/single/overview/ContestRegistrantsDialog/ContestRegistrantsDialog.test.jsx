@@ -7,9 +7,11 @@ import { nockUriel } from '../../../../../../utils/nock';
 import ContestRegistrantsDialog from './ContestRegistrantsDialog';
 
 describe('ContestRegistrantsDialog', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
 
+  const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -38,9 +40,11 @@ describe('ContestRegistrantsDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('table', async () => {
+    await renderComponent();
+
     const rows = await screen.findAllByRole('row');
     expect(rows.slice(1).map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
       ['Indonesia', 'username3'],
