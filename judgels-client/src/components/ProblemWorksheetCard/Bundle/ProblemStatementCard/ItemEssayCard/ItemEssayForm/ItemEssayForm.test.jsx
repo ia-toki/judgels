@@ -7,167 +7,150 @@ import { AnswerState } from '../../../itemStatement';
 import ItemEssayForm from './ItemEssayForm';
 
 describe('ItemEssayForm', () => {
-  const onSubmitFn = vi.fn(() => Promise.resolve(true));
   const itemConfig = {
     statement: 'statement',
     score: 100,
   };
 
-  beforeEach(() => {
+  const renderComponent = ({
+    answerState = AnswerState.NotAnswered,
+    initialAnswer,
+    disabled = false,
+    onSubmit = vi.fn(() => Promise.resolve(true)),
+  } = {}) => {
     window.confirm = vi.fn(() => true);
+
+    render(
+      <ItemEssayForm
+        jid="jid"
+        type={ItemType.Essay}
+        meta="meta"
+        config={itemConfig}
+        disabled={disabled}
+        initialAnswer={initialAnswer}
+        onSubmit={onSubmit}
+        answerState={answerState}
+      />
+    );
+
+    return { onSubmit };
+  };
+
+  test('when not answered yet, renders textarea with empty value', () => {
+    renderComponent();
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveValue('');
   });
 
-  describe('not answered yet', () => {
-    const props = {
-      jid: 'jid',
-      type: ItemType.Essay,
-      meta: 'meta',
-      config: itemConfig,
-      disabled: false,
-      onSubmit: onSubmitFn,
-      answerState: AnswerState.NotAnswered,
-    };
-
-    beforeEach(() => {
-      render(<ItemEssayForm {...props} />);
-    });
-
-    describe('initial condition', () => {
-      it('should render textarea with empty value', () => {
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveValue('');
-      });
-
-      it('should be no buttons', () => {
-        expect(screen.queryByRole('button')).not.toBeInTheDocument();
-      });
-
-      test("helptext should be 'Unanswered.'", () => {
-        expect(screen.getByText(/Unanswered\./i)).toBeInTheDocument();
-      });
-    });
-
-    describe('fill and submit the answer', () => {
-      beforeEach(async () => {
-        const user = userEvent.setup();
-        const textarea = screen.getByRole('textbox');
-        await user.type(textarea, 'answer');
-      });
-
-      test("textarea value should be 'answer'", () => {
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveValue('answer');
-      });
-
-      test('cancel filling the answer should render no buttons', async () => {
-        const user = userEvent.setup();
-        const buttons = screen.getAllByRole('button');
-        const cancelButton = buttons[buttons.length - 1];
-        await user.click(cancelButton);
-        expect(screen.queryByRole('button')).not.toBeInTheDocument();
-      });
-
-      test('submit the answer', async () => {
-        const user = userEvent.setup();
-        const buttons = screen.getAllByRole('button');
-        const submitButton = buttons[0];
-        await user.click(submitButton);
-        expect(onSubmitFn).toBeCalled();
-      });
-    });
+  test('when not answered yet, renders no buttons', () => {
+    renderComponent();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
-  describe('answered', () => {
-    const props = {
-      jid: 'jid',
-      type: ItemType.Essay,
-      meta: 'meta',
-      config: itemConfig,
-      disabled: false,
-      initialAnswer: 'initial',
-      onSubmit: onSubmitFn,
-      answerState: AnswerState.AnswerSaved,
-    };
-
-    beforeEach(() => {
-      render(<ItemEssayForm {...props} />);
-    });
-
-    describe('initial condition', () => {
-      it('should render textarea with initial answer', () => {
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveValue(props.initialAnswer);
-      });
-
-      it('should render Clear button', () => {
-        const button = screen.getByRole('button');
-        expect(button).toHaveTextContent('Clear');
-      });
-
-      test("helptext should be 'Answered'", () => {
-        expect(screen.getByText(/Answered\./i)).toBeInTheDocument();
-      });
-    });
-
-    describe('change the answer', () => {
-      beforeEach(async () => {
-        const user = userEvent.setup();
-        const textarea = screen.getByRole('textbox');
-        await user.click(textarea);
-        await user.clear(textarea);
-        await user.type(textarea, 'answer');
-      });
-
-      test("textarea value should be 'answer'", () => {
-        const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveValue('answer');
-      });
-
-      test('cancel filling the answer should render Clear button', async () => {
-        const user = userEvent.setup();
-        const buttons = screen.getAllByRole('button');
-        const cancelButton = buttons[buttons.length - 1];
-        await user.click(cancelButton);
-        const button = screen.getByRole('button');
-        expect(button).toHaveTextContent('Clear');
-      });
-
-      test('submit the answer', async () => {
-        const user = userEvent.setup();
-        const buttons = screen.getAllByRole('button');
-        const submitButton = buttons[0];
-        await user.click(submitButton);
-        expect(onSubmitFn).toBeCalled();
-      });
-    });
-
-    test('clear the answer', async () => {
-      const user = userEvent.setup();
-      const clearButton = screen.getByRole('button');
-      await user.click(clearButton);
-      expect(window.confirm).toBeCalled();
-    });
+  test("when not answered yet, helptext should be 'Unanswered.'", () => {
+    renderComponent();
+    expect(screen.getByText(/Unanswered\./i)).toBeInTheDocument();
   });
 
-  describe('disabled', () => {
-    const props = {
-      jid: 'jid',
-      type: ItemType.Essay,
-      meta: 'meta',
-      config: itemConfig,
-      disabled: true,
-      initialAnswer: 'initial',
-      onSubmit: vi.fn().mockReturnValue(undefined),
-      answerState: AnswerState.AnswerSaved,
-    };
+  test("when not answered yet, textarea value should be 'answer'", async () => {
+    renderComponent();
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, 'answer');
+    expect(textarea).toHaveValue('answer');
+  });
 
-    beforeEach(() => {
-      render(<ItemEssayForm {...props} />);
-    });
+  test('when not answered yet, cancelling filling the answer renders no buttons', async () => {
+    renderComponent();
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, 'answer');
 
-    it('button disabled', () => {
-      const button = screen.getByRole('button');
-      expect(button).toBeDisabled();
-    });
+    const buttons = screen.getAllByRole('button');
+    const cancelButton = buttons[buttons.length - 1];
+    await user.click(cancelButton);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  test('when not answered yet, submits the answer', async () => {
+    const { onSubmit } = renderComponent();
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.type(textarea, 'answer');
+
+    const buttons = screen.getAllByRole('button');
+    const submitButton = buttons[0];
+    await user.click(submitButton);
+    expect(onSubmit).toBeCalled();
+  });
+
+  test('when answered, renders textarea with initial answer', () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const textarea = screen.getByRole('textbox');
+    expect(textarea).toHaveValue('initial');
+  });
+
+  test('when answered, renders Clear button', () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const button = screen.getByRole('button');
+    expect(button).toHaveTextContent('Clear');
+  });
+
+  test("when answered, helptext should be 'Answered'", () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    expect(screen.getByText(/Answered\./i)).toBeInTheDocument();
+  });
+
+  test("when answered, textarea value should be 'answer'", async () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.click(textarea);
+    await user.clear(textarea);
+    await user.type(textarea, 'answer');
+    expect(textarea).toHaveValue('answer');
+  });
+
+  test('when answered, cancelling filling the answer renders Clear button', async () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.click(textarea);
+    await user.clear(textarea);
+    await user.type(textarea, 'answer');
+
+    const buttons = screen.getAllByRole('button');
+    const cancelButton = buttons[buttons.length - 1];
+    await user.click(cancelButton);
+    const button = screen.getByRole('button');
+    expect(button).toHaveTextContent('Clear');
+  });
+
+  test('when answered, submits the answer', async () => {
+    const { onSubmit } = renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const user = userEvent.setup();
+    const textarea = screen.getByRole('textbox');
+    await user.click(textarea);
+    await user.clear(textarea);
+    await user.type(textarea, 'answer');
+
+    const buttons = screen.getAllByRole('button');
+    const submitButton = buttons[0];
+    await user.click(submitButton);
+    expect(onSubmit).toBeCalled();
+  });
+
+  test('when answered, clears the answer', async () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial' });
+    const user = userEvent.setup();
+    const clearButton = screen.getByRole('button');
+    await user.click(clearButton);
+    expect(window.confirm).toBeCalled();
+  });
+
+  test('when disabled, button should be disabled', () => {
+    renderComponent({ answerState: AnswerState.AnswerSaved, initialAnswer: 'initial', disabled: true });
+    const button = screen.getByRole('button');
+    expect(button).toBeDisabled();
   });
 });

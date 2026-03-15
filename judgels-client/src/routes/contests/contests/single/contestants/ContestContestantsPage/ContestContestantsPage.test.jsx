@@ -60,7 +60,7 @@ describe('ContestContestantsPage', () => {
     expect(screen.getByRole('button', { name: /remove contestants/i })).toBeInTheDocument();
   });
 
-  test('renders placeholder text when there are no contestants', async () => {
+  test('renders placeholder when there are no contestants', async () => {
     await renderComponent({ contestants: [] });
     expect(await screen.findByText(/no contestants/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();

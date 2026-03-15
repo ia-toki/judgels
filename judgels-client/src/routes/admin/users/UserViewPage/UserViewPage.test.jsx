@@ -36,7 +36,7 @@ describe('UserViewPage', () => {
     );
   };
 
-  it('shows user details', async () => {
+  test('renders user details', async () => {
     await renderComponent();
 
     expect(await screen.findByText('andi')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('UserViewPage', () => {
     expect(screen.getByText('andi@example.com')).toBeInTheDocument();
   });
 
-  it('shows user info', async () => {
+  test('renders user info', async () => {
     await renderComponent();
 
     await waitFor(() => {

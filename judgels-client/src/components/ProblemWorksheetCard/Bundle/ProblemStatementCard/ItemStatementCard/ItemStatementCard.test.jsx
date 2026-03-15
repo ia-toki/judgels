@@ -6,27 +6,24 @@ import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProvi
 import { ItemStatementCard } from './ItemStatementCard';
 
 describe('ItemStatementCard', () => {
-  const props = {
-    jid: 'jid',
-    type: ItemType.Statement,
-    meta: 'meta',
-    config: {
-      statement: 'statement',
-    },
-    disabled: false,
-  };
-
-  beforeEach(() => {
+  const renderComponent = () => {
     render(
       <WebPrefsProvider>
         <QueryClientProviderWrapper>
-          <ItemStatementCard {...props} />
+          <ItemStatementCard
+            jid="jid"
+            type={ItemType.Statement}
+            meta="meta"
+            config={{ statement: 'statement' }}
+            disabled={false}
+          />
         </QueryClientProviderWrapper>
       </WebPrefsProvider>
     );
-  });
+  };
 
-  it('should render item statement', () => {
-    expect(screen.getByText(props.config.statement)).toBeInTheDocument();
+  test('renders item statement', () => {
+    renderComponent();
+    expect(screen.getByText('statement')).toBeInTheDocument();
   });
 });

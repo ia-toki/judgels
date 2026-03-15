@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -9,52 +9,42 @@ import { ItemMultipleChoiceCard } from './ItemMultipleChoiceCard';
 
 describe('ItemMultipleChoiceCard', () => {
   const onChoiceChangeFn = vi.fn();
-  const itemConfig = {
-    statement: 'Statement',
-    choices: [
-      {
-        alias: 'A',
-        content: 'A',
-      },
-      {
-        alias: 'B',
-        content: 'B',
-      },
-      {
-        alias: 'C',
-        content: 'C',
-      },
-    ],
-  };
-  const multipleChoiceCardProps = {
-    jid: 'jid',
-    type: ItemType.MultipleChoice,
-    meta: 'meta',
-    config: itemConfig,
-    disabled: false,
-    onChoiceChange: onChoiceChangeFn,
-    itemNumber: 1,
-  };
 
-  beforeEach(() => {
-    const props = multipleChoiceCardProps;
+  const renderComponent = () => {
     render(
       <WebPrefsProvider>
         <QueryClientProviderWrapper>
-          <ItemMultipleChoiceCard {...props} />
+          <ItemMultipleChoiceCard
+            jid="jid"
+            type={ItemType.MultipleChoice}
+            meta="meta"
+            config={{
+              statement: 'Statement',
+              choices: [
+                { alias: 'A', content: 'A' },
+                { alias: 'B', content: 'B' },
+                { alias: 'C', content: 'C' },
+              ],
+            }}
+            disabled={false}
+            onChoiceChange={onChoiceChangeFn}
+            itemNumber={1}
+          />
         </QueryClientProviderWrapper>
       </WebPrefsProvider>
     );
-  });
+  };
 
-  test('Answer the question by clicking a radio button', async () => {
+  test('answers the question by clicking a radio button', async () => {
+    renderComponent();
     const user = userEvent.setup();
     const radioButtons = screen.getAllByRole('radio');
     await user.click(radioButtons[0]);
     expect(onChoiceChangeFn).toBeCalled();
   });
 
-  test('Answer the question and change the answer', async () => {
+  test('answers the question and changes the answer', async () => {
+    renderComponent();
     const user = userEvent.setup();
     const radioButtons = screen.getAllByRole('radio');
     await user.click(radioButtons[0]);

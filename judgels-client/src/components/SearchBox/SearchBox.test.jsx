@@ -7,7 +7,6 @@ import { createTestRouter } from '../../test/RouterWrapper';
 import SearchBox from './SearchBox';
 
 describe('SearchBox', () => {
-  let onRouteChange;
   let testLocation;
 
   const LocationTracker = () => {
@@ -16,7 +15,7 @@ describe('SearchBox', () => {
     return null;
   };
 
-  const renderComponent = async (key, initialValue) => {
+  const renderComponent = async ({ key, initialValue, onRouteChange }) => {
     const props = {
       initialValue,
       onRouteChange,
@@ -44,21 +43,20 @@ describe('SearchBox', () => {
     await user.click(submitButton);
   };
 
-  describe('when onSubmit is invoked by enter key or button press', () => {
-    beforeEach(() => {
-      onRouteChange = vi.fn().mockReturnValue({ key: 'judgels' });
+  test('updates the query string', async () => {
+    await renderComponent({
+      key: 'key',
+      initialValue: 'test',
+      onRouteChange: vi.fn().mockReturnValue({ key: 'judgels' }),
     });
+    await submit('judgels');
+    expect(testLocation.search).toEqual({ key: 'judgels' });
+  });
 
-    it('updates the query string', async () => {
-      await renderComponent('key', 'test');
-      await submit('judgels');
-      expect(testLocation.search).toEqual({ key: 'judgels' });
-    });
-
-    it('calls onRouteChange with correct previous route and the typed string', async () => {
-      await renderComponent('key', 'test');
-      await submit('judgels');
-      expect(onRouteChange).toBeCalledWith('judgels', { key: 'test', page: '2' });
-    });
+  test('calls onRouteChange with correct previous route and the typed string', async () => {
+    const onRouteChange = vi.fn().mockReturnValue({ key: 'judgels' });
+    await renderComponent({ key: 'key', initialValue: 'test', onRouteChange });
+    await submit('judgels');
+    expect(onRouteChange).toBeCalledWith('judgels', { key: 'test', page: '2' });
   });
 });

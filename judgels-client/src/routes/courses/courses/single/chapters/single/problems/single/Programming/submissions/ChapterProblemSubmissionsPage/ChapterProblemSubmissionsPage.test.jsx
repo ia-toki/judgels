@@ -8,14 +8,36 @@ import { ChapterProblemContext } from '../../../ChapterProblemContext';
 import ChapterProblemSubmissionsPage from './ChapterProblemSubmissionsPage';
 
 describe('ChapterProblemSubmissionsPage', () => {
+  const mockSubmissions = [
+    {
+      id: 20,
+      jid: 'submissionJid1',
+      containerJid: 'chapterJid',
+      userJid: 'userJid1',
+      problemJid: 'problemJid1',
+      gradingLanguage: 'Cpp17',
+      time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      latestGrading: {
+        verdict: { code: 'AC' },
+        score: 100,
+      },
+    },
+    {
+      id: 10,
+      jid: 'submissionJid2',
+      containerJid: 'chapterJid',
+      userJid: 'userJid2',
+      problemJid: 'problemJid1',
+      gradingLanguage: 'Cpp17',
+      time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
+    },
+  ];
+
   beforeEach(() => {
     setSession('token', { jid: 'userJid', username: 'username' });
   });
 
-  let submissions;
-  let canManage;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({ submissions = mockSubmissions, canManage = false } = {}) => {
     nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
     nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
@@ -57,128 +79,62 @@ describe('ChapterProblemSubmissionsPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(() => {
-      submissions = [];
-    });
-
-    describe('when not canManage', () => {
-      beforeEach(async () => {
-        canManage = false;
-        await renderComponent();
-      });
-
-      it('shows no buttons', async () => {
-        await screen.findByText(/no submissions/i);
-        expect(document.querySelectorAll('.action-buttons button')).toHaveLength(0);
-      });
-    });
-
-    describe('when canManage', () => {
-      beforeEach(async () => {
-        canManage = true;
-        await renderComponent();
-      });
-
-      it('shows action buttons', async () => {
-        expect(await screen.findByRole('button', { name: /regrade all pages/i })).toBeInTheDocument();
-      });
-    });
+  test('when not canManage, renders no buttons', async () => {
+    await renderComponent({ submissions: [] });
+    await screen.findByText(/no submissions/i);
+    expect(document.querySelectorAll('.action-buttons button')).toHaveLength(0);
   });
 
-  describe('content', () => {
-    describe('when there are no submissions', () => {
-      beforeEach(async () => {
-        submissions = [];
-        canManage = false;
-        await renderComponent();
-      });
+  test('when canManage, renders action buttons', async () => {
+    await renderComponent({ submissions: [], canManage: true });
+    expect(await screen.findByRole('button', { name: /regrade all pages/i })).toBeInTheDocument();
+  });
 
-      it('shows placeholder text and no submissions', async () => {
-        expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
-        expect(screen.queryByRole('row')).not.toBeInTheDocument();
-      });
+  test('renders placeholder when there are no submissions', async () => {
+    await renderComponent({ submissions: [] });
+    expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
+    expect(screen.queryByRole('row')).not.toBeInTheDocument();
+  });
+
+  test('when not canManage, renders the submissions', async () => {
+    await renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
 
-    describe('when there are submissions', () => {
-      beforeEach(() => {
-        submissions = [
-          {
-            id: 20,
-            jid: 'submissionJid1',
-            containerJid: 'chapterJid',
-            userJid: 'userJid1',
-            problemJid: 'problemJid1',
-            gradingLanguage: 'Cpp17',
-            time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-            latestGrading: {
-              verdict: { code: 'AC' },
-              score: 100,
-            },
-          },
-          {
-            id: 10,
-            jid: 'submissionJid2',
-            containerJid: 'chapterJid',
-            userJid: 'userJid2',
-            problemJid: 'problemJid1',
-            gradingLanguage: 'Cpp17',
-            time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
-          },
-        ];
-      });
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows).toHaveLength(2);
 
-      describe('when not canManage', () => {
-        beforeEach(async () => {
-          canManage = false;
-          await renderComponent();
-        });
+    expect(
+      within(rows[0])
+        .getAllByRole('cell')
+        .map(td => td.textContent.trim())
+    ).toEqual(['20', 'username1', 'C++17', 'Accepted', '1 day ago', 'search']);
+    expect(
+      within(rows[1])
+        .getAllByRole('cell')
+        .map(td => td.textContent.trim())
+    ).toEqual(['10', 'username2', 'C++17', '', '2 days ago', 'search']);
+  });
 
-        it('shows the submissions', async () => {
-          await waitFor(() => {
-            expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-          });
+  test('when canManage, renders the submissions', async () => {
+    await renderComponent({ canManage: true });
 
-          const rows = screen.getAllByRole('row').slice(1);
-          expect(rows).toHaveLength(2);
-
-          expect(
-            within(rows[0])
-              .getAllByRole('cell')
-              .map(td => td.textContent.trim())
-          ).toEqual(['20', 'username1', 'C++17', 'Accepted', '1 day ago', 'search']);
-          expect(
-            within(rows[1])
-              .getAllByRole('cell')
-              .map(td => td.textContent.trim())
-          ).toEqual(['10', 'username2', 'C++17', '', '2 days ago', 'search']);
-        });
-      });
-
-      describe('when canManage', () => {
-        beforeEach(async () => {
-          canManage = true;
-          await renderComponent();
-        });
-
-        it('shows the submissions', async () => {
-          await waitFor(() => {
-            expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-          });
-
-          const rows = screen.getAllByRole('row').slice(1);
-          expect(
-            rows.map(row =>
-              within(row)
-                .getAllByRole('cell')
-                .map(cell => cell.textContent.replace(/\s+/g, ' ').trim())
-            )
-          ).toEqual([
-            ['20 refresh', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
-            ['10 refresh', 'username2', 'C++17', '', '2 days ago', 'search'],
-          ]);
-        });
-      });
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
+
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(
+      rows.map(row =>
+        within(row)
+          .getAllByRole('cell')
+          .map(cell => cell.textContent.replace(/\s+/g, ' ').trim())
+      )
+    ).toEqual([
+      ['20 refresh', 'username1', 'C++17', 'Accepted', '1 day ago', 'search'],
+      ['10 refresh', 'username2', 'C++17', '', '2 days ago', 'search'],
+    ]);
   });
 });

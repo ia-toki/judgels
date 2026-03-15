@@ -65,7 +65,7 @@ describe('ContestLogsPage', () => {
     );
   };
 
-  test('renders placeholder text when there are no logs', async () => {
+  test('renders placeholder when there are no logs', async () => {
     await renderComponent({ logs: [] });
     expect(await screen.findByText(/no logs/i)).toBeInTheDocument();
     expect(screen.queryByRole('row')).not.toBeInTheDocument();

@@ -1,5 +1,4 @@
 import { consolidateLanguages, sortLanguagesByName } from './language';
-import { ProblemInfo } from './problem';
 
 describe('language', () => {
   test('sortLanguagesByName()', () => {
@@ -12,9 +11,8 @@ describe('language', () => {
       titlesByLanguage: Object.assign({}, ...languages.map(lang => ({ [lang]: 'name' }))),
     });
 
-    let problemsMap;
-    it('returns the current statement language when it is one of the languages', () => {
-      problemsMap = Object.assign({}, [mk('id', ['id', 'en']), mk('id', ['id', 'hr'])]);
+    test('returns the current statement language when it is one of the languages', () => {
+      const problemsMap = Object.assign({}, [mk('id', ['id', 'en']), mk('id', ['id', 'hr'])]);
       expect(consolidateLanguages(problemsMap, 'id')).toEqual({
         defaultLanguage: 'id',
         uniqueLanguages: ['id', 'en', 'hr'],
@@ -25,8 +23,8 @@ describe('language', () => {
       });
     });
 
-    it('returns the most common default languages when the current statement language is not one of the languages', () => {
-      problemsMap = Object.assign({}, [
+    test('returns the most common default languages when the current statement language is not one of the languages', () => {
+      let problemsMap = Object.assign({}, [
         mk('id', ['id', 'en']),
         mk('id', ['id', 'hr']),
         mk('en', ['en']),

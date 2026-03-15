@@ -26,64 +26,60 @@ describe('ContentWithTopbar', () => {
     });
   };
 
-  describe('when the first item has a path', () => {
-    it('shows topbar items with correct texts', async () => {
-      await renderComponent('/second', 'first');
+  test('when the first item has a path, renders topbar items with correct texts', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('link');
-      expect(items).toHaveLength(3);
-      expect(items[0]).toHaveTextContent('First');
-      expect(items[1]).toHaveTextContent('Second');
-      expect(items[2]).toHaveTextContent('Third');
-    });
-
-    it('marks the matching item as active', async () => {
-      await renderComponent('/second', 'first');
-
-      const items = screen.getAllByRole('link');
-      expect(items[0]).not.toHaveClass('bp6-active');
-      expect(items[1]).toHaveClass('bp6-active');
-      expect(items[2]).not.toHaveClass('bp6-active');
-    });
-
-    it('has no active item when at base path (first item has non-empty path)', async () => {
-      await renderComponent('', 'first');
-
-      const items = screen.getAllByRole('link');
-      expect(items[0]).not.toHaveClass('bp6-active');
-      expect(items[1]).not.toHaveClass('bp6-active');
-    });
-
-    it('generates correct links', async () => {
-      await renderComponent('/second', 'first');
-
-      const items = screen.getAllByRole('link');
-      expect(items[2]).toHaveAttribute('href', '/parent/third');
-    });
+    const items = screen.getAllByRole('link');
+    expect(items).toHaveLength(3);
+    expect(items[0]).toHaveTextContent('First');
+    expect(items[1]).toHaveTextContent('Second');
+    expect(items[2]).toHaveTextContent('Third');
   });
 
-  describe('when the first item has empty path', () => {
-    it('marks the matching item as active', async () => {
-      await renderComponent('/second');
+  test('when the first item has a path, marks the matching item as active', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('link');
-      expect(items[0]).not.toHaveClass('bp6-active');
-      expect(items[1]).toHaveClass('bp6-active');
-    });
+    const items = screen.getAllByRole('link');
+    expect(items[0]).not.toHaveClass('bp6-active');
+    expect(items[1]).toHaveClass('bp6-active');
+    expect(items[2]).not.toHaveClass('bp6-active');
+  });
 
-    it('marks the first item as active when at base path', async () => {
-      await renderComponent('');
+  test('when the first item has a path, has no active item when at base path', async () => {
+    await renderComponent('', 'first');
 
-      const items = screen.getAllByRole('link');
-      expect(items[0]).toHaveClass('bp6-active');
-      expect(items[1]).not.toHaveClass('bp6-active');
-    });
+    const items = screen.getAllByRole('link');
+    expect(items[0]).not.toHaveClass('bp6-active');
+    expect(items[1]).not.toHaveClass('bp6-active');
+  });
 
-    it('generates correct link for first item', async () => {
-      await renderComponent('/second');
+  test('when the first item has a path, generates correct links', async () => {
+    await renderComponent('/second', 'first');
 
-      const items = screen.getAllByRole('link');
-      expect(items[0]).toHaveAttribute('href', '/parent');
-    });
+    const items = screen.getAllByRole('link');
+    expect(items[2]).toHaveAttribute('href', '/parent/third');
+  });
+
+  test('when the first item has empty path, marks the matching item as active', async () => {
+    await renderComponent('/second');
+
+    const items = screen.getAllByRole('link');
+    expect(items[0]).not.toHaveClass('bp6-active');
+    expect(items[1]).toHaveClass('bp6-active');
+  });
+
+  test('when the first item has empty path, marks the first item as active when at base path', async () => {
+    await renderComponent('');
+
+    const items = screen.getAllByRole('link');
+    expect(items[0]).toHaveClass('bp6-active');
+    expect(items[1]).not.toHaveClass('bp6-active');
+  });
+
+  test('when the first item has empty path, generates correct link for first item', async () => {
+    await renderComponent('/second');
+
+    const items = screen.getAllByRole('link');
+    expect(items[0]).toHaveAttribute('href', '/parent');
   });
 });

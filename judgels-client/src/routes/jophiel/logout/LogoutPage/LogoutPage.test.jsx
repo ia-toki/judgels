@@ -12,7 +12,7 @@ describe('LogoutPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  beforeEach(async () => {
+  const renderComponent = async () => {
     nockJophiel().post('/session/logout').reply(200);
 
     await act(async () =>
@@ -24,9 +24,10 @@ describe('LogoutPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
-  it('logs out immediately', () => {
+  test('logs out immediately', async () => {
+    await renderComponent();
     expect(nock.isDone()).toBe(true);
   });
 });

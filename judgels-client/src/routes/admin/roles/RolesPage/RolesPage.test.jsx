@@ -11,10 +11,16 @@ describe('RolesPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let roles;
-  let profilesMap;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    roles = [
+      { userJid: 'userJid1', role: { jophiel: 'ADMIN', sandalphon: 'ADMIN', uriel: 'ADMIN', jerahmeel: 'ADMIN' } },
+      { userJid: 'userJid2', role: { sandalphon: 'ADMIN' } },
+    ],
+    profilesMap = {
+      userJid1: { username: 'andi' },
+      userJid2: { username: 'budi' },
+    },
+  } = {}) => {
     nockJophiel().get('/user-roles').reply(200, {
       data: roles,
       profilesMap,
@@ -31,47 +37,29 @@ describe('RolesPage', () => {
     );
   };
 
-  describe('when there are no roles', () => {
-    beforeEach(async () => {
-      roles = [];
-      profilesMap = {};
-      await renderComponent();
-    });
-
-    it('shows placeholder text', async () => {
-      expect(await screen.findByText(/no roles/i)).toBeInTheDocument();
-    });
+  test('renders placeholder when there are no roles', async () => {
+    await renderComponent({ roles: [], profilesMap: {} });
+    expect(await screen.findByText(/no roles/i)).toBeInTheDocument();
   });
 
-  describe('when there are roles', () => {
-    beforeEach(async () => {
-      roles = [
-        { userJid: 'userJid1', role: { jophiel: 'ADMIN', sandalphon: 'ADMIN', uriel: 'ADMIN', jerahmeel: 'ADMIN' } },
-        { userJid: 'userJid2', role: { sandalphon: 'ADMIN' } },
-      ];
-      profilesMap = {
-        userJid1: { username: 'andi' },
-        userJid2: { username: 'budi' },
-      };
-      await renderComponent();
-    });
+  test('renders the roles table', async () => {
+    await renderComponent();
 
-    it('shows the roles table', async () => {
-      await waitFor(() => {
-        expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-      });
-      const rows = screen.getAllByRole('row');
-      expect(
-        rows.map(row =>
-          within(row)
-            .queryAllByRole('cell')
-            .map(cell => cell.textContent)
-        )
-      ).toEqual([[], ['andi', 'ADMIN', 'ADMIN', 'ADMIN', 'ADMIN'], ['budi', '-', 'ADMIN', '-', '-']]);
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
+    const rows = screen.getAllByRole('row');
+    expect(
+      rows.map(row =>
+        within(row)
+          .queryAllByRole('cell')
+          .map(cell => cell.textContent)
+      )
+    ).toEqual([[], ['andi', 'ADMIN', 'ADMIN', 'ADMIN', 'ADMIN'], ['budi', '-', 'ADMIN', '-', '-']]);
+  });
 
-    it('shows the edit button', () => {
-      expect(screen.getByRole('button', { name: /edit roles/i })).toBeInTheDocument();
-    });
+  test('renders the edit button', async () => {
+    await renderComponent();
+    expect(await screen.findByRole('button', { name: /edit roles/i })).toBeInTheDocument();
   });
 });

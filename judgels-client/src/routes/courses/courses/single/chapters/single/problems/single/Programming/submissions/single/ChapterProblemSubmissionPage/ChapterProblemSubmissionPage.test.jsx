@@ -8,8 +8,6 @@ import { nockJerahmeel } from '../../../../../../../../../../../../utils/nock';
 import ChapterProblemSubmissionPage from './ChapterProblemSubmissionPage';
 
 describe('ChapterProblemSubmissionPage', () => {
-  let source = {};
-
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -28,7 +26,7 @@ describe('ChapterProblemSubmissionPage', () => {
             jid: 'submissionJid',
             gradingEngine: 'OutputOnly',
           },
-          source,
+          source: {},
         },
       });
 
@@ -48,11 +46,8 @@ describe('ChapterProblemSubmissionPage', () => {
     );
   };
 
-  beforeEach(async () => {
-    await renderComponent();
-  });
-
   test('page', async () => {
+    await renderComponent();
     await screen.findByText('Submission #10');
   });
 });

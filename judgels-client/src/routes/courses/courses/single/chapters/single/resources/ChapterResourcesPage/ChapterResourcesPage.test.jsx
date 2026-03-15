@@ -8,14 +8,20 @@ import { nockJerahmeel } from '../../../../../../../../utils/nock';
 import ChapterResourcesPage from './ChapterResourcesPage';
 
 describe('ChapterResourcesPage', () => {
-  let lessons;
-  let problems;
-
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    lessons = [
+      { lessonJid: 'lessonJid1', alias: 'X' },
+      { lessonJid: 'lessonJid2', alias: 'Y' },
+    ],
+    problems = [
+      { problemJid: 'problemJid1', alias: 'A' },
+      { problemJid: 'problemJid2', alias: 'B' },
+    ],
+  } = {}) => {
     nockJerahmeel()
       .get('/courses/slug/courseSlug')
       .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
@@ -77,41 +83,21 @@ describe('ChapterResourcesPage', () => {
     );
   };
 
-  describe('when there are no resources', () => {
-    beforeEach(async () => {
-      lessons = [];
-      problems = [];
-      await renderComponent();
-    });
-
-    it('shows placeholder text and no resources', async () => {
-      await screen.findByText(/no resources/i);
-      expect(document.querySelectorAll('a.content-card-link')).toHaveLength(0);
-    });
+  test('renders placeholder when there are no resources', async () => {
+    await renderComponent({ lessons: [], problems: [] });
+    await screen.findByText(/no resources/i);
+    expect(document.querySelectorAll('a.content-card-link')).toHaveLength(0);
   });
 
-  describe('when there are resources', () => {
-    beforeEach(async () => {
-      lessons = [
-        { lessonJid: 'lessonJid1', alias: 'X' },
-        { lessonJid: 'lessonJid2', alias: 'Y' },
-      ];
-      problems = [
-        { problemJid: 'problemJid1', alias: 'A' },
-        { problemJid: 'problemJid2', alias: 'B' },
-      ];
-      await renderComponent();
-    });
-
-    it('shows the resources', async () => {
-      await screen.findByText('X. Lesson X');
-      const cards = document.querySelectorAll('a.content-card-link');
-      expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
-        ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
-        ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
-        [`A. Problem Asolved\xa0\xa0`, '/courses/courseSlug/chapters/chapter-1/problems/A'],
-        ['B. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
-      ]);
-    });
+  test('renders the resources', async () => {
+    await renderComponent();
+    await screen.findByText('X. Lesson X');
+    const cards = document.querySelectorAll('a.content-card-link');
+    expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
+      ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
+      ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],
+      [`A. Problem Asolved\xa0\xa0`, '/courses/courseSlug/chapters/chapter-1/problems/A'],
+      ['B. Problem B', '/courses/courseSlug/chapters/chapter-1/problems/B'],
+    ]);
   });
 });
