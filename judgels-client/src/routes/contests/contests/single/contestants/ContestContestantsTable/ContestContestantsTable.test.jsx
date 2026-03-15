@@ -4,11 +4,17 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantsTable } from './ContestContestantsTable';
 
 describe('ContestContestantsTable', () => {
-  let virtualModuleConfig;
-  let contestants;
-  let now;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    virtualModuleConfig,
+    contestants = [
+      { userJid: 'userJid1' },
+      { userJid: 'userJid2' },
+      { userJid: 'userJid3' },
+      { userJid: 'userJid4' },
+      { userJid: 'userJid5' },
+    ],
+    now,
+  } = {}) => {
     const props = {
       contest: {
         beginTime: 10,
@@ -35,54 +41,39 @@ describe('ContestContestantsTable', () => {
     );
   };
 
-  describe('when contest is not virtual', () => {
-    beforeEach(async () => {
-      contestants = [
-        { userJid: 'userJid1' },
-        { userJid: 'userJid2' },
-        { userJid: 'userJid3' },
-        { userJid: 'userJid4' },
-        { userJid: 'userJid5' },
-      ];
-      await renderComponent();
-    });
-
-    it('shows the correct columns', () => {
-      const rows = screen.getAllByRole('row').slice(1);
-      const usernames = rows.map(row => row.children[1].textContent);
-      expect(usernames).toEqual(['userA', 'userB', 'userC', 'userD', 'userE']);
-    });
+  test('renders sorted usernames when contest is not virtual', async () => {
+    await renderComponent();
+    const rows = screen.getAllByRole('row').slice(1);
+    const usernames = rows.map(row => row.children[1].textContent);
+    expect(usernames).toEqual(['userA', 'userB', 'userC', 'userD', 'userE']);
   });
 
-  describe('when contest is virtual', () => {
-    beforeEach(async () => {
-      now = 70;
-      virtualModuleConfig = { virtualDuration: 50 };
-      contestants = [
+  test('renders correct columns with progress bars when contest is virtual', async () => {
+    await renderComponent({
+      now: 70,
+      virtualModuleConfig: { virtualDuration: 50 },
+      contestants: [
         { userJid: 'userJid1' },
         { userJid: 'userJid2', contestStartTime: 30 },
         { userJid: 'userJid3', contestStartTime: 20 },
         { userJid: 'userJid4', contestStartTime: 65 },
         { userJid: 'userJid5' },
-      ];
-      await renderComponent();
+      ],
     });
 
-    it('shows the correct columns', () => {
-      const rows = screen.getAllByRole('row').slice(1);
-      expect(rows).toHaveLength(5);
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows).toHaveLength(5);
 
-      expect(rows[0].children[1]).toHaveTextContent('userA');
-      expect(within(rows[0]).getByRole('progressbar')).toBeInTheDocument();
+    expect(rows[0].children[1]).toHaveTextContent('userA');
+    expect(within(rows[0]).getByRole('progressbar')).toBeInTheDocument();
 
-      expect(rows[1].children[1]).toHaveTextContent('userD');
-      expect(within(rows[1]).getByRole('progressbar')).toBeInTheDocument();
+    expect(rows[1].children[1]).toHaveTextContent('userD');
+    expect(within(rows[1]).getByRole('progressbar')).toBeInTheDocument();
 
-      expect(rows[2].children[1]).toHaveTextContent('userE');
-      expect(within(rows[2]).getByRole('progressbar')).toBeInTheDocument();
+    expect(rows[2].children[1]).toHaveTextContent('userE');
+    expect(within(rows[2]).getByRole('progressbar')).toBeInTheDocument();
 
-      expect(rows[3].children[1]).toHaveTextContent('userB');
-      expect(rows[4].children[1]).toHaveTextContent('userC');
-    });
+    expect(rows[3].children[1]).toHaveTextContent('userB');
+    expect(rows[4].children[1]).toHaveTextContent('userC');
   });
 });

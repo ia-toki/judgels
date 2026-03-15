@@ -11,10 +11,10 @@ describe('ContestContestantsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let contestants;
-  let canManage;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    contestants = [{ userJid: 'userJid1' }, { userJid: 'userJid2' }],
+    canManage,
+  } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -47,74 +47,35 @@ describe('ContestContestantsPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(() => {
-      contestants = [];
-    });
-
-    describe('when not canManage', () => {
-      beforeEach(async () => {
-        canManage = false;
-        await renderComponent();
-      });
-
-      it('shows no buttons', async () => {
-        await screen.findByRole('heading', { name: 'Contestants' });
-        expect(screen.queryByRole('button', { name: /add contestants/i })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: /remove contestants/i })).not.toBeInTheDocument();
-      });
-    });
-
-    describe('when canManage', () => {
-      beforeEach(async () => {
-        canManage = true;
-        await renderComponent();
-      });
-
-      it('shows action buttons', async () => {
-        expect(await screen.findByRole('button', { name: /add contestants/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /remove contestants/i })).toBeInTheDocument();
-      });
-    });
+  test('renders no buttons when not canManage', async () => {
+    await renderComponent({ contestants: [], canManage: false });
+    await screen.findByRole('heading', { name: 'Contestants' });
+    expect(screen.queryByRole('button', { name: /add contestants/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /remove contestants/i })).not.toBeInTheDocument();
   });
 
-  describe('content', () => {
-    describe('when there are no contestants', () => {
-      beforeEach(async () => {
-        contestants = [];
-        await renderComponent();
-      });
+  test('renders action buttons when canManage', async () => {
+    await renderComponent({ canManage: true });
+    expect(await screen.findByRole('button', { name: /add contestants/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove contestants/i })).toBeInTheDocument();
+  });
 
-      it('shows placeholder text and no contestants', async () => {
-        expect(await screen.findByText(/no contestants/i)).toBeInTheDocument();
-        expect(screen.queryByRole('row')).not.toBeInTheDocument();
-      });
+  test('renders placeholder text when there are no contestants', async () => {
+    await renderComponent({ contestants: [] });
+    expect(await screen.findByText(/no contestants/i)).toBeInTheDocument();
+    expect(screen.queryByRole('row')).not.toBeInTheDocument();
+  });
+
+  test('renders the contestants when there are contestants', async () => {
+    await renderComponent();
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
-
-    describe('when there are contestants', () => {
-      beforeEach(async () => {
-        contestants = [
-          {
-            userJid: 'userJid1',
-          },
-          {
-            userJid: 'userJid2',
-          },
-        ];
-        await renderComponent();
-      });
-
-      it('shows the contestants', async () => {
-        await waitFor(() => {
-          expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-        });
-        const rows = screen.getAllByRole('row');
-        expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
-          [],
-          ['1', 'username1'],
-          ['2', 'username2'],
-        ]);
-      });
-    });
+    const rows = screen.getAllByRole('row');
+    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
+      [],
+      ['1', 'username1'],
+      ['2', 'username2'],
+    ]);
   });
 });

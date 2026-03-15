@@ -8,7 +8,7 @@ import { nockUriel } from '../../../../../../utils/nock';
 import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
 
 describe('ContestAnnouncementCreateDialog', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -18,9 +18,11 @@ describe('ContestAnnouncementCreateDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');

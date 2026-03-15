@@ -39,7 +39,7 @@ describe('ContestProblemEditDialog', () => {
     },
   ];
 
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -49,9 +49,11 @@ describe('ContestProblemEditDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');

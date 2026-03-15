@@ -15,11 +15,7 @@ describe('ContestAnnouncementEditDialog', () => {
     status: 'PUBLISHED',
   };
 
-  beforeEach(async () => {
-    const onToggleEditDialog = () => {
-      return;
-    };
-
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -27,15 +23,16 @@ describe('ContestAnnouncementEditDialog', () => {
             <ContestAnnouncementEditDialog
               contest={{ jid: 'contestJid' }}
               announcement={announcement}
-              onToggleEditDialog={onToggleEditDialog}
+              onToggleEditDialog={() => {}}
             />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
     const user = userEvent.setup();
 
     // TODO(fushar): make this work

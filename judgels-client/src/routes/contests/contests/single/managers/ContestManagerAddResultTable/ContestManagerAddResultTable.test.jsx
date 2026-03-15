@@ -4,28 +4,33 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestManagerAddResultTable } from './ContestManagerAddResultTable';
 
 describe('ContestManagerAddResultTable', () => {
-  beforeEach(async () => {
-    const props = {
-      usernames: ['budi', 'caca', 'andi', 'dudi', 'zoro'],
-      insertedManagerProfilesMap: {
-        budi: { username: 'budi' },
-        andi: { username: 'andi' },
-      },
-      alreadyManagerProfilesMap: {
-        dudi: { username: 'dudi' },
-        caca: { username: 'caca' },
-      },
-    };
+  const renderComponent = async ({
+    usernames = ['budi', 'caca', 'andi', 'dudi', 'zoro'],
+    insertedManagerProfilesMap = {
+      budi: { username: 'budi' },
+      andi: { username: 'andi' },
+    },
+    alreadyManagerProfilesMap = {
+      dudi: { username: 'dudi' },
+      caca: { username: 'caca' },
+    },
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestManagerAddResultTable {...props} />
+          <ContestManagerAddResultTable
+            usernames={usernames}
+            insertedManagerProfilesMap={insertedManagerProfilesMap}
+            alreadyManagerProfilesMap={alreadyManagerProfilesMap}
+          />
         </TestRouter>
       )
     );
-  });
+  };
 
-  it('shows the correct tables', () => {
+  test('renders the correct tables', async () => {
+    await renderComponent();
+
     const tables = screen.getAllByRole('table');
 
     const insertedManagerRows = within(tables[0]).getAllByRole('row');

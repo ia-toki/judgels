@@ -12,10 +12,7 @@ describe('ContestProblemsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let problems;
-  let canManage;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({ problems = [], canManage } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -64,84 +61,58 @@ describe('ContestProblemsPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(() => {
-      problems = [];
-    });
+  test('renders no action buttons when not canManage', async () => {
+    await renderComponent({ canManage: false });
 
-    describe('when not canManage', () => {
-      beforeEach(async () => {
-        canManage = false;
-        await renderComponent();
-      });
+    const section = document.querySelector('div.content-card__section');
+    const buttons = section ? section.querySelectorAll('button') : [];
+    expect(buttons).toHaveLength(0);
+  });
 
-      it('shows no buttons', async () => {
-        const section = document.querySelector('div.content-card__section');
-        const buttons = section ? section.querySelectorAll('button') : [];
-        expect(buttons).toHaveLength(0);
-      });
-    });
+  test('renders action buttons when canManage', async () => {
+    await renderComponent({ canManage: true });
 
-    describe('when canManage', () => {
-      beforeEach(async () => {
-        canManage = true;
-        await renderComponent();
-      });
-
-      it('shows action buttons', async () => {
-        await waitFor(() => {
-          const section = document.querySelector('div.content-card__section');
-          expect(section).not.toBeNull();
-          const buttons = Array.from(section.querySelectorAll('button'));
-          expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
-        });
-      });
+    await waitFor(() => {
+      const section = document.querySelector('div.content-card__section');
+      expect(section).not.toBeNull();
+      const buttons = Array.from(section.querySelectorAll('button'));
+      expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
     });
   });
 
-  describe('content', () => {
-    describe('when there are no problems', () => {
-      beforeEach(async () => {
-        problems = [];
-        await renderComponent();
-      });
+  test('renders placeholder text when there are no problems', async () => {
+    await renderComponent({ problems: [] });
 
-      it('shows placeholder text and no problems', async () => {
-        expect(await screen.findByText(/no problems/i)).toBeInTheDocument();
-        const cards = document.querySelectorAll('div.contest-problem-card');
-        expect(cards).toHaveLength(0);
-      });
+    expect(await screen.findByText(/no problems/i)).toBeInTheDocument();
+    const cards = document.querySelectorAll('div.contest-problem-card');
+    expect(cards).toHaveLength(0);
+  });
+
+  test('renders the problems when there are problems', async () => {
+    await renderComponent({
+      problems: [
+        {
+          problemJid: 'problemJid1',
+          alias: 'A',
+          status: 'CLOSED',
+          submissionsLimit: null,
+        },
+        {
+          problemJid: 'problemJid2',
+          alias: 'B',
+          status: 'OPEN',
+          submissionsLimit: 10,
+          points: 100,
+        },
+      ],
     });
 
-    describe('when there are problems', () => {
-      beforeEach(async () => {
-        problems = [
-          {
-            problemJid: 'problemJid1',
-            alias: 'A',
-            status: 'CLOSED',
-            submissionsLimit: null,
-          },
-          {
-            problemJid: 'problemJid2',
-            alias: 'B',
-            status: 'OPEN',
-            submissionsLimit: 10,
-            points: 100,
-          },
-        ];
-        await renderComponent();
-      });
-
-      it('shows the problems', async () => {
-        await waitFor(() => {
-          const cards = document.querySelectorAll('div.contest-problem-card');
-          expect([...cards].map(card => card.textContent)).toEqual([
-            'B. Problem B [100 points]8 submissions left',
-            'A. Problem ACLOSED',
-          ]);
-        });
-      });
+    await waitFor(() => {
+      const cards = document.querySelectorAll('div.contest-problem-card');
+      expect([...cards].map(card => card.textContent)).toEqual([
+        'B. Problem B [100 points]8 submissions left',
+        'A. Problem ACLOSED',
+      ]);
     });
   });
 });

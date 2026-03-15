@@ -13,7 +13,7 @@ describe('ContestSupervisorAddDialog', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -23,9 +23,11 @@ describe('ContestSupervisorAddDialog', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const button = screen.getByRole('button');

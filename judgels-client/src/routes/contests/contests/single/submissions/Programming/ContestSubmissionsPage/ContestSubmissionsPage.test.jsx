@@ -11,11 +11,36 @@ describe('ContestSubmissionsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let submissions;
-  let canSupervise;
-  let canManage;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    submissions = [
+      {
+        id: 20,
+        jid: 'jid1',
+        userJid: 'userJid1',
+        problemJid: 'problemJid1',
+        containerJid: 'contestJid',
+        gradingEngine: 'Batch',
+        gradingLanguage: 'Cpp17',
+        time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      },
+      {
+        id: 10,
+        jid: 'jid2',
+        userJid: 'userJid2',
+        problemJid: 'problemJid2',
+        containerJid: 'contestJid',
+        gradingEngine: 'Batch',
+        gradingLanguage: 'Cpp17',
+        time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
+        latestGrading: {
+          verdict: { code: 'WA' },
+          score: 70,
+        },
+      },
+    ],
+    canSupervise = false,
+    canManage = false,
+  } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -54,118 +79,62 @@ describe('ContestSubmissionsPage', () => {
     });
   };
 
-  describe('when there are no submissions', () => {
-    beforeEach(async () => {
-      submissions = [];
-      canSupervise = false;
-      canManage = false;
-      await renderComponent();
-    });
+  test('renders placeholder text when there are no submissions', async () => {
+    await renderComponent({ submissions: [] });
 
-    it('shows placeholder text and no submissions', async () => {
-      expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
-      const rows = screen.queryAllByRole('row');
-      expect(rows).toHaveLength(0);
-    });
+    expect(await screen.findByText(/no submissions/i)).toBeInTheDocument();
+    const rows = screen.queryAllByRole('row');
+    expect(rows).toHaveLength(0);
   });
 
-  describe('when there are submissions', () => {
-    beforeEach(() => {
-      submissions = [
-        {
-          id: 20,
-          jid: 'jid1',
-          userJid: 'userJid1',
-          problemJid: 'problemJid1',
-          containerJid: 'contestJid',
-          gradingEngine: 'Batch',
-          gradingLanguage: 'Cpp17',
-          time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-        },
-        {
-          id: 10,
-          jid: 'jid2',
-          userJid: 'userJid2',
-          problemJid: 'problemJid2',
-          containerJid: 'contestJid',
-          gradingEngine: 'Batch',
-          gradingLanguage: 'Cpp17',
-          time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
-          latestGrading: {
-            verdict: { code: 'WA' },
-            score: 70,
-          },
-        },
-      ];
+  test('renders submissions when not canSupervise', async () => {
+    await renderComponent();
+
+    await screen.findAllByRole('row');
+
+    const rows = screen.getAllByRole('row').slice(1);
+    const data = rows.map(row => {
+      const cells = within(row).queryAllByRole('cell');
+      return cells.map(cell => cell.textContent.trim());
     });
 
-    describe('when not canSupervise', () => {
-      beforeEach(async () => {
-        canSupervise = false;
-        canManage = false;
-        await renderComponent();
-      });
+    expect(data).toEqual([
+      ['20', 'A', 'C++17', '', '1 day ago', 'search'],
+      ['10', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
+    ]);
+  });
 
-      it('shows the submissions', async () => {
-        await screen.findAllByRole('row');
+  test('renders submissions with username when canSupervise', async () => {
+    await renderComponent({ canSupervise: true });
 
-        const rows = screen.getAllByRole('row').slice(1);
-        const data = rows.map(row => {
-          const cells = within(row).queryAllByRole('cell');
-          return cells.map(cell => cell.textContent.trim());
-        });
+    await screen.findAllByRole('row');
 
-        expect(data).toEqual([
-          ['20', 'A', 'C++17', '', '1 day ago', 'search'],
-          ['10', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
-        ]);
-      });
+    const rows = screen.getAllByRole('row').slice(1);
+    const data = rows.map(row => {
+      const cells = within(row).queryAllByRole('cell');
+      return cells.map(cell => cell.textContent.trim());
     });
 
-    describe('when canSupervise', () => {
-      beforeEach(async () => {
-        canSupervise = true;
-        canManage = false;
-        await renderComponent();
-      });
+    expect(data).toEqual([
+      ['20', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
+      ['10', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
+    ]);
+  });
 
-      it('shows the submissions', async () => {
-        await screen.findAllByRole('row');
+  test('renders submissions with regrade button when canManage', async () => {
+    await renderComponent({ canSupervise: true, canManage: true });
 
-        const rows = screen.getAllByRole('row').slice(1);
-        const data = rows.map(row => {
-          const cells = within(row).queryAllByRole('cell');
-          return cells.map(cell => cell.textContent.trim());
-        });
+    await screen.findAllByRole('row');
 
-        expect(data).toEqual([
-          ['20', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
-          ['10', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
-        ]);
-      });
+    const rows = screen.getAllByRole('row').slice(1);
+    const data = rows.map(row => {
+      const cells = within(row).queryAllByRole('cell');
+      return cells.map(cell => cell.textContent.replace(/\s+/g, ' ').trim());
     });
 
-    describe('when canManage', () => {
-      beforeEach(async () => {
-        canSupervise = true;
-        canManage = true;
-        await renderComponent();
-      });
-
-      it('shows the submissions', async () => {
-        await screen.findAllByRole('row');
-
-        const rows = screen.getAllByRole('row').slice(1);
-        const data = rows.map(row => {
-          const cells = within(row).queryAllByRole('cell');
-          return cells.map(cell => cell.textContent.replace(/\s+/g, ' ').trim());
-        });
-
-        expect(data).toEqual([
-          ['20 refresh', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
-          ['10 refresh', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
-        ]);
-      });
-    });
+    expect(data).toEqual([
+      ['20 refresh', 'user1', 'A', 'C++17', '', '1 day ago', 'search'],
+      ['10 refresh', 'user2', 'B', 'C++17', 'Wrong Answer70', '2 days ago', 'search'],
+    ]);
   });
 });

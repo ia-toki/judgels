@@ -11,10 +11,7 @@ describe('ContestManagersPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let managers;
-  let canManage;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({ managers = [], canManage = false } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -47,73 +44,36 @@ describe('ContestManagersPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(() => {
-      managers = [];
-    });
-
-    describe('when not canManage', () => {
-      beforeEach(async () => {
-        canManage = false;
-        await renderComponent();
-      });
-
-      it('shows no buttons', async () => {
-        await screen.findByRole('heading', { name: 'Managers' });
-        expect(screen.queryByRole('button', { name: /add managers/i })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: /remove managers/i })).not.toBeInTheDocument();
-      });
-    });
-
-    describe('when canManage', () => {
-      beforeEach(async () => {
-        canManage = true;
-        await renderComponent();
-      });
-
-      it('shows action buttons', async () => {
-        expect(await screen.findByRole('button', { name: /add managers/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
-      });
-    });
+  test('renders no action buttons when not canManage', async () => {
+    await renderComponent();
+    await screen.findByRole('heading', { name: 'Managers' });
+    expect(screen.queryByRole('button', { name: /add managers/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /remove managers/i })).not.toBeInTheDocument();
   });
 
-  describe('content', () => {
-    describe('when there are no managers', () => {
-      beforeEach(async () => {
-        managers = [];
-        await renderComponent();
-      });
+  test('renders action buttons when canManage', async () => {
+    await renderComponent({ canManage: true });
+    expect(await screen.findByRole('button', { name: /add managers/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /remove managers/i })).toBeInTheDocument();
+  });
 
-      it('shows placeholder text and no managers', async () => {
-        expect(await screen.findByText(/no managers/i)).toBeInTheDocument();
-        expect(screen.queryByRole('row')).not.toBeInTheDocument();
-      });
+  test('renders placeholder text when there are no managers', async () => {
+    await renderComponent();
+    expect(await screen.findByText(/no managers/i)).toBeInTheDocument();
+    expect(screen.queryByRole('row')).not.toBeInTheDocument();
+  });
+
+  test('renders the managers when there are managers', async () => {
+    await renderComponent({
+      managers: [{ userJid: 'userJid1' }, { userJid: 'userJid2' }],
     });
-
-    describe('when there are managers', () => {
-      beforeEach(async () => {
-        managers = [
-          {
-            userJid: 'userJid1',
-          },
-          {
-            userJid: 'userJid2',
-          },
-        ];
-        await renderComponent();
-      });
-
-      it('shows the managers', async () => {
-        await waitFor(() => {
-          expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-        });
-        const rows = screen.getAllByRole('row').slice(1);
-        expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
-          ['username1'],
-          ['username2'],
-        ]);
-      });
+    await waitFor(() => {
+      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
+      ['username1'],
+      ['username2'],
+    ]);
   });
 });

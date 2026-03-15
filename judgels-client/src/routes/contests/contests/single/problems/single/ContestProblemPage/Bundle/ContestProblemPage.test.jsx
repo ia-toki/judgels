@@ -10,9 +10,11 @@ import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
 describe('BundleContestProblemPage', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
 
+  const renderComponent = async () => {
     nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -75,9 +77,11 @@ describe('BundleContestProblemPage', () => {
         </WebPrefsProvider>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     await screen.findByText('somestatement');
 
     const createSubmission = nockUriel()

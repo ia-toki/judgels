@@ -7,8 +7,11 @@ import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditModulesTab from './ContestEditModulesTab';
 
 describe('ContestEditModulesTab', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -25,9 +28,11 @@ describe('ContestEditModulesTab', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
-  test('tab', async () => {
+  test('renders modules', async () => {
+    await renderComponent();
+
     const modules = await screen.findAllByRole('heading', { level: 5 });
     expect(modules).toHaveLength(12);
 

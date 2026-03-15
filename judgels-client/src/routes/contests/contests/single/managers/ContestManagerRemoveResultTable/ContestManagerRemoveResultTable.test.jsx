@@ -4,24 +4,28 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestManagerRemoveResultTable } from './ContestManagerRemoveResultTable';
 
 describe('ContestManagerRemoveResultTable', () => {
-  beforeEach(async () => {
-    const props = {
-      usernames: ['budi', 'andi', 'zoro'],
-      deletedManagerProfilesMap: {
-        budi: { username: 'budi' },
-        andi: { username: 'andi' },
-      },
-    };
+  const renderComponent = async ({
+    usernames = ['budi', 'andi', 'zoro'],
+    deletedManagerProfilesMap = {
+      budi: { username: 'budi' },
+      andi: { username: 'andi' },
+    },
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestManagerRemoveResultTable {...props} />
+          <ContestManagerRemoveResultTable
+            usernames={usernames}
+            deletedManagerProfilesMap={deletedManagerProfilesMap}
+          />
         </TestRouter>
       )
     );
-  });
+  };
 
-  it('shows the correct tables', () => {
+  test('renders the correct tables', async () => {
+    await renderComponent();
+
     const tables = screen.getAllByRole('table');
 
     const deletedManagerRows = within(tables[0]).getAllByRole('row');

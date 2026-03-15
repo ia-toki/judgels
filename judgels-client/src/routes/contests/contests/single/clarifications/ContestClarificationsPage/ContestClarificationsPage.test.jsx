@@ -12,11 +12,33 @@ describe('ContestClarificationsPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  let clarifications;
-  let canCreate;
-  let canSupervise;
-
-  const renderComponent = async () => {
+  const renderComponent = async ({
+    clarifications = [
+      {
+        jid: 'clarificationJid1',
+        userJid: 'userJid1',
+        topicJid: 'contestJid',
+        title: 'Title 1',
+        question: 'Question 1',
+        status: 'ANSWERED',
+        answer: 'Answer 1',
+        answererJid: 'userJid3',
+        time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
+        answeredTime: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      },
+      {
+        jid: 'clarificationJid2',
+        userJid: 'userJid2',
+        topicJid: 'problemJid1',
+        title: 'Title 2',
+        question: 'Question 2',
+        status: 'ASKED',
+        time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
+      },
+    ],
+    canCreate,
+    canSupervise,
+  } = {}) => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -60,132 +82,66 @@ describe('ContestClarificationsPage', () => {
     );
   };
 
-  describe('action buttons', () => {
-    beforeEach(() => {
-      clarifications = [];
-    });
-
-    describe('when not canCreate', () => {
-      beforeEach(async () => {
-        canCreate = false;
-        await renderComponent();
-      });
-
-      it('shows no buttons', async () => {
-        await screen.findByRole('heading', { name: 'Clarifications' });
-        expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
-      });
-    });
-
-    describe('when canCreate', () => {
-      beforeEach(async () => {
-        canCreate = true;
-        await renderComponent();
-      });
-
-      it('shows action buttons', async () => {
-        expect(await screen.findByRole('button', { name: /new clarification/i })).toBeInTheDocument();
-      });
-    });
+  test('renders no action buttons when not canCreate', async () => {
+    await renderComponent({ canCreate: false });
+    await screen.findByRole('heading', { name: 'Clarifications' });
+    expect(screen.queryByRole('button', { name: /new announcement/i })).not.toBeInTheDocument();
   });
 
-  describe('content', () => {
-    describe('when there are no clarifications', () => {
-      beforeEach(async () => {
-        clarifications = [];
-        await renderComponent();
-      });
+  test('renders action buttons when canCreate', async () => {
+    await renderComponent({ canCreate: true });
+    expect(await screen.findByRole('button', { name: /new clarification/i })).toBeInTheDocument();
+  });
 
-      it('shows placeholder text and no clarifications', async () => {
-        expect(await screen.findByText('No clarifications.')).toBeInTheDocument();
-        expect(document.querySelectorAll('div.contest-clarification-card')).toHaveLength(0);
-      });
+  test('renders placeholder when there are no clarifications', async () => {
+    await renderComponent({ clarifications: [] });
+    expect(await screen.findByText('No clarifications.')).toBeInTheDocument();
+    expect(document.querySelectorAll('div.contest-clarification-card')).toHaveLength(0);
+  });
+
+  test('renders clarifications when not canSupervise', async () => {
+    await renderComponent({ canSupervise: false });
+    await waitFor(() => {
+      expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
     });
+    const clarifications = document.querySelectorAll('div.contest-clarification-card');
+    expect(clarifications).toHaveLength(4);
 
-    describe('when there are clarifications', () => {
-      beforeEach(() => {
-        clarifications = [
-          {
-            jid: 'clarificationJid1',
-            userJid: 'userJid1',
-            topicJid: 'contestJid',
-            title: 'Title 1',
-            question: 'Question 1',
-            status: 'ANSWERED',
-            answer: 'Answer 1',
-            answererJid: 'userJid3',
-            time: new Date(new Date().setDate(new Date().getDate() - 2)).getTime(),
-            answeredTime: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-          },
-          {
-            jid: 'clarificationJid2',
-            userJid: 'userJid2',
-            topicJid: 'problemJid1',
-            title: 'Title 2',
-            question: 'Question 2',
-            status: 'ASKED',
-            time: new Date(new Date().setDate(new Date().getDate() - 1)).getTime(),
-          },
-        ];
-      });
+    expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
+    expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
+    expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago$/);
 
-      describe('when not canSupervise', () => {
-        beforeEach(async () => {
-          canSupervise = false;
-          await renderComponent();
-        });
+    expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
+    expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
+    expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago$/);
 
-        it('shows the clarifications', async () => {
-          await waitFor(() => {
-            expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
-          });
-          const clarifications = document.querySelectorAll('div.contest-clarification-card');
-          expect(clarifications).toHaveLength(4);
+    expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
+    expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
+    expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago$/);
 
-          expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
-          expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
-          expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago$/);
+    expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
+  });
 
-          expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
-          expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
-          expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago$/);
-
-          expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
-          expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
-          expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago$/);
-
-          expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
-        });
-      });
-
-      describe('when canSupervise', () => {
-        beforeEach(async () => {
-          canSupervise = true;
-          await renderComponent();
-        });
-
-        it('shows the clarifications', async () => {
-          await waitFor(() => {
-            expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
-          });
-          const clarifications = document.querySelectorAll('div.contest-clarification-card');
-          expect(clarifications).toHaveLength(4);
-
-          expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
-          expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
-          expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago by username1$/);
-
-          expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
-          expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
-          expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago by username3$/);
-
-          expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
-          expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
-          expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago by username2$/);
-
-          expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
-        });
-      });
+  test('renders clarifications when canSupervise', async () => {
+    await renderComponent({ canSupervise: true });
+    await waitFor(() => {
+      expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
     });
+    const clarifications = document.querySelectorAll('div.contest-clarification-card');
+    expect(clarifications).toHaveLength(4);
+
+    expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
+    expect(within(clarifications[0]).getByText('Question 1')).toBeInTheDocument();
+    expect(clarifications[0].querySelector('small')).toHaveTextContent(/asked 2 days ago by username1$/);
+
+    expect(within(clarifications[1]).getByRole('heading')).toHaveTextContent('Answer:');
+    expect(within(clarifications[1]).getByText('Answer 1')).toBeInTheDocument();
+    expect(clarifications[1].querySelector('small')).toHaveTextContent(/answered 1 day ago by username3$/);
+
+    expect(within(clarifications[2]).getAllByRole('heading')[0]).toHaveTextContent('Title 2 A. Problem 1');
+    expect(within(clarifications[2]).getByText('Question 2')).toBeInTheDocument();
+    expect(clarifications[2].querySelector('small')).toHaveTextContent(/asked 1 day ago by username2$/);
+
+    expect(within(clarifications[3]).queryByRole('heading')).not.toBeInTheDocument();
   });
 });

@@ -4,26 +4,30 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestSupervisorAddResultTable } from './ContestSupervisorAddResultTable';
 
 describe('ContestSupervisorAddResultTable', () => {
-  beforeEach(async () => {
-    const props = {
-      usernames: ['budi', 'caca', 'andi', 'dudi', 'zoro'],
-      insertedSupervisorProfilesMap: {
-        budi: { username: 'budi' },
-        andi: { username: 'andi' },
-        caca: { username: 'caca' },
-        dudi: { username: 'dudi' },
-      },
-    };
+  const renderComponent = async ({
+    usernames = ['budi', 'caca', 'andi', 'dudi', 'zoro'],
+    insertedSupervisorProfilesMap = {
+      budi: { username: 'budi' },
+      andi: { username: 'andi' },
+      caca: { username: 'caca' },
+      dudi: { username: 'dudi' },
+    },
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestSupervisorAddResultTable {...props} />
+          <ContestSupervisorAddResultTable
+            usernames={usernames}
+            insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
+          />
         </TestRouter>
       )
     );
-  });
+  };
 
-  it('shows the correct tables', () => {
+  test('renders the correct tables', async () => {
+    await renderComponent();
+
     const tables = screen.getAllByRole('table');
 
     const insertedSupervisorRows = within(tables[0]).getAllByRole('row');

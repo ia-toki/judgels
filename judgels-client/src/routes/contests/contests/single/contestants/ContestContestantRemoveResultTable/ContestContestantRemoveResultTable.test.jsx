@@ -4,24 +4,28 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestContestantRemoveResultTable } from './ContestContestantRemoveResultTable';
 
 describe('ContestContestantRemoveResultTable', () => {
-  beforeEach(async () => {
-    const props = {
-      usernames: ['budi', 'andi', 'zoro'],
-      deletedContestantProfilesMap: {
-        budi: { username: 'budi' },
-        andi: { username: 'andi' },
-      },
-    };
+  const renderComponent = async ({
+    usernames = ['budi', 'andi', 'zoro'],
+    deletedContestantProfilesMap = {
+      budi: { username: 'budi' },
+      andi: { username: 'andi' },
+    },
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <ContestContestantRemoveResultTable {...props} />
+          <ContestContestantRemoveResultTable
+            usernames={usernames}
+            deletedContestantProfilesMap={deletedContestantProfilesMap}
+          />
         </TestRouter>
       )
     );
-  });
+  };
 
-  it('shows the correct tables', () => {
+  test('renders the correct tables', async () => {
+    await renderComponent();
+
     const tables = screen.getAllByRole('table');
 
     const deletedContestantRows = within(tables[0]).getAllByRole('row');

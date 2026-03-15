@@ -3,11 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { ScoreboardTable } from './ScoreboardTable';
 
 describe('ScoreboardTable', () => {
-  let problemPoints;
-
-  const className = 'className';
-
-  const renderComponent = () => {
+  const renderComponent = ({ problemPoints } = {}) => {
     const state = {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3'],
       problemAliases: ['A', 'B', 'C'],
@@ -15,32 +11,20 @@ describe('ScoreboardTable', () => {
       problemPoints,
     };
 
-    const props = { className, state };
-    render(<ScoreboardTable {...props} />);
+    render(<ScoreboardTable className="className" state={state} />);
   };
 
-  describe('header', () => {
-    describe('without points', () => {
-      beforeEach(() => renderComponent());
+  test('displays header without points', () => {
+    renderComponent();
+    const headerCells = screen.getAllByRole('columnheader');
+    const header = headerCells.map(th => th.textContent);
+    expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
+  });
 
-      it('does not display the points', () => {
-        const headerCells = screen.getAllByRole('columnheader');
-        const header = headerCells.map(th => th.textContent);
-        expect(header).toEqual(['#', 'Contestant', 'Total', 'A', 'B', 'C']);
-      });
-    });
-
-    describe('points', () => {
-      beforeEach(() => {
-        problemPoints = [10, 0, 30];
-        renderComponent();
-      });
-
-      it('displays the points', () => {
-        const headerCells = screen.getAllByRole('columnheader');
-        const header = headerCells.map(th => th.textContent);
-        expect(header).toEqual(['#', 'Contestant', 'Total', 'A10', 'B0', 'C30']);
-      });
-    });
+  test('displays header with points', () => {
+    renderComponent({ problemPoints: [10, 0, 30] });
+    const headerCells = screen.getAllByRole('columnheader');
+    const header = headerCells.map(th => th.textContent);
+    expect(header).toEqual(['#', 'Contestant', 'Total', 'A10', 'B0', 'C30']);
   });
 });

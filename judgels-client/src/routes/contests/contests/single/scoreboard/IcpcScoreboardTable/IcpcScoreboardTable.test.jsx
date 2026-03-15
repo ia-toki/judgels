@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
@@ -7,7 +7,7 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { IcpcScoreboardTable } from './IcpcScoreboardTable';
 
 describe('IcpcScoreboardTable', () => {
-  const scoreboard = {
+  const mockScoreboard = {
     state: {
       problemJids: ['JIDPROG1', 'JIDPROG2', 'JIDPROG3', 'JIDPROG4'],
       problemAliases: ['A', 'B', 'C', 'D'],
@@ -47,57 +47,54 @@ describe('IcpcScoreboardTable', () => {
     },
   };
 
-  const profilesMap = {
+  const mockProfilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(async () => {
-    const props = { scoreboard, profilesMap };
+  const renderComponent = async ({
+    scoreboard = mockScoreboard,
+    profilesMap = mockProfilesMap,
+    onClickSubmissionCell,
+  } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <IcpcScoreboardTable {...props} />
+          <IcpcScoreboardTable
+            scoreboard={scoreboard}
+            profilesMap={profilesMap}
+            onClickSubmissionCell={onClickSubmissionCell}
+          />
         </TestRouter>
       )
     );
-  });
+  };
 
-  test('ranks', () => {
+  test('ranks', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
     expect(ranks).toEqual(['1', '2']);
   });
 
-  describe('incognito ranks', () => {
-    beforeEach(async () => {
-      cleanup();
-      const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
-      const incognitoScoreboard = { ...scoreboard, content: { entries: incognitoEntries } };
-      const props = { scoreboard: incognitoScoreboard, profilesMap };
-      await act(async () =>
-        render(
-          <TestRouter>
-            <IcpcScoreboardTable {...props} />
-          </TestRouter>
-        )
-      );
-    });
-
-    it('only shows question marks', () => {
-      const rows = screen.getAllByRole('row').slice(1);
-      const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
-      expect(ranks).toEqual(['?', '?']);
-    });
+  test('incognito ranks only show question marks', async () => {
+    const incognitoEntries = mockScoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
+    const incognitoScoreboard = { ...mockScoreboard, content: { entries: incognitoEntries } };
+    await renderComponent({ scoreboard: incognitoScoreboard });
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
+    expect(ranks).toEqual(['?', '?']);
   });
 
-  test('display names', () => {
+  test('display names', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const names = rows.map(row => within(row).getAllByRole('cell')[1].textContent);
     expect(names).toEqual(['username2', 'username1']);
   });
 
-  test('points', () => {
+  test('points', async () => {
+    await renderComponent();
     const getColor = td =>
       td === 'first-accepted'
         ? 'D '
@@ -124,41 +121,29 @@ describe('IcpcScoreboardTable', () => {
     ]);
   });
 
-  describe('clicking a submission cell', () => {
-    describe('when onClickSubmissionCell is passed', () => {
-      const onClickSubmissionCell = vi.fn();
+  test('renders submission for attempted cell when onClickSubmissionCell is passed', async () => {
+    const onClickSubmissionCell = vi.fn();
+    await renderComponent({ onClickSubmissionCell });
 
-      beforeEach(async () => {
-        cleanup();
-        const props = { scoreboard, profilesMap, onClickSubmissionCell };
-        await act(async () =>
-          render(
-            <TestRouter>
-              <IcpcScoreboardTable {...props} />
-            </TestRouter>
-          )
-        );
-      });
+    const user = userEvent.setup();
+    const rows = screen.getAllByRole('row').slice(1);
 
-      test('shows submission for attempted cell', async () => {
-        const user = userEvent.setup();
-        const rows = screen.getAllByRole('row').slice(1);
+    const firstRowCells = within(rows[0]).getAllByRole('cell');
+    await user.click(firstRowCells[3]);
 
-        const firstRowCells = within(rows[0]).getAllByRole('cell');
-        await user.click(firstRowCells[3]);
+    expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
+  });
 
-        expect(onClickSubmissionCell).toHaveBeenCalledWith('JIDUSER2', 'JIDPROG1');
-      });
+  test('does not render submission for unattempted cell when onClickSubmissionCell is passed', async () => {
+    const onClickSubmissionCell = vi.fn();
+    await renderComponent({ onClickSubmissionCell });
 
-      test('does not show submission for unattempted cell', async () => {
-        const user = userEvent.setup();
-        const rows = screen.getAllByRole('row').slice(1);
+    const user = userEvent.setup();
+    const rows = screen.getAllByRole('row').slice(1);
 
-        const firstRowCells = within(rows[0]).getAllByRole('cell');
-        await user.click(firstRowCells[6]);
+    const firstRowCells = within(rows[0]).getAllByRole('cell');
+    await user.click(firstRowCells[6]);
 
-        expect(onClickSubmissionCell).not.toBeCalled();
-      });
-    });
+    expect(onClickSubmissionCell).not.toBeCalled();
   });
 });

@@ -9,9 +9,11 @@ import { nockUriel } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
 describe('ProgrammingContestProblemPage', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
 
+  const renderComponent = async () => {
     nockUriel().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
@@ -61,14 +63,17 @@ describe('ProgrammingContestProblemPage', () => {
         </WebPrefsProvider>
       );
     });
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     await screen.findByText('Lorem ipsum');
 
     const createSubmission = nockUriel()
-      .post('/contests/submissions/programming', body => {
-        return (
+      .post(
+        '/contests/submissions/programming',
+        body =>
           body.includes('name="contestJid"\r\n\r\ncontestJid\r\n') &&
           body.includes('name="problemJid"\r\n\r\nproblemJid\r\n') &&
           body.includes('name="gradingLanguage"\r\n\r\nCpp11\r\n') &&
@@ -76,8 +81,7 @@ describe('ProgrammingContestProblemPage', () => {
           body.includes('Content-Type: text/plain\r\n\r\nencoder content\r\n') &&
           body.includes('name="sourceFiles.decoder"') &&
           body.includes('Content-Type: text/plain\r\n\r\ndecoder content\r\n')
-        );
-      })
+      )
       .reply(200);
 
     const user = userEvent.setup();

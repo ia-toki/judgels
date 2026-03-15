@@ -107,21 +107,17 @@ describe('ContestEditorialPage', () => {
     );
   };
 
-  describe('content', () => {
-    beforeEach(async () => {
-      await renderComponent();
-    });
+  test('renders the editorial', async () => {
+    await renderComponent();
 
-    it('shows the editorial', async () => {
-      await waitFor(() => {
-        expect(document.querySelector('.contest-editorial')).toBeInTheDocument();
-      });
-      expect(document.querySelector('.contest-editorial')).toHaveTextContent(
-        '' +
-          'Thanks for participating.' +
-          'A. Soal AHello. This is editorial for problem A' +
-          'B. Problem BHello. This is editorial for problem B'
-      );
+    await waitFor(() => {
+      expect(document.querySelector('.contest-editorial')).toBeInTheDocument();
     });
+    expect(document.querySelector('.contest-editorial')).toHaveTextContent(
+      '' +
+        'Thanks for participating.' +
+        'A. Soal AHello. This is editorial for problem A' +
+        'B. Problem BHello. This is editorial for problem B'
+    );
   });
 });

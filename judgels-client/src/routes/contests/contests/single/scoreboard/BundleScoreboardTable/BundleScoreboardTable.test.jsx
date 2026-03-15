@@ -1,10 +1,10 @@
-import { act, cleanup, render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { BundleScoreboardTable } from './BundleScoreboardTable';
 
 describe('BundleScoreboardTable', () => {
-  const scoreboard = {
+  const mockScoreboard = {
     state: {
       problemJids: ['JIDBUND1', 'JIDBUND2'],
       problemAliases: ['A', 'B'],
@@ -28,60 +28,49 @@ describe('BundleScoreboardTable', () => {
     },
   };
 
-  const profilesMap = {
+  const mockProfilesMap = {
     JIDUSER1: { username: 'username1' },
     JIDUSER2: { username: 'username2' },
   };
 
-  beforeEach(async () => {
-    const props = { scoreboard, profilesMap };
+  const renderComponent = async ({ scoreboard = mockScoreboard, profilesMap = mockProfilesMap } = {}) => {
     await act(async () =>
       render(
         <TestRouter>
-          <BundleScoreboardTable {...props} />
+          <BundleScoreboardTable scoreboard={scoreboard} profilesMap={profilesMap} />
         </TestRouter>
       )
     );
-  });
+  };
 
-  test('ranks', () => {
+  test('ranks', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
     expect(ranks).toEqual(['1', '2']);
   });
 
-  describe('incognito ranks', () => {
-    beforeEach(async () => {
-      cleanup();
-      const incognitoEntries = scoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
-      const incognitoScoreboard = {
-        ...scoreboard,
-        content: { entries: incognitoEntries },
-      };
-      const props = { scoreboard: incognitoScoreboard, profilesMap };
-      await act(async () =>
-        render(
-          <TestRouter>
-            <BundleScoreboardTable {...props} />
-          </TestRouter>
-        )
-      );
-    });
-
-    it('only shows question marks', () => {
-      const rows = screen.getAllByRole('row').slice(1);
-      const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
-      expect(ranks).toEqual(['?', '?']);
-    });
+  test('incognito ranks only show question marks', async () => {
+    const incognitoEntries = mockScoreboard.content.entries.map(entry => ({ ...entry, rank: -1 }));
+    const incognitoScoreboard = {
+      ...mockScoreboard,
+      content: { entries: incognitoEntries },
+    };
+    await renderComponent({ scoreboard: incognitoScoreboard });
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
+    expect(ranks).toEqual(['?', '?']);
   });
 
-  test('display names', () => {
+  test('display names', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const names = rows.map(row => within(row).getAllByRole('cell')[1].textContent);
     expect(names).toEqual(['username1', 'username2']);
   });
 
-  test('display score', () => {
+  test('display score', async () => {
+    await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);
     const score = rows.map(row => {
       const cells = within(row).getAllByRole('cell');
@@ -93,7 +82,8 @@ describe('BundleScoreboardTable', () => {
     ]);
   });
 
-  test('display points', () => {
+  test('display points', async () => {
+    await renderComponent();
     const headerCells = screen.getAllByRole('columnheader');
     const points = [headerCells[3], headerCells[4]].map(cell => cell.textContent);
     expect(points).toEqual(['A', 'B']);

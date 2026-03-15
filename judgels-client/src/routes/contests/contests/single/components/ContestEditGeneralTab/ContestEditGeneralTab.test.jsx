@@ -10,8 +10,11 @@ import { nockUriel } from '../../../../../../utils/nock';
 import ContestEditGeneralTab from './ContestEditGeneralTab';
 
 describe('ContestEditGeneralTab', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     setSession('token', { jid: 'userJid' });
+  });
+
+  const renderComponent = async () => {
     nockUriel()
       .get('/contests/slug/contest-a')
       .reply(200, {
@@ -32,9 +35,11 @@ describe('ContestEditGeneralTab', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const button = await screen.findByRole('button', { name: /edit/i });
