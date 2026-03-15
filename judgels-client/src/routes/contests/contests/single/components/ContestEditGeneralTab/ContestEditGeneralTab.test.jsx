@@ -73,6 +73,16 @@ describe('ContestEditGeneralTab', () => {
       })
       .reply(200);
 
+    nockUriel()
+      .get('/contests/slug/contest-b')
+      .reply(200, {
+        jid: 'contestJid',
+        slug: 'contest-b',
+        name: 'Contest B',
+        style: 'ICPC',
+        beginTime: parseDateTime('2018-09-10 17:00').getTime(),
+      });
+
     await user.click(screen.getByRole('button', { name: /save/i }));
   });
 });
