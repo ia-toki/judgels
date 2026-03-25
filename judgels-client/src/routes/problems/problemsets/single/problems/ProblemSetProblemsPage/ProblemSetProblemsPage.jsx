@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -24,9 +25,10 @@ export default function ProblemSetProblemsPage() {
   const renderHeader = () => {
     return (
       <>
-        <div className="float-left">{renderProblemSpoilerWidget()}</div>
-        <div className="float-right">{renderStatementLanguageWidget()}</div>
-        <div className="clearfix" />
+        <Flex justifyContent="space-between">
+          <div>{renderProblemSpoilerWidget()}</div>
+          <div>{renderStatementLanguageWidget()}</div>
+        </Flex>
       </>
     );
   };

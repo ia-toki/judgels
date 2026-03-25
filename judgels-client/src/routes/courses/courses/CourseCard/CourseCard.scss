@@ -1,7 +1,4 @@
 .course-card {
-  display: flex;
-  flex-direction: column;
-
   hr {
     margin-top: 0 !important;
   }
@@ -10,8 +7,4 @@
 .course-card__title {
   font-size: 20px !important;
   line-height: 20px !important;
-}
-
-.course-card__progress-bar {
-  margin-top: auto;
 }

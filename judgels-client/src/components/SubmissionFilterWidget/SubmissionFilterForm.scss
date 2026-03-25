@@ -1,36 +1,21 @@
 .submission-filter-form {
   .form-username {
-    min-width: 250px;
     .form-group__select button {
       width: 200px;
     }
   }
 
   .form-problem-alias {
-    min-width: 180px;
     button {
       width: 110px;
     }
   }
 
-  .form-username,
-  .form-problem-alias {
-    float: right;
-
-    label {
-      float: left;
-      width: initial;
-      line-height: 30px;
-      margin-right: 5px;
-    }
-
-    .form-group__select {
-      float: left;
-      width: initial;
-    }
-  }
-
-  button {
-    float: right;
+  .form-username.bp6-form-group,
+  .form-problem-alias.bp6-form-group {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 0;
   }
 }

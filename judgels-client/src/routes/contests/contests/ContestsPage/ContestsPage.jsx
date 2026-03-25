@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
@@ -22,9 +23,10 @@ export default function ContestsPage() {
   const renderHeader = () => {
     return (
       <>
-        <div className="float-left">{renderCreateDialog()}</div>
-        <div className="float-right">{renderFilter()}</div>
-        <div className="clearfix" />
+        <Flex justifyContent="space-between" alignItems="center">
+          {renderCreateDialog()}
+          {renderFilter()}
+        </Flex>
         {renderFilterResultsBanner()}
       </>
     );
@@ -36,7 +38,7 @@ export default function ContestsPage() {
     }
 
     return (
-      <div className="content-card__section">
+      <div>
         Search results for: <b>{name}</b>
         <hr />
       </div>

@@ -1,5 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -23,13 +24,7 @@ export default function ContestEditGeneralTab() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button
-          small
-          className="right-action-button"
-          intent={Intent.PRIMARY}
-          icon={<Edit />}
-          onClick={() => setIsEditing(true)}
-        >
+        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -73,10 +68,12 @@ export default function ContestEditGeneralTab() {
 
   return (
     <>
-      <h4>
-        General settings
-        {renderEditButton()}
-      </h4>
+      <Flex asChild justifyContent="space-between" alignItems="baseline">
+        <h4>
+          <span>General settings</span>
+          {renderEditButton()}
+        </h4>
+      </Flex>
       <hr />
       {renderContent()}
     </>

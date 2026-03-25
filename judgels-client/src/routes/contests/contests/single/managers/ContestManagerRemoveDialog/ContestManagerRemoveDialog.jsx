@@ -76,7 +76,7 @@ export function ContestManagerRemoveDialog({ contest }) {
   const dialogTitle = submitted !== undefined ? 'Remove managers results' : 'Remove managers';
 
   return (
-    <div className="content-card__section">
+    <>
       <Button
         className="contest-manager-dialog-button"
         intent={Intent.DANGER}
@@ -96,6 +96,6 @@ export function ContestManagerRemoveDialog({ contest }) {
       >
         {dialogBody}
       </Dialog>
-    </div>
+    </>
   );
 }

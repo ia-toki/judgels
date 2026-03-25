@@ -39,13 +39,13 @@ export function ArchiveCreateDialog() {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New archive
       </Button>
       <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new archive" canOutsideClickClose={false}>
         <ArchiveCreateForm renderFormComponents={renderDialogForm} onSubmit={createArchive} />
       </Dialog>
-    </div>
+    </>
   );
 }

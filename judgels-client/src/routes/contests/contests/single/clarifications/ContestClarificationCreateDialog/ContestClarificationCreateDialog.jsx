@@ -52,7 +52,7 @@ export function ContestClarificationCreateDialog({ contest, problemJids, problem
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New clarification
       </Button>
@@ -64,6 +64,6 @@ export function ContestClarificationCreateDialog({ contest, problemJids, problem
       >
         <ContestClarificationCreateForm {...props} />
       </Dialog>
-    </div>
+    </>
   );
 }

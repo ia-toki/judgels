@@ -1,4 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -47,11 +48,10 @@ export default function SingleContestLayout() {
       titleIcon: contestIcon[ContestTab.Announcements],
       title: (
         <div className="tab-item-with-widget">
-          <div className="float-left">Announcements</div>
-          <div className="float-right">
+          <div>Announcements</div>
+          <div>
             <ContestAnnouncementsWidget />
           </div>
-          <div className="clearfix" />
         </div>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Announcements) === -1,
@@ -67,13 +67,12 @@ export default function SingleContestLayout() {
       titleIcon: contestIcon[ContestTab.Editorial],
       title: (
         <div className="tab-item-with-widget">
-          <div className="float-left">Editorial</div>
-          <div className="float-right">
+          <div>Editorial</div>
+          <div>
             <Tag className="normal-weight" intent={Intent.WARNING}>
               NEW
             </Tag>
           </div>
-          <div className="clearfix" />
         </div>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Editorial) === -1,
@@ -107,11 +106,10 @@ export default function SingleContestLayout() {
       titleIcon: contestIcon[ContestTab.Clarifications],
       title: (
         <div className="tab-item-with-widget">
-          <div className="float-left">Clarifications</div>
-          <div className="float-right">
+          <div>Clarifications</div>
+          <div>
             <ContestClarificationsWidget />
           </div>
-          <div className="clearfix" />
         </div>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Clarifications) === -1,
@@ -143,16 +141,14 @@ export default function SingleContestLayout() {
     basePath: `/contests/${contestSlug}`,
     contentHeader: (
       <div className="single-contest-routes__header">
-        <div className="single-contest-routes__heading">
+        <Flex gap={2} justifyContent="space-between" alignItems="baseline">
           <h2>{contest.name}</h2>
-          <div className="single-contest-routes__action">
-            <ContestEditDialog
-              contest={contest}
-              canManage={contestWebConfig.canManage}
-              initiallyOpen={isEditingContest}
-            />
-          </div>
-        </div>
+          <ContestEditDialog
+            contest={contest}
+            canManage={contestWebConfig.canManage}
+            initiallyOpen={isEditingContest}
+          />
+        </Flex>
         <ContestStateWidget />
       </div>
     ),

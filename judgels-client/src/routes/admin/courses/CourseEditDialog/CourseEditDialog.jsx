@@ -37,10 +37,8 @@ export function CourseEditDialog({ course, isOpen, onCloseDialog }) {
   };
 
   return (
-    <div className="content-card__section">
-      <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit course" canOutsideClickClose={false}>
-        <CourseEditForm renderFormComponents={renderDialogForm} onSubmit={updateCourse} initialValues={initialValues} />
-      </Dialog>
-    </div>
+    <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit course" canOutsideClickClose={false}>
+      <CourseEditForm renderFormComponents={renderDialogForm} onSubmit={updateCourse} initialValues={initialValues} />
+    </Dialog>
   );
 }

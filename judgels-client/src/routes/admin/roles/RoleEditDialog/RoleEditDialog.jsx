@@ -79,7 +79,7 @@ export function RoleEditDialog({ currentData }) {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleDialog} disabled={isDialogOpen}>
         Edit roles
       </Button>
@@ -140,6 +140,6 @@ export function RoleEditDialog({ currentData }) {
           </div>
         </div>
       </Dialog>
-    </div>
+    </>
   );
 }

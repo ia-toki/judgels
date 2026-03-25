@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
@@ -38,11 +39,10 @@ function ContestSubmissionsPage() {
 
   const renderHeader = () => {
     return (
-      <div className="content-card__header">
-        <div className="float-left">{renderRegradeAllButton()}</div>
-        <div className="float-right">{renderFilterWidget()}</div>
-        <div className="clearfix" />
-      </div>
+      <Flex justifyContent="space-between" alignItems="center">
+        <div>{renderRegradeAllButton()}</div>
+        <div>{renderFilterWidget()}</div>
+      </Flex>
     );
   };
 

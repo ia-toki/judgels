@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
@@ -22,12 +23,9 @@ export default function ProblemSetsPage() {
   const renderHeader = () => {
     return (
       <>
-        <div className="float-right">{renderFilter()}</div>
-        <div className="clearfix" />
-        <div className="content-card__section">
-          {renderFilterResultsBanner()}
-          <hr />
-        </div>
+        <Flex justifyContent="end">{renderFilter()}</Flex>
+        {renderFilterResultsBanner()}
+        <hr />
       </>
     );
   };

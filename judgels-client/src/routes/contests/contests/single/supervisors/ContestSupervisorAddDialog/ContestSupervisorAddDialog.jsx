@@ -89,7 +89,7 @@ export function ContestSupervisorAddDialog({ contest }) {
   const dialogTitle = submitted !== undefined ? 'Add/update supervisors results' : 'Add/update supervisors';
 
   return (
-    <div className="content-card__section">
+    <>
       <Button
         className="contest-supervisor-dialog-button"
         intent={Intent.PRIMARY}
@@ -109,6 +109,6 @@ export function ContestSupervisorAddDialog({ contest }) {
       >
         {dialogBody}
       </Dialog>
-    </div>
+    </>
   );
 }

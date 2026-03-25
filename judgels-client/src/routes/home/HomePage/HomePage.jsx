@@ -51,7 +51,6 @@ export default function HomePage() {
           <ActiveContestsWidget />
         </div>
         <div className="home-widget-row__one-third">{isTLX() && <TopRatingsWidget />}</div>
-        <div className="clearfix" />
       </div>
     );
   };

@@ -1,5 +1,6 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
 import { Download, Lock } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
@@ -435,13 +436,12 @@ export function SubmissionDetails({
       return null;
     }
     return (
-      <div>
-        <h4 className="source-heading">Source Files</h4>
+      <Flex alignItems="center" gap={2}>
+        <h4>Source Files</h4>
         <Button small className="source-download" icon={<Download />} onClick={onDownload}>
           Download
         </Button>
-        <div className="clearfix" />
-      </div>
+      </Flex>
     );
   };
 

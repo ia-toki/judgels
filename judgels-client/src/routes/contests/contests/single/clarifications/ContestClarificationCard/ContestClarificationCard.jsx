@@ -1,4 +1,5 @@
 import { Callout, Intent, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
@@ -63,13 +64,14 @@ export function ContestClarificationCard({
 
     return (
       <>
-        <h5>Answer:</h5>
-        <p className="float-right">
-          <small>
-            answered <FormattedRelative value={clarification.answeredTime} /> {answerer}
-          </small>
-        </p>
-        <div className="clearfix" />
+        <Flex justifyContent="space-between">
+          <h5>Answer:</h5>
+          <p>
+            <small>
+              answered <FormattedRelative value={clarification.answeredTime} /> {answerer}
+            </small>
+          </p>
+        </Flex>
         <hr />
         <div className="multiline-text">{clarification.answer}</div>
       </>
@@ -78,15 +80,16 @@ export function ContestClarificationCard({
 
   return (
     <Callout className="contest-clarification-card" intent={questionIntent} icon={null}>
-      <h5>
-        {clarification.title} &nbsp; <Tag>{topic}</Tag>
-      </h5>
-      <p className="float-right">
-        <small>
-          asked <FormattedRelative value={clarification.time} /> {asker}
-        </small>
-      </p>
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <h5>
+          {clarification.title} &nbsp; <Tag>{topic}</Tag>
+        </h5>
+        <p>
+          <small>
+            asked <FormattedRelative value={clarification.time} /> {asker}
+          </small>
+        </p>
+      </Flex>
       <hr />
       <div className="multiline-text">{clarification.question}</div>
       <Callout

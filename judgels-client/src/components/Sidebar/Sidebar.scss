@@ -76,7 +76,10 @@
 }
 
 .card-sidebar__arrow {
-  float: right;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 
   .bp6-light & {
     color: $primary-color !important;

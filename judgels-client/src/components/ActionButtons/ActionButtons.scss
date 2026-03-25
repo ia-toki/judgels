@@ -1,9 +1,6 @@
 .action-buttons {
   display: flex;
-}
-
-.action-buttons button {
-  margin-right: 5px;
+  gap: 5px;
 }
 
 .right-action-buttons {

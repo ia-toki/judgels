@@ -1,4 +1,5 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { FormattedContent } from '../../../../../../components/FormattedContent/FormattedContent';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
@@ -40,14 +41,16 @@ export function ContestAnnouncementCard({
   };
 
   return (
-    <Callout className="contest-announcement-card" title={announcement.title} intent={intent} icon={null}>
-      {isDraft ? <Tag intent={intent}>Draft</Tag> : null}
-      <p className="float-right">
-        <small>
-          published <FormattedRelative value={announcement.updatedTime} /> {user} {renderEditDialog()}
-        </small>
-      </p>
-      <div className="clearfix" />
+    <Callout className="contest-announcement-card" intent={intent} icon={null}>
+      <Flex justifyContent="space-between">
+        <h5>{announcement.title}</h5>
+        <p>
+          <small>
+            {isDraft ? <Tag intent={intent}>Draft</Tag> : null} published{' '}
+            <FormattedRelative value={announcement.updatedTime} /> {user} {renderEditDialog()}
+          </small>
+        </p>
+      </Flex>
       <hr />
       <FormattedContent context={{ contestJid: contest.jid }}>{announcement.content}</FormattedContent>
     </Callout>

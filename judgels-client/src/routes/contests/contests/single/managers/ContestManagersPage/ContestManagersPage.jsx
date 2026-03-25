@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
@@ -48,11 +49,10 @@ export default function ContestManagersPage() {
       return null;
     }
     return (
-      <div className="content-card__header">
+      <Flex gap={1}>
         <ContestManagerAddDialog contest={contest} />
         <ContestManagerRemoveDialog contest={contest} />
-        <div className="clearfix" />
-      </div>
+      </Flex>
     );
   };
 

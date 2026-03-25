@@ -1,3 +1,5 @@
+import { Flex } from '@blueprintjs/labs';
+
 import { ContentCard } from '../../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemEditorialCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
@@ -58,11 +60,11 @@ export default function ChapterProblemStatementPage({ worksheet }) {
       statementLanguages: languages,
     };
     return (
-      <div className="statement-header">
-        <StatementLanguageWidget {...props} />
-        {renderLimits()}
+      <Flex className="statement-header" gap={4} flexWrap="wrap" alignItems="baseline">
         {renderProblemSetProblemPaths()}
-      </div>
+        {renderLimits()}
+        <StatementLanguageWidget {...props} />
+      </Flex>
     );
   };
 

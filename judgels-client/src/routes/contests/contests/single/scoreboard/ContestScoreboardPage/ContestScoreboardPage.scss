@@ -1,15 +1,10 @@
 .contest-scoreboard-page {
-  h3 {
-    float: left;
-  }
-
   hr {
     margin-top: 10px !important;
   }
 }
 
 .contest-scoreboard-page__info {
-  float: right;
   line-height: 9px !important;
   margin-bottom: 0 !important;
 }
@@ -22,9 +17,4 @@
   h4 {
     font-size: 14px;
   }
-}
-
-.contest-scoreboard-page__filter {
-  float: left;
-  margin-right: 25px;
 }

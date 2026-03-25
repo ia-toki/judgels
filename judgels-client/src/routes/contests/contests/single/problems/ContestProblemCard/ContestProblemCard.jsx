@@ -1,4 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
 import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
@@ -25,16 +26,17 @@ export function ContestProblemCard({
 
   return (
     <ContentCardLink className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
-      <div className=" float-left">
-        <span data-key="name">
-          {alias}. {problemName}
-          {problemPoints}
-        </span>
-      </div>
-      <div data-key="status" className="float-right secondary-info">
-        {renderStatus()}
-      </div>
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <div>
+          <span data-key="name">
+            {alias}. {problemName}
+            {problemPoints}
+          </span>
+        </div>
+        <div data-key="status" className="secondary-info">
+          {renderStatus()}
+        </div>
+      </Flex>
     </ContentCardLink>
   );
 }

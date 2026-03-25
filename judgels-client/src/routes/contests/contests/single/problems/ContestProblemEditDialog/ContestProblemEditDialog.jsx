@@ -72,7 +72,7 @@ export function ContestProblemEditDialog({ contest, problems }) {
   };
 
   return (
-    <div className="content-card__section">
+    <div>
       <Button
         className="contest-problem-set-dialog__button"
         intent={Intent.PRIMARY}

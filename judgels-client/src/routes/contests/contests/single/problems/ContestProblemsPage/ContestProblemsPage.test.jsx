@@ -63,21 +63,13 @@ describe('ContestProblemsPage', () => {
 
   test('renders no action buttons when not canManage', async () => {
     await renderComponent({ canManage: false });
-
-    const section = document.querySelector('div.content-card__section');
-    const buttons = section ? section.querySelectorAll('button') : [];
-    expect(buttons).toHaveLength(0);
+    await screen.findByRole('heading', { name: 'Problems' });
+    expect(screen.queryByRole('button', { name: /edit problems/i })).not.toBeInTheDocument();
   });
 
   test('renders action buttons when canManage', async () => {
     await renderComponent({ canManage: true });
-
-    await waitFor(() => {
-      const section = document.querySelector('div.content-card__section');
-      expect(section).not.toBeNull();
-      const buttons = Array.from(section.querySelectorAll('button'));
-      expect(buttons.map(b => b.textContent)).toEqual(['Edit problems']);
-    });
+    expect(await screen.findByRole('button', { name: /edit problems/i })).toBeInTheDocument();
   });
 
   test('renders placeholder when there are no problems', async () => {

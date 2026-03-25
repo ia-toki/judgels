@@ -39,13 +39,13 @@ export function ChapterCreateDialog() {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New chapter
       </Button>
       <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new chapter" canOutsideClickClose={false}>
         <ChapterCreateForm renderFormComponents={renderDialogForm} onSubmit={createChapter} />
       </Dialog>
-    </div>
+    </>
   );
 }

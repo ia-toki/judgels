@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import HTMLReactParser from 'html-react-parser';
 
 import { APP_CONFIG } from '../../conf';
@@ -11,11 +12,12 @@ export function Footer() {
     <div className="footer">
       <hr />
       <small className="footer__text">
-        <div className="float-left">{HTMLReactParser(footer)}</div>
-        <div className="float-right">
-          Powered by <a href="https://github.com/ia-toki/judgels">Judgels</a>
-        </div>
-        <div className="clearfix" />
+        <Flex justifyContent="space-between">
+          <div>{HTMLReactParser(footer)}</div>
+          <div>
+            Powered by <a href="https://github.com/ia-toki/judgels">Judgels</a>
+          </div>
+        </Flex>
       </small>
     </div>
   );

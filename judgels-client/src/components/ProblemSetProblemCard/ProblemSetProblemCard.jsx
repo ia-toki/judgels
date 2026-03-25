@@ -1,5 +1,6 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { SmallTick } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { ProblemType } from '../../modules/api/sandalphon/problem';
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
@@ -8,19 +9,13 @@ import ProblemTopicsTags from '../ProblemTopicTags/ProblemTopicTags';
 import { ProgressBar } from '../ProgressBar/ProgressBar';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 
-import './ProblemSetProblemCard.scss';
-
 export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, metadata, difficulty, progress }) {
   const renderDifficulty = () => {
-    return (
-      <div className="float-left">
-        <ProblemDifficulty problem={problem} difficulty={difficulty} />
-      </div>
-    );
+    return <ProblemDifficulty problem={problem} difficulty={difficulty} />;
   };
 
   const renderMetadata = () => {
-    return <div className="float-right">{renderTopicTags()}</div>;
+    return renderTopicTags();
   };
 
   const renderEditorialTag = () => {
@@ -41,11 +36,10 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
 
   const renderSpoilers = () => {
     return (
-      <>
+      <Flex justifyContent="space-between">
         {renderDifficulty()}
         {renderMetadata()}
-        <div className="clearfix" />
-      </>
+      </Flex>
     );
   };
 
@@ -66,12 +60,18 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
   };
 
   return (
-    <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-card">
+    <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-cardd">
       <h4 data-key="name">
-        {showAlias && <>{problem.alias}. </>}
-        {problemName}
-        {renderProgress()}
-        {renderEditorialTag()}
+        <Flex justifyContent="space-between">
+          <span>
+            {showAlias && <>{problem.alias}. </>}
+            {problemName}
+          </span>
+          <Flex gap={1}>
+            {renderEditorialTag()}
+            {renderProgress()}
+          </Flex>
+        </Flex>
       </h4>
       {renderProgressBar()}
       {renderSpoilers()}

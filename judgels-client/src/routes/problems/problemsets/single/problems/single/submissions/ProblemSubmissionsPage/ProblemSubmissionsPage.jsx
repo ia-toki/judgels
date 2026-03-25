@@ -69,7 +69,7 @@ export default function ProblemSubmissionsPage() {
   };
 
   const renderHeader = () => {
-    return <div className="content-card__header">{renderRegradeAllButton()}</div>;
+    return <div>{renderRegradeAllButton()}</div>;
   };
 
   const renderRegradeAllButton = () => {

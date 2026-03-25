@@ -1,5 +1,6 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
 import { BanCircle, People, Tick } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -55,11 +56,12 @@ export default function ContestRegistrationCard() {
 
     return (
       <>
-        {renderContestantStateTag(contestantState)}
-        {renderActionButton(contestantState)}
-        {renderViewRegistrantsButton(contestantsCount)}
+        <Flex gap={1} alignItems="center">
+          {renderContestantStateTag(contestantState)}
+          {renderActionButton(contestantState)}
+          {renderViewRegistrantsButton(contestantsCount)}
+        </Flex>
         {renderRegistrantsDialog()}
-        <div className="clearfix" />
       </>
     );
   };
@@ -70,7 +72,7 @@ export default function ContestRegistrationCard() {
       contestantState === ContestContestantState.Contestant
     ) {
       return (
-        <Tag large intent={Intent.SUCCESS} className="contest-registration-card__item contest-registration-card__state">
+        <Tag large intent={Intent.SUCCESS} className="contest-registration-card__state">
           <Tick /> Registered
         </Tag>
       );
@@ -82,7 +84,7 @@ export default function ContestRegistrationCard() {
     if (contestantState === ContestContestantState.RegistrableWrongDivision) {
       return (
         <Button
-          className="contest-registration-card__item contest-registration-card__action"
+          className="contest-registration-card__action"
           intent={Intent.WARNING}
           text="Your rating is not allowed for this contest division"
           disabled
@@ -92,7 +94,7 @@ export default function ContestRegistrationCard() {
     if (contestantState === ContestContestantState.Registrable) {
       return (
         <Button
-          className="contest-registration-card__item contest-registration-card__action"
+          className="contest-registration-card__action"
           intent={Intent.PRIMARY}
           text="Register"
           onClick={register}
@@ -103,7 +105,7 @@ export default function ContestRegistrationCard() {
     if (contestantState === ContestContestantState.Registrant) {
       return (
         <Button
-          className="contest-registration-card__item contest-registration-card__action"
+          className="contest-registration-card__action"
           intent={Intent.DANGER}
           text="Unregister"
           onClick={unregister}
@@ -117,7 +119,6 @@ export default function ContestRegistrationCard() {
   const renderViewRegistrantsButton = contestantsCount => {
     return (
       <Button
-        className="contest-registration-card__item"
         icon={<People />}
         text={`View registrants (${contestantsCount})`}
         onClick={() => setIsRegistrantsDialogOpen(true)}

@@ -38,14 +38,8 @@ export function ArchiveEditDialog({ archive, isOpen, onCloseDialog }) {
   };
 
   return (
-    <div className="content-card__section">
-      <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit archive" canOutsideClickClose={false}>
-        <ArchiveEditForm
-          renderFormComponents={renderDialogForm}
-          onSubmit={updateArchive}
-          initialValues={initialValues}
-        />
-      </Dialog>
-    </div>
+    <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit archive" canOutsideClickClose={false}>
+      <ArchiveEditForm renderFormComponents={renderDialogForm} onSubmit={updateArchive} initialValues={initialValues} />
+    </Dialog>
   );
 }

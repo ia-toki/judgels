@@ -56,7 +56,6 @@ export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, c
         {renderMain()}
         <div className="basic-profile-card__divider" />
         {renderDetails()}
-        <div className="clearfix" />
       </div>
     </Card>
   );

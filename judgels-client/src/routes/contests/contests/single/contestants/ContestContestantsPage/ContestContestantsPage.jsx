@@ -1,5 +1,6 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
@@ -78,21 +79,15 @@ export default function ContestContestantsPage() {
     const { data: contestants } = response;
     const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
-      <div className="content-card__header">
+      <Flex gap={1}>
         <ContestContestantAddDialog contest={contest} />
         <ContestContestantRemoveDialog contest={contest} />
         {isVirtualContest && (
-          <Button
-            className="contest-contestant-dialog-button"
-            intent={Intent.DANGER}
-            icon={<Refresh />}
-            onClick={onResetVirtualContest}
-          >
+          <Button intent={Intent.DANGER} icon={<Refresh />} onClick={onResetVirtualContest}>
             Reset all contestant virtual start times
           </Button>
         )}
-        <div className="clearfix" />
-      </div>
+      </Flex>
     );
   };
 
