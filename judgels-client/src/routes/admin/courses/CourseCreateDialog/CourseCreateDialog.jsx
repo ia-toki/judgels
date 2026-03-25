@@ -39,13 +39,13 @@ export function CourseCreateDialog() {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New course
       </Button>
       <Dialog isOpen={isDialogOpen} onClose={toggleDialog} title="Create new course" canOutsideClickClose={false}>
         <CourseCreateForm renderFormComponents={renderDialogForm} onSubmit={createCourse} />
       </Dialog>
-    </div>
+    </>
   );
 }

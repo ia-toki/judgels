@@ -1,4 +1,5 @@
 import { Alignment, Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { languageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
@@ -20,24 +21,26 @@ export default function LanguageForm({ onSubmit, initialValues, languages }) {
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting, dirty }) => (
-        <form onSubmit={handleSubmit} className="language-form">
-          <table className="language-form__field">
-            <tbody>
-              <Field component={FormTableSelect2} {...field} />
-            </tbody>
-          </table>
-          {languages.length > 1 && (
-            <Button
-              className="language-form__button"
-              type="submit"
-              text="Switch"
-              alignText={Alignment.LEFT}
-              intent={Intent.PRIMARY}
-              loading={submitting}
-              disabled={!dirty}
-            />
-          )}
-        </form>
+        <Flex asChild gap={1} alignItems="center">
+          <form onSubmit={handleSubmit} className="language-form">
+            <table className="language-form__field">
+              <tbody>
+                <Field component={FormTableSelect2} {...field} />
+              </tbody>
+            </table>
+            {languages.length > 1 && (
+              <Button
+                className="language-form__button"
+                type="submit"
+                text="Switch"
+                alignText={Alignment.LEFT}
+                intent={Intent.PRIMARY}
+                loading={submitting}
+                disabled={!dirty}
+              />
+            )}
+          </form>
+        </Flex>
       )}
     </Form>
   );

@@ -1,15 +1,5 @@
 .chapter-problem-card {
-  display: flex;
-  flex-direction: column;
-  row-gap: 5px;
-
-  .chapter-problem-card__heading {
-    display: flex;
-    gap: 10px;
-  }
-
   h4 {
-    flex: 1 1;
     margin-bottom: 0;
   }
 

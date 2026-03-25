@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { FormTextInput } from '../forms/FormTextInput/FormTextInput';
@@ -20,18 +21,14 @@ export default function SearchBoxForm({ onSubmit, initialValues, isLoading }) {
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => {
         const submitButton = (
-          <Button
-            className="search-box-button"
-            type="submit"
-            text="Search"
-            intent={Intent.PRIMARY}
-            loading={isLoading || submitting}
-          />
+          <Button type="submit" text="Search" intent={Intent.PRIMARY} loading={isLoading || submitting} />
         );
         return (
           <form onSubmit={handleSubmit}>
-            {fields}
-            {submitButton}
+            <Flex gap={1} alignItems="center">
+              {fields}
+              {submitButton}
+            </Flex>
           </form>
         );
       }}

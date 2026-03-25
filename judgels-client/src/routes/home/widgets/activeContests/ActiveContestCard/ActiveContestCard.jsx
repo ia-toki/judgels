@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { PureComponent } from 'react';
 
 import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
@@ -13,12 +14,12 @@ export class ActiveContestCard extends PureComponent {
 
     return (
       <ContentCardLink to={`/contests/${contest.slug}`}>
-        <h4 className="active-contest-card-name">
-          {contest.name}
-          <div className="active-contest-card-role">
+        <Flex asChild justifyContent="space-between">
+          <h4>
+            {contest.name}
             <ContestRoleTag role={role} />
-          </div>
-        </h4>
+          </h4>
+        </Flex>
         <p className="active-contest-card-date">
           <small>{this.renderBeginTime(contest)}</small>
         </p>

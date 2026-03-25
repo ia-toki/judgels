@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
@@ -20,9 +21,10 @@ export default function ClarificationFilterForm({ onSubmit, initialValues, statu
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className="clarification-filter-form">
-          <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
-          <Field component={FormSelect2} {...statusField} />
-          <div className="clearfix" />
+          <Flex gap={2} justifyContent="end">
+            <Field component={FormSelect2} {...statusField} />
+            <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
+          </Flex>
         </form>
       )}
     </Form>

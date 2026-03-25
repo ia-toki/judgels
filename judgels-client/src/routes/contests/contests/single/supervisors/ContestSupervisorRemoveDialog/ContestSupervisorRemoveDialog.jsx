@@ -76,7 +76,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
   const dialogTitle = submitted !== undefined ? 'Remove supervisors results' : 'Remove supervisors';
 
   return (
-    <div className="content-card__section">
+    <>
       <Button
         className="contest-supervisor-dialog-button"
         intent={Intent.DANGER}
@@ -96,6 +96,6 @@ export function ContestSupervisorRemoveDialog({ contest }) {
       >
         {dialogBody}
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@
 @use '../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 @use '../../node_modules/@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 @use '../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
+@use '../../node_modules/@blueprintjs/labs/lib/css/blueprint-labs.css';
 
 @use './base' as *;
 @use './table';
@@ -371,22 +372,8 @@ table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
   font-family: $accent-font;
 }
 
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
 .multiline-text {
   white-space: pre-wrap;
-}
-
-.clearfix::after {
-  content: '';
-  clear: both;
-  display: table;
 }
 
 .normal-weight {

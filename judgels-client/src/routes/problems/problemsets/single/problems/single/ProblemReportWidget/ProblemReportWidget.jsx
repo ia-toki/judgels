@@ -1,4 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
@@ -54,9 +55,10 @@ export default function ProblemReportWidget() {
   const renderProgress = ({ progress }) => {
     return (
       <ContentCard>
-        <h4 className="progress-title">Your score</h4>
-        <VerdictProgressTag {...progress} />
-        <br />
+        <Flex justifyContent="space-between">
+          <h4 className="progress-title">Your score</h4>
+          <VerdictProgressTag {...progress} />
+        </Flex>
         <ProgressBar num={progress.score} denom={100} verdict={progress.verdict} />
       </ContentCard>
     );

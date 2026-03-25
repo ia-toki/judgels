@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
@@ -109,12 +110,7 @@ function ContestSubmissionsPage() {
     }
 
     return (
-      <Button
-        className="item-submissions-table__regrade-button"
-        intent="primary"
-        icon={<Refresh />}
-        onClick={onRegradeAll}
-      >
+      <Button intent="primary" icon={<Refresh />} onClick={onRegradeAll}>
         Regrade all pages
       </Button>
     );
@@ -150,8 +146,10 @@ function ContestSubmissionsPage() {
     <ContentCard>
       <h3>Submissions</h3>
       <hr />
-      {renderRegradeAllButton()}
-      {renderFilterWidget()}
+      <Flex justifyContent="space-between">
+        {renderRegradeAllButton()}
+        {renderFilterWidget()}
+      </Flex>
       {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

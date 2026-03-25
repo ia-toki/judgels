@@ -1,28 +1,12 @@
 .clarification-filter-form {
-  .form-status {
-    min-width: 250px;
+  .form-status.bp6-form-group {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 0;
+
     button {
       width: 200px;
     }
-  }
-
-  .form-status {
-    float: right;
-
-    label {
-      float: left;
-      width: initial;
-      line-height: 30px;
-      margin-right: 5px;
-    }
-
-    .form-group__select {
-      float: left;
-      width: initial;
-    }
-  }
-
-  button {
-    float: right;
   }
 }

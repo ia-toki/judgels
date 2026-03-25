@@ -97,11 +97,9 @@ export function ProblemSetProblemEditDialog({ isOpen, problemSet, onCloseDialog 
   };
 
   return (
-    <div className="content-card__section">
-      <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit problemset problems" canOutsideClickClose={false}>
-        {renderDialogContent()}
-      </Dialog>
-    </div>
+    <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit problemset problems" canOutsideClickClose={false}>
+      {renderDialogContent()}
+    </Dialog>
   );
 }
 

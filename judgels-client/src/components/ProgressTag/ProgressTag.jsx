@@ -1,8 +1,6 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import './ProgressTag.scss';
-
 export function ProgressTag({ className, large, num, denom, children }) {
   if (denom === 0) {
     return null;

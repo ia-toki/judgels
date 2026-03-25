@@ -77,7 +77,7 @@ export function ContestContestantAddDialog({ contest }) {
   const dialogTitle = submitted !== undefined ? 'Add contestants results' : 'Add contestants';
 
   return (
-    <div className="content-card__section">
+    <>
       <Button
         className="contest-contestant-dialog-button"
         intent={Intent.PRIMARY}
@@ -97,6 +97,6 @@ export function ContestContestantAddDialog({ contest }) {
       >
         {dialogBody}
       </Dialog>
-    </div>
+    </>
   );
 }

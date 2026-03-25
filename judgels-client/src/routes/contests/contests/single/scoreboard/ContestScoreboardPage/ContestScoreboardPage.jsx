@@ -1,5 +1,6 @@
 import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
 import { Pause, Refresh } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { Fragment, useState } from 'react';
@@ -100,7 +101,7 @@ function ContestScoreboardPage() {
     }
 
     return (
-      <div className="float-left">
+      <Flex gap={5}>
         {canViewOfficialAndFrozen && (
           <Switch
             className="contest-scoreboard-page__filter"
@@ -117,8 +118,7 @@ function ContestScoreboardPage() {
             onChange={onChangeShowClosedProblems}
           />
         )}
-        <div className="clearfix " />
-      </div>
+      </Flex>
     );
   };
 
@@ -134,7 +134,6 @@ function ContestScoreboardPage() {
 
     return (
       <Button
-        className="float-right"
         intent="primary"
         small
         icon={<Refresh />}
@@ -291,15 +290,15 @@ function ContestScoreboardPage() {
 
   return (
     <ContentCard className="contest-scoreboard-page">
-      <h3>Scoreboard</h3>
-      {renderScoreboardUpdatedTime()}
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <h3>Scoreboard</h3>
+        {renderScoreboardUpdatedTime()}
+      </Flex>
       <hr />
-      <div className="content-card__header">
+      <Flex justifyContent="space-between" alignItems="center">
         {renderFilter()}
         {renderForceRefreshButton()}
-        <div className="clearfix" />
-      </div>
+      </Flex>
       {renderFrozenScoreboardNotice()}
       {renderScoreboard()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalEntries} />}

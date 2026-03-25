@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
@@ -24,11 +25,10 @@ export default function StatementLanguageWidget({ className, defaultLanguage, st
   };
 
   return (
-    <div className={classNames('language-widget', className)}>
+    <Flex className={classNames('language-widget', className)} justifyContent="end">
       <div className="language-widget__right">
         <LanguageForm onSubmit={data => setStatementLanguage(data.language)} {...formProps} />
       </div>
-      <div className="clearfix" />
-    </div>
+    </Flex>
   );
 }

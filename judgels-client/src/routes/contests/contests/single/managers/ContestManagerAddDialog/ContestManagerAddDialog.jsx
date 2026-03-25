@@ -77,7 +77,7 @@ export function ContestManagerAddDialog({ contest }) {
   const dialogTitle = submitted !== undefined ? 'Add managers results' : 'Add managers';
 
   return (
-    <div className="content-card__section">
+    <>
       <Button
         className="contest-manager-dialog-button"
         intent={Intent.PRIMARY}
@@ -97,6 +97,6 @@ export function ContestManagerAddDialog({ contest }) {
       >
         {dialogBody}
       </Dialog>
-    </div>
+    </>
   );
 }

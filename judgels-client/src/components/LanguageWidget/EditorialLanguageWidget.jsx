@@ -1,3 +1,5 @@
+import { Flex } from '@blueprintjs/labs';
+
 import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
 import { useWebPrefs } from '../../modules/webPrefs';
 import LanguageForm from './LanguageForm/LanguageForm';
@@ -22,11 +24,10 @@ export default function EditorialLanguageWidget({ defaultLanguage, editorialLang
   };
 
   return (
-    <div className="language-widget">
+    <Flex className="language-widget" justifyContent="end">
       <div className="language-widget__right">
         <LanguageForm onSubmit={data => setEditorialLanguage(data.language)} {...formProps} />
       </div>
-      <div className="clearfix" />
-    </div>
+    </Flex>
   );
 }

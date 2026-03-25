@@ -28,14 +28,8 @@ export function ContestEditDialog({ initiallyOpen, canManage }) {
       return null;
     }
     return (
-      <Button
-        className="contest-edit-dialog-button"
-        intent={Intent.PRIMARY}
-        icon={<Cog />}
-        onClick={toggleDialog}
-        disabled={state.isDialogOpen}
-      >
-        <span className="contest-edit-dialog-button__text">Settings</span>
+      <Button intent={Intent.PRIMARY} icon={<Cog />} onClick={toggleDialog} disabled={state.isDialogOpen}>
+        Settings
       </Button>
     );
   };

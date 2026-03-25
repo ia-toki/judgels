@@ -35,7 +35,7 @@ export function ChapterEditDialog({ chapter, isOpen, onCloseDialog }) {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit chapter" canOutsideClickClose={false}>
         <ChapterEditForm
           renderFormComponents={renderDialogForm}
@@ -43,6 +43,6 @@ export function ChapterEditDialog({ chapter, isOpen, onCloseDialog }) {
           initialValues={initialValues}
         />
       </Dialog>
-    </div>
+    </>
   );
 }

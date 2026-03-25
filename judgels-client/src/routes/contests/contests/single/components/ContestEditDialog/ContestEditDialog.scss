@@ -72,20 +72,11 @@
 
   .contest-edit-dialog__arrow {
     line-height: 0 !important;
-    float: right;
 
     .bp6-light & {
       color: $primary-color !important;
     }
   }
-
-  .right-action-button {
-    float: right;
-  }
-}
-
-.contest-edit-dialog-button {
-  margin-top: 5px;
 }
 
 .contest-edit-dialog__content {

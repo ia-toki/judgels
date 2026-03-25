@@ -1,3 +1,5 @@
+import { Flex } from '@blueprintjs/labs';
+
 import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
@@ -24,20 +26,21 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
     if (!progress) {
       return null;
     }
-    return (
-      <ProgressBar className="course-card__progress-bar" num={progress.solvedProblems} denom={progress.totalProblems} />
-    );
+    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
   };
 
   return (
     <ContentCardLink to={`/courses/${slug}`} className="course-card">
-      <h4 className="course-card__title">
-        {`${name}`}
-        {renderProgress()}
-      </h4>
+      <Flex asChild justifyContent="space-between" alignItems="baseline">
+        <h4 className="course-card__title">
+          {`${name}`}
+          {renderProgress()}
+        </h4>
+      </Flex>
+
       <hr />
       {description && (
-        <small className="course-card__description">
+        <small>
           <HtmlText>{description}</HtmlText>
         </small>
       )}

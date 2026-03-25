@@ -1,12 +1,8 @@
 .language-form {
-  display: flex;
-  gap: 5px;
-
   .language-form__field {
     width: 210px;
 
-    .form-language {
-      margin-top: 3px;
+    .form-table-input__group.form-language {
       button {
         width: 210px;
       }
@@ -14,7 +10,7 @@
   }
 
   .language-form__button {
-    margin-top: 10px;
+    margin-top: 2px;
     height: 30px;
   }
 }

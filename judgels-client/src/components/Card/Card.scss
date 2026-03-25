@@ -23,3 +23,8 @@
   margin-bottom: 10px;
   overflow-x: auto;
 }
+
+// HACK
+.card__content div:has(button):first-child {
+  margin-bottom: 8px;
+}

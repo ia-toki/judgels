@@ -1,4 +1,5 @@
 import { Code, Form } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
@@ -43,14 +44,18 @@ export function ChapterProblemCard({
       className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
       to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}`}
     >
-      <div className="chapter-problem-card__heading">
-        {problem.type === ProblemType.Programming ? <Code /> : <Form />}
-        <h4 data-key="name">
-          {problem.alias}. {problemName}
-        </h4>
-        {renderProblemSetProblemPaths()}
-        {renderProgress()}
-      </div>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Flex gap={2}>
+          {problem.type === ProblemType.Programming ? <Code /> : <Form />}
+          <h4 data-key="name">
+            {problem.alias}. {problemName}
+          </h4>
+        </Flex>
+        <Flex gap={2} alignItems="baseline">
+          {renderProblemSetProblemPaths()}
+          {renderProgress()}
+        </Flex>
+      </Flex>
     </ContentCardLink>
   );
 }

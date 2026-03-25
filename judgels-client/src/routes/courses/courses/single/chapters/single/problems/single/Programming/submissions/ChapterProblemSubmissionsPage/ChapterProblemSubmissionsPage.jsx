@@ -81,15 +81,6 @@ export default function ChapterProblemSubmissionsPage() {
     }
   };
 
-  const renderHeader = () => {
-    return (
-      <div className="content-card__header">
-        <div className="action-buttons float-left">{renderRegradeAllButton()}</div>
-        <div className="clearfix" />
-      </div>
-    );
-  };
-
   const renderFilter = () => {
     return userJid && <Switch label="Show all submissions" checked={isShowAll} onChange={onChangeFilterShowAll} />;
   };
@@ -131,7 +122,7 @@ export default function ChapterProblemSubmissionsPage() {
   return (
     <ContentCard>
       {renderFilter()}
-      {renderHeader()}
+      {renderRegradeAllButton()}
       {renderSubmissions()}
       {response && (
         <CursorPagination

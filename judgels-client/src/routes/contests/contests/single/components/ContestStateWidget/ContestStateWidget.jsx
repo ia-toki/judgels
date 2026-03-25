@@ -1,5 +1,6 @@
 import { Alert, Button, Callout, Intent } from '@blueprintjs/core';
 import { InfoSign, Time } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
@@ -175,9 +176,10 @@ export default function ContestStateWidget() {
   const { leftComponent, rightComponent } = getWidgetComponents();
   return (
     <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
-      <div className="float-left">{leftComponent}</div>
-      <div className="float-right">{rightComponent}</div>
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <div>{leftComponent}</div>
+        <div>{rightComponent}</div>
+      </Flex>
       {renderVirtualContestAlert()}
     </Callout>
   );

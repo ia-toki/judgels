@@ -5,6 +5,7 @@
     "@blueprintjs/core": "6.3.4",
     "@blueprintjs/datetime": "6.0.8",
     "@blueprintjs/icons": "6.3.1",
+    "@blueprintjs/labs": "6.2.3",
     "@blueprintjs/select": "6.0.8",
     "@react-oauth/google": "0.11.1",
     "@tanstack/query-async-storage-persister": "5.90.18",

@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { FormTableFileInput } from '../../../../../../components/forms/FormTableFileInput/FormTableFileInput';
@@ -17,18 +18,20 @@ export default function ContestFileUploadForm({ onSubmit }) {
     <Form onSubmit={onSubmit}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="contest-file-upload-form">
-          <table className="contest-file-upload-form__table">
-            <tbody>
-              <Field component={FormTableFileInput} {...field} />
-            </tbody>
-          </table>
-          <Button
-            className="contest-file-upload-form__button"
-            type="submit"
-            text="Upload"
-            intent={Intent.PRIMARY}
-            loading={submitting}
-          />
+          <Flex gap={2} alignItems="start">
+            <table className="contest-file-upload-form__table">
+              <tbody>
+                <Field component={FormTableFileInput} {...field} />
+              </tbody>
+            </table>
+            <Button
+              className="contest-file-upload-form__button"
+              type="submit"
+              text="Upload"
+              intent={Intent.PRIMARY}
+              loading={submitting}
+            />
+          </Flex>
         </form>
       )}
     </Form>

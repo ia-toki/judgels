@@ -208,7 +208,6 @@ export default class ItemShortAnswerForm extends PureComponent {
         </ControlGroup>
         {this.renderWrongFormatNotice()}
         {this.renderHelpText()}
-        <div className="clearfix" />
       </form>
     );
   }

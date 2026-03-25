@@ -1,4 +1,5 @@
 import { Button, Callout } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/uriel/contestModule';
 
@@ -11,16 +12,17 @@ export function ContestModuleCard({ type, intent, buttonIntent, buttonText, butt
 
   return (
     <Callout className="contest-module-card" intent={intent} icon={null}>
-      <div className="float-left">
-        <h5>{moduleTitlesMap[type]}</h5>
-        <small>{moduleDescriptionsMap[type]}</small>
-      </div>
-      <div className="float-right">
-        <Button small intent={buttonIntent} onClick={clickButton}>
-          {buttonText}
-        </Button>
-      </div>
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <div>
+          <h5>{moduleTitlesMap[type]}</h5>
+          <small>{moduleDescriptionsMap[type]}</small>
+        </div>
+        <div>
+          <Button small intent={buttonIntent} onClick={clickButton}>
+            {buttonText}
+          </Button>
+        </div>
+      </Flex>
     </Callout>
   );
 }

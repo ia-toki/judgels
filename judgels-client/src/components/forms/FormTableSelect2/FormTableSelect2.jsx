@@ -6,8 +6,6 @@ import classNames from 'classnames';
 import { FormTableInput } from '../FormTableInput/FormTableInput';
 import { getIntentClassName } from '../meta';
 
-import './FormTableSelect2.scss';
-
 export function FormTableSelect2(props) {
   const { input, meta, disabled, optionValues, optionNamesMap } = props;
   const { onChange, ...inputProps } = input;

@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
@@ -109,11 +110,10 @@ export default function ContestProblemsPage() {
     <ContentCard>
       <h3>Problems</h3>
       <hr />
-      <div className="content-card__header">
+      <Flex justifyContent="space-between" alignItems="center">
         {renderSetDialog()}
         {renderStatementLanguageWidget()}
-        <div className="clearfix" />
-      </div>
+      </Flex>
       {renderProblems()}
     </ContentCard>
   );

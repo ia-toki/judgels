@@ -1,5 +1,6 @@
 import { Popover, Position } from '@blueprintjs/core';
 import { Menu } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
@@ -77,12 +78,13 @@ export default function CourseChaptersSidebar() {
           }
         }}
       >
-        <div className="course-chapters-sidebar__item-title">
-          {courseChapter.alias}
-          {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
-          &nbsp;&nbsp;
+        <Flex gap={1} justifyContent="space-between" alignItems="baseline">
+          <span>
+            {courseChapter.alias}
+            {showName && <>. {chaptersMap[courseChapter.chapterJid].name}</>}
+          </span>
           {renderProgress(chapterProgressesMap[courseChapter.chapterJid])}
-        </div>
+        </Flex>
       </Link>
     ));
   };

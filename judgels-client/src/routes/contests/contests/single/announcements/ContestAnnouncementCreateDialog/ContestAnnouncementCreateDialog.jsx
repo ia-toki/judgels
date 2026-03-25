@@ -71,9 +71,9 @@ export function ContestAnnouncementCreateDialog({ contest }) {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       {renderButton()}
       {renderDialog()}
-    </div>
+    </>
   );
 }

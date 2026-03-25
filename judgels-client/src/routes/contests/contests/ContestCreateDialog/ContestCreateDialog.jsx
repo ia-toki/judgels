@@ -17,7 +17,7 @@ export function ContestCreateDialog() {
 
   const render = () => {
     return (
-      <div className="content-card__section">
+      <div>
         {renderButton()}
         {renderDialog()}
       </div>

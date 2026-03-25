@@ -1,12 +1,14 @@
 import { Callout, Intent } from '@blueprintjs/core';
 import { InfoSign } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 export function LoadingContestStateWidget() {
   return (
     <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
-      <div className="float-left">&nbsp;</div>
-      <div className="float-right">&nbsp;</div>
-      <div className="clearfix" />
+      <Flex justifyContent="space-between">
+        <div>&nbsp;</div>
+        <div>&nbsp;</div>
+      </Flex>
     </Callout>
   );
 }

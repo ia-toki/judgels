@@ -16,6 +16,14 @@
   box-shadow: 0 0 0 0.5px $dark-secondary-background-color !important;
 }
 
+// HACK
+.content-card hr + * {
+  margin-bottom: 15px;
+}
+.content-card hr ~ div:has(button) {
+  margin-bottom: 15px;
+}
+
 .content-card__section {
   margin-bottom: 15px;
 }

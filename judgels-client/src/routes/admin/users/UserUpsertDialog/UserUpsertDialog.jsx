@@ -120,7 +120,7 @@ export function UserUpsertDialog() {
   );
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Upload />} onClick={toggleDialog} disabled={isDialogOpen}>
         Upsert users
       </Button>
@@ -133,6 +133,6 @@ export function UserUpsertDialog() {
       >
         {result ? renderResult() : renderForm()}
       </Dialog>
-    </div>
+    </>
   );
 }

@@ -96,11 +96,9 @@ export function ChapterLessonEditDialog({ isOpen, chapter, onCloseDialog }) {
   };
 
   return (
-    <div className="content-card__section">
-      <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter lessons" canOutsideClickClose={false}>
-        {renderDialogContent()}
-      </Dialog>
-    </div>
+    <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit chapter lessons" canOutsideClickClose={false}>
+      {renderDialogContent()}
+    </Dialog>
   );
 }
 

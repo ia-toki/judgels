@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
@@ -29,10 +30,11 @@ export default function SubmissionFilterForm({ onSubmit, initialValues, username
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className="submission-filter-form">
-          <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
-          {problemAliases && <Field component={FormSelect2} {...problemField} />}
-          {usernames && <Field component={FormSelect2} {...userField} />}
-          <div className="clearfix" />
+          <Flex justifyContent="end" gap={2} alignItems="end">
+            {usernames && <Field component={FormSelect2} {...userField} />}
+            {problemAliases && <Field component={FormSelect2} {...problemField} />}
+            <Button type="submit" text="Filter" intent={Intent.PRIMARY} loading={isLoading} />
+          </Flex>
         </form>
       )}
     </Form>

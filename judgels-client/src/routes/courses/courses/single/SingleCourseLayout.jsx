@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -6,8 +7,6 @@ import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/
 import { courseBySlugQueryOptions } from '../../../../modules/queries/course';
 import { createDocumentTitle } from '../../../../utils/title';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
-
-import './SingleCourseLayout.scss';
 
 export default function SingleCourseLayout() {
   const { courseSlug } = useParams({ strict: false });
@@ -19,10 +18,10 @@ export default function SingleCourseLayout() {
 
   return (
     <FullWidthPageLayout>
-      <div className="single-course-routes">
+      <Flex flexWrap="wrap">
         <CourseChaptersSidebar />
         <Outlet />
-      </div>
+      </Flex>
     </FullWidthPageLayout>
   );
 }

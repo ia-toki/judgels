@@ -48,14 +48,12 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
   };
 
   return (
-    <div className="content-card__section">
-      <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit problemset" canOutsideClickClose={false}>
-        <ProblemSetEditForm
-          renderFormComponents={renderDialogForm}
-          onSubmit={updateProblemSet}
-          initialValues={initialValues}
-        />
-      </Dialog>
-    </div>
+    <Dialog isOpen={isOpen} onClose={onCloseDialog} title="Edit problemset" canOutsideClickClose={false}>
+      <ProblemSetEditForm
+        renderFormComponents={renderDialogForm}
+        onSubmit={updateProblemSet}
+        initialValues={initialValues}
+      />
+    </Dialog>
   );
 }

@@ -64,12 +64,9 @@
 
   .widget-user__burger,
   .widget-user__menu-helper {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
     cursor: pointer;
-
-    span.bp6-icon {
-      float: left;
-    }
   }
 }
 
@@ -80,11 +77,8 @@
 
   .widget-user__burger,
   .widget-user__menu-helper {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
     cursor: pointer;
-
-    span.bp6-icon {
-      float: left;
-    }
   }
 }

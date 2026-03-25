@@ -52,7 +52,7 @@ export function ProblemSetCreateDialog() {
   };
 
   return (
-    <div className="content-card__section">
+    <>
       <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New problemset
       </Button>
@@ -63,6 +63,6 @@ export function ProblemSetCreateDialog() {
           initialValues={initialValues}
         />
       </Dialog>
-    </div>
+    </>
   );
 }

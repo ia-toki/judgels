@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -79,7 +80,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
   };
 
   const renderNavigationSection = () => {
-    return <div className="chapter-problem-navigation">{renderNavigation({ hidePrev: true })}</div>;
+    return <Flex justifyContent="end">{renderNavigation({ hidePrev: true })}</Flex>;
   };
 
   return (
