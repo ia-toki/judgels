@@ -8,7 +8,7 @@ import { nockJophiel } from '../../../../utils/nock';
 import LoginPage from './LoginPage';
 
 describe('LoginPage', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -18,9 +18,11 @@ describe('LoginPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const usernameOrEmail = screen.getByRole('textbox', { name: /username or email/i });

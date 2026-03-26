@@ -22,7 +22,7 @@ describe('Menubar', () => {
     );
   };
 
-  it('renders all menu items', async () => {
+  test('renders all menu items', async () => {
     await renderMenubar('/');
 
     expect(screen.getByText('Home')).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe('Menubar', () => {
     expect(screen.getByText('Third')).toBeInTheDocument();
   });
 
-  it('highlights the active route', async () => {
+  test('highlights the active route', async () => {
     await renderMenubar('/second');
 
     const tabs = screen.getAllByRole('tab');
@@ -39,21 +39,21 @@ describe('Menubar', () => {
     expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('highlights active route for nested paths', async () => {
+  test('highlights active route for nested paths', async () => {
     await renderMenubar('/second/child/path');
 
     const tabs = screen.getAllByRole('tab');
     expect(tabs.find(t => t.textContent === 'Second')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('falls back to home when no route matches', async () => {
+  test('falls back to home when no route matches', async () => {
     await renderMenubar('/unknown');
 
     const tabs = screen.getAllByRole('tab');
     expect(tabs.find(t => t.textContent === 'Home')).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('generates correct links', async () => {
+  test('generates correct links', async () => {
     await renderMenubar('/');
 
     expect(screen.getByRole('link', { name: 'Third' })).toHaveAttribute('href', '/third');

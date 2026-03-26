@@ -7,7 +7,7 @@ import { nockJophiel } from '../../../../utils/nock';
 import ActivatePage from './ActivatePage';
 
 describe('ActivatePage', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     nockJophiel().post('/user-account/activate/code123').reply(200);
 
     await act(async () =>
@@ -19,9 +19,11 @@ describe('ActivatePage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('activate', async () => {
+    await renderComponent();
+
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

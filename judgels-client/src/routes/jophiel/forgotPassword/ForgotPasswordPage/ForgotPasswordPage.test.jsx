@@ -8,7 +8,7 @@ import { nockJophiel } from '../../../../utils/nock';
 import ForgotPasswordPage from './ForgotPasswordPage';
 
 describe('ForgotPasswordPage', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -18,9 +18,11 @@ describe('ForgotPasswordPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const email = screen.getByRole('textbox');
