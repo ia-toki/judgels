@@ -76,9 +76,14 @@ export default function ProblemSetArchiveFilter() {
   }
 
   return (
-    <ContentCard>
-      <h4>Filter problemset</h4>
-      <hr />
+    <ContentCard
+      header={
+        <>
+          <h4>Filter problemset</h4>
+          <hr />
+        </>
+      }
+    >
       {renderArchiveCategories()}
     </ContentCard>
   );

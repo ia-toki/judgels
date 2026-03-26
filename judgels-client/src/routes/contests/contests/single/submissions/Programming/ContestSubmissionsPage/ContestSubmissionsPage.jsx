@@ -37,7 +37,7 @@ function ContestSubmissionsPage() {
   const regradeSubmissionMutation = useMutation(regradeProgrammingSubmissionMutationOptions(contest.jid));
   const regradeSubmissionsMutation = useMutation(regradeProgrammingSubmissionsMutationOptions(contest.jid));
 
-  const renderHeader = () => {
+  const renderActions = () => {
     return (
       <Flex justifyContent="space-between" alignItems="center">
         <div>{renderRegradeAllButton()}</div>
@@ -124,10 +124,8 @@ function ContestSubmissionsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Submissions</h3>
-      <hr />
-      {renderHeader()}
+    <ContentCard title="Submissions">
+      {renderActions()}
       {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

@@ -107,9 +107,7 @@ export default function ProblemSubmissionsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Submissions</h3>
-      <hr />
+    <ContentCard title="Submissions">
       {renderUserFilter()}
       {renderHeader()}
       {renderSubmissions()}

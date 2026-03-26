@@ -1,7 +1,8 @@
 .courses {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 10px;
+  row-gap: 8px;
+  column-gap: 8px;
 }
 
 @media only screen and (max-width: 900px) {

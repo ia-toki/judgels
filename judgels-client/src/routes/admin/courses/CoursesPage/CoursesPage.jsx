@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { coursesQueryOptions } from '../../../../modules/queries/course';
@@ -47,11 +48,17 @@ export default function CoursesPage() {
     return <CoursesTable courses={courses} onEditCourse={editCourse} onEditCourseChapters={editCourseChapters} />;
   };
 
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <CourseCreateDialog />
+      </ActionButtons>
+    );
+  };
+
   return (
-    <ContentCard>
-      <h3>Courses</h3>
-      <hr />
-      <CourseCreateDialog />
+    <ContentCard title="Courses">
+      {renderAction()}
       <CourseEditDialog isOpen={editDialogType === 'edit'} course={editedCourse} onCloseDialog={closeDialog} />
       <CourseChapterEditDialog
         isOpen={editDialogType === 'chapters'}

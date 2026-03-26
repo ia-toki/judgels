@@ -1,6 +1,7 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
 
+import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 
 export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) {
@@ -24,9 +25,11 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
       );
     }
     return (
-      <Button intent={Intent.PRIMARY} onClick={redirectToResultsUrl}>
-        Submit
-      </Button>
+      <ActionButtons>
+        <Button intent={Intent.PRIMARY} onClick={redirectToResultsUrl}>
+          Submit
+        </Button>
+      </ActionButtons>
     );
   };
 

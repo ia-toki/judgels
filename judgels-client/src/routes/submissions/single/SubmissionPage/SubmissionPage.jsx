@@ -51,11 +51,5 @@ export default function SubmissionPage() {
     );
   };
 
-  return (
-    <ContentCard>
-      <h3>Submission #{submissionId}</h3>
-      <hr />
-      {renderSubmission()}
-    </ContentCard>
-  );
+  return <ContentCard title={`Submission #${submissionId}`}>{renderSubmission()}</ContentCard>;
 }

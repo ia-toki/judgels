@@ -78,17 +78,10 @@ export function ContestContestantAddDialog({ contest }) {
 
   return (
     <>
-      <Button
-        className="contest-contestant-dialog-button"
-        intent={Intent.PRIMARY}
-        icon={<Plus />}
-        onClick={toggleDialog}
-        disabled={isDialogOpen}
-      >
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         Add contestants
       </Button>
       <Dialog
-        className="contest-contestant-dialog"
         isOpen={isDialogOpen}
         onClose={toggleDialog}
         title={dialogTitle}

@@ -143,9 +143,7 @@ function ContestSubmissionsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Submissions</h3>
-      <hr />
+    <ContentCard title="Submissions">
       <Flex justifyContent="space-between">
         {renderRegradeAllButton()}
         {renderFilterWidget()}

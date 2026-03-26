@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { chaptersQueryOptions } from '../../../../modules/queries/chapter';
@@ -60,11 +61,17 @@ export default function ChaptersPage() {
     );
   };
 
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <ChapterCreateDialog />
+      </ActionButtons>
+    );
+  };
+
   return (
-    <ContentCard>
-      <h3>Chapters</h3>
-      <hr />
-      <ChapterCreateDialog />
+    <ContentCard title="Chapters">
+      {renderAction()}
       <ChapterEditDialog isOpen={editDialogType === 'edit'} chapter={editedChapter} onCloseDialog={closeDialog} />
       <ChapterLessonEditDialog
         isOpen={editDialogType === 'lessons'}

@@ -84,9 +84,7 @@ export default function ProblemSetProblemsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Problems</h3>
-      <hr />
+    <ContentCard title="Problems">
       {renderHeader()}
       {renderProblems()}
     </ContentCard>

@@ -31,8 +31,6 @@ import { TrocScoreboardTable } from '../TrocScoreboardTable/TrocScoreboardTable'
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-import './ContestScoreboardPage.scss';
-
 const PAGE_SIZE = 250;
 
 function ContestScoreboardPage() {
@@ -67,11 +65,9 @@ function ContestScoreboardPage() {
     const scoreboard = response.data;
     const contestEndTime = contest.beginTime + contest.duration;
     return (
-      <p className="contest-scoreboard-page__info">
-        <small>
-          last updated <FormattedRelative value={Math.min(contestEndTime, scoreboard.updatedTime)} />
-        </small>
-      </p>
+      <span>
+        last updated <FormattedRelative value={Math.min(contestEndTime, scoreboard.updatedTime)} />
+      </span>
     );
   };
 
@@ -80,14 +76,7 @@ function ContestScoreboardPage() {
       return null;
     }
 
-    return (
-      <Callout
-        className="contest-scoreboard-page__frozen"
-        icon={<Pause />}
-        intent={Intent.WARNING}
-        title="SCOREBOARD HAS BEEN FROZEN"
-      />
-    );
+    return <Callout icon={<Pause />} intent={Intent.WARNING} title="SCOREBOARD HAS BEEN FROZEN" />;
   };
 
   const renderFilter = () => {
@@ -102,21 +91,9 @@ function ContestScoreboardPage() {
 
     return (
       <Flex gap={5}>
-        {canViewOfficialAndFrozen && (
-          <Switch
-            className="contest-scoreboard-page__filter"
-            label="Frozen"
-            checked={frozen}
-            onChange={onChangeFrozen}
-          />
-        )}
+        {canViewOfficialAndFrozen && <Switch label="Frozen" checked={frozen} onChange={onChangeFrozen} />}
         {canViewClosedProblems && (
-          <Switch
-            className="contest-scoreboard-page__filter"
-            label="Show closed problems"
-            checked={showClosedProblems}
-            onChange={onChangeShowClosedProblems}
-          />
+          <Switch label="Show closed problems" checked={showClosedProblems} onChange={onChangeShowClosedProblems} />
         )}
       </Flex>
     );
@@ -289,12 +266,7 @@ function ContestScoreboardPage() {
   };
 
   return (
-    <ContentCard className="contest-scoreboard-page">
-      <Flex justifyContent="space-between">
-        <h3>Scoreboard</h3>
-        {renderScoreboardUpdatedTime()}
-      </Flex>
-      <hr />
+    <ContentCard title="Scoreboard" subtitle={renderScoreboardUpdatedTime()}>
       <Flex justifyContent="space-between" alignItems="center">
         {renderFilter()}
         {renderForceRefreshButton()}

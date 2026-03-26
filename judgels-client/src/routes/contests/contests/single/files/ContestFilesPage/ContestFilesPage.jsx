@@ -43,9 +43,7 @@ export default function ContestFilesPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Files</h3>
-      <hr />
+    <ContentCard title="Files">
       {renderUploadCard()}
       {renderFiles()}
     </ContentCard>

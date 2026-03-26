@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -15,6 +16,14 @@ export default function UsersPage() {
   const page = +(location.search.page || 1);
 
   const { data: response } = useQuery(usersQueryOptions({ page }));
+
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <UserUpsertDialog />
+      </ActionButtons>
+    );
+  };
 
   const renderUsers = () => {
     if (!response) {
@@ -34,10 +43,8 @@ export default function UsersPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Users</h3>
-      <hr />
-      <UserUpsertDialog />
+    <ContentCard title="Users">
+      {renderAction()}
       {renderUsers()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

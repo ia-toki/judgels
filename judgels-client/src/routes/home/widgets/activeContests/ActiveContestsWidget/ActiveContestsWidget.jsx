@@ -28,7 +28,7 @@ export default function ActiveContestsWidget() {
   };
 
   return (
-    <Card title="Active contests" className="active-contests-widget">
+    <Card title="Active contests">
       {renderActiveContests()}
 
       <small>

@@ -16,7 +16,7 @@ export default function ContestEditDescriptionForm({ onSubmit, initialValues, on
         <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
           <Field component={FormRichTextArea} {...descriptionField} />
           <hr />
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button text="Cancel" disabled={submitting} onClick={onCancel} />
             <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>

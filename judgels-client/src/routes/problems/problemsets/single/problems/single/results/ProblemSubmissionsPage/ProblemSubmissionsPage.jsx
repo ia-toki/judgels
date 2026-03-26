@@ -146,9 +146,7 @@ export default function ProblemSubmissionsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Results</h3>
-      <hr />
+    <ContentCard title="Results">
       <ItemSubmissionUserFilter />
       {renderRegradeAllButton()}
       {renderSubmissions()}

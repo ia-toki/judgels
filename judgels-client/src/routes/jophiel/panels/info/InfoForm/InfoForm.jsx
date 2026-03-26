@@ -110,7 +110,7 @@ export default function InfoForm({ onSubmit, initialValues, onCancel }) {
 
           <HorizontalDivider />
 
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button data-key="cancel" text="Cancel" onClick={onCancel} disabled={submitting} />
             <Button type="submit" text="Save changes" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>

@@ -20,20 +20,24 @@ export default function ProblemTopicTags({ tags, alignLeft }) {
     return null;
   }
 
-  return tags
-    .filter(tag => tag.startsWith('topic-'))
-    .filter(tag => !isParent(tag, tags))
-    .sort()
-    .map(formatTagName)
-    .map(tag => (
-      <Tag
-        round
-        multiline
-        intent={Intent.PRIMARY}
-        key={tag}
-        className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
-      >
-        {tag}
-      </Tag>
-    ));
+  return (
+    <div>
+      {tags
+        .filter(tag => tag.startsWith('topic-'))
+        .filter(tag => !isParent(tag, tags))
+        .sort()
+        .map(formatTagName)
+        .map(tag => (
+          <Tag
+            round
+            multiline
+            intent={Intent.PRIMARY}
+            key={tag}
+            className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
+          >
+            {tag}
+          </Tag>
+        ))}
+    </div>
+  );
 }

@@ -45,9 +45,7 @@ export default function UserViewPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>{user.username}</h3>
-      <hr />
+    <ContentCard title={user.username}>
       <HTMLTable striped className="table-list">
         <tbody>
           <tr>

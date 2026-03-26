@@ -2,6 +2,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -39,7 +40,7 @@ function ContestClarificationsPage() {
     setOpenAnswerBoxJid(clarification?.jid);
   };
 
-  const renderCreateDialog = () => {
+  const renderAction = () => {
     if (!response) {
       return null;
     }
@@ -48,12 +49,14 @@ function ContestClarificationsPage() {
     }
 
     return (
-      <ContestClarificationCreateDialog
-        contest={contest}
-        problemJids={response.config.problemJids}
-        problemAliasesMap={response.problemAliasesMap}
-        problemNamesMap={response.problemNamesMap}
-      />
+      <ActionButtons>
+        <ContestClarificationCreateDialog
+          contest={contest}
+          problemJids={response.config.problemJids}
+          problemAliasesMap={response.problemAliasesMap}
+          problemNamesMap={response.problemNamesMap}
+        />
+      </ActionButtons>
     );
   };
 
@@ -96,7 +99,7 @@ function ContestClarificationsPage() {
     const { canSupervise, canManage } = config;
 
     return clarifications.page.map(clarification => (
-      <div className="content-card__section" key={clarification.jid}>
+      <div key={clarification.jid}>
         <ContestClarificationCard
           contest={contest}
           clarification={clarification}
@@ -116,10 +119,8 @@ function ContestClarificationsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Clarifications</h3>
-      <hr />
-      {renderCreateDialog()}
+    <ContentCard title="Clarifications">
+      {renderAction()}
       {renderFilterWidget()}
       {renderClarifications()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}

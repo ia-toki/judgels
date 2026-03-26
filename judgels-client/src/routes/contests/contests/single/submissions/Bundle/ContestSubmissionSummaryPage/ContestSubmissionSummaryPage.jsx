@@ -50,9 +50,7 @@ export default function ContestSubmissionSummaryPage() {
   };
 
   return (
-    <ContentCard className="contest-submision-summary-page">
-      <h3>Submissions</h3>
-      <hr />
+    <ContentCard className="contest-submision-summary-page" title="Submissions">
       <ContentCard>
         Summary for <UserRef profile={profile} />
       </ContentCard>

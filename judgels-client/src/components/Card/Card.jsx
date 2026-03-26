@@ -1,4 +1,5 @@
 import { Card as BlueprintCard } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import './Card.scss';
 
@@ -9,7 +10,11 @@ export function Card({ className, title, action, actionRightJustified, children 
         <h3>{title}</h3>
         <div className={'card__title__action' + (actionRightJustified ? '_right' : '')}>{action}</div>
       </BlueprintCard>
-      <BlueprintCard className="card__content">{children}</BlueprintCard>
+      <BlueprintCard className="card__content">
+        <Flex flexDirection="column" gap={2}>
+          {children}
+        </Flex>
+      </BlueprintCard>
     </div>
   );
 }
