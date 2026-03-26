@@ -46,7 +46,7 @@ export default function ProblemTagFilter() {
   const renderTagCategory = ({ title, options }) => {
     return (
       <div key={title}>
-        <h5 className="problem-tag-filter__category">{title}</h5>
+        <h5>{title}</h5>
         {options.map(opt => (
           <Checkbox
             key={opt.value}
@@ -118,9 +118,14 @@ export default function ProblemTagFilter() {
   };
 
   return (
-    <ContentCard>
-      <h4>Filter problem</h4>
-      <hr />
+    <ContentCard
+      header={
+        <>
+          <h4>Filter problem</h4>
+          <hr />
+        </>
+      }
+    >
       {renderAvailableTags()}
     </ContentCard>
   );

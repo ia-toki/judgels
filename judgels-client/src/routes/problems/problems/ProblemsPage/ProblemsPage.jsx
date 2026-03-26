@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
@@ -69,8 +70,10 @@ export default function ProblemsPage() {
     <Card title="Browse problems">
       <ProblemSpoilerWidget />
       <hr />
-      {renderProblems()}
-      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      <Flex flexDirection="column" gap={2}>
+        {renderProblems()}
+        {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      </Flex>
     </Card>
   );
 }

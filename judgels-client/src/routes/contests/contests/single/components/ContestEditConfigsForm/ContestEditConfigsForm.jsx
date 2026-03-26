@@ -364,7 +364,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
           {config.editorial && renderEditorialForm()}
 
           <hr />
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button text="Cancel" disabled={submitting} onClick={onCancel} />
             <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>

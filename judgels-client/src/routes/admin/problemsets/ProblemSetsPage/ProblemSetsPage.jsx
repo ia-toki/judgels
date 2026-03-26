@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -63,11 +64,17 @@ export default function ProblemSetsPage() {
     );
   };
 
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <ProblemSetCreateDialog />
+      </ActionButtons>
+    );
+  };
+
   return (
-    <ContentCard>
-      <h3>Problemsets</h3>
-      <hr />
-      <ProblemSetCreateDialog />
+    <ContentCard title="Problemsets">
+      {renderAction()}
       <ProblemSetEditDialog
         isOpen={editDialogType === 'edit'}
         problemSet={editedProblemSet}

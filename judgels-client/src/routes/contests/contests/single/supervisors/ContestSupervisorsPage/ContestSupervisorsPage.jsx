@@ -1,7 +1,7 @@
-import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -41,23 +41,21 @@ export default function ContestSupervisorsPage() {
     return <ContestSupervisorsTable supervisors={supervisors.page} profilesMap={profilesMap} />;
   };
 
-  const renderAddRemoveDialogs = () => {
+  const renderActions = () => {
     if (!response) {
       return null;
     }
     return (
-      <Flex gap={1}>
+      <ActionButtons>
         <ContestSupervisorAddDialog contest={contest} />
         <ContestSupervisorRemoveDialog contest={contest} />
-      </Flex>
+      </ActionButtons>
     );
   };
 
   return (
-    <ContentCard>
-      <h3>Supervisors</h3>
-      <hr />
-      {renderAddRemoveDialogs()}
+    <ContentCard title="Supervisors">
+      {renderActions()}
       {renderSupervisors()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

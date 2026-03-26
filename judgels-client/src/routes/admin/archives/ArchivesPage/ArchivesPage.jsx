@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { archivesQueryOptions } from '../../../../modules/queries/archive';
@@ -30,11 +31,17 @@ export default function ArchivesPage() {
     return <ArchivesTable archives={archives} onEditArchive={setEditedArchive} />;
   };
 
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <ArchiveCreateDialog />
+      </ActionButtons>
+    );
+  };
+
   return (
-    <ContentCard>
-      <h3>Archives</h3>
-      <hr />
-      <ArchiveCreateDialog />
+    <ContentCard title="Archives">
+      {renderAction()}
       <ArchiveEditDialog
         isOpen={!!editedArchive}
         archive={editedArchive}

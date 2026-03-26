@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -69,7 +69,7 @@ export default function ContestContestantsPage() {
     );
   };
 
-  const renderAddRemoveDialogs = () => {
+  const renderActions = () => {
     if (!response) {
       return null;
     }
@@ -79,7 +79,7 @@ export default function ContestContestantsPage() {
     const { data: contestants } = response;
     const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
-      <Flex gap={1}>
+      <ActionButtons>
         <ContestContestantAddDialog contest={contest} />
         <ContestContestantRemoveDialog contest={contest} />
         {isVirtualContest && (
@@ -87,15 +87,13 @@ export default function ContestContestantsPage() {
             Reset all contestant virtual start times
           </Button>
         )}
-      </Flex>
+      </ActionButtons>
     );
   };
 
   return (
-    <ContentCard>
-      <h3>Contestants</h3>
-      <hr />
-      {renderAddRemoveDialogs()}
+    <ContentCard title="Contestants">
+      {renderActions()}
       {renderContestants()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

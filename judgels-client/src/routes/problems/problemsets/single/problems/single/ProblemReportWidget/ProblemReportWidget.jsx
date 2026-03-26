@@ -54,11 +54,14 @@ export default function ProblemReportWidget() {
 
   const renderProgress = ({ progress }) => {
     return (
-      <ContentCard>
-        <Flex justifyContent="space-between">
-          <h4 className="progress-title">Your score</h4>
-          <VerdictProgressTag {...progress} />
-        </Flex>
+      <ContentCard
+        header={
+          <Flex justifyContent="space-between" alignItems="baseline">
+            <h4>Your score</h4>
+            <VerdictProgressTag {...progress} />
+          </Flex>
+        }
+      >
         <ProgressBar num={progress.score} denom={100} verdict={progress.verdict} />
       </ContentCard>
     );
@@ -66,11 +69,17 @@ export default function ProblemReportWidget() {
 
   const renderSpoilers = ({ metadata, difficulty, profilesMap }) => {
     return (
-      <ContentCard>
-        <h4>Spoilers</h4>
-        {renderSpoilersWidget()}
-        {renderDifficulty({ difficulty })}
-        {renderTopicTags({ metadata })}
+      <ContentCard
+        header={
+          <>
+            <h4>Spoilers</h4>
+            {renderSpoilersWidget()}
+            {renderDifficulty({ difficulty })}
+            {renderTopicTags({ metadata })}
+            <hr />
+          </>
+        }
+      >
         {renderEditorial({ metadata, profilesMap })}
       </ContentCard>
     );
@@ -93,12 +102,7 @@ export default function ProblemReportWidget() {
     if (!hasEditorial) {
       return null;
     }
-    return (
-      <>
-        <hr />
-        <ProblemEditorialDialog settersMap={settersMap} profilesMap={profilesMap} />
-      </>
-    );
+    return <ProblemEditorialDialog settersMap={settersMap} profilesMap={profilesMap} />;
   };
 
   const renderTopStats = ({ topStats, profilesMap }) => {
@@ -166,11 +170,11 @@ export default function ProblemReportWidget() {
   };
 
   return (
-    <div className="problem-report-widget">
+    <Flex className="problem-report-widget" gap={2} flexDirection="column">
       {renderContests(response)}
       {renderProgress(response)}
       {renderSpoilers(response)}
       {renderTopStats(response)}
-    </div>
+    </Flex>
   );
 }

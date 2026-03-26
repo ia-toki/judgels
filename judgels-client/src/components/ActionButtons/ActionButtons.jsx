@@ -1,7 +1,9 @@
-import classNames from 'classnames';
+import { Flex } from '@blueprintjs/labs';
 
-import './ActionButtons.scss';
-
-export function ActionButtons({ leftAlign, children }) {
-  return <div className={classNames('action-buttons', { 'right-action-buttons': !leftAlign })}>{children}</div>;
+export function ActionButtons({ justifyContent = 'start', children }) {
+  return (
+    <Flex justifyContent={justifyContent} gap={1}>
+      {children}
+    </Flex>
+  );
 }

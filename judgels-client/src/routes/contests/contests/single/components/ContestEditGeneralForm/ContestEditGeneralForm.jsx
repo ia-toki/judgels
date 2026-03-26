@@ -63,7 +63,7 @@ export default function ContestEditGeneralForm({ onSubmit, initialValues, onCanc
             </tbody>
           </HTMLTable>
           <hr />
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button text="Cancel" disabled={submitting} onClick={onCancel} />
             <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>

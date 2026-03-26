@@ -21,7 +21,7 @@ export default function ForgotPasswordForm({ onSubmit }) {
 
           <HorizontalDivider />
 
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button type="submit" text="Request to reset password" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>
         </form>

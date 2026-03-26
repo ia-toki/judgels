@@ -3,6 +3,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
+import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -29,7 +30,7 @@ export default function ContestProblemsPage() {
     return consolidateLanguages(response.problemsMap, statementLanguage);
   }, [response, statementLanguage]);
 
-  const renderSetDialog = () => {
+  const renderAction = () => {
     if (!response || !response.config.canManage) {
       return null;
     }
@@ -41,7 +42,11 @@ export default function ContestProblemsPage() {
       submissionsLimit: p.submissionsLimit,
       points: p.points,
     }));
-    return <ContestProblemEditDialog contest={contest} problems={problems} />;
+    return (
+      <ActionButtons>
+        <ContestProblemEditDialog contest={contest} problems={problems} />
+      </ActionButtons>
+    );
   };
 
   const renderStatementLanguageWidget = () => {
@@ -107,11 +112,9 @@ export default function ContestProblemsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Problems</h3>
-      <hr />
+    <ContentCard title="Problems">
       <Flex justifyContent="space-between" alignItems="center">
-        {renderSetDialog()}
+        {renderAction()}
         {renderStatementLanguageWidget()}
       </Flex>
       {renderProblems()}

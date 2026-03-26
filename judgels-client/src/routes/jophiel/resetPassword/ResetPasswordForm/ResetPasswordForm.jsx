@@ -30,7 +30,7 @@ export default function ResetPasswordForm({ onSubmit }) {
 
           <HorizontalDivider />
 
-          <ActionButtons>
+          <ActionButtons justifyContent="end">
             <Button type="submit" text="Reset password" intent={Intent.PRIMARY} loading={submitting} />
           </ActionButtons>
         </form>

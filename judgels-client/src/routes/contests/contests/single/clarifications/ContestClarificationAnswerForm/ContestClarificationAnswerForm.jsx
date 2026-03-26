@@ -19,7 +19,7 @@ export default function ContestClarificationAnswerForm({ onSubmit, isLoading, on
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <Field component={FormTextArea} {...answerField} />
-          <ActionButtons leftAlign>
+          <ActionButtons>
             <Button type="submit" text="Answer" intent={Intent.PRIMARY} loading={isLoading} />
             <Button text="Cancel" onClick={onCancel} />
           </ActionButtons>

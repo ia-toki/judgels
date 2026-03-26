@@ -84,16 +84,19 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
   };
 
   return (
-    <ContentCard className="chapter-bundle-problem-submissions-page">
-      <h3 className="heading-with-button-action">Results</h3>
-      <ButtonLink
-        small
-        intent={Intent.PRIMARY}
-        to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
-      >
-        Retake
-      </ButtonLink>
-      <hr />
+    <ContentCard
+      className="chapter-bundle-problem-submissions-page"
+      title="Results"
+      action={
+        <ButtonLink
+          small
+          intent={Intent.PRIMARY}
+          to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
+        >
+          Retake
+        </ButtonLink>
+      }
+    >
       {renderResults()}
       {renderEditorial()}
       {renderNavigationSection()}

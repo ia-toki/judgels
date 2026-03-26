@@ -94,9 +94,7 @@ export default function ProblemSubmissionSummaryPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Results</h3>
-      <hr />
+    <ContentCard title="Results">
       {renderUserFilter()}
       {renderResults()}
     </ContentCard>

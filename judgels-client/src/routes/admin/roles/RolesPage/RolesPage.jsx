@@ -1,6 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { userRolesQueryOptions } from '../../../../modules/queries/userRole';
@@ -55,11 +56,17 @@ export default function RolesPage() {
     );
   };
 
+  const renderAction = () => {
+    return (
+      <ActionButtons>
+        <RoleEditDialog currentData={response} />
+      </ActionButtons>
+    );
+  };
+
   return (
-    <ContentCard>
-      <h3>Roles</h3>
-      <hr />
-      <RoleEditDialog currentData={response} />
+    <ContentCard title="Roles">
+      {renderAction()}
       {renderRoles()}
     </ContentCard>
   );

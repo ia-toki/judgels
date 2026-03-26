@@ -46,17 +46,18 @@ export default function ChapterProblemSubmissionPage() {
   };
 
   return (
-    <ContentCard>
-      <h3 className="heading-with-button-action">Submission #{submissionId}</h3>
-      <ButtonLink
-        small
-        icon={<ChevronLeft />}
-        to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`}
-      >
-        Back
-      </ButtonLink>
-      <hr />
-
+    <ContentCard
+      title={`Submission #${submissionId}`}
+      action={
+        <ButtonLink
+          small
+          icon={<ChevronLeft />}
+          to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`}
+        >
+          Back
+        </ButtonLink>
+      }
+    >
       {renderSubmission()}
     </ContentCard>
   );

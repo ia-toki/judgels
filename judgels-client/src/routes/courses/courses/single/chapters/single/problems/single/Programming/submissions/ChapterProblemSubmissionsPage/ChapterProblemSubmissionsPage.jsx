@@ -2,6 +2,7 @@ import { Switch } from '@blueprintjs/core';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
+import { ActionButtons } from '../../../../../../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import CursorPagination from '../../../../../../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
@@ -85,11 +86,15 @@ export default function ChapterProblemSubmissionsPage() {
     return userJid && <Switch label="Show all submissions" checked={isShowAll} onChange={onChangeFilterShowAll} />;
   };
 
-  const renderRegradeAllButton = () => {
+  const renderAction = () => {
     if (!response || !response.config.canManage) {
       return null;
     }
-    return <RegradeAllButton onRegradeAll={onRegradeSubmissions} />;
+    return (
+      <ActionButtons>
+        <RegradeAllButton onRegradeAll={onRegradeSubmissions} />
+      </ActionButtons>
+    );
   };
 
   const renderSubmissions = () => {
@@ -122,7 +127,7 @@ export default function ChapterProblemSubmissionsPage() {
   return (
     <ContentCard>
       {renderFilter()}
-      {renderRegradeAllButton()}
+      {renderAction()}
       {renderSubmissions()}
       {response && (
         <CursorPagination

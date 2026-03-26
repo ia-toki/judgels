@@ -1,6 +1,7 @@
 .chapter-programming-problem-statement-page {
   flex: 1 1;
   max-width: 865px;
+  overflow: auto;
 
   details summary {
     cursor: pointer;
@@ -13,8 +14,6 @@
 
   .statement-header {
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
 
     &__limits {
       white-space: nowrap;
@@ -27,8 +26,6 @@
 
   .chapter-problem-editorial {
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
 
     > hr {
       margin-top: 25px !important;

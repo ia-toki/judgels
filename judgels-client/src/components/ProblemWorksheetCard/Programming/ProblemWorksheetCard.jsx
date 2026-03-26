@@ -1,3 +1,5 @@
+import { Flex } from '@blueprintjs/labs';
+
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
 
@@ -40,9 +42,9 @@ export function ProblemWorksheetCard({
   };
 
   return (
-    <div className="programming-problem-worksheet">
+    <Flex className="programming-problem-worksheet" flexDirection="column" gap={2}>
       {renderStatement()}
       {renderSubmission()}
-    </div>
+    </Flex>
   );
 }

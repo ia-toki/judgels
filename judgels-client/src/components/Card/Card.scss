@@ -20,11 +20,5 @@
 .bp6-card.card__content {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  margin-bottom: 10px;
   overflow-x: auto;
-}
-
-// HACK
-.card__content div:has(button):first-child {
-  margin-bottom: 8px;
 }

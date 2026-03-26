@@ -90,9 +90,7 @@ export default function ContestEditorialPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Editorial</h3>
-      <hr />
+    <ContentCard title="Editorial">
       {renderEditorialLanguageWidget()}
       {renderEditorial()}
     </ContentCard>

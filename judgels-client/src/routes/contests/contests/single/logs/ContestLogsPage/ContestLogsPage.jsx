@@ -26,7 +26,7 @@ function ContestLogsPage() {
     contestLogsQueryOptions(contest.jid, { username, problemAlias, page })
   );
 
-  const renderFilterWidget = () => {
+  const renderActions = () => {
     if (!response) {
       return null;
     }
@@ -66,10 +66,8 @@ function ContestLogsPage() {
   };
 
   return (
-    <ContentCard>
-      <h3>Logs</h3>
-      <hr />
-      {renderFilterWidget()}
+    <ContentCard title="Logs">
+      {renderActions()}
       {renderLogs()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

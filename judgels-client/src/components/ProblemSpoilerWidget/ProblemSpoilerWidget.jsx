@@ -1,4 +1,5 @@
 import { Alignment, Switch } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { useWebPrefs } from '../../modules/webPrefs';
 
@@ -17,7 +18,7 @@ export default function ProblemSpoilerWidget() {
   };
 
   return (
-    <>
+    <Flex gap={5}>
       <Switch
         className="problem-spoiler-switch"
         alignIndicator={Alignment.LEFT}
@@ -32,6 +33,6 @@ export default function ProblemSpoilerWidget() {
         checked={showProblemTopicTags}
         onChange={changeShowProblemTopicTags}
       />
-    </>
+    </Flex>
   );
 }

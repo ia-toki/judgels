@@ -1,3 +1,5 @@
+import { Flex } from '@blueprintjs/labs';
+
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
 
@@ -14,7 +16,7 @@ export function ProblemWorksheetCard({
 }) {
   const { statement, items, reasonNotAllowedToSubmit } = worksheet;
   return (
-    <div className="bundle-problem-worksheet">
+    <Flex className="bundle-problem-worksheet" flexDirection="column" gap={2}>
       <ProblemStatementCard
         alias={alias}
         statement={statement}
@@ -25,6 +27,6 @@ export function ProblemWorksheetCard({
         disabled={disabled || !!reasonNotAllowedToSubmit}
       />
       <ProblemSubmissionCard reasonNotAllowedToSubmit={reasonNotAllowedToSubmit} resultsUrl={resultsUrl} />
-    </div>
+    </Flex>
   );
 }
