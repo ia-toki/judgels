@@ -5,11 +5,9 @@ import { vi } from 'vitest';
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {
-  let onUpdateInfo;
+  const onUpdateInfo = vi.fn().mockReturnValue(Promise.resolve());
 
-  beforeEach(() => {
-    onUpdateInfo = vi.fn().mockReturnValue(Promise.resolve());
-
+  const renderComponent = () => {
     const info = {
       name: 'My Name',
       gender: 'MALE',
@@ -23,9 +21,11 @@ describe('InfoPanel', () => {
     };
 
     render(<InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />);
-  });
+  };
 
   test('form', async () => {
+    renderComponent();
+
     const user = userEvent.setup();
 
     expect(document.querySelector('[data-key="name"]').textContent).toEqual('My Name');

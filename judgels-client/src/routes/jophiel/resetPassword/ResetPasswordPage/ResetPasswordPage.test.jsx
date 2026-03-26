@@ -8,7 +8,7 @@ import { nockJophiel } from '../../../../utils/nock';
 import ResetPasswordPage from './ResetPasswordPage';
 
 describe('ResetPasswordPage', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -18,9 +18,11 @@ describe('ResetPasswordPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const password = document.querySelector('input[name="password"]');

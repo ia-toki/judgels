@@ -8,7 +8,7 @@ import { nockJophiel } from '../../../../utils/nock';
 import RegisterPage from './RegisterPage';
 
 describe('RegisterPage', () => {
-  beforeEach(async () => {
+  const renderComponent = async () => {
     nockJophiel().get('/users/registration/web/config').reply(200, { useRecaptcha: false });
 
     await act(async () =>
@@ -20,9 +20,11 @@ describe('RegisterPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     const username = await screen.findByRole('textbox', { name: /username/i });

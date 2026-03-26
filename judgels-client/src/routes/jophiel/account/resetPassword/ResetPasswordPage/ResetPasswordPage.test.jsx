@@ -9,11 +9,9 @@ import { nockJophiel } from '../../../../../utils/nock';
 import ResetPasswordPage from './ResetPasswordPage';
 
 describe('ResetPasswordPage', () => {
-  beforeEach(() => {
+  const renderComponent = async () => {
     setSession('token', { jid: 'userJid', email: 'user@domain.com' });
-  });
 
-  beforeEach(async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
@@ -23,9 +21,11 @@ describe('ResetPasswordPage', () => {
         </QueryClientProviderWrapper>
       )
     );
-  });
+  };
 
   test('form', async () => {
+    await renderComponent();
+
     const user = userEvent.setup();
 
     nockJophiel().post('/user-account/request-reset-password/user@domain.com').reply(200);
