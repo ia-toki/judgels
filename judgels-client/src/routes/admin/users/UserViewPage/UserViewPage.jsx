@@ -1,69 +1,104 @@
-import { HTMLTable } from '@blueprintjs/core';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { Button, Intent } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
+import { useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { userQueryOptions } from '../../../../modules/queries/user';
-import { userInfoQueryOptions } from '../../../../modules/queries/userInfo';
+import { updateUserInfoMutationOptions, userInfoQueryOptions } from '../../../../modules/queries/userInfo';
+import UserEditInfoForm from '../UserEditInfoForm/UserEditInfoForm';
+
+import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function UserViewPage() {
   const { userJid } = useParams({ strict: false });
 
   const { data: user } = useSuspenseQuery(userQueryOptions(userJid));
-  const { data: userInfo } = useQuery(userInfoQueryOptions(userJid));
+  const { data: userInfo } = useSuspenseQuery(userInfoQueryOptions(userJid));
 
-  const renderUserInfo = () => {
-    if (!userInfo) {
-      return <LoadingState />;
-    }
+  const updateUserInfoMutation = useMutation(updateUserInfoMutationOptions(userJid));
+
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
+
+  const keyStyles = { width: '200px' };
+
+  const generalRows = [
+    { key: 'jid', title: 'JID', value: user.jid },
+    { key: 'email', title: 'Email', value: user.email },
+  ];
+
+  const renderGeneralSection = () => {
+    return (
+      <div>
+        <h4>General</h4>
+        <FormTable keyStyles={keyStyles} rows={generalRows} />
+      </div>
+    );
+  };
+
+  const infoRows = [
+    { key: 'name', title: 'Name', value: userInfo.name || '-' },
+    { key: 'gender', title: 'Gender', value: userInfo.gender || '-' },
+    { key: 'country', title: 'Country', value: userInfo.country || '-' },
+  ];
+
+  const updateUserInfo = data => {
+    updateUserInfoMutation.mutate(data, {
+      onSuccess: () => toastActions.showSuccessToast('User info updated.'),
+    });
+    setIsEditingInfo(false);
+  };
+
+  const renderInfoEditButton = () => {
+    return (
+      !isEditingInfo && (
+        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditingInfo(true)}>
+          Edit
+        </Button>
+      )
+    );
+  };
+
+  const renderInfoSection = () => {
+    const renderInfoContent = () => {
+      if (isEditingInfo) {
+        const initialValues = {
+          name: userInfo.name || '',
+          gender: userInfo.gender || '',
+          country: userInfo.country || '',
+        };
+        return (
+          <UserEditInfoForm
+            initialValues={initialValues}
+            onSubmit={updateUserInfo}
+            onCancel={() => setIsEditingInfo(false)}
+          />
+        );
+      }
+      return <FormTable keyStyles={keyStyles} rows={infoRows} />;
+    };
 
     return (
-      <HTMLTable striped className="table-list">
-        <tbody>
-          <tr>
-            <td>
-              <strong>Name</strong>
-            </td>
-            <td>{userInfo.name || '-'}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Gender</strong>
-            </td>
-            <td>{userInfo.gender || '-'}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Country</strong>
-            </td>
-            <td>{userInfo.country || '-'}</td>
-          </tr>
-        </tbody>
-      </HTMLTable>
+      <div>
+        <Flex asChild justifyContent="space-between" alignItems="baseline">
+          <h4>
+            <span>Info</span>
+            {renderInfoEditButton()}
+          </h4>
+        </Flex>
+        {renderInfoContent()}
+      </div>
     );
   };
 
   return (
-    <ContentCard title={user.username}>
-      <HTMLTable striped className="table-list">
-        <tbody>
-          <tr>
-            <td>
-              <strong>JID</strong>
-            </td>
-            <td>{user.jid}</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Email</strong>
-            </td>
-            <td>{user.email}</td>
-          </tr>
-        </tbody>
-      </HTMLTable>
-      <h4>Info</h4>
-      {renderUserInfo()}
+    <ContentCard title={`Users › ${user.username}`}>
+      {renderGeneralSection()}
+      <hr />
+      {renderInfoSection()}
     </ContentCard>
   );
 }

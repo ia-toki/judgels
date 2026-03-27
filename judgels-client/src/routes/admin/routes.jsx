@@ -2,6 +2,9 @@ import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-route
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
+import { userQueryOptions } from '../../modules/queries/user';
+import { userInfoQueryOptions } from '../../modules/queries/userInfo';
+import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createAdminRoutes = appRoute => {
@@ -32,6 +35,10 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminRoute,
     path: 'users/$userJid',
     component: lazyRouteComponent(retryImport(() => import('./users/UserViewPage/UserViewPage'))),
+    loader: async ({ params: { userJid } }) => {
+      await queryClient.ensureQueryData(userQueryOptions(userJid));
+      await queryClient.ensureQueryData(userInfoQueryOptions(userJid));
+    },
   });
 
   const adminRolesRoute = createRoute({
