@@ -83,15 +83,15 @@ describe('ContestAnnouncementsPage', () => {
   test('renders placeholder when there are no announcements', async () => {
     await renderComponent({ announcements: [] });
     expect(await screen.findByText('No announcements.')).toBeInTheDocument();
-    expect(document.querySelectorAll('div.contest-announcement-card')).toHaveLength(0);
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 
   test('renders announcements when not canSupervise', async () => {
     await renderComponent({ canSupervise: false });
     await waitFor(() => {
-      expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
     });
-    const announcements = document.querySelectorAll('div.contest-announcement-card');
+    const announcements = screen.getAllByRole('article');
     expect(announcements).toHaveLength(2);
 
     expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
@@ -106,9 +106,9 @@ describe('ContestAnnouncementsPage', () => {
   test('renders announcements when canSupervise', async () => {
     await renderComponent({ canSupervise: true });
     await waitFor(() => {
-      expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
     });
-    const announcements = document.querySelectorAll('div.contest-announcement-card');
+    const announcements = screen.getAllByRole('article');
     expect(announcements).toHaveLength(2);
 
     expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
@@ -123,9 +123,9 @@ describe('ContestAnnouncementsPage', () => {
   test('renders announcements when canManage', async () => {
     await renderComponent({ canSupervise: true, canManage: true });
     await waitFor(() => {
-      expect(document.querySelectorAll('div.contest-announcement-card').length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
     });
-    const announcements = document.querySelectorAll('div.contest-announcement-card');
+    const announcements = screen.getAllByRole('article');
     expect(announcements).toHaveLength(2);
 
     expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');

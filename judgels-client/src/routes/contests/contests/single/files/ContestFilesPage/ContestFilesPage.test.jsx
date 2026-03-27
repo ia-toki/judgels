@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
@@ -55,7 +55,18 @@ describe('ContestFilesPage', () => {
       expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
     });
     const rows = screen.getAllByRole('row');
-    expect(rows).toHaveLength(1 + 1 + 2);
+    expect(
+      rows.map(row =>
+        within(row)
+          .queryAllByRole('cell')
+          .map(cell => cell.textContent)
+      )
+    ).toEqual([
+      ['', 'Upload new file...'],
+      [],
+      ['editorial.pdf', '100 B', expect.any(String), ''],
+      ['solutions.zip', '100 B', expect.any(String), ''],
+    ]);
   });
 
   test('upload form', async () => {

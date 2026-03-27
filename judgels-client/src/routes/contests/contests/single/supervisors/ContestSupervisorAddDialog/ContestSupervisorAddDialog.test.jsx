@@ -36,10 +36,10 @@ describe('ContestSupervisorAddDialog', () => {
     const usernames = screen.getByRole('textbox');
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
-    const announcementPermission = document.querySelector('input[name="managementPermissions.Announcements"]');
+    const announcementPermission = screen.getByRole('checkbox', { name: /announcements/i });
     await user.click(announcementPermission);
 
-    const clarificationPermission = document.querySelector('input[name="managementPermissions.Clarifications"]');
+    const clarificationPermission = screen.getByRole('checkbox', { name: /clarifications/i });
     await user.click(clarificationPermission);
 
     nockUriel()

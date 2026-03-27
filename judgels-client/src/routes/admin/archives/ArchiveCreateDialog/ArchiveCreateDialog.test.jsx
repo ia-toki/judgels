@@ -29,16 +29,16 @@ describe('ArchiveCreateDialog', () => {
     const button = screen.getByRole('button');
     await user.click(button);
 
-    const slug = document.querySelector('input[name="slug"]');
+    const slug = screen.getByRole('textbox', { name: /slug/i });
     await user.type(slug, 'new-archive');
 
-    const name = document.querySelector('input[name="name"]');
+    const name = screen.getByRole('textbox', { name: /^name$/i });
     await user.type(name, 'New archive');
 
-    const category = document.querySelector('input[name="category"]');
+    const category = screen.getByRole('textbox', { name: /category/i });
     await user.type(category, 'New category');
 
-    const description = document.querySelector('textarea[name="description"]');
+    const description = screen.getByRole('textbox', { name: /description/i });
     await user.type(description, 'New description');
 
     nockJerahmeel()

@@ -41,7 +41,7 @@ export function ContestAnnouncementCard({
   };
 
   return (
-    <Callout className="contest-announcement-card" intent={intent} icon={null}>
+    <Callout role="article" className="contest-announcement-card" intent={intent} icon={null}>
       <Flex justifyContent="space-between">
         <h5>{announcement.title}</h5>
         <p>

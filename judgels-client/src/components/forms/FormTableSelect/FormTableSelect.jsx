@@ -10,7 +10,7 @@ export function FormTableSelect(props) {
   const { input, meta, children } = props;
   return (
     <FormTableInput {...props}>
-      <HTMLSelect {...input} className={classNames(getIntentClassName(meta))}>
+      <HTMLSelect {...input} aria-label={props.label} className={classNames(getIntentClassName(meta))}>
         {children}
       </HTMLSelect>
     </FormTableInput>

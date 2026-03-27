@@ -25,10 +25,10 @@ describe('ResetPasswordPage', () => {
 
     const user = userEvent.setup();
 
-    const password = document.querySelector('input[name="password"]');
+    const password = screen.getByLabelText(/^new password$/i);
     await user.type(password, 'pass');
 
-    const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+    const confirmPassword = screen.getByLabelText(/^confirm new password$/i);
     await user.type(confirmPassword, 'pass');
 
     nockJophiel().post('/user-account/reset-password', { emailCode: 'code123', newPassword: 'pass' }).reply(200);

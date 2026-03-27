@@ -76,8 +76,7 @@ describe('ContestProblemsPage', () => {
     await renderComponent({ problems: [] });
 
     expect(await screen.findByText(/no problems/i)).toBeInTheDocument();
-    const cards = document.querySelectorAll('div.contest-problem-card');
-    expect(cards).toHaveLength(0);
+    expect(screen.queryAllByRole('link')).toHaveLength(0);
   });
 
   test('renders the problems when there are problems', async () => {
@@ -100,8 +99,8 @@ describe('ContestProblemsPage', () => {
     });
 
     await waitFor(() => {
-      const cards = document.querySelectorAll('div.contest-problem-card');
-      expect([...cards].map(card => card.textContent)).toEqual([
+      const cards = screen.getAllByRole('link');
+      expect(cards.map(card => card.textContent)).toEqual([
         'B. Problem B [100 points]8 submissions left',
         'A. Problem ACLOSED',
       ]);

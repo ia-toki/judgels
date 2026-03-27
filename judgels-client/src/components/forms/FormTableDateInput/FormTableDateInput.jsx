@@ -26,7 +26,7 @@ export function FormTableDateInput(props) {
         maxDate={new Date(4102444800000)}
         timePickerProps={{ showArrowButtons: true }}
         onChange={onChange}
-        inputProps={{ name: inputProps.name }}
+        inputProps={{ name: inputProps.name, 'aria-label': props.label }}
         {...inputProps}
       />
       <FormInputValidation meta={meta} />

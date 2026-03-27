@@ -1,5 +1,6 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -73,47 +74,45 @@ describe('ContestEditConfigsTab', () => {
     const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
-    const icpcWrongSubmissionPenalty = document.querySelector('input[name="icpcWrongSubmissionPenalty"]');
+    const icpcWrongSubmissionPenalty = screen.getByRole('textbox', { name: /wrong submission penalty/i });
     await user.clear(icpcWrongSubmissionPenalty);
     await user.type(icpcWrongSubmissionPenalty, '25');
 
-    const scoreboardIsIncognito = document.querySelector('input[name="scoreboardIsIncognito"]');
+    const scoreboardIsIncognito = screen.getByRole('checkbox', { name: /incognito scoreboard/i });
     await user.click(scoreboardIsIncognito);
 
-    const clarificationTimeLimitDuration = document.querySelector('input[name="clarificationTimeLimitDuration"]');
+    const clarificationTimeLimitDuration = screen.getByRole('textbox', { name: /clarification duration/i });
     await user.clear(clarificationTimeLimitDuration);
     await user.type(clarificationTimeLimitDuration, '2h 5m');
 
-    const divisionDivision = document.querySelector('input[name="divisionDivision"]');
+    const divisionDivision = screen.getByRole('textbox', { name: /division/i });
     await user.clear(divisionDivision);
     await user.type(divisionDivision, '2');
 
-    const frozenScoreboardFreezeTime = document.querySelector('input[name="frozenScoreboardFreezeTime"]');
+    const frozenScoreboardFreezeTime = screen.getByRole('textbox', { name: /freeze time/i });
     await user.clear(frozenScoreboardFreezeTime);
     await user.type(frozenScoreboardFreezeTime, '1h 5m');
 
-    const frozenScoreboardIsOfficialAllowed = document.querySelector('input[name="frozenScoreboardIsOfficialAllowed"]');
+    const frozenScoreboardIsOfficialAllowed = screen.getByRole('checkbox', { name: /is now unfrozen/i });
     await user.click(frozenScoreboardIsOfficialAllowed);
 
-    const mergedScoreboardPreviousContestJid = document.querySelector(
-      'input[name="mergedScoreboardPreviousContestJid"]'
-    );
+    const mergedScoreboardPreviousContestJid = screen.getByRole('textbox', { name: /previous contest jid/i });
     await user.clear(mergedScoreboardPreviousContestJid);
     await user.type(mergedScoreboardPreviousContestJid, 'JIDCONT12345');
 
-    const externalScoreboardReceiverUrl = document.querySelector('input[name="externalScoreboardReceiverUrl"]');
+    const externalScoreboardReceiverUrl = screen.getByRole('textbox', { name: /receiver url/i });
     await user.clear(externalScoreboardReceiverUrl);
     await user.type(externalScoreboardReceiverUrl, 'http://new.external.scoreboard');
 
-    const externalScoreboardReceiverSecret = document.querySelector('input[name="externalScoreboardReceiverSecret"]');
+    const externalScoreboardReceiverSecret = screen.getByRole('textbox', { name: /receiver secret/i });
     await user.clear(externalScoreboardReceiverSecret);
     await user.type(externalScoreboardReceiverSecret, 'the_new_secret');
 
-    const virtualDuration = document.querySelector('input[name="virtualDuration"]');
+    const virtualDuration = screen.getByRole('textbox', { name: /virtual contest duration/i });
     await user.clear(virtualDuration);
     await user.type(virtualDuration, '5h 5m');
 
-    const editorialPreface = document.querySelector('textarea[name="editorialPreface"]');
+    const editorialPreface = screen.getByRole('textbox', { name: /preface/i });
     await user.clear(editorialPreface);
     await user.type(editorialPreface, '<p>Thank you for your participation.</p>');
 
@@ -154,6 +153,8 @@ describe('ContestEditConfigsTab', () => {
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 
   test('submits empty restriction when we allow all languages', async () => {
@@ -172,7 +173,7 @@ describe('ContestEditConfigsTab', () => {
     const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
-    const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
+    const icpcAllowAllLanguages = screen.getByRole('checkbox', { name: /\(all\)/i });
     await user.click(icpcAllowAllLanguages);
 
     nockUriel()
@@ -187,6 +188,8 @@ describe('ContestEditConfigsTab', () => {
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 
   test('submits the restriction when we allow not all languages', async () => {
@@ -205,7 +208,7 @@ describe('ContestEditConfigsTab', () => {
     const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
-    const icpcAllowAllLanguages = document.querySelector('input[name="icpcAllowAllLanguages"]');
+    const icpcAllowAllLanguages = screen.getByRole('checkbox', { name: /\(all\)/i });
     await user.click(icpcAllowAllLanguages);
 
     const icpcAllowedLanguagesPascal = screen.getByRole('checkbox', { name: /pascal/i });
@@ -226,5 +229,7 @@ describe('ContestEditConfigsTab', () => {
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

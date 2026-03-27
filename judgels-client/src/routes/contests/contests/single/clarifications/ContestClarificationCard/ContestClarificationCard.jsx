@@ -79,7 +79,7 @@ export function ContestClarificationCard({
   };
 
   return (
-    <Callout className="contest-clarification-card" intent={questionIntent} icon={null}>
+    <Callout role="article" className="contest-clarification-card" intent={questionIntent} icon={null}>
       <Flex justifyContent="space-between">
         <h5>
           {clarification.title} &nbsp; <Tag>{topic}</Tag>
@@ -93,6 +93,7 @@ export function ContestClarificationCard({
       <hr />
       <div className="multiline-text">{clarification.question}</div>
       <Callout
+        role="article"
         className="contest-clarification-card contest-clarification-card__answer"
         intent={answerIntent}
         icon={null}
