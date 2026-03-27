@@ -1,5 +1,6 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -50,5 +51,7 @@ describe('ContestEditDescriptionTab', () => {
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

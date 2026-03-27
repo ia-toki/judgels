@@ -28,7 +28,7 @@ describe('LoginPage', () => {
     const usernameOrEmail = screen.getByRole('textbox', { name: /username or email/i });
     await user.type(usernameOrEmail, 'user');
 
-    const password = document.querySelector('input[name="password"]');
+    const password = screen.getByLabelText(/password/i);
     await user.type(password, 'pass');
 
     nockJophiel()

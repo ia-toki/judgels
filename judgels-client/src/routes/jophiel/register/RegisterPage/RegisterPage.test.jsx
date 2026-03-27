@@ -36,10 +36,10 @@ describe('RegisterPage', () => {
     const email = screen.getByRole('textbox', { name: /email/i });
     await user.type(email, 'email@domain.com');
 
-    const password = document.querySelector('input[name="password"]');
+    const password = screen.getByLabelText(/^password$/i);
     await user.type(password, 'pass');
 
-    const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+    const confirmPassword = screen.getByLabelText(/confirm password/i);
     await user.type(confirmPassword, 'pass');
 
     nockJophiel().get('/user-search/username-exists/user').reply(200, false);

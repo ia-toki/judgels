@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
@@ -40,18 +40,34 @@ describe('UserViewPage', () => {
   test('renders user details', async () => {
     await renderComponent();
 
-    expect(await screen.findAllByText(/andi/));
-    expect(screen.getByText('JIDUSER123')).toBeInTheDocument();
-    expect(screen.getByText('andi@example.com')).toBeInTheDocument();
-  });
+    await screen.findAllByText(/andi/);
+    const tables = screen.getAllByRole('table');
+    expect(
+      within(tables[0])
+        .getAllByRole('row')
+        .map(row =>
+          within(row)
+            .getAllByRole('cell')
+            .map(cell => cell.textContent)
+        )
+    ).toEqual([
+      ['JID', 'JIDUSER123'],
+      ['Email', 'andi@example.com'],
+    ]);
 
-  test('renders user info', async () => {
-    await renderComponent();
-
-    expect(await screen.findByText(/Andi Smith/)).toBeInTheDocument();
-    expect(screen.getByText('Andi Smith')).toBeInTheDocument();
-    expect(screen.getByText('MALE')).toBeInTheDocument();
-    expect(screen.getByText('ID')).toBeInTheDocument();
+    expect(
+      within(tables[1])
+        .getAllByRole('row')
+        .map(row =>
+          within(row)
+            .getAllByRole('cell')
+            .map(cell => cell.textContent)
+        )
+    ).toEqual([
+      ['Name', 'Andi Smith'],
+      ['Gender', 'MALE'],
+      ['Country', 'ID'],
+    ]);
   });
 
   test('user info form', async () => {
@@ -62,16 +78,16 @@ describe('UserViewPage', () => {
     const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
-    const name = document.querySelector('input[name="name"]');
+    const name = screen.getByRole('textbox', { name: /name/i });
     expect(name).toHaveValue('Andi Smith');
     await user.clear(name);
     await user.type(name, 'Caca');
 
-    const gender = document.querySelector('select[name="gender"]');
+    const gender = screen.getByRole('combobox', { name: /gender/i });
     expect(gender).toHaveValue('MALE');
     await user.selectOptions(gender, 'FEMALE');
 
-    const country = document.querySelector('select[name="country"]');
+    const country = screen.getByRole('combobox', { name: /country/i });
     expect(country).toHaveValue('ID');
     await user.selectOptions(country, 'US');
 

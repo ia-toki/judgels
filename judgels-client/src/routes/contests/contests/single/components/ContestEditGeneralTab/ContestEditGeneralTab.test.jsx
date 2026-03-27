@@ -1,5 +1,6 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
@@ -24,7 +25,6 @@ describe('ContestEditGeneralTab', () => {
         style: 'ICPC',
         beginTime: parseDateTime('2018-09-10 13:00').getTime(),
       });
-    nockUriel().get('/contests/slug/contest-a/config').reply(200, {});
 
     await act(async () =>
       render(
@@ -45,12 +45,12 @@ describe('ContestEditGeneralTab', () => {
     const button = await screen.findByRole('button', { name: /edit/i });
     await user.click(button);
 
-    const slug = document.querySelector('input[name="slug"]');
+    const slug = screen.getByRole('textbox', { name: /slug/i });
     expect(slug).toHaveValue('contest-a');
     await user.clear(slug);
     await user.type(slug, 'contest-b');
 
-    const name = document.querySelector('input[name="name"]');
+    const name = screen.getByRole('textbox', { name: /^name$/i });
     expect(name).toHaveValue('Contest A');
     await user.clear(name);
     await user.type(name, 'Contest B');
@@ -59,7 +59,7 @@ describe('ContestEditGeneralTab', () => {
     await user.clear(beginTime);
     await user.type(beginTime, '2018-09-10 17:00');
 
-    const duration = document.querySelector('input[name="duration"]');
+    const duration = screen.getByRole('textbox', { name: /duration/i });
     await user.clear(duration);
     await user.type(duration, '6h');
 
@@ -84,5 +84,7 @@ describe('ContestEditGeneralTab', () => {
       });
 
     await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

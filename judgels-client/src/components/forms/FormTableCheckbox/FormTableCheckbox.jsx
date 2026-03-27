@@ -16,6 +16,7 @@ export function FormTableCheckbox(props) {
       <Checkbox
         defaultChecked={!!value}
         onChange={newOnChange}
+        aria-label={props.label}
         {...inputProps}
         className={classNames(getIntentClassName(meta))}
       />

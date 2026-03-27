@@ -96,15 +96,15 @@ describe('ContestClarificationsPage', () => {
   test('renders placeholder when there are no clarifications', async () => {
     await renderComponent({ clarifications: [] });
     expect(await screen.findByText('No clarifications.')).toBeInTheDocument();
-    expect(document.querySelectorAll('div.contest-clarification-card')).toHaveLength(0);
+    expect(screen.queryAllByRole('article')).toHaveLength(0);
   });
 
   test('renders clarifications when not canSupervise', async () => {
     await renderComponent({ canSupervise: false });
     await waitFor(() => {
-      expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
     });
-    const clarifications = document.querySelectorAll('div.contest-clarification-card');
+    const clarifications = screen.getAllByRole('article');
     expect(clarifications).toHaveLength(4);
 
     expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');
@@ -125,9 +125,9 @@ describe('ContestClarificationsPage', () => {
   test('renders clarifications when canSupervise', async () => {
     await renderComponent({ canSupervise: true });
     await waitFor(() => {
-      expect(document.querySelectorAll('div.contest-clarification-card').length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
     });
-    const clarifications = document.querySelectorAll('div.contest-clarification-card');
+    const clarifications = screen.getAllByRole('article');
     expect(clarifications).toHaveLength(4);
 
     expect(within(clarifications[0]).getAllByRole('heading')[0]).toHaveTextContent('Title 1 General');

@@ -12,6 +12,7 @@ export function FormTableTextInput(props) {
         {...input}
         type={type || 'text'}
         disabled={disabled}
+        aria-label={props.label}
         className={classNames(Classes.INPUT, getIntentClassName(meta))}
       />
     </FormTableInput>
