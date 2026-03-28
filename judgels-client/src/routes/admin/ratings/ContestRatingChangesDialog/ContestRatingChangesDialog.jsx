@@ -22,10 +22,8 @@ export function ContestRatingChangesDialog({ contest, ratingChanges, onClose }) 
       },
       {
         onSuccess: () => {
-          toastActions.showSuccessToast('Ratings updated.');
-        },
-        onSettled: () => {
           onClose();
+          toastActions.showSuccessToast('Ratings updated.');
         },
       }
     );

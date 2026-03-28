@@ -21,13 +21,13 @@ export function ArchiveEditDialog({ archive, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateArchive = data => {
-    updateArchiveMutation.mutate(data, {
+  const updateArchive = async data => {
+    await updateArchiveMutation.mutateAsync(data, {
       onSuccess: () => {
+        onCloseDialog();
         toastActions.showSuccessToast('Archive updated.');
       },
     });
-    onCloseDialog();
   };
 
   const initialValues = archive && {

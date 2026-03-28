@@ -40,13 +40,11 @@ export function ContestAnnouncementCreateDialog({ contest }) {
     </>
   );
 
-  const createAnnouncement = data => {
-    createAnnouncementMutation.mutate(data, {
+  const createAnnouncement = async data => {
+    await createAnnouncementMutation.mutateAsync(data, {
       onSuccess: () => {
-        toastActions.showSuccessToast('Announcement created.');
-      },
-      onSettled: () => {
         setIsDialogOpen(false);
+        toastActions.showSuccessToast('Announcement created.');
       },
     });
   };

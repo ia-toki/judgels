@@ -29,13 +29,13 @@ export function CourseCreateDialog() {
     </>
   );
 
-  const createCourse = data => {
-    createCourseMutation.mutate(data, {
+  const createCourse = async data => {
+    await createCourseMutation.mutateAsync(data, {
       onSuccess: () => {
+        setIsDialogOpen(false);
         toastActions.showSuccessToast('Course created.');
       },
     });
-    setIsDialogOpen(false);
   };
 
   return (

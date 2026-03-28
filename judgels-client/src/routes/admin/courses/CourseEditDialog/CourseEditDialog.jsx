@@ -21,13 +21,13 @@ export function CourseEditDialog({ course, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateCourse = data => {
-    updateCourseMutation.mutate(data, {
+  const updateCourse = async data => {
+    await updateCourseMutation.mutateAsync(data, {
       onSuccess: () => {
+        onCloseDialog();
         toastActions.showSuccessToast('Course updated.');
       },
     });
-    onCloseDialog();
   };
 
   const initialValues = course && {

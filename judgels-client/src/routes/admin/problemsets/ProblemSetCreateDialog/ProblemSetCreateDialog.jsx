@@ -29,8 +29,8 @@ export function ProblemSetCreateDialog() {
     </>
   );
 
-  const createProblemSet = data => {
-    createProblemSetMutation.mutate(
+  const createProblemSet = async data => {
+    await createProblemSetMutation.mutateAsync(
       {
         slug: data.slug,
         name: data.name,
@@ -40,11 +40,11 @@ export function ProblemSetCreateDialog() {
       },
       {
         onSuccess: () => {
+          setIsDialogOpen(false);
           toastActions.showSuccessToast('Problemset created.');
         },
       }
     );
-    setIsDialogOpen(false);
   };
 
   const initialValues = {

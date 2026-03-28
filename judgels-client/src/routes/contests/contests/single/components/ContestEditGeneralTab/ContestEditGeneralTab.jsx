@@ -48,7 +48,7 @@ export default function ContestEditGeneralTab() {
     return <ContestEditGeneralTable contest={contest} />;
   };
 
-  const updateContest = data => {
+  const updateContest = async data => {
     const updateData = {
       slug: data.slug,
       name: data.name,
@@ -56,14 +56,16 @@ export default function ContestEditGeneralTab() {
       beginTime: new Date(data.beginTime).getTime(),
       duration: parseDuration(data.duration),
     };
-    updateContestMutation.mutate(updateData, {
-      onSuccess: () => toastActions.showSuccessToast('Contest updated.'),
-    });
-    setIsEditing(false);
+    await updateContestMutation.mutateAsync(updateData, {
+      onSuccess: () => {
+        setIsEditing(false);
+        toastActions.showSuccessToast('Contest updated.');
 
-    if (updateData.slug && updateData.slug !== contestSlug) {
-      navigate({ to: `/contests/${updateData.slug}` });
-    }
+        if (updateData.slug && updateData.slug !== contestSlug) {
+          navigate({ to: `/contests/${updateData.slug}` });
+        }
+      },
+    });
   };
 
   return (

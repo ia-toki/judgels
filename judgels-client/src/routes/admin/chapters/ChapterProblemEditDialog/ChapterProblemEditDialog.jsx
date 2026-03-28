@@ -33,14 +33,14 @@ export function ChapterProblemEditDialog({ isOpen, chapter, onCloseDialog }) {
     setIsEditing(prev => !prev);
   };
 
-  const updateProblems = data => {
+  const updateProblems = async data => {
     const problems = deserializeProblems(data.problems);
-    setProblemsMutation.mutate(problems, {
+    await setProblemsMutation.mutateAsync(problems, {
       onSuccess: () => {
+        setIsEditing(false);
         toastActions.showSuccessToast('Chapter problems updated.');
       },
     });
-    setIsEditing(false);
   };
 
   const renderDialogContent = () => {
