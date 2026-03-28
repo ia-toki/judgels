@@ -36,12 +36,7 @@ describe('RoleEditDialog', () => {
     );
   };
 
-  test('renders the edit button', async () => {
-    await renderComponent();
-    expect(screen.getByRole('button', { name: /edit roles/i })).toBeInTheDocument();
-  });
-
-  test('pre-fills the textarea with current roles', async () => {
+  test('form', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
@@ -49,18 +44,14 @@ describe('RoleEditDialog', () => {
 
     const textarea = screen.getByRole('textbox');
     expect(textarea.value).toBe('andi,ADMIN,ADMIN,ADMIN,ADMIN\nbudi,,ADMIN,,');
-  });
 
-  test('submits roles', async () => {
-    await renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(screen.getByRole('button', { name: /edit roles/i }));
+    await user.clear(textarea);
+    await user.type(textarea, 'andi,ADMIN,ADMIN,,\ncaca,,ADMIN,,');
 
     nockJophiel()
       .put('/user-roles', {
-        andi: { jophiel: 'ADMIN', sandalphon: 'ADMIN', uriel: 'ADMIN', jerahmeel: 'ADMIN' },
-        budi: { sandalphon: 'ADMIN' },
+        andi: { jophiel: 'ADMIN', sandalphon: 'ADMIN' },
+        caca: { sandalphon: 'ADMIN' },
       })
       .reply(200);
 

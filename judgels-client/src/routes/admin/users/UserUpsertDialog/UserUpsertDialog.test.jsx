@@ -25,12 +25,7 @@ describe('UserUpsertDialog', () => {
     );
   };
 
-  test('renders the upsert button', async () => {
-    await renderComponent();
-    expect(screen.getByRole('button', { name: /upsert users/i })).toBeInTheDocument();
-  });
-
-  test('submits CSV and renders results', async () => {
+  test('form', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
