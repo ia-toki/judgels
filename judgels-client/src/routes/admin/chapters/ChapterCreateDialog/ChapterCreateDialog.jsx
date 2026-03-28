@@ -29,13 +29,13 @@ export function ChapterCreateDialog() {
     </>
   );
 
-  const createChapter = data => {
-    createChapterMutation.mutate(data, {
+  const createChapter = async data => {
+    await createChapterMutation.mutateAsync(data, {
       onSuccess: () => {
+        setIsDialogOpen(false);
         toastActions.showSuccessToast('Chapter created.');
       },
     });
-    setIsDialogOpen(false);
   };
 
   return (

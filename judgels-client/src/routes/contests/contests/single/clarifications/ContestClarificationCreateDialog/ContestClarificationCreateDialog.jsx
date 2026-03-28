@@ -28,13 +28,11 @@ export function ContestClarificationCreateDialog({ contest, problemJids, problem
     </>
   );
 
-  const createClarification = data => {
-    createClarificationMutation.mutate(data, {
+  const createClarification = async data => {
+    await createClarificationMutation.mutateAsync(data, {
       onSuccess: () => {
-        toastActions.showSuccessToast('Clarification submitted.');
-      },
-      onSettled: () => {
         setIsDialogOpen(false);
+        toastActions.showSuccessToast('Clarification submitted.');
       },
     });
   };

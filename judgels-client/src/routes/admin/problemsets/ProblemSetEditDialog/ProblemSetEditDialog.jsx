@@ -21,8 +21,8 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
     </>
   );
 
-  const updateProblemSet = data => {
-    updateProblemSetMutation.mutate(
+  const updateProblemSet = async data => {
+    await updateProblemSetMutation.mutateAsync(
       {
         slug: data.slug,
         name: data.name,
@@ -32,11 +32,11 @@ export function ProblemSetEditDialog({ isOpen, problemSet, archiveSlug, onCloseD
       },
       {
         onSuccess: () => {
+          onCloseDialog();
           toastActions.showSuccessToast('Problemset updated.');
         },
       }
     );
-    onCloseDialog();
   };
 
   const initialValues = problemSet && {

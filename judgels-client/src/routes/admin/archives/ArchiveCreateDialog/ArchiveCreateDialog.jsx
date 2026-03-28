@@ -29,13 +29,13 @@ export function ArchiveCreateDialog() {
     </>
   );
 
-  const createArchive = data => {
-    createArchiveMutation.mutate(data, {
+  const createArchive = async data => {
+    await createArchiveMutation.mutateAsync(data, {
       onSuccess: () => {
+        setIsDialogOpen(false);
         toastActions.showSuccessToast('Archive created.');
       },
     });
-    setIsDialogOpen(false);
   };
 
   return (

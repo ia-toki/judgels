@@ -21,13 +21,13 @@ export function ChapterEditDialog({ chapter, isOpen, onCloseDialog }) {
     </>
   );
 
-  const updateChapter = data => {
-    updateChapterMutation.mutate(data, {
+  const updateChapter = async data => {
+    await updateChapterMutation.mutateAsync(data, {
       onSuccess: () => {
+        onCloseDialog();
         toastActions.showSuccessToast('Chapter updated.');
       },
     });
-    onCloseDialog();
   };
 
   const initialValues = chapter && {
