@@ -169,6 +169,20 @@ public class UserResource {
     }
 
     @GET
+    @Path("/username/{username}")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public User getUserByUsername(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("username") String username) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.canAdminister(actorJid));
+
+        return checkFound(userStore.getUserByUsername(username));
+    }
+
+    @GET
     @Path("/me")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)

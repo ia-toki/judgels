@@ -14,6 +14,10 @@ export const userAPI = {
     return get(`${baseUsersURL}/${userJid}`, token);
   },
 
+  getUserByUsername: (token, username) => {
+    return get(`${baseUsersURL}/username/${username}`, token);
+  },
+
   getMyself: token => {
     return get(`${baseUsersURL}/me`, token);
   },
