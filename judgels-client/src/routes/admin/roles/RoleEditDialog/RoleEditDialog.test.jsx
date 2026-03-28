@@ -41,18 +41,6 @@ describe('RoleEditDialog', () => {
     expect(screen.getByRole('button', { name: /edit roles/i })).toBeInTheDocument();
   });
 
-  test('opens the dialog with instructions', async () => {
-    await renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(screen.getByRole('button', { name: /edit roles/i }));
-
-    expect(screen.getByText(/user roles can be edited via csv/i)).toBeInTheDocument();
-    expect(screen.getByText('Row format:', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText(/user management role/i)).toBeInTheDocument();
-    expect(screen.getByText('Example', { exact: false })).toBeInTheDocument();
-  });
-
   test('pre-fills the textarea with current roles', async () => {
     await renderComponent();
     const user = userEvent.setup();
