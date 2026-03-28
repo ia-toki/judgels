@@ -10,6 +10,12 @@ export const userQueryOptions = userJid =>
     queryFn: () => userAPI.getUser(getToken(), userJid),
   });
 
+export const userByUsernameQueryOptions = username =>
+  queryOptions({
+    queryKey: ['user', 'username', username],
+    queryFn: () => userAPI.getUserByUsername(getToken(), username),
+  });
+
 export const usersQueryOptions = params => {
   const { page, orderBy, orderDir } = params || {};
   return queryOptions({

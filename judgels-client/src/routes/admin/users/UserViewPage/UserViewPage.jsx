@@ -7,19 +7,19 @@ import { useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { userQueryOptions } from '../../../../modules/queries/user';
+import { userByUsernameQueryOptions } from '../../../../modules/queries/user';
 import { updateUserInfoMutationOptions, userInfoQueryOptions } from '../../../../modules/queries/userInfo';
 import UserEditInfoForm from '../UserEditInfoForm/UserEditInfoForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function UserViewPage() {
-  const { userJid } = useParams({ strict: false });
+  const { username } = useParams({ strict: false });
 
-  const { data: user } = useSuspenseQuery(userQueryOptions(userJid));
-  const { data: userInfo } = useSuspenseQuery(userInfoQueryOptions(userJid));
+  const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username));
+  const { data: userInfo } = useSuspenseQuery(userInfoQueryOptions(user.jid));
 
-  const updateUserInfoMutation = useMutation(updateUserInfoMutationOptions(userJid));
+  const updateUserInfoMutation = useMutation(updateUserInfoMutationOptions(user.jid));
 
   const [isEditingInfo, setIsEditingInfo] = useState(false);
 

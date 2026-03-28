@@ -7,7 +7,7 @@ export function UsersTable({ users, lastSessionTimesMap }) {
   const rows = users.map(user => (
     <tr key={user.jid}>
       <td>
-        <Link to={`/admin/users/${user.jid}`}>{user.username}</Link>
+        <Link to={`/admin/users/${user.username}`}>{user.username}</Link>
       </td>
       <td>{user.email}</td>
       <td>{lastSessionTimesMap[user.jid] ? <FormattedDate value={lastSessionTimesMap[user.jid]} /> : '-'}</td>

@@ -14,7 +14,7 @@ describe('UserViewPage', () => {
   });
 
   const renderComponent = async () => {
-    nockJophiel().get('/users/JIDUSER123').reply(200, {
+    nockJophiel().get('/users/username/andi').reply(200, {
       jid: 'JIDUSER123',
       username: 'andi',
       email: 'andi@example.com',
@@ -29,7 +29,7 @@ describe('UserViewPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/users/JIDUSER123']} path="/admin/users/$userJid">
+          <TestRouter initialEntries={['/admin/users/andi']} path="/admin/users/$username">
             <UserViewPage />
           </TestRouter>
         </QueryClientProviderWrapper>

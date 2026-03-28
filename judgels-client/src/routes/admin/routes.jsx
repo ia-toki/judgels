@@ -2,7 +2,7 @@ import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-route
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
-import { userQueryOptions } from '../../modules/queries/user';
+import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
@@ -33,11 +33,11 @@ export const createAdminRoutes = appRoute => {
 
   const adminUserViewRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'users/$userJid',
+    path: 'users/$username',
     component: lazyRouteComponent(retryImport(() => import('./users/UserViewPage/UserViewPage'))),
-    loader: async ({ params: { userJid } }) => {
-      await queryClient.ensureQueryData(userQueryOptions(userJid));
-      await queryClient.ensureQueryData(userInfoQueryOptions(userJid));
+    loader: async ({ params: { username } }) => {
+      const user = await queryClient.ensureQueryData(userByUsernameQueryOptions(username));
+      await queryClient.ensureQueryData(userInfoQueryOptions(user.jid));
     },
   });
 

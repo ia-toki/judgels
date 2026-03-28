@@ -26,6 +26,10 @@ public interface UserClient {
     @Headers("Authorization: Bearer {token}")
     User getUser(@Param("token") String token, @Param("userJid") String userJid);
 
+    @RequestLine("GET /api/v2/users/username/{username}")
+    @Headers("Authorization: Bearer {token}")
+    User getUserByUsername(@Param("token") String token, @Param("username") String username);
+
     @RequestLine("GET /api/v2/users/me")
     @Headers("Authorization: Bearer {token}")
     User getMyself(@Param("token") String token);
