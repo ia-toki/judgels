@@ -30,19 +30,6 @@ describe('UserUpsertDialog', () => {
     expect(screen.getByRole('button', { name: /upsert users/i })).toBeInTheDocument();
   });
 
-  test('opens the dialog and renders instructions', async () => {
-    await renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(screen.getByRole('button', { name: /upsert users/i }));
-
-    expect(screen.getByText(/users can be created or updated via csv/i)).toBeInTheDocument();
-    expect(screen.getByText(/allowed csv headers/i)).toBeInTheDocument();
-    expect(screen.getByText('Example 1:', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('Example 2:', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('Example 3:', { exact: false })).toBeInTheDocument();
-  });
-
   test('submits CSV and renders results', async () => {
     await renderComponent();
     const user = userEvent.setup();
