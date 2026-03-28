@@ -5,8 +5,11 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { getCountryName } from '../../../../assets/data/countries';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { HorizontalInnerDivider } from '../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
+import { userInfoGender } from '../../../../modules/api/jophiel/userInfo';
 import { userByUsernameQueryOptions } from '../../../../modules/queries/user';
 import { updateUserInfoMutationOptions, userInfoQueryOptions } from '../../../../modules/queries/userInfo';
 import UserEditInfoForm from '../UserEditInfoForm/UserEditInfoForm';
@@ -23,7 +26,7 @@ export default function UserViewPage() {
 
   const [isEditingInfo, setIsEditingInfo] = useState(false);
 
-  const keyStyles = { width: '200px' };
+  const keyStyles = { width: '220px' };
 
   const generalRows = [
     { key: 'jid', title: 'JID', value: user.jid },
@@ -40,9 +43,15 @@ export default function UserViewPage() {
   };
 
   const infoRows = [
-    { key: 'name', title: 'Name', value: userInfo.name || '-' },
-    { key: 'gender', title: 'Gender', value: userInfo.gender || '-' },
-    { key: 'country', title: 'Country', value: userInfo.country || '-' },
+    { key: 'name', title: 'Name', value: userInfo.name },
+    { key: 'gender', title: 'Gender', value: userInfo.gender && userInfoGender[userInfo.gender] },
+    { key: 'country', title: 'Country', value: getCountryName(userInfo.country) },
+    { key: 'homeAddress', title: 'Home address', value: userInfo.homeAddress },
+    { key: 'shirtSize', title: 'Shirt size', value: userInfo.shirtSize },
+    { key: 'institutionName', title: 'Institution name', value: userInfo.institutionName },
+    { key: 'institutionCountry', title: 'Institution country', value: getCountryName(userInfo.institutionCountry) },
+    { key: 'institutionProvince', title: 'Institution province/state', value: userInfo.institutionProvince },
+    { key: 'institutionCity', title: 'Institution city', value: userInfo.institutionCity },
   ];
 
   const updateUserInfo = data => {
@@ -69,6 +78,12 @@ export default function UserViewPage() {
           name: userInfo.name || '',
           gender: userInfo.gender || '',
           country: userInfo.country || '',
+          homeAddress: userInfo.homeAddress || '',
+          shirtSize: userInfo.shirtSize || '',
+          institutionName: userInfo.institutionName || '',
+          institutionCountry: userInfo.institutionCountry || '',
+          institutionProvince: userInfo.institutionProvince || '',
+          institutionCity: userInfo.institutionCity || '',
         };
         return (
           <UserEditInfoForm

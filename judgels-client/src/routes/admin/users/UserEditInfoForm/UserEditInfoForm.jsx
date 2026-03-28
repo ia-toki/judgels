@@ -3,7 +3,9 @@ import { Field, Form } from 'react-final-form';
 
 import { countriesData } from '../../../../assets/data/countries';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { HorizontalInnerDivider } from '../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { FormTableSelect } from '../../../../components/forms/FormTableSelect/FormTableSelect';
+import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -20,6 +22,36 @@ const genderField = {
 const countryField = {
   name: 'country',
   label: 'Country',
+};
+
+const homeAddressField = {
+  name: 'homeAddress',
+  label: 'Home address',
+};
+
+const shirtSizeField = {
+  name: 'shirtSize',
+  label: 'Shirt size',
+};
+
+const institutionField = {
+  name: 'institutionName',
+  label: 'Institution name',
+};
+
+const institutionCountryField = {
+  name: 'institutionCountry',
+  label: 'Institution country',
+};
+
+const institutionProvinceField = {
+  name: 'institutionProvince',
+  label: 'Institution province/state',
+};
+
+const institutionCityField = {
+  name: 'institutionCity',
+  label: 'Institution city',
 };
 
 export default function UserEditInfoForm({ onSubmit, initialValues, onCancel }) {
@@ -45,6 +77,25 @@ export default function UserEditInfoForm({ onSubmit, initialValues, onCancel }) 
                 <option />
                 {countryOptions}
               </Field>
+              <Field component={FormTableTextArea} {...homeAddressField} />
+              <Field component={FormTableSelect} {...shirtSizeField}>
+                <option />
+                <option value="XXS">XXS</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <option value="XXXL">XXXL</option>
+              </Field>
+              <Field component={FormTableTextInput} {...institutionField} />
+              <Field component={FormTableSelect} {...institutionCountryField}>
+                <option />
+                {countryOptions}
+              </Field>
+              <Field component={FormTableTextInput} {...institutionProvinceField} />
+              <Field component={FormTableTextInput} {...institutionCityField} />
             </tbody>
           </HTMLTable>
           <hr />
