@@ -60,6 +60,7 @@ export const updateCourseMutationOptions = courseJid => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(coursesQueryOptions());
+    queryClient.invalidateQueries({ queryKey: ['course-by-slug'] });
   },
 });
 
