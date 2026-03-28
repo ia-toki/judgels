@@ -32,10 +32,10 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./users/UsersPage/UsersPage'))),
   });
 
-  const adminUserViewRoute = createRoute({
+  const adminUserRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'users/$username',
-    component: lazyRouteComponent(retryImport(() => import('./users/UserViewPage/UserViewPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./users/UserPage/UserPage'))),
     loader: async ({ params: { username } }) => {
       const user = await queryClient.ensureQueryData(userByUsernameQueryOptions(username));
       await queryClient.ensureQueryData(userInfoQueryOptions(user.jid));
@@ -60,10 +60,10 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./courses/CoursesPage/CoursesPage'))),
   });
 
-  const adminCourseViewRoute = createRoute({
+  const adminCourseRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses/$courseSlug',
-    component: lazyRouteComponent(retryImport(() => import('./courses/CourseViewPage/CourseViewPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./courses/CoursePage/CoursePage'))),
     loader: async ({ params: { courseSlug } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       await queryClient.ensureQueryData(courseChaptersQueryOptions(course.jid));
@@ -91,11 +91,11 @@ export const createAdminRoutes = appRoute => {
   return adminRoute.addChildren([
     adminIndexRoute,
     adminUsersRoute,
-    adminUserViewRoute,
+    adminUserRoute,
     adminRolesRoute,
     adminRatingsRoute,
     adminCoursesRoute,
-    adminCourseViewRoute,
+    adminCourseRoute,
     adminChaptersRoute,
     adminArchivesRoute,
     adminProblemSetsRoute,

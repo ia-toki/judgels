@@ -1,9 +1,12 @@
 @use '../../../styles/base' as *;
 
 .form-table-input td {
-  line-height: 40px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+.form-table-input td:first-child {
+  line-height: 40px !important;
 }
 
 .form-table-input__group-label {

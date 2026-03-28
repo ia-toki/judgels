@@ -9,7 +9,10 @@ import { FormTableTextArea } from '../../../../components/forms/FormTableTextAre
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
+const keyStyles = { width: '250px' };
+
 const nameField = {
+  keyStyles,
   name: 'name',
   label: 'Name',
 };
@@ -54,7 +57,7 @@ const institutionCityField = {
   label: 'Institution city',
 };
 
-export default function UserEditInfoForm({ onSubmit, initialValues, onCancel }) {
+export default function UserInfoEditForm({ onSubmit, initialValues, onCancel }) {
   const countryOptions = countriesData.map(country => (
     <option key={country.code} value={country.code}>
       {country.name}

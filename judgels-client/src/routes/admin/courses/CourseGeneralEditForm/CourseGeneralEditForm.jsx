@@ -8,7 +8,10 @@ import { FormTableTextInput } from '../../../../components/forms/FormTableTextIn
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
+const keyStyles = { width: '250px' };
+
 const slugField = {
+  keyStyles,
   name: 'slug',
   label: 'Slug',
   validate: composeValidators(Required, Slug),
@@ -25,7 +28,7 @@ const descriptionField = {
   label: 'Description',
 };
 
-export default function CourseEditForm({ onSubmit, initialValues, onCancel }) {
+export default function CourseGeneralEditForm({ onSubmit, initialValues, onCancel }) {
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
