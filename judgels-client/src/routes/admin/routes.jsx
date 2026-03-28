@@ -2,6 +2,7 @@ import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-route
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
+import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../modules/queries/course';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
@@ -59,6 +60,16 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./courses/CoursesPage/CoursesPage'))),
   });
 
+  const adminCourseViewRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'courses/$courseSlug',
+    component: lazyRouteComponent(retryImport(() => import('./courses/CourseViewPage/CourseViewPage'))),
+    loader: async ({ params: { courseSlug } }) => {
+      const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
+      await queryClient.ensureQueryData(courseChaptersQueryOptions(course.jid));
+    },
+  });
+
   const adminChaptersRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'chapters',
@@ -84,6 +95,7 @@ export const createAdminRoutes = appRoute => {
     adminRolesRoute,
     adminRatingsRoute,
     adminCoursesRoute,
+    adminCourseViewRoute,
     adminChaptersRoute,
     adminArchivesRoute,
     adminProblemSetsRoute,

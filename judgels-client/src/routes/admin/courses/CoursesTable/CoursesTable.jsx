@@ -1,9 +1,9 @@
 import { HTMLTable } from '@blueprintjs/core';
-import { Edit, Properties } from '@blueprintjs/icons';
+import { Link } from '@tanstack/react-router';
 
 import './CoursesTable.scss';
 
-export function CoursesTable({ courses, onEditCourse, onEditCourseChapters }) {
+export function CoursesTable({ courses }) {
   const renderHeader = () => {
     return (
       <thead>
@@ -11,7 +11,6 @@ export function CoursesTable({ courses, onEditCourse, onEditCourseChapters }) {
           <th className="col-id">ID</th>
           <th className="col-slug">Slug</th>
           <th>Name</th>
-          <th className="col-actions" />
         </tr>
       </thead>
     );
@@ -21,12 +20,10 @@ export function CoursesTable({ courses, onEditCourse, onEditCourseChapters }) {
     const rows = courses.map(course => (
       <tr key={course.jid}>
         <td>{course.id}</td>
-        <td>{course.slug}</td>
-        <td>{course.name}</td>
         <td>
-          <Edit className="action" intent="primary" onClick={() => onEditCourse(course)} />
-          <Properties className="action" intent="primary" onClick={() => onEditCourseChapters(course)} />
+          <Link to={`/admin/courses/${course.slug}`}>{course.slug}</Link>
         </td>
+        <td>{course.name}</td>
       </tr>
     ));
 

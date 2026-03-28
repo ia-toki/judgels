@@ -1,42 +1,50 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
-import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
-import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
+import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-export default function CourseEditForm({ onSubmit, initialValues, renderFormComponents }) {
-  const slugField = {
-    name: 'slug',
-    label: 'Slug',
-    validate: composeValidators(Required, Slug),
-  };
-  const nameField = {
-    name: 'name',
-    label: 'Name',
-    validate: Required,
-  };
-  const descriptionField = {
-    name: 'description',
-    label: 'Description',
-    rows: 5,
-  };
+const slugField = {
+  name: 'slug',
+  label: 'Slug',
+  validate: composeValidators(Required, Slug),
+};
 
-  const fields = (
-    <>
-      <Field component={FormTextInput} {...slugField} />
-      <Field component={FormTextInput} {...nameField} />
-      <Field component={FormTextArea} {...descriptionField} />
-    </>
-  );
+const nameField = {
+  name: 'name',
+  label: 'Name',
+  validate: Required,
+};
 
+const descriptionField = {
+  name: 'description',
+  label: 'Description',
+};
+
+export default function CourseEditForm({ onSubmit, initialValues, onCancel }) {
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
-      {({ handleSubmit, submitting }) => {
-        const submitButton = <Button type="submit" text="Update" intent={Intent.PRIMARY} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
-      }}
+      {({ handleSubmit, submitting }) => (
+        <Flex asChild flexDirection="column" gap={2}>
+          <form onSubmit={handleSubmit}>
+            <HTMLTable striped>
+              <tbody>
+                <Field component={FormTableTextInput} {...slugField} />
+                <Field component={FormTableTextInput} {...nameField} />
+                <Field component={FormTableTextArea} {...descriptionField} />
+              </tbody>
+            </HTMLTable>
+            <ActionButtons justifyContent="end">
+              <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
+            </ActionButtons>
+          </form>
+        </Flex>
+      )}
     </Form>
   );
 }
