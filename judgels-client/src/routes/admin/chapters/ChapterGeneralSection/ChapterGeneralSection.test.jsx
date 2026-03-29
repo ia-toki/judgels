@@ -45,19 +45,19 @@ describe('ChapterGeneralSection', () => {
   test('form', async () => {
     await renderComponent();
 
-    const u = userEvent.setup();
+    const user = userEvent.setup();
 
     const button = await screen.findByRole('button', { name: /edit/i });
-    await u.click(button);
+    await user.click(button);
 
     const name = screen.getByRole('textbox', { name: /name/i });
     expect(name).toHaveValue('Chapter 1');
-    await u.clear(name);
-    await u.type(name, 'New Chapter');
+    await user.clear(name);
+    await user.type(name, 'New Chapter');
 
     nockJerahmeel().post('/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
 
-    await u.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });

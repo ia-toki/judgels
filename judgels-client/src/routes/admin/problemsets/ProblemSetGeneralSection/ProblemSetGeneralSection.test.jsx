@@ -50,25 +50,25 @@ describe('ProblemSetGeneralSection', () => {
   test('form', async () => {
     await renderComponent();
 
-    const u = userEvent.setup();
+    const user = userEvent.setup();
 
     const button = await screen.findByRole('button', { name: /edit/i });
-    await u.click(button);
+    await user.click(button);
 
     const slug = screen.getByRole('textbox', { name: /^slug/i });
     expect(slug).toHaveValue('problemset-1');
-    await u.clear(slug);
-    await u.type(slug, 'new-problemset');
+    await user.clear(slug);
+    await user.type(slug, 'new-problemset');
 
     const name = screen.getByRole('textbox', { name: /^name/i });
     expect(name).toHaveValue('Problemset 1');
-    await u.clear(name);
-    await u.type(name, 'New Problemset');
+    await user.clear(name);
+    await user.type(name, 'New Problemset');
 
     const archive = screen.getByRole('textbox', { name: /archive slug/i });
     expect(archive).toHaveValue('archive-1');
-    await u.clear(archive);
-    await u.type(archive, 'new-archive');
+    await user.clear(archive);
+    await user.type(archive, 'new-archive');
 
     nockJerahmeel()
       .post('/problemsets/JIDPROBLEMSET1', body => {
@@ -76,7 +76,7 @@ describe('ProblemSetGeneralSection', () => {
       })
       .reply(200);
 
-    await u.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });

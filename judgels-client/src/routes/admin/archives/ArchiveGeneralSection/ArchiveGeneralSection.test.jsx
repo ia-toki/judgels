@@ -48,30 +48,30 @@ describe('ArchiveGeneralSection', () => {
   test('form', async () => {
     await renderComponent();
 
-    const u = userEvent.setup();
+    const user = userEvent.setup();
 
     const button = await screen.findByRole('button', { name: /edit/i });
-    await u.click(button);
+    await user.click(button);
 
     const slug = screen.getByRole('textbox', { name: /slug/i });
     expect(slug).toHaveValue('archive-1');
-    await u.clear(slug);
-    await u.type(slug, 'new-archive');
+    await user.clear(slug);
+    await user.type(slug, 'new-archive');
 
     const names = screen.getAllByRole('textbox', { name: /name/i });
     expect(names[0]).toHaveValue('Archive 1');
-    await u.clear(names[0]);
-    await u.type(names[0], 'New Archive');
+    await user.clear(names[0]);
+    await user.type(names[0], 'New Archive');
 
     const category = screen.getByRole('textbox', { name: /category/i });
     expect(category).toHaveValue('Category 1');
-    await u.clear(category);
-    await u.type(category, 'New Category');
+    await user.clear(category);
+    await user.type(category, 'New Category');
 
     const description = document.querySelector('textarea[name="description"]');
     expect(description).toHaveValue('Description 1');
-    await u.clear(description);
-    await u.type(description, 'New Description');
+    await user.clear(description);
+    await user.type(description, 'New Description');
 
     nockJerahmeel()
       .post('/archives/JIDARCHIVE1', {
@@ -82,7 +82,7 @@ describe('ArchiveGeneralSection', () => {
       })
       .reply(200);
 
-    await u.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });
