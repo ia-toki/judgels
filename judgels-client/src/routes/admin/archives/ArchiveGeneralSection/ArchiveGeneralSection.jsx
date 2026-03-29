@@ -17,7 +17,7 @@ export function ArchiveGeneralSection({ archive }) {
 
   const keyStyles = { width: '250px' };
 
-  const detailRows = [
+  const rows = [
     { key: 'slug', title: 'Slug', value: archive.slug },
     { key: 'name', title: 'Name', value: archive.name },
     { key: 'category', title: 'Category', value: archive.category },
@@ -57,7 +57,7 @@ export function ArchiveGeneralSection({ archive }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={detailRows} />;
+    return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   return (

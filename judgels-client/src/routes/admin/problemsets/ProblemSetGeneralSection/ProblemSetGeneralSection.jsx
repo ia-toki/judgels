@@ -17,7 +17,7 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
 
   const keyStyles = { width: '250px' };
 
-  const detailRows = [
+  const rows = [
     { key: 'slug', title: 'Slug', value: problemSet.slug },
     { key: 'name', title: 'Name', value: problemSet.name },
     { key: 'archiveSlug', title: 'Archive slug', value: archiveSlug },
@@ -68,7 +68,7 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={detailRows} />;
+    return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   return (

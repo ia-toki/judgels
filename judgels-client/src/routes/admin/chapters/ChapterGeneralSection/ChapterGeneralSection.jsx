@@ -17,7 +17,7 @@ export function ChapterGeneralSection({ chapter }) {
 
   const keyStyles = { width: '250px' };
 
-  const detailRows = [{ key: 'name', title: 'Name', value: chapter.name }];
+  const rows = [{ key: 'name', title: 'Name', value: chapter.name }];
 
   const updateChapter = async data => {
     await updateChapterMutation.mutateAsync(data, {
@@ -49,7 +49,7 @@ export function ChapterGeneralSection({ chapter }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={detailRows} />;
+    return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   return (
