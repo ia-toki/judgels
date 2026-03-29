@@ -90,6 +90,7 @@ export const updateProblemSetMutationOptions = problemSetJid => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetsQueryOptions());
+    queryClient.invalidateQueries({ queryKey: ['problem-set-by-slug'] });
   },
 });
 

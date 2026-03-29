@@ -2,7 +2,13 @@ import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-route
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
+import { archiveBySlugQueryOptions } from '../../modules/queries/archive';
+import { archivesQueryOptions } from '../../modules/queries/archive';
+import { chapterByJidQueryOptions } from '../../modules/queries/chapter';
+import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
+import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../modules/queries/course';
+import { problemSetBySlugQueryOptions, problemSetProblemsQueryOptions } from '../../modules/queries/problemSet';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
@@ -76,16 +82,51 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./chapters/ChaptersPage/ChaptersPage'))),
   });
 
+  const adminChapterRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'chapters/$chapterJid',
+    component: lazyRouteComponent(retryImport(() => import('./chapters/ChapterPage/ChapterPage'))),
+    loader: async ({ params: { chapterJid } }) => {
+      await queryClient.ensureQueryData(chapterByJidQueryOptions(chapterJid));
+      await Promise.all([
+        queryClient.ensureQueryData(chapterLessonsQueryOptions(chapterJid)),
+        queryClient.ensureQueryData(chapterProblemsQueryOptions(chapterJid)),
+      ]);
+    },
+  });
+
   const adminArchivesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'archives',
     component: lazyRouteComponent(retryImport(() => import('./archives/ArchivesPage/ArchivesPage'))),
   });
 
+  const adminArchiveRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'archives/$archiveSlug',
+    component: lazyRouteComponent(retryImport(() => import('./archives/ArchivePage/ArchivePage'))),
+    loader: async ({ params: { archiveSlug } }) => {
+      await queryClient.ensureQueryData(archiveBySlugQueryOptions(archiveSlug));
+    },
+  });
+
   const adminProblemSetsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'problemsets',
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
+  });
+
+  const adminProblemSetRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'problemsets/$problemSetSlug',
+    component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetPage/ProblemSetPage'))),
+    loader: async ({ params: { problemSetSlug } }) => {
+      const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
+      await Promise.all([
+        queryClient.ensureQueryData(archivesQueryOptions()),
+        queryClient.ensureQueryData(problemSetProblemsQueryOptions(problemSet.jid)),
+      ]);
+    },
   });
 
   return adminRoute.addChildren([
@@ -97,7 +138,10 @@ export const createAdminRoutes = appRoute => {
     adminCoursesRoute,
     adminCourseRoute,
     adminChaptersRoute,
+    adminChapterRoute,
     adminArchivesRoute,
+    adminArchiveRoute,
     adminProblemSetsRoute,
+    adminProblemSetRoute,
   ]);
 };

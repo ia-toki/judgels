@@ -12,6 +12,15 @@ export const archivesQueryOptions = () =>
     queryFn: () => archiveAPI.getArchives(getToken()),
   });
 
+export const archiveBySlugQueryOptions = archiveSlug =>
+  queryOptions({
+    queryKey: ['archive-by-slug', archiveSlug],
+    queryFn: async () => {
+      const response = await archiveAPI.getArchives(getToken());
+      return response.data.find(a => a.slug === archiveSlug);
+    },
+  });
+
 export const createArchiveMutationOptions = {
   mutationFn: async data => {
     try {
@@ -25,6 +34,7 @@ export const createArchiveMutationOptions = {
   },
   onSuccess: () => {
     queryClient.invalidateQueries(archivesQueryOptions());
+    queryClient.invalidateQueries({ queryKey: ['archive-by-slug'] });
   },
 };
 
@@ -41,5 +51,6 @@ export const updateArchiveMutationOptions = archiveJid => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(archivesQueryOptions());
+    queryClient.invalidateQueries({ queryKey: ['archive-by-slug'] });
   },
 });

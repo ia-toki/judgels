@@ -1,41 +1,15 @@
+import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { chaptersQueryOptions } from '../../../../modules/queries/chapter';
 import { ChapterCreateDialog } from '../ChapterCreateDialog/ChapterCreateDialog';
-import { ChapterEditDialog } from '../ChapterEditDialog/ChapterEditDialog';
-import { ChapterLessonEditDialog } from '../ChapterLessonEditDialog/ChapterLessonEditDialog';
-import { ChapterProblemEditDialog } from '../ChapterProblemEditDialog/ChapterProblemEditDialog';
-import { ChaptersTable } from '../ChaptersTable/ChaptersTable';
 
 export default function ChaptersPage() {
-  const [editedChapter, setEditedChapter] = useState(undefined);
-  const [editDialogType, setEditDialogType] = useState(undefined);
-
   const { data: response } = useQuery(chaptersQueryOptions());
-
-  const editChapter = chapter => {
-    setEditedChapter(chapter);
-    setEditDialogType(chapter ? 'edit' : undefined);
-  };
-
-  const editChapterLessons = chapter => {
-    setEditedChapter(chapter);
-    setEditDialogType(chapter ? 'lessons' : undefined);
-  };
-
-  const editChapterProblems = chapter => {
-    setEditedChapter(chapter);
-    setEditDialogType(chapter ? 'problems' : undefined);
-  };
-
-  const closeDialog = () => {
-    setEditedChapter(undefined);
-    setEditDialogType(undefined);
-  };
 
   const renderChapters = () => {
     if (!response) {
@@ -51,13 +25,27 @@ export default function ChaptersPage() {
       );
     }
 
+    const rows = chapters.map(chapter => (
+      <tr key={chapter.jid}>
+        <td style={{ width: '60px' }}>{chapter.id}</td>
+        <td style={{ width: '200px' }}>
+          <Link to={`/admin/chapters/${chapter.jid}`}>{chapter.jid}</Link>
+        </td>
+        <td>{chapter.name}</td>
+      </tr>
+    ));
+
     return (
-      <ChaptersTable
-        chapters={chapters}
-        onEditChapter={editChapter}
-        onEditChapterLessons={editChapterLessons}
-        onEditChapterProblems={editChapterProblems}
-      />
+      <HTMLTable striped className="table-list-condensed">
+        <thead>
+          <tr>
+            <th style={{ width: '60px' }}>ID</th>
+            <th style={{ width: '200px' }}>JID</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </HTMLTable>
     );
   };
 
@@ -72,17 +60,6 @@ export default function ChaptersPage() {
   return (
     <ContentCard title="Chapters">
       {renderAction()}
-      <ChapterEditDialog isOpen={editDialogType === 'edit'} chapter={editedChapter} onCloseDialog={closeDialog} />
-      <ChapterLessonEditDialog
-        isOpen={editDialogType === 'lessons'}
-        chapter={editedChapter}
-        onCloseDialog={closeDialog}
-      />
-      <ChapterProblemEditDialog
-        isOpen={editDialogType === 'problems'}
-        chapter={editedChapter}
-        onCloseDialog={closeDialog}
-      />
       {renderChapters()}
     </ContentCard>
   );
