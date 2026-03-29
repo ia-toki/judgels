@@ -13,7 +13,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export function CourseGeneralSection({ course }) {
   const updateCourseMutation = useMutation(updateCourseMutationOptions(course.jid));
 
-  const [isEditing, setIsEditingGeneral] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const keyStyles = { width: '250px' };
 
@@ -27,13 +27,13 @@ export function CourseGeneralSection({ course }) {
     await updateCourseMutation.mutateAsync(data, {
       onSuccess: () => toastActions.showSuccessToast('Course updated.'),
     });
-    setIsEditingGeneral(false);
+    setIsEditing(false);
   };
 
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditingGeneral(true)}>
+        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -51,7 +51,7 @@ export function CourseGeneralSection({ course }) {
         <CourseGeneralEditForm
           initialValues={initialValues}
           onSubmit={updateCourse}
-          onCancel={() => setIsEditingGeneral(false)}
+          onCancel={() => setIsEditing(false)}
         />
       );
     }
