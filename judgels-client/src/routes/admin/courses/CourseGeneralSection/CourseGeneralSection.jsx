@@ -17,7 +17,7 @@ export function CourseGeneralSection({ course }) {
 
   const keyStyles = { width: '250px' };
 
-  const detailRows = [
+  const rows = [
     { key: 'slug', title: 'Slug', value: course.slug },
     { key: 'name', title: 'Name', value: course.name },
     { key: 'description', title: 'Description', value: course.description },
@@ -55,7 +55,7 @@ export function CourseGeneralSection({ course }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={detailRows} />;
+    return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   return (
