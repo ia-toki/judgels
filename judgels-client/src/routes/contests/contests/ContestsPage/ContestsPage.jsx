@@ -1,4 +1,3 @@
-import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
@@ -8,7 +7,6 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { contestsQueryOptions } from '../../../../modules/queries/contest';
 import { ContestCard } from '../ContestCard/ContestCard';
-import { ContestCreateDialog } from '../ContestCreateDialog/ContestCreateDialog';
 
 const PAGE_SIZE = 20;
 
@@ -23,10 +21,7 @@ export default function ContestsPage() {
   const renderHeader = () => {
     return (
       <>
-        <Flex justifyContent="space-between" alignItems="center">
-          {renderCreateDialog()}
-          {renderFilter()}
-        </Flex>
+        {renderFilter()}
         {renderFilterResultsBanner()}
       </>
     );
@@ -49,17 +44,6 @@ export default function ContestsPage() {
     return (
       <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={name || ''} isLoading={isLoading && !!name} />
     );
-  };
-
-  const renderCreateDialog = () => {
-    if (!response) {
-      return null;
-    }
-    const config = response.config;
-    if (!config.canAdminister) {
-      return null;
-    }
-    return <ContestCreateDialog />;
   };
 
   const renderContests = () => {

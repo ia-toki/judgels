@@ -60,6 +60,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./ratings/RatingsPage/RatingsPage'))),
   });
 
+  const adminContestsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'contests',
+    component: lazyRouteComponent(retryImport(() => import('./contests/ContestsPage/ContestsPage'))),
+  });
+
   const adminCoursesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses',
@@ -135,6 +141,7 @@ export const createAdminRoutes = appRoute => {
     adminUserRoute,
     adminRolesRoute,
     adminRatingsRoute,
+    adminContestsRoute,
     adminCoursesRoute,
     adminCourseRoute,
     adminChaptersRoute,
