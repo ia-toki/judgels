@@ -14,20 +14,20 @@ export function CourseChaptersSection({ course }) {
   const { data: chaptersResponse } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
   const setChaptersMutation = useMutation(setCourseChaptersMutationOptions(course.jid));
 
-  const [isEditing, setIsEditingChapters] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const updateChapters = data => {
     const chapters = deserializeChapters(data.chapters);
     setChaptersMutation.mutate(chapters, {
       onSuccess: () => toastActions.showSuccessToast('Course chapters updated.'),
     });
-    setIsEditingChapters(false);
+    setIsEditing(false);
   };
 
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditingChapters(true)}>
+        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -42,7 +42,7 @@ export function CourseChaptersSection({ course }) {
           initialValues={initialValues}
           validator={validateChapters}
           onSubmit={updateChapters}
-          onCancel={() => setIsEditingChapters(false)}
+          onCancel={() => setIsEditing(false)}
         />
       );
     }
