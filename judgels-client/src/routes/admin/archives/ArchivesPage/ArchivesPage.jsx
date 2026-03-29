@@ -1,17 +1,14 @@
+import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { archivesQueryOptions } from '../../../../modules/queries/archive';
 import { ArchiveCreateDialog } from '../ArchiveCreateDialog/ArchiveCreateDialog';
-import { ArchiveEditDialog } from '../ArchiveEditDialog/ArchiveEditDialog';
-import { ArchivesTable } from '../ArchivesTable/ArchivesTable';
 
 export default function ArchivesPage() {
-  const [editedArchive, setEditedArchive] = useState(undefined);
-
   const { data: response } = useQuery(archivesQueryOptions());
 
   const renderArchives = () => {
@@ -28,7 +25,30 @@ export default function ArchivesPage() {
       );
     }
 
-    return <ArchivesTable archives={archives} onEditArchive={setEditedArchive} />;
+    const rows = archives.map(archive => (
+      <tr key={archive.jid}>
+        <td style={{ width: '60px' }}>{archive.id}</td>
+        <td style={{ width: '200px' }}>
+          <Link to={`/admin/archives/${archive.slug}`}>{archive.slug}</Link>
+        </td>
+        <td>{archive.name}</td>
+        <td>{archive.category}</td>
+      </tr>
+    ));
+
+    return (
+      <HTMLTable striped className="table-list-condensed">
+        <thead>
+          <tr>
+            <th style={{ width: '60px' }}>ID</th>
+            <th style={{ width: '200px' }}>Slug</th>
+            <th>Name</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </HTMLTable>
+    );
   };
 
   const renderAction = () => {
@@ -42,11 +62,6 @@ export default function ArchivesPage() {
   return (
     <ContentCard title="Archives">
       {renderAction()}
-      <ArchiveEditDialog
-        isOpen={!!editedArchive}
-        archive={editedArchive}
-        onCloseDialog={() => setEditedArchive(undefined)}
-      />
       {renderArchives()}
     </ContentCard>
   );

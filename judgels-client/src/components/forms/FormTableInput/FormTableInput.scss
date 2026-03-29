@@ -5,7 +5,7 @@
   padding-bottom: 0 !important;
 }
 
-.form-table-input td:first-child {
+.form-table-input td:not(:has(textarea)) {
   line-height: 40px !important;
 }
 

@@ -1,6 +1,6 @@
+import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from '@tanstack/react-router';
-import { useState } from 'react';
+import { Link, useLocation } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
@@ -8,9 +8,6 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import Pagination from '../../../../components/Pagination/Pagination';
 import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
-import { ProblemSetEditDialog } from '../ProblemSetEditDialog/ProblemSetEditDialog';
-import { ProblemSetProblemEditDialog } from '../ProblemSetProblemEditDialog/ProblemSetProblemEditDialog';
-import { ProblemSetsTable } from '../ProblemSetsTable/ProblemSetsTable';
 
 const PAGE_SIZE = 20;
 
@@ -18,27 +15,7 @@ export default function ProblemSetsPage() {
   const location = useLocation();
   const page = location.search.page;
 
-  const [editedProblemSet, setEditedProblemSet] = useState(undefined);
-  const [editDialogType, setEditDialogType] = useState(undefined);
-
   const { data: response } = useQuery(problemSetsQueryOptions({ page }));
-
-  const editProblemSet = problemSet => {
-    setEditedProblemSet(problemSet);
-    setEditDialogType(problemSet ? 'edit' : undefined);
-  };
-
-  const editProblemSetProblems = problemSet => {
-    setEditedProblemSet(problemSet);
-    setEditDialogType(problemSet ? 'problems' : undefined);
-  };
-
-  const closeDialog = () => {
-    setEditedProblemSet(undefined);
-    setEditDialogType(undefined);
-  };
-
-  const archiveSlug = response && editedProblemSet && response.archiveSlugsMap[editedProblemSet.archiveJid];
 
   const renderProblemSets = () => {
     if (!response) {
@@ -54,13 +31,29 @@ export default function ProblemSetsPage() {
       );
     }
 
+    const rows = problemSets.page.map(problemSet => (
+      <tr key={problemSet.jid}>
+        <td style={{ width: '60px' }}>{problemSet.id}</td>
+        <td style={{ width: '200px' }}>
+          <Link to={`/admin/problemsets/${problemSet.slug}`}>{problemSet.slug}</Link>
+        </td>
+        <td>{problemSet.name}</td>
+        <td>{archiveSlugsMap[problemSet.archiveJid]}</td>
+      </tr>
+    ));
+
     return (
-      <ProblemSetsTable
-        problemSets={problemSets.page}
-        archiveSlugsMap={archiveSlugsMap}
-        onEditProblemSet={editProblemSet}
-        onEditProblemSetProblems={editProblemSetProblems}
-      />
+      <HTMLTable striped className="table-list-condensed">
+        <thead>
+          <tr>
+            <th style={{ width: '60px' }}>ID</th>
+            <th style={{ width: '200px' }}>Slug</th>
+            <th>Name</th>
+            <th>Archive</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </HTMLTable>
     );
   };
 
@@ -75,17 +68,6 @@ export default function ProblemSetsPage() {
   return (
     <ContentCard title="Problemsets">
       {renderAction()}
-      <ProblemSetEditDialog
-        isOpen={editDialogType === 'edit'}
-        problemSet={editedProblemSet}
-        archiveSlug={archiveSlug}
-        onCloseDialog={closeDialog}
-      />
-      <ProblemSetProblemEditDialog
-        isOpen={editDialogType === 'problems'}
-        problemSet={editedProblemSet}
-        onCloseDialog={closeDialog}
-      />
       {renderProblemSets()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
