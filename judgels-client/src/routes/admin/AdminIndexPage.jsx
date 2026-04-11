@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Navigate } from '@tanstack/react-router';
 
+import { isTLX } from '../../conf';
 import { JerahmeelRole } from '../../modules/api/jerahmeel/role';
 import { JophielRole } from '../../modules/api/jophiel/role';
 import { UrielRole } from '../../modules/api/uriel/role';
@@ -17,7 +18,7 @@ export default function AdminIndexPage() {
   if (role.uriel === UrielRole.Admin) {
     return <Navigate to="/admin/contests" />;
   }
-  if (role.jerahmeel === JerahmeelRole.Admin) {
+  if (isTLX() && role.jerahmeel === JerahmeelRole.Admin) {
     return <Navigate to="/admin/courses" />;
   }
   return <Navigate to="/" />;

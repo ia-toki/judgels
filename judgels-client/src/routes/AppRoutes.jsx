@@ -18,7 +18,7 @@ const appRoutes = [
       role.jophiel === JophielRole.Superadmin ||
       role.jophiel === JophielRole.Admin ||
       role.uriel === UrielRole.Admin ||
-      role.jerahmeel === JerahmeelRole.Admin,
+      (isTLX() && role.jerahmeel === JerahmeelRole.Admin),
   },
   {
     id: 'contests',
