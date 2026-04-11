@@ -1,6 +1,8 @@
 @use '../../styles/variables/colors' as *;
 
 .content-card {
+  overflow-x: auto;
+
   h3 {
     line-height: 9px;
   }
