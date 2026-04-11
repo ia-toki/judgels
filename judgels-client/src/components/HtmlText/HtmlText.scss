@@ -83,18 +83,19 @@
 
   .highlight {
     background-color: #ffe39f;
-    margin-left: -15px;
-    margin-right: -15px;
+    margin-left: -20px;
+    margin-right: -20px;
     margin-bottom: 20px;
     padding: 10px 20px;
     border-radius: 3px;
+    overflow-x: auto;
 
     .bp6-dark & {
       background-color: #0c5174;
     }
 
     &:first-child {
-      margin-top: -15px;
+      margin-top: -20px;
     }
 
     &:not(:first-child) {
@@ -102,7 +103,7 @@
     }
 
     &:last-child {
-      margin-bottom: -15px;
+      margin-bottom: -20px;
     }
 
     h3:first-child {
