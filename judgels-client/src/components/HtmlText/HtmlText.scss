@@ -24,19 +24,19 @@
   table {
     width: inherit;
     margin-bottom: 10px;
-  }
 
-  td,
-  th {
-    border: solid 1px #cccccc;
-    text-align: left;
-    padding: 5px;
-  }
+    td,
+    th {
+      border: solid 1px #cccccc;
+      text-align: left;
+      padding: 5px;
+    }
 
-  th {
-    background-color: #eeeeee;
-    font-weight: bold;
-    color: $text-color;
+    th {
+      background-color: #eeeeee;
+      font-weight: bold;
+      color: $text-color;
+    }
   }
 
   pre {
