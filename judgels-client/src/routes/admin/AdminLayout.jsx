@@ -13,6 +13,7 @@ import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
+import { isTLX } from '../../conf';
 import { JerahmeelRole } from '../../modules/api/jerahmeel/role';
 import { JophielRole } from '../../modules/api/jophiel/role';
 import { UrielRole } from '../../modules/api/uriel/role';
@@ -25,7 +26,7 @@ export default function AdminLayout() {
 
   const isJophielAdmin = role.jophiel === JophielRole.Admin || role.jophiel === JophielRole.Superadmin;
   const isUrielAdmin = role.uriel === UrielRole.Admin;
-  const isJerahmeelAdmin = role.jerahmeel === JerahmeelRole.Admin;
+  const isJerahmeelAdmin = isTLX() && role.jerahmeel === JerahmeelRole.Admin;
 
   const sidebarItems = [
     {
