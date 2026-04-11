@@ -1,4 +1,7 @@
+import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
+import { SandalphonRole } from '../modules/api/sandalphon/role';
+import { UrielRole } from '../modules/api/uriel/role';
 import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {
@@ -21,6 +24,21 @@ describe('AppRoutes', () => {
 
   test('Jophiel superadmin', () => {
     testAppRoutes({ jophiel: JophielRole.Superadmin }, [
+      'admin',
+      'contests',
+      'courses',
+      'problems',
+      'submissions',
+      'ranking',
+    ]);
+  });
+
+  test('Uriel admin', () => {
+    testAppRoutes({ uriel: UrielRole.Admin }, ['admin', 'contests', 'courses', 'problems', 'submissions', 'ranking']);
+  });
+
+  test('Jerahmeel admin', () => {
+    testAppRoutes({ jerahmeel: JerahmeelRole.Admin }, [
       'admin',
       'contests',
       'courses',

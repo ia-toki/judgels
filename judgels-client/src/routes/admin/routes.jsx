@@ -1,4 +1,4 @@
-import { Navigate, createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
@@ -29,7 +29,7 @@ export const createAdminRoutes = appRoute => {
   const adminIndexRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: '/',
-    component: () => <Navigate to="/admin/users" />,
+    component: lazyRouteComponent(retryImport(() => import('./AdminIndexPage'))),
   });
 
   const adminUsersRoute = createRoute({

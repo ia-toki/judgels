@@ -1,7 +1,10 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
+import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
+import { SandalphonRole } from '../modules/api/sandalphon/role';
+import { UrielRole } from '../modules/api/uriel/role';
 
 const appRoutes = [
   {
@@ -11,7 +14,11 @@ const appRoutes = [
     route: {
       path: '/admin',
     },
-    visible: role => isTLX() && (role.jophiel === JophielRole.Superadmin || role.jophiel === JophielRole.Admin),
+    visible: role =>
+      role.jophiel === JophielRole.Superadmin ||
+      role.jophiel === JophielRole.Admin ||
+      role.uriel === UrielRole.Admin ||
+      role.jerahmeel === JerahmeelRole.Admin,
   },
   {
     id: 'contests',
