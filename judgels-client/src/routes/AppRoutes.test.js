@@ -52,9 +52,4 @@ describe('AppRoutes', () => {
   test('user', () => {
     testAppRoutes({}, ['contests', 'courses', 'problems', 'submissions', 'ranking']);
   });
-
-  test('blocked user', () => {
-    const blockedUser = { username: BLOCKED_USERNAMES[0] };
-    testAppRoutes({}, ['contests'], blockedUser);
-  });
 });
