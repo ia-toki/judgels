@@ -3,10 +3,11 @@ import { JophielRole } from '../modules/api/jophiel/role';
 import { SandalphonRole } from '../modules/api/sandalphon/role';
 import { UrielRole } from '../modules/api/uriel/role';
 import { getVisibleAppRoutes } from './AppRoutes';
+import { BLOCKED_USERNAMES } from './blockedUsernames';
 
 describe('AppRoutes', () => {
-  const testAppRoutes = (role, expectedIds) => {
-    const appRoutes = getVisibleAppRoutes(role);
+  const testAppRoutes = (role, expectedIds, user = undefined) => {
+    const appRoutes = getVisibleAppRoutes(role, user);
     const ids = appRoutes.map(route => route.id);
     expect(ids).toEqual(expectedIds);
   };
@@ -50,5 +51,10 @@ describe('AppRoutes', () => {
 
   test('user', () => {
     testAppRoutes({}, ['contests', 'courses', 'problems', 'submissions', 'ranking']);
+  });
+
+  test('blocked user', () => {
+    const blockedUser = { username: BLOCKED_USERNAMES[0] };
+    testAppRoutes({}, ['contests'], blockedUser);
   });
 });

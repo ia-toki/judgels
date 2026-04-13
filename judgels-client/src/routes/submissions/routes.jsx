@@ -1,4 +1,4 @@
-import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import { submissionWithSourceQueryOptions, submissionsQueryOptions } from '../../modules/queries/submissionProgramming';
@@ -6,6 +6,7 @@ import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
+import { isUserBlocked } from '../blockedUsernames';
 
 export const createSubmissionsRoutes = appRoute => {
   const submissionsRoute = createRoute({
@@ -13,6 +14,11 @@ export const createSubmissionsRoutes = appRoute => {
     path: 'submissions',
     component: lazyRouteComponent(retryImport(() => import('./SubmissionsLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Submissions') }] }),
+    beforeLoad: () => {
+      if (isUserBlocked(getUser())) {
+        throw redirect({ to: '/' });
+      }
+    },
   });
 
   const submissionsIndexRoute = createRoute({
