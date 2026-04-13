@@ -1,4 +1,4 @@
-import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { Outlet, createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/sandalphon/problem';
@@ -23,6 +23,7 @@ import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
 import { createDocumentTitle } from '../../utils/title';
+import { isUserBlocked } from '../blockedUsernames';
 
 export const createProblemsRoutes = appRoute => {
   const problemsRoute = createRoute({
@@ -30,6 +31,11 @@ export const createProblemsRoutes = appRoute => {
     path: 'problems',
     component: Outlet,
     head: () => ({ meta: [{ title: createDocumentTitle('Problems') }] }),
+    beforeLoad: () => {
+      if (isUserBlocked(getUser())) {
+        throw redirect({ to: '/' });
+      }
+    },
   });
 
   const problemsIndexRoute = createRoute({
