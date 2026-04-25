@@ -10,6 +10,7 @@ import org.immutables.value.Value;
 public interface SubmissionWithSource {
     Submission getSubmission();
     Optional<SubmissionSource> getSource();
+    Optional<String> getReasonNotAllowedToViewSource();
 
     class Builder extends ImmutableSubmissionWithSource.Builder {}
 }

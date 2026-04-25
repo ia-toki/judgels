@@ -184,7 +184,7 @@ public class SubmissionResource {
         List<String> containerPath;
         String containerName;
         String problemAlias;
-        boolean canViewSource;
+        Optional<String> reasonNotAllowedToViewSource;
 
         if (SubmissionUtils.isProblemSet(containerJid)) {
             ProblemSet problemSet = checkFound(problemSetStore.getProblemSetByJid(containerJid));
@@ -192,14 +192,14 @@ public class SubmissionResource {
             containerPath = checkFound(problemSetStore.getProblemSetPathByJid(containerJid));
             containerName = problemSet.getName();
             problemAlias = problem.getAlias();
-            canViewSource = submissionRoleChecker.canViewProblemSetSource(actorJid, userJid, problemJid);
+            reasonNotAllowedToViewSource = submissionRoleChecker.canViewProblemSetSource(actorJid, userJid, problemJid);
         } else {
             Chapter chapter = checkFound(chapterStore.getChapterByJid(containerJid));
             ChapterProblem problem = checkFound(chapterProblemStore.getProblem(problemJid));
             containerPath = checkFound(chapterStore.getChapterPathByJid(containerJid));
             containerName = chapter.getName();
             problemAlias = problem.getAlias();
-            canViewSource = submissionRoleChecker.canViewChapterSource(actorJid, userJid, problemJid);
+            reasonNotAllowedToViewSource = submissionRoleChecker.canViewChapterSource(actorJid, userJid, problemJid);
         }
 
         ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
@@ -207,11 +207,10 @@ public class SubmissionResource {
         Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid)));
 
         SubmissionWithSource submissionWithSource;
-        if (canViewSource) {
-            SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
+        if (reasonNotAllowedToViewSource.isPresent()) {
             submissionWithSource = new SubmissionWithSource.Builder()
                     .submission(submission)
-                    .source(source)
+                    .reasonNotAllowedToViewSource(reasonNotAllowedToViewSource.get())
                     .build();
         } else {
             submissionWithSource = new SubmissionWithSource.Builder()

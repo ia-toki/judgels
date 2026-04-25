@@ -38,7 +38,7 @@ export default function ProblemSubmissionPage() {
 
       document.title = createDocumentTitle(`Submission #${data.submission.id}`);
 
-      if (!data.source) {
+      if (!data.source && !data.reasonNotAllowedToViewSource) {
         submissionProgrammingAPI.getSubmissionSourceImage(data.submission.jid, isDarkMode).then(setSourceImageUrl);
       }
     }
@@ -55,6 +55,7 @@ export default function ProblemSubmissionPage() {
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
+        reasonNotAllowedToViewSource={submissionWithSource.reasonNotAllowedToViewSource}
         sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemName={problemName}

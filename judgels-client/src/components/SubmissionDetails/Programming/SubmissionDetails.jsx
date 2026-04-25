@@ -31,10 +31,10 @@ export function SubmissionDetails({
   problemUrl,
   containerName,
   onDownload,
-  hideSource,
   hideSourceFilename,
   onClickViewSource,
   showLoaderWhenPending,
+  reasonNotAllowedToViewSource,
 }) {
   const hasSubtasks = latestGrading && latestGrading.details && latestGrading.details.subtaskResults.length > 1;
 
@@ -356,10 +356,13 @@ export function SubmissionDetails({
     }
 
     if (!source) {
-      if (hideSource) {
+      if (reasonNotAllowedToViewSource) {
         return (
           <ContentCard>
-            <Lock /> &nbsp;<small>You cannot view other's solution before solving this problem in this course.</small>
+            <Flex gap={2} alignItems="center">
+              <Lock />
+              <small>{reasonNotAllowedToViewSource}</small>
+            </Flex>
           </ContentCard>
         );
       }
