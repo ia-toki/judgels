@@ -144,9 +144,9 @@ function ContestSubmissionsPage() {
 
   return (
     <ContentCard title="Submissions">
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" flexWrap="wrap">
         {renderRegradeAllButton()}
-        {renderFilterWidget()}
+        <div style={{ marginLeft: 'auto' }}>{renderFilterWidget()}</div>
       </Flex>
       {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}

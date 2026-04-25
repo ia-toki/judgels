@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -42,9 +43,9 @@ export default function ProfileSummaryPage() {
   };
 
   return (
-    <>
+    <Flex gap={2} flexDirection="column">
       {renderBasicProfile()}
       {renderProblemStats()}
-    </>
+    </Flex>
   );
 }

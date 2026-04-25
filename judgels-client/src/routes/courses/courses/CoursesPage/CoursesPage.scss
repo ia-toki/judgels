@@ -1,12 +1,12 @@
 .courses {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  row-gap: 8px;
-  column-gap: 8px;
+  gap: 8px;
 }
 
 @media only screen and (max-width: 900px) {
   .courses {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 }

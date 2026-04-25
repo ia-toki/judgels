@@ -39,9 +39,9 @@ function ContestSubmissionsPage() {
 
   const renderActions = () => {
     return (
-      <Flex justifyContent="space-between" alignItems="center">
-        <div>{renderRegradeAllButton()}</div>
-        <div>{renderFilterWidget()}</div>
+      <Flex gap={1} justifyContent="space-between" alignItems="center" flexWrap="wrap">
+        {renderRegradeAllButton()}
+        <div style={{ marginLeft: 'auto' }}>{renderFilterWidget()}</div>
       </Flex>
     );
   };

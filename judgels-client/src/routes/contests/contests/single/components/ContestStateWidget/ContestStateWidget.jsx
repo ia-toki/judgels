@@ -176,9 +176,9 @@ export default function ContestStateWidget() {
   const { leftComponent, rightComponent } = getWidgetComponents();
   return (
     <Callout intent={Intent.PRIMARY} className="secondary-info" icon={<InfoSign />}>
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" flexWrap="wrap">
         <div>{leftComponent}</div>
-        <div>{rightComponent}</div>
+        <div style={{ marginLeft: 'auto' }}>{rightComponent}</div>
       </Flex>
       {renderVirtualContestAlert()}
     </Callout>
