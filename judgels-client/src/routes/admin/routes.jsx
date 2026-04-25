@@ -1,6 +1,5 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
-import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
 import { archiveBySlugQueryOptions } from '../../modules/queries/archive';
 import { archivesQueryOptions } from '../../modules/queries/archive';
@@ -15,10 +14,6 @@ import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createAdminRoutes = appRoute => {
-  if (!isTLX()) {
-    return null;
-  }
-
   const adminRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'admin',

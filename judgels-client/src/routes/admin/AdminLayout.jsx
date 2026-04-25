@@ -45,7 +45,7 @@ export default function AdminLayout() {
       path: 'ratings',
       titleIcon: <TimelineLineChart />,
       title: 'Ratings',
-      visible: isJophielAdmin,
+      visible: isTLX() && isJophielAdmin,
     },
     {
       path: 'contests',
