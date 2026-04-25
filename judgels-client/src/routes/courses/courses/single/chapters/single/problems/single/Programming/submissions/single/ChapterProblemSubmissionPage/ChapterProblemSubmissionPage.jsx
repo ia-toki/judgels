@@ -36,9 +36,9 @@ export default function ChapterProblemSubmissionPage() {
       <SubmissionDetails
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
+        reasonNotAllowedToViewSource={submissionWithSource.reasonNotAllowedToViewSource}
         profile={profile}
         problemUrl={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
-        hideSource={!!!submissionWithSource.source}
         hideSourceFilename
         showLoaderWhenPending
       />
