@@ -6,21 +6,21 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.ProgrammingGradingDao;
-import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
-import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.sandalphon.persistence.ProblemDao;
-import judgels.sandalphon.persistence.ProblemModel;
+import judgels.persistence.BundleItemSubmissionDao;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ProblemDao;
+import judgels.persistence.ProblemModel;
+import judgels.persistence.ProblemSetProblemDao;
+import judgels.persistence.StatsUserProblemDao;
+import judgels.persistence.TrainingProgrammingGradingDao;
+import judgels.persistence.TrainingProgrammingSubmissionDao;
 
 public class DeleteProblemTask extends Task {
     private final ProblemDao problemDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
-    private final ProgrammingSubmissionDao programmingSubmissionDao;
-    private final ProgrammingGradingDao programmingGradingDao;
+    private final TrainingProgrammingSubmissionDao programmingSubmissionDao;
+    private final TrainingProgrammingGradingDao programmingGradingDao;
     private final BundleItemSubmissionDao bundleItemSubmissionDao;
     private final StatsUserProblemDao statsUserProblemDao;
 
@@ -28,8 +28,8 @@ public class DeleteProblemTask extends Task {
             ProblemDao problemDao,
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
-            ProgrammingSubmissionDao programmingSubmissionDao,
-            ProgrammingGradingDao programmingGradingDao,
+            TrainingProgrammingSubmissionDao programmingSubmissionDao,
+            TrainingProgrammingGradingDao programmingGradingDao,
             BundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 

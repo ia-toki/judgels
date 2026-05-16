@@ -3,8 +3,8 @@ package judgels.user.account;
 import jakarta.inject.Inject;
 import java.time.Duration;
 import java.util.Optional;
-import judgels.jophiel.persistence.UserResetPasswordDao;
-import judgels.jophiel.persistence.UserResetPasswordModel;
+import judgels.persistence.UserResetPasswordDao;
+import judgels.persistence.UserResetPasswordModel;
 import judgels.service.RandomCodeGenerator;
 
 public class UserResetPasswordStore {

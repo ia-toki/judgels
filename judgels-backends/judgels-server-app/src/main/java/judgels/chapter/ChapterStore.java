@@ -14,12 +14,12 @@ import judgels.api.chapter.Chapter;
 import judgels.api.chapter.ChapterCreateData;
 import judgels.api.chapter.ChapterInfo;
 import judgels.api.chapter.ChapterUpdateData;
-import judgels.jerahmeel.persistence.ChapterDao;
-import judgels.jerahmeel.persistence.ChapterModel;
-import judgels.jerahmeel.persistence.CourseChapterDao;
-import judgels.jerahmeel.persistence.CourseChapterModel;
-import judgels.jerahmeel.persistence.CourseDao;
-import judgels.jerahmeel.persistence.CourseModel;
+import judgels.persistence.ChapterDao;
+import judgels.persistence.ChapterModel;
+import judgels.persistence.CourseChapterDao;
+import judgels.persistence.CourseChapterModel;
+import judgels.persistence.CourseDao;
+import judgels.persistence.CourseModel;
 
 public class ChapterStore {
     private final ChapterDao chapterDao;

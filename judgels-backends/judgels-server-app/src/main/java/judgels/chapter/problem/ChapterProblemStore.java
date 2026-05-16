@@ -15,9 +15,9 @@ import java.util.Set;
 import java.util.function.Function;
 import judgels.api.chapter.problem.ChapterProblem;
 import judgels.api.problem.ProblemType;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.ChapterProblemModel;
-import judgels.jerahmeel.persistence.ChapterProblemModel_;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ChapterProblemModel;
+import judgels.persistence.ChapterProblemModel_;
 import judgels.persistence.api.OrderDir;
 
 public class ChapterProblemStore {

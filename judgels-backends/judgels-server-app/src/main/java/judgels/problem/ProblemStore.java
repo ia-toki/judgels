@@ -5,10 +5,10 @@ import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.problem.ProblemSetProblemInfo;
-import judgels.jerahmeel.persistence.ProblemSetDao;
-import judgels.jerahmeel.persistence.ProblemSetModel;
-import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.ProblemSetProblemModel;
+import judgels.persistence.ProblemSetDao;
+import judgels.persistence.ProblemSetModel;
+import judgels.persistence.ProblemSetProblemDao;
+import judgels.persistence.ProblemSetProblemModel;
 import judgels.persistence.api.Page;
 
 public class ProblemStore {

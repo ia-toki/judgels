@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.contest.contestant.ContestContestant;
 import judgels.api.contest.contestant.ContestContestantStatus;
+import judgels.persistence.ContestContestantDao;
+import judgels.persistence.ContestContestantModel;
 import judgels.persistence.api.Page;
-import judgels.uriel.persistence.ContestContestantDao;
-import judgels.uriel.persistence.ContestContestantModel;
 
 @Singleton
 public class ContestContestantStore {

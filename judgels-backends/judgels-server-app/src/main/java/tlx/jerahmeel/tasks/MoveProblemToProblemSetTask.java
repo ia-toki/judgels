@@ -7,29 +7,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.problem.ProblemType;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.ChapterProblemModel;
-import judgels.jerahmeel.persistence.ProblemSetDao;
-import judgels.jerahmeel.persistence.ProblemSetModel;
-import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
-import judgels.sandalphon.persistence.ProblemDao;
-import judgels.sandalphon.persistence.ProblemModel;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ChapterProblemModel;
+import judgels.persistence.ProblemDao;
+import judgels.persistence.ProblemModel;
+import judgels.persistence.ProblemSetDao;
+import judgels.persistence.ProblemSetModel;
+import judgels.persistence.ProblemSetProblemDao;
+import judgels.persistence.ProblemSetProblemModel;
+import judgels.persistence.TrainingProgrammingSubmissionDao;
 
 public class MoveProblemToProblemSetTask extends Task {
     private final ProblemDao problemDao;
     private final ProblemSetDao problemSetDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
-    private final ProgrammingSubmissionDao programmingSubmissionDao;
+    private final TrainingProgrammingSubmissionDao programmingSubmissionDao;
 
     public MoveProblemToProblemSetTask(
             ProblemDao problemDao,
             ProblemSetDao problemSetDao,
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
-            ProgrammingSubmissionDao programmingSubmissionDao) {
+            TrainingProgrammingSubmissionDao programmingSubmissionDao) {
 
         super("jerahmeel-move-problem-to-problem-set");
 

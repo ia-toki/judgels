@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.api.contest.manager.ContestManager;
+import judgels.persistence.ContestManagerDao;
+import judgels.persistence.ContestManagerModel;
 import judgels.persistence.api.Page;
-import judgels.uriel.persistence.ContestManagerDao;
-import judgels.uriel.persistence.ContestManagerModel;
 
 public class ContestManagerStore {
     private final ContestManagerDao managerDao;

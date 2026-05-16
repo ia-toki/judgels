@@ -12,8 +12,8 @@ import judgels.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.api.problem.partner.ProblemPartnerConfig;
 import judgels.api.resource.Partner;
 import judgels.api.resource.PartnerPermission;
-import judgels.sandalphon.persistence.ProblemPartnerDao;
-import judgels.sandalphon.persistence.ProblemPartnerModel;
+import judgels.persistence.ProblemPartnerDao;
+import judgels.persistence.ProblemPartnerModel;
 
 public class ProblemPartnerStore {
     private final ProblemPartnerDao partnerDao;

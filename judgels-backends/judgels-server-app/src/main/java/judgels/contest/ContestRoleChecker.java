@@ -3,8 +3,8 @@ package judgels.contest;
 import jakarta.inject.Inject;
 import judgels.api.contest.Contest;
 import judgels.api.contest.role.ContestRole;
+import judgels.persistence.ContestRoleDao;
 import judgels.role.ContestAdminRoleChecker;
-import judgels.uriel.persistence.ContestRoleDao;
 
 public class ContestRoleChecker {
     private final ContestAdminRoleChecker roleChecker;

@@ -12,14 +12,14 @@ import judgels.gabriel.api.TestCaseResult;
 import judgels.gabriel.api.TestGroupResult;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.ChapterProblemModel;
-import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.jerahmeel.persistence.StatsUserDao;
-import judgels.jerahmeel.persistence.StatsUserModel;
-import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jerahmeel.persistence.StatsUserProblemModel;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ChapterProblemModel;
+import judgels.persistence.ProblemSetProblemDao;
+import judgels.persistence.ProblemSetProblemModel;
+import judgels.persistence.StatsUserDao;
+import judgels.persistence.StatsUserModel;
+import judgels.persistence.StatsUserProblemDao;
+import judgels.persistence.StatsUserProblemModel;
 
 public class StatsProcessor implements SubmissionConsumer {
     private final ChapterProblemDao chapterProblemDao;

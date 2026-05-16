@@ -10,9 +10,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import judgels.api.course.chapter.CourseChapter;
-import judgels.jerahmeel.persistence.CourseChapterDao;
-import judgels.jerahmeel.persistence.CourseChapterModel;
-import judgels.jerahmeel.persistence.CourseChapterModel_;
+import judgels.persistence.CourseChapterDao;
+import judgels.persistence.CourseChapterModel;
+import judgels.persistence.CourseChapterModel_;
 import judgels.persistence.api.OrderDir;
 
 public class CourseChapterStore {

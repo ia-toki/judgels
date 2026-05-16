@@ -19,12 +19,12 @@ import judgels.api.contest.ContestErrors;
 import judgels.api.contest.ContestInfo;
 import judgels.api.contest.ContestStyle;
 import judgels.api.contest.ContestUpdateData;
+import judgels.persistence.ContestDao;
+import judgels.persistence.ContestDao.ContestQueryBuilder;
+import judgels.persistence.ContestModel;
+import judgels.persistence.ContestModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.uriel.persistence.ContestDao;
-import judgels.uriel.persistence.ContestDao.ContestQueryBuilder;
-import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestModel_;
 
 @Singleton
 public class ContestStore {

@@ -16,9 +16,9 @@ import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.lesson.BaseLessonStore;
 import judgels.lesson.LessonFs;
+import judgels.persistence.LessonDao;
 import judgels.problem.base.statement.ProblemStatementUtils;
 import judgels.resource.StatementLanguageStatus;
-import judgels.sandalphon.persistence.LessonDao;
 
 public class LessonStatementStore extends BaseLessonStore {
     private final LessonDao lessonDao;

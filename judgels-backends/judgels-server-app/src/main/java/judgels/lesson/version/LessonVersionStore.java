@@ -6,12 +6,12 @@ import java.nio.file.Path;
 import java.util.List;
 import judgels.fs.FileSystem;
 import judgels.lesson.BaseLessonStore;
+import judgels.persistence.LessonDao;
+import judgels.persistence.LessonModel;
 import judgels.problem.base.ProblemFs;
 import judgels.problem.base.ProblemGit;
 import judgels.sandalphon.Git;
 import judgels.sandalphon.GitCommit;
-import judgels.sandalphon.persistence.LessonDao;
-import judgels.sandalphon.persistence.LessonModel;
 
 public class LessonVersionStore extends BaseLessonStore {
     private final Git lessonGit;
