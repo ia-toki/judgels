@@ -14,8 +14,8 @@ import { Outlet } from '@tanstack/react-router';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { isTLX } from '../../conf';
-import { ArchiveAdminRole } from '../../modules/api/archiveAdminRole';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
+import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
 import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
@@ -26,7 +26,7 @@ export default function AdminLayout() {
 
   const isJophielAdmin = role.jophiel === UserAdminRole.Admin || role.jophiel === UserAdminRole.Superadmin;
   const isUrielAdmin = role.uriel === ContestAdminRole.Admin;
-  const isJerahmeelAdmin = isTLX() && role.jerahmeel === ArchiveAdminRole.Admin;
+  const isJerahmeelAdmin = isTLX() && role.jerahmeel === TrainingAdminRole.Admin;
 
   const sidebarItems = [
     {

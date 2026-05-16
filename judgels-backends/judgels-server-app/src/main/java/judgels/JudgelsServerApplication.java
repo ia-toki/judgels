@@ -34,7 +34,7 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.session.SessionModule;
-import judgels.submission.bundle.ArchiveItemSubmissionModule;
+import judgels.submission.bundle.TrainingItemSubmissionModule;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
@@ -265,8 +265,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
-                .archiveSubmissionModule(new judgels.submission.programming.ArchiveSubmissionModule(jerahmeelConfig.getStatsConfig()))
-                .archiveItemSubmissionModule(new ArchiveItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
+                .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
+                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
             if (jerahmeelConfig.getSubmissionConfig().isPresent()) {
@@ -274,7 +274,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                     AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
                     AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
                     AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                    componentBuilder.archiveSubmissionModule(new judgels.submission.programming.ArchiveSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+                    componentBuilder.trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
                 }
             }
         }

@@ -37,7 +37,7 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.lesson.ChapterLessonStore;
 import judgels.course.CourseStore;
 import judgels.jophiel.JophielClient;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -45,7 +45,7 @@ import judgels.stats.StatsStore;
 @Path("/api/v2/courses/{courseJid}/chapters")
 public class CourseChapterResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected CourseStore courseStore;
     @Inject protected CourseChapterStore courseChapterStore;
     @Inject protected ChapterStore chapterStore;

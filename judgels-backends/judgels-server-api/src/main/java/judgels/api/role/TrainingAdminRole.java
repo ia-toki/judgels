@@ -1,5 +1,5 @@
 package judgels.api.role;
 
-public enum ArchiveAdminRole {
+public enum TrainingAdminRole {
     ADMIN,
 }

@@ -47,7 +47,7 @@ import judgels.api.profile.Profile;
 import judgels.difficulty.ProblemDifficultyStore;
 import judgels.jophiel.JophielClient;
 import judgels.problemset.ProblemSetStore;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -57,7 +57,7 @@ import judgels.uriel.UrielClient;
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
 public class ProblemSetProblemResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemStore;
     @Inject protected ProblemDifficultyStore difficultyStore;

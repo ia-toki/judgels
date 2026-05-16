@@ -33,7 +33,7 @@ import judgels.api.lesson.LessonInfo;
 import judgels.api.lesson.LessonStatement;
 import judgels.chapter.ChapterStore;
 import judgels.chapter.resource.ChapterResourceStore;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -41,7 +41,7 @@ import judgels.service.api.actor.AuthHeader;
 @Path("/api/v2/chapters/{chapterJid}/lessons")
 public class ChapterLessonResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterLessonStore lessonStore;

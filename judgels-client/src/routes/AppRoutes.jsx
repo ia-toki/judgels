@@ -1,9 +1,8 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { ArchiveAdminRole } from '../modules/api/archiveAdminRole';
 import { ContestAdminRole } from '../modules/api/contestAdminRole';
-import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { TrainingAdminRole } from '../modules/api/trainingAdminRole';
 import { UserAdminRole } from '../modules/api/userAdminRole';
 
 const appRoutes = [
@@ -18,7 +17,7 @@ const appRoutes = [
       role.jophiel === UserAdminRole.Superadmin ||
       role.jophiel === UserAdminRole.Admin ||
       role.uriel === ContestAdminRole.Admin ||
-      (isTLX() && role.jerahmeel === ArchiveAdminRole.Admin),
+      (isTLX() && role.jerahmeel === TrainingAdminRole.Admin),
   },
   {
     id: 'contests',
