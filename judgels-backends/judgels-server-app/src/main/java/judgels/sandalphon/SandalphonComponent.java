@@ -6,12 +6,12 @@ import judgels.JudgelsServerModule;
 import judgels.lesson.LessonResource;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.problem.base.ProblemResource;
-import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.submission.SubmissionModule;
 import judgels.submission.programming.GradingResponsePoller;
@@ -25,7 +25,7 @@ import judgels.submission.programming.GradingResponsePoller;
 
         // Database
         JudgelsHibernateModule.class,
-        SandalphonHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         RabbitMQModule.class,

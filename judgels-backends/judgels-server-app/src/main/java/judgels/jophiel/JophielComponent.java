@@ -6,13 +6,13 @@ import judgels.JudgelsServerModule;
 import judgels.admin.user.UserAdminResource;
 import judgels.admin.user.info.UserInfoAdminResource;
 import judgels.admin.user.role.UserRoleAdminResource;
-import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.mailer.MailerModule;
 import judgels.profile.ProfileResource;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.session.SessionCleaner;
 import judgels.session.SessionModule;
@@ -39,7 +39,7 @@ import judgels.user.web.WebModule;
 
         // Database
         JudgelsHibernateModule.class,
-        JophielHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         MailerModule.class,
