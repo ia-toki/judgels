@@ -7,11 +7,11 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.course.CourseStore;
 import judgels.course.chapter.CourseChapterStore;
-import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.StatsStore;
 import judgels.submission.bundle.TrainingItemSubmissionModule;
@@ -20,7 +20,7 @@ import judgels.submission.bundle.TrainingItemSubmissionModule;
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
-        JerahmeelHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
         TrainingItemSubmissionModule.class})
 @Singleton
 public interface JerahmeelIntegrationTestComponent {

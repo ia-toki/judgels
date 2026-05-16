@@ -4,7 +4,6 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.contrib.auth.AuthModule;
-import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.account.role.RoleResource;
 import judgels.michael.account.user.UserResource;
@@ -28,11 +27,11 @@ import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.sandalphon.SandalphonClientModule;
-import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.submission.SubmissionModule;
 
@@ -45,8 +44,7 @@ import judgels.submission.SubmissionModule;
 
         // Database
         JudgelsHibernateModule.class,
-        JophielHibernateDaoModule.class,
-        SandalphonHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         AuthModule.class,

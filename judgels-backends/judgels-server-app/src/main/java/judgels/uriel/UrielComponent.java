@@ -28,22 +28,20 @@ import judgels.contest.supervisor.ContestSupervisorResource;
 import judgels.contest.web.ContestWebResource;
 import judgels.contrib.contest.rating.ContestRatingModule;
 import judgels.file.FileModule;
-import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
-import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.submission.bundle.ContestItemSubmissionModule;
 import judgels.submission.programming.ContestSubmissionModule;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.tasks.DumpContestTask;
 import judgels.tasks.UrielTaskModule;
-import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
 @Component(modules = {
         // Judgels service
@@ -54,9 +52,7 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
         // Database
         JudgelsHibernateModule.class,
-        JophielHibernateDaoModule.class,
-        SandalphonHibernateDaoModule.class,
-        UrielHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         RabbitMQModule.class,

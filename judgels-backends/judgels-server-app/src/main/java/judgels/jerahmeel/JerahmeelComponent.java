@@ -18,20 +18,18 @@ import judgels.chapter.problem.ChapterProblemResource;
 import judgels.course.CourseResource;
 import judgels.course.chapter.CourseChapterResource;
 import judgels.curriculum.CurriculumResource;
-import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.problem.ProblemResource;
 import judgels.problem.ProblemTagResource;
 import judgels.problemset.ProblemSetResource;
 import judgels.problemset.problem.ProblemSetProblemResource;
 import judgels.sandalphon.SandalphonClientModule;
-import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
+import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.UserStatsResource;
 import judgels.submission.bundle.ItemSubmissionResource;
@@ -42,7 +40,6 @@ import judgels.submission.programming.TrainingSubmissionModule;
 import judgels.tasks.JerahmeelTaskModule;
 import judgels.tasks.RefreshContestStatsTask;
 import judgels.tasks.RefreshProblemSetStatsTask;
-import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
 @Component(modules = {
         // Judgels service
@@ -53,10 +50,7 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
         // Database
         JudgelsHibernateModule.class,
-        JophielHibernateDaoModule.class,
-        SandalphonHibernateDaoModule.class,
-        UrielHibernateDaoModule.class,
-        JerahmeelHibernateDaoModule.class,
+        JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         RabbitMQModule.class,
