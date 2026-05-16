@@ -11,9 +11,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJerahmeelConfiguration.class)
 public interface JerahmeelConfiguration {
-    @JsonProperty("gabriel")
-    GabrielClientConfiguration getGabrielConfig();
-
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
 

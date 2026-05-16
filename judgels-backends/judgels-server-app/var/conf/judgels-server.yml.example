@@ -49,6 +49,10 @@ judgels:
   app:
     name: Judgels
 
+  grading:
+    gradingRequestQueueName: judgels-grading-request
+    gradingResponseQueueName: judgels-grading-response
+
 #  rabbitmq:
 #    host: localhost
 #    username: guest
@@ -78,20 +82,6 @@ jophiel:
   web:
     announcements: []
 
-sandalphon:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: sandalphon-grading-response
-
-uriel:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: uriel-grading-response
-
 jerahmeel:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: jerahmeel-grading-response
-
   stats:
     enabled: false

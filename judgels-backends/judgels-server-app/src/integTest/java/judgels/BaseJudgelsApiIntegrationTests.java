@@ -39,16 +39,13 @@ import judgels.api.user.role.UserRole;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.contrib.user.registration.UserRegistrationConfiguration;
-import judgels.gabriel.api.GabrielClientConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerConfiguration;
-import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
 import judgels.session.SessionConfiguration;
 import judgels.stats.StatsConfiguration;
-import judgels.uriel.UrielConfiguration;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
 import judgels.user.account.UserResetPasswordConfiguration;
@@ -98,9 +95,15 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .name("Judgels")
                 .build();
 
+        GradingConfiguration gradingConfig = new GradingConfiguration.Builder()
+                .gradingRequestQueueName("grading-request")
+                .gradingResponseQueueName("grading-response")
+                .build();
+
         JudgelsServerConfiguration judgelsConfig = new JudgelsServerConfiguration.Builder()
                 .baseDataDir(baseDataDir.toAbsolutePath())
                 .appConfig(judgelsAppConfig)
+                .gradingConfig(gradingConfig)
                 .build();
 
         JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
@@ -119,16 +122,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .webConfig(WebConfiguration.DEFAULT)
                 .build();
 
-        UrielConfiguration urielConfig = new UrielConfiguration.Builder()
-                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .build();
-
-        SandalphonConfiguration sandalphonConfig = new SandalphonConfiguration.Builder()
-                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
-                .build();
-
         JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
-                .gabrielConfig(GabrielClientConfiguration.DEFAULT)
                 .statsConfig(StatsConfiguration.DEFAULT)
                 .build();
 
@@ -137,8 +131,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 webSecurityConfig,
                 judgelsConfig,
                 jophielConfig,
-                sandalphonConfig,
-                urielConfig,
                 jerahmeelConfig) {
             {
                 DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
