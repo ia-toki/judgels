@@ -2,11 +2,14 @@ package judgels.profile;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import judgels.api.profile.BasicProfile;
@@ -57,6 +60,15 @@ public class ProfileStore {
 
     public Map<String, Profile> getProfiles(Collection<String> userJids) {
         return getProfiles(userJids, Instant.now());
+    }
+
+    public Map<String, Profile> parseProfiles(String str) {
+        Set<String> usernames = Sets.newHashSet();
+        Matcher m = USERNAME_PATTERN.matcher(str);
+        while (m.find()) {
+            usernames.add(m.group(1));
+        }
+        return getProfiles(ImmutableSet.copyOf(userStore.translateUsernamesToJids(usernames).values()));
     }
 
     public Page<Profile> getTopRatedProfiles(Instant time, int pageNumber, int pageSize) {

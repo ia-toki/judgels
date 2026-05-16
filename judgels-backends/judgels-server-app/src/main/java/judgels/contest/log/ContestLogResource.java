@@ -31,10 +31,11 @@ import judgels.contest.ContestStore;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserStore;
 
 @Path("/api/v2/contests/{contestJid}/logs")
 public class ContestLogResource {
@@ -47,7 +48,8 @@ public class ContestLogResource {
     @Inject protected ContestContestantStore contestantStore;
     @Inject protected ContestSupervisorStore supervisorStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public ContestLogResource() {}
 
@@ -66,7 +68,7 @@ public class ContestLogResource {
 
         checkAllowed(contestRoleChecker.canManage(actorJid, contest));
 
-        Optional<String> userJid = username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
+        Optional<String> userJid = username.map(u -> userStore.translateUsernameToJid(u).orElse(""));
         Optional<String> problemJid = problemAlias.map(alias -> problemStore
                 .getProblemByAlias(contestJid, alias)
                 .map(ContestProblem::getProblemJid)
@@ -80,7 +82,7 @@ public class ContestLogResource {
                 .addAll(supervisorStore.getAllSupervisorJids(contestJid))
                 .build();
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         List<String> userJidsSortedByUsername = Lists.newArrayList(userJids);
         userJidsSortedByUsername.sort((u1, u2) -> {

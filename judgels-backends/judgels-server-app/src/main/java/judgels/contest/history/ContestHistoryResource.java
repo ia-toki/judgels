@@ -21,13 +21,15 @@ import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.contest.ContestStore;
 import judgels.contest.contestant.ContestContestantStore;
-import judgels.jophiel.JophielClient;
+import judgels.user.UserStore;
+import judgels.user.rating.UserRatingStore;
 
 @Path("/api/v2/contest-history")
 public class ContestHistoryResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestContestantStore contestantStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected UserStore userStore;
+    @Inject protected UserRatingStore userRatingStore;
 
     @Inject public ContestHistoryResource() {}
 
@@ -36,10 +38,10 @@ public class ContestHistoryResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestHistoryResponse getPublicHistory(@QueryParam("username") String username) {
-        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
+        String userJid = checkFound(userStore.translateUsernameToJid(username));
 
         List<Contest> contests = contestStore.getPubliclyParticipatedContests(userJid);
-        Map<String, UserRating> ratingsMap = jophielClient.getUserRatingEvents(userJid)
+        Map<String, UserRating> ratingsMap = userRatingStore.getUserRatingEvents(userJid)
                 .stream()
                 .collect(Collectors.toMap(UserRatingEvent::getEventJid, UserRatingEvent::getRating));
         Map<String, Integer> ranksMap = contestantStore.getContestantFinalRanks(userJid);

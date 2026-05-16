@@ -39,14 +39,15 @@ import judgels.api.submission.bundle.ItemSubmissionData;
 import judgels.api.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.submission.bundle.TrainingSubmissionSummaryResponse;
 import judgels.chapter.problem.ChapterProblemStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
 import judgels.problemset.problem.ProblemSetProblemStore;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;
+import judgels.user.UserStore;
 
 @Path("/api/v2/submissions/bundle")
 public class ItemSubmissionResource {
@@ -57,7 +58,8 @@ public class ItemSubmissionResource {
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
     @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
     @Inject protected SandalphonClient sandalphonClient;
     @Inject protected ItemSubmissionConsumer itemSubmissionConsumer;
 
@@ -80,7 +82,7 @@ public class ItemSubmissionResource {
 
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         Optional<String> userJid = username.map(
-                u -> jophielClient.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
+                u -> userStore.translateUsernamesToJids(ImmutableSet.of(u)).getOrDefault(u, ""));
 
         Optional<String> problemJid = Optional.empty();
         if (problemAlias.isPresent()) {
@@ -92,7 +94,7 @@ public class ItemSubmissionResource {
         var userJids = Lists.transform(submissions.getPage(), ItemSubmission::getUserJid);
         var problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -182,7 +184,7 @@ public class ItemSubmissionResource {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(jophielClient.translateUsernameToJid(username.get()));
+            userJid = checkFound(userStore.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -216,7 +218,7 @@ public class ItemSubmissionResource {
         boolean canManage = submissionRoleChecker.canManage(actorJid);
         String userJid;
         if (canManage && username.isPresent()) {
-            userJid = checkFound(jophielClient.translateUsernameToJid(username.get()));
+            userJid = checkFound(userStore.translateUsernameToJid(username.get()));
         } else {
             userJid = actorJid;
         }
@@ -252,7 +254,7 @@ public class ItemSubmissionResource {
         }
 
         Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
-        Profile profile = jophielClient.getProfile(userJid);
+        Profile profile = profileStore.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)

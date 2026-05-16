@@ -33,8 +33,8 @@ import judgels.api.contest.role.ContestRole;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -48,7 +48,7 @@ public class ContestResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestModuleStore moduleStore;
     @Inject protected ContestContestantStore contestantStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
 
     @Inject public ContestResource() {}
 
@@ -228,7 +228,7 @@ public class ContestResource {
         String description = contestStore.getContestDescription(contest.getJid());
         return new ContestDescription.Builder()
                 .description(description)
-                .profilesMap(jophielClient.parseProfiles(description))
+                .profilesMap(profileStore.parseProfiles(description))
                 .build();
     }
 

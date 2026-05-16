@@ -22,7 +22,7 @@ import judgels.api.contest.module.ContestModulesConfig;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.jophiel.JophielClient;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -33,7 +33,7 @@ public class ContestModuleResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestModuleStore moduleStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
 
     @Inject public ContestModuleResource() {}
 
@@ -104,7 +104,7 @@ public class ContestModuleResource {
         if (config.getEditorial().isPresent()) {
             config = new ContestModulesConfig.Builder()
                     .from(config)
-                    .profilesMap(jophielClient.parseProfiles(config.getEditorial().get().getPreface().orElse("")))
+                    .profilesMap(profileStore.parseProfiles(config.getEditorial().get().getPreface().orElse("")))
                     .build();
         }
         return config;

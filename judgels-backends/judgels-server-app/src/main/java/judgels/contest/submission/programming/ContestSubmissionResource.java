@@ -60,8 +60,8 @@ import judgels.contest.submission.ContestSubmissionRoleChecker;
 import judgels.contest.supervisor.ContestSupervisorStore;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
@@ -71,6 +71,7 @@ import judgels.submission.programming.SubmissionDownloader;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
@@ -95,7 +96,8 @@ public class ContestSubmissionResource {
     @Inject protected ContestContestantStore contestantStore;
     @Inject protected ContestSupervisorStore supervisorStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestSubmissionResource() {}
@@ -146,7 +148,7 @@ public class ContestSubmissionResource {
                     .collect(toSet());
         }
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -219,7 +221,7 @@ public class ContestSubmissionResource {
         ProblemInfo problem = sandalphonClient.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
-        Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid, contest.getBeginTime())));
+        Profile profile = checkFound(Optional.ofNullable(profileStore.getProfile(userJid, contest.getBeginTime())));
 
         SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
         SubmissionWithSource submissionWithSource = new SubmissionWithSource.Builder()
@@ -250,7 +252,7 @@ public class ContestSubmissionResource {
 
         Submission submission = checkFound(submissionStore
                 .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        Profile profile = this.jophielClient.getProfile(userJid);
+        Profile profile = this.profileStore.getProfile(userJid);
 
         return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
     }
@@ -437,7 +439,7 @@ public class ContestSubmissionResource {
         }
 
         var userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, String> usernamesMap = jophielClient.getProfiles(userJids).entrySet()
+        Map<String, String> usernamesMap = profileStore.getProfiles(userJids).entrySet()
                 .stream()
                 .collect(toMap(e -> e.getKey(), e -> e.getValue().getUsername()));
 
@@ -453,7 +455,7 @@ public class ContestSubmissionResource {
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> userStore.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(

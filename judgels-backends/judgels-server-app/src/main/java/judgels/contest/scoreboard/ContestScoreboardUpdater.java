@@ -37,7 +37,7 @@ import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.gabriel.api.ScoringConfig;
-import judgels.jophiel.JophielClient;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
@@ -55,7 +55,7 @@ public class ContestScoreboardUpdater {
     private final ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
-    private final JophielClient jophielClient;
+    private final ProfileStore profileStore;
     private final SandalphonClient sandalphonClient;
 
     public ContestScoreboardUpdater(
@@ -71,7 +71,7 @@ public class ContestScoreboardUpdater {
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
-            JophielClient jophielClient,
+            ProfileStore profileStore,
             SandalphonClient sandalphonClient) {
 
         this.objectMapper = objectMapper;
@@ -86,7 +86,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardIncrementalMarker = scoreboardIncrementalMarker;
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
-        this.jophielClient = jophielClient;
+        this.profileStore = profileStore;
         this.sandalphonClient = sandalphonClient;
     }
 
@@ -177,7 +177,7 @@ public class ContestScoreboardUpdater {
                 .filter(s -> contestantJidsSet.contains(s.getUserJid()))
                 .collect(toList());
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJidsSet, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(contestantJidsSet, contest.getBeginTime());
 
         Map<String, ScoringConfig> problemScoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
                 ? Map.of()

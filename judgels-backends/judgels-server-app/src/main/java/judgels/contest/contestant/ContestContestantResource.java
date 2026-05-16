@@ -37,10 +37,11 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserStore;
 
 @Path("/api/v2/contests/{contestJid}/contestants")
 public class ContestContestantResource {
@@ -52,7 +53,8 @@ public class ContestContestantResource {
     @Inject protected ContestContestantRoleChecker contestantRoleChecker;
     @Inject protected ContestContestantStore contestantStore;
     @Inject protected ContestModuleStore moduleStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public ContestContestantResource() {}
 
@@ -71,7 +73,7 @@ public class ContestContestantResource {
         Page<ContestContestant> contestants = contestantStore.getContestants(contestJid, pageNumber, PAGE_SIZE);
 
         var userJids = Lists.transform(contestants.getPage(), ContestContestant::getUserJid);
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         boolean canManage = contestantRoleChecker.canManage(actorJid, contest);
         ContestContestantConfig config = new ContestContestantConfig.Builder()
@@ -102,7 +104,7 @@ public class ContestContestantResource {
         checkAllowed(contestantRoleChecker.canViewApproved(actorJid, contest));
 
         var userJids = contestantStore.getApprovedContestantJids(contestJid);
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         return new ApprovedContestContestantsResponse.Builder()
                 .data(userJids)
@@ -134,7 +136,7 @@ public class ContestContestantResource {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        Profile profile = jophielClient.getProfile(actorJid);
+        Profile profile = profileStore.getProfile(actorJid);
         checkAllowed(contestantRoleChecker.canRegister(actorJid, profile.getRating(), contest));
 
         contestLogger.log(contestJid, "REGISTER_CONTEST");
@@ -168,7 +170,7 @@ public class ContestContestantResource {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        Profile profile = jophielClient.getProfile(actorJid);
+        Profile profile = profileStore.getProfile(actorJid);
 
         return contestantRoleChecker.getContestantState(actorJid, profile.getRating(), contest);
     }
@@ -189,7 +191,7 @@ public class ContestContestantResource {
 
         checkArgument(usernames.size() <= 1000, "Cannot add more than 1000 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
         Set<String> insertedContestantUsernames = Sets.newHashSet();
         Set<String> alreadyContestantUsernames = Sets.newHashSet();
@@ -201,7 +203,7 @@ public class ContestContestantResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> insertedContestantProfilesMap = insertedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -233,7 +235,7 @@ public class ContestContestantResource {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
         Set<String> deletedContestantUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
@@ -242,7 +244,7 @@ public class ContestContestantResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> deletedContestantProfilesMap = deletedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

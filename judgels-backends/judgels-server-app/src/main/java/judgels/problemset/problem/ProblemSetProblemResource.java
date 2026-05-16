@@ -44,15 +44,15 @@ import judgels.api.problemset.problem.ProblemSetProblemData;
 import judgels.api.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.api.problemset.problem.ProblemSetProblemsResponse;
 import judgels.api.profile.Profile;
+import judgels.contest.ContestStore;
 import judgels.difficulty.ProblemDifficultyStore;
-import judgels.jophiel.JophielClient;
 import judgels.problemset.ProblemSetStore;
+import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
-import judgels.uriel.UrielClient;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
 public class ProblemSetProblemResource {
@@ -62,9 +62,9 @@ public class ProblemSetProblemResource {
     @Inject protected ProblemSetProblemStore problemStore;
     @Inject protected ProblemDifficultyStore difficultyStore;
     @Inject protected StatsStore statsStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
     @Inject protected SandalphonClient sandalphonClient;
-    @Inject protected UrielClient urielClient;
+    @Inject protected ContestStore contestStore;
 
     @Inject public ProblemSetProblemResource() {}
 
@@ -94,7 +94,7 @@ public class ProblemSetProblemResource {
                 .flatMap(List::stream)
                 .collect(Collectors.toSet());
 
-        Map<String, String> contestSlugToJidMap = urielClient.translateContestSlugsToJids(contestSlugs);
+        Map<String, String> contestSlugToJidMap = contestStore.translateSlugsToJids(contestSlugs);
 
         Set<String> notAllowedContestSlugs = data.stream()
                 .map(ProblemSetProblemData::getContestSlugs)
@@ -147,7 +147,7 @@ public class ProblemSetProblemResource {
                 .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .contestsMap(roleChecker.isAdmin(actorJid)
-                        ? urielClient.getContestsByJids(contestJids)
+                        ? contestStore.getContestInfosByJids(contestJids)
                         : ImmutableMap.of())
                 .build();
     }
@@ -234,7 +234,7 @@ public class ProblemSetProblemResource {
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
 
-        Map<String, ContestInfo> contestsMap = urielClient.getContestsByJids(ImmutableSet.copyOf(problem.getContestJids()));
+        Map<String, ContestInfo> contestsMap = contestStore.getContestInfosByJids(ImmutableSet.copyOf(problem.getContestJids()));
         List<ContestInfo> contests = problem.getContestJids().stream()
                 .filter(contestsMap::containsKey)
                 .map(contestsMap::get)
@@ -245,7 +245,7 @@ public class ProblemSetProblemResource {
         topStats.getTopUsersByScore().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByTime().forEach(e -> userJids.add(e.getUserJid()));
         topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         return new ProblemReportResponse.Builder()
                 .metadata(metadata)

@@ -29,8 +29,8 @@ import judgels.api.contest.announcement.ContestAnnouncementsResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -43,7 +43,7 @@ public class ContestAnnouncementResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestAnnouncementRoleChecker announcementRoleChecker;
     @Inject protected ContestAnnouncementStore announcementStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
 
     @Inject public ContestAnnouncementResource() {}
 
@@ -70,7 +70,7 @@ public class ContestAnnouncementResource {
         Page<ContestAnnouncement> announcements = announcementStore.getAnnouncements(contestJid, statusFilter, pageNumber, PAGE_SIZE);
 
         var userJids = Lists.transform(announcements.getPage(), ContestAnnouncement::getUserJid);
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_ANNOUNCEMENTS");
 

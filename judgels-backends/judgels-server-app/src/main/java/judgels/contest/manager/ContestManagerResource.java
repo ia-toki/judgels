@@ -31,10 +31,11 @@ import judgels.api.contest.manager.ContestManagersUpsertResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserStore;
 
 @Path("/api/v2/contests/{contestJid}/managers")
 public class ContestManagerResource {
@@ -45,7 +46,8 @@ public class ContestManagerResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestManagerRoleChecker managerRoleChecker;
     @Inject protected ContestManagerStore managerStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public ContestManagerResource() {}
 
@@ -64,7 +66,7 @@ public class ContestManagerResource {
         Page<ContestManager> managers = managerStore.getManagers(contestJid, pageNumber, PAGE_SIZE);
 
         var userJids = Lists.transform(managers.getPage(), ContestManager::getUserJid);
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         boolean canManage = managerRoleChecker.canManage(actorJid);
         ContestManagerConfig config = new ContestManagerConfig.Builder()
@@ -96,7 +98,7 @@ public class ContestManagerResource {
 
         checkArgument(usernames.size() <= 100, "Cannot add more than 100 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
         Set<String> insertedManagerUsernames = Sets.newHashSet();
         Set<String> alreadyManagerUsernames = Sets.newHashSet();
@@ -108,7 +110,7 @@ public class ContestManagerResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> insertedManagerProfilesMap = insertedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -140,7 +142,7 @@ public class ContestManagerResource {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
         Set<String> deletedManagerUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
@@ -149,7 +151,7 @@ public class ContestManagerResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> deletedManagerProfilesMap = deletedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

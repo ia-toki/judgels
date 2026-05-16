@@ -49,14 +49,15 @@ import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.problem.ContestProblemRoleChecker;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
+import judgels.user.UserStore;
 
 @Path("/api/v2/contests/submissions/bundle")
 public class ContestItemSubmissionResource {
@@ -72,7 +73,8 @@ public class ContestItemSubmissionResource {
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestItemSubmissionResource() {}
@@ -125,7 +127,7 @@ public class ContestItemSubmissionResource {
             problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
         }
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         userJidsSortedByUsername.sort((u1, u2) -> {
             String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
@@ -283,7 +285,7 @@ public class ContestItemSubmissionResource {
         Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
-        Profile profile = jophielClient.getProfile(userJid, contest.getBeginTime());
+        Profile profile = profileStore.getProfile(userJid, contest.getBeginTime());
 
         ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
                 .canSupervise(canSupervise)
@@ -343,7 +345,7 @@ public class ContestItemSubmissionResource {
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> userStore.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(

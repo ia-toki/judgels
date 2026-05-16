@@ -10,17 +10,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
+import judgels.persistence.api.Page;
+import judgels.submission.UrielSubmissionStore;
 import judgels.submission.programming.StatsProcessor;
-import judgels.uriel.UrielClient;
+import judgels.submission.programming.SubmissionStore;
 
 public class RefreshContestStatsTask extends Task {
-    private final UrielClient urielClient;
+    private final SubmissionStore submissionStore;
     private final StatsProcessor statsProcessor;
 
-    public RefreshContestStatsTask(UrielClient urielClient, StatsProcessor statsProcessor) {
+    public RefreshContestStatsTask(
+            @UrielSubmissionStore SubmissionStore submissionStore,
+            StatsProcessor statsProcessor) {
+
         super("jerahmeel-refresh-contest-stats");
 
-        this.urielClient = urielClient;
+        this.submissionStore = submissionStore;
         this.statsProcessor = statsProcessor;
     }
 
@@ -42,10 +47,11 @@ public class RefreshContestStatsTask extends Task {
         List<String> limits = parameters.get("limit");
         Optional<Integer> limit = limits == null || limits.isEmpty() ? empty() : of(Integer.parseInt(limits.get(0)));
 
-        List<Submission> submissions = urielClient.getSubmissionsForStats(contestJid, lastSubmissionId, limit);
+        Page<Submission> submissions =
+                submissionStore.getSubmissionsForStats(of(contestJid), lastSubmissionId, limit.orElse(100));
 
         Submission lastSubmission = null;
-        for (Submission s : submissions) {
+        for (Submission s : submissions.getPage()) {
             statsProcessor.accept(s);
             lastSubmission = s;
         }
