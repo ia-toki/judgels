@@ -53,6 +53,10 @@ judgels:
 {% endif %}
     name: {{ app_name }}
 
+  grading:
+    gradingRequestQueueName: judgels-grading-request
+    gradingResponseQueueName: judgels-grading-response
+
 {% if rabbitmq_username is defined %}
   rabbitmq:
     host: localhost
@@ -125,21 +129,7 @@ jophiel:
   web:
     announcements: []
 
-sandalphon:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: sandalphon-grading-response
-
-uriel:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: uriel-grading-response
-
 jerahmeel:
-  gabriel:
-    gradingRequestQueueName: gabriel-grading-request
-    gradingResponseQueueName: jerahmeel-grading-response
-
 {% if jerahmeel_aws_accessKey is defined %}
   aws:
     accessKey: {{ jerahmeel_aws_accessKey }}

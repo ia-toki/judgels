@@ -28,7 +28,6 @@ import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
-import judgels.sandalphon.SandalphonConfiguration;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
@@ -37,7 +36,6 @@ import judgels.session.SessionModule;
 import judgels.submission.bundle.TrainingItemSubmissionModule;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
-import judgels.uriel.UrielConfiguration;
 import judgels.user.account.UserResetPasswordModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.WebModule;
@@ -78,7 +76,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JophielConfiguration jophielConfig = config.getJophielConfig();
-        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
@@ -86,7 +83,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(sandalphonConfig.getGabrielConfig()))
+                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
                 .build();
 
         env.servlets().setSessionHandler(new SessionHandler());
@@ -174,14 +171,13 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        SandalphonConfiguration sandalphonConfig = config.getSandalphonConfig();
 
         SandalphonComponent component = DaggerSandalphonComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(sandalphonConfig.getGabrielConfig()))
+                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
                 .build();
 
         env.jersey().register(component.problemResource());
@@ -194,14 +190,13 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runUriel(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        UrielConfiguration urielConfig = config.getUrielConfig();
 
         var componentBuilder = DaggerUrielComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(urielConfig.getGabrielConfig()));
+                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()));
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
@@ -264,7 +259,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
+                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
                 .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
