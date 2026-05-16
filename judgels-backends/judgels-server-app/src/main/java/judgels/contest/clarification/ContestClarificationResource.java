@@ -35,8 +35,8 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -51,7 +51,7 @@ public class ContestClarificationResource {
     @Inject protected ContestClarificationRoleChecker clarificationRoleChecker;
     @Inject protected ContestClarificationStore clarificationStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestClarificationResource() {}
@@ -133,7 +133,7 @@ public class ContestClarificationResource {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
         Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(problemJids, language);

@@ -33,7 +33,7 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.jophiel.JophielClient;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 
 @Path("/api/v2/contests/{contestJid}/editorial")
@@ -43,7 +43,7 @@ public class ContestEditorialResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestModuleStore contestModuleStore;
     @Inject protected ContestProblemStore problemStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject public ContestEditorialResource() {}
@@ -70,8 +70,8 @@ public class ContestEditorialResource {
         Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(req, uriInfo, problemJids, language);
 
         Map<String, Profile> profilesMap = Maps.newHashMap();
-        profilesMap.putAll(jophielClient.parseProfiles(config.getPreface().orElse("")));
-        profilesMap.putAll(jophielClient.getProfiles(problemMetadatasMap.values()
+        profilesMap.putAll(profileStore.parseProfiles(config.getPreface().orElse("")));
+        profilesMap.putAll(profileStore.getProfiles(problemMetadatasMap.values()
                 .stream()
                 .map(ProblemMetadata::getSettersMap)
                 .map(Map::values)

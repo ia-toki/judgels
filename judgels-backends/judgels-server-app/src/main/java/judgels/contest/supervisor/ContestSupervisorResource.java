@@ -32,10 +32,11 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserStore;
 
 @Path("/api/v2/contests/{contestJid}/supervisors")
 public class ContestSupervisorResource {
@@ -46,7 +47,8 @@ public class ContestSupervisorResource {
     @Inject protected ContestLogger contestLogger;
     @Inject protected ContestRoleChecker roleChecker;
     @Inject protected ContestSupervisorStore supervisorStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public ContestSupervisorResource() {}
 
@@ -65,7 +67,7 @@ public class ContestSupervisorResource {
         Page<ContestSupervisor> supervisors = supervisorStore.getSupervisors(contestJid, pageNumber, PAGE_SIZE);
 
         var userJids = Lists.transform(supervisors.getPage(), ContestSupervisor::getUserJid);
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         contestLogger.log(contestJid, "OPEN_SUPERVISORS");
 
@@ -91,7 +93,7 @@ public class ContestSupervisorResource {
 
         checkArgument(data.getUsernames().size() <= 100, "Cannot add more than 100 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(data.getUsernames());
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(data.getUsernames());
 
         Set<String> upsertedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
@@ -99,7 +101,7 @@ public class ContestSupervisorResource {
             upsertedSupervisorUsernames.add(username);
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> upsertedSupervisorProfilesMap = upsertedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
@@ -127,7 +129,7 @@ public class ContestSupervisorResource {
 
         checkArgument(usernames.size() <= 100, "Cannot remove more than 100 users.");
 
-        Map<String, String> usernameToJidMap = jophielClient.translateUsernamesToJids(usernames);
+        Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
         Set<String> deletedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
@@ -136,7 +138,7 @@ public class ContestSupervisorResource {
             }
         });
 
-        Map<String, Profile> userJidToProfileMap = jophielClient.getProfiles(usernameToJidMap.values());
+        Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
         Map<String, Profile> deletedSupervisorProfilesMap = deletedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));

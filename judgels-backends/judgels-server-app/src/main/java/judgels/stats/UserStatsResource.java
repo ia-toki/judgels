@@ -16,13 +16,15 @@ import judgels.api.profile.Profile;
 import judgels.api.stats.UserStats;
 import judgels.api.stats.UserTopStatsEntry;
 import judgels.api.stats.UserTopStatsResponse;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
+import judgels.profile.ProfileStore;
+import judgels.user.UserStore;
 
 @Path("/api/v2/stats/users")
 public class UserStatsResource {
     @Inject protected StatsStore statsStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public UserStatsResource() {}
 
@@ -37,7 +39,7 @@ public class UserStatsResource {
         Page<UserTopStatsEntry> stats = statsStore.getTopUserStats(pageNumber, pageSize);
 
         var userJids = Lists.transform(stats.getPage(), UserTopStatsEntry::getUserJid);
-        Map<String, Profile> profileMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> profileMap = profileStore.getProfiles(userJids);
 
         return new UserTopStatsResponse.Builder()
                 .data(stats)
@@ -49,7 +51,7 @@ public class UserStatsResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UserStats getUserStats(@QueryParam("username") String username) {
-        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
+        String userJid = checkFound(userStore.translateUsernameToJid(username));
         return statsStore.getUserStats(userJid);
     }
 }

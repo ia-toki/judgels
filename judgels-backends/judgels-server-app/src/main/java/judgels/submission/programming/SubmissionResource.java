@@ -45,10 +45,10 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.SubmissionSource;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.CursorPage;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
+import judgels.profile.ProfileStore;
 import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
@@ -56,6 +56,7 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.submission.JerahmeelSubmissionStore;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;
+import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/api/v2/submissions/programming")
@@ -68,7 +69,8 @@ public class SubmissionResource {
     @Inject protected SubmissionClient submissionClient;
     @Inject protected SubmissionRegrader submissionRegrader;
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
     @Inject protected SandalphonClient sandalphonClient;
 
     @Inject protected ProblemSetStore problemSetStore;
@@ -110,7 +112,7 @@ public class SubmissionResource {
             problemJids = chapterProblemStore.getProgrammingProblemJids(containerJid.get());
         }
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids);
+        Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
                 .canManage(canManage)
@@ -200,7 +202,7 @@ public class SubmissionResource {
 
         ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
 
-        Profile profile = checkFound(Optional.ofNullable(jophielClient.getProfile(userJid)));
+        Profile profile = checkFound(Optional.ofNullable(profileStore.getProfile(userJid)));
 
         SubmissionWithSource submissionWithSource;
         if (reasonNotAllowedToViewSource.isPresent()) {
@@ -323,7 +325,7 @@ public class SubmissionResource {
     }
 
     private Optional<String> byUserJid(Optional<String> username) {
-        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
+        return username.map(u -> userStore.translateUsernameToJid(u).orElse(""));
     }
 
     private Optional<String> byProblemJid(

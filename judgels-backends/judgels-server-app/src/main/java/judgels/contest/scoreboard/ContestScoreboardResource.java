@@ -26,7 +26,7 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
-import judgels.jophiel.JophielClient;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -42,7 +42,7 @@ public class ContestScoreboardResource {
     @Inject protected ContestScoreboardFetcher scoreboardFetcher;
     @Inject protected ContestScoreboardPoller scoreboardUpdaterDispatcher;
     @Inject protected ScoreboardIncrementalMarker scoreboardIncrementalMarker;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
 
     @Inject public ContestScoreboardResource() {}
 
@@ -83,7 +83,7 @@ public class ContestScoreboardResource {
                 .fetchScoreboard(contest, actorJid, canSupervise, frozen, showClosedProblems, pageNumber, PAGE_SIZE)
                 .map(scoreboard -> {
                     var contestantJids = Lists.transform(scoreboard.getScoreboard().getContent().getEntries(), ScoreboardEntry::getContestantJid);
-                    Map<String, Profile> profilesMap = jophielClient.getProfiles(contestantJids, contest.getBeginTime());
+                    Map<String, Profile> profilesMap = profileStore.getProfiles(contestantJids, contest.getBeginTime());
 
                     return new ContestScoreboardResponse.Builder()
                             .data(scoreboard)

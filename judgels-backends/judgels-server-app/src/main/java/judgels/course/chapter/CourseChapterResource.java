@@ -36,11 +36,11 @@ import judgels.api.course.chapter.CourseChaptersResponse;
 import judgels.chapter.ChapterStore;
 import judgels.chapter.lesson.ChapterLessonStore;
 import judgels.course.CourseStore;
-import judgels.jophiel.JophielClient;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
+import judgels.user.UserStore;
 
 @Path("/api/v2/courses/{courseJid}/chapters")
 public class CourseChapterResource {
@@ -51,7 +51,7 @@ public class CourseChapterResource {
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterLessonStore chapterLessonStore;
     @Inject protected StatsStore statsStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected UserStore userStore;
 
     @Inject public CourseChapterResource() {}
 
@@ -145,7 +145,7 @@ public class CourseChapterResource {
                 .map(totalProblemsMap::get)
                 .collect(toList());
 
-        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(data.getUsernames());
+        Map<String, String> usernameToJidsMap = userStore.translateUsernamesToJids(data.getUsernames());
         Map<String, Map<String, Integer>> userSolvedProblemsMap = statsStore.getUserChapterSolvedProblemsMap(
                     usernameToJidsMap.values(),
                     chapterJids);

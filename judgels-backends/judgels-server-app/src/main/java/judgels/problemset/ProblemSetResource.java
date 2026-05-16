@@ -38,13 +38,14 @@ import judgels.api.problemset.ProblemSetsResponse;
 import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.api.profile.Profile;
 import judgels.archive.ArchiveStore;
-import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
 import judgels.problemset.problem.ProblemSetProblemStore;
+import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
+import judgels.user.UserStore;
 
 @Path("/api/v2/problemsets")
 public class ProblemSetResource {
@@ -56,7 +57,8 @@ public class ProblemSetResource {
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ArchiveStore archiveStore;
     @Inject protected StatsStore statsStore;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
 
     @Inject public ProblemSetResource() {}
 
@@ -96,7 +98,7 @@ public class ProblemSetResource {
         for (ProblemSet problemSet : problemSets.getPage()) {
             descriptions = descriptions.concat(problemSet.getDescription());
         }
-        Map<String, Profile> profilesMap = jophielClient.parseProfiles(descriptions);
+        Map<String, Profile> profilesMap = profileStore.parseProfiles(descriptions);
 
         return new ProblemSetsResponse.Builder()
                 .data(problemSets)
@@ -185,7 +187,7 @@ public class ProblemSetResource {
 
         var problemSetJids = Collections2.transform(problemSetsMap.values(), ProblemSet::getJid);
         Map<String, List<ProblemSetProblem>> problemsMap = problemSetProblemStore.getProblems(problemSetJids);
-        Map<String, String> usernameToJidsMap = jophielClient.translateUsernamesToJids(data.getUsernames());
+        Map<String, String> usernameToJidsMap = userStore.translateUsernamesToJids(data.getUsernames());
 
         var userJids = usernameToJidsMap.values();
         var problemJids = problemsMap

@@ -37,9 +37,11 @@ import judgels.contrib.api.contest.rating.ContestRating;
 import judgels.contrib.api.contest.rating.ContestRatingChanges;
 import judgels.contrib.api.contest.rating.ContestRatingHistoryResponse;
 import judgels.contrib.api.contest.rating.ContestsPendingRatingResponse;
-import judgels.jophiel.JophielClient;
+import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserStore;
+import judgels.user.rating.UserRatingStore;
 
 @Path("/api/v2/contest-rating")
 public class ContestRatingResource {
@@ -49,7 +51,9 @@ public class ContestRatingResource {
     @Inject protected ContestScoreboardStore scoreboardStore;
     @Inject protected ContestScoreboardBuilder scoreboardBuilder;
     @Inject protected ContestRatingProvider ratingProvider;
-    @Inject protected JophielClient jophielClient;
+    @Inject protected ProfileStore profileStore;
+    @Inject protected UserStore userStore;
+    @Inject protected UserRatingStore userRatingStore;
 
     @Inject public ContestRatingResource() {}
 
@@ -61,7 +65,7 @@ public class ContestRatingResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(contestRoleChecker.canAdminister(actorJid));
 
-        Optional<RatingEvent> latestEvent = jophielClient.getLatestRatingEvent();
+        Optional<RatingEvent> latestEvent = userRatingStore.getLatestRatingEvent();
         Instant latestTime = latestEvent.isPresent() ? latestEvent.get().getTime() : Instant.EPOCH;
 
         List<Contest> contests = contestStore.getPublicContestsAfter(latestTime);
@@ -79,9 +83,9 @@ public class ContestRatingResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public ContestRatingHistoryResponse getRatingHistory(@QueryParam("username") String username) {
-        String userJid = checkFound(jophielClient.translateUsernameToJid(username));
+        String userJid = checkFound(userStore.translateUsernameToJid(username));
 
-        List<UserRatingEvent> userRatingEvents = jophielClient.getUserRatingEvents(userJid);
+        List<UserRatingEvent> userRatingEvents = userRatingStore.getUserRatingEvents(userJid);
 
         var contestJids = Lists.transform(userRatingEvents, UserRatingEvent::getEventJid);
         Map<String, ContestInfo> contestInfosMap = contestStore.getContestInfosByJids(contestJids);
@@ -111,7 +115,7 @@ public class ContestRatingResource {
                 .filter(ScoreboardEntry::hasSubmission)
                 .collect(Collectors.toMap(ScoreboardEntry::getContestantJid, ScoreboardEntry::getRank));
 
-        Map<String, Profile> profilesMap = jophielClient.getProfiles(ranksMap.keySet(), contest.getBeginTime());
+        Map<String, Profile> profilesMap = profileStore.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
         List<String> contestantJids = Lists.newArrayList();
         Map<String, UserRating> currentRatingsMap = new HashMap<>();
