@@ -7,4 +7,4 @@ import java.lang.annotation.Retention;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface UrielSubmissionStore {}
+public @interface TrainingSubmissionStore {}

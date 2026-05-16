@@ -44,7 +44,7 @@ import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
-import judgels.submission.JerahmeelSubmissionStore;
+import judgels.submission.TrainingSubmissionStore;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
 
@@ -57,7 +57,7 @@ public class ChapterProblemResource {
     @Inject protected ChapterProblemStore chapterProblemStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected StatsStore statsStore;
-    @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
+    @Inject @TrainingSubmissionStore protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected ProblemService problemService;
 

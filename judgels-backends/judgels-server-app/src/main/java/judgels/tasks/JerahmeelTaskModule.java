@@ -4,8 +4,8 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.submission.JerahmeelSubmissionStore;
-import judgels.submission.UrielSubmissionStore;
+import judgels.submission.ContestSubmissionStore;
+import judgels.submission.TrainingSubmissionStore;
 import judgels.submission.programming.StatsProcessor;
 import judgels.submission.programming.SubmissionStore;
 
@@ -17,7 +17,7 @@ public class JerahmeelTaskModule {
     @Singleton
     static RefreshContestStatsTask refreshContestStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @UrielSubmissionStore SubmissionStore submissionStore,
+            @ContestSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -34,7 +34,7 @@ public class JerahmeelTaskModule {
     @Singleton
     static RefreshProblemSetStatsTask refreshProblemSetStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(

@@ -21,8 +21,8 @@ import judgels.persistence.TrainingProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.stats.StatsConfiguration;
-import judgels.submission.JerahmeelSubmissionStore;
-import judgels.submission.UrielSubmissionStore;
+import judgels.submission.ContestSubmissionStore;
+import judgels.submission.TrainingSubmissionStore;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -49,8 +49,8 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
-    @JerahmeelSubmissionStore
-    static SubmissionStore jerahmeelSubmissionStore(
+    @TrainingSubmissionStore
+    static SubmissionStore trainingSubmissionStore(
             TrainingProgrammingSubmissionDao submissionDao,
             TrainingProgrammingGradingDao gradingDao,
             ObjectMapper mapper) {
@@ -60,8 +60,8 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
-    @UrielSubmissionStore
-    static SubmissionStore urielSubmissionStore(
+    @ContestSubmissionStore
+    static SubmissionStore contestSubmissionStore(
             ContestProgrammingSubmissionDao submissionDao,
             ContestProgrammingGradingDao gradingDao,
             ObjectMapper mapper) {
@@ -79,7 +79,7 @@ public class TrainingSubmissionModule {
     @Singleton
     static SubmissionClient submissionClient(
             SessionFactory sessionFactory,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             MessageClient messageClient,
@@ -98,7 +98,7 @@ public class TrainingSubmissionModule {
     @Singleton
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             SubmissionRegradeProcessor processor) {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-submission-regrade-processor-%d", 5);
@@ -126,7 +126,7 @@ public class TrainingSubmissionModule {
     GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(

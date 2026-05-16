@@ -53,9 +53,9 @@ import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.submission.JerahmeelSubmissionStore;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;
+import judgels.submission.TrainingSubmissionStore;
 import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
@@ -64,7 +64,7 @@ public class SubmissionResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
-    @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
+    @Inject @TrainingSubmissionStore protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected SubmissionClient submissionClient;
     @Inject protected SubmissionRegrader submissionRegrader;
