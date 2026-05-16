@@ -3,10 +3,10 @@ package judgels.michael.problem.editorial;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import judgels.api.problem.ProblemEditorial;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.problem.ProblemEditorial;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class ViewEditorialView extends TemplateView {
     private final ProblemEditorial editorial;

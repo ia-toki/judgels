@@ -3,37 +3,45 @@ package judgels.jerahmeel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.jerahmeel.archive.ArchiveResource;
-import judgels.jerahmeel.chapter.ChapterResource;
-import judgels.jerahmeel.chapter.lesson.ChapterLessonResource;
-import judgels.jerahmeel.chapter.problem.ChapterProblemResource;
-import judgels.jerahmeel.course.CourseResource;
-import judgels.jerahmeel.course.chapter.CourseChapterResource;
-import judgels.jerahmeel.curriculum.CurriculumResource;
+import judgels.admin.archive.ArchiveAdminResource;
+import judgels.admin.chapter.ChapterAdminResource;
+import judgels.admin.chapter.lesson.ChapterLessonAdminResource;
+import judgels.admin.chapter.problem.ChapterProblemAdminResource;
+import judgels.admin.course.CourseAdminResource;
+import judgels.admin.course.chapter.CourseChapterAdminResource;
+import judgels.admin.problemset.ProblemSetAdminResource;
+import judgels.admin.problemset.problem.ProblemSetProblemAdminResource;
+import judgels.archive.ArchiveResource;
+import judgels.chapter.ChapterResource;
+import judgels.chapter.lesson.ChapterLessonResource;
+import judgels.chapter.problem.ChapterProblemResource;
+import judgels.course.CourseResource;
+import judgels.course.chapter.CourseChapterResource;
+import judgels.curriculum.CurriculumResource;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jerahmeel.problem.ProblemResource;
-import judgels.jerahmeel.problem.ProblemTagResource;
-import judgels.jerahmeel.problemset.ProblemSetResource;
-import judgels.jerahmeel.problemset.problem.ProblemSetProblemResource;
-import judgels.jerahmeel.stats.UserStatsResource;
-import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
-import judgels.jerahmeel.submission.bundle.ItemSubmissionResource;
-import judgels.jerahmeel.submission.programming.SubmissionModule;
-import judgels.jerahmeel.submission.programming.SubmissionResource;
-import judgels.jerahmeel.tasks.JerahmeelTaskModule;
-import judgels.jerahmeel.tasks.RefreshContestStatsTask;
-import judgels.jerahmeel.tasks.RefreshProblemSetStatsTask;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
+import judgels.problem.ProblemResource;
+import judgels.problem.ProblemTagResource;
+import judgels.problemset.ProblemSetResource;
+import judgels.problemset.problem.ProblemSetProblemResource;
 import judgels.sandalphon.SandalphonClientModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
-import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.stats.UserStatsResource;
+import judgels.submission.bundle.ArchiveItemSubmissionModule;
+import judgels.submission.bundle.ItemSubmissionResource;
+import judgels.submission.programming.ArchiveSubmissionModule;
+import judgels.submission.programming.GradingResponsePoller;
+import judgels.submission.programming.SubmissionResource;
+import judgels.tasks.JerahmeelTaskModule;
+import judgels.tasks.RefreshContestStatsTask;
+import judgels.tasks.RefreshProblemSetStatsTask;
 import judgels.uriel.hibernate.UrielHibernateDaoModule;
 
 @Component(modules = {
@@ -56,24 +64,32 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         GabrielClientModule.class,
 
         // Features
-        SubmissionModule.class,
-        ItemSubmissionModule.class,
+        ArchiveSubmissionModule.class,
+        ArchiveItemSubmissionModule.class,
         JerahmeelTaskModule.class,
 
         tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})
 @Singleton
 public interface JerahmeelComponent {
     ArchiveResource archiveResource();
+    ArchiveAdminResource archiveAdminResource();
     CurriculumResource curriculumResource();
     CourseResource courseResource();
+    CourseAdminResource courseAdminResource();
     ChapterResource chapterResource();
+    ChapterAdminResource chapterAdminResource();
     CourseChapterResource courseChapterResource();
+    CourseChapterAdminResource courseChapterAdminResource();
     ChapterLessonResource chapterLessonResource();
+    ChapterLessonAdminResource chapterLessonAdminResource();
     ChapterProblemResource chapterProblemResource();
+    ChapterProblemAdminResource chapterProblemAdminResource();
     ProblemResource problemResource();
     ProblemTagResource problemTagResource();
     ProblemSetResource problemSetResource();
+    ProblemSetAdminResource problemSetAdminResource();
     ProblemSetProblemResource problemSetProblemResource();
+    ProblemSetProblemAdminResource problemSetProblemAdminResource();
     ItemSubmissionResource itemSubmissionResource();
     SubmissionResource submissionResource();
     UserStatsResource userStatsResource();

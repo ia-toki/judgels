@@ -3,10 +3,10 @@ package judgels.michael.lesson.statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import judgels.api.lesson.LessonStatement;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class ViewStatementView extends TemplateView {
     private final LessonStatement statement;

@@ -2,9 +2,9 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Navigate } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
-import { JerahmeelRole } from '../../modules/api/jerahmeel/role';
-import { JophielRole } from '../../modules/api/jophiel/role';
-import { UrielRole } from '../../modules/api/uriel/role';
+import { ArchiveAdminRole } from '../../modules/api/archiveAdminRole';
+import { ContestAdminRole } from '../../modules/api/contestAdminRole';
+import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
 export default function AdminIndexPage() {
@@ -12,13 +12,13 @@ export default function AdminIndexPage() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  if (role.jophiel === JophielRole.Admin || role.jophiel === JophielRole.Superadmin) {
+  if (role.jophiel === UserAdminRole.Admin || role.jophiel === UserAdminRole.Superadmin) {
     return <Navigate to="/admin/users" />;
   }
-  if (role.uriel === UrielRole.Admin) {
+  if (role.uriel === ContestAdminRole.Admin) {
     return <Navigate to="/admin/contests" />;
   }
-  if (isTLX() && role.jerahmeel === JerahmeelRole.Admin) {
+  if (isTLX() && role.jerahmeel === ArchiveAdminRole.Admin) {
     return <Navigate to="/admin/courses" />;
   }
   return <Navigate to="/" />;

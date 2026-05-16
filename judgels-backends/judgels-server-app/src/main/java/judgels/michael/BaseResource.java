@@ -5,11 +5,11 @@ import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
+import judgels.api.actor.Actor;
 import judgels.app.JudgelsAppConfiguration;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.user.UserRoleChecker;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.UserRoleChecker;
 
 public abstract class BaseResource {
     @Inject protected JudgelsAppConfiguration appConfig;

@@ -6,7 +6,7 @@ import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { Required } from '../../../../components/forms/validations';
-import { upsertUsersMutationOptions } from '../../../../modules/queries/user';
+import { upsertUsersMutationOptions } from '../../../../modules/queries/adminUser';
 
 export function UserUpsertDialog() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

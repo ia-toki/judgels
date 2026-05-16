@@ -1,10 +1,10 @@
 package judgels.michael.problem;
 
 import java.util.List;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.problem.Problem;
+import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.problem.Problem;
 
 public class ViewProblemView extends TemplateView {
     private final Problem problem;

@@ -5,7 +5,7 @@ import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/Form
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../../../components/forms/validations';
-import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { constructProblemName } from '../../../../../../modules/api/problem';
 
 export default function ContestClarificationCreateForm({
   onSubmit,

@@ -51,7 +51,7 @@ describe('RatingsPage', () => {
     ],
     ratingChangesMap = mockRatingChangesMap,
   } = {}) => {
-    nockUriel().get('/contest-rating/pending').reply(200, {
+    nockUriel().get('/admin/contest-rating/pending').reply(200, {
       data: contests,
       ratingChangesMap,
     });
@@ -121,7 +121,7 @@ describe('RatingsPage', () => {
     await user.click(viewButton);
 
     nockJophiel()
-      .post('/user-rating', {
+      .post('/admin/user-rating', {
         eventJid: 'contestJid1',
         time: 150,
         ratingsMap: mockRatingChangesMap.contestJid1.ratingsMap,

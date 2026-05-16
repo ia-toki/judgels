@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.gabriel.api.GabrielClientConfiguration;
-import judgels.jerahmeel.stats.StatsConfiguration;
-import judgels.jerahmeel.submission.programming.SubmissionConfiguration;
+import judgels.stats.StatsConfiguration;
+import judgels.submission.programming.SubmissionConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

@@ -5,8 +5,8 @@ import { Link } from '@tanstack/react-router';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
-import { constructContainerUrl, constructProblemUrl } from '../../../../../../modules/api/jerahmeel/submission';
-import { constructProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { constructProblemName } from '../../../../../../modules/api/problem';
+import { constructContainerUrl, constructProblemUrl } from '../../../../../../modules/api/submission';
 
 import '../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
 

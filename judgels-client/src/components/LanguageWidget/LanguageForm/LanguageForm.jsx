@@ -2,7 +2,7 @@ import { Alignment, Button, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
-import { languageDisplayNamesMap } from '../../../modules/api/sandalphon/language';
+import { languageDisplayNamesMap } from '../../../modules/api/language';
 import { FormTableSelect2 } from '../../forms/FormTableSelect2/FormTableSelect2';
 import { Required } from '../../forms/validations';
 

@@ -6,7 +6,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
-import { contestsQueryOptions } from '../../../../modules/queries/contest';
+import { contestsQueryOptions } from '../../../../modules/queries/adminContest';
 import { ContestCreateDialog } from '../../../contests/contests/ContestCreateDialog/ContestCreateDialog';
 
 const PAGE_SIZE = 20;

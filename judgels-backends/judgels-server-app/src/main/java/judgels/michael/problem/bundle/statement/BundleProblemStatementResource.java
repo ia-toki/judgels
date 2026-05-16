@@ -14,13 +14,13 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import java.util.List;
 import java.util.Set;
-import judgels.jophiel.api.actor.Actor;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemStatement;
+import judgels.api.problem.bundle.BundleItem;
+import judgels.api.problem.bundle.ItemConfig;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.api.problem.bundle.BundleItem;
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
 
 @Path("/problems/bundle/{problemId}/statements")
 public class BundleProblemStatementResource extends BaseBundleProblemResource {

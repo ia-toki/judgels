@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { ContestStyle } from '../../../../../modules/api/uriel/contest';
-import { ContestRole } from '../../../../../modules/api/uriel/contestWeb';
+import { ContestStyle } from '../../../../../modules/api/contest';
+import { ContestRole } from '../../../../../modules/api/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../modules/queries/contestWeb';
 import BundleContestSubmissionSummaryPage from './Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage';

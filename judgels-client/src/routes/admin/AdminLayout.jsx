@@ -14,9 +14,9 @@ import { Outlet } from '@tanstack/react-router';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { isTLX } from '../../conf';
-import { JerahmeelRole } from '../../modules/api/jerahmeel/role';
-import { JophielRole } from '../../modules/api/jophiel/role';
-import { UrielRole } from '../../modules/api/uriel/role';
+import { ArchiveAdminRole } from '../../modules/api/archiveAdminRole';
+import { ContestAdminRole } from '../../modules/api/contestAdminRole';
+import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
 export default function AdminLayout() {
@@ -24,9 +24,9 @@ export default function AdminLayout() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  const isJophielAdmin = role.jophiel === JophielRole.Admin || role.jophiel === JophielRole.Superadmin;
-  const isUrielAdmin = role.uriel === UrielRole.Admin;
-  const isJerahmeelAdmin = isTLX() && role.jerahmeel === JerahmeelRole.Admin;
+  const isJophielAdmin = role.jophiel === UserAdminRole.Admin || role.jophiel === UserAdminRole.Superadmin;
+  const isUrielAdmin = role.uriel === ContestAdminRole.Admin;
+  const isJerahmeelAdmin = isTLX() && role.jerahmeel === ArchiveAdminRole.Admin;
 
   const sidebarItems = [
     {

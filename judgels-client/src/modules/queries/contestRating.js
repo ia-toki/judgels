@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestRatingAPI } from '../api/uriel/contestRating';
+import { contestRatingAPI } from '../api/contestRating';
 import { getToken } from '../session';
 
 export const contestsPendingRatingQueryOptions = () => {

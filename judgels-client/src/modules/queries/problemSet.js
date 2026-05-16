@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { BadRequestError, ForbiddenError } from '../api/error';
-import { ProblemSetErrors, problemSetAPI } from '../api/jerahmeel/problemSet';
-import { problemSetProblemAPI } from '../api/jerahmeel/problemSetProblem';
+import { ProblemSetErrors, problemSetAPI } from '../api/problemSet';
+import { problemSetProblemAPI } from '../api/problemSetProblem';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';

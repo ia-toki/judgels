@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../../../../../components/FullWidthPageLayout/FullWidthPageLayout';
-import { ProblemType } from '../../../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../../../modules/api/problem';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,

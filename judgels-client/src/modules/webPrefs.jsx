@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { languageDisplayNamesMap } from './api/sandalphon/language';
+import { languageDisplayNamesMap } from './api/language';
 
 import * as toastActions from './toast/toastActions';
 

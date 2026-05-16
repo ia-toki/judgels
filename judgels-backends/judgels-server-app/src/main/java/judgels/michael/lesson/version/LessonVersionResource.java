@@ -17,8 +17,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.lesson.Lesson;
+import judgels.api.profile.Profile;
+import judgels.lesson.version.LessonVersionStore;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.CommitVersionForm;
 import judgels.michael.resource.ListVersionHistoryView;
@@ -26,8 +28,6 @@ import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.sandalphon.GitCommit;
-import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.lesson.version.LessonVersionStore;
 
 @Path("/lessons/{lessonId}/versions")
 public class LessonVersionResource extends BaseLessonResource {

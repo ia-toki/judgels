@@ -11,12 +11,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.user.rating.RatingEvent;
-import judgels.jophiel.api.user.rating.UserRatingEvent;
-import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.rating.UserRatingStore;
+import judgels.api.profile.Profile;
+import judgels.api.user.rating.RatingEvent;
+import judgels.api.user.rating.UserRatingEvent;
+import judgels.profile.ProfileStore;
+import judgels.user.UserStore;
+import judgels.user.rating.UserRatingStore;
 
 public class JophielClient {
     private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");

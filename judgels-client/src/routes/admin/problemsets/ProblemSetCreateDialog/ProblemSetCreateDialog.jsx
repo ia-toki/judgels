@@ -3,7 +3,7 @@ import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { createProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
+import { createProblemSetMutationOptions } from '../../../../modules/queries/adminProblemSet';
 import ProblemSetCreateForm from '../ProblemSetCreateForm/ProblemSetCreateForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

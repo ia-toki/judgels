@@ -4,8 +4,8 @@ import { Link, useParams } from '@tanstack/react-router';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
-import { getLessonName } from '../../../../../../../../modules/api/sandalphon/lesson';
-import { getProblemName } from '../../../../../../../../modules/api/sandalphon/problem';
+import { getLessonName } from '../../../../../../../../modules/api/lesson';
+import { getProblemName } from '../../../../../../../../modules/api/problem';
 import { chapterLessonsQueryOptions } from '../../../../../../../../modules/queries/chapterLesson';
 import { chapterProblemsQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
 import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';

@@ -2,9 +2,9 @@ package judgels.uriel.persistence;
 
 import java.io.PrintWriter;
 import java.util.Optional;
+import judgels.api.contest.module.ContestModuleType;
 import judgels.persistence.Dao;
 import judgels.persistence.QueryBuilder;
-import judgels.uriel.api.contest.module.ContestModuleType;
 
 public interface ContestModuleDao extends Dao<ContestModuleModel> {
     ContestModuleQueryBuilder selectByContestJid(String contestJid);

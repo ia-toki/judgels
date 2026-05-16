@@ -1,7 +1,7 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { ProblemType } from '../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../modules/api/problem';
 import { chapterLessonStatementQueryOptions, chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionBundle';

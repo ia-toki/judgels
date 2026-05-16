@@ -18,17 +18,17 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.profile.Profile;
+import judgels.api.resource.Partner;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.resource.Partner;
-import judgels.sandalphon.problem.base.partner.ProblemPartnerStore;
+import judgels.problem.base.partner.ProblemPartnerStore;
 
 @Path("/problems/{problemId}/partners")
 public class ProblemPartnerResource extends BaseProblemResource {

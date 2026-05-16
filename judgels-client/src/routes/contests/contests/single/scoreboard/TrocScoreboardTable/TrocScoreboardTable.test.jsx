@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 
-import { TrocScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { TrocScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { TrocScoreboardTable } from './TrocScoreboardTable';
 

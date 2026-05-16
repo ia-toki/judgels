@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { updateCourseMutationOptions } from '../../../../modules/queries/course';
+import { updateCourseMutationOptions } from '../../../../modules/queries/adminCourse';
 import CourseGeneralEditForm from '../CourseGeneralEditForm/CourseGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

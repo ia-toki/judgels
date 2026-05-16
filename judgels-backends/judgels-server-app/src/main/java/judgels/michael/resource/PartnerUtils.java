@@ -7,10 +7,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.user.UserStore;
-import judgels.sandalphon.api.resource.Partner;
-import judgels.sandalphon.api.resource.PartnerPermission;
+import judgels.api.profile.Profile;
+import judgels.api.resource.Partner;
+import judgels.api.resource.PartnerPermission;
+import judgels.user.UserStore;
 
 public class PartnerUtils {
     private PartnerUtils() {}

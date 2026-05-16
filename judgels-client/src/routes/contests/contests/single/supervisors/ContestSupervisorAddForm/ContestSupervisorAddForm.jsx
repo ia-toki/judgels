@@ -4,7 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
-import { supervisorManagementPermissions } from '../../../../../../modules/api/uriel/contestSupervisor';
+import { supervisorManagementPermissions } from '../../../../../../modules/api/contestSupervisor';
 
 export default function ContestSupervisorAddForm({ onSubmit, renderFormComponents }) {
   const render = () => {

@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { contestSubmissionProgrammingAPI } from '../api/contestSubmissionProgramming';
 import { NotFoundError } from '../api/error';
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gabriel/language';
-import { contestSubmissionProgrammingAPI } from '../api/uriel/contestSubmissionProgramming';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

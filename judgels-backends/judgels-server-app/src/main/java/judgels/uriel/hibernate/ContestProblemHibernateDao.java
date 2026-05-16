@@ -1,7 +1,7 @@
 package judgels.uriel.hibernate;
 
-import static judgels.uriel.api.contest.problem.ContestProblemStatus.CLOSED;
-import static judgels.uriel.api.contest.problem.ContestProblemStatus.OPEN;
+import static judgels.api.contest.problem.ContestProblemStatus.CLOSED;
+import static judgels.api.contest.problem.ContestProblemStatus.OPEN;
 
 import com.google.common.collect.ImmutableSet;
 import jakarta.inject.Inject;

@@ -51,8 +51,8 @@ public class JophielHibernateDaoModule {
     }
 
     @Provides
-    static judgels.contrib.jophiel.persistence.UserRegistrationEmailDao userRegistrationEmailDao(
-            judgels.contrib.jophiel.hibernate.UserRegistrationEmailHibernateDao dao) {
+    static judgels.contrib.persistence.UserRegistrationEmailDao userRegistrationEmailDao(
+            judgels.contrib.hibernate.UserRegistrationEmailHibernateDao dao) {
 
         return dao;
     }

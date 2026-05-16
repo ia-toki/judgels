@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
 import './IcpcScoreboardTable.scss';

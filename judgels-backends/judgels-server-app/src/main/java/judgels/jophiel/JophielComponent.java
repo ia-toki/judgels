@@ -3,30 +3,32 @@ package judgels.jophiel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.admin.user.UserAdminResource;
+import judgels.admin.user.info.UserInfoAdminResource;
+import judgels.admin.user.role.UserRoleAdminResource;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.mailer.MailerModule;
-import judgels.jophiel.profile.ProfileResource;
-import judgels.jophiel.session.SessionCleaner;
-import judgels.jophiel.session.SessionModule;
-import judgels.jophiel.session.SessionResource;
-import judgels.jophiel.user.UserResource;
-import judgels.jophiel.user.account.UserAccountResource;
-import judgels.jophiel.user.account.UserResetPasswordModule;
-import judgels.jophiel.user.avatar.UserAvatarModule;
-import judgels.jophiel.user.avatar.UserAvatarResource;
-import judgels.jophiel.user.info.UserInfoResource;
-import judgels.jophiel.user.rating.UserRatingResource;
-import judgels.jophiel.user.role.UserRoleResource;
-import judgels.jophiel.user.search.UserSearchResource;
-import judgels.jophiel.user.superadmin.SuperadminCreator;
-import judgels.jophiel.user.superadmin.SuperadminModule;
-import judgels.jophiel.user.web.UserWebResource;
-import judgels.jophiel.user.web.WebModule;
+import judgels.mailer.MailerModule;
+import judgels.profile.ProfileResource;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.session.SessionCleaner;
+import judgels.session.SessionModule;
+import judgels.session.SessionResource;
+import judgels.user.UserResource;
+import judgels.user.account.UserAccountResource;
+import judgels.user.account.UserResetPasswordModule;
+import judgels.user.avatar.UserAvatarModule;
+import judgels.user.avatar.UserAvatarResource;
+import judgels.user.info.UserInfoResource;
+import judgels.user.rating.UserRatingResource;
+import judgels.user.search.UserSearchResource;
+import judgels.user.superadmin.SuperadminCreator;
+import judgels.user.superadmin.SuperadminModule;
+import judgels.user.web.UserWebResource;
+import judgels.user.web.WebModule;
 
 @Component(modules = {
         // Judgels service
@@ -49,27 +51,29 @@ import judgels.service.persistence.JudgelsPersistenceModule;
         SessionModule.class,
         WebModule.class,
 
-        judgels.contrib.jophiel.auth.AuthModule.class,
-        judgels.contrib.jophiel.recaptcha.RecaptchaModule.class,
-        judgels.contrib.jophiel.user.registration.UserRegistrationModule.class})
+        judgels.contrib.auth.AuthModule.class,
+        judgels.contrib.recaptcha.RecaptchaModule.class,
+        judgels.contrib.user.registration.UserRegistrationModule.class})
 @Singleton
 public interface JophielComponent {
     ProfileResource profileResource();
     SessionResource sessionResource();
     SuperadminCreator superadminCreator();
     UserResource userResource();
+    UserAdminResource userAdminResource();
     UserAccountResource userAccountResource();
     UserAvatarResource userAvatarResource();
     UserInfoResource userProfileResource();
+    UserInfoAdminResource userInfoAdminResource();
     UserRatingResource userRatingResource();
-    UserRoleResource userRoleResource();
+    UserRoleAdminResource userRoleAdminResource();
     UserSearchResource userSearchResource();
     UserWebResource userWebResource();
 
     JudgelsScheduler scheduler();
     SessionCleaner sessionCleaner();
 
-    judgels.contrib.jophiel.session.SessionWithGoogleResource sessionWithGoogleResource();
-    judgels.contrib.jophiel.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
-    judgels.contrib.jophiel.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
+    judgels.contrib.session.SessionWithGoogleResource sessionWithGoogleResource();
+    judgels.contrib.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
+    judgels.contrib.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 }

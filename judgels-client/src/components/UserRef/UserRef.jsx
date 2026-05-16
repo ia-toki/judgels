@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import classNames from 'classnames';
 
-import { getRatingClass } from '../../modules/api/jophiel/userRating';
+import { getRatingClass } from '../../modules/api/userRating';
 
 import './UserRef.scss';
 

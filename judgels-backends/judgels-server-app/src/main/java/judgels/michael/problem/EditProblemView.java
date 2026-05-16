@@ -3,7 +3,7 @@ package judgels.michael.problem;
 import java.util.List;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.problem.base.tag.ProblemTags;
+import judgels.problem.base.tag.ProblemTags;
 
 public class EditProblemView extends TemplateView {
     public EditProblemView(HtmlTemplate template, EditProblemForm form) {

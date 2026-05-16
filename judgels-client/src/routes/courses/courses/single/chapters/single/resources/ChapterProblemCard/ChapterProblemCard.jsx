@@ -6,7 +6,7 @@ import { ContentCardLink } from '../../../../../../../../components/ContentCardL
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
-import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../../../../../modules/api/problem';
 
 import './ChapterProblemCard.scss';
 

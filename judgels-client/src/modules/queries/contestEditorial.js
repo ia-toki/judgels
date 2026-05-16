@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestEditorialAPI } from '../api/uriel/contestEditorial';
+import { contestEditorialAPI } from '../api/contestEditorial';
 
 export const contestEditorialQueryOptions = (contestJid, params) => {
   const { language } = params || {};

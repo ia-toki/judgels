@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { ContestErrors } from '../api/contest';
+import { contestProblemAPI } from '../api/contestProblem';
 import { ForbiddenError } from '../api/error';
-import { ContestErrors } from '../api/uriel/contest';
-import { contestProblemAPI } from '../api/uriel/contestProblem';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';

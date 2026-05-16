@@ -1,5 +1,5 @@
 import { Alias, NonnegativeNumber, Slug } from '../../../../../../../components/forms/validations';
-import { ContestProblemStatus } from '../../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../../modules/api/contestProblem';
 
 const trocContestProblemEditor = {
   validator: value => {

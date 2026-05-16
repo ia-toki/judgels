@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
-import { ContestState } from '../../../../../../modules/api/uriel/contestWeb';
+import { ContestState } from '../../../../../../modules/api/contestWeb';
 import {
   contestBySlugQueryOptions,
   searchProblemSetQueryOptions,

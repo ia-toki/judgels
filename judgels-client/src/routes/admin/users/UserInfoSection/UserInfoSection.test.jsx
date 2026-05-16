@@ -20,7 +20,7 @@ describe('UserInfoSection', () => {
   };
 
   const renderComponent = async () => {
-    nockJophiel().get('/users/JIDUSER123/info').reply(200, {
+    nockJophiel().get('/admin/users/JIDUSER123/info').reply(200, {
       name: 'Andi Smith',
       gender: 'MALE',
       country: 'ID',
@@ -99,7 +99,7 @@ describe('UserInfoSection', () => {
     await u.type(institutionCity, 'London');
 
     nockJophiel()
-      .put('/users/JIDUSER123/info', {
+      .put('/admin/users/JIDUSER123/info', {
         name: 'Caca',
         gender: 'FEMALE',
         country: 'US',

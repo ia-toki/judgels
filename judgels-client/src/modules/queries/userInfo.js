@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { userInfoAPI } from '../api/jophiel/userInfo';
+import { userInfoAPI } from '../api/userInfo';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

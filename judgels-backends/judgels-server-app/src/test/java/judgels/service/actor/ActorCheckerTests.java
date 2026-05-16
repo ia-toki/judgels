@@ -8,9 +8,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import judgels.jophiel.api.session.Session;
-import judgels.jophiel.session.SessionStore;
+import judgels.api.session.Session;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.SessionStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

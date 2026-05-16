@@ -1,7 +1,7 @@
 import { ForbiddenError } from '../api/error';
-import { sessionAPI } from '../api/jophiel/session';
-import { userAccountAPI } from '../api/jophiel/userAccount';
-import { userSearchAPI } from '../api/jophiel/userSearch';
+import { sessionAPI } from '../api/session';
+import { userAccountAPI } from '../api/userAccount';
+import { userSearchAPI } from '../api/userSearch';
 import { SubmissionError } from '../form/submissionError';
 import { afterLogin } from './session';
 

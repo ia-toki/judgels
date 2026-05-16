@@ -1,10 +1,10 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { contestHistoryAPI } from '../api/contestHistory';
 import { NotFoundError } from '../api/error';
-import { submissionProgrammingAPI } from '../api/jerahmeel/submissionProgramming';
-import { profileAPI } from '../api/jophiel/profile';
-import { userSearchAPI } from '../api/jophiel/userSearch';
-import { contestHistoryAPI } from '../api/uriel/contestHistory';
+import { profileAPI } from '../api/profile';
+import { submissionProgrammingAPI } from '../api/submissionProgramming';
+import { userSearchAPI } from '../api/userSearch';
 import { getToken } from '../session';
 
 export const userJidByUsernameQueryOptions = username =>

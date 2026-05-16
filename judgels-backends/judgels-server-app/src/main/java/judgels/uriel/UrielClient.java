@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.sandalphon.api.submission.programming.Submission;
-import judgels.sandalphon.submission.programming.SubmissionStore;
-import judgels.uriel.api.contest.ContestInfo;
-import judgels.uriel.contest.ContestStore;
-import judgels.uriel.submission.UrielSubmissionStore;
+import judgels.api.contest.ContestInfo;
+import judgels.api.submission.programming.Submission;
+import judgels.contest.ContestStore;
+import judgels.submission.UrielSubmissionStore;
+import judgels.submission.programming.SubmissionStore;
 
 public class UrielClient {
     @Inject protected ContestStore contestStore;

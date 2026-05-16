@@ -3,7 +3,7 @@ package judgels.michael;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
-import judgels.contrib.jophiel.auth.AuthModule;
+import judgels.contrib.auth.AuthModule;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.account.role.RoleResource;
@@ -29,12 +29,12 @@ import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.sandalphon.SandalphonClientModule;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
-import judgels.sandalphon.submission.SubmissionModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.submission.SubmissionModule;
 
 @Component(modules = {
         // Judgels service

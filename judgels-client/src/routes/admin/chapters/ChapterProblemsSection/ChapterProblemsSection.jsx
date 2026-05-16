@@ -5,11 +5,11 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Alias } from '../../../../components/forms/validations';
-import { ProblemType } from '../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../modules/api/problem';
 import {
   chapterProblemsQueryOptions,
   setChapterProblemsMutationOptions,
-} from '../../../../modules/queries/chapterProblem';
+} from '../../../../modules/queries/adminChapterProblem';
 import ChapterProblemsEditForm from '../ChapterProblemsEditForm/ChapterProblemsEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

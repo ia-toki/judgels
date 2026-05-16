@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 
-import { GcjScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { GcjScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { GcjScoreboardTable } from './GcjScoreboardTable';
 

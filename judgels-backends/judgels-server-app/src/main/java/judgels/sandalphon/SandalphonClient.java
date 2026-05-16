@@ -1,7 +1,7 @@
 package judgels.sandalphon;
 
 import static java.util.stream.Collectors.toMap;
-import static judgels.sandalphon.resource.LanguageUtils.simplifyLanguageCode;
+import static judgels.resource.LanguageUtils.simplifyLanguageCode;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.UriInfo;
@@ -15,38 +15,38 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.api.lesson.Lesson;
+import judgels.api.lesson.LessonInfo;
+import judgels.api.lesson.LessonStatement;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemEditorial;
+import judgels.api.problem.ProblemEditorialInfo;
+import judgels.api.problem.ProblemInfo;
+import judgels.api.problem.ProblemMetadata;
+import judgels.api.problem.ProblemStatement;
+import judgels.api.problem.ProblemType;
+import judgels.api.problem.bundle.BundleItem;
+import judgels.api.problem.bundle.Item;
+import judgels.api.problem.bundle.ItemConfig;
+import judgels.api.problem.programming.ProblemLimits;
+import judgels.api.problem.programming.ProblemSkeleton;
+import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.ScoringConfig;
-import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.api.lesson.LessonInfo;
-import judgels.sandalphon.api.lesson.LessonStatement;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemEditorial;
-import judgels.sandalphon.api.problem.ProblemEditorialInfo;
-import judgels.sandalphon.api.problem.ProblemInfo;
-import judgels.sandalphon.api.problem.ProblemMetadata;
-import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.api.problem.bundle.BundleItem;
-import judgels.sandalphon.api.problem.bundle.Item;
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
-import judgels.sandalphon.api.problem.programming.ProblemLimits;
-import judgels.sandalphon.api.problem.programming.ProblemSkeleton;
-import judgels.sandalphon.api.problem.programming.ProblemSubmissionConfig;
-import judgels.sandalphon.lesson.LessonStore;
-import judgels.sandalphon.lesson.statement.LessonStatementStore;
-import judgels.sandalphon.problem.base.ProblemStore;
-import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
-import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
-import judgels.sandalphon.problem.base.tag.ProblemTagStore;
-import judgels.sandalphon.problem.bundle.ItemProcessorRegistry;
-import judgels.sandalphon.problem.bundle.item.BundleItemStore;
-import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
-import judgels.sandalphon.resource.StatementLanguageStatus;
-import judgels.sandalphon.role.RoleChecker;
+import judgels.lesson.LessonStore;
+import judgels.lesson.statement.LessonStatementStore;
+import judgels.problem.base.ProblemStore;
+import judgels.problem.base.editorial.ProblemEditorialStore;
+import judgels.problem.base.statement.ProblemStatementStore;
+import judgels.problem.base.tag.ProblemTagStore;
+import judgels.problem.bundle.ItemProcessorRegistry;
+import judgels.problem.bundle.item.BundleItemStore;
+import judgels.problem.programming.ProgrammingProblemStore;
+import judgels.resource.StatementLanguageStatus;
+import judgels.role.ProblemAdminRoleChecker;
 
 public class SandalphonClient {
-    @Inject protected RoleChecker roleChecker;
+    @Inject protected ProblemAdminRoleChecker roleChecker;
     @Inject protected ProblemStore problemStore;
     @Inject protected ProblemStatementStore problemStatementStore;
     @Inject protected ProblemEditorialStore problemEditorialStore;
@@ -163,7 +163,7 @@ public class SandalphonClient {
         return Set.copyOf(problemJids).stream().collect(toMap(jid -> jid, this::getProgrammingProblemScoringConfig));
     }
 
-    public judgels.sandalphon.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
+    public judgels.api.problem.programming.ProblemWorksheet getProgrammingProblemWorksheet(
             HttpServletRequest req,
             UriInfo uriInfo,
             String problemJid,
@@ -174,7 +174,7 @@ public class SandalphonClient {
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
         String apiUrl = getApiUrl(req, uriInfo);
 
-        return new judgels.sandalphon.api.problem.programming.ProblemWorksheet.Builder()
+        return new judgels.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
                         .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
@@ -191,7 +191,7 @@ public class SandalphonClient {
         return problemStatementStore.getSkeletons(null, problemJid);
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
+    public judgels.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheet(
             HttpServletRequest req,
             UriInfo uriInfo,
             String problemJid,
@@ -217,7 +217,7 @@ public class SandalphonClient {
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
         String apiUrl = getApiUrl(req, uriInfo);
 
-        return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+        return new judgels.api.problem.bundle.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
                         .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
@@ -230,14 +230,14 @@ public class SandalphonClient {
                 .build();
     }
 
-    public judgels.sandalphon.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(
+    public judgels.api.problem.bundle.ProblemWorksheet getBundleProblemWorksheetWithoutAnswerKey(
             HttpServletRequest req,
             UriInfo uriInfo,
             String problemJid,
             Optional<String> language) {
 
-        judgels.sandalphon.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(req, uriInfo, problemJid, language);
-        return new judgels.sandalphon.api.problem.bundle.ProblemWorksheet.Builder()
+        judgels.api.problem.bundle.ProblemWorksheet worksheet = getBundleProblemWorksheet(req, uriInfo, problemJid, language);
+        return new judgels.api.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .items(worksheet.getItems().stream()
                         .map(item -> itemProcessorRegistry.get(item.getType()).removeAnswerKey(item))

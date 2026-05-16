@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class EditStatementView extends TemplateView {
     private final String language;

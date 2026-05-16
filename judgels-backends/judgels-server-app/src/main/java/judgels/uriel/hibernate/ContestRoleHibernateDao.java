@@ -1,18 +1,18 @@
 package judgels.uriel.hibernate;
 
+import static judgels.api.contest.contestant.ContestContestantStatus.APPROVED;
 import static judgels.persistence.CriteriaPredicate.and;
 import static judgels.persistence.CriteriaPredicate.not;
 import static judgels.persistence.CriteriaPredicate.or;
-import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
+import judgels.api.contest.module.ContestModuleType;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.JudgelsHibernateDao;
-import judgels.uriel.api.contest.module.ContestModuleType;
 import judgels.uriel.persistence.ContestContestantModel;
 import judgels.uriel.persistence.ContestContestantModel_;
 import judgels.uriel.persistence.ContestManagerModel;

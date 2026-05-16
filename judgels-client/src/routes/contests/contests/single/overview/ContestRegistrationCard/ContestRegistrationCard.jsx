@@ -6,7 +6,7 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { ContestContestantState } from '../../../../../../modules/api/uriel/contestContestant';
+import { ContestContestantState } from '../../../../../../modules/api/contestContestant';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
   approvedContestantsCountQueryOptions,

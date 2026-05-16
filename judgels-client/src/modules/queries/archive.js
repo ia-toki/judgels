@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { ArchiveErrors, archiveAPI } from '../api/archive';
 import { BadRequestError } from '../api/error';
-import { ArchiveErrors, archiveAPI } from '../api/jerahmeel/archive';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';

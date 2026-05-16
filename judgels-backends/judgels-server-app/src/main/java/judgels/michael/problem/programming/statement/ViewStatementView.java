@@ -3,6 +3,7 @@ package judgels.michael.problem.programming.statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import judgels.api.problem.ProblemStatement;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.OutputOnlyOverrides;
 import judgels.gabriel.engines.outputonly.OutputOnlyGradingConfig;
@@ -10,8 +11,7 @@ import judgels.gabriel.engines.outputonly.OutputOnlyWithSubtasksGradingConfig;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class ViewStatementView extends TemplateView {
     private final ProblemStatement statement;

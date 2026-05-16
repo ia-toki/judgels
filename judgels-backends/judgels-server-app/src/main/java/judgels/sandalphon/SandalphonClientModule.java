@@ -6,10 +6,10 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
-import judgels.sandalphon.lesson.LessonFs;
-import judgels.sandalphon.lesson.LessonGit;
-import judgels.sandalphon.problem.base.ProblemFs;
-import judgels.sandalphon.problem.base.ProblemGit;
+import judgels.lesson.LessonFs;
+import judgels.lesson.LessonGit;
+import judgels.problem.base.ProblemFs;
+import judgels.problem.base.ProblemGit;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module

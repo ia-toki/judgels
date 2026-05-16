@@ -1,6 +1,6 @@
 import { Divider } from '@blueprintjs/core';
 
-import { ItemType } from '../../../../modules/api/sandalphon/problemBundle';
+import { ItemType } from '../../../../modules/api/problemBundle';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import RichStatementText from '../../../RichStatementText/RichStatementText';
 import { ItemEssayCard } from './ItemEssayCard/ItemEssayCard';

@@ -3,7 +3,7 @@ import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { createArchiveMutationOptions } from '../../../../modules/queries/archive';
+import { createArchiveMutationOptions } from '../../../../modules/queries/adminArchive';
 import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

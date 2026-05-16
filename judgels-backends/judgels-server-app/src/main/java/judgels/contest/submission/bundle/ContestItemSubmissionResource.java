@@ -1,0 +1,361 @@
+package judgels.contest.submission.bundle;
+
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import judgels.api.contest.Contest;
+import judgels.api.contest.problem.ContestProblem;
+import judgels.api.contest.submission.ContestSubmissionConfig;
+import judgels.api.contest.submission.bundle.ContestItemSubmissionsResponse;
+import judgels.api.contest.submission.bundle.ContestSubmissionSummaryResponse;
+import judgels.api.problem.ProblemType;
+import judgels.api.problem.bundle.BundleItem;
+import judgels.api.problem.bundle.Item;
+import judgels.api.problem.bundle.ItemType;
+import judgels.api.problem.bundle.ProblemWorksheet;
+import judgels.api.profile.Profile;
+import judgels.api.submission.bundle.Grading;
+import judgels.api.submission.bundle.ItemSubmission;
+import judgels.api.submission.bundle.ItemSubmissionData;
+import judgels.contest.ContestRoleChecker;
+import judgels.contest.ContestStore;
+import judgels.contest.contestant.ContestContestantStore;
+import judgels.contest.problem.ContestProblemRoleChecker;
+import judgels.contest.problem.ContestProblemStore;
+import judgels.contest.submission.ContestSubmissionRoleChecker;
+import judgels.jophiel.JophielClient;
+import judgels.persistence.api.Page;
+import judgels.sandalphon.SandalphonClient;
+import judgels.service.actor.ActorChecker;
+import judgels.service.api.actor.AuthHeader;
+import judgels.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.submission.bundle.ItemSubmissionRegrader;
+import judgels.submission.bundle.ItemSubmissionStore;
+
+@Path("/api/v2/contests/submissions/bundle")
+public class ContestItemSubmissionResource {
+    private static final int PAGE_SIZE = 20;
+
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected ContestStore contestStore;
+    @Inject protected ContestContestantStore contestContestantStore;
+    @Inject protected ItemSubmissionStore submissionStore;
+    @Inject protected ContestRoleChecker contestRoleChecker;
+    @Inject protected ContestSubmissionRoleChecker submissionRoleChecker;
+    @Inject protected ContestProblemRoleChecker problemRoleChecker;
+    @Inject protected ContestProblemStore problemStore;
+    @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
+    @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
+    @Inject protected JophielClient jophielClient;
+    @Inject protected SandalphonClient sandalphonClient;
+
+    @Inject public ContestItemSubmissionResource() {}
+
+    @GET
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork
+    public ContestItemSubmissionsResponse getSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") Optional<String> problemAlias,
+            @QueryParam("page") @DefaultValue("1") int pageNumber) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
+
+        boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
+
+        Page<ItemSubmission> submissions = submissionStore.getSubmissions(
+                contestJid,
+                canSupervise ? byUserJid(username) : Optional.of(actorJid),
+                byProblemJid(Optional.of(contestJid), Optional.empty(), problemAlias),
+                pageNumber,
+                PAGE_SIZE);
+
+        boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
+        if (!canManage) {
+            submissions = submissions.mapPage(p -> Lists.transform(p, ItemSubmission::withoutGrading));
+        }
+
+        List<String> userJidsSortedByUsername;
+        Set<String> userJids;
+
+        List<String> problemJidsSortedByAlias;
+        Collection<String> problemJids;
+
+        userJids = submissions.getPage().stream().map(ItemSubmission::getUserJid).collect(Collectors.toSet());
+        if (canSupervise) {
+            userJids.addAll(contestContestantStore.getApprovedContestantJids(contestJid));
+            userJidsSortedByUsername = Lists.newArrayList(userJids);
+
+            problemJidsSortedByAlias = problemStore.getProblemJids(contestJid);
+            problemJids = problemJidsSortedByAlias;
+        } else {
+            userJidsSortedByUsername = Collections.emptyList();
+
+            problemJidsSortedByAlias = Collections.emptyList();
+            problemJids = Lists.transform(submissions.getPage(), ItemSubmission::getProblemJid);
+        }
+
+        Map<String, Profile> profilesMap = jophielClient.getProfiles(userJids, contest.getBeginTime());
+
+        userJidsSortedByUsername.sort((u1, u2) -> {
+            String usernameA = profilesMap.containsKey(u1) ? profilesMap.get(u1).getUsername() : u1;
+            String usernameB = profilesMap.containsKey(u2) ? profilesMap.get(u2).getUsername() : u2;
+            return usernameA.compareTo(usernameB);
+        });
+
+        ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
+                .canSupervise(canSupervise)
+                .canManage(submissionRoleChecker.canManage(actorJid, contest))
+                .userJids(userJidsSortedByUsername)
+                .problemJids(problemJidsSortedByAlias)
+                .build();
+
+        Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
+
+        var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
+        Map<String, BundleItem> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
+        Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getNumber().orElse(0))
+                );
+        Map<String, ItemType> itemTypesMap = itemsMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().getType())
+                );
+
+        return new ContestItemSubmissionsResponse.Builder()
+                .data(submissions)
+                .config(config)
+                .profilesMap(profilesMap)
+                .problemAliasesMap(problemAliasesMap)
+                .itemNumbersMap(itemNumbersMap)
+                .itemTypesMap(itemTypesMap)
+                .build();
+    }
+
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @UnitOfWork
+    public void createItemSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            ItemSubmissionData data) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(data.getContainerJid()));
+        ContestProblem problem = checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
+        checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
+
+        Optional<Item> item = sandalphonClient.getItem(data.getProblemJid(), data.getItemJid());
+        checkFound(item);
+
+        if (data.getAnswer().trim().isEmpty()) {
+            submissionStore.deleteSubmission(
+                    data.getContainerJid(), data.getProblemJid(), data.getItemJid(), actorJid);
+        } else {
+            Grading grading = itemSubmissionGraderRegistry
+                    .get(item.get().getType())
+                    .grade(item.get(), data.getAnswer());
+
+            submissionStore.upsertSubmission(
+                    data.getContainerJid(),
+                    data.getProblemJid(),
+                    data.getItemJid(),
+                    data.getAnswer(),
+                    grading,
+                    actorJid
+            );
+        }
+    }
+
+    @GET
+    @Path("/answers")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public Map<String, ItemSubmission> getLatestSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemAlias") String problemAlias) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
+
+        boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
+
+        ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
+
+        List<ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserForProblemInContainer(
+                contestJid,
+                problem.getProblemJid(),
+                canSupervise ? byUserJid(username).orElse(actorJid) : actorJid
+        );
+
+        return submissions.stream()
+                .map(ItemSubmission::withoutGrading)
+                .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
+    }
+
+    @GET
+    @Path("/summary")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public ContestSubmissionSummaryResponse getSubmissionSummary(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") String contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("language") Optional<String> language) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
+        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, contest));
+
+        boolean canSupervise = submissionRoleChecker.canSupervise(actorJid, contest);
+        String userJid = canSupervise ? byUserJid(username).orElse(actorJid) : actorJid;
+
+        List<? extends ItemSubmission> submissions = submissionStore.getLatestSubmissionsByUserInContainer(
+                contestJid,
+                userJid);
+
+        boolean canManage = submissionRoleChecker.canManage(actorJid, contest);
+        if (!canManage) {
+            submissions = submissions.stream().map(ItemSubmission::withoutGrading).collect(Collectors.toList());
+        }
+
+        Map<String, ItemSubmission> submissionsByItemJid = submissions.stream()
+                .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
+
+        List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
+                .filter(problemJid -> sandalphonClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
+                .collect(Collectors.toList());
+        Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
+                contestJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
+
+        Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
+        Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
+        for (String problemJid : bundleProblemJidsSortedByAlias) {
+            ProblemWorksheet worksheet = sandalphonClient.getBundleProblemWorksheet(null, null, problemJid, language);
+            List<Item> items = worksheet.getItems().stream()
+                    .filter(item -> !item.getType().equals(ItemType.STATEMENT))
+                    .collect(Collectors.toList());
+            items.sort(Comparator.comparingInt(item -> item.getNumber().get()));
+
+            items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
+
+            itemJidsByProblemJid.put(
+                    problemJid,
+                    items.stream().map(Item::getJid).collect(Collectors.toList())
+            );
+        }
+
+        Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(
+                ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
+
+        Profile profile = jophielClient.getProfile(userJid, contest.getBeginTime());
+
+        ContestSubmissionConfig config = new ContestSubmissionConfig.Builder()
+                .canSupervise(canSupervise)
+                .canManage(canManage)
+                .userJids(ImmutableList.of(userJid))
+                .problemJids(bundleProblemJidsSortedByAlias)
+                .build();
+
+        return new ContestSubmissionSummaryResponse.Builder()
+                .profile(profile)
+                .config(config)
+                .itemJidsByProblemJid(itemJidsByProblemJid)
+                .submissionsByItemJid(submissionsByItemJid)
+                .itemTypesMap(itemTypesByItemJid)
+                .problemAliasesMap(problemAliasesByProblemJid)
+                .problemNamesMap(problemNamesByProblemJid)
+                .build();
+    }
+
+    @POST
+    @Path("/{submissionJid}/regrade")
+    @UnitOfWork
+    public void regradeSubmission(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("submissionJid") String submissionJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        ItemSubmission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
+        Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
+        checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+
+        itemSubmissionRegrader.regradeSubmission(submission);
+    }
+
+    @POST
+    @Path("/regrade")
+    @UnitOfWork
+    public void regradeSubmissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @QueryParam("contestJid") Optional<String> contestJid,
+            @QueryParam("username") Optional<String> username,
+            @QueryParam("problemJid") Optional<String> problemJid,
+            @QueryParam("problemAlias") Optional<String> problemAlias) {
+
+        String actorJid = actorChecker.check(authHeader);
+        if (contestJid.isPresent()) {
+            Contest contest = checkFound(contestStore.getContestByJid(contestJid.get()));
+            checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
+        } else {
+            checkAllowed(contestRoleChecker.canAdminister(actorJid));
+        }
+
+        itemSubmissionRegrader.regradeSubmissions(
+                contestJid,
+                byUserJid(username),
+                byProblemJid(contestJid, problemJid, problemAlias));
+    }
+
+    private Optional<String> byUserJid(Optional<String> username) {
+        return username.map(u -> jophielClient.translateUsernameToJid(u).orElse(""));
+    }
+
+    private Optional<String> byProblemJid(
+            Optional<String> contestJid,
+            Optional<String> problemJid,
+            Optional<String> problemAlias) {
+        if (contestJid.isPresent() && problemAlias.isPresent()) {
+            return Optional.of(problemStore
+                    .getProblemByAlias(contestJid.get(), problemAlias.get())
+                    .map(ContestProblem::getProblemJid)
+                    .orElse(""));
+        }
+        return problemJid;
+    }
+}

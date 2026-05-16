@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
-import { userAccountAPI } from '../../../../modules/api/jophiel/userAccount';
+import { userAccountAPI } from '../../../../modules/api/userAccount';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 

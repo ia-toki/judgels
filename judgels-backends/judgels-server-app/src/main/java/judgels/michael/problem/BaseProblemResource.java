@@ -3,17 +3,17 @@ package judgels.michael.problem;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.user.UserStore;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemType;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.problem.base.ProblemRoleChecker;
-import judgels.sandalphon.problem.base.ProblemStore;
-import judgels.sandalphon.problem.base.editorial.ProblemEditorialStore;
-import judgels.sandalphon.problem.base.statement.ProblemStatementStore;
+import judgels.problem.base.ProblemRoleChecker;
+import judgels.problem.base.ProblemStore;
+import judgels.problem.base.editorial.ProblemEditorialStore;
+import judgels.problem.base.statement.ProblemStatementStore;
+import judgels.profile.ProfileStore;
+import judgels.user.UserStore;
 
 public abstract class BaseProblemResource extends BaseResource {
     @Inject protected ProblemRoleChecker roleChecker;

@@ -5,7 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { getRatingClass } from '../../../../../../modules/api/jophiel/userRating';
+import { getRatingClass } from '../../../../../../modules/api/userRating';
 import { profileContestHistoryQueryOptions } from '../../../../../../modules/queries/profile';
 
 import './ContestHistoryPage.scss';

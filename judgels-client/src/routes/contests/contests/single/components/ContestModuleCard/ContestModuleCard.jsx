@@ -1,7 +1,7 @@
 import { Button, Callout } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 
-import { moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/uriel/contestModule';
+import { moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/contestModule';
 
 import './ContestModuleCard.scss';
 

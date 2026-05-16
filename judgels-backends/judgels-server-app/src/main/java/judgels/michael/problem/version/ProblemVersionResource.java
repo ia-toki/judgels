@@ -17,18 +17,18 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.profile.Profile;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.CommitVersionForm;
 import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
+import judgels.problem.base.tag.ProblemTagStore;
+import judgels.problem.base.version.ProblemVersionStore;
 import judgels.sandalphon.GitCommit;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.problem.base.tag.ProblemTagStore;
-import judgels.sandalphon.problem.base.version.ProblemVersionStore;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {

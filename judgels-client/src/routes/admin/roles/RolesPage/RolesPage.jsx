@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { userRolesQueryOptions } from '../../../../modules/queries/userRole';
+import { userRolesQueryOptions } from '../../../../modules/queries/adminUserRole';
 import { RoleEditDialog } from '../RoleEditDialog/RoleEditDialog';
 
 export default function RolesPage() {

@@ -5,7 +5,10 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Alias } from '../../../../components/forms/validations';
-import { courseChaptersQueryOptions, setCourseChaptersMutationOptions } from '../../../../modules/queries/course';
+import {
+  courseChaptersQueryOptions,
+  setCourseChaptersMutationOptions,
+} from '../../../../modules/queries/adminCourseChapter';
 import CourseChaptersEditForm from '../CourseChaptersEditForm/CourseChaptersEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

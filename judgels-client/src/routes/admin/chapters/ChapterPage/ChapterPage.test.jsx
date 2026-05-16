@@ -13,7 +13,7 @@ describe('ChapterPage', () => {
 
   const renderComponent = async () => {
     nockJerahmeel()
-      .get('/chapters')
+      .get('/admin/chapters')
       .reply(200, {
         data: [
           {
@@ -25,14 +25,14 @@ describe('ChapterPage', () => {
       });
 
     nockJerahmeel()
-      .get('/chapters/JIDCHAPTER1/lessons')
+      .get('/admin/chapters/JIDCHAPTER1/lessons')
       .reply(200, {
         data: [{ alias: 'A', lessonJid: 'JIDLESSON1' }],
         lessonsMap: { JIDLESSON1: { slug: 'lesson-1' } },
       });
 
     nockJerahmeel()
-      .get('/chapters/JIDCHAPTER1/problems')
+      .get('/admin/chapters/JIDCHAPTER1/problems')
       .reply(200, {
         data: [{ alias: 'A', problemJid: 'JIDPROBLEM1', type: 'PROGRAMMING' }],
         problemsMap: { JIDPROBLEM1: { slug: 'problem-1' } },

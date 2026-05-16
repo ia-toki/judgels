@@ -6,9 +6,9 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
-import judgels.jophiel.api.session.Session;
-import judgels.jophiel.session.SessionStore;
+import judgels.api.session.Session;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.SessionStore;
 import org.eclipse.jetty.server.Response;
 
 public class ActorChecker {

@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
-import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
+import { ContestStyle } from '../../../../../../modules/api/contest';
+import { ContestScoreboardType } from '../../../../../../modules/api/contestScoreboard';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';

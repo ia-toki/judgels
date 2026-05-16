@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestFileAPI } from '../api/uriel/contestFile';
+import { contestFileAPI } from '../api/contestFile';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

@@ -25,17 +25,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemSetterRole;
+import judgels.api.problem.ProblemType;
+import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemSetterRole;
-import judgels.sandalphon.api.problem.ProblemType;
-import judgels.sandalphon.problem.base.tag.ProblemTagStore;
-import judgels.sandalphon.problem.bundle.BundleProblemStore;
-import judgels.sandalphon.problem.programming.ProgrammingProblemStore;
+import judgels.problem.base.tag.ProblemTagStore;
+import judgels.problem.bundle.BundleProblemStore;
+import judgels.problem.programming.ProgrammingProblemStore;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {

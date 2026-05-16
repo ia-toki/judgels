@@ -7,7 +7,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
-import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../../../../../modules/api/problem';
 import { chapterProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
 import {
   courseBySlugQueryOptions,

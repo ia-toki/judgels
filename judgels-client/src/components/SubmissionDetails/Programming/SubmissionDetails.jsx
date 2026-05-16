@@ -10,7 +10,7 @@ import {
 } from '../../../modules/api/gabriel/language.js';
 import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
 import { VerdictCode } from '../../../modules/api/gabriel/verdict';
-import { constructProblemName } from '../../../modules/api/sandalphon/problem';
+import { constructProblemName } from '../../../modules/api/problem';
 import { decodeBase64 } from '../../../utils/base64';
 import { ContentCard } from '../../ContentCard/ContentCard';
 import { FormattedDate } from '../../FormattedDate/FormattedDate';

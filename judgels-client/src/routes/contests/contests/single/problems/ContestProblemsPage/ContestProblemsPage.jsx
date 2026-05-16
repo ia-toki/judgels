@@ -7,9 +7,9 @@ import { ActionButtons } from '../../../../../../components/ActionButtons/Action
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
-import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
-import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
+import { consolidateLanguages } from '../../../../../../modules/api/language';
+import { getProblemName } from '../../../../../../modules/api/problem';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestProblemsQueryOptions } from '../../../../../../modules/queries/contestProblem';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';

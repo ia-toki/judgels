@@ -2,26 +2,26 @@ package judgels.jerahmeel;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import judgels.jerahmeel.archive.ArchiveStore;
-import judgels.jerahmeel.chapter.ChapterStore;
-import judgels.jerahmeel.chapter.problem.ChapterProblemStore;
-import judgels.jerahmeel.course.CourseStore;
-import judgels.jerahmeel.course.chapter.CourseChapterStore;
+import judgels.archive.ArchiveStore;
+import judgels.chapter.ChapterStore;
+import judgels.chapter.problem.ChapterProblemStore;
+import judgels.course.CourseStore;
+import judgels.course.chapter.CourseChapterStore;
 import judgels.jerahmeel.hibernate.JerahmeelHibernateDaoModule;
-import judgels.jerahmeel.problemset.ProblemSetStore;
-import judgels.jerahmeel.problemset.problem.ProblemSetProblemStore;
-import judgels.jerahmeel.stats.StatsStore;
-import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
+import judgels.problemset.ProblemSetStore;
+import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.stats.StatsStore;
+import judgels.submission.bundle.ArchiveItemSubmissionModule;
 
 @Component(modules = {
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
         JerahmeelHibernateDaoModule.class,
-        ItemSubmissionModule.class})
+        ArchiveItemSubmissionModule.class})
 @Singleton
 public interface JerahmeelIntegrationTestComponent {
     CourseStore courseStore();
@@ -32,6 +32,6 @@ public interface JerahmeelIntegrationTestComponent {
     ProblemSetStore problemSetStore();
     ProblemSetProblemStore problemSetProblemStore();
     StatsStore statsStore();
-    judgels.jerahmeel.submission.programming.StatsProcessor programmingStatsProcessor();
-    judgels.jerahmeel.submission.bundle.StatsProcessor bundleStatsProcessor();
+    judgels.submission.programming.StatsProcessor programmingStatsProcessor();
+    judgels.submission.bundle.StatsProcessor bundleStatsProcessor();
 }

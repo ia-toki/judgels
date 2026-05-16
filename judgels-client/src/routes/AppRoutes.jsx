@@ -1,10 +1,10 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { JerahmeelRole } from '../modules/api/jerahmeel/role';
-import { JophielRole } from '../modules/api/jophiel/role';
-import { SandalphonRole } from '../modules/api/sandalphon/role';
-import { UrielRole } from '../modules/api/uriel/role';
+import { ArchiveAdminRole } from '../modules/api/archiveAdminRole';
+import { ContestAdminRole } from '../modules/api/contestAdminRole';
+import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { UserAdminRole } from '../modules/api/userAdminRole';
 
 const appRoutes = [
   {
@@ -15,10 +15,10 @@ const appRoutes = [
       path: '/admin',
     },
     visible: role =>
-      role.jophiel === JophielRole.Superadmin ||
-      role.jophiel === JophielRole.Admin ||
-      role.uriel === UrielRole.Admin ||
-      (isTLX() && role.jerahmeel === JerahmeelRole.Admin),
+      role.jophiel === UserAdminRole.Superadmin ||
+      role.jophiel === UserAdminRole.Admin ||
+      role.uriel === ContestAdminRole.Admin ||
+      (isTLX() && role.jerahmeel === ArchiveAdminRole.Admin),
   },
   {
     id: 'contests',

@@ -1,0 +1,71 @@
+package judgels.user.info;
+
+import jakarta.inject.Inject;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import judgels.api.user.info.UserInfo;
+import judgels.jophiel.persistence.UserInfoDao;
+import judgels.jophiel.persistence.UserInfoModel;
+
+public class UserInfoStore {
+    private final UserInfoDao profileDao;
+
+    @Inject
+    public UserInfoStore(UserInfoDao profileDao) {
+        this.profileDao = profileDao;
+    }
+
+    public UserInfo getInfo(String userJid) {
+        return profileDao.selectByUserJid(userJid)
+                .map(UserInfoStore::fromModel)
+                .orElse(new UserInfo.Builder().build());
+    }
+
+    public Map<String, UserInfo> getInfos(Collection<String> userJids) {
+        return profileDao.selectAllByUserJids(userJids)
+                .stream()
+                .collect(Collectors.toMap(m -> m.userJid, UserInfoStore::fromModel));
+    }
+
+    public UserInfo upsertInfo(String userJid, UserInfo profile) {
+        Optional<UserInfoModel> maybeModel = profileDao.selectByUserJid(userJid);
+        if (maybeModel.isPresent()) {
+            UserInfoModel model = maybeModel.get();
+            toModel(userJid, profile, model);
+            return fromModel(profileDao.update(model));
+        } else {
+            UserInfoModel model = new UserInfoModel();
+            toModel(userJid, profile, model);
+            return fromModel(profileDao.insert(model));
+        }
+    }
+
+    private static void toModel(String userJid, UserInfo profile, UserInfoModel model) {
+        model.userJid = userJid;
+        model.name = profile.getName().orElse(null);
+        model.gender = profile.getGender().orElse(null);
+        model.country = profile.getCountry().orElse(null);
+        model.homeAddress = profile.getHomeAddress().orElse(null);
+        model.institutionName = profile.getInstitutionName().orElse(null);
+        model.institutionCountry = profile.getInstitutionCountry().orElse(null);
+        model.institutionProvince = profile.getInstitutionProvince().orElse(null);
+        model.institutionCity = profile.getInstitutionCity().orElse(null);
+        model.shirtSize = profile.getShirtSize().orElse(null);
+    }
+
+    private static UserInfo fromModel(UserInfoModel model) {
+        return new UserInfo.Builder()
+                .name(Optional.ofNullable(model.name))
+                .gender(Optional.ofNullable(model.gender))
+                .country(Optional.ofNullable(model.country))
+                .homeAddress(Optional.ofNullable(model.homeAddress))
+                .institutionName(Optional.ofNullable(model.institutionName))
+                .institutionCountry(Optional.ofNullable(model.institutionCountry))
+                .institutionProvince(Optional.ofNullable(model.institutionProvince))
+                .institutionCity(Optional.ofNullable(model.institutionCity))
+                .shirtSize(Optional.ofNullable(model.shirtSize))
+                .build();
+    }
+}

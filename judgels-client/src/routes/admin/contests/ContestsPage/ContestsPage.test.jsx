@@ -18,7 +18,7 @@ describe('ContestsPage', () => {
     ],
   } = {}) => {
     nockUriel()
-      .get('/contests?')
+      .get('/admin/contests?')
       .reply(200, {
         data: { page: contests, totalCount: contests.length },
         config: { canAdminister: true },

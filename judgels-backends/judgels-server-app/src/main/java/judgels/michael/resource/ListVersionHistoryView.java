@@ -2,7 +2,7 @@ package judgels.michael.resource;
 
 import java.util.List;
 import java.util.Map;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.sandalphon.GitCommit;

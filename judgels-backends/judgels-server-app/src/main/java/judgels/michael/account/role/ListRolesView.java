@@ -2,8 +2,8 @@ package judgels.michael.account.role;
 
 import java.util.List;
 import java.util.Map;
-import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.user.role.UserWithRole;
+import judgels.api.profile.Profile;
+import judgels.api.user.role.UserWithRole;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

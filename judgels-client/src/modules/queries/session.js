@@ -1,6 +1,6 @@
 import { BadRequestError, ForbiddenError } from '../api/error';
-import { SessionErrors, sessionAPI } from '../api/jophiel/session';
-import { userAPI } from '../api/jophiel/user';
+import { SessionErrors, sessionAPI } from '../api/session';
+import { userAPI } from '../api/user';
 import { userWebConfigQueryOptions } from '../queries/userWeb';
 import { queryClient } from '../queryClient';
 import { clearSession, getToken, setSession } from '../session';

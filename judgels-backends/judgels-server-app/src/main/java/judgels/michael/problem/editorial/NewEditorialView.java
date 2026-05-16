@@ -3,7 +3,7 @@ package judgels.michael.problem.editorial;
 import java.util.Map;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class NewEditorialView extends TemplateView {
     private final boolean canEdit;

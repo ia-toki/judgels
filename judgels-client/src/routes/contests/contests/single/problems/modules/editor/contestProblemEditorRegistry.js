@@ -1,4 +1,4 @@
-import { ContestStyle } from '../../../../../../../modules/api/uriel/contest';
+import { ContestStyle } from '../../../../../../../modules/api/contest';
 import defaultContestProblemEditor from './defaultContestProblemEditor';
 import gcjContestProblemEditor from './gcjContestProblemEditor';
 import trocContestProblemEditor from './trocContestProblemEditor';

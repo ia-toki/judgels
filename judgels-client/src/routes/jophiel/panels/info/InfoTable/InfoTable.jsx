@@ -1,7 +1,7 @@
 import { getCountryName } from '../../../../../assets/data/countries';
 import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
-import { userInfoGender } from '../../../../../modules/api/jophiel/userInfo';
+import { userInfoGender } from '../../../../../modules/api/userInfo';
 
 export function InfoTable({ email, info }) {
   const infoRows = [

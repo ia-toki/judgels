@@ -20,16 +20,16 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.profile.Profile;
+import judgels.api.submission.bundle.BundleAnswer;
+import judgels.api.submission.bundle.BundleSubmission;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.submission.bundle.BundleAnswer;
-import judgels.sandalphon.api.submission.bundle.BundleSubmission;
-import judgels.sandalphon.problem.bundle.submission.BundleSubmissionClient;
-import judgels.sandalphon.problem.bundle.submission.BundleSubmissionStore;
+import judgels.problem.bundle.submission.BundleSubmissionClient;
+import judgels.problem.bundle.submission.BundleSubmissionStore;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {

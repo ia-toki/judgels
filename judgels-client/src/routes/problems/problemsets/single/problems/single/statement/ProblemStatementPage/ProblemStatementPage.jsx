@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
-import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../../../../../modules/api/problem';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
