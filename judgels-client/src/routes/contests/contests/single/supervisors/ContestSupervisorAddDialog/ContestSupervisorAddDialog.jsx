@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { SupervisorManagementPermission } from '../../../../../../modules/api/uriel/contestSupervisor';
+import { SupervisorManagementPermission } from '../../../../../../modules/api/contestSupervisor';
 import { upsertContestSupervisorsMutationOptions } from '../../../../../../modules/queries/contestSupervisor';
 import ContestSupervisorAddForm from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';

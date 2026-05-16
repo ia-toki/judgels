@@ -10,9 +10,9 @@ import { FormattedRelative } from '../../../../../../components/FormattedRelativ
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
 import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
-import { ContestScoreboardType } from '../../../../../../modules/api/uriel/contestScoreboard';
-import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/uriel/contestSubmissionProgramming';
+import { ContestStyle } from '../../../../../../modules/api/contest';
+import { ContestScoreboardType } from '../../../../../../modules/api/contestScoreboard';
+import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/contestSubmissionProgramming';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
   contestScoreboardQueryOptions,

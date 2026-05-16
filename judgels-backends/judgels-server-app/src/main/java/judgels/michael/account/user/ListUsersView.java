@@ -2,7 +2,7 @@ package judgels.michael.account.user;
 
 import java.time.Instant;
 import java.util.Map;
-import judgels.jophiel.api.user.User;
+import judgels.api.user.User;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.persistence.api.Page;

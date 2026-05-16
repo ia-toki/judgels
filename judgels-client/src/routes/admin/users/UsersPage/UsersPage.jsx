@@ -7,7 +7,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
-import { usersQueryOptions } from '../../../../modules/queries/user';
+import { usersQueryOptions } from '../../../../modules/queries/adminUser';
 import { UserUpsertDialog } from '../UserUpsertDialog/UserUpsertDialog';
 
 const PAGE_SIZE = 250;

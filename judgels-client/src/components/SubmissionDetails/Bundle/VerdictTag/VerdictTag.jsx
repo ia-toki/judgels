@@ -1,7 +1,7 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { Follower, Time } from '@blueprintjs/icons';
 
-import { Verdict } from '../../../../modules/api/sandalphon/submissionBundle';
+import { Verdict } from '../../../../modules/api/submissionBundle';
 
 const verdictIntentMap = {
   [Verdict.ACCEPTED]: Intent.SUCCESS,

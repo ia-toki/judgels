@@ -1,15 +1,17 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { archiveBySlugQueryOptions } from '../../modules/queries/archive';
-import { archivesQueryOptions } from '../../modules/queries/archive';
-import { chapterByJidQueryOptions } from '../../modules/queries/chapter';
-import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
-import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
-import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../modules/queries/course';
-import { problemSetBySlugQueryOptions, problemSetProblemsQueryOptions } from '../../modules/queries/problemSet';
-import { userByUsernameQueryOptions } from '../../modules/queries/user';
-import { userInfoQueryOptions } from '../../modules/queries/userInfo';
+import { archiveBySlugQueryOptions } from '../../modules/queries/adminArchive';
+import { archivesQueryOptions } from '../../modules/queries/adminArchive';
+import { chapterByJidQueryOptions } from '../../modules/queries/adminChapter';
+import { chapterLessonsQueryOptions } from '../../modules/queries/adminChapterLesson';
+import { chapterProblemsQueryOptions } from '../../modules/queries/adminChapterProblem';
+import { courseBySlugQueryOptions } from '../../modules/queries/adminCourse';
+import { courseChaptersQueryOptions } from '../../modules/queries/adminCourseChapter';
+import { problemSetBySlugQueryOptions } from '../../modules/queries/adminProblemSet';
+import { problemSetProblemsQueryOptions } from '../../modules/queries/adminProblemSetProblem';
+import { userByUsernameQueryOptions } from '../../modules/queries/adminUser';
+import { adminUserInfoQueryOptions } from '../../modules/queries/adminUserInfo';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -39,7 +41,7 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./users/UserPage/UserPage'))),
     loader: async ({ params: { username } }) => {
       const user = await queryClient.ensureQueryData(userByUsernameQueryOptions(username));
-      await queryClient.ensureQueryData(userInfoQueryOptions(user.jid));
+      await queryClient.ensureQueryData(adminUserInfoQueryOptions(user.jid));
     },
   });
 

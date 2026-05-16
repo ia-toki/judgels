@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { contestsPendingRatingQueryOptions } from '../../../../modules/queries/contestRating';
+import { contestsPendingRatingQueryOptions } from '../../../../modules/queries/adminContestRating';
 import { ContestRatingChangesDialog } from '../ContestRatingChangesDialog/ContestRatingChangesDialog';
 import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/ContestsPendingRatingTable';
 

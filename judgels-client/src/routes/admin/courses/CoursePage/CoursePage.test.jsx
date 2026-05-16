@@ -12,7 +12,7 @@ describe('CoursePage', () => {
   });
 
   const renderComponent = async () => {
-    nockJerahmeel().get('/courses/slug/course-1').reply(200, {
+    nockJerahmeel().get('/admin/courses/slug/course-1').reply(200, {
       id: 1,
       jid: 'JIDCOURSE1',
       slug: 'course-1',
@@ -21,7 +21,7 @@ describe('CoursePage', () => {
     });
 
     nockJerahmeel()
-      .get('/courses/JIDCOURSE1/chapters')
+      .get('/admin/courses/JIDCOURSE1/chapters')
       .reply(200, {
         data: [{ alias: 'A', chapterJid: 'JIDCHAPTER1' }],
         chaptersMap: { JIDCHAPTER1: { name: 'Chapter 1' } },

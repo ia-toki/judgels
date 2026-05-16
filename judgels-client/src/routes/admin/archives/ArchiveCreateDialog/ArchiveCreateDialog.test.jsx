@@ -42,7 +42,7 @@ describe('ArchiveCreateDialog', () => {
     await user.type(description, 'New description');
 
     nockJerahmeel()
-      .post('/archives', {
+      .post('/admin/archives', {
         slug: 'new-archive',
         name: 'New archive',
         category: 'New category',

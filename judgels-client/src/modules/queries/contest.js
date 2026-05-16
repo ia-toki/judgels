@@ -1,9 +1,9 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { isTLX } from '../../conf';
+import { ContestErrors, contestAPI } from '../api/contest';
 import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
-import { problemSetAPI } from '../api/jerahmeel/problemSet';
-import { ContestErrors, contestAPI } from '../api/uriel/contest';
+import { problemSetAPI } from '../api/problemSet';
 import { SubmissionError } from '../form/submissionError';
 import { contestContestantsQueryOptions } from '../queries/contestContestant';
 import { queryClient } from '../queryClient';
@@ -16,22 +16,6 @@ export const contestsQueryOptions = params => {
     queryFn: () => contestAPI.getContests(getToken(), name, page),
   });
 };
-
-export const createContestMutationOptions = () => ({
-  mutationFn: async data => {
-    try {
-      await contestAPI.createContest(getToken(), data);
-    } catch (error) {
-      if (error instanceof BadRequestError && error.message === ContestErrors.SlugAlreadyExists) {
-        throw new SubmissionError({ slug: 'Slug already exists' });
-      }
-      throw error;
-    }
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries(contestsQueryOptions());
-  },
-});
 
 export const updateContestMutationOptions = (contestJid, contestSlug) => ({
   mutationFn: async data => {

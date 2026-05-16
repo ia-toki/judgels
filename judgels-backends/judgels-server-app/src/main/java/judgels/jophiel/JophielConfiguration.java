@@ -3,12 +3,12 @@ package judgels.jophiel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.contrib.jophiel.auth.AuthConfiguration;
-import judgels.jophiel.mailer.MailerConfiguration;
-import judgels.jophiel.session.SessionConfiguration;
-import judgels.jophiel.user.account.UserResetPasswordConfiguration;
-import judgels.jophiel.user.superadmin.SuperadminCreatorConfiguration;
-import judgels.jophiel.user.web.WebConfiguration;
+import judgels.contrib.auth.AuthConfiguration;
+import judgels.mailer.MailerConfiguration;
+import judgels.session.SessionConfiguration;
+import judgels.user.account.UserResetPasswordConfiguration;
+import judgels.user.superadmin.SuperadminCreatorConfiguration;
+import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -33,10 +33,10 @@ public interface JophielConfiguration {
     WebConfiguration getWebConfig();
 
     @JsonProperty("recaptcha")
-    Optional<judgels.contrib.jophiel.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
+    Optional<judgels.contrib.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
 
     @JsonProperty("userRegistration")
-    Optional<judgels.contrib.jophiel.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
+    Optional<judgels.contrib.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
 
     @Value.Check
     default void check() {

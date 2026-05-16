@@ -18,17 +18,17 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.actor.Actor;
+import judgels.api.lesson.Lesson;
+import judgels.api.profile.Profile;
+import judgels.api.resource.Partner;
+import judgels.lesson.partner.LessonPartnerStore;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.lesson.Lesson;
-import judgels.sandalphon.api.resource.Partner;
-import judgels.sandalphon.lesson.partner.LessonPartnerStore;
 
 @Path("/lessons/{lessonId}/partners")
 public class LessonPartnerResource extends BaseLessonResource {

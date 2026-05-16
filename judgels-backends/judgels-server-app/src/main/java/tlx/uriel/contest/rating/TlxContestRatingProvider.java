@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.contrib.uriel.contest.rating.ContestRatingProvider;
-import judgels.jophiel.api.user.rating.UserRating;
+import judgels.api.user.rating.UserRating;
+import judgels.contrib.contest.rating.ContestRatingProvider;
 import tlx.jophiel.api.user.rating.TlxRating;
 
 public class TlxContestRatingProvider implements ContestRatingProvider {

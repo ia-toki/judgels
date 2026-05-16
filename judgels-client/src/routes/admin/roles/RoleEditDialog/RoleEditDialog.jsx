@@ -6,7 +6,7 @@ import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { Required } from '../../../../components/forms/validations';
-import { setUserRolesMutationOptions } from '../../../../modules/queries/userRole';
+import { setUserRolesMutationOptions } from '../../../../modules/queries/adminUserRole';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 

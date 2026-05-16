@@ -2,7 +2,7 @@ package judgels.michael.problem.bundle.item.config;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import judgels.sandalphon.api.problem.bundle.ItemType;
+import judgels.api.problem.bundle.ItemType;
 
 public class ItemConfigAdapterRegistry {
     private static final Map<ItemType, ItemConfigAdapter> REGISTRY = new LinkedHashMap<>();

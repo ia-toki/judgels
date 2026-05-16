@@ -71,7 +71,7 @@ describe('ProblemSetGeneralSection', () => {
     await user.type(archive, 'new-archive');
 
     nockJerahmeel()
-      .post('/problemsets/JIDPROBLEMSET1', body => {
+      .post('/admin/problemsets/JIDPROBLEMSET1', body => {
         return body.slug === 'new-problemset' && body.name === 'New Problemset' && body.archiveSlug === 'new-archive';
       })
       .reply(200);

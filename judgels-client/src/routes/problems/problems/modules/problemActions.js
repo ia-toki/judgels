@@ -1,4 +1,4 @@
-import { problemAPI } from '../../../../modules/api/jerahmeel/problem';
+import { problemAPI } from '../../../../modules/api/archiveProblem';
 import { getToken } from '../../../../modules/session';
 
 export async function getProblems(tags, page) {

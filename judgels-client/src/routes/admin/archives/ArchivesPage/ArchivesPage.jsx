@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { archivesQueryOptions } from '../../../../modules/queries/archive';
+import { archivesQueryOptions } from '../../../../modules/queries/adminArchive';
 import { ArchiveCreateDialog } from '../ArchiveCreateDialog/ArchiveCreateDialog';
 
 export default function ArchivesPage() {

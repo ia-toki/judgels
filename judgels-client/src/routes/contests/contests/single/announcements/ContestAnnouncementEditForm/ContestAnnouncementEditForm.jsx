@@ -5,7 +5,7 @@ import { FormRichTextArea } from '../../../../../../components/forms/FormRichTex
 import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../../../components/forms/validations';
-import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncementStatus } from '../../../../../../modules/api/contestAnnouncement';
 import { ContestAnnouncementInstruction } from '../ContestAnnouncementInstruction/ContestAnnouncementInstruction';
 
 export default function ContestAnnouncementEditForm({ onSubmit, initialValues, renderFormComponents }) {

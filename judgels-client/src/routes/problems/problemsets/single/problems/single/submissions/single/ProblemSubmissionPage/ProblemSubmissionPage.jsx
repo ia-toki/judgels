@@ -6,7 +6,7 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
-import { submissionProgrammingAPI } from '../../../../../../../../../modules/api/jerahmeel/submissionProgramming';
+import { submissionProgrammingAPI } from '../../../../../../../../../modules/api/submissionProgramming';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,

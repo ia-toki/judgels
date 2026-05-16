@@ -19,17 +19,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.jophiel.api.actor.Actor;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.problem.bundle.BundleItem;
+import judgels.api.problem.bundle.ItemConfig;
+import judgels.api.problem.bundle.ItemType;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapter;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapterRegistry;
 import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.bundle.BundleItem;
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
-import judgels.sandalphon.api.problem.bundle.ItemType;
-import judgels.sandalphon.problem.bundle.item.ItemEngineRegistry;
+import judgels.problem.bundle.item.ItemEngineRegistry;
 
 @Path("/problems/bundle/{problemId}/items")
 public class BundleProblemItemResource extends BaseBundleProblemResource {

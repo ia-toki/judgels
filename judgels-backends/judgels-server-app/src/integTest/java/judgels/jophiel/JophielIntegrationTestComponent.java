@@ -3,14 +3,14 @@ package judgels.jophiel;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.jophiel.hibernate.JophielHibernateDaoModule;
-import judgels.jophiel.role.SuperadminRoleStore;
-import judgels.jophiel.session.SessionStore;
-import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.account.UserResetPasswordStore;
-import judgels.jophiel.user.avatar.UserAvatarIntegrationTestModule;
+import judgels.role.SuperadminRoleStore;
 import judgels.service.JudgelsModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.session.SessionStore;
+import judgels.user.UserStore;
+import judgels.user.account.UserResetPasswordStore;
+import judgels.user.avatar.UserAvatarIntegrationTestModule;
 
 @Component(modules = {
         JophielHibernateDaoModule.class,

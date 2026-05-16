@@ -6,12 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import judgels.api.problem.ProblemStatement;
+import judgels.api.problem.bundle.BundleItem;
+import judgels.api.problem.bundle.ItemConfig;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.problem.ProblemStatement;
-import judgels.sandalphon.api.problem.bundle.BundleItem;
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class ViewStatementView extends TemplateView {
     private final ProblemStatement statement;

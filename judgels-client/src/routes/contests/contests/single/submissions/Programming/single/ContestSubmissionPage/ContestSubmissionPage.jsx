@@ -4,7 +4,7 @@ import { useParams } from '@tanstack/react-router';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { contestSubmissionProgrammingAPI } from '../../../../../../../../modules/api/uriel/contestSubmissionProgramming';
+import { contestSubmissionProgrammingAPI } from '../../../../../../../../modules/api/contestSubmissionProgramming';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
 import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
 import { getToken } from '../../../../../../../../modules/session';

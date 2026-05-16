@@ -1,7 +1,7 @@
 package judgels.michael.problem.bundle.item.config;
 
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
-import judgels.sandalphon.api.problem.bundle.StatementItemConfig;
+import judgels.api.problem.bundle.ItemConfig;
+import judgels.api.problem.bundle.StatementItemConfig;
 
 public class StatementItemConfigAdapter implements ItemConfigAdapter {
     @Override

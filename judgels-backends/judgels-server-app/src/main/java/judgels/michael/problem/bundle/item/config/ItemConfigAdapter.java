@@ -1,6 +1,6 @@
 package judgels.michael.problem.bundle.item.config;
 
-import judgels.sandalphon.api.problem.bundle.ItemConfig;
+import judgels.api.problem.bundle.ItemConfig;
 
 public interface ItemConfigAdapter {
     ItemConfigForm buildFormFromConfig(ItemConfig config);

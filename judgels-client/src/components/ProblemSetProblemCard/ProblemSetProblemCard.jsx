@@ -2,7 +2,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { SmallTick } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 
-import { ProblemType } from '../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../modules/api/problem';
 import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
 import ProblemDifficulty from '../ProblemDifficulty/ProblemDifficulty';
 import ProblemTopicsTags from '../ProblemTopicTags/ProblemTopicTags';

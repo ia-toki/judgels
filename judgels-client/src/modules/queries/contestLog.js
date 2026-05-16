@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestLogAPI } from '../api/uriel/contestLog';
+import { contestLogAPI } from '../api/contestLog';
 import { getToken } from '../session';
 
 export const contestLogsQueryOptions = (contestJid, params) => {

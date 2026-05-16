@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { archiveBySlugQueryOptions } from '../../../../modules/queries/archive';
+import { archiveBySlugQueryOptions } from '../../../../modules/queries/adminArchive';
 import { ArchiveGeneralSection } from '../ArchiveGeneralSection/ArchiveGeneralSection';
 
 export default function ArchivePage() {

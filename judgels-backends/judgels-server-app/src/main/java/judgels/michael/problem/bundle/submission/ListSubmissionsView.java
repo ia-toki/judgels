@@ -1,11 +1,11 @@
 package judgels.michael.problem.bundle.submission;
 
 import java.util.Map;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.profile.Profile;
+import judgels.api.submission.bundle.BundleSubmission;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.submission.bundle.BundleSubmission;
 
 public class ListSubmissionsView extends TemplateView {
     private final Page<BundleSubmission> submissions;

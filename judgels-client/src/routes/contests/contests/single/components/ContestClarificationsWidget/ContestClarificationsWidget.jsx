@@ -3,8 +3,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 
-import { ContestClarificationStatus } from '../../../../../../modules/api/uriel/contestClarification';
-import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/uriel/contestWeb';
+import { ContestClarificationStatus } from '../../../../../../modules/api/contestClarification';
+import { REFRESH_WEB_CONFIG_INTERVAL } from '../../../../../../modules/api/contestWeb';
 import { showDesktopNotification } from '../../../../../../modules/notification/notification';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';

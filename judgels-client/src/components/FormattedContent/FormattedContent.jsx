@@ -1,4 +1,4 @@
-import { contestFileAPI } from '../../modules/api/uriel/contestFile';
+import { contestFileAPI } from '../../modules/api/contestFile';
 import RichStatementText from '../RichStatementText/RichStatementText';
 
 export function FormattedContent({ context, children }) {

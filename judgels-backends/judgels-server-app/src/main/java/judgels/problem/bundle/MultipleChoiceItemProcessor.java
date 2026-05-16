@@ -1,0 +1,66 @@
+package judgels.problem.bundle;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import judgels.api.problem.bundle.Item;
+import judgels.api.problem.bundle.ItemConfig;
+import judgels.api.problem.bundle.MultipleChoiceItemConfig;
+import judgels.sandalphon.SandalphonUtils;
+
+public class MultipleChoiceItemProcessor implements ItemProcessor {
+    @Override
+    public ItemConfig parseItemConfigFromString(ObjectMapper objectMapper, String json) throws IOException {
+        return objectMapper.readValue(json, MultipleChoiceItemConfig.class);
+    }
+
+    @Override
+    public Item replaceRenderUrls(Item item, String apiUrl, String problemJid) {
+        MultipleChoiceItemConfig itemConfig = (MultipleChoiceItemConfig) item.getConfig();
+
+        List<MultipleChoiceItemConfig.Choice> choices = itemConfig.getChoices().stream()
+                .map(choice -> new MultipleChoiceItemConfig.Choice.Builder()
+                        .from(choice)
+                        .content(SandalphonUtils.replaceProblemRenderUrls(
+                                choice.getContent(),
+                                apiUrl,
+                                problemJid))
+                        .build())
+                .collect(Collectors.toList());
+
+        return new Item.Builder()
+                .from(item)
+                .config(new MultipleChoiceItemConfig.Builder()
+                        .from(itemConfig)
+                        .statement(
+                                SandalphonUtils.replaceProblemRenderUrls(
+                                        item.getConfig().getStatement(),
+                                        apiUrl,
+                                        problemJid))
+                        .choices(choices)
+                        .build())
+                .build();
+    }
+
+    @Override
+    public Item removeAnswerKey(Item item) {
+        MultipleChoiceItemConfig itemConfig = (MultipleChoiceItemConfig) item.getConfig();
+
+        List<MultipleChoiceItemConfig.Choice> choices = itemConfig.getChoices().stream()
+                .map(choice -> new MultipleChoiceItemConfig.Choice.Builder()
+                        .from(choice)
+                        .isCorrect(Optional.empty())
+                        .build())
+                .collect(Collectors.toList());
+
+        return new Item.Builder()
+                .from(item)
+                .config(new MultipleChoiceItemConfig.Builder()
+                        .from(item.getConfig())
+                        .choices(choices)
+                        .build())
+                .build();
+    }
+}

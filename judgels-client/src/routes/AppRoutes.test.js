@@ -1,7 +1,7 @@
-import { JerahmeelRole } from '../modules/api/jerahmeel/role';
-import { JophielRole } from '../modules/api/jophiel/role';
-import { SandalphonRole } from '../modules/api/sandalphon/role';
-import { UrielRole } from '../modules/api/uriel/role';
+import { ArchiveAdminRole } from '../modules/api/archiveAdminRole';
+import { ContestAdminRole } from '../modules/api/contestAdminRole';
+import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { UserAdminRole } from '../modules/api/userAdminRole';
 import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {
@@ -12,7 +12,7 @@ describe('AppRoutes', () => {
   };
 
   test('Jophiel admin', () => {
-    testAppRoutes({ jophiel: JophielRole.Admin }, [
+    testAppRoutes({ jophiel: UserAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',
@@ -23,7 +23,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jophiel superadmin', () => {
-    testAppRoutes({ jophiel: JophielRole.Superadmin }, [
+    testAppRoutes({ jophiel: UserAdminRole.Superadmin }, [
       'admin',
       'contests',
       'courses',
@@ -34,11 +34,18 @@ describe('AppRoutes', () => {
   });
 
   test('Uriel admin', () => {
-    testAppRoutes({ uriel: UrielRole.Admin }, ['admin', 'contests', 'courses', 'problems', 'submissions', 'ranking']);
+    testAppRoutes({ uriel: ContestAdminRole.Admin }, [
+      'admin',
+      'contests',
+      'courses',
+      'problems',
+      'submissions',
+      'ranking',
+    ]);
   });
 
   test('Jerahmeel admin', () => {
-    testAppRoutes({ jerahmeel: JerahmeelRole.Admin }, [
+    testAppRoutes({ jerahmeel: ArchiveAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',

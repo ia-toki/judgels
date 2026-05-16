@@ -1,9 +1,9 @@
 package judgels.michael.lesson;
 
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.lesson.Lesson;
+import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.api.lesson.Lesson;
 
 public class ViewLessonView extends TemplateView {
     private final Lesson lesson;

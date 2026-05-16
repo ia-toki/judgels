@@ -1,6 +1,6 @@
 package judgels.uriel.hibernate;
 
-import static judgels.uriel.api.contest.contestant.ContestContestantStatus.APPROVED;
+import static judgels.api.contest.contestant.ContestContestantStatus.APPROVED;
 
 import jakarta.inject.Inject;
 import java.io.PrintWriter;

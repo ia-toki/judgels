@@ -1,4 +1,4 @@
-import { ProblemType } from '../../../../../../../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../../../../../../../modules/api/problem';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import { useChapterProblemContext } from './ChapterProblemContext';
 import ProgrammingChapterProblemStatementLayout from './Programming/ChapterProblemStatementLayout';

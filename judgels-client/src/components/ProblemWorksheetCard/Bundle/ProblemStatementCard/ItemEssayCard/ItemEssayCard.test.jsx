@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemType } from '../../../../../modules/api/problemBundle';
 import { WebPrefsProvider } from '../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { ItemEssayCard } from './ItemEssayCard';

@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestHistoryAPI } from '../api/uriel/contestHistory';
+import { contestHistoryAPI } from '../api/contestHistory';
 
 export const contestPublicHistoryQueryOptions = username =>
   queryOptions({

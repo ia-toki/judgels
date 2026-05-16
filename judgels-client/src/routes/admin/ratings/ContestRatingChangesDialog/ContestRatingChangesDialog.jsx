@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { getRatingClass } from '../../../../modules/api/jophiel/userRating';
-import { updateRatingsMutationOptions } from '../../../../modules/queries/userRating';
+import { getRatingClass } from '../../../../modules/api/userRating';
+import { updateRatingsMutationOptions } from '../../../../modules/queries/adminUserRating';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 

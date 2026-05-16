@@ -8,26 +8,21 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import judgels.app.JudgelsApp;
+import judgels.contrib.auth.AuthModule;
+import judgels.contrib.contest.rating.ContestRatingModule;
 import judgels.contrib.fs.aws.AwsConfiguration;
 import judgels.contrib.fs.aws.AwsFileSystem;
 import judgels.contrib.fs.aws.AwsFsConfiguration;
-import judgels.contrib.jophiel.auth.AuthModule;
-import judgels.contrib.jophiel.recaptcha.RecaptchaModule;
-import judgels.contrib.jophiel.user.registration.UserRegistrationModule;
-import judgels.contrib.jophiel.user.registration.web.UserRegistrationWebConfig;
-import judgels.contrib.uriel.contest.rating.ContestRatingModule;
+import judgels.contrib.recaptcha.RecaptchaModule;
+import judgels.contrib.user.registration.UserRegistrationModule;
+import judgels.contrib.user.registration.web.UserRegistrationWebConfig;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
-import judgels.jerahmeel.submission.bundle.ItemSubmissionModule;
 import judgels.jophiel.DaggerJophielComponent;
 import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
-import judgels.jophiel.mailer.MailerModule;
-import judgels.jophiel.session.SessionModule;
-import judgels.jophiel.user.account.UserResetPasswordModule;
-import judgels.jophiel.user.superadmin.SuperadminModule;
-import judgels.jophiel.user.web.WebModule;
+import judgels.mailer.MailerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
@@ -38,9 +33,14 @@ import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
+import judgels.session.SessionModule;
+import judgels.submission.bundle.ArchiveItemSubmissionModule;
 import judgels.uriel.DaggerUrielComponent;
 import judgels.uriel.UrielComponent;
 import judgels.uriel.UrielConfiguration;
+import judgels.user.account.UserResetPasswordModule;
+import judgels.user.superadmin.SuperadminModule;
+import judgels.user.web.WebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 import tlx.uriel.contest.rating.TlxContestRatingProvider;
 
@@ -150,11 +150,13 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
+        env.jersey().register(component.userAdminResource());
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
+        env.jersey().register(component.userInfoAdminResource());
         env.jersey().register(component.userRatingResource());
-        env.jersey().register(component.userRoleResource());
+        env.jersey().register(component.userRoleAdminResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
 
@@ -209,6 +211,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         UrielComponent component = componentBuilder.build();
 
         env.jersey().register(component.contestResource());
+        env.jersey().register(component.contestAdminResource());
         env.jersey().register(component.contestWebResource());
         env.jersey().register(component.contestAnnouncementResource());
         env.jersey().register(component.contestClarificationResource());
@@ -227,6 +230,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         if (JudgelsApp.isTLX()) {
             env.jersey().register(component.contestRatingResource());
+            env.jersey().register(component.contestRatingAdminResource());
+            env.jersey().register(component.userRatingAdminResource());
         }
 
         component.scheduler().scheduleWithFixedDelay(
@@ -260,8 +265,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gabrielClientModule(new GabrielClientModule(jerahmeelConfig.getGabrielConfig()))
-                .submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig()))
-                .itemSubmissionModule(new ItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
+                .archiveSubmissionModule(new judgels.submission.programming.ArchiveSubmissionModule(jerahmeelConfig.getStatsConfig()))
+                .archiveItemSubmissionModule(new ArchiveItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
             if (jerahmeelConfig.getSubmissionConfig().isPresent()) {
@@ -269,7 +274,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                     AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
                     AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
                     AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                    componentBuilder.submissionModule(new judgels.jerahmeel.submission.programming.SubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+                    componentBuilder.archiveSubmissionModule(new judgels.submission.programming.ArchiveSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
                 }
             }
         }
@@ -277,16 +282,24 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JerahmeelComponent component = componentBuilder.build();
 
         env.jersey().register(component.archiveResource());
+        env.jersey().register(component.archiveAdminResource());
         env.jersey().register(component.curriculumResource());
         env.jersey().register(component.courseResource());
+        env.jersey().register(component.courseAdminResource());
         env.jersey().register(component.chapterResource());
+        env.jersey().register(component.chapterAdminResource());
         env.jersey().register(component.courseChapterResource());
+        env.jersey().register(component.courseChapterAdminResource());
         env.jersey().register(component.chapterLessonResource());
+        env.jersey().register(component.chapterLessonAdminResource());
         env.jersey().register(component.chapterProblemResource());
+        env.jersey().register(component.chapterProblemAdminResource());
         env.jersey().register(component.problemResource());
         env.jersey().register(component.problemTagResource());
         env.jersey().register(component.problemSetResource());
+        env.jersey().register(component.problemSetAdminResource());
         env.jersey().register(component.problemSetProblemResource());
+        env.jersey().register(component.problemSetProblemAdminResource());
         env.jersey().register(component.itemSubmissionResource());
         env.jersey().register(component.submissionResource());
         env.jersey().register(component.userStatsResource());

@@ -2,11 +2,11 @@ package judgels.sandalphon.hibernate;
 
 import jakarta.inject.Inject;
 import java.util.List;
+import judgels.api.problem.ProblemSetterRole;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.UnmodifiableHibernateDao;
-import judgels.sandalphon.api.problem.ProblemSetterRole;
 import judgels.sandalphon.persistence.ProblemSetterDao;
 import judgels.sandalphon.persistence.ProblemSetterModel;
 import judgels.sandalphon.persistence.ProblemSetterModel_;

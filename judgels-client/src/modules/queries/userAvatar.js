@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { userAvatarAPI } from '../api/jophiel/userAvatar';
+import { userAvatarAPI } from '../api/userAvatar';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

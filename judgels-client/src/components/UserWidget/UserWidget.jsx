@@ -4,7 +4,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
-import { getRatingClass } from '../../modules/api/jophiel/userRating';
+import { getRatingClass } from '../../modules/api/userRating';
 import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 import { useSession } from '../../modules/session';

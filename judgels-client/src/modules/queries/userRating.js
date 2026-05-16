@@ -1,4 +1,4 @@
-import { userRatingAPI } from '../api/jophiel/userRating';
+import { userRatingAPI } from '../api/userRating';
 import { contestsPendingRatingQueryOptions } from '../queries/contestRating';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';

@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
+import { CourseErrors, courseAPI } from '../api/course';
+import { courseChapterAPI } from '../api/courseChapter';
 import { BadRequestError } from '../api/error';
-import { CourseErrors, courseAPI } from '../api/jerahmeel/course';
-import { courseChapterAPI } from '../api/jerahmeel/courseChapter';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';

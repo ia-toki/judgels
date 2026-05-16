@@ -1,8 +1,8 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { ContestStyle } from '../../modules/api/uriel/contest';
-import { ContestRole } from '../../modules/api/uriel/contestWeb';
+import { ContestStyle } from '../../modules/api/contest';
+import { ContestRole } from '../../modules/api/contestWeb';
 import {
   contestBySlugQueryOptions,
   contestDescriptionQueryOptions,

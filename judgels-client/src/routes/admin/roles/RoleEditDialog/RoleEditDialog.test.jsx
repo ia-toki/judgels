@@ -49,7 +49,7 @@ describe('RoleEditDialog', () => {
     await user.type(textarea, 'andi,ADMIN,ADMIN,,\ncaca,,ADMIN,,');
 
     nockJophiel()
-      .put('/user-roles', {
+      .put('/admin/user-roles', {
         andi: { jophiel: 'ADMIN', sandalphon: 'ADMIN' },
         caca: { sandalphon: 'ADMIN' },
       })

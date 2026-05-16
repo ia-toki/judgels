@@ -2,7 +2,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 
 import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
-import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
 
 import './ContestProblemCard.scss';
 

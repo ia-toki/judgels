@@ -12,14 +12,14 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import java.util.Set;
+import judgels.api.actor.Actor;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemStatement;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.jophiel.api.actor.Actor;
 import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.problem.programming.grading.LanguageRestrictionAdapter;
 import judgels.michael.template.HtmlTemplate;
-import judgels.sandalphon.api.problem.Problem;
-import judgels.sandalphon.api.problem.ProblemStatement;
 
 @Path("/problems/programming/{problemId}/statements")
 public class ProgrammingProblemStatementResource extends BaseProgrammingProblemResource {

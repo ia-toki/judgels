@@ -74,7 +74,7 @@ describe('ArchiveGeneralSection', () => {
     await user.type(description, 'New Description');
 
     nockJerahmeel()
-      .post('/archives/JIDARCHIVE1', {
+      .post('/admin/archives/JIDARCHIVE1', {
         slug: 'new-archive',
         name: 'New Archive',
         category: 'New Category',

@@ -1,9 +1,9 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { BadRequestError, NotFoundError } from '../api/error';
-import { userAccountAPI } from '../api/jophiel/userAccount';
-import { userRegistrationWebAPI } from '../api/jophiel/userRegistration';
-import { userSearchAPI } from '../api/jophiel/userSearch';
+import { userAccountAPI } from '../api/userAccount';
+import { userRegistrationWebAPI } from '../api/userRegistration';
+import { userSearchAPI } from '../api/userSearch';
 import { SubmissionError } from '../form/submissionError';
 
 export const registrationWebConfigQueryOptions = () =>

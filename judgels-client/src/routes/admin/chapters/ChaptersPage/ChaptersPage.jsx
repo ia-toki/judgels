@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { chaptersQueryOptions } from '../../../../modules/queries/chapter';
+import { chaptersQueryOptions } from '../../../../modules/queries/adminChapter';
 import { ChapterCreateDialog } from '../ChapterCreateDialog/ChapterCreateDialog';
 
 export default function ChaptersPage() {

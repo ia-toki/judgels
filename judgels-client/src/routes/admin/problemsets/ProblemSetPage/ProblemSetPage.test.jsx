@@ -12,7 +12,7 @@ describe('ProblemSetPage', () => {
   });
 
   const renderComponent = async () => {
-    nockJerahmeel().get('/problemsets/slug/problemset-1').reply(200, {
+    nockJerahmeel().get('/admin/problemsets/slug/problemset-1').reply(200, {
       jid: 'JIDPROBLEMSET1',
       slug: 'problemset-1',
       name: 'Problemset 1',
@@ -22,13 +22,13 @@ describe('ProblemSetPage', () => {
     });
 
     nockJerahmeel()
-      .get('/archives')
+      .get('/admin/archives')
       .reply(200, {
         data: [{ jid: 'JIDARCHIVE1', slug: 'archive-1', name: 'Archive 1' }],
       });
 
     nockJerahmeel()
-      .get('/problemsets/JIDPROBLEMSET1/problems')
+      .get('/admin/problemsets/JIDPROBLEMSET1/problems')
       .reply(200, {
         data: [{ alias: 'A', problemJid: 'JIDPROBLEM1', type: 'PROGRAMMING', contestJids: [] }],
         problemsMap: { JIDPROBLEM1: { slug: 'problem-1' } },

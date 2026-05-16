@@ -5,7 +5,7 @@ import java.util.Map;
 import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.WorldLanguageRegistry;
 
 public class NewProblemView extends TemplateView {
     public NewProblemView(HtmlTemplate template, NewProblemForm form) {

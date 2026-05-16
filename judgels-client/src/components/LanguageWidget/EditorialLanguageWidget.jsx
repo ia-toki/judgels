@@ -1,6 +1,6 @@
 import { Flex } from '@blueprintjs/labs';
 
-import { sortLanguagesByName } from '../../modules/api/sandalphon/language';
+import { sortLanguagesByName } from '../../modules/api/language';
 import { useWebPrefs } from '../../modules/webPrefs';
 import LanguageForm from './LanguageForm/LanguageForm';
 

@@ -3,7 +3,7 @@ import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { createCourseMutationOptions } from '../../../../modules/queries/course';
+import { createCourseMutationOptions } from '../../../../modules/queries/adminCourse';
 import CourseCreateForm from '../CourseCreateForm/CourseCreateForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

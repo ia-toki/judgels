@@ -1,8 +1,8 @@
 package judgels.sandalphon;
 
 import java.util.Optional;
-import judgels.sandalphon.api.lesson.LessonInfo;
-import judgels.sandalphon.api.problem.ProblemInfo;
+import judgels.api.lesson.LessonInfo;
+import judgels.api.problem.ProblemInfo;
 
 public class SandalphonUtils {
     private SandalphonUtils() {}

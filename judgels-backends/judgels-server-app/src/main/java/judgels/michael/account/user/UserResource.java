@@ -20,16 +20,16 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.info.UserInfo;
-import judgels.jophiel.session.SessionStore;
-import judgels.jophiel.user.UserCreator;
-import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.info.UserInfoStore;
+import judgels.api.actor.Actor;
+import judgels.api.user.User;
+import judgels.api.user.info.UserInfo;
 import judgels.michael.account.BaseAccountResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
+import judgels.session.SessionStore;
+import judgels.user.UserCreator;
+import judgels.user.UserStore;
+import judgels.user.info.UserInfoStore;
 
 @Path("/accounts/users")
 public class UserResource extends BaseAccountResource {

@@ -4,7 +4,7 @@ import { Flex } from '@blueprintjs/labs';
 import { FormattedContent } from '../../../../../../components/FormattedContent/FormattedContent';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
-import { ContestAnnouncementStatus } from '../../../../../../modules/api/uriel/contestAnnouncement';
+import { ContestAnnouncementStatus } from '../../../../../../modules/api/contestAnnouncement';
 
 import './ContestAnnouncementCard.scss';
 

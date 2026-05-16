@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { chapterAPI } from '../api/jerahmeel/chapter';
+import { chapterAPI } from '../api/chapter';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

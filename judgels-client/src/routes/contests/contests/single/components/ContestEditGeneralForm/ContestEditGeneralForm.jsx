@@ -6,7 +6,7 @@ import { FormTableDateInput } from '../../../../../../components/forms/FormTable
 import { FormTableSelect2 } from '../../../../../../components/forms/FormTableSelect2/FormTableSelect2';
 import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { Required, Slug, composeValidators } from '../../../../../../components/forms/validations';
-import { ContestStyle } from '../../../../../../modules/api/uriel/contest';
+import { ContestStyle } from '../../../../../../modules/api/contest';
 import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 
 export default function ContestEditGeneralForm({ onSubmit, initialValues, onCancel }) {

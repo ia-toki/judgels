@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 
-import { ContestProblemStatus } from '../../../../../../modules/api/uriel/contestProblem';
+import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { ContestProblemCard } from './ContestProblemCard';
 

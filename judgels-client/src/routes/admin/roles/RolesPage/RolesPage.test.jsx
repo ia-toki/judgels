@@ -21,7 +21,7 @@ describe('RolesPage', () => {
       userJid2: { username: 'budi' },
     },
   } = {}) => {
-    nockJophiel().get('/user-roles').reply(200, {
+    nockJophiel().get('/admin/user-roles').reply(200, {
       data: roles,
       profilesMap,
     });

@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { submissionProgrammingAPI } from '../api/jerahmeel/submissionProgramming';
+import { submissionProgrammingAPI } from '../api/submissionProgramming';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

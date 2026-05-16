@@ -3,18 +3,18 @@ package judgels.sandalphon;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.lesson.LessonResource;
 import judgels.messaging.rabbitmq.RabbitMQModule;
+import judgels.problem.base.ProblemResource;
 import judgels.sandalphon.hibernate.SandalphonHibernateDaoModule;
-import judgels.sandalphon.lesson.LessonResource;
-import judgels.sandalphon.problem.base.ProblemResource;
-import judgels.sandalphon.submission.SubmissionModule;
-import judgels.sandalphon.submission.programming.GradingResponsePoller;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.submission.SubmissionModule;
+import judgels.submission.programming.GradingResponsePoller;
 
 @Component(modules = {
         // Judgels service

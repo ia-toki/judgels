@@ -3,8 +3,8 @@ package judgels.michael.resource;
 import java.util.Map;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.resource.StatementLanguageStatus;
-import judgels.sandalphon.resource.WorldLanguageRegistry;
+import judgels.resource.StatementLanguageStatus;
+import judgels.resource.WorldLanguageRegistry;
 
 public class ListStatementLanguagesView extends TemplateView {
     private final Map<String, StatementLanguageStatus> availableLanguages;

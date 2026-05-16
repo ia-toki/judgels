@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { ItemType } from '../../../../../modules/api/sandalphon/problemBundle';
+import { ItemType } from '../../../../../modules/api/problemBundle';
 import { WebPrefsProvider } from '../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { ItemStatementCard } from './ItemStatementCard';

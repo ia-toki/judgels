@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { chapterByJidQueryOptions } from '../../../../modules/queries/chapter';
+import { chapterByJidQueryOptions } from '../../../../modules/queries/adminChapter';
 import { ChapterGeneralSection } from '../ChapterGeneralSection/ChapterGeneralSection';
 import { ChapterLessonsSection } from '../ChapterLessonsSection/ChapterLessonsSection';
 import { ChapterProblemsSection } from '../ChapterProblemsSection/ChapterProblemsSection';

@@ -2,8 +2,8 @@ package judgels.michael.problem.bundle;
 
 import jakarta.inject.Inject;
 import judgels.michael.problem.BaseProblemResource;
-import judgels.sandalphon.problem.bundle.BundleProblemStore;
-import judgels.sandalphon.problem.bundle.item.BundleItemStore;
+import judgels.problem.bundle.BundleProblemStore;
+import judgels.problem.bundle.item.BundleItemStore;
 
 public abstract class BaseBundleProblemResource extends BaseProblemResource {
     @Inject protected BundleProblemStore bundleProblemStore;

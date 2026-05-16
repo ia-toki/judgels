@@ -1,7 +1,7 @@
 package judgels.michael.account.user;
 
-import judgels.jophiel.api.user.User;
-import judgels.jophiel.api.user.info.UserInfo;
+import judgels.api.user.User;
+import judgels.api.user.info.UserInfo;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

@@ -7,7 +7,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
-import { ProblemType, getProblemName } from '../../../../modules/api/sandalphon/problem';
+import { ProblemType, getProblemName } from '../../../../modules/api/problem';
 import { problemsQueryOptions } from '../../../../modules/queries/problem';
 
 const PAGE_SIZE = 20;

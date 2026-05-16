@@ -39,7 +39,7 @@ describe('CourseCreateDialog', () => {
     await user.type(description, 'New description');
 
     nockJerahmeel()
-      .post('/courses', {
+      .post('/admin/courses', {
         slug: 'new-course',
         name: 'New course',
         description: 'New description',

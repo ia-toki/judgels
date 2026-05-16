@@ -2,7 +2,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
-import { IcpcScoreboardProblemState } from '../../../../../../modules/api/uriel/scoreboard';
+import { IcpcScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { IcpcScoreboardTable } from './IcpcScoreboardTable';
 

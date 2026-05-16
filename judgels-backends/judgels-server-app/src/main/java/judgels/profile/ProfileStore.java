@@ -1,0 +1,93 @@
+package judgels.profile;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import judgels.api.profile.BasicProfile;
+import judgels.api.profile.Profile;
+import judgels.api.user.User;
+import judgels.api.user.info.UserInfo;
+import judgels.api.user.rating.UserRating;
+import judgels.persistence.api.Page;
+import judgels.user.UserStore;
+import judgels.user.info.UserInfoStore;
+import judgels.user.rating.UserRatingStore;
+import judgels.user.rating.UserWithRating;
+
+public class ProfileStore {
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("\\[user:(\\S+)]");
+
+    private final UserStore userStore;
+    private final UserInfoStore infoStore;
+    private final UserRatingStore ratingStore;
+
+    @Inject
+    public ProfileStore(UserStore userStore, UserInfoStore infoStore, UserRatingStore ratingStore) {
+        this.userStore = userStore;
+        this.infoStore = infoStore;
+        this.ratingStore = ratingStore;
+    }
+
+    public Profile getProfile(String userJid, Instant time) {
+        return getProfiles(ImmutableSet.of(userJid), time).get(userJid);
+    }
+
+    public Profile getProfile(String userJid) {
+        return getProfiles(ImmutableSet.of(userJid), Instant.now()).get(userJid);
+    }
+
+    public Map<String, Profile> getProfiles(Collection<String> userJids, Instant time) {
+        Map<String, UserInfo> infos = infoStore.getInfos(userJids);
+        Map<String, UserRating> ratings = ratingStore.getRatings(time, userJids);
+
+        return userStore.getUsersByJids(userJids).entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> new Profile.Builder()
+                        .username(e.getValue().getUsername())
+                        .country(Optional.ofNullable(infos.get(e.getKey())).flatMap(UserInfo::getCountry))
+                        .rating(Optional.ofNullable(ratings.get(e.getKey())))
+                        .build()));
+    }
+
+    public Map<String, Profile> getProfiles(Collection<String> userJids) {
+        return getProfiles(userJids, Instant.now());
+    }
+
+    public Page<Profile> getTopRatedProfiles(Instant time, int pageNumber, int pageSize) {
+        Page<UserWithRating> ratings = ratingStore.getTopRatings(time, pageNumber, pageSize);
+
+        var userJids = Lists.transform(ratings.getPage(), UserWithRating::getUserJid);
+        Map<String, User> users = userStore.getUsersByJids(userJids);
+        Map<String, UserInfo> infos = infoStore.getInfos(userJids);
+
+        return ratings.mapPage(p -> p
+                .stream()
+                .filter(e -> users.containsKey(e.getUserJid()))
+                .map(e -> new Profile.Builder()
+                        .username(users.get(e.getUserJid()).getUsername())
+                        .country(Optional.ofNullable(infos.get(e.getUserJid())).flatMap(UserInfo::getCountry))
+                        .rating(Optional.of(e.getRating()))
+                        .build())
+                .collect(Collectors.toList()));
+    }
+
+    public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {
+        return userStore.getUserByJid(userJid).map(user -> {
+            Map<String, UserRating> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
+            UserInfo info = infoStore.getInfo(userJid);
+
+            return new BasicProfile.Builder()
+                    .username(user.getUsername())
+                    .country(info.getCountry())
+                    .rating(Optional.ofNullable(ratings.get(userJid)))
+                    .name(info.getName())
+                    .build();
+        });
+    }
+}

@@ -7,8 +7,8 @@ import StatementLanguageWidget from '../../../../../../components/LanguageWidget
 import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
-import { consolidateLanguages } from '../../../../../../modules/api/sandalphon/language';
-import { getProblemName } from '../../../../../../modules/api/sandalphon/problem';
+import { consolidateLanguages } from '../../../../../../modules/api/language';
+import { getProblemName } from '../../../../../../modules/api/problem';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemsQueryOptions,

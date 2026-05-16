@@ -1,6 +1,6 @@
 import { Intent, Tag } from '@blueprintjs/core';
 
-import { ProblemType } from '../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../modules/api/problem';
 import { useWebPrefs } from '../../modules/webPrefs';
 
 import './ProblemDifficulty.scss';

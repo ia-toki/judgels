@@ -3,7 +3,7 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { allModules } from '../../../../../../modules/api/uriel/contestModule';
+import { allModules } from '../../../../../../modules/api/contestModule';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
   contestModulesQueryOptions,

@@ -1,6 +1,6 @@
 import { Intent, Tag } from '@blueprintjs/core';
 
-import { ContestRole } from '../../modules/api/uriel/contestWeb';
+import { ContestRole } from '../../modules/api/contestWeb';
 
 const contestRoleColor = {
   [ContestRole.Admin]: Intent.DANGER,

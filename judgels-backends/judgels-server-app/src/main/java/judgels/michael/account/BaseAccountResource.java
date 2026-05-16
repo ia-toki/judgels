@@ -1,6 +1,6 @@
 package judgels.michael.account;
 
-import judgels.jophiel.api.actor.Actor;
+import judgels.api.actor.Actor;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 

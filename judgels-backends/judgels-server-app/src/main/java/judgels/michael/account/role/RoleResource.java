@@ -20,15 +20,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.jophiel.api.actor.Actor;
-import judgels.jophiel.api.profile.Profile;
-import judgels.jophiel.api.user.role.UserRole;
-import judgels.jophiel.api.user.role.UserWithRole;
-import judgels.jophiel.profile.ProfileStore;
-import judgels.jophiel.user.UserStore;
-import judgels.jophiel.user.role.UserRoleStore;
+import judgels.api.actor.Actor;
+import judgels.api.profile.Profile;
+import judgels.api.user.role.UserRole;
+import judgels.api.user.role.UserWithRole;
 import judgels.michael.account.BaseAccountResource;
 import judgels.michael.template.HtmlTemplate;
+import judgels.profile.ProfileStore;
+import judgels.user.UserStore;
+import judgels.user.role.UserRoleStore;
 import liquibase.util.csv.CSVReader;
 
 @Path("/accounts/roles")

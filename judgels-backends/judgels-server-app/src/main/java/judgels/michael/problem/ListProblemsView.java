@@ -2,11 +2,11 @@ package judgels.michael.problem;
 
 import java.util.Map;
 import java.util.Set;
-import judgels.jophiel.api.profile.Profile;
+import judgels.api.problem.Problem;
+import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.api.problem.Problem;
 
 public class ListProblemsView extends TemplateView {
     private final Page<Problem> problems;

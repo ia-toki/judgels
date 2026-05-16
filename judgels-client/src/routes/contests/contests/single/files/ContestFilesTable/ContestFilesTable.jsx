@@ -3,7 +3,7 @@ import { Download } from '@blueprintjs/icons';
 import prettyBytes from 'pretty-bytes';
 
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
-import { contestFileAPI } from '../../../../../../modules/api/uriel/contestFile';
+import { contestFileAPI } from '../../../../../../modules/api/contestFile';
 
 import './ContestFilesTable.scss';
 

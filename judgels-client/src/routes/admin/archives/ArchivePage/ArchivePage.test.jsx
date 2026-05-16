@@ -13,7 +13,7 @@ describe('ArchivePage', () => {
 
   const renderComponent = async () => {
     nockJerahmeel()
-      .get('/archives')
+      .get('/admin/archives')
       .reply(200, {
         data: [
           {

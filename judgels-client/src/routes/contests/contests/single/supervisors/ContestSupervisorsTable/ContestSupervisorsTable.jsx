@@ -4,8 +4,8 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import {
   SupervisorManagementPermission,
   supervisorManagementPermissionShortNamesMap,
-} from '../../../../../../modules/api/uriel/contestSupervisor';
-import { ContestTab } from '../../../../../../modules/api/uriel/contestWeb';
+} from '../../../../../../modules/api/contestSupervisor';
+import { ContestTab } from '../../../../../../modules/api/contestWeb';
 import { contestIcon } from '../../modules/contestIcon';
 
 import './ContestSupervisorsTable.scss';

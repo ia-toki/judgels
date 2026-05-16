@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { userWebAPI } from '../api/jophiel/userWeb';
+import { userWebAPI } from '../api/userWeb';
 import { getToken } from '../session';
 
 export const userWebConfigQueryOptions = () =>

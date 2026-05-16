@@ -1,7 +1,7 @@
 import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { ProblemType } from '../../modules/api/sandalphon/problem';
+import { ProblemType } from '../../modules/api/problem';
 import { archivesQueryOptions } from '../../modules/queries/archive';
 import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/problem';
 import {

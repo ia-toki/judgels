@@ -17,7 +17,7 @@ describe('ChaptersPage', () => {
       { jid: 'JIDCHAPTER2', id: 2, name: 'Chapter 2' },
     ],
   } = {}) => {
-    nockJerahmeel().get('/chapters').reply(200, { data: chapters });
+    nockJerahmeel().get('/admin/chapters').reply(200, { data: chapters });
 
     await act(async () =>
       render(

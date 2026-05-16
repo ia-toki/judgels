@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
-import { ItemType } from '../../../../../../modules/api/sandalphon/problemBundle';
+import { ItemType } from '../../../../../../modules/api/problemBundle';
 import { AnswerState } from '../../../itemStatement';
 import ItemEssayForm from './ItemEssayForm';
 
