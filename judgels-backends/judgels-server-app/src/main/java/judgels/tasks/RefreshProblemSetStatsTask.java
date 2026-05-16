@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
 import judgels.persistence.api.Page;
-import judgels.submission.JerahmeelSubmissionStore;
+import judgels.submission.TrainingSubmissionStore;
 import judgels.submission.programming.StatsProcessor;
 import judgels.submission.programming.SubmissionStore;
 
@@ -20,7 +20,7 @@ public class RefreshProblemSetStatsTask extends Task {
     private final StatsProcessor statsProcessor;
 
     public RefreshProblemSetStatsTask(
-            @JerahmeelSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
         super("jerahmeel-refresh-problem-set-stats");
