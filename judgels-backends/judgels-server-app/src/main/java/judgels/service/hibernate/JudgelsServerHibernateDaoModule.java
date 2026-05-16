@@ -4,94 +4,94 @@ import dagger.Module;
 import dagger.Provides;
 import judgels.contrib.hibernate.UserRegistrationEmailHibernateDao;
 import judgels.contrib.persistence.UserRegistrationEmailDao;
-import judgels.jerahmeel.hibernate.ArchiveHibernateDao;
-import judgels.jerahmeel.hibernate.BundleItemSubmissionHibernateDao;
-import judgels.jerahmeel.hibernate.ChapterHibernateDao;
-import judgels.jerahmeel.hibernate.ChapterLessonHibernateDao;
-import judgels.jerahmeel.hibernate.ChapterProblemHibernateDao;
-import judgels.jerahmeel.hibernate.CourseChapterHibernateDao;
-import judgels.jerahmeel.hibernate.CourseHibernateDao;
-import judgels.jerahmeel.hibernate.CurriculumHibernateDao;
-import judgels.jerahmeel.hibernate.ProblemContestHibernateDao;
-import judgels.jerahmeel.hibernate.ProblemLevelHibernateDao;
-import judgels.jerahmeel.hibernate.ProblemSetHibernateDao;
-import judgels.jerahmeel.hibernate.ProblemSetProblemHibernateDao;
-import judgels.jerahmeel.hibernate.StatsUserHibernateDao;
-import judgels.jerahmeel.hibernate.StatsUserProblemHibernateDao;
-import judgels.jerahmeel.persistence.ArchiveDao;
-import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
-import judgels.jerahmeel.persistence.ChapterDao;
-import judgels.jerahmeel.persistence.ChapterLessonDao;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.CourseChapterDao;
-import judgels.jerahmeel.persistence.CourseDao;
-import judgels.jerahmeel.persistence.CurriculumDao;
-import judgels.jerahmeel.persistence.ProblemContestDao;
-import judgels.jerahmeel.persistence.ProblemLevelDao;
-import judgels.jerahmeel.persistence.ProblemSetDao;
-import judgels.jerahmeel.persistence.ProblemSetProblemDao;
-import judgels.jerahmeel.persistence.StatsUserDao;
-import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jophiel.hibernate.SessionHibernateDao;
-import judgels.jophiel.hibernate.UserHibernateDao;
-import judgels.jophiel.hibernate.UserInfoHibernateDao;
-import judgels.jophiel.hibernate.UserRatingEventHibernateDao;
-import judgels.jophiel.hibernate.UserRatingHibernateDao;
-import judgels.jophiel.hibernate.UserResetPasswordHibernateDao;
-import judgels.jophiel.hibernate.UserRoleHibernateDao;
-import judgels.jophiel.persistence.SessionDao;
-import judgels.jophiel.persistence.UserDao;
-import judgels.jophiel.persistence.UserInfoDao;
-import judgels.jophiel.persistence.UserRatingDao;
-import judgels.jophiel.persistence.UserRatingEventDao;
-import judgels.jophiel.persistence.UserResetPasswordDao;
-import judgels.jophiel.persistence.UserRoleDao;
-import judgels.sandalphon.hibernate.BundleGradingHibernateDao;
-import judgels.sandalphon.hibernate.BundleSubmissionHibernateDao;
-import judgels.sandalphon.hibernate.LessonHibernateDao;
-import judgels.sandalphon.hibernate.LessonPartnerHibernateDao;
-import judgels.sandalphon.hibernate.ProblemHibernateDao;
-import judgels.sandalphon.hibernate.ProblemPartnerHibernateDao;
-import judgels.sandalphon.hibernate.ProblemSetterHibernateDao;
-import judgels.sandalphon.hibernate.ProblemTagHibernateDao;
-import judgels.sandalphon.persistence.BundleGradingDao;
-import judgels.sandalphon.persistence.BundleSubmissionDao;
-import judgels.sandalphon.persistence.LessonDao;
-import judgels.sandalphon.persistence.LessonPartnerDao;
-import judgels.sandalphon.persistence.ProblemDao;
-import judgels.sandalphon.persistence.ProblemPartnerDao;
-import judgels.sandalphon.persistence.ProblemSetterDao;
-import judgels.sandalphon.persistence.ProblemTagDao;
-import judgels.uriel.hibernate.ContestAnnouncementHibernateDao;
-import judgels.uriel.hibernate.ContestBundleItemSubmissionHibernateDao;
-import judgels.uriel.hibernate.ContestClarificationHibernateDao;
-import judgels.uriel.hibernate.ContestContestantHibernateDao;
-import judgels.uriel.hibernate.ContestHibernateDao;
-import judgels.uriel.hibernate.ContestLogHibernateDao;
-import judgels.uriel.hibernate.ContestManagerHibernateDao;
-import judgels.uriel.hibernate.ContestModuleHibernateDao;
-import judgels.uriel.hibernate.ContestProblemHibernateDao;
-import judgels.uriel.hibernate.ContestProgrammingGradingHibernateDao;
-import judgels.uriel.hibernate.ContestProgrammingSubmissionHibernateDao;
-import judgels.uriel.hibernate.ContestRoleHibernateDao;
-import judgels.uriel.hibernate.ContestScoreboardHibernateDao;
-import judgels.uriel.hibernate.ContestStyleHibernateDao;
-import judgels.uriel.hibernate.ContestSupervisorHibernateDao;
-import judgels.uriel.persistence.ContestAnnouncementDao;
-import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
-import judgels.uriel.persistence.ContestClarificationDao;
-import judgels.uriel.persistence.ContestContestantDao;
-import judgels.uriel.persistence.ContestDao;
-import judgels.uriel.persistence.ContestLogDao;
-import judgels.uriel.persistence.ContestManagerDao;
-import judgels.uriel.persistence.ContestModuleDao;
-import judgels.uriel.persistence.ContestProblemDao;
-import judgels.uriel.persistence.ContestProgrammingGradingDao;
-import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
-import judgels.uriel.persistence.ContestRoleDao;
-import judgels.uriel.persistence.ContestScoreboardDao;
-import judgels.uriel.persistence.ContestStyleDao;
-import judgels.uriel.persistence.ContestSupervisorDao;
+import judgels.hibernate.ArchiveHibernateDao;
+import judgels.hibernate.BundleGradingHibernateDao;
+import judgels.hibernate.BundleItemSubmissionHibernateDao;
+import judgels.hibernate.BundleSubmissionHibernateDao;
+import judgels.hibernate.ChapterHibernateDao;
+import judgels.hibernate.ChapterLessonHibernateDao;
+import judgels.hibernate.ChapterProblemHibernateDao;
+import judgels.hibernate.ContestAnnouncementHibernateDao;
+import judgels.hibernate.ContestBundleItemSubmissionHibernateDao;
+import judgels.hibernate.ContestClarificationHibernateDao;
+import judgels.hibernate.ContestContestantHibernateDao;
+import judgels.hibernate.ContestHibernateDao;
+import judgels.hibernate.ContestLogHibernateDao;
+import judgels.hibernate.ContestManagerHibernateDao;
+import judgels.hibernate.ContestModuleHibernateDao;
+import judgels.hibernate.ContestProblemHibernateDao;
+import judgels.hibernate.ContestProgrammingGradingHibernateDao;
+import judgels.hibernate.ContestProgrammingSubmissionHibernateDao;
+import judgels.hibernate.ContestRoleHibernateDao;
+import judgels.hibernate.ContestScoreboardHibernateDao;
+import judgels.hibernate.ContestStyleHibernateDao;
+import judgels.hibernate.ContestSupervisorHibernateDao;
+import judgels.hibernate.CourseChapterHibernateDao;
+import judgels.hibernate.CourseHibernateDao;
+import judgels.hibernate.CurriculumHibernateDao;
+import judgels.hibernate.LessonHibernateDao;
+import judgels.hibernate.LessonPartnerHibernateDao;
+import judgels.hibernate.ProblemContestHibernateDao;
+import judgels.hibernate.ProblemHibernateDao;
+import judgels.hibernate.ProblemLevelHibernateDao;
+import judgels.hibernate.ProblemPartnerHibernateDao;
+import judgels.hibernate.ProblemSetHibernateDao;
+import judgels.hibernate.ProblemSetProblemHibernateDao;
+import judgels.hibernate.ProblemSetterHibernateDao;
+import judgels.hibernate.ProblemTagHibernateDao;
+import judgels.hibernate.SessionHibernateDao;
+import judgels.hibernate.StatsUserHibernateDao;
+import judgels.hibernate.StatsUserProblemHibernateDao;
+import judgels.hibernate.UserHibernateDao;
+import judgels.hibernate.UserInfoHibernateDao;
+import judgels.hibernate.UserRatingEventHibernateDao;
+import judgels.hibernate.UserRatingHibernateDao;
+import judgels.hibernate.UserResetPasswordHibernateDao;
+import judgels.hibernate.UserRoleHibernateDao;
+import judgels.persistence.ArchiveDao;
+import judgels.persistence.BundleGradingDao;
+import judgels.persistence.BundleItemSubmissionDao;
+import judgels.persistence.BundleSubmissionDao;
+import judgels.persistence.ChapterDao;
+import judgels.persistence.ChapterLessonDao;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ContestAnnouncementDao;
+import judgels.persistence.ContestBundleItemSubmissionDao;
+import judgels.persistence.ContestClarificationDao;
+import judgels.persistence.ContestContestantDao;
+import judgels.persistence.ContestDao;
+import judgels.persistence.ContestLogDao;
+import judgels.persistence.ContestManagerDao;
+import judgels.persistence.ContestModuleDao;
+import judgels.persistence.ContestProblemDao;
+import judgels.persistence.ContestProgrammingGradingDao;
+import judgels.persistence.ContestProgrammingSubmissionDao;
+import judgels.persistence.ContestRoleDao;
+import judgels.persistence.ContestScoreboardDao;
+import judgels.persistence.ContestStyleDao;
+import judgels.persistence.ContestSupervisorDao;
+import judgels.persistence.CourseChapterDao;
+import judgels.persistence.CourseDao;
+import judgels.persistence.CurriculumDao;
+import judgels.persistence.LessonDao;
+import judgels.persistence.LessonPartnerDao;
+import judgels.persistence.ProblemContestDao;
+import judgels.persistence.ProblemDao;
+import judgels.persistence.ProblemLevelDao;
+import judgels.persistence.ProblemPartnerDao;
+import judgels.persistence.ProblemSetDao;
+import judgels.persistence.ProblemSetProblemDao;
+import judgels.persistence.ProblemSetterDao;
+import judgels.persistence.ProblemTagDao;
+import judgels.persistence.SessionDao;
+import judgels.persistence.StatsUserDao;
+import judgels.persistence.StatsUserProblemDao;
+import judgels.persistence.UserDao;
+import judgels.persistence.UserInfoDao;
+import judgels.persistence.UserRatingDao;
+import judgels.persistence.UserRatingEventDao;
+import judgels.persistence.UserResetPasswordDao;
+import judgels.persistence.UserRoleDao;
 
 @Module
 public class JudgelsServerHibernateDaoModule {
@@ -178,14 +178,14 @@ public class JudgelsServerHibernateDaoModule {
     }
 
     @Provides
-    static judgels.sandalphon.persistence.ProgrammingGradingDao sandalphonProgrammingGradingDao(
-            judgels.sandalphon.hibernate.ProgrammingGradingHibernateDao dao) {
+    static judgels.persistence.ProgrammingGradingDao programmingGradingDao(
+            judgels.hibernate.ProgrammingGradingHibernateDao dao) {
         return dao;
     }
 
     @Provides
-    static judgels.sandalphon.persistence.ProgrammingSubmissionDao sandalphonProgrammingSubmissionDao(
-            judgels.sandalphon.hibernate.ProgrammingSubmissionHibernateDao dao) {
+    static judgels.persistence.ProgrammingSubmissionDao programmingSubmissionDao(
+            judgels.hibernate.ProgrammingSubmissionHibernateDao dao) {
         return dao;
     }
 
@@ -336,14 +336,14 @@ public class JudgelsServerHibernateDaoModule {
     }
 
     @Provides
-    static judgels.jerahmeel.persistence.ProgrammingGradingDao jerahmeelProgrammingGradingDao(
-            judgels.jerahmeel.hibernate.ProgrammingGradingHibernateDao dao) {
+    static judgels.persistence.TrainingProgrammingGradingDao trainingProgrammingGradingDao(
+            judgels.hibernate.TrainingProgrammingGradingHibernateDao dao) {
         return dao;
     }
 
     @Provides
-    static judgels.jerahmeel.persistence.ProgrammingSubmissionDao jerahmeelProgrammingSubmissionDao(
-            judgels.jerahmeel.hibernate.ProgrammingSubmissionHibernateDao dao) {
+    static judgels.persistence.TrainingProgrammingSubmissionDao trainingProgrammingSubmissionDao(
+            judgels.hibernate.TrainingProgrammingSubmissionHibernateDao dao) {
         return dao;
     }
 }

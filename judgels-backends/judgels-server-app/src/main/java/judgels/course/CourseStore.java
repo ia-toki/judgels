@@ -8,9 +8,9 @@ import judgels.api.course.Course;
 import judgels.api.course.CourseCreateData;
 import judgels.api.course.CourseErrors;
 import judgels.api.course.CourseUpdateData;
-import judgels.jerahmeel.persistence.CourseDao;
-import judgels.jerahmeel.persistence.CourseModel;
-import judgels.jerahmeel.persistence.CourseModel_;
+import judgels.persistence.CourseDao;
+import judgels.persistence.CourseModel;
+import judgels.persistence.CourseModel_;
 import judgels.persistence.api.OrderDir;
 
 public class CourseStore {

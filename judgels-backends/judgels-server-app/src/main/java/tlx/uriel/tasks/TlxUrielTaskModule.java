@@ -4,11 +4,11 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.sandalphon.persistence.ProblemDao;
-import judgels.uriel.persistence.ContestClarificationDao;
-import judgels.uriel.persistence.ContestLogDao;
-import judgels.uriel.persistence.ContestProblemDao;
-import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
+import judgels.persistence.ContestClarificationDao;
+import judgels.persistence.ContestLogDao;
+import judgels.persistence.ContestProblemDao;
+import judgels.persistence.ContestProgrammingSubmissionDao;
+import judgels.persistence.ProblemDao;
 
 @Module
 public class TlxUrielTaskModule {

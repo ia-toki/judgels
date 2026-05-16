@@ -12,9 +12,9 @@ import judgels.api.archive.Archive;
 import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveErrors;
 import judgels.api.archive.ArchiveUpdateData;
-import judgels.jerahmeel.persistence.ArchiveDao;
-import judgels.jerahmeel.persistence.ArchiveModel;
-import judgels.jerahmeel.persistence.ArchiveModel_;
+import judgels.persistence.ArchiveDao;
+import judgels.persistence.ArchiveModel;
+import judgels.persistence.ArchiveModel_;
 import judgels.persistence.api.OrderDir;
 
 public class ArchiveStore {

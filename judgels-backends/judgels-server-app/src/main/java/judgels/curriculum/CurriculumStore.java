@@ -5,8 +5,8 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import judgels.api.curriculum.Curriculum;
-import judgels.jerahmeel.persistence.CurriculumDao;
-import judgels.jerahmeel.persistence.CurriculumModel;
+import judgels.persistence.CurriculumDao;
+import judgels.persistence.CurriculumModel;
 
 public class CurriculumStore {
     private final CurriculumDao curriculumDao;

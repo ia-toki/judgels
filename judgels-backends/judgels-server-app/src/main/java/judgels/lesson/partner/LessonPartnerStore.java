@@ -12,8 +12,8 @@ import java.util.Optional;
 import judgels.api.lesson.partner.LessonPartnerConfig;
 import judgels.api.resource.Partner;
 import judgels.api.resource.PartnerPermission;
-import judgels.sandalphon.persistence.LessonPartnerDao;
-import judgels.sandalphon.persistence.LessonPartnerModel;
+import judgels.persistence.LessonPartnerDao;
+import judgels.persistence.LessonPartnerModel;
 
 @Singleton
 public class LessonPartnerStore {

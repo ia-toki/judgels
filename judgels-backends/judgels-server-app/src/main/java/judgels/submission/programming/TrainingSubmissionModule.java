@@ -12,17 +12,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
-import judgels.jerahmeel.persistence.ProgrammingGradingDao;
-import judgels.jerahmeel.persistence.ProgrammingSubmissionDao;
 import judgels.messaging.MessageClient;
 import judgels.messaging.MessageListener;
+import judgels.persistence.ContestProgrammingGradingDao;
+import judgels.persistence.ContestProgrammingSubmissionDao;
+import judgels.persistence.TrainingProgrammingGradingDao;
+import judgels.persistence.TrainingProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.stats.StatsConfiguration;
 import judgels.submission.JerahmeelSubmissionStore;
 import judgels.submission.UrielSubmissionStore;
-import judgels.uriel.persistence.ContestProgrammingGradingDao;
-import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -51,8 +51,8 @@ public class TrainingSubmissionModule {
     @Singleton
     @JerahmeelSubmissionStore
     static SubmissionStore jerahmeelSubmissionStore(
-            ProgrammingSubmissionDao submissionDao,
-            ProgrammingGradingDao gradingDao,
+            TrainingProgrammingSubmissionDao submissionDao,
+            TrainingProgrammingGradingDao gradingDao,
             ObjectMapper mapper) {
 
         return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);

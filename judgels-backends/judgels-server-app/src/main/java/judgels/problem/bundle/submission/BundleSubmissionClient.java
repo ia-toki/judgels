@@ -12,12 +12,12 @@ import judgels.api.submission.bundle.BundleAnswer;
 import judgels.api.submission.bundle.BundleGradingResult;
 import judgels.api.submission.bundle.BundleSubmission;
 import judgels.fs.FileSystem;
+import judgels.persistence.BundleGradingDao;
+import judgels.persistence.BundleGradingModel;
+import judgels.persistence.BundleSubmissionDao;
+import judgels.persistence.BundleSubmissionModel;
 import judgels.problem.base.submission.SubmissionFs;
 import judgels.problem.bundle.grading.BundleProblemGrader;
-import judgels.sandalphon.persistence.BundleGradingDao;
-import judgels.sandalphon.persistence.BundleGradingModel;
-import judgels.sandalphon.persistence.BundleSubmissionDao;
-import judgels.sandalphon.persistence.BundleSubmissionModel;
 
 public class BundleSubmissionClient {
     private final ObjectMapper mapper;

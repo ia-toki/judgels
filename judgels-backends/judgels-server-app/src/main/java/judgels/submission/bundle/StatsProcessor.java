@@ -6,10 +6,10 @@ import java.util.Optional;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.gabriel.api.Verdict;
-import judgels.jerahmeel.persistence.ChapterProblemDao;
-import judgels.jerahmeel.persistence.ChapterProblemModel;
-import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jerahmeel.persistence.StatsUserProblemModel;
+import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ChapterProblemModel;
+import judgels.persistence.StatsUserProblemDao;
+import judgels.persistence.StatsUserProblemModel;
 
 public class StatsProcessor implements ItemSubmissionConsumer {
     private final ChapterProblemDao chapterProblemDao;

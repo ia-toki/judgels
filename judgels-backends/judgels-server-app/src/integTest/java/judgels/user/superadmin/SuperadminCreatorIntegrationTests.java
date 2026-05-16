@@ -6,7 +6,7 @@ import java.util.Optional;
 import judgels.api.user.User;
 import judgels.jophiel.BaseJophielIntegrationTests;
 import judgels.jophiel.JophielIntegrationTestComponent;
-import judgels.jophiel.persistence.UserModel;
+import judgels.persistence.UserModel;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.role.SuperadminRoleStore;
 import judgels.user.UserStore;

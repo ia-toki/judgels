@@ -4,8 +4,8 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
-import judgels.jerahmeel.persistence.StatsUserProblemDao;
-import judgels.jerahmeel.persistence.StatsUserProblemModel;
+import judgels.persistence.StatsUserProblemDao;
+import judgels.persistence.StatsUserProblemModel;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.Actors;
 

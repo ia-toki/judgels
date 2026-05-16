@@ -15,11 +15,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import judgels.api.contest.problem.ContestProblem;
 import judgels.api.contest.problem.ContestProblemStatus;
+import judgels.persistence.ContestProblemDao;
+import judgels.persistence.ContestProblemDao.ContestProblemQueryBuilder;
+import judgels.persistence.ContestProblemModel;
+import judgels.persistence.ContestProblemModel_;
 import judgels.persistence.api.OrderDir;
-import judgels.uriel.persistence.ContestProblemDao;
-import judgels.uriel.persistence.ContestProblemDao.ContestProblemQueryBuilder;
-import judgels.uriel.persistence.ContestProblemModel;
-import judgels.uriel.persistence.ContestProblemModel_;
 
 public class ContestProblemStore {
     private final ContestProblemDao problemDao;

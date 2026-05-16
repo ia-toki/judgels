@@ -1,0 +1,24 @@
+package judgels.persistence;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+
+@SuppressWarnings("checkstyle:visibilitymodifier")
+@MappedSuperclass
+@JidPrefix("GRAD")
+public abstract class AbstractProgrammingGradingModel extends JudgelsModel {
+    @Column(nullable = false)
+    public String submissionJid;
+
+    @Column(nullable = false)
+    public String verdictCode;
+
+    @Column(nullable = false)
+    public String verdictName;
+
+    @Column(nullable = false)
+    public int score;
+
+    @Column(columnDefinition = "LONGTEXT")
+    public String details;
+}

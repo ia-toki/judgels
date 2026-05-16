@@ -2,48 +2,48 @@ package judgels;
 
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
-import judgels.jerahmeel.persistence.ArchiveModel;
-import judgels.jerahmeel.persistence.BundleItemSubmissionModel;
-import judgels.jerahmeel.persistence.ChapterLessonModel;
-import judgels.jerahmeel.persistence.ChapterModel;
-import judgels.jerahmeel.persistence.ChapterProblemModel;
-import judgels.jerahmeel.persistence.CourseChapterModel;
-import judgels.jerahmeel.persistence.CourseModel;
-import judgels.jerahmeel.persistence.CurriculumModel;
-import judgels.jerahmeel.persistence.ProblemContestModel;
-import judgels.jerahmeel.persistence.ProblemLevelModel;
-import judgels.jerahmeel.persistence.ProblemSetModel;
-import judgels.jerahmeel.persistence.ProblemSetProblemModel;
-import judgels.jerahmeel.persistence.StatsUserModel;
-import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.jophiel.persistence.SessionModel;
-import judgels.jophiel.persistence.UserInfoModel;
-import judgels.jophiel.persistence.UserModel;
-import judgels.jophiel.persistence.UserRatingModel;
-import judgels.jophiel.persistence.UserResetPasswordModel;
-import judgels.jophiel.persistence.UserRoleModel;
-import judgels.sandalphon.persistence.BundleGradingModel;
-import judgels.sandalphon.persistence.BundleSubmissionModel;
-import judgels.sandalphon.persistence.LessonModel;
-import judgels.sandalphon.persistence.LessonPartnerModel;
-import judgels.sandalphon.persistence.ProblemModel;
-import judgels.sandalphon.persistence.ProblemPartnerModel;
-import judgels.sandalphon.persistence.ProblemSetterModel;
-import judgels.sandalphon.persistence.ProblemTagModel;
-import judgels.uriel.persistence.ContestAnnouncementModel;
-import judgels.uriel.persistence.ContestBundleItemSubmissionModel;
-import judgels.uriel.persistence.ContestClarificationModel;
-import judgels.uriel.persistence.ContestContestantModel;
-import judgels.uriel.persistence.ContestLogModel;
-import judgels.uriel.persistence.ContestManagerModel;
-import judgels.uriel.persistence.ContestModel;
-import judgels.uriel.persistence.ContestModuleModel;
-import judgels.uriel.persistence.ContestProblemModel;
-import judgels.uriel.persistence.ContestProgrammingGradingModel;
-import judgels.uriel.persistence.ContestProgrammingSubmissionModel;
-import judgels.uriel.persistence.ContestScoreboardModel;
-import judgels.uriel.persistence.ContestStyleModel;
-import judgels.uriel.persistence.ContestSupervisorModel;
+import judgels.persistence.ArchiveModel;
+import judgels.persistence.BundleGradingModel;
+import judgels.persistence.BundleItemSubmissionModel;
+import judgels.persistence.BundleSubmissionModel;
+import judgels.persistence.ChapterLessonModel;
+import judgels.persistence.ChapterModel;
+import judgels.persistence.ChapterProblemModel;
+import judgels.persistence.ContestAnnouncementModel;
+import judgels.persistence.ContestBundleItemSubmissionModel;
+import judgels.persistence.ContestClarificationModel;
+import judgels.persistence.ContestContestantModel;
+import judgels.persistence.ContestLogModel;
+import judgels.persistence.ContestManagerModel;
+import judgels.persistence.ContestModel;
+import judgels.persistence.ContestModuleModel;
+import judgels.persistence.ContestProblemModel;
+import judgels.persistence.ContestProgrammingGradingModel;
+import judgels.persistence.ContestProgrammingSubmissionModel;
+import judgels.persistence.ContestScoreboardModel;
+import judgels.persistence.ContestStyleModel;
+import judgels.persistence.ContestSupervisorModel;
+import judgels.persistence.CourseChapterModel;
+import judgels.persistence.CourseModel;
+import judgels.persistence.CurriculumModel;
+import judgels.persistence.LessonModel;
+import judgels.persistence.LessonPartnerModel;
+import judgels.persistence.ProblemContestModel;
+import judgels.persistence.ProblemLevelModel;
+import judgels.persistence.ProblemModel;
+import judgels.persistence.ProblemPartnerModel;
+import judgels.persistence.ProblemSetModel;
+import judgels.persistence.ProblemSetProblemModel;
+import judgels.persistence.ProblemSetterModel;
+import judgels.persistence.ProblemTagModel;
+import judgels.persistence.SessionModel;
+import judgels.persistence.StatsUserModel;
+import judgels.persistence.StatsUserProblemModel;
+import judgels.persistence.UserInfoModel;
+import judgels.persistence.UserModel;
+import judgels.persistence.UserRatingModel;
+import judgels.persistence.UserResetPasswordModel;
+import judgels.persistence.UserRoleModel;
 
 public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerApplicationConfiguration> {
     public JudgelsServerHibernateBundle() {
@@ -55,7 +55,7 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 UserRatingModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
-                judgels.jophiel.persistence.UserRatingEventModel.class,
+                judgels.persistence.UserRatingEventModel.class,
                 judgels.contrib.persistence.UserRegistrationEmailModel.class,
 
                 // Sandalphon
@@ -67,8 +67,8 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 ProblemPartnerModel.class,
                 ProblemSetterModel.class,
                 ProblemTagModel.class,
-                judgels.sandalphon.persistence.ProgrammingGradingModel.class,
-                judgels.sandalphon.persistence.ProgrammingSubmissionModel.class,
+                judgels.persistence.ProgrammingGradingModel.class,
+                judgels.persistence.ProgrammingSubmissionModel.class,
 
                 // Uriel
                 ContestModel.class,
@@ -94,8 +94,8 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 ChapterProblemModel.class,
                 CourseModel.class,
                 CourseChapterModel.class,
-                judgels.jerahmeel.persistence.ProgrammingGradingModel.class,
-                judgels.jerahmeel.persistence.ProgrammingSubmissionModel.class,
+                judgels.persistence.TrainingProgrammingGradingModel.class,
+                judgels.persistence.TrainingProgrammingSubmissionModel.class,
                 BundleItemSubmissionModel.class,
                 ProblemContestModel.class,
                 ProblemLevelModel.class,

@@ -14,13 +14,13 @@ import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
 import judgels.messaging.MessageListener;
+import judgels.persistence.ContestBundleItemSubmissionDao;
+import judgels.persistence.ContestProgrammingGradingDao;
+import judgels.persistence.ContestProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.submission.bundle.BaseItemSubmissionStore;
 import judgels.submission.bundle.ItemSubmissionStore;
-import judgels.uriel.persistence.ContestBundleItemSubmissionDao;
-import judgels.uriel.persistence.ContestProgrammingGradingDao;
-import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import org.hibernate.SessionFactory;
 
 @Module

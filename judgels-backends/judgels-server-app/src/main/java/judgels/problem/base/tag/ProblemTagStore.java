@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.gabriel.api.GradingConfig;
+import judgels.persistence.ProblemTagDao;
+import judgels.persistence.ProblemTagModel;
 import judgels.problem.base.editorial.ProblemEditorialStore;
 import judgels.problem.base.statement.ProblemStatementStore;
 import judgels.problem.programming.ProgrammingProblemStore;
-import judgels.sandalphon.persistence.ProblemTagDao;
-import judgels.sandalphon.persistence.ProblemTagModel;
 
 public class ProblemTagStore {
     private final ProblemTagDao tagDao;
