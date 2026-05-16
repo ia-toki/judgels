@@ -25,7 +25,7 @@ import judgels.api.course.CourseUpdateData;
 import judgels.api.course.CoursesResponse;
 import judgels.api.curriculum.Curriculum;
 import judgels.curriculum.CurriculumStore;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -33,7 +33,7 @@ import judgels.stats.StatsStore;
 @Path("/api/v2/courses")
 public class CourseResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected CourseStore courseStore;
     @Inject protected CurriculumStore curriculumStore;
     @Inject protected StatsStore statsStore;

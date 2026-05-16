@@ -14,14 +14,14 @@ import judgels.service.JudgelsModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.StatsStore;
-import judgels.submission.bundle.ArchiveItemSubmissionModule;
+import judgels.submission.bundle.TrainingItemSubmissionModule;
 
 @Component(modules = {
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
         JerahmeelHibernateDaoModule.class,
-        ArchiveItemSubmissionModule.class})
+        TrainingItemSubmissionModule.class})
 @Singleton
 public interface JerahmeelIntegrationTestComponent {
     CourseStore courseStore();

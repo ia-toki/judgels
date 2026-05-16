@@ -9,8 +9,8 @@ import judgels.persistence.api.CursorPage;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableArchiveSubmissionsResponse.class)
-public interface ArchiveSubmissionsResponse {
+@JsonDeserialize(as = ImmutableTrainingSubmissionsResponse.class)
+public interface TrainingSubmissionsResponse {
     CursorPage<Submission> getData();
     Map<String, Profile> getProfilesMap();
     Map<String, String> getProblemAliasesMap();
@@ -19,5 +19,5 @@ public interface ArchiveSubmissionsResponse {
     Map<String, List<String>> getContainerPathsMap();
     SubmissionConfig getConfig();
 
-    class Builder extends ImmutableArchiveSubmissionsResponse.Builder {}
+    class Builder extends ImmutableTrainingSubmissionsResponse.Builder {}
 }

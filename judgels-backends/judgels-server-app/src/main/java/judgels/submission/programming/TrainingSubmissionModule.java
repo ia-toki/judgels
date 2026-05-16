@@ -26,23 +26,23 @@ import judgels.uriel.persistence.ContestProgrammingSubmissionDao;
 import org.hibernate.SessionFactory;
 
 @Module
-public class ArchiveSubmissionModule {
+public class TrainingSubmissionModule {
     private final StatsConfiguration statsConfig;
     private final Optional<FileSystem> fs;
 
-    public ArchiveSubmissionModule(StatsConfiguration statsConfig) {
+    public TrainingSubmissionModule(StatsConfiguration statsConfig) {
         this.statsConfig = statsConfig;
         this.fs = Optional.empty();
     }
 
-    public ArchiveSubmissionModule(StatsConfiguration statsConfig, FileSystem fs) {
+    public TrainingSubmissionModule(StatsConfiguration statsConfig, FileSystem fs) {
         this.statsConfig = statsConfig;
         this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
-    @ArchiveSubmissionFs
+    @TrainingSubmissionFs
     FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
         return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
     }
@@ -71,7 +71,7 @@ public class ArchiveSubmissionModule {
 
     @Provides
     @Singleton
-    static SubmissionSourceBuilder submissionSourceBuilder(@ArchiveSubmissionFs FileSystem submissionFs) {
+    static SubmissionSourceBuilder submissionSourceBuilder(@TrainingSubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 

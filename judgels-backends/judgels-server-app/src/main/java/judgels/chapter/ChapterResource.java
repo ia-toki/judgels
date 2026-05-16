@@ -19,14 +19,14 @@ import judgels.api.chapter.Chapter;
 import judgels.api.chapter.ChapterCreateData;
 import judgels.api.chapter.ChapterUpdateData;
 import judgels.api.chapter.ChaptersResponse;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/chapters")
 public class ChapterResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
 
     @Inject public ChapterResource() {}

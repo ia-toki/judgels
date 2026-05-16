@@ -36,11 +36,11 @@ import judgels.api.problemset.ProblemSet;
 import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.SubmissionConfig;
-import judgels.api.submission.programming.ArchiveSubmissionsResponse;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
 import judgels.api.submission.programming.SubmissionWithSource;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
+import judgels.api.submission.programming.TrainingSubmissionsResponse;
 import judgels.chapter.ChapterStore;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.gabriel.api.GradingOptions;
@@ -82,7 +82,7 @@ public class SubmissionResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ArchiveSubmissionsResponse getSubmissions(
+    public TrainingSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("containerJid") Optional<String> containerJid,
             @QueryParam("username") Optional<String> username,
@@ -142,7 +142,7 @@ public class SubmissionResource {
             containerPathsMap.putAll(chapterStore.getChapterPathsByJids(containerJids));
         }
 
-        return new ArchiveSubmissionsResponse.Builder()
+        return new TrainingSubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)

@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { problemAPI } from '../api/archiveProblem';
+import { problemAPI } from '../api/problem';
 import { getToken } from '../session';
 
 export const problemsQueryOptions = params => {

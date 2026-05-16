@@ -39,7 +39,7 @@ import judgels.chapter.resource.ChapterResourceStore;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
 import judgels.problemset.problem.ProblemSetProblemStore;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -51,7 +51,7 @@ import judgels.submission.programming.SubmissionStore;
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterProblemStore chapterProblemStore;

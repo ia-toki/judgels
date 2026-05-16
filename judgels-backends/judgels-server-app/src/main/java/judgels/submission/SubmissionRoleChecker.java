@@ -6,15 +6,15 @@ import judgels.gabriel.api.Verdict;
 import judgels.gabriel.api.Verdicts;
 import judgels.jerahmeel.persistence.StatsUserProblemDao;
 import judgels.jerahmeel.persistence.StatsUserProblemModel;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.Actors;
 
 public class SubmissionRoleChecker {
-    private final ArchiveAdminRoleChecker roleChecker;
+    private final TrainingAdminRoleChecker roleChecker;
     private final StatsUserProblemDao statsUserProblemDao;
 
     @Inject
-    public SubmissionRoleChecker(ArchiveAdminRoleChecker roleChecker, StatsUserProblemDao statsUserProblemDao) {
+    public SubmissionRoleChecker(TrainingAdminRoleChecker roleChecker, StatsUserProblemDao statsUserProblemDao) {
         this.roleChecker = roleChecker;
         this.statsUserProblemDao = statsUserProblemDao;
     }

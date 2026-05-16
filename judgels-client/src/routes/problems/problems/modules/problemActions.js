@@ -1,4 +1,4 @@
-import { problemAPI } from '../../../../modules/api/archiveProblem';
+import { problemAPI } from '../../../../modules/api/problem';
 import { getToken } from '../../../../modules/session';
 
 export async function getProblems(tags, page) {

@@ -34,11 +34,11 @@ import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.UserStatsResource;
-import judgels.submission.bundle.ArchiveItemSubmissionModule;
 import judgels.submission.bundle.ItemSubmissionResource;
-import judgels.submission.programming.ArchiveSubmissionModule;
+import judgels.submission.bundle.TrainingItemSubmissionModule;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.submission.programming.SubmissionResource;
+import judgels.submission.programming.TrainingSubmissionModule;
 import judgels.tasks.JerahmeelTaskModule;
 import judgels.tasks.RefreshContestStatsTask;
 import judgels.tasks.RefreshProblemSetStatsTask;
@@ -64,8 +64,8 @@ import judgels.uriel.hibernate.UrielHibernateDaoModule;
         GabrielClientModule.class,
 
         // Features
-        ArchiveSubmissionModule.class,
-        ArchiveItemSubmissionModule.class,
+        TrainingSubmissionModule.class,
+        TrainingItemSubmissionModule.class,
         JerahmeelTaskModule.class,
 
         tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})

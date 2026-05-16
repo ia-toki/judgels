@@ -1,6 +1,6 @@
-import { ArchiveAdminRole } from '../modules/api/archiveAdminRole';
 import { ContestAdminRole } from '../modules/api/contestAdminRole';
 import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { TrainingAdminRole } from '../modules/api/trainingAdminRole';
 import { UserAdminRole } from '../modules/api/userAdminRole';
 import { getVisibleAppRoutes } from './AppRoutes';
 
@@ -45,7 +45,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jerahmeel admin', () => {
-    testAppRoutes({ jerahmeel: ArchiveAdminRole.Admin }, [
+    testAppRoutes({ jerahmeel: TrainingAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',

@@ -41,7 +41,7 @@ import judgels.archive.ArchiveStore;
 import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
 import judgels.problemset.problem.ProblemSetProblemStore;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -51,7 +51,7 @@ public class ProblemSetResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ArchiveStore archiveStore;

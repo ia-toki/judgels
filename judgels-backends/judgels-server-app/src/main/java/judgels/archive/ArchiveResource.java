@@ -19,14 +19,14 @@ import judgels.api.archive.Archive;
 import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveUpdateData;
 import judgels.api.archive.ArchivesResponse;
-import judgels.role.ArchiveAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/archives")
 public class ArchiveResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ArchiveAdminRoleChecker roleChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ArchiveStore archiveStore;
 
     @Inject public ArchiveResource() {}

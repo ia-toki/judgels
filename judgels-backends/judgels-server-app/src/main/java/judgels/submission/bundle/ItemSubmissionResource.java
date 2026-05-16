@@ -33,11 +33,11 @@ import judgels.api.problem.bundle.ItemType;
 import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.SubmissionConfig;
-import judgels.api.submission.bundle.ArchiveItemSubmissionsResponse;
-import judgels.api.submission.bundle.ArchiveSubmissionSummaryResponse;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
+import judgels.api.submission.bundle.TrainingItemSubmissionsResponse;
+import judgels.api.submission.bundle.TrainingSubmissionSummaryResponse;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.jophiel.JophielClient;
 import judgels.persistence.api.Page;
@@ -69,7 +69,7 @@ public class ItemSubmissionResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ArchiveItemSubmissionsResponse getSubmissions(
+    public TrainingItemSubmissionsResponse getSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
@@ -112,7 +112,7 @@ public class ItemSubmissionResource {
                         Map.Entry::getKey,
                         entry -> entry.getValue().getType()));
 
-        return new ArchiveItemSubmissionsResponse.Builder()
+        return new TrainingItemSubmissionsResponse.Builder()
                 .data(submissions)
                 .config(config)
                 .profilesMap(profilesMap)
@@ -203,7 +203,7 @@ public class ItemSubmissionResource {
     @Path("/summary")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ArchiveSubmissionSummaryResponse getSubmissionSummary(
+    public TrainingSubmissionSummaryResponse getSubmissionSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("containerJid") String containerJid,
             @QueryParam("problemJid") Optional<String> problemJid,
@@ -260,7 +260,7 @@ public class ItemSubmissionResource {
                 .problemJids(problemJids)
                 .build();
 
-        return new ArchiveSubmissionSummaryResponse.Builder()
+        return new TrainingSubmissionSummaryResponse.Builder()
                 .profile(profile)
                 .config(config)
                 .itemJidsByProblemJid(itemJidsByProblemJid)

@@ -9,10 +9,10 @@ import judgels.sandalphon.SandalphonClient;
 import judgels.stats.StatsConfiguration;
 
 @Module
-public class ArchiveItemSubmissionModule {
+public class TrainingItemSubmissionModule {
     private final StatsConfiguration statsConfig;
 
-    public ArchiveItemSubmissionModule(StatsConfiguration statsConfig) {
+    public TrainingItemSubmissionModule(StatsConfiguration statsConfig) {
         this.statsConfig = statsConfig;
     }
 
