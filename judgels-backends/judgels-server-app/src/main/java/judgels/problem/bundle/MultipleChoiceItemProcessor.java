@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import judgels.api.problem.bundle.Item;
 import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.bundle.MultipleChoiceItemConfig;
-import judgels.sandalphon.SandalphonUtils;
+import judgels.problem.ProblemUtils;
 
 public class MultipleChoiceItemProcessor implements ItemProcessor {
     @Override
@@ -23,7 +23,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
         List<MultipleChoiceItemConfig.Choice> choices = itemConfig.getChoices().stream()
                 .map(choice -> new MultipleChoiceItemConfig.Choice.Builder()
                         .from(choice)
-                        .content(SandalphonUtils.replaceProblemRenderUrls(
+                        .content(ProblemUtils.replaceProblemRenderUrls(
                                 choice.getContent(),
                                 apiUrl,
                                 problemJid))
@@ -35,7 +35,7 @@ public class MultipleChoiceItemProcessor implements ItemProcessor {
                 .config(new MultipleChoiceItemConfig.Builder()
                         .from(itemConfig)
                         .statement(
-                                SandalphonUtils.replaceProblemRenderUrls(
+                                ProblemUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         apiUrl,
                                         problemJid))

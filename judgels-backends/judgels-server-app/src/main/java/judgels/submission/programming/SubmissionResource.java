@@ -47,10 +47,10 @@ import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;
 import judgels.problem.ProblemService;
+import judgels.problem.ProblemUtils;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.JerahmeelSubmissionStore;
@@ -220,7 +220,7 @@ public class SubmissionResource {
                 .data(submissionWithSource)
                 .profile(profile)
                 .problemAlias(problemAlias)
-                .problemName(SandalphonUtils.getProblemName(problem, language))
+                .problemName(ProblemUtils.getProblemName(problem, language))
                 .containerPath(containerPath)
                 .containerName(containerName)
                 .build();

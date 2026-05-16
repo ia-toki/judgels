@@ -16,7 +16,6 @@ import judgels.api.lesson.LessonStatement;
 import judgels.lesson.statement.LessonStatementStore;
 import judgels.resource.StatementLanguageStatus;
 import judgels.role.ProblemAdminRoleChecker;
-import judgels.sandalphon.SandalphonUtils;
 
 public class LessonService {
     @Inject protected ProblemAdminRoleChecker roleChecker;
@@ -55,11 +54,11 @@ public class LessonService {
 
         String sanitizedLanguage = sanitizeLessonStatementLanguage(lessonJid, language);
         LessonStatement statement = lessonStatementStore.getStatement(null, lessonJid, sanitizedLanguage);
-        String apiUrl = SandalphonUtils.getApiUrl(req, uriInfo);
+        String apiUrl = LessonUtils.getApiUrl(req, uriInfo);
 
         return new LessonStatement.Builder()
                 .from(statement)
-                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), apiUrl, lessonJid))
+                .text(LessonUtils.replaceLessonRenderUrls(statement.getText(), apiUrl, lessonJid))
                 .build();
     }
 

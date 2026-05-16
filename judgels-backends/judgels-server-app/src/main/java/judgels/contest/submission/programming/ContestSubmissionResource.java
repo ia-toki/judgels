@@ -62,8 +62,8 @@ import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
+import judgels.problem.ProblemUtils;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.programming.SubmissionClient;
@@ -233,7 +233,7 @@ public class ContestSubmissionResource {
                 .data(submissionWithSource)
                 .profile(profile)
                 .problemAlias(contestProblem.getAlias())
-                .problemName(SandalphonUtils.getProblemName(problem, language))
+                .problemName(ProblemUtils.getProblemName(problem, language))
                 .containerName(contest.getName())
                 .build();
     }

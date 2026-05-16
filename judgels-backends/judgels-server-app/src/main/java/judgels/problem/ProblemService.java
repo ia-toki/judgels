@@ -39,7 +39,6 @@ import judgels.problem.bundle.item.BundleItemStore;
 import judgels.problem.programming.ProgrammingProblemStore;
 import judgels.resource.StatementLanguageStatus;
 import judgels.role.ProblemAdminRoleChecker;
-import judgels.sandalphon.SandalphonUtils;
 
 public class ProblemService {
     @Inject protected ProblemAdminRoleChecker roleChecker;
@@ -105,7 +104,7 @@ public class ProblemService {
                 .stream()
                 .collect(toMap(
                         Map.Entry::getKey,
-                        e -> SandalphonUtils.getProblemName(e.getValue(), language)
+                        e -> ProblemUtils.getProblemName(e.getValue(), language)
                 ));
     }
 
@@ -166,12 +165,12 @@ public class ProblemService {
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
         String sanitizedLanguage = sanitizeProblemStatementLanguage(problemJid, language);
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
-        String apiUrl = SandalphonUtils.getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return new judgels.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
+                        .text(ProblemUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .limits(new ProblemLimits.Builder()
                         .timeLimit(config.getTimeLimit())
@@ -209,12 +208,12 @@ public class ProblemService {
         }
 
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
-        String apiUrl = SandalphonUtils.getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return new judgels.api.problem.bundle.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
+                        .text(ProblemUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .items(itemsWithConfig
                         .stream()
@@ -247,10 +246,10 @@ public class ProblemService {
 
         String sanitizedLanguage = sanitizeProblemEditorialLanguage(problemJid, language);
         ProblemEditorial editorial = problemEditorialStore.getEditorial(null, problemJid, sanitizedLanguage);
-        String apiUrl = SandalphonUtils.getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return Optional.of(new ProblemEditorialInfo.Builder()
-                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), apiUrl, problemJid))
+                .text(ProblemUtils.replaceProblemEditorialRenderUrls(editorial.getText(), apiUrl, problemJid))
                 .defaultLanguage(simplifyLanguageCode(problemEditorialStore.getEditorialDefaultLanguage(null, problemJid)))
                 .languages(problemEditorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
