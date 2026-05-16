@@ -39,7 +39,7 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
 import judgels.gabriel.api.LanguageRestriction;
-import judgels.sandalphon.SandalphonClient;
+import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.programming.SubmissionStore;
@@ -53,7 +53,7 @@ public class ContestProblemResource {
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ContestModuleStore moduleStore;
     @Inject protected SubmissionStore submissionStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ContestProblemResource() {}
 
@@ -76,7 +76,7 @@ public class ContestProblemResource {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedProblemSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = problemService.translateAllowedProblemSlugsToJids(actorJid, slugs);
 
         Set<String> notAllowedSlugs = data.stream()
                 .map(ContestProblemData::getSlug)
@@ -116,7 +116,7 @@ public class ContestProblemResource {
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
 
         var problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
-        Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
+        Map<String, ProblemInfo> problemsMap = problemService.getProblems(problemJids);
         Map<String, Long> totalSubmissionsMap =
                 submissionStore.getTotalSubmissionsMap(contestJid, actorJid, problemJids);
 
@@ -164,7 +164,7 @@ public class ContestProblemResource {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
+        ProblemInfo problemInfo = problemService.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.PROGRAMMING) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -176,7 +176,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.api.problem.programming.ProblemWorksheet worksheet =
-                sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
+                problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
                 moduleStore.getStyleModuleConfig(contestJid, contest.getStyle()).getGradingLanguageRestriction();
@@ -223,7 +223,7 @@ public class ContestProblemResource {
 
         ContestProblem problem = checkFound(problemStore.getProblemByAlias(contestJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
+        ProblemInfo problemInfo = problemService.getProblem(problemJid);
 
         if (problemInfo.getType() != ProblemType.BUNDLE) {
             throw ContestErrors.wrongProblemType(problemInfo.getType());
@@ -235,7 +235,7 @@ public class ContestProblemResource {
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
         judgels.api.problem.bundle.ProblemWorksheet worksheet =
-                sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
+                problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
 
         judgels.api.problem.bundle.ProblemWorksheet
                 finalWorksheet = new judgels.api.problem.bundle.ProblemWorksheet.Builder()

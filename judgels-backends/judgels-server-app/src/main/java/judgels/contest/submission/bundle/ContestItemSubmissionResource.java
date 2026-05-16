@@ -50,8 +50,8 @@ import judgels.contest.problem.ContestProblemRoleChecker;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
@@ -75,7 +75,7 @@ public class ContestItemSubmissionResource {
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ContestItemSubmissionResource() {}
 
@@ -145,7 +145,7 @@ public class ContestItemSubmissionResource {
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
 
         var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
-        Map<String, BundleItem> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
+        Map<String, BundleItem> itemsMap = problemService.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -179,7 +179,7 @@ public class ContestItemSubmissionResource {
         ContestProblem problem = checkFound(problemStore.getProblem(data.getContainerJid(), data.getProblemJid()));
         checkAllowed(problemRoleChecker.canSubmit(actorJid, contest, problem, 0));
 
-        Optional<Item> item = sandalphonClient.getItem(data.getProblemJid(), data.getItemJid());
+        Optional<Item> item = problemService.getItem(data.getProblemJid(), data.getItemJid());
         checkFound(item);
 
         if (data.getAnswer().trim().isEmpty()) {
@@ -260,7 +260,7 @@ public class ContestItemSubmissionResource {
                 .collect(Collectors.toMap(ItemSubmission::getItemJid, Function.identity()));
 
         List<String> bundleProblemJidsSortedByAlias = problemStore.getProblemJids(contestJid).stream()
-                .filter(problemJid -> sandalphonClient.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
+                .filter(problemJid -> problemService.getProblem(problemJid).getType().equals(ProblemType.BUNDLE))
                 .collect(Collectors.toList());
         Map<String, String> problemAliasesByProblemJid = problemStore.getProblemAliasesByJids(
                 contestJid, ImmutableSet.copyOf(bundleProblemJidsSortedByAlias));
@@ -268,7 +268,7 @@ public class ContestItemSubmissionResource {
         Map<String, List<String>> itemJidsByProblemJid = new HashMap<>();
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
         for (String problemJid : bundleProblemJidsSortedByAlias) {
-            ProblemWorksheet worksheet = sandalphonClient.getBundleProblemWorksheet(null, null, problemJid, language);
+            ProblemWorksheet worksheet = problemService.getBundleProblemWorksheet(null, null, problemJid, language);
             List<Item> items = worksheet.getItems().stream()
                     .filter(item -> !item.getType().equals(ItemType.STATEMENT))
                     .collect(Collectors.toList());
@@ -282,7 +282,7 @@ public class ContestItemSubmissionResource {
             );
         }
 
-        Map<String, String> problemNamesByProblemJid = sandalphonClient.getProblemNames(
+        Map<String, String> problemNamesByProblemJid = problemService.getProblemNames(
                 ImmutableSet.copyOf(bundleProblemJidsSortedByAlias), language);
 
         Profile profile = profileStore.getProfile(userJid, contest.getBeginTime());

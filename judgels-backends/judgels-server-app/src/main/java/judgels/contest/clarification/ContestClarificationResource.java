@@ -36,8 +36,8 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -52,7 +52,7 @@ public class ContestClarificationResource {
     @Inject protected ContestClarificationStore clarificationStore;
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ProfileStore profileStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ContestClarificationResource() {}
 
@@ -136,7 +136,7 @@ public class ContestClarificationResource {
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids, contest.getBeginTime());
 
         Map<String, String> problemAliasesMap = problemStore.getProblemAliasesByJids(contestJid, problemJids);
-        Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(problemJids, language);
+        Map<String, String> problemNamesMap = problemService.getProblemNames(problemJids, language);
 
         contestLogger.log(contestJid, "OPEN_CLARIFICATIONS");
 

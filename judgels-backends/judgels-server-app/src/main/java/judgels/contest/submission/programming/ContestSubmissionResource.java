@@ -61,8 +61,8 @@ import judgels.contest.supervisor.ContestSupervisorStore;
 import judgels.gabriel.api.LanguageRestriction;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -98,7 +98,7 @@ public class ContestSubmissionResource {
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ContestSubmissionResource() {}
 
@@ -218,7 +218,7 @@ public class ContestSubmissionResource {
 
         ContestProblem contestProblem =
                 checkFound(problemStore.getProblem(contest.getJid(), submission.getProblemJid()));
-        ProblemInfo problem = sandalphonClient.getProblem(contestProblem.getProblemJid());
+        ProblemInfo problem = problemService.getProblem(contestProblem.getProblemJid());
 
         String userJid = submission.getUserJid();
         Profile profile = checkFound(Optional.ofNullable(profileStore.getProfile(userJid, contest.getBeginTime())));
@@ -322,7 +322,7 @@ public class ContestSubmissionResource {
                 .additionalGradingLanguageRestriction(contestGradingLanguageRestriction)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
+        ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         Submission submission = submissionClient.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
@@ -342,7 +342,7 @@ public class ContestSubmissionResource {
         Contest contest = checkFound(contestStore.getContestByJid(submission.getContainerJid()));
         checkAllowed(submissionRoleChecker.canManage(actorJid, contest));
 
-        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
         submissionRegrader.regradeSubmission(submission, config);
 
         scoreboardIncrementalMarker.invalidateMark(contest.getJid());
@@ -380,7 +380,7 @@ public class ContestSubmissionResource {
             }
 
             var problemJids = Lists.transform(submissions, Submission::getProblemJid);
-            configsMap.putAll(sandalphonClient.getProgrammingProblemSubmissionConfigs(
+            configsMap.putAll(problemService.getProgrammingProblemSubmissionConfigs(
                     Sets.difference(Set.copyOf(problemJids), configsMap.keySet())));
 
             submissionRegrader.regradeSubmissions(submissions, configsMap);

@@ -1,11 +1,29 @@
 package judgels.sandalphon;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.UriInfo;
 import java.util.Optional;
 import judgels.api.lesson.LessonInfo;
 import judgels.api.problem.ProblemInfo;
 
 public class SandalphonUtils {
     private SandalphonUtils() {}
+
+    public static String getApiUrl(HttpServletRequest req, UriInfo uriInfo) {
+        if (req == null) {
+            return "";
+        }
+
+        String oldScheme = uriInfo.getBaseUri().getScheme();
+        String newScheme = oldScheme;
+
+        String forwardedProto = req.getHeader("X-Forwarded-Proto");
+        if (forwardedProto != null && !forwardedProto.isEmpty()) {
+            newScheme = forwardedProto;
+        }
+
+        return newScheme + uriInfo.getBaseUri().toString().substring(oldScheme.length());
+    }
 
     public static String getProblemName(ProblemInfo problem, Optional<String> language) {
         String finalLanguage = problem.getDefaultLanguage();

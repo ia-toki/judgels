@@ -18,7 +18,6 @@ import judgels.api.problem.ProblemSetProblemInfo;
 import judgels.api.problem.ProblemsResponse;
 import judgels.difficulty.ProblemDifficultyStore;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -31,7 +30,7 @@ public class ProblemResource {
     @Inject protected ProblemStore problemStore;
     @Inject protected StatsStore statsStore;
     @Inject protected ProblemDifficultyStore difficultyStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ProblemResource() {}
 
@@ -55,7 +54,7 @@ public class ProblemResource {
 
         Set<String> allowedProblemJids = null;
         if (!tags.isEmpty()) {
-            allowedProblemJids = sandalphonClient.getProblemJidsByTags(tags);
+            allowedProblemJids = problemService.getProblemJidsByTags(tags);
         }
 
         Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber, PAGE_SIZE);
@@ -63,8 +62,8 @@ public class ProblemResource {
 
         return new ProblemsResponse.Builder()
                 .data(problems)
-                .problemsMap(sandalphonClient.getProblems(problemJids))
-                .problemMetadatasMap(sandalphonClient.getProblemMetadatas(problemJids))
+                .problemsMap(problemService.getProblems(problemJids))
+                .problemMetadatasMap(problemService.getProblemMetadatas(problemJids))
                 .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .build();

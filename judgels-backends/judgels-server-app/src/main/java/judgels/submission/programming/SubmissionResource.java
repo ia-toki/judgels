@@ -46,10 +46,10 @@ import judgels.chapter.problem.ChapterProblemStore;
 import judgels.gabriel.api.GradingOptions;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;
+import judgels.problem.ProblemService;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.sandalphon.SandalphonUtils;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -71,7 +71,7 @@ public class SubmissionResource {
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
@@ -129,7 +129,7 @@ public class SubmissionResource {
 
         Map<String, String> problemNamesMap = new HashMap<>();
         if (!containerJid.isPresent()) {
-            problemNamesMap = sandalphonClient.getProblemNames(problemJids, Optional.empty());
+            problemNamesMap = problemService.getProblemNames(problemJids, Optional.empty());
         }
 
         Map<String, String> containerNamesMap = new HashMap<>();
@@ -200,7 +200,7 @@ public class SubmissionResource {
             reasonNotAllowedToViewSource = submissionRoleChecker.canViewChapterSource(actorJid, userJid, problemJid);
         }
 
-        ProblemInfo problem = sandalphonClient.getProblem(submission.getProblemJid());
+        ProblemInfo problem = problemService.getProblem(submission.getProblemJid());
 
         Profile profile = checkFound(Optional.ofNullable(profileStore.getProfile(userJid)));
 
@@ -265,7 +265,7 @@ public class SubmissionResource {
                 .gradingLanguage(gradingLanguage)
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
-        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(data.getProblemJid());
+        ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         GradingOptions options = new GradingOptions.Builder().shouldRevealEvaluation(true).build();
         Submission submission = submissionClient.submit(data, source, config, options);
 
@@ -285,7 +285,7 @@ public class SubmissionResource {
         Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
         checkAllowed(submissionRoleChecker.canManage(actorJid));
 
-        ProblemSubmissionConfig config = sandalphonClient.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
+        ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(submission.getProblemJid());
         submissionRegrader.regradeSubmission(submission, config);
     }
 
@@ -317,7 +317,7 @@ public class SubmissionResource {
             }
 
             var problemJids = Lists.transform(submissions, Submission::getProblemJid);
-            configsMap.putAll(sandalphonClient.getProgrammingProblemSubmissionConfigs(
+            configsMap.putAll(problemService.getProgrammingProblemSubmissionConfigs(
                     Sets.difference(Set.copyOf(problemJids), configsMap.keySet())));
 
             submissionRegrader.regradeSubmissions(submissions, configsMap);

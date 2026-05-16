@@ -33,8 +33,8 @@ import judgels.api.lesson.LessonInfo;
 import judgels.api.lesson.LessonStatement;
 import judgels.chapter.ChapterStore;
 import judgels.chapter.resource.ChapterResourceStore;
+import judgels.lesson.LessonService;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
@@ -45,7 +45,7 @@ public class ChapterLessonResource {
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterLessonStore lessonStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected LessonService lessonService;
 
     @Inject public ChapterLessonResource() {}
 
@@ -68,7 +68,7 @@ public class ChapterLessonResource {
         checkArgument(aliases.size() == data.size(), "Lesson aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Lesson slugs must be unique");
 
-        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedLessonSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = lessonService.translateAllowedLessonSlugsToJids(actorJid, slugs);
 
         List<ChapterLesson> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(lesson ->
                 new ChapterLesson.Builder()
@@ -93,7 +93,7 @@ public class ChapterLessonResource {
         List<ChapterLesson> lessons = lessonStore.getLessons(chapterJid);
 
         var lessonJids = Lists.transform(lessons, ChapterLesson::getLessonJid);
-        Map<String, LessonInfo> lessonsMap = sandalphonClient.getLessons(lessonJids);
+        Map<String, LessonInfo> lessonsMap = lessonService.getLessons(lessonJids);
 
         return new ChapterLessonsResponse.Builder()
                 .data(lessons)
@@ -118,8 +118,8 @@ public class ChapterLessonResource {
 
         ChapterLesson lesson = checkFound(lessonStore.getLessonByAlias(chapterJid, lessonAlias));
         String lessonJid = lesson.getLessonJid();
-        LessonInfo lessonInfo = sandalphonClient.getLesson(lessonJid);
-        LessonStatement statement = sandalphonClient.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
+        LessonInfo lessonInfo = lessonService.getLesson(lessonJid);
+        LessonStatement statement = lessonService.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
 
         List<Optional<String>> previousAndNextResourcePaths =
                 resourceStore.getPreviousAndNextResourcePathsForLesson(chapterJid, lessonAlias);

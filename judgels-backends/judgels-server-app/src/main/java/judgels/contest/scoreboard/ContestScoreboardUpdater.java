@@ -37,8 +37,8 @@ import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.gabriel.api.ScoringConfig;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
 
@@ -56,7 +56,7 @@ public class ContestScoreboardUpdater {
     private final ScoreboardProcessorRegistry scoreboardProcessorRegistry;
     private final ContestScoreboardPusher scoreboardPusher;
     private final ProfileStore profileStore;
-    private final SandalphonClient sandalphonClient;
+    private final ProblemService problemService;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -72,7 +72,7 @@ public class ContestScoreboardUpdater {
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
             ProfileStore profileStore,
-            SandalphonClient sandalphonClient) {
+            ProblemService problemService) {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
@@ -87,7 +87,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardProcessorRegistry = scoreboardProcessorRegistry;
         this.scoreboardPusher = scoreboardPusher;
         this.profileStore = profileStore;
-        this.sandalphonClient = sandalphonClient;
+        this.problemService = problemService;
     }
 
     @UnitOfWork
@@ -181,7 +181,7 @@ public class ContestScoreboardUpdater {
 
         Map<String, ScoringConfig> problemScoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
                 ? Map.of()
-                : sandalphonClient.getProgrammingProblemScoringConfigs(problemJidsSet);
+                : problemService.getProgrammingProblemScoringConfigs(problemJidsSet);
 
 
         Map<ContestScoreboardType, Scoreboard> scoreboards = new HashMap<>();

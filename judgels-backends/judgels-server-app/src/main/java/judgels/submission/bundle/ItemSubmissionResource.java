@@ -40,9 +40,9 @@ import judgels.api.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.submission.bundle.TrainingSubmissionSummaryResponse;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
@@ -60,7 +60,7 @@ public class ItemSubmissionResource {
     @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
     @Inject protected ItemSubmissionConsumer itemSubmissionConsumer;
 
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
@@ -104,7 +104,7 @@ public class ItemSubmissionResource {
         Map<String, String> problemAliasesMap = getProblemAliasesMap(containerJid, problemJids);
 
         var itemJids = Lists.transform(submissions.getPage(), ItemSubmission::getItemJid);
-        Map<String, BundleItem> itemsMap = sandalphonClient.getItems(problemJids, itemJids);
+        Map<String, BundleItem> itemsMap = problemService.getItems(problemJids, itemJids);
         Map<String, Integer> itemNumbersMap = itemsMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -133,7 +133,7 @@ public class ItemSubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
 
-        Item item = checkFound(sandalphonClient.getItem(data.getProblemJid(), data.getItemJid()));
+        Item item = checkFound(problemService.getItem(data.getProblemJid(), data.getItemJid()));
 
         if (data.getAnswer().trim().isEmpty()) {
             submissionStore.deleteSubmission(
@@ -157,7 +157,7 @@ public class ItemSubmissionResource {
                     actorJid);
 
             Map<String, Optional<Grading>> itemGradingsMap = new HashMap<>();
-            for (BundleItem bundleItem : sandalphonClient.getItems(data.getProblemJid())) {
+            for (BundleItem bundleItem : problemService.getItems(data.getProblemJid())) {
                 if (bundleItem.getNumber().isPresent()) {
                     itemGradingsMap.put(bundleItem.getJid(), Optional.empty());
                 }
@@ -246,14 +246,14 @@ public class ItemSubmissionResource {
         Map<String, ItemType> itemTypesByItemJid = new HashMap<>();
 
         for (String pJid : problemJids) {
-            List<BundleItem> items = sandalphonClient.getItems(pJid).stream()
+            List<BundleItem> items = problemService.getItems(pJid).stream()
                     .filter(item -> item.getNumber().isPresent())
                     .collect(Collectors.toList());
             items.stream().forEach(item -> itemTypesByItemJid.put(item.getJid(), item.getType()));
             itemJidsByProblemJid.put(pJid, items.stream().map(BundleItem::getJid).collect(Collectors.toList()));
         }
 
-        Map<String, String> problemNamesMap = sandalphonClient.getProblemNames(ImmutableSet.copyOf(problemJids), language);
+        Map<String, String> problemNamesMap = problemService.getProblemNames(ImmutableSet.copyOf(problemJids), language);
         Profile profile = profileStore.getProfile(userJid);
 
         SubmissionConfig config = new SubmissionConfig.Builder()
