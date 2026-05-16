@@ -5,7 +5,7 @@ import java.io.IOException;
 import judgels.api.problem.bundle.Item;
 import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.bundle.StatementItemConfig;
-import judgels.sandalphon.SandalphonUtils;
+import judgels.problem.ProblemUtils;
 
 public class StatementItemProcessor implements ItemProcessor {
     @Override
@@ -20,7 +20,7 @@ public class StatementItemProcessor implements ItemProcessor {
                 .config(new StatementItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
-                                SandalphonUtils.replaceProblemRenderUrls(
+                                ProblemUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         apiUrl,
                                         problemJid))

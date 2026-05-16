@@ -38,9 +38,9 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.resource.ChapterResourceStore;
 import judgels.gabriel.api.SubmissionSource;
 import judgels.gabriel.api.Verdict;
+import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -59,7 +59,7 @@ public class ChapterProblemResource {
     @Inject protected StatsStore statsStore;
     @Inject @JerahmeelSubmissionStore protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ChapterProblemResource() {}
 
@@ -82,7 +82,7 @@ public class ChapterProblemResource {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedProblemSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = problemService.translateAllowedProblemSlugsToJids(actorJid, slugs);
 
         List<ChapterProblem> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(problem ->
                 new ChapterProblem.Builder()
@@ -108,7 +108,7 @@ public class ChapterProblemResource {
         List<ChapterProblem> problems = chapterProblemStore.getProblems(chapterJid);
 
         var problemJids = Lists.transform(problems, ChapterProblem::getProblemJid);
-        Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
+        Map<String, ProblemInfo> problemsMap = problemService.getProblems(problemJids);
         Map<String, List<List<String>>> problemSetProblemPathsMap = problemSetProblemStore.getProblemSetProblemPathsMap(problemJids);
         Map<String, ProblemProgress> problemProgressesMap = statsStore.getProblemProgressesMap(actorJid, problemJids);
 
@@ -137,7 +137,7 @@ public class ChapterProblemResource {
 
         ChapterProblem problem = checkFound(chapterProblemStore.getProblemByAlias(chapterJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
+        ProblemInfo problemInfo = problemService.getProblem(problemJid);
 
         Optional<String> reasonNotAllowedToSubmit = authHeader.isPresent()
                 ? Optional.empty()
@@ -148,7 +148,7 @@ public class ChapterProblemResource {
         List<List<String>> problemSetProblemPaths = problemSetProblemStore.getProblemSetProblemPaths(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
         Optional<ProblemEditorialInfo> editorial = progress.getVerdict().equals(Verdict.ACCEPTED.getCode())
-                ? sandalphonClient.getProblemEditorial(req, uriInfo, problemJid, language)
+                ? problemService.getProblemEditorial(req, uriInfo, problemJid, language)
                 : Optional.empty();
 
         if (problemInfo.getType() == ProblemType.PROGRAMMING) {
@@ -168,10 +168,10 @@ public class ChapterProblemResource {
                     .previousResourcePath(previousAndNextResourcePaths.get(0))
                     .nextResourcePath(previousAndNextResourcePaths.get(1))
                     .worksheet(new judgels.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
+                            .from(problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
-                    .skeletons(sandalphonClient.getProgrammingProblemSkeletons(problemJid))
+                    .skeletons(problemService.getProgrammingProblemSkeletons(problemJid))
                     .lastSubmission(lastSubmission)
                     .lastSubmissionSource(lastSubmissionSource)
                     .problemSetProblemPaths(problemSetProblemPaths)
@@ -186,7 +186,7 @@ public class ChapterProblemResource {
                     .previousResourcePath(previousAndNextResourcePaths.get(0))
                     .nextResourcePath(previousAndNextResourcePaths.get(1))
                     .worksheet(new judgels.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
+                            .from(problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .progress(progress)

@@ -6,7 +6,7 @@ import java.util.Optional;
 import judgels.api.problem.bundle.Item;
 import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.bundle.ShortAnswerItemConfig;
-import judgels.sandalphon.SandalphonUtils;
+import judgels.problem.ProblemUtils;
 
 public class ShortAnswerItemProcessor implements ItemProcessor {
     @Override
@@ -21,7 +21,7 @@ public class ShortAnswerItemProcessor implements ItemProcessor {
                 .config(new ShortAnswerItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
-                                SandalphonUtils.replaceProblemRenderUrls(
+                                ProblemUtils.replaceProblemRenderUrls(
                                         item.getConfig().getStatement(),
                                         apiUrl,
                                         problemJid))

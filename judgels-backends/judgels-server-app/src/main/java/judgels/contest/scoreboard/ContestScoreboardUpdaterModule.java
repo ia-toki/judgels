@@ -11,8 +11,8 @@ import judgels.contest.ContestTimer;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.JudgelsScheduler;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
@@ -64,7 +64,7 @@ public class ContestScoreboardUpdaterModule {
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
             ProfileStore profileStore,
-            SandalphonClient sandalphonClient) {
+            ProblemService problemService) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
@@ -82,7 +82,7 @@ public class ContestScoreboardUpdaterModule {
                         ScoreboardProcessorRegistry.class,
                         ContestScoreboardPusher.class,
                         ProfileStore.class,
-                        SandalphonClient.class},
+                        ProblemService.class},
                 new Object[] {
                         objectMapper,
                         contestTimer,
@@ -97,6 +97,6 @@ public class ContestScoreboardUpdaterModule {
                         scoreboardProcessorRegistry,
                         scoreboardPusher,
                         profileStore,
-                        sandalphonClient});
+                        problemService});
     }
 }

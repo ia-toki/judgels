@@ -33,8 +33,8 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
+import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.sandalphon.SandalphonClient;
 
 @Path("/api/v2/contests/{contestJid}/editorial")
 public class ContestEditorialResource {
@@ -44,7 +44,7 @@ public class ContestEditorialResource {
     @Inject protected ContestModuleStore contestModuleStore;
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ProfileStore profileStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
 
     @Inject public ContestEditorialResource() {}
 
@@ -65,9 +65,9 @@ public class ContestEditorialResource {
         List<ContestProblem> problems = problemStore.getProblems(contestJid);
 
         var problemJids = Lists.transform(problems, ContestProblem::getProblemJid);
-        Map<String, ProblemInfo> problemsMap = sandalphonClient.getProblems(problemJids);
-        Map<String, ProblemMetadata> problemMetadatasMap = sandalphonClient.getProblemMetadatas(problemJids);
-        Map<String, ProblemEditorialInfo> problemEditorialsMap = sandalphonClient.getProblemEditorials(req, uriInfo, problemJids, language);
+        Map<String, ProblemInfo> problemsMap = problemService.getProblems(problemJids);
+        Map<String, ProblemMetadata> problemMetadatasMap = problemService.getProblemMetadatas(problemJids);
+        Map<String, ProblemEditorialInfo> problemEditorialsMap = problemService.getProblemEditorials(req, uriInfo, problemJids, language);
 
         Map<String, Profile> profilesMap = Maps.newHashMap();
         profilesMap.putAll(profileStore.parseProfiles(config.getPreface().orElse("")));

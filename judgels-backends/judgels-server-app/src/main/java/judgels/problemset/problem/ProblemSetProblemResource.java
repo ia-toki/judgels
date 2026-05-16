@@ -46,10 +46,10 @@ import judgels.api.problemset.problem.ProblemSetProblemsResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.difficulty.ProblemDifficultyStore;
+import judgels.problem.ProblemService;
 import judgels.problemset.ProblemSetStore;
 import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.sandalphon.SandalphonClient;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -63,7 +63,7 @@ public class ProblemSetProblemResource {
     @Inject protected ProblemDifficultyStore difficultyStore;
     @Inject protected StatsStore statsStore;
     @Inject protected ProfileStore profileStore;
-    @Inject protected SandalphonClient sandalphonClient;
+    @Inject protected ProblemService problemService;
     @Inject protected ContestStore contestStore;
 
     @Inject public ProblemSetProblemResource() {}
@@ -87,7 +87,7 @@ public class ProblemSetProblemResource {
         checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
         checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
 
-        Map<String, String> slugToJidMap = sandalphonClient.translateAllowedProblemSlugsToJids(actorJid, slugs);
+        Map<String, String> slugToJidMap = problemService.translateAllowedProblemSlugsToJids(actorJid, slugs);
 
         Set<String> contestSlugs = data.stream()
                 .map(ProblemSetProblemData::getContestSlugs)
@@ -119,7 +119,7 @@ public class ProblemSetProblemResource {
                 .collect(Collectors.toList());
 
         Map<String, Boolean> problemVisibilitiesMap = problemStore.setProblems(problemSetJid, setData);
-        sandalphonClient.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
+        problemService.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
     }
 
     @GET
@@ -142,8 +142,8 @@ public class ProblemSetProblemResource {
 
         return new ProblemSetProblemsResponse.Builder()
                 .data(problems)
-                .problemsMap(sandalphonClient.getProblems(problemJids))
-                .problemMetadatasMap(sandalphonClient.getProblemMetadatas(problemJids))
+                .problemsMap(problemService.getProblems(problemJids))
+                .problemMetadatasMap(problemService.getProblemMetadatas(problemJids))
                 .problemDifficultiesMap(difficultyStore.getProblemDifficultiesMap(problemJids))
                 .problemProgressesMap(statsStore.getProblemProgressesMap(actorJid, problemJids))
                 .contestsMap(roleChecker.isAdmin(actorJid)
@@ -184,7 +184,7 @@ public class ProblemSetProblemResource {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         String problemJid = problem.getProblemJid();
-        ProblemInfo problemInfo = sandalphonClient.getProblem(problemJid);
+        ProblemInfo problemInfo = problemService.getProblem(problemJid);
 
         Optional<String> reasonNotAllowedToSubmit = authHeader.isPresent()
                 ? Optional.empty()
@@ -196,7 +196,7 @@ public class ProblemSetProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.api.problem.programming.ProblemWorksheet.Builder()
-                            .from(sandalphonClient.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
+                            .from(problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -206,7 +206,7 @@ public class ProblemSetProblemResource {
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
                     .worksheet(new judgels.api.problem.bundle.ProblemWorksheet.Builder()
-                            .from(sandalphonClient.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
+                            .from(problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
                     .build();
@@ -229,7 +229,7 @@ public class ProblemSetProblemResource {
         String problemJid = problem.getProblemJid();
         Set<String> problemJids = ImmutableSet.of(problemJid);
 
-        ProblemMetadata metadata = sandalphonClient.getProblemMetadata(problem.getProblemJid());
+        ProblemMetadata metadata = problemService.getProblemMetadata(problem.getProblemJid());
         ProblemDifficulty difficulty = difficultyStore.getProblemDifficultiesMap(problemJids).get(problemJid);
         ProblemTopStats topStats = statsStore.getProblemTopStats(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, problemJids).get(problemJid);
@@ -271,7 +271,7 @@ public class ProblemSetProblemResource {
         checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
-        ProblemEditorialInfo editorial = checkFound(sandalphonClient.getProblemEditorial(req, uriInfo, problem.getProblemJid(), language));
+        ProblemEditorialInfo editorial = checkFound(problemService.getProblemEditorial(req, uriInfo, problem.getProblemJid(), language));
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();

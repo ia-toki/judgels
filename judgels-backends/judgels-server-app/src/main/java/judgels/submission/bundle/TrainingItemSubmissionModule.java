@@ -5,7 +5,7 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import judgels.jerahmeel.persistence.BundleItemSubmissionDao;
-import judgels.sandalphon.SandalphonClient;
+import judgels.problem.ProblemService;
 import judgels.stats.StatsConfiguration;
 
 @Module
@@ -34,19 +34,19 @@ public class TrainingItemSubmissionModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
             ItemSubmissionStore itemSubmissionStore,
-            SandalphonClient sandalphonClient) {
+            ProblemService problemService) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ItemSubmissionRegradeProcessor.class,
                 new Class<?>[] {
                         ItemSubmissionGraderRegistry.class,
                         ItemSubmissionStore.class,
-                        SandalphonClient.class
+                        ProblemService.class
                 },
                 new Object[] {
                         itemSubmissionGraderRegistry,
                         itemSubmissionStore,
-                        sandalphonClient
+                        problemService
                 }
         );
     }

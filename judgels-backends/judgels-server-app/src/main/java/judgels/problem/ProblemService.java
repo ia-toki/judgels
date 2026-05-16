@@ -1,8 +1,9 @@
-package judgels.sandalphon;
+package judgels.problem;
 
 import static java.util.stream.Collectors.toMap;
 import static judgels.resource.LanguageUtils.simplifyLanguageCode;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.ArrayList;
@@ -14,10 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import judgels.api.lesson.Lesson;
-import judgels.api.lesson.LessonInfo;
-import judgels.api.lesson.LessonStatement;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemEditorial;
 import judgels.api.problem.ProblemEditorialInfo;
@@ -33,8 +30,6 @@ import judgels.api.problem.programming.ProblemSkeleton;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.ScoringConfig;
-import judgels.lesson.LessonStore;
-import judgels.lesson.statement.LessonStatementStore;
 import judgels.problem.base.ProblemStore;
 import judgels.problem.base.editorial.ProblemEditorialStore;
 import judgels.problem.base.statement.ProblemStatementStore;
@@ -45,7 +40,7 @@ import judgels.problem.programming.ProgrammingProblemStore;
 import judgels.resource.StatementLanguageStatus;
 import judgels.role.ProblemAdminRoleChecker;
 
-public class SandalphonClient {
+public class ProblemService {
     @Inject protected ProblemAdminRoleChecker roleChecker;
     @Inject protected ProblemStore problemStore;
     @Inject protected ProblemStatementStore problemStatementStore;
@@ -54,10 +49,8 @@ public class SandalphonClient {
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected BundleItemStore bundleItemStore;
     @Inject protected ItemProcessorRegistry itemProcessorRegistry;
-    @Inject protected LessonStore lessonStore;
-    @Inject protected LessonStatementStore lessonStatementStore;
 
-    @Inject public SandalphonClient() {}
+    @Inject public ProblemService() {}
 
     public Map<String, String> translateAllowedProblemSlugsToJids(String actorJid, Set<String> slugs) {
         Optional<String> userJid = roleChecker.isAdmin(actorJid)
@@ -111,7 +104,7 @@ public class SandalphonClient {
                 .stream()
                 .collect(toMap(
                         Map.Entry::getKey,
-                        e -> SandalphonUtils.getProblemName(e.getValue(), language)
+                        e -> ProblemUtils.getProblemName(e.getValue(), language)
                 ));
     }
 
@@ -172,12 +165,12 @@ public class SandalphonClient {
         GradingConfig config = programmingProblemStore.getGradingConfig(null, problemJid);
         String sanitizedLanguage = sanitizeProblemStatementLanguage(problemJid, language);
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
-        String apiUrl = getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return new judgels.api.problem.programming.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
+                        .text(ProblemUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .limits(new ProblemLimits.Builder()
                         .timeLimit(config.getTimeLimit())
@@ -215,12 +208,12 @@ public class SandalphonClient {
         }
 
         ProblemStatement statement = problemStatementStore.getStatement(null, problemJid, sanitizedLanguage);
-        String apiUrl = getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return new judgels.api.problem.bundle.ProblemWorksheet.Builder()
                 .statement(new ProblemStatement.Builder()
                         .from(statement)
-                        .text(SandalphonUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
+                        .text(ProblemUtils.replaceProblemRenderUrls(statement.getText(), apiUrl, problemJid))
                         .build())
                 .items(itemsWithConfig
                         .stream()
@@ -253,10 +246,10 @@ public class SandalphonClient {
 
         String sanitizedLanguage = sanitizeProblemEditorialLanguage(problemJid, language);
         ProblemEditorial editorial = problemEditorialStore.getEditorial(null, problemJid, sanitizedLanguage);
-        String apiUrl = getApiUrl(req, uriInfo);
+        String apiUrl = ProblemUtils.getApiUrl(req, uriInfo);
 
         return Optional.of(new ProblemEditorialInfo.Builder()
-                .text(SandalphonUtils.replaceProblemEditorialRenderUrls(editorial.getText(), apiUrl, problemJid))
+                .text(ProblemUtils.replaceProblemEditorialRenderUrls(editorial.getText(), apiUrl, problemJid))
                 .defaultLanguage(simplifyLanguageCode(problemEditorialStore.getEditorialDefaultLanguage(null, problemJid)))
                 .languages(problemEditorialStore.getEditorialLanguages(null, problemJid).stream()
                         .map(lang -> simplifyLanguageCode(lang))
@@ -301,73 +294,5 @@ public class SandalphonClient {
         }
 
         return simplifiedLanguages.get(lang);
-    }
-
-    public Map<String, String> translateAllowedLessonSlugsToJids(String actorJid, Collection<String> slugs) {
-        Optional<String> userJid = roleChecker.isAdmin(actorJid)
-                ? Optional.empty()
-                : Optional.of(actorJid);
-        return lessonStore.translateAllowedSlugsToJids(userJid, slugs);
-    }
-
-    public LessonInfo getLesson(String lessonJid) {
-        Lesson lesson = lessonStore.getLessonByJid(lessonJid).get();
-
-        return new LessonInfo.Builder()
-                .slug(lesson.getSlug())
-                .defaultLanguage(simplifyLanguageCode(lessonStatementStore.getDefaultLanguage(null, lessonJid)))
-                .titlesByLanguage(lessonStatementStore.getTitlesByLanguage(null, lessonJid).entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getValue())))
-                .build();
-    }
-
-    public Map<String, LessonInfo> getLessons(Collection<String> lessonJids) {
-        return Set.copyOf(lessonJids).stream().collect(Collectors.toMap(jid -> jid, this::getLesson));
-    }
-
-    public LessonStatement getLessonStatement(
-            HttpServletRequest req,
-            UriInfo uriInfo,
-            String lessonJid, Optional<String> language) {
-
-        String sanitizedLanguage = sanitizeLessonStatementLanguage(lessonJid, language);
-        LessonStatement statement = lessonStatementStore.getStatement(null, lessonJid, sanitizedLanguage);
-        String apiUrl = getApiUrl(req, uriInfo);
-
-        return new LessonStatement.Builder()
-                .from(statement)
-                .text(SandalphonUtils.replaceLessonRenderUrls(statement.getText(), apiUrl, lessonJid))
-                .build();
-    }
-
-    private String sanitizeLessonStatementLanguage(String problemJid, Optional<String> language) {
-        Map<String, StatementLanguageStatus> availableLanguages = lessonStatementStore.getAvailableLanguages(null, problemJid);
-        Map<String, String> simplifiedLanguages = availableLanguages.entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> simplifyLanguageCode(e.getKey()), e -> e.getKey()));
-
-        String lang = language.orElse("");
-        if (!simplifiedLanguages.containsKey(lang) || availableLanguages.get(simplifiedLanguages.get(lang)) == StatementLanguageStatus.DISABLED) {
-            lang = simplifyLanguageCode(lessonStatementStore.getDefaultLanguage(null, problemJid));
-        }
-
-        return simplifiedLanguages.get(lang);
-    }
-
-    private static String getApiUrl(HttpServletRequest req, UriInfo uriInfo) {
-        if (req == null) {
-            return "";
-        }
-
-        String oldScheme = uriInfo.getBaseUri().getScheme();
-        String newScheme = oldScheme;
-
-        String forwardedProto = req.getHeader("X-Forwarded-Proto");
-        if (forwardedProto != null && !forwardedProto.isEmpty()) {
-            newScheme = forwardedProto;
-        }
-
-        return newScheme + uriInfo.getBaseUri().toString().substring(oldScheme.length());
     }
 }
