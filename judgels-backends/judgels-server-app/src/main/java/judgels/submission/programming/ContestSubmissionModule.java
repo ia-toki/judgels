@@ -19,7 +19,9 @@ import judgels.persistence.ContestProgrammingGradingDao;
 import judgels.persistence.ContestProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
+import judgels.submission.ContestSubmissionStore;
 import judgels.submission.bundle.BaseItemSubmissionStore;
+import judgels.submission.bundle.ContestItemSubmissionStore;
 import judgels.submission.bundle.ItemSubmissionStore;
 import org.hibernate.SessionFactory;
 
@@ -44,6 +46,7 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
+    @ContestSubmissionStore
     static SubmissionStore submissionStore(
             ContestProgrammingSubmissionDao submissionDao,
             ContestProgrammingGradingDao gradingDao,
@@ -54,21 +57,24 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
+    @ContestItemSubmissionStore
     static ItemSubmissionStore itemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
         return new BaseItemSubmissionStore<>(submissionDao);
     }
 
     @Provides
     @Singleton
+    @ContestSubmissionSourceBuilder
     static SubmissionSourceBuilder submissionSourceBuilder(@ContestSubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
     @Singleton
+    @ContestSubmissionClient
     static SubmissionClient submissionClient(
             SessionFactory sessionFactory,
-            SubmissionStore submissionStore,
+            @ContestSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             MessageClient messageClient,
@@ -85,24 +91,37 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
-    static SubmissionRegrader submissionRegrader(
-            JudgelsScheduler scheduler,
-            SubmissionStore submissionStore,
-            SubmissionRegradeProcessor processor) {
-
-        ExecutorService executorService = scheduler.createExecutorService("uriel-submission-regrade-processor-%d", 5);
-        return new SubmissionRegrader(submissionStore, executorService, processor);
+    static SubmissionDownloader submissionDownloader(
+            @ContestSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder) {
+        return new SubmissionDownloader(submissionSourceBuilder);
     }
 
     @Provides
     @Singleton
+    @ContestSubmissionRegrader
+    static SubmissionRegrader submissionRegrader(
+            JudgelsScheduler scheduler,
+            @ContestSubmissionStore SubmissionStore submissionStore,
+            @ContestSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
+            @ContestSubmissionClient SubmissionClient submissionClient) {
+
+        ExecutorService executorService = scheduler.createExecutorService("contest-submission-regrade-processor-%d", 5);
+        return new SubmissionRegrader(
+                submissionStore,
+                executorService,
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
+    }
+
+    @Provides
+    @Singleton
+    @ContestGradingResponsePoller
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
             MessageListener messageListener,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            GradingResponseProcessor processor) {
+            @ContestGradingResponseProcessor GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("uriel-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("contest-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,
@@ -112,10 +131,11 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
+    @ContestGradingResponseProcessor
     static GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            SubmissionStore submissionStore) {
+            @ContestSubmissionStore SubmissionStore submissionStore) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,

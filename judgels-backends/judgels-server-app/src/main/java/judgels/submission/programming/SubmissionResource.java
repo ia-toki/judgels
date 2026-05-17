@@ -65,9 +65,9 @@ public class SubmissionResource {
 
     @Inject protected ActorChecker actorChecker;
     @Inject @TrainingSubmissionStore protected SubmissionStore submissionStore;
-    @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
-    @Inject protected SubmissionClient submissionClient;
-    @Inject protected SubmissionRegrader submissionRegrader;
+    @Inject @TrainingSubmissionSourceBuilder protected SubmissionSourceBuilder submissionSourceBuilder;
+    @Inject @TrainingSubmissionClient protected SubmissionClient submissionClient;
+    @Inject @TrainingSubmissionRegrader protected SubmissionRegrader submissionRegrader;
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;

@@ -80,10 +80,14 @@ public class SubmissionModule {
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
             SubmissionStore submissionStore,
-            SubmissionRegradeProcessor processor) {
+            SubmissionSourceBuilder submissionSourceBuilder,
+            SubmissionClient submissionClient) {
 
-        ExecutorService executorService = scheduler.createExecutorService("sandalphon-submission-regrade-processor-%d", 5);
-        return new SubmissionRegrader(submissionStore, executorService, processor);
+        ExecutorService executorService = scheduler.createExecutorService("problem-submission-regrade-processor-%d", 5);
+        return new SubmissionRegrader(
+                submissionStore,
+                executorService,
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
     }
 
     @Provides
@@ -94,7 +98,7 @@ public class SubmissionModule {
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("sandalphon-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("problem-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,
