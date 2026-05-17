@@ -18,6 +18,7 @@ import judgels.chapter.problem.ChapterProblemResource;
 import judgels.course.CourseResource;
 import judgels.course.chapter.CourseChapterResource;
 import judgels.curriculum.CurriculumResource;
+import judgels.grading.GradingClientModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.problem.ProblemResource;
 import judgels.problem.ProblemTagResource;
@@ -27,7 +28,6 @@ import judgels.sandalphon.SandalphonClientModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
@@ -55,7 +55,7 @@ import judgels.tasks.RefreshProblemSetStatsTask;
         // 3rd parties
         RabbitMQModule.class,
         SandalphonClientModule.class,
-        GabrielClientModule.class,
+        GradingClientModule.class,
 
         // Features
         TrainingSubmissionModule.class,

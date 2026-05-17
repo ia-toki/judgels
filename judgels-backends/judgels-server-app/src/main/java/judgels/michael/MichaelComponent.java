@@ -4,6 +4,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.contrib.auth.AuthModule;
+import judgels.grading.GradingClientModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.account.role.RoleResource;
 import judgels.michael.account.user.UserResource;
@@ -29,7 +30,6 @@ import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.sandalphon.SandalphonClientModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
@@ -49,7 +49,7 @@ import judgels.submission.SubmissionModule;
         // 3rd parties
         AuthModule.class,
         RabbitMQModule.class,
-        GabrielClientModule.class,
+        GradingClientModule.class,
         SandalphonClientModule.class,
 
         // Features

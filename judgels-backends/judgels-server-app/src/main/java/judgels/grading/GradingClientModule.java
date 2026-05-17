@@ -1,15 +1,14 @@
-package judgels.service.gabriel;
+package judgels.grading;
 
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
-import judgels.grading.JudgelsServerGradingConfiguration;
 
 @Module
-public final class GabrielClientModule {
+public final class GradingClientModule {
     private final JudgelsServerGradingConfiguration config;
 
-    public GabrielClientModule(JudgelsServerGradingConfiguration config) {
+    public GradingClientModule(JudgelsServerGradingConfiguration config) {
         this.config = config;
     }
 

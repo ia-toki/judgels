@@ -16,6 +16,7 @@ import judgels.contrib.fs.aws.AwsFsConfiguration;
 import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.contrib.user.registration.UserRegistrationModule;
 import judgels.contrib.user.registration.web.UserRegistrationWebConfig;
+import judgels.grading.GradingClientModule;
 import judgels.jerahmeel.DaggerJerahmeelComponent;
 import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
@@ -29,7 +30,6 @@ import judgels.michael.MichaelComponent;
 import judgels.sandalphon.DaggerSandalphonComponent;
 import judgels.sandalphon.SandalphonComponent;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.session.SessionModule;
@@ -83,7 +83,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(jophielConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
+                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
                 .build();
 
         env.servlets().setSessionHandler(new SessionHandler());
@@ -177,7 +177,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
+                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
                 .build();
 
         env.jersey().register(component.problemResource());
@@ -196,7 +196,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()));
+                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()));
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
@@ -259,7 +259,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gabrielClientModule(new GabrielClientModule(judgelsConfig.getGradingConfig()))
+                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
                 .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
