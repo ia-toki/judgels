@@ -29,7 +29,7 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
                 .judgelsGraderModule(new JudgelsGraderModule(judgelsConfig))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .isolateModule(new IsolateModule(gabrielConfig.getIsolateConfig()))
-                .gradingModule(new GradingModule(env.lifecycle(), gabrielConfig.getGradingConfig()))
+                .gradingModule(new GradingModule(env.lifecycle(), judgelsConfig.getGradingConfig()))
                 .cacheModule(new CacheModule(gabrielConfig.getCacheConfig()))
                 .build();
 

@@ -17,11 +17,11 @@ judgels:
     username: guest
     password: guest
 
-gabriel:
   grading:
     gradingRequestQueueName: gabriel-grading-request
     numWorkerThreads: 2
 
+gabriel:
   cache:
     cachedBaseDataDir: ../judgels-server/var/data              # development mode; cache data = actual server data
     # cachedBaseDataDir: var/data

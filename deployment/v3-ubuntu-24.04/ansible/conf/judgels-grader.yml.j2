@@ -22,11 +22,11 @@ judgels:
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
 
-gabriel:
   grading:
     gradingRequestQueueName: gabriel-grading-request
     numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
 
+gabriel:
   cache:
     cachedBaseDataDir: var/data
     serverBaseDataDir: {{ ansible_user }}@{{ groups['core'][0] }}:/opt/judgels/server/var/data

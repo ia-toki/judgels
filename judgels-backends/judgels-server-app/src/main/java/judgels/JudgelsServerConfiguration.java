@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
 import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
+import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
@@ -16,11 +17,11 @@ public interface JudgelsServerConfiguration {
     @JsonProperty("app")
     JudgelsAppConfiguration getAppConfig();
 
-    @JsonProperty("grading")
-    GradingConfiguration getGradingConfig();
-
     @JsonProperty("rabbitmq")
     Optional<RabbitMQConfiguration> getRabbitMQConfig();
+
+    @JsonProperty("grading")
+    JudgelsServerGradingConfiguration getGradingConfig();
 
     class Builder extends ImmutableJudgelsServerConfiguration.Builder {}
 }
