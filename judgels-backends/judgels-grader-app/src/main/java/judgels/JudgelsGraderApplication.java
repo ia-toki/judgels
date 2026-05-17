@@ -2,11 +2,8 @@ package judgels;
 
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
-import judgels.gabriel.DaggerGabrielComponent;
-import judgels.gabriel.GabrielComponent;
-import judgels.gabriel.JudgelsGraderModule;
-import judgels.gabriel.grading.GradingModule;
 import judgels.grading.CacheModule;
+import judgels.grading.GradingModule;
 import judgels.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 
@@ -17,13 +14,13 @@ public class JudgelsGraderApplication extends Application<JudgelsGraderApplicati
 
     @Override
     public void run(JudgelsGraderApplicationConfiguration config, Environment env) throws Exception {
-        runGabriel(config, env);
+        runGrader(config, env);
     }
 
-    private void runGabriel(JudgelsGraderApplicationConfiguration config, Environment env) {
+    private void runGrader(JudgelsGraderApplicationConfiguration config, Environment env) {
         JudgelsGraderConfiguration judgelsConfig = config.getJudgelsConfig();
 
-        GabrielComponent component = DaggerGabrielComponent.builder()
+        JudgelsGraderComponent component = DaggerJudgelsGraderComponent.builder()
                 .judgelsGraderModule(new JudgelsGraderModule(judgelsConfig))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .isolateModule(new IsolateModule(judgelsConfig.getIsolateConfig()))

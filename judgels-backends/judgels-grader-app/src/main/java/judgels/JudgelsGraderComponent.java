@@ -1,10 +1,10 @@
-package judgels.gabriel;
+package judgels;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import judgels.gabriel.grading.GradingModule;
-import judgels.gabriel.grading.GradingRequestPoller;
 import judgels.grading.CacheModule;
+import judgels.grading.GradingModule;
+import judgels.grading.GradingRequestPoller;
 import judgels.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
@@ -22,6 +22,6 @@ import judgels.service.JudgelsModule;
         GradingModule.class,
         CacheModule.class})
 @Singleton
-public interface GabrielComponent {
+public interface JudgelsGraderComponent {
     GradingRequestPoller gradingRequestPoller();
 }

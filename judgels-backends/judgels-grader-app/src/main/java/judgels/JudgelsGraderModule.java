@@ -1,11 +1,10 @@
-package judgels.gabriel;
+package judgels;
 
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.time.Clock;
-import judgels.JudgelsGraderConfiguration;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
