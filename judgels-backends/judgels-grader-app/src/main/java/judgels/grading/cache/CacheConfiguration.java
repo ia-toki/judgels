@@ -1,4 +1,4 @@
-package judgels.grading;
+package judgels.grading.cache;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
