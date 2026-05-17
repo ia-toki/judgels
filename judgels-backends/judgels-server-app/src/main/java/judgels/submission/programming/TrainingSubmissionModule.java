@@ -91,7 +91,7 @@ public class TrainingSubmissionModule {
             @TrainingSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
             @TrainingSubmissionClient SubmissionClient submissionClient) {
 
-        ExecutorService executorService = scheduler.createExecutorService("jerahmeel-submission-regrade-processor-%d", 5);
+        ExecutorService executorService = scheduler.createExecutorService("training-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
@@ -107,7 +107,7 @@ public class TrainingSubmissionModule {
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             @TrainingGradingResponseProcessor GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("jerahmeel-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("training-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,

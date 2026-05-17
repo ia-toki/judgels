@@ -33,7 +33,7 @@ public class ContestScoreboardUpdaterModule {
             ContestStore contestStore,
             ContestScoreboardUpdater contestScoreboardUpdater) {
 
-        ExecutorService executorService = scheduler.createExecutorService("uriel-contest-scoreboard-updater-%d", 2);
+        ExecutorService executorService = scheduler.createExecutorService("contest-scoreboard-updater-%d", 2);
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardPoller.class,

@@ -83,7 +83,7 @@ public class SubmissionModule {
             SubmissionSourceBuilder submissionSourceBuilder,
             SubmissionClient submissionClient) {
 
-        ExecutorService executorService = scheduler.createExecutorService("sandalphon-submission-regrade-processor-%d", 5);
+        ExecutorService executorService = scheduler.createExecutorService("problem-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
@@ -98,7 +98,7 @@ public class SubmissionModule {
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("sandalphon-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("problem-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,

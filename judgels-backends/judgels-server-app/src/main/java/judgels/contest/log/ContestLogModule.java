@@ -31,7 +31,7 @@ public class ContestLogModule {
             @Named("ContestLogQueue") Queue<ContestLog> logQueue,
             ContestLogCreator logCreator) {
 
-        ExecutorService executorService = scheduler.createExecutorService("uriel-contest-log-creator-%d", 2);
+        ExecutorService executorService = scheduler.createExecutorService("contest-log-creator-%d", 2);
         return new ContestLogPoller(logQueue, executorService, logCreator);
     }
 

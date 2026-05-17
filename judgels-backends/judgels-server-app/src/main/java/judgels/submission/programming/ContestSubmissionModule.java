@@ -105,7 +105,7 @@ public class ContestSubmissionModule {
             @ContestSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
             @ContestSubmissionClient SubmissionClient submissionClient) {
 
-        ExecutorService executorService = scheduler.createExecutorService("uriel-submission-regrade-processor-%d", 5);
+        ExecutorService executorService = scheduler.createExecutorService("contest-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
@@ -121,7 +121,7 @@ public class ContestSubmissionModule {
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             @ContestGradingResponseProcessor GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("uriel-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("contest-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,

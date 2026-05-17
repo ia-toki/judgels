@@ -163,7 +163,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userWebResource());
 
         component.scheduler().scheduleWithFixedDelay(
-                "jophiel-session-cleaner",
+                "session-cleaner",
                 component.sessionCleaner(),
                 Duration.ofDays(1));
 
@@ -207,12 +207,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         }
 
         component.scheduler().scheduleWithFixedDelay(
-                "uriel-contest-scoreboard-poller",
+                "contest-scoreboard-poller",
                 component.contestScoreboardPoller(),
                 Duration.ofSeconds(10));
 
         component.scheduler().scheduleWithFixedDelay(
-                "uriel-contest-log-poller",
+                "contest-log-poller",
                 component.contestLogPoller(),
                 Duration.ofSeconds(3));
 
