@@ -1,4 +1,4 @@
-package judgels.submission.programming;
+package judgels.training.submission.programming;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -20,6 +20,7 @@ import judgels.persistence.StatsUserDao;
 import judgels.persistence.StatsUserModel;
 import judgels.persistence.StatsUserProblemDao;
 import judgels.persistence.StatsUserProblemModel;
+import judgels.submission.programming.SubmissionConsumer;
 
 public class StatsProcessor implements SubmissionConsumer {
     private final ChapterProblemDao chapterProblemDao;

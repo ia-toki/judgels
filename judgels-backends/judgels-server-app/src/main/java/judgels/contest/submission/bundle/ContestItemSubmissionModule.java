@@ -1,41 +1,26 @@
-package judgels.submission.bundle;
+package judgels.contest.submission.bundle;
 
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.persistence.BundleItemSubmissionDao;
 import judgels.problem.ProblemService;
-import judgels.stats.StatsConfiguration;
+import judgels.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
+import judgels.submission.bundle.ItemSubmissionRegrader;
+import judgels.submission.bundle.ItemSubmissionStore;
 
 @Module
-public class TrainingItemSubmissionModule {
-    private final StatsConfiguration statsConfig;
-
-    public TrainingItemSubmissionModule(StatsConfiguration statsConfig) {
-        this.statsConfig = statsConfig;
-    }
+public class ContestItemSubmissionModule {
+    private ContestItemSubmissionModule() {}
 
     @Provides
     @Singleton
-    ItemSubmissionConsumer itemSubmissionConsumer(StatsProcessor statsProcessor) {
-        return statsConfig.getEnabled() ? statsProcessor : new NoOpItemSubmissionConsumer();
-    }
-
-    @Provides
-    @Singleton
-    @TrainingItemSubmissionStore
-    static ItemSubmissionStore itemSubmissionStore(BundleItemSubmissionDao submissionDao) {
-        return new BaseItemSubmissionStore<>(submissionDao);
-    }
-
-    @Provides
-    @Singleton
-    @TrainingItemSubmissionRegradeProcessor
+    @ContestItemSubmissionRegradeProcessor
     static ItemSubmissionRegradeProcessor itemSubmissionRegradeProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
-            @TrainingItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
+            @ContestItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
             ProblemService problemService) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -55,10 +40,10 @@ public class TrainingItemSubmissionModule {
 
     @Provides
     @Singleton
-    @TrainingItemSubmissionRegrader
+    @ContestItemSubmissionRegrader
     static ItemSubmissionRegrader itemSubmissionRegrader(
-            @TrainingItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
-            @TrainingItemSubmissionRegradeProcessor ItemSubmissionRegradeProcessor processor) {
+            @ContestItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
+            @ContestItemSubmissionRegradeProcessor ItemSubmissionRegradeProcessor processor) {
         return new ItemSubmissionRegrader(itemSubmissionStore, processor);
     }
 }

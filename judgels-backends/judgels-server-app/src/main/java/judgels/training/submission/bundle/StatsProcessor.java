@@ -1,4 +1,4 @@
-package judgels.submission.bundle;
+package judgels.training.submission.bundle;
 
 import jakarta.inject.Inject;
 import java.util.Map;
@@ -10,6 +10,7 @@ import judgels.persistence.ChapterProblemDao;
 import judgels.persistence.ChapterProblemModel;
 import judgels.persistence.StatsUserProblemDao;
 import judgels.persistence.StatsUserProblemModel;
+import judgels.submission.bundle.ItemSubmissionConsumer;
 
 public class StatsProcessor implements ItemSubmissionConsumer {
     private final ChapterProblemDao chapterProblemDao;

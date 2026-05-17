@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
+import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.persistence.api.Page;
-import judgels.submission.ContestSubmissionStore;
-import judgels.submission.programming.StatsProcessor;
 import judgels.submission.programming.SubmissionStore;
+import judgels.training.submission.programming.StatsProcessor;
 
 public class RefreshContestStatsTask extends Task {
     private final SubmissionStore submissionStore;

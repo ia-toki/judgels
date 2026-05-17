@@ -2,10 +2,10 @@ package judgels;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import judgels.contest.submission.programming.ContestGradingResponsePoller;
 import judgels.service.JudgelsScheduler;
-import judgels.submission.programming.ContestGradingResponsePoller;
 import judgels.submission.programming.GradingResponsePoller;
-import judgels.submission.programming.TrainingGradingResponsePoller;
+import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
 @Component(modules = {
         // Judgels service
@@ -39,8 +39,8 @@ import judgels.submission.programming.TrainingGradingResponsePoller;
 
         // Contest features
         judgels.file.FileModule.class,
-        judgels.submission.programming.ContestSubmissionModule.class,
-        judgels.submission.bundle.ContestItemSubmissionModule.class,
+        judgels.contest.submission.programming.ContestSubmissionModule.class,
+        judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
         judgels.contest.log.ContestLogModule.class,
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
         judgels.contrib.contest.rating.ContestRatingModule.class,
@@ -48,8 +48,8 @@ import judgels.submission.programming.TrainingGradingResponsePoller;
         tlx.uriel.tasks.TlxUrielTaskModule.class,
 
         // Training features
-        judgels.submission.programming.TrainingSubmissionModule.class,
-        judgels.submission.bundle.TrainingItemSubmissionModule.class,
+        judgels.training.submission.programming.TrainingSubmissionModule.class,
+        judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
         judgels.tasks.JerahmeelTaskModule.class,
         tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})
 @Singleton
