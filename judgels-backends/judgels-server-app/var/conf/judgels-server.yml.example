@@ -49,14 +49,14 @@ judgels:
   app:
     name: Judgels
 
-  grading:
-    gradingRequestQueueName: judgels-grading-request
-    gradingResponseQueueName: judgels-grading-response
-
 #  rabbitmq:
 #    host: localhost
 #    username: guest
 #    password: guest
+
+  grading:
+    gradingRequestQueueName: judgels-grading-request
+    gradingResponseQueueName: judgels-grading-response
 
 jophiel:
   userResetPassword:

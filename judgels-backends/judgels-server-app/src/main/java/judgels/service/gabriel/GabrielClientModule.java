@@ -3,7 +3,7 @@ package judgels.service.gabriel;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Named;
-import judgels.JudgelsServerGradingConfiguration;
+import judgels.grading.JudgelsServerGradingConfiguration;
 
 @Module
 public final class GabrielClientModule {

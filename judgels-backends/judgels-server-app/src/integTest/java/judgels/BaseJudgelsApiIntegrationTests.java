@@ -39,6 +39,7 @@ import judgels.api.user.role.UserRole;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.contrib.user.registration.UserRegistrationConfiguration;
+import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerConfiguration;

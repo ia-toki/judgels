@@ -3,6 +3,7 @@ package judgels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
+import judgels.grading.JudgelsGraderGradingConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
@@ -11,9 +12,9 @@ import org.immutables.value.Value;
 public interface JudgelsGraderConfiguration {
     Path getBaseDataDir();
 
-    @JsonProperty("grading")
-    JudgelsGraderGradingConfiguration getGradingConfig();
-
     @JsonProperty("rabbitmq")
     RabbitMQConfiguration getRabbitMQConfig();
+
+    @JsonProperty("grading")
+    JudgelsGraderGradingConfiguration getGradingConfig();
 }
