@@ -1,4 +1,4 @@
-package judgels.gabriel.grading;
+package judgels.grading;
 
 import dagger.Module;
 import dagger.Provides;
@@ -9,7 +9,6 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
-import judgels.grading.JudgelsGraderGradingConfiguration;
 import judgels.messaging.MessageListener;
 import judgels.service.JudgelsBaseDataDir;
 

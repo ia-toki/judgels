@@ -1,4 +1,4 @@
-package judgels.gabriel.grading;
+package judgels.grading;
 
 import io.dropwizard.lifecycle.Managed;
 import jakarta.inject.Provider;
