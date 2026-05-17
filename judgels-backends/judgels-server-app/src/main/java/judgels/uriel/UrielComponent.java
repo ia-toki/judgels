@@ -28,12 +28,12 @@ import judgels.contest.supervisor.ContestSupervisorResource;
 import judgels.contest.web.ContestWebResource;
 import judgels.contrib.contest.rating.ContestRatingModule;
 import judgels.file.FileModule;
+import judgels.grading.GradingClientModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.sandalphon.SandalphonClientModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsScheduler;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.gabriel.GabrielClientModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
@@ -57,7 +57,7 @@ import judgels.tasks.UrielTaskModule;
         // 3rd parties
         RabbitMQModule.class,
         SandalphonClientModule.class,
-        GabrielClientModule.class,
+        GradingClientModule.class,
 
         // Features
         FileModule.class,

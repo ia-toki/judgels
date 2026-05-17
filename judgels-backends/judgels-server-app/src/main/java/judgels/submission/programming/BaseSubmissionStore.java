@@ -414,7 +414,7 @@ public class BaseSubmissionStore<
 
     // Previously, we had OK verdicts with name e.g. "OK (worst: TLE)".
     // These verdicts have been confusing, so in the new version, we replace it to just e.g. TLE.
-    // TODO(fushar): Remove this "worst" feature completely, by updating Gabriel grading logic.
+    // TODO(fushar): Remove this "worst" feature completely, by updating the grading logic.
     private static Verdict normalizeVerdict(String code, String name) {
         Pattern pattern = Pattern.compile("^.*\\(worst: (.*)\\)$");
         Matcher matcher = pattern.matcher(name);
