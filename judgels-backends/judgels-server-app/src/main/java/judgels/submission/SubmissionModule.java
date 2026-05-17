@@ -80,10 +80,14 @@ public class SubmissionModule {
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
             SubmissionStore submissionStore,
-            SubmissionRegradeProcessor processor) {
+            SubmissionSourceBuilder submissionSourceBuilder,
+            SubmissionClient submissionClient) {
 
         ExecutorService executorService = scheduler.createExecutorService("sandalphon-submission-regrade-processor-%d", 5);
-        return new SubmissionRegrader(submissionStore, executorService, processor);
+        return new SubmissionRegrader(
+                submissionStore,
+                executorService,
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
     }
 
     @Provides

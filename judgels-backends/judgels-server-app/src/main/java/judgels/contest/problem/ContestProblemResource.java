@@ -42,6 +42,7 @@ import judgels.grading.api.LanguageRestriction;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.submission.ContestSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
 
 @Path("/api/v2/contests/{contestJid}/problems")
@@ -52,7 +53,7 @@ public class ContestProblemResource {
     @Inject protected ContestStore contestStore;
     @Inject protected ContestProblemStore problemStore;
     @Inject protected ContestModuleStore moduleStore;
-    @Inject protected SubmissionStore submissionStore;
+    @Inject @ContestSubmissionStore protected SubmissionStore submissionStore;
     @Inject protected ProblemService problemService;
 
     @Inject public ContestProblemResource() {}

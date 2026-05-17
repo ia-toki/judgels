@@ -14,6 +14,8 @@ import judgels.contest.problem.ContestProblemStore;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.service.JudgelsScheduler;
+import judgels.submission.ContestSubmissionStore;
+import judgels.submission.bundle.ContestItemSubmissionStore;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
 import org.hibernate.SessionFactory;
@@ -58,8 +60,8 @@ public class ContestScoreboardUpdaterModule {
             ContestModuleStore moduleStore,
             ContestContestantStore contestantStore,
             ContestProblemStore problemStore,
-            SubmissionStore programmingSubmissionStore,
-            ItemSubmissionStore bundleItemSubmissionStore,
+            @ContestSubmissionStore SubmissionStore programmingSubmissionStore,
+            @ContestItemSubmissionStore ItemSubmissionStore bundleItemSubmissionStore,
             ScoreboardIncrementalMarker scoreboardIncrementalMarker,
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,

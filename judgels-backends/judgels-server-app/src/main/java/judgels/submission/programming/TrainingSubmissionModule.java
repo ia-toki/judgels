@@ -14,14 +14,11 @@ import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
 import judgels.messaging.MessageListener;
-import judgels.persistence.ContestProgrammingGradingDao;
-import judgels.persistence.ContestProgrammingSubmissionDao;
 import judgels.persistence.TrainingProgrammingGradingDao;
 import judgels.persistence.TrainingProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.stats.StatsConfiguration;
-import judgels.submission.ContestSubmissionStore;
 import judgels.submission.TrainingSubmissionStore;
 import org.hibernate.SessionFactory;
 
@@ -60,23 +57,14 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
-    @ContestSubmissionStore
-    static SubmissionStore contestSubmissionStore(
-            ContestProgrammingSubmissionDao submissionDao,
-            ContestProgrammingGradingDao gradingDao,
-            ObjectMapper mapper) {
-
-        return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
-    }
-
-    @Provides
-    @Singleton
+    @TrainingSubmissionSourceBuilder
     static SubmissionSourceBuilder submissionSourceBuilder(@TrainingSubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
     @Singleton
+    @TrainingSubmissionClient
     static SubmissionClient submissionClient(
             SessionFactory sessionFactory,
             @TrainingSubmissionStore SubmissionStore submissionStore,
@@ -96,22 +84,28 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
+    @TrainingSubmissionRegrader
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
             @TrainingSubmissionStore SubmissionStore submissionStore,
-            SubmissionRegradeProcessor processor) {
+            @TrainingSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
+            @TrainingSubmissionClient SubmissionClient submissionClient) {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-submission-regrade-processor-%d", 5);
-        return new SubmissionRegrader(submissionStore, executorService, processor);
+        return new SubmissionRegrader(
+                submissionStore,
+                executorService,
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
     }
 
     @Provides
     @Singleton
+    @TrainingGradingResponsePoller
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
             MessageListener messageListener,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            GradingResponseProcessor processor) {
+            @TrainingGradingResponseProcessor GradingResponseProcessor processor) {
 
         ExecutorService executorService = scheduler.createExecutorService("jerahmeel-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
@@ -123,6 +117,7 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
+    @TrainingGradingResponseProcessor
     GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,

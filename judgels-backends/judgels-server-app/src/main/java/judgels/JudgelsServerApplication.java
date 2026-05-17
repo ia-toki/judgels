@@ -17,25 +17,17 @@ import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.contrib.user.registration.UserRegistrationModule;
 import judgels.contrib.user.registration.web.UserRegistrationWebConfig;
 import judgels.grading.GradingClientModule;
-import judgels.jerahmeel.DaggerJerahmeelComponent;
-import judgels.jerahmeel.JerahmeelComponent;
 import judgels.jerahmeel.JerahmeelConfiguration;
-import judgels.jophiel.DaggerJophielComponent;
-import judgels.jophiel.JophielComponent;
 import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
-import judgels.sandalphon.DaggerSandalphonComponent;
-import judgels.sandalphon.SandalphonComponent;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.session.SessionModule;
 import judgels.submission.bundle.TrainingItemSubmissionModule;
-import judgels.uriel.DaggerUrielComponent;
-import judgels.uriel.UrielComponent;
 import judgels.user.account.UserResetPasswordModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.WebModule;
@@ -67,10 +59,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JudgelsApp.initialize(config.getJudgelsConfig().getAppConfig());
 
         runMichael(config, env);
-        runJophiel(config, env);
-        runSandalphon(config, env);
-        runUriel(config, env);
-        runJerahmeel(config, env);
+        runJudgelsServer(config, env);
     }
 
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
@@ -117,33 +106,49 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.lessonVersionResource());
     }
 
-    private void runJophiel(JudgelsServerApplicationConfiguration config, Environment env) {
+    private void runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
         JophielConfiguration jophielConfig = config.getJophielConfig();
+        JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
 
-        var componentBuilder = DaggerJophielComponent.builder()
+        var componentBuilder = DaggerJudgelsServerComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(jophielConfig.getAuthConfig()))
+                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
+                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
                 .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
-                .webModule(new WebModule(jophielConfig.getWebConfig()));
+                .webModule(new WebModule(jophielConfig.getWebConfig()))
+                .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
+                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
                     .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
                     .userRegistrationModule(new UserRegistrationModule(
                             jophielConfig.getUserRegistrationConfig(),
-                            UserRegistrationWebConfig.fromServerConfig(jophielConfig)));
+                            UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
+                    .contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
+
+            if (jerahmeelConfig.getSubmissionConfig().isPresent()) {
+                if (jerahmeelConfig.getAwsConfig().isPresent() && jerahmeelConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
+                    AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
+                    AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
+                    AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
+                    componentBuilder.trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+                }
+            }
         }
 
-        JophielComponent component = componentBuilder.build();
+        JudgelsServerComponent component = componentBuilder.build();
 
         component.superadminCreator().ensureSuperadminExists();
 
+        // Users
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
@@ -167,44 +172,16 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.userAccountWithRegistrationResource());
             env.jersey().register(component.userRegistrationWebResource());
         }
-    }
 
-    private void runSandalphon(JudgelsServerApplicationConfiguration config, Environment env) {
-        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-
-        SandalphonComponent component = DaggerSandalphonComponent.builder()
-                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
-                .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
-                .build();
-
-        env.jersey().register(component.problemResource());
+        // Problems
+        env.jersey().register(component.baseProblemResource());
         env.jersey().register(component.lessonResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.gradingResponsePoller());
-        }
-    }
-
-    private void runUriel(JudgelsServerApplicationConfiguration config, Environment env) {
-        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-
-        var componentBuilder = DaggerUrielComponent.builder()
-                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
-                .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()));
-
-        if (JudgelsApp.isTLX()) {
-            componentBuilder
-                    .contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
+            env.lifecycle().manage(component.problemGradingResponsePoller());
         }
 
-        UrielComponent component = componentBuilder.build();
-
+        // Contests
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestAdminResource());
         env.jersey().register(component.contestWebResource());
@@ -240,7 +217,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofSeconds(3));
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.gradingResponsePoller());
+            env.lifecycle().manage(component.contestGradingResponsePoller());
         }
 
         env.admin().addTask(component.dumpContestTask());
@@ -248,34 +225,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         if (JudgelsApp.isTLX()) {
             env.admin().addTask(component.tlxReplaceProblemTask());
         }
-    }
 
-    private void runJerahmeel(JudgelsServerApplicationConfiguration config, Environment env) {
-        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        JerahmeelConfiguration jerahmeelConfig = config.getJerahmeelConfig();
-
-        var componentBuilder = DaggerJerahmeelComponent.builder()
-                .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
-                .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
-                .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
-                .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
-                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
-
-        if (JudgelsApp.isTLX()) {
-            if (jerahmeelConfig.getSubmissionConfig().isPresent()) {
-                if (jerahmeelConfig.getAwsConfig().isPresent() && jerahmeelConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
-                    AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
-                    AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
-                    AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                    componentBuilder.trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
-                }
-            }
-        }
-
-        JerahmeelComponent component = componentBuilder.build();
-
+        // Training
         env.jersey().register(component.archiveResource());
         env.jersey().register(component.archiveAdminResource());
         env.jersey().register(component.curriculumResource());
@@ -300,7 +251,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userStatsResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.gradingResponsePoller());
+            env.lifecycle().manage(component.trainingGradingResponsePoller());
         }
 
         env.admin().addTask(component.refreshContestStatsTask());

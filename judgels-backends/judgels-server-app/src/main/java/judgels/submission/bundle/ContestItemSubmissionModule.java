@@ -12,10 +12,11 @@ public class ContestItemSubmissionModule {
 
     @Provides
     @Singleton
+    @ContestItemSubmissionRegradeProcessor
     static ItemSubmissionRegradeProcessor itemSubmissionRegradeProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
-            ItemSubmissionStore itemSubmissionStore,
+            @ContestItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
             ProblemService problemService) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -31,5 +32,14 @@ public class ContestItemSubmissionModule {
                         problemService
                 }
         );
+    }
+
+    @Provides
+    @Singleton
+    @ContestItemSubmissionRegrader
+    static ItemSubmissionRegrader itemSubmissionRegrader(
+            @ContestItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
+            @ContestItemSubmissionRegradeProcessor ItemSubmissionRegradeProcessor processor) {
+        return new ItemSubmissionRegrader(itemSubmissionStore, processor);
     }
 }

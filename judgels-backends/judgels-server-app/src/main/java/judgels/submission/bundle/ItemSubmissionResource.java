@@ -54,10 +54,10 @@ public class ItemSubmissionResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
-    @Inject protected ItemSubmissionStore submissionStore;
+    @Inject @TrainingItemSubmissionStore protected ItemSubmissionStore submissionStore;
     @Inject protected SubmissionRoleChecker submissionRoleChecker;
     @Inject protected ItemSubmissionGraderRegistry itemSubmissionGraderRegistry;
-    @Inject protected ItemSubmissionRegrader itemSubmissionRegrader;
+    @Inject @TrainingItemSubmissionRegrader protected ItemSubmissionRegrader itemSubmissionRegrader;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
     @Inject protected ProblemService problemService;

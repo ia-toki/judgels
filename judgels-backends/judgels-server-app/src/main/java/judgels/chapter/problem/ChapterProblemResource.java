@@ -47,6 +47,7 @@ import judgels.stats.StatsStore;
 import judgels.submission.TrainingSubmissionStore;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.TrainingSubmissionSourceBuilder;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {
@@ -58,7 +59,7 @@ public class ChapterProblemResource {
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected StatsStore statsStore;
     @Inject @TrainingSubmissionStore protected SubmissionStore submissionStore;
-    @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
+    @Inject @TrainingSubmissionSourceBuilder protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected ProblemService problemService;
 
     @Inject public ChapterProblemResource() {}

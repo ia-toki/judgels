@@ -24,16 +24,18 @@ public class TrainingItemSubmissionModule {
 
     @Provides
     @Singleton
+    @TrainingItemSubmissionStore
     static ItemSubmissionStore itemSubmissionStore(BundleItemSubmissionDao submissionDao) {
         return new BaseItemSubmissionStore<>(submissionDao);
     }
 
     @Provides
     @Singleton
+    @TrainingItemSubmissionRegradeProcessor
     static ItemSubmissionRegradeProcessor itemSubmissionRegradeProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ItemSubmissionGraderRegistry itemSubmissionGraderRegistry,
-            ItemSubmissionStore itemSubmissionStore,
+            @TrainingItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
             ProblemService problemService) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -49,5 +51,14 @@ public class TrainingItemSubmissionModule {
                         problemService
                 }
         );
+    }
+
+    @Provides
+    @Singleton
+    @TrainingItemSubmissionRegrader
+    static ItemSubmissionRegrader itemSubmissionRegrader(
+            @TrainingItemSubmissionStore ItemSubmissionStore itemSubmissionStore,
+            @TrainingItemSubmissionRegradeProcessor ItemSubmissionRegradeProcessor processor) {
+        return new ItemSubmissionRegrader(itemSubmissionStore, processor);
     }
 }
