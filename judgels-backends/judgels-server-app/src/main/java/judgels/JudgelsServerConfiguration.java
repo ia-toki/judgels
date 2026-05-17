@@ -17,7 +17,7 @@ public interface JudgelsServerConfiguration {
     JudgelsAppConfiguration getAppConfig();
 
     @JsonProperty("grading")
-    GradingConfiguration getGradingConfig();
+    JudgelsServerGradingConfiguration getGradingConfig();
 
     @JsonProperty("rabbitmq")
     Optional<RabbitMQConfiguration> getRabbitMQConfig();

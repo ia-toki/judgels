@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableGradingConfiguration.class)
-public interface GradingConfiguration {
+@JsonDeserialize(as = ImmutableJudgelsServerGradingConfiguration.class)
+public interface JudgelsServerGradingConfiguration {
     String getGradingRequestQueueName();
     String getGradingResponseQueueName();
 
-    class Builder extends ImmutableGradingConfiguration.Builder {}
+    class Builder extends ImmutableJudgelsServerGradingConfiguration.Builder {}
 }

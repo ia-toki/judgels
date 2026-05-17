@@ -17,16 +17,16 @@ logging:
 judgels:
   baseDataDir: var/data
 
+  grading:
+    gradingRequestQueueName: gabriel-grading-request
+    numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
+
   rabbitmq:
     host: {{ groups['core'][0] }}
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
 
 gabriel:
-  grading:
-    gradingRequestQueueName: gabriel-grading-request
-    numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
-
   cache:
     cachedBaseDataDir: var/data
     serverBaseDataDir: {{ ansible_user }}@{{ groups['core'][0] }}:/opt/judgels/server/var/data

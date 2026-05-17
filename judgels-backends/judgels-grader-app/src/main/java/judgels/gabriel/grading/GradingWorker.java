@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
+import judgels.JudgelsGraderGradingConfiguration;
 import judgels.JudgelsObjectMappers;
 import judgels.gabriel.api.GradingConfig;
 import judgels.gabriel.api.GradingEngine;
@@ -44,7 +45,7 @@ public class GradingWorker {
     private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
     private static final Logger LOGGER = LoggerFactory.getLogger(GradingWorker.class);
 
-    private final GradingConfiguration gradingConfig;
+    private final JudgelsGraderGradingConfiguration gradingConfig;
     private final Path workersDir;
     private final ProblemCache problemCache;
     private final MessageClient messageClient;
@@ -72,7 +73,7 @@ public class GradingWorker {
 
     @Inject
     public GradingWorker(
-            GradingConfiguration gradingConfig,
+            JudgelsGraderGradingConfiguration gradingConfig,
             @Named("workersDir") Path workersDir,
             ProblemCache problemCache,
             MessageClient messageClient,

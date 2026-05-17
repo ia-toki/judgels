@@ -11,6 +11,9 @@ import org.immutables.value.Value;
 public interface JudgelsGraderConfiguration {
     Path getBaseDataDir();
 
+    @JsonProperty("grading")
+    JudgelsGraderGradingConfiguration getGradingConfig();
+
     @JsonProperty("rabbitmq")
     RabbitMQConfiguration getRabbitMQConfig();
 }

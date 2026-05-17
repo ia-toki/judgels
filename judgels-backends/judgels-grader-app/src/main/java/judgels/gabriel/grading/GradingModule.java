@@ -9,21 +9,22 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import judgels.JudgelsGraderGradingConfiguration;
 import judgels.messaging.MessageListener;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class GradingModule {
     private final LifecycleEnvironment lifecycleEnv;
-    private final GradingConfiguration config;
+    private final JudgelsGraderGradingConfiguration config;
 
-    public GradingModule(LifecycleEnvironment lifecycleEnv, GradingConfiguration config) {
+    public GradingModule(LifecycleEnvironment lifecycleEnv, JudgelsGraderGradingConfiguration config) {
         this.lifecycleEnv = lifecycleEnv;
         this.config = config;
     }
 
     @Provides
-    GradingConfiguration config() {
+    JudgelsGraderGradingConfiguration config() {
         return config;
     }
 

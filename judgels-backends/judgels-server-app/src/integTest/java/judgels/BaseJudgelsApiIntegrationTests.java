@@ -95,7 +95,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .name("Judgels")
                 .build();
 
-        GradingConfiguration gradingConfig = new GradingConfiguration.Builder()
+        JudgelsServerGradingConfiguration gradingConfig = new JudgelsServerGradingConfiguration.Builder()
                 .gradingRequestQueueName("grading-request")
                 .gradingResponseQueueName("grading-response")
                 .build();

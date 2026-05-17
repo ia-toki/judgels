@@ -12,16 +12,16 @@ logging:
 judgels:
   baseDataDir: var/data
 
+  grading:
+    gradingRequestQueueName: gabriel-grading-request
+    numWorkerThreads: 2
+
   rabbitmq:
     host: localhost
     username: guest
     password: guest
 
 gabriel:
-  grading:
-    gradingRequestQueueName: gabriel-grading-request
-    numWorkerThreads: 2
-
   cache:
     cachedBaseDataDir: ../judgels-server/var/data              # development mode; cache data = actual server data
     # cachedBaseDataDir: var/data
