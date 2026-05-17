@@ -1,4 +1,4 @@
-package judgels.grading;
+package judgels.grading.cache;
 
 import dagger.Module;
 import dagger.Provides;

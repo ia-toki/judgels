@@ -33,6 +33,7 @@ import judgels.gabriel.engines.GradingEngineRegistry;
 import judgels.gabriel.languages.GradingLanguageRegistry;
 import judgels.gabriel.sandboxes.fake.FakeSandboxFactory;
 import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
+import judgels.grading.cache.ProblemCache;
 import judgels.messaging.MessageClient;
 import judgels.messaging.api.Message;
 import org.slf4j.Logger;

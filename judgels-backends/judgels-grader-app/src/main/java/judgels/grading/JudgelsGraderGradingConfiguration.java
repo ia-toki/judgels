@@ -2,6 +2,7 @@ package judgels.grading;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import judgels.grading.cache.CacheConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
