@@ -1,4 +1,4 @@
-package judgels.submission.programming;
+package judgels.contest.submission.programming;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

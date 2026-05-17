@@ -1,10 +1,14 @@
-package judgels.submission.bundle;
+package judgels.contest.submission.bundle;
 
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import judgels.problem.ProblemService;
+import judgels.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
+import judgels.submission.bundle.ItemSubmissionRegrader;
+import judgels.submission.bundle.ItemSubmissionStore;
 
 @Module
 public class ContestItemSubmissionModule {

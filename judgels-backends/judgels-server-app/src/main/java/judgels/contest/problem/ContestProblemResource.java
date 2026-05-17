@@ -42,7 +42,7 @@ import judgels.grading.api.LanguageRestriction;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.submission.ContestSubmissionStore;
+import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.submission.programming.SubmissionStore;
 
 @Path("/api/v2/contests/{contestJid}/problems")

@@ -14,7 +14,7 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.StatsStore;
-import judgels.submission.bundle.TrainingItemSubmissionModule;
+import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 
 @Component(modules = {
         JudgelsModule.class,
@@ -32,6 +32,6 @@ public interface JerahmeelIntegrationTestComponent {
     ProblemSetStore problemSetStore();
     ProblemSetProblemStore problemSetProblemStore();
     StatsStore statsStore();
-    judgels.submission.programming.StatsProcessor programmingStatsProcessor();
-    judgels.submission.bundle.StatsProcessor bundleStatsProcessor();
+    judgels.training.submission.programming.StatsProcessor programmingStatsProcessor();
+    judgels.training.submission.bundle.StatsProcessor bundleStatsProcessor();
 }

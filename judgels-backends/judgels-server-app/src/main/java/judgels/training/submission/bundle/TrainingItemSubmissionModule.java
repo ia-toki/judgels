@@ -1,4 +1,4 @@
-package judgels.submission.bundle;
+package judgels.training.submission.bundle;
 
 import dagger.Module;
 import dagger.Provides;
@@ -6,6 +6,13 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import judgels.persistence.BundleItemSubmissionDao;
 import judgels.problem.ProblemService;
+import judgels.submission.bundle.BaseItemSubmissionStore;
+import judgels.submission.bundle.ItemSubmissionConsumer;
+import judgels.submission.bundle.ItemSubmissionGraderRegistry;
+import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
+import judgels.submission.bundle.ItemSubmissionRegrader;
+import judgels.submission.bundle.ItemSubmissionStore;
+import judgels.submission.bundle.NoOpItemSubmissionConsumer;
 import judgels.stats.StatsConfiguration;
 
 @Module

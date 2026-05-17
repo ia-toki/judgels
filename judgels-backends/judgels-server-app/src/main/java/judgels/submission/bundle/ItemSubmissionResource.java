@@ -47,6 +47,8 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;
+import judgels.training.submission.bundle.TrainingItemSubmissionRegrader;
+import judgels.training.submission.bundle.TrainingItemSubmissionStore;
 import judgels.user.UserStore;
 
 @Path("/api/v2/submissions/bundle")

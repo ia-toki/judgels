@@ -55,7 +55,10 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;
-import judgels.submission.TrainingSubmissionStore;
+import judgels.training.submission.programming.TrainingSubmissionClient;
+import judgels.training.submission.programming.TrainingSubmissionRegrader;
+import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
+import judgels.training.submission.programming.TrainingSubmissionStore;
 import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 

@@ -44,10 +44,10 @@ import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
-import judgels.submission.TrainingSubmissionStore;
+import judgels.training.submission.programming.TrainingSubmissionStore;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
-import judgels.submission.programming.TrainingSubmissionSourceBuilder;
+import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {

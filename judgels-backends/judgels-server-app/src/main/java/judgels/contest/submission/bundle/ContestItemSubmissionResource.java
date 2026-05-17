@@ -54,8 +54,6 @@ import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.submission.bundle.ContestItemSubmissionRegrader;
-import judgels.submission.bundle.ContestItemSubmissionStore;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;

@@ -1,4 +1,4 @@
-package judgels.submission.programming;
+package judgels.training.submission.programming;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
@@ -14,42 +14,51 @@ import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.messaging.MessageClient;
 import judgels.messaging.MessageListener;
-import judgels.persistence.ContestBundleItemSubmissionDao;
-import judgels.persistence.ContestProgrammingGradingDao;
-import judgels.persistence.ContestProgrammingSubmissionDao;
+import judgels.persistence.TrainingProgrammingGradingDao;
+import judgels.persistence.TrainingProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
-import judgels.submission.ContestSubmissionStore;
-import judgels.submission.bundle.BaseItemSubmissionStore;
-import judgels.submission.bundle.ContestItemSubmissionStore;
-import judgels.submission.bundle.ItemSubmissionStore;
+import judgels.stats.StatsConfiguration;
+import judgels.submission.programming.BaseSubmissionStore;
+import judgels.submission.programming.GradingResponsePoller;
+import judgels.submission.programming.GradingResponseProcessor;
+import judgels.submission.programming.NoOpSubmissionConsumer;
+import judgels.submission.programming.SubmissionClient;
+import judgels.submission.programming.SubmissionConsumer;
+import judgels.submission.programming.SubmissionRegradeProcessor;
+import judgels.submission.programming.SubmissionRegrader;
+import judgels.submission.programming.SubmissionSourceBuilder;
+import judgels.submission.programming.SubmissionStore;
 import org.hibernate.SessionFactory;
 
 @Module
-public class ContestSubmissionModule {
+public class TrainingSubmissionModule {
+    private final StatsConfiguration statsConfig;
     private final Optional<FileSystem> fs;
 
-    public ContestSubmissionModule() {
+    public TrainingSubmissionModule(StatsConfiguration statsConfig) {
+        this.statsConfig = statsConfig;
         this.fs = Optional.empty();
     }
 
-    public ContestSubmissionModule(FileSystem fs) {
+    public TrainingSubmissionModule(StatsConfiguration statsConfig, FileSystem fs) {
+        this.statsConfig = statsConfig;
         this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
-    @ContestSubmissionFs
+    @TrainingSubmissionFs
     FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
         return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
     }
 
     @Provides
     @Singleton
-    @ContestSubmissionStore
-    static SubmissionStore submissionStore(
-            ContestProgrammingSubmissionDao submissionDao,
-            ContestProgrammingGradingDao gradingDao,
+    @TrainingSubmissionStore
+    static SubmissionStore trainingSubmissionStore(
+            TrainingProgrammingSubmissionDao submissionDao,
+            TrainingProgrammingGradingDao gradingDao,
             ObjectMapper mapper) {
 
         return new BaseSubmissionStore<>(submissionDao, gradingDao, mapper);
@@ -57,24 +66,17 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
-    @ContestItemSubmissionStore
-    static ItemSubmissionStore itemSubmissionStore(ContestBundleItemSubmissionDao submissionDao) {
-        return new BaseItemSubmissionStore<>(submissionDao);
-    }
-
-    @Provides
-    @Singleton
-    @ContestSubmissionSourceBuilder
-    static SubmissionSourceBuilder submissionSourceBuilder(@ContestSubmissionFs FileSystem submissionFs) {
+    @TrainingSubmissionSourceBuilder
+    static SubmissionSourceBuilder submissionSourceBuilder(@TrainingSubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
     @Singleton
-    @ContestSubmissionClient
+    @TrainingSubmissionClient
     static SubmissionClient submissionClient(
             SessionFactory sessionFactory,
-            @ContestSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
             MessageClient messageClient,
@@ -91,21 +93,14 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
-    static SubmissionDownloader submissionDownloader(
-            @ContestSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder) {
-        return new SubmissionDownloader(submissionSourceBuilder);
-    }
-
-    @Provides
-    @Singleton
-    @ContestSubmissionRegrader
+    @TrainingSubmissionRegrader
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
-            @ContestSubmissionStore SubmissionStore submissionStore,
-            @ContestSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
-            @ContestSubmissionClient SubmissionClient submissionClient) {
+            @TrainingSubmissionStore SubmissionStore submissionStore,
+            @TrainingSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
+            @TrainingSubmissionClient SubmissionClient submissionClient) {
 
-        ExecutorService executorService = scheduler.createExecutorService("contest-submission-regrade-processor-%d", 5);
+        ExecutorService executorService = scheduler.createExecutorService("training-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
@@ -114,14 +109,14 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
-    @ContestGradingResponsePoller
+    @TrainingGradingResponsePoller
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
             MessageListener messageListener,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            @ContestGradingResponseProcessor GradingResponseProcessor processor) {
+            @TrainingGradingResponseProcessor GradingResponseProcessor processor) {
 
-        ExecutorService executorService = scheduler.createExecutorService("contest-grading-response-processor-%d", 10);
+        ExecutorService executorService = scheduler.createExecutorService("training-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
                 gradingResponseQueueName,
@@ -131,11 +126,12 @@ public class ContestSubmissionModule {
 
     @Provides
     @Singleton
-    @ContestGradingResponseProcessor
-    static GradingResponseProcessor gradingResponseProcessor(
+    @TrainingGradingResponseProcessor
+    GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
-            @ContestSubmissionStore SubmissionStore submissionStore) {
+            @TrainingSubmissionStore SubmissionStore submissionStore,
+            StatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,
@@ -146,6 +142,6 @@ public class ContestSubmissionModule {
                 new Object[] {
                         mapper,
                         submissionStore,
-                        new NoOpSubmissionConsumer()});
+                        statsConfig.getEnabled() ? statsProcessor : new NoOpSubmissionConsumer()});
     }
 }

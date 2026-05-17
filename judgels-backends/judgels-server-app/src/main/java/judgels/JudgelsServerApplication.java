@@ -27,7 +27,7 @@ import judgels.service.JudgelsSchedulerModule;
 import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.session.SessionModule;
-import judgels.submission.bundle.TrainingItemSubmissionModule;
+import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.user.account.UserResetPasswordModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.WebModule;
@@ -123,7 +123,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
                 .webModule(new WebModule(jophielConfig.getWebConfig()))
-                .trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
+                .trainingSubmissionModule(new judgels.training.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig()))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(jerahmeelConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
@@ -139,7 +139,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                     AwsConfiguration awsConfig = jerahmeelConfig.getAwsConfig().get();
                     AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) jerahmeelConfig.getSubmissionConfig().get().getFs();
                     AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                    componentBuilder.trainingSubmissionModule(new judgels.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
+                    componentBuilder.trainingSubmissionModule(new judgels.training.submission.programming.TrainingSubmissionModule(jerahmeelConfig.getStatsConfig(), submissionFs));
                 }
             }
         }

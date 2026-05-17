@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
 import judgels.persistence.api.Page;
-import judgels.submission.ContestSubmissionStore;
-import judgels.submission.programming.StatsProcessor;
+import judgels.contest.submission.programming.ContestSubmissionStore;
+import judgels.training.submission.programming.StatsProcessor;
 import judgels.submission.programming.SubmissionStore;
 
 public class RefreshContestStatsTask extends Task {
