@@ -2,10 +2,10 @@ package judgels.gabriel;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import judgels.gabriel.cache.CacheModule;
 import judgels.gabriel.grading.GradingModule;
 import judgels.gabriel.grading.GradingRequestPoller;
-import judgels.gabriel.isolate.IsolateModule;
+import judgels.grading.CacheModule;
+import judgels.isolate.IsolateModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.service.JudgelsModule;
 

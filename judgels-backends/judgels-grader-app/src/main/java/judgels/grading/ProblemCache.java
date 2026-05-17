@@ -1,4 +1,4 @@
-package judgels.gabriel.cache;
+package judgels.grading;
 
 import static java.util.stream.Collectors.joining;
 

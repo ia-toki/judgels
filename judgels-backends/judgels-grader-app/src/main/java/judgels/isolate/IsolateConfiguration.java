@@ -1,4 +1,4 @@
-package judgels.gabriel.isolate;
+package judgels.isolate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
