@@ -5,9 +5,9 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestSubmissionStore;
-import judgels.training.submission.programming.TrainingSubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
 import judgels.submission.programming.SubmissionStore;
+import judgels.training.submission.programming.StatsProcessor;
+import judgels.training.submission.programming.TrainingSubmissionStore;
 
 @Module
 public class JerahmeelTaskModule {

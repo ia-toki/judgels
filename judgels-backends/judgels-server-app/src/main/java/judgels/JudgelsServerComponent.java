@@ -2,8 +2,8 @@ package judgels;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import judgels.service.JudgelsScheduler;
 import judgels.contest.submission.programming.ContestGradingResponsePoller;
+import judgels.service.JudgelsScheduler;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
