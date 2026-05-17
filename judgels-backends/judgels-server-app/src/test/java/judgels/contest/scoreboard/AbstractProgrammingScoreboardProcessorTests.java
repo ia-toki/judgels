@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.GradingResultDetails;
-import judgels.gabriel.api.SubtaskResult;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.GradingResultDetails;
+import judgels.grading.api.SubtaskResult;
+import judgels.grading.api.Verdict;
 import org.assertj.core.util.Lists;
 
 public abstract class AbstractProgrammingScoreboardProcessorTests {

@@ -3,7 +3,7 @@ package judgels.api.problem.programming;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.Instant;
 import java.util.Map;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 @Value.Immutable

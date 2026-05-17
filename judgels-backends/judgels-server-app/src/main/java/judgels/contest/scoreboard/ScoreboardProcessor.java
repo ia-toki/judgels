@@ -14,7 +14,7 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.ScoringConfig;
+import judgels.grading.api.ScoringConfig;
 
 public interface ScoreboardProcessor {
     Scoreboard parse(ObjectMapper mapper, String json);

@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.GradingConfig;
-import judgels.gabriel.api.Subtask;
-import judgels.gabriel.api.TestCase;
-import judgels.gabriel.api.TestGroup;
+import judgels.grading.api.GradingConfig;
+import judgels.grading.api.Subtask;
+import judgels.grading.api.TestCase;
+import judgels.grading.api.TestGroup;
 import org.apache.commons.io.FilenameUtils;
 
 public abstract class BaseGradingConfigAdapter implements GradingConfigAdapter {

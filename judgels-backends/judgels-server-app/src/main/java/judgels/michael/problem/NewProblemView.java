@@ -2,7 +2,7 @@ package judgels.michael.problem;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.grading.engines.GradingEngineRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.resource.WorldLanguageRegistry;

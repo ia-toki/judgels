@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.google.common.collect.ImmutableSet;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.Test;
 
 class SubmissionUtilsTests {

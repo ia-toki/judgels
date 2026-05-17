@@ -27,7 +27,7 @@ import judgels.api.contest.scoreboard.Scoreboard;
 import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

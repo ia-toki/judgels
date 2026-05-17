@@ -28,7 +28,7 @@ import judgels.api.problem.bundle.StatementItemConfig;
 import judgels.api.problem.programming.ProblemLimits;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.problem.programming.ProblemWorksheet;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

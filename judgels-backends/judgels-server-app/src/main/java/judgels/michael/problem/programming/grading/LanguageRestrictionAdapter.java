@@ -2,8 +2,8 @@ package judgels.michael.problem.programming.grading;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.grading.api.LanguageRestriction;
+import judgels.grading.languages.GradingLanguageRegistry;
 
 public class LanguageRestrictionAdapter {
     private LanguageRestrictionAdapter() {}

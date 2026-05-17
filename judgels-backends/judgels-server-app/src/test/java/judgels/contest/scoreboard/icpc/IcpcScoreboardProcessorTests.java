@@ -24,8 +24,8 @@ import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.contest.scoreboard.AbstractProgrammingScoreboardProcessorTests;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
-import judgels.gabriel.api.ScoringConfig;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.ScoringConfig;
+import judgels.grading.api.Verdict;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

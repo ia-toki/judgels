@@ -10,11 +10,11 @@ import java.util.List;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
-import judgels.gabriel.api.GradingConfig;
-import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.api.Osn2024Hacks;
-import judgels.gabriel.api.ScoringConfig;
-import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.grading.api.GradingConfig;
+import judgels.grading.api.LanguageRestriction;
+import judgels.grading.api.Osn2024Hacks;
+import judgels.grading.api.ScoringConfig;
+import judgels.grading.engines.GradingEngineRegistry;
 import judgels.problem.base.BaseProblemStore;
 import judgels.problem.base.ProblemFs;
 

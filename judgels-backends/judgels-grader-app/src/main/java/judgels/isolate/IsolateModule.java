@@ -3,7 +3,7 @@ package judgels.isolate;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
-import judgels.gabriel.sandboxes.isolate.IsolateSandboxFactory;
+import judgels.grading.sandboxes.isolate.IsolateSandboxFactory;
 
 @Module
 public class IsolateModule {

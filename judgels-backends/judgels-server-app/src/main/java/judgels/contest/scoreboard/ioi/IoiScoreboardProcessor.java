@@ -33,10 +33,10 @@ import judgels.api.user.rating.UserRating;
 import judgels.contest.scoreboard.ScoreboardIncrementalContent;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.contest.scoreboard.ScoreboardProcessor;
-import judgels.gabriel.api.ScoringConfig;
-import judgels.gabriel.api.ScoringRoundingMode;
-import judgels.gabriel.api.SubtaskResult;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.ScoringConfig;
+import judgels.grading.api.ScoringRoundingMode;
+import judgels.grading.api.SubtaskResult;
+import judgels.grading.api.Verdict;
 
 public class IoiScoreboardProcessor implements ScoreboardProcessor {
     @Override

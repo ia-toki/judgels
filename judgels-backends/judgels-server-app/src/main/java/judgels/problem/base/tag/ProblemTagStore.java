@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.gabriel.api.GradingConfig;
+import judgels.grading.api.GradingConfig;
 import judgels.persistence.ProblemTagDao;
 import judgels.persistence.ProblemTagModel;
 import judgels.problem.base.editorial.ProblemEditorialStore;

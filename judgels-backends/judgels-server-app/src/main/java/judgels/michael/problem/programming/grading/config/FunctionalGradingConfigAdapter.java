@@ -3,9 +3,9 @@ package judgels.michael.problem.programming.grading.config;
 import java.util.List;
 import java.util.Optional;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.GradingConfig;
-import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.functional.FunctionalGradingConfig;
+import judgels.grading.api.GradingConfig;
+import judgels.grading.api.TestGroup;
+import judgels.grading.engines.functional.FunctionalGradingConfig;
 
 public class FunctionalGradingConfigAdapter extends BaseGradingConfigAdapter {
     @Override

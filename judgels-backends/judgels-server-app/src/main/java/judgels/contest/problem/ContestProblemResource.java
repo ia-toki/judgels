@@ -38,7 +38,7 @@ import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;

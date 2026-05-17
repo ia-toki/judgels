@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.SubmissionSource;
+import judgels.grading.api.SubmissionSource;
 import org.immutables.value.Value;
 
 @Value.Immutable

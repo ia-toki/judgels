@@ -36,7 +36,7 @@ import judgels.contest.ContestTimer;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.gabriel.api.ScoringConfig;
+import judgels.grading.api.ScoringConfig;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.submission.bundle.ItemSubmissionStore;
