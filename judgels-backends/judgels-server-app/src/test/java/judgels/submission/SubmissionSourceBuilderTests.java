@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableMap;
 import java.nio.file.Paths;
 import judgels.fs.InMemoryFileSystem;
-import judgels.gabriel.api.SourceFile;
+import judgels.grading.api.SourceFile;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package judgels.michael.problem.programming.grading;
 
 import java.util.Map;
-import judgels.gabriel.engines.GradingEngineRegistry;
+import judgels.grading.engines.GradingEngineRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

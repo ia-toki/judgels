@@ -1,0 +1,28 @@
+package judgels.grading.engines;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import judgels.grading.api.GradingConfig;
+import org.apache.commons.lang3.StringUtils;
+
+public interface MultipleSourceFilesGradingConfig extends GradingConfig {
+    List<String> getSourceFileFieldKeys();
+
+    @JsonIgnore
+    @Override
+    default Map<String, String> getSourceFileFields() {
+        if (getSourceFileFieldKeys().size() == 1) {
+            return ImmutableMap.of(getSourceFileFieldKeys().get(0), "Source code");
+        }
+
+        Map<String, String> sourceFileFields = new LinkedHashMap<>();
+        for (String key : getSourceFileFieldKeys()) {
+            sourceFileFields.put(key, StringUtils.capitalize(key));
+        }
+
+        return ImmutableMap.copyOf(sourceFileFields);
+    }
+}

@@ -2,8 +2,8 @@ package judgels.api.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.gabriel.api.GradingResultDetails;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.GradingResultDetails;
+import judgels.grading.api.Verdict;
 import org.immutables.value.Value;
 
 @Value.Immutable

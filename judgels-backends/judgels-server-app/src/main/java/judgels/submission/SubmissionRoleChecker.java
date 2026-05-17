@@ -2,8 +2,8 @@ package judgels.submission;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.gabriel.api.Verdict;
-import judgels.gabriel.api.Verdicts;
+import judgels.grading.api.Verdict;
+import judgels.grading.api.Verdicts;
 import judgels.persistence.StatsUserProblemDao;
 import judgels.persistence.StatsUserProblemModel;
 import judgels.role.TrainingAdminRoleChecker;

@@ -7,7 +7,7 @@ import java.util.Optional;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
-import judgels.gabriel.api.GradingResult;
+import judgels.grading.api.GradingResult;
 import judgels.persistence.api.CursorPage;
 import judgels.persistence.api.Page;
 

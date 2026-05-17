@@ -24,7 +24,7 @@ import judgels.api.problem.ProblemTopStatsEntry;
 import judgels.api.problemset.ProblemSetProgress;
 import judgels.api.stats.UserStats;
 import judgels.api.stats.UserTopStatsEntry;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.Verdict;
 import judgels.persistence.ChapterProblemDao;
 import judgels.persistence.ChapterProblemModel;
 import judgels.persistence.CourseChapterDao;

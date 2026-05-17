@@ -1,7 +1,7 @@
 package judgels.michael.problem.programming.grading;
 
 import java.util.Map;
-import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.grading.languages.GradingLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

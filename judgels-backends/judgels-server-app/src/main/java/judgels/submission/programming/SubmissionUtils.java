@@ -6,9 +6,9 @@ import com.google.common.collect.Sets;
 import jakarta.ws.rs.ForbiddenException;
 import java.util.Set;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
-import judgels.gabriel.api.LanguageRestriction;
-import judgels.gabriel.api.OutputOnlyOverrides;
-import judgels.gabriel.api.SubmissionSource;
+import judgels.grading.api.LanguageRestriction;
+import judgels.grading.api.OutputOnlyOverrides;
+import judgels.grading.api.SubmissionSource;
 
 public class SubmissionUtils {
     private SubmissionUtils() {}

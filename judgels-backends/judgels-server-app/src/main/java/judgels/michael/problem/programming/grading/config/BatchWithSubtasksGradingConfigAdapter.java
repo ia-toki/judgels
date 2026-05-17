@@ -3,9 +3,9 @@ package judgels.michael.problem.programming.grading.config;
 import java.util.List;
 import java.util.Optional;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.GradingConfig;
-import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.batch.BatchWithSubtasksGradingConfig;
+import judgels.grading.api.GradingConfig;
+import judgels.grading.api.TestGroup;
+import judgels.grading.engines.batch.BatchWithSubtasksGradingConfig;
 
 public class BatchWithSubtasksGradingConfigAdapter extends BaseGradingConfigAdapter {
     @Override

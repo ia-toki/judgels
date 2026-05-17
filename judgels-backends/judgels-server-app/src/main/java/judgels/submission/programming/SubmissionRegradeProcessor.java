@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import java.util.Map;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.SubmissionSource;
+import judgels.grading.api.SubmissionSource;
 
 public class SubmissionRegradeProcessor {
     private final SubmissionSourceBuilder submissionSourceBuilder;

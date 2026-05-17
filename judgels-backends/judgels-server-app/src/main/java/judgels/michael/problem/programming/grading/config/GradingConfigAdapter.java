@@ -2,7 +2,7 @@ package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.GradingConfig;
+import judgels.grading.api.GradingConfig;
 
 public interface GradingConfigAdapter {
     GradingConfigForm buildFormFromConfig(GradingConfig config);

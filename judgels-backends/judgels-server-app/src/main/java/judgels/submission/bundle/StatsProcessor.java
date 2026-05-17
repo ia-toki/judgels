@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
-import judgels.gabriel.api.Verdict;
+import judgels.grading.api.Verdict;
 import judgels.persistence.ChapterProblemDao;
 import judgels.persistence.ChapterProblemModel;
 import judgels.persistence.StatsUserProblemDao;

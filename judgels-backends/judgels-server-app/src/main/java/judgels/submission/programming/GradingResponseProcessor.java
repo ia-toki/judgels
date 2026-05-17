@@ -5,7 +5,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.util.Optional;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.GradingResponse;
+import judgels.grading.api.GradingResponse;
 import judgels.messaging.api.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

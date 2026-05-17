@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.TestCase;
-import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.functional.FunctionalWithSubtasksGradingConfig;
+import judgels.grading.api.TestCase;
+import judgels.grading.api.TestGroup;
+import judgels.grading.engines.functional.FunctionalWithSubtasksGradingConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

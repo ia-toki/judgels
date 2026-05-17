@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.GradingResultDetails;
-import judgels.gabriel.api.OutputOnlyOverrides;
-import judgels.gabriel.api.SourceFile;
+import judgels.grading.api.GradingResultDetails;
+import judgels.grading.api.OutputOnlyOverrides;
+import judgels.grading.api.SourceFile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

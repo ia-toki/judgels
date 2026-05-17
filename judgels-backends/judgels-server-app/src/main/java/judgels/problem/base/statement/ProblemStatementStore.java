@@ -17,7 +17,7 @@ import judgels.api.problem.ProblemType;
 import judgels.api.problem.programming.ProblemSkeleton;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
-import judgels.gabriel.languages.GradingLanguageRegistry;
+import judgels.grading.languages.GradingLanguageRegistry;
 import judgels.problem.base.BaseProblemStore;
 import judgels.problem.base.ProblemFs;
 import judgels.problem.bundle.statement.BundleProblemStatementUtils;

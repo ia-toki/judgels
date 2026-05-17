@@ -10,8 +10,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
-import judgels.gabriel.api.SourceFile;
-import judgels.gabriel.api.SubmissionSource;
+import judgels.grading.api.SourceFile;
+import judgels.grading.api.SubmissionSource;
 
 public class SubmissionDownloader {
     private final SubmissionSourceBuilder sourceBuilder;

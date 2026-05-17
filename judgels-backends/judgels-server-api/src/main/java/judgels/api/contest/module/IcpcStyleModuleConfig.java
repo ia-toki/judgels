@@ -3,7 +3,7 @@ package judgels.api.contest.module;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 @JsonTypeName("ICPC")

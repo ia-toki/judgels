@@ -7,9 +7,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.List;
 import judgels.fs.FileInfo;
-import judgels.gabriel.api.TestCase;
-import judgels.gabriel.api.TestGroup;
-import judgels.gabriel.engines.functional.FunctionalGradingConfig;
+import judgels.grading.api.TestCase;
+import judgels.grading.api.TestGroup;
+import judgels.grading.engines.functional.FunctionalGradingConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

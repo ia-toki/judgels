@@ -1,7 +1,7 @@
 package judgels.api.contest.module;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import judgels.gabriel.api.LanguageRestriction;
+import judgels.grading.api.LanguageRestriction;
 import org.immutables.value.Value;
 
 public interface StyleModuleConfig {
