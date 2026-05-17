@@ -1,4 +1,4 @@
-package judgels.gabriel.isolate;
+package judgels.isolate;
 
 import dagger.Module;
 import dagger.Provides;

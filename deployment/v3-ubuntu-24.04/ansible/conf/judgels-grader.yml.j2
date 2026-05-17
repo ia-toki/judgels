@@ -26,11 +26,10 @@ judgels:
     gradingRequestQueueName: gabriel-grading-request
     numWorkerThreads: {{ gabriel_grading_numWorkerThreads }}
 
-gabriel:
-  cache:
-    cachedBaseDataDir: var/data
-    serverBaseDataDir: {{ ansible_user }}@{{ groups['core'][0] }}:/opt/judgels/server/var/data
-    rsyncIdentityFile: var/conf/judgels-grader
+    cache:
+      cachedBaseDataDir: var/data
+      serverBaseDataDir: {{ ansible_user }}@{{ groups['core'][0] }}:/opt/judgels/server/var/data
+      rsyncIdentityFile: var/conf/judgels-grader
 
   isolate:
     baseDir: /judgels/isolate
