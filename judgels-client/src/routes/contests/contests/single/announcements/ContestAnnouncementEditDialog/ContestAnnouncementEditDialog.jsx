@@ -10,9 +10,7 @@ import * as toastActions from '../../../../../../modules/toast/toastActions';
 import './ContestAnnouncementEditDialog.scss';
 
 export function ContestAnnouncementEditDialog({ contest, announcement, onToggleEditDialog }) {
-  const updateAnnouncementMutation = useMutation(
-    updateContestAnnouncementMutationOptions(contest.jid, announcement?.jid)
-  );
+  const updateAnnouncementMutation = useMutation(updateContestAnnouncementMutationOptions(contest.jid));
 
   const closeDialog = () => {
     onToggleEditDialog();
@@ -31,11 +29,14 @@ export function ContestAnnouncementEditDialog({ contest, announcement, onToggleE
   );
 
   const updateAnnouncement = data => {
-    updateAnnouncementMutation.mutate(data, {
-      onSuccess: () => {
-        toastActions.showSuccessToast('Announcement updated.');
-      },
-    });
+    updateAnnouncementMutation.mutate(
+      { announcementJid: announcement.jid, data },
+      {
+        onSuccess: () => {
+          toastActions.showSuccessToast('Announcement updated.');
+        },
+      }
+    );
     closeDialog();
   };
 

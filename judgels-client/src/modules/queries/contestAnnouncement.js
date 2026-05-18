@@ -19,8 +19,9 @@ export const createContestAnnouncementMutationOptions = contestJid => ({
   },
 });
 
-export const updateContestAnnouncementMutationOptions = (contestJid, announcementJid) => ({
-  mutationFn: async data => contestAnnouncementAPI.updateAnnouncement(getToken(), contestJid, announcementJid, data),
+export const updateContestAnnouncementMutationOptions = contestJid => ({
+  mutationFn: async ({ announcementJid, data }) =>
+    contestAnnouncementAPI.updateAnnouncement(getToken(), contestJid, announcementJid, data),
   onSuccess: () => {
     queryClient.invalidateQueries(contestAnnouncementsQueryOptions(contestJid));
   },
