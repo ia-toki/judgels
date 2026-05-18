@@ -1,4 +1,4 @@
-package tlx.jerahmeel.tasks;
+package tlx.tasks;
 
 import dagger.Module;
 import dagger.Provides;
@@ -7,6 +7,10 @@ import jakarta.inject.Singleton;
 import judgels.persistence.BundleItemSubmissionDao;
 import judgels.persistence.ChapterDao;
 import judgels.persistence.ChapterProblemDao;
+import judgels.persistence.ContestClarificationDao;
+import judgels.persistence.ContestLogDao;
+import judgels.persistence.ContestProblemDao;
+import judgels.persistence.ContestProgrammingSubmissionDao;
 import judgels.persistence.ProblemDao;
 import judgels.persistence.ProblemSetDao;
 import judgels.persistence.ProblemSetProblemDao;
@@ -15,8 +19,34 @@ import judgels.persistence.TrainingProgrammingGradingDao;
 import judgels.persistence.TrainingProgrammingSubmissionDao;
 
 @Module
-public class TlxJerahmeelTaskModule {
-    private TlxJerahmeelTaskModule() {}
+public class TlxTaskModule {
+    private TlxTaskModule() {}
+
+    @Provides
+    @Singleton
+    static ReplaceProblemTask replaceProblemTask(
+            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
+            ProblemDao problemDao,
+            ContestProblemDao contestProblemDao,
+            ContestProgrammingSubmissionDao contestProgrammingSubmissionDao,
+            ContestClarificationDao contestClarificationDao,
+            ContestLogDao contestLogDao) {
+
+        return unitOfWorkAwareProxyFactory.create(
+                ReplaceProblemTask.class,
+                new Class<?>[] {
+                        ProblemDao.class,
+                        ContestProblemDao.class,
+                        ContestProgrammingSubmissionDao.class,
+                        ContestClarificationDao.class,
+                        ContestLogDao.class},
+                new Object[] {
+                        problemDao,
+                        contestProblemDao,
+                        contestProgrammingSubmissionDao,
+                        contestClarificationDao,
+                        contestLogDao});
+    }
 
     @Provides
     @Singleton

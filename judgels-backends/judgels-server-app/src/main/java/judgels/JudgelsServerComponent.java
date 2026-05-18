@@ -44,14 +44,14 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.contest.log.ContestLogModule.class,
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
         judgels.contrib.contest.rating.ContestRatingModule.class,
-        judgels.tasks.UrielTaskModule.class,
-        tlx.uriel.tasks.TlxUrielTaskModule.class,
 
         // Training features
         judgels.training.submission.programming.TrainingSubmissionModule.class,
         judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
-        judgels.tasks.JerahmeelTaskModule.class,
-        tlx.jerahmeel.tasks.TlxJerahmeelTaskModule.class})
+
+        // Tasks
+        judgels.tasks.JudgelsServerTaskModule.class,
+        tlx.tasks.TlxTaskModule.class})
 @Singleton
 public interface JudgelsServerComponent {
     // Users
@@ -103,7 +103,7 @@ public interface JudgelsServerComponent {
     judgels.contrib.contest.rating.ContestRatingResource contestRatingResource();
     judgels.admin.contrib.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
     judgels.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
-    tlx.uriel.tasks.ReplaceProblemTask tlxReplaceProblemTask();
+    tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 
     // Training
     judgels.archive.ArchiveResource archiveResource();
@@ -131,9 +131,9 @@ public interface JudgelsServerComponent {
     @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
     judgels.tasks.RefreshContestStatsTask refreshContestStatsTask();
     judgels.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
-    tlx.jerahmeel.tasks.DeleteProblemTask tlxDeleteProblemTask();
-    tlx.jerahmeel.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
-    tlx.jerahmeel.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
+    tlx.tasks.DeleteProblemTask tlxDeleteProblemTask();
+    tlx.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
+    tlx.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
 
     JudgelsScheduler scheduler();
 }
