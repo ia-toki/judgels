@@ -3,28 +3,28 @@ package judgels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
-import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jophiel.JophielConfiguration;
+import judgels.training.TrainingConfiguration;
 
 public class JudgelsServerApplicationConfiguration extends Configuration {
     private final DataSourceFactory databaseConfig;
     private final WebSecurityConfiguration webSecurityConfig;
     private final JudgelsServerConfiguration judgelsConfig;
     private final JophielConfiguration jophielConfig;
-    private final JerahmeelConfiguration jerahmeelConfig;
+    private final TrainingConfiguration trainingConfig;
 
     public JudgelsServerApplicationConfiguration(
             @JsonProperty("database") DataSourceFactory databaseConfig,
             @JsonProperty("webSecurity") WebSecurityConfiguration webSecurityConfig,
             @JsonProperty("judgels") JudgelsServerConfiguration judgelsConfig,
             @JsonProperty("jophiel") JophielConfiguration jophielConfig,
-            @JsonProperty("jerahmeel") JerahmeelConfiguration jerahmeelConfig) {
+            @JsonProperty("training") TrainingConfiguration trainingConfig) {
 
         this.databaseConfig = databaseConfig;
         this.webSecurityConfig = webSecurityConfig;
         this.judgelsConfig = judgelsConfig;
         this.jophielConfig = jophielConfig;
-        this.jerahmeelConfig = jerahmeelConfig;
+        this.trainingConfig = trainingConfig;
     }
 
     public DataSourceFactory getDatabaseConfig() {
@@ -43,7 +43,7 @@ public class JudgelsServerApplicationConfiguration extends Configuration {
         return jophielConfig;
     }
 
-    public JerahmeelConfiguration getJerahmeelConfig() {
-        return jerahmeelConfig;
+    public TrainingConfiguration getTrainingConfig() {
+        return trainingConfig;
     }
 }

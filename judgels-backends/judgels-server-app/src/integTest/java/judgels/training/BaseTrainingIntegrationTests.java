@@ -1,4 +1,4 @@
-package judgels.jerahmeel;
+package judgels.training;
 
 import java.time.Clock;
 import judgels.persistence.TestActorProvider;
@@ -6,9 +6,9 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import org.hibernate.SessionFactory;
 
-public abstract class BaseJerahmeelIntegrationTests {
-    protected static JerahmeelIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
-        return DaggerJerahmeelIntegrationTestComponent.builder()
+public abstract class BaseTrainingIntegrationTests {
+    protected static TrainingIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
+        return DaggerTrainingIntegrationTestComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(sessionFactory))
                 .judgelsPersistenceModule(new JudgelsPersistenceModule(Clock.systemUTC(), new TestActorProvider()))
                 .build();

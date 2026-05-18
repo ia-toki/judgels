@@ -1,4 +1,4 @@
-package judgels.jerahmeel;
+package judgels.training;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,8 +8,8 @@ import judgels.submission.programming.SubmissionConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableJerahmeelConfiguration.class)
-public interface JerahmeelConfiguration {
+@JsonDeserialize(as = ImmutableTrainingConfiguration.class)
+public interface TrainingConfiguration {
     @JsonProperty("stats")
     StatsConfiguration getStatsConfig();
 
@@ -19,5 +19,5 @@ public interface JerahmeelConfiguration {
     @JsonProperty("aws")
     Optional<judgels.contrib.fs.aws.AwsConfiguration> getAwsConfig();
 
-    class Builder extends ImmutableJerahmeelConfiguration.Builder {}
+    class Builder extends ImmutableTrainingConfiguration.Builder {}
 }
