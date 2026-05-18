@@ -32,7 +32,7 @@ import judgels.user.account.UserResetPasswordModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.WebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
-import tlx.uriel.contest.rating.TlxContestRatingProvider;
+import tlx.contest.rating.TlxContestRatingProvider;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
     private final HibernateBundle<JudgelsServerApplicationConfiguration> hibernateBundle = new JudgelsServerHibernateBundle();
