@@ -130,19 +130,19 @@ jophiel:
     announcements: []
 
 training:
-{% if training_aws_accessKey is defined %}
+{% if jerahmeel_aws_accessKey is defined %}
   aws:
-    accessKey: {{ training_aws_accessKey }}
-    secretKey: {{ training_aws_secretKey }}
-    s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
+    accessKey: {{ jerahmeel_aws_accessKey }}
+    secretKey: {{ jerahmeel_aws_secretKey }}
+    s3BucketRegionId: {{ jerahmeel_aws_s3BucketRegionId }}
 {% endif %}
 
   submission:
     fs:
-      type: {{ training_submission_fs_type | default('local', true) }}
-{% if training_submission_fs_type | default('local', true) != 'local' %}
-      s3BucketName: {{ training_submission_fs_s3BucketName }}
+      type: {{ jerahmeel_submission_fs_type | default('local', true) }}
+{% if jerahmeel_submission_fs_type | default('local', true) != 'local' %}
+      s3BucketName: {{ jerahmeel_submission_fs_s3BucketName }}
 {% endif %}
 
   stats:
-    enabled: {{ training_stats_enabled | default(false, true) }}
+    enabled: {{ jerahmeel_stats_enabled | default(false, true) }}
