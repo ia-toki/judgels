@@ -1,4 +1,4 @@
-package judgels.jerahmeel;
+package judgels.training;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -23,7 +23,7 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
         JudgelsServerHibernateDaoModule.class,
         TrainingItemSubmissionModule.class})
 @Singleton
-public interface JerahmeelIntegrationTestComponent {
+public interface TrainingIntegrationTestComponent {
     CourseStore courseStore();
     CourseChapterStore courseChapterStore();
     ChapterStore chapterStore();

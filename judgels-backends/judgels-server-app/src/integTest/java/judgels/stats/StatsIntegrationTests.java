@@ -50,8 +50,6 @@ import judgels.grading.api.SandboxExecutionStatus;
 import judgels.grading.api.TestCaseResult;
 import judgels.grading.api.TestGroupResult;
 import judgels.grading.api.Verdict;
-import judgels.jerahmeel.BaseJerahmeelIntegrationTests;
-import judgels.jerahmeel.JerahmeelIntegrationTestComponent;
 import judgels.persistence.ArchiveModel;
 import judgels.persistence.ChapterModel;
 import judgels.persistence.ChapterProblemModel;
@@ -65,6 +63,8 @@ import judgels.persistence.StatsUserProblemModel;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
+import judgels.training.BaseTrainingIntegrationTests;
+import judgels.training.TrainingIntegrationTestComponent;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,7 +80,7 @@ import org.junit.jupiter.api.Test;
         ProblemContestModel.class,
         StatsUserModel.class,
         StatsUserProblemModel.class})
-class StatsIntegrationTests extends BaseJerahmeelIntegrationTests {
+class StatsIntegrationTests extends BaseTrainingIntegrationTests {
     private static final String USER_JID_1 = "JIDUSER-1";
     private static final String USER_JID_2 = "JIDUSER-2";
     private static final String PROBLEM_JID_1 = "JIDPROG-1";
@@ -103,7 +103,7 @@ class StatsIntegrationTests extends BaseJerahmeelIntegrationTests {
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        JerahmeelIntegrationTestComponent component = createComponent(sessionFactory);
+        TrainingIntegrationTestComponent component = createComponent(sessionFactory);
 
         courseStore = component.courseStore();
         courseChapterStore = component.courseChapterStore();

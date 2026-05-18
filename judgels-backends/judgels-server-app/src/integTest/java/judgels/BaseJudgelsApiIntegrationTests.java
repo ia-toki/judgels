@@ -40,13 +40,13 @@ import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.contrib.user.registration.UserRegistrationConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
-import judgels.jerahmeel.JerahmeelConfiguration;
 import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
 import judgels.session.SessionConfiguration;
 import judgels.stats.StatsConfiguration;
+import judgels.training.TrainingConfiguration;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
 import judgels.user.account.UserResetPasswordConfiguration;
@@ -123,7 +123,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .webConfig(WebConfiguration.DEFAULT)
                 .build();
 
-        JerahmeelConfiguration jerahmeelConfig = new JerahmeelConfiguration.Builder()
+        TrainingConfiguration trainingConfig = new TrainingConfiguration.Builder()
                 .statsConfig(StatsConfiguration.DEFAULT)
                 .build();
 
@@ -132,7 +132,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 webSecurityConfig,
                 judgelsConfig,
                 jophielConfig,
-                jerahmeelConfig) {
+                trainingConfig) {
             {
                 DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
 
