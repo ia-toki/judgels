@@ -13,12 +13,15 @@ export default function RichStatementText({ children }) {
   const ref = useRef();
   const { isDarkMode } = useWebPrefs();
 
-  const typesetKatex = async () => {
+  const typesetKatex = async isStale => {
     if (!ref.current) {
       return;
     }
 
     const { default: renderMathInElement } = await import('katex/dist/contrib/auto-render');
+    if (isStale()) {
+      return;
+    }
     renderMathInElement(ref.current, {
       delimiters: [
         { left: '\\(', right: '\\)', display: false },
@@ -39,9 +42,13 @@ export default function RichStatementText({ children }) {
   };
 
   useEffect(() => {
+    let stale = false;
     if (containsKatexSyntax(children)) {
-      typesetKatex();
+      typesetKatex(() => stale);
     }
+    return () => {
+      stale = true;
+    };
   }, [children]);
 
   let str = children;
@@ -56,7 +63,7 @@ export default function RichStatementText({ children }) {
 
   return (
     <div className="rich-statement-text" ref={ref}>
-      <HtmlText>{str}</HtmlText>
+      <HtmlText key={str}>{str}</HtmlText>
     </div>
   );
 }
