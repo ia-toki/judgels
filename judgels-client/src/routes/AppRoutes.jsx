@@ -5,6 +5,7 @@ import { JerahmeelRole } from '../modules/api/jerahmeel/role';
 import { JophielRole } from '../modules/api/jophiel/role';
 import { SandalphonRole } from '../modules/api/sandalphon/role';
 import { UrielRole } from '../modules/api/uriel/role';
+import { isUserBlocked } from './blockedUsernames';
 
 const appRoutes = [
   {
@@ -36,7 +37,7 @@ const appRoutes = [
     route: {
       path: '/courses',
     },
-    visible: () => isTLX(),
+    visible: (role, user) => isTLX() && !isUserBlocked(user),
   },
   {
     id: 'problems',
@@ -45,7 +46,7 @@ const appRoutes = [
     route: {
       path: '/problems',
     },
-    visible: () => isTLX(),
+    visible: (role, user) => isTLX() && !isUserBlocked(user),
   },
   {
     id: 'submissions',
@@ -54,7 +55,7 @@ const appRoutes = [
     route: {
       path: '/submissions',
     },
-    visible: () => isTLX(),
+    visible: (role, user) => isTLX() && !isUserBlocked(user),
   },
   {
     id: 'ranking',
@@ -63,7 +64,7 @@ const appRoutes = [
     route: {
       path: '/ranking',
     },
-    visible: () => isTLX(),
+    visible: (role, user) => isTLX() && !isUserBlocked(user),
   },
 ];
 
@@ -74,8 +75,8 @@ const homeRoute = {
   route: {},
 };
 
-export function getVisibleAppRoutes(role) {
-  return appRoutes.filter(route => route.visible(role));
+export function getVisibleAppRoutes(role, user) {
+  return appRoutes.filter(route => route.visible(role, user));
 }
 
 export function getHomeRoute() {

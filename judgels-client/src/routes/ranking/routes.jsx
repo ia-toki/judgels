@@ -1,9 +1,11 @@
-import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import { topRatedProfilesQueryOptions } from '../../modules/queries/profile';
 import { queryClient } from '../../modules/queryClient';
+import { getUser } from '../../modules/session';
 import { createDocumentTitle } from '../../utils/title';
+import { isUserBlocked } from '../blockedUsernames';
 
 export const createRankingRoutes = appRoute => {
   const rankingRoute = createRoute({
@@ -11,6 +13,11 @@ export const createRankingRoutes = appRoute => {
     path: 'ranking',
     component: lazyRouteComponent(retryImport(() => import('./RankingLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Ranking') }] }),
+    beforeLoad: () => {
+      if (isUserBlocked(getUser())) {
+        throw redirect({ to: '/' });
+      }
+    },
   });
 
   const rankingIndexRoute = createRoute({

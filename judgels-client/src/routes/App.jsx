@@ -26,7 +26,7 @@ export default function App() {
     setGAUser(userJid);
   }, []);
 
-  const visibleAppRoutes = getVisibleAppRoutes(role);
+  const visibleAppRoutes = getVisibleAppRoutes(role, user);
   const homeRoute = getHomeRoute();
 
   return (
