@@ -2,11 +2,11 @@ package judgels.user;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import judgels.persistence.JudgelsPersistenceModule;
+import judgels.persistence.hibernate.JudgelsHibernateModule;
+import judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule;
 import judgels.role.SuperadminRoleStore;
 import judgels.service.JudgelsModule;
-import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
-import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.session.SessionStore;
 import judgels.user.account.UserResetPasswordStore;
 import judgels.user.avatar.UserAvatarIntegrationTestModule;

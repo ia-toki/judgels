@@ -19,8 +19,8 @@ import judgels.api.chapter.Chapter;
 import judgels.api.chapter.ChapterCreateData;
 import judgels.api.chapter.ChapterUpdateData;
 import judgels.api.chapter.ChaptersResponse;
+import judgels.persistence.actor.ActorChecker;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/chapters")

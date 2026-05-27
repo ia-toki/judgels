@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.session.Session;
-import judgels.persistence.SessionDao;
-import judgels.persistence.SessionModel;
+import judgels.persistence.dao.SessionDao;
+import judgels.persistence.model.SessionModel;
 
 public class SessionStore {
     private final SessionDao sessionDao;

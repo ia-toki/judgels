@@ -1,5 +1,6 @@
 package judgels.persistence;
 
+import judgels.persistence.model.JudgelsModel;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.text.RandomStringGenerator;

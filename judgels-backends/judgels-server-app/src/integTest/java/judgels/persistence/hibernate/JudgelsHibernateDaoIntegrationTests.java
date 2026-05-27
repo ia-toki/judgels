@@ -8,11 +8,13 @@ import jakarta.persistence.Entity;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
-import judgels.persistence.ActorProvider;
 import judgels.persistence.JidPrefix;
-import judgels.persistence.JudgelsModel;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
+import judgels.persistence.actor.ActorProvider;
+import judgels.persistence.hibernate.dao.HibernateDaoData;
+import judgels.persistence.hibernate.dao.JudgelsHibernateDao;
+import judgels.persistence.model.JudgelsModel;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 

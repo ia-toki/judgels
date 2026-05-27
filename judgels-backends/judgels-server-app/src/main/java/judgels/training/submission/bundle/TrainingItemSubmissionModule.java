@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.persistence.BundleItemSubmissionDao;
+import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.problem.ProblemService;
 import judgels.stats.StatsConfiguration;
 import judgels.submission.bundle.BaseItemSubmissionStore;

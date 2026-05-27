@@ -16,18 +16,18 @@ import judgels.api.problemset.ProblemSet;
 import judgels.api.problemset.ProblemSetCreateData;
 import judgels.api.problemset.ProblemSetErrors;
 import judgels.api.problemset.ProblemSetUpdateData;
-import judgels.persistence.ArchiveDao;
-import judgels.persistence.ArchiveModel;
-import judgels.persistence.ProblemContestDao;
-import judgels.persistence.ProblemContestModel;
-import judgels.persistence.ProblemSetDao;
-import judgels.persistence.ProblemSetDao.ProblemSetQueryBuilder;
-import judgels.persistence.ProblemSetModel;
-import judgels.persistence.ProblemSetModel_;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.ProblemSetProblemModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ArchiveDao;
+import judgels.persistence.dao.ProblemContestDao;
+import judgels.persistence.dao.ProblemSetDao;
+import judgels.persistence.dao.ProblemSetDao.ProblemSetQueryBuilder;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.model.ArchiveModel;
+import judgels.persistence.model.ProblemContestModel;
+import judgels.persistence.model.ProblemSetModel;
+import judgels.persistence.model.ProblemSetModel_;
+import judgels.persistence.model.ProblemSetProblemModel;
 
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;

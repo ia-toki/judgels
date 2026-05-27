@@ -16,7 +16,7 @@ import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.lesson.BaseLessonStore;
 import judgels.lesson.LessonFs;
-import judgels.persistence.LessonDao;
+import judgels.persistence.dao.LessonDao;
 import judgels.problem.base.statement.ProblemStatementUtils;
 import judgels.resource.StatementLanguageStatus;
 

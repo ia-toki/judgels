@@ -31,9 +31,9 @@ import judgels.contest.ContestStore;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
+import judgels.persistence.actor.ActorChecker;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserStore;
 

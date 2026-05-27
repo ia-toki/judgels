@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.contest.supervisor.ContestSupervisor;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.persistence.ContestSupervisorDao;
-import judgels.persistence.ContestSupervisorModel;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ContestSupervisorDao;
+import judgels.persistence.model.ContestSupervisorModel;
 
 @Singleton
 public class ContestSupervisorStore {

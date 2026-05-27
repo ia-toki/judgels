@@ -17,8 +17,8 @@ import java.util.Set;
 import judgels.api.problem.ProblemSetProblemInfo;
 import judgels.api.problem.ProblemsResponse;
 import judgels.difficulty.ProblemDifficultyStore;
+import judgels.persistence.actor.ActorChecker;
 import judgels.persistence.api.Page;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 

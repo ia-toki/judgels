@@ -17,15 +17,15 @@ import judgels.api.problem.ProblemType;
 import judgels.fs.FileSystem;
 import judgels.git.Git;
 import judgels.persistence.JidGenerator;
-import judgels.persistence.Model_;
-import judgels.persistence.ProblemDao;
-import judgels.persistence.ProblemDao.ProblemQueryBuilder;
-import judgels.persistence.ProblemModel;
-import judgels.persistence.ProblemPartnerDao;
-import judgels.persistence.ProblemSetterDao;
-import judgels.persistence.ProblemSetterModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ProblemDao;
+import judgels.persistence.dao.ProblemDao.ProblemQueryBuilder;
+import judgels.persistence.dao.ProblemPartnerDao;
+import judgels.persistence.dao.ProblemSetterDao;
+import judgels.persistence.model.Model_;
+import judgels.persistence.model.ProblemModel;
+import judgels.persistence.model.ProblemSetterModel;
 import judgels.problem.base.tag.ProblemTags;
 
 public class ProblemStore extends BaseProblemStore {

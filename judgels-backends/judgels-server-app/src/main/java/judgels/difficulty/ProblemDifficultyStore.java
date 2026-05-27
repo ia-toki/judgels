@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemDifficulty;
 import judgels.api.problem.ProblemStats;
-import judgels.persistence.ProblemLevelDao;
+import judgels.persistence.dao.ProblemLevelDao;
 import judgels.stats.StatsStore;
 
 public class ProblemDifficultyStore {

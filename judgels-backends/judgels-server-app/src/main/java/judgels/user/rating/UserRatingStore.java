@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import judgels.api.user.rating.RatingEvent;
 import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
-import judgels.persistence.UserRatingDao;
-import judgels.persistence.UserRatingEventDao;
-import judgels.persistence.UserRatingEventModel;
-import judgels.persistence.UserRatingModel;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.UserRatingDao;
+import judgels.persistence.dao.UserRatingEventDao;
+import judgels.persistence.model.UserRatingEventModel;
+import judgels.persistence.model.UserRatingModel;
 
 public class UserRatingStore {
     private final UserRatingDao ratingDao;

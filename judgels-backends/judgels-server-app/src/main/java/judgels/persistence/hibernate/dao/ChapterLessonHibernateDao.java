@@ -1,0 +1,33 @@
+package judgels.persistence.hibernate.dao;
+
+import jakarta.inject.Inject;
+import java.util.Optional;
+import judgels.persistence.QueryBuilder;
+import judgels.persistence.dao.ChapterLessonDao;
+import judgels.persistence.model.ChapterLessonModel;
+import judgels.persistence.model.ChapterLessonModel_;
+
+public class ChapterLessonHibernateDao extends HibernateDao<ChapterLessonModel> implements ChapterLessonDao {
+    @Inject
+    public ChapterLessonHibernateDao(HibernateDaoData data) {
+        super(data);
+    }
+
+    @Override
+    public QueryBuilder<ChapterLessonModel> selectByChapterJid(String chapterJid) {
+        return select().where(columnEq(ChapterLessonModel_.chapterJid, chapterJid));
+    }
+
+    @Override
+    public Optional<ChapterLessonModel> selectByLessonJid(String lessonJid) {
+        return select().where(columnEq(ChapterLessonModel_.lessonJid, lessonJid)).unique();
+    }
+
+    @Override
+    public Optional<ChapterLessonModel> selectByChapterJidAndLessonAlias(String chapterJid, String lessonAlias) {
+        return select()
+                .where(columnEq(ChapterLessonModel_.chapterJid, chapterJid))
+                .where(columnEq(ChapterLessonModel_.alias, lessonAlias))
+                .unique();
+    }
+}

@@ -4,19 +4,19 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.persistence.BundleItemSubmissionDao;
-import judgels.persistence.ChapterDao;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ContestClarificationDao;
-import judgels.persistence.ContestLogDao;
-import judgels.persistence.ContestProblemDao;
-import judgels.persistence.ContestProgrammingSubmissionDao;
-import judgels.persistence.ProblemDao;
-import judgels.persistence.ProblemSetDao;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.StatsUserProblemDao;
-import judgels.persistence.TrainingProgrammingGradingDao;
-import judgels.persistence.TrainingProgrammingSubmissionDao;
+import judgels.persistence.dao.BundleItemSubmissionDao;
+import judgels.persistence.dao.ChapterDao;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.dao.ContestClarificationDao;
+import judgels.persistence.dao.ContestLogDao;
+import judgels.persistence.dao.ContestProblemDao;
+import judgels.persistence.dao.ContestProgrammingSubmissionDao;
+import judgels.persistence.dao.ProblemDao;
+import judgels.persistence.dao.ProblemSetDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.dao.TrainingProgrammingGradingDao;
+import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 
 @Module
 public class TlxTaskModule {

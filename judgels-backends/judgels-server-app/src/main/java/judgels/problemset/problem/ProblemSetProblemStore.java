@@ -15,14 +15,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemType;
 import judgels.api.problemset.problem.ProblemSetProblem;
-import judgels.persistence.ProblemContestDao;
-import judgels.persistence.ProblemContestModel;
-import judgels.persistence.ProblemSetDao;
-import judgels.persistence.ProblemSetModel;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.ProblemSetProblemModel;
-import judgels.persistence.ProblemSetProblemModel_;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.ProblemContestDao;
+import judgels.persistence.dao.ProblemSetDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.model.ProblemContestModel;
+import judgels.persistence.model.ProblemSetModel;
+import judgels.persistence.model.ProblemSetProblemModel;
+import judgels.persistence.model.ProblemSetProblemModel_;
 
 public class ProblemSetProblemStore {
     private final ProblemSetDao problemSetDao;

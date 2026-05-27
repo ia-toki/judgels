@@ -6,12 +6,12 @@ import java.util.Optional;
 import judgels.api.contest.announcement.ContestAnnouncement;
 import judgels.api.contest.announcement.ContestAnnouncementData;
 import judgels.api.contest.announcement.ContestAnnouncementStatus;
-import judgels.persistence.ContestAnnouncementDao;
-import judgels.persistence.ContestAnnouncementDao.ContestAnnouncementQueryBuilder;
-import judgels.persistence.ContestAnnouncementModel;
-import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ContestAnnouncementDao;
+import judgels.persistence.dao.ContestAnnouncementDao.ContestAnnouncementQueryBuilder;
+import judgels.persistence.model.ContestAnnouncementModel;
+import judgels.persistence.model.Model_;
 
 public class ContestAnnouncementStore {
     private final ContestAnnouncementDao announcementDao;

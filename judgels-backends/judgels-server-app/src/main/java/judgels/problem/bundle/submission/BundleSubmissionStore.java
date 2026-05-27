@@ -11,11 +11,11 @@ import java.util.Optional;
 import judgels.api.submission.bundle.BundleGrading;
 import judgels.api.submission.bundle.BundleSubmission;
 import judgels.api.submission.bundle.ItemGradingResult;
-import judgels.persistence.BundleGradingDao;
-import judgels.persistence.BundleGradingModel;
-import judgels.persistence.BundleSubmissionDao;
-import judgels.persistence.BundleSubmissionModel;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.BundleGradingDao;
+import judgels.persistence.dao.BundleSubmissionDao;
+import judgels.persistence.model.BundleGradingModel;
+import judgels.persistence.model.BundleSubmissionModel;
 
 public class BundleSubmissionStore {
     private final ObjectMapper mapper;

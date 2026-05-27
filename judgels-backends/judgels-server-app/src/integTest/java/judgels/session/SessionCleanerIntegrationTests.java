@@ -3,9 +3,9 @@ package judgels.session;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import judgels.persistence.SessionModel;
 import judgels.persistence.TestClock;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.model.SessionModel;
 import judgels.user.BaseUserIntegrationTests;
 import judgels.user.UserIntegrationTestComponent;
 import org.hibernate.SessionFactory;

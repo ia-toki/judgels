@@ -6,14 +6,14 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.persistence.BundleItemSubmissionDao;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ProblemDao;
-import judgels.persistence.ProblemModel;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.StatsUserProblemDao;
-import judgels.persistence.TrainingProgrammingGradingDao;
-import judgels.persistence.TrainingProgrammingSubmissionDao;
+import judgels.persistence.dao.BundleItemSubmissionDao;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.dao.ProblemDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.dao.TrainingProgrammingGradingDao;
+import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
+import judgels.persistence.model.ProblemModel;
 
 public class DeleteProblemTask extends Task {
     private final ProblemDao problemDao;

@@ -12,14 +12,14 @@ import judgels.grading.api.TestCaseResult;
 import judgels.grading.api.TestGroupResult;
 import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ChapterProblemModel;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.ProblemSetProblemModel;
-import judgels.persistence.StatsUserDao;
-import judgels.persistence.StatsUserModel;
-import judgels.persistence.StatsUserProblemDao;
-import judgels.persistence.StatsUserProblemModel;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.dao.StatsUserDao;
+import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.model.ChapterProblemModel;
+import judgels.persistence.model.ProblemSetProblemModel;
+import judgels.persistence.model.StatsUserModel;
+import judgels.persistence.model.StatsUserProblemModel;
 import judgels.submission.programming.SubmissionConsumer;
 
 public class StatsProcessor implements SubmissionConsumer {

@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import judgels.persistence.Model;
+import judgels.persistence.model.Model;
 
 @Entity
 @Table(indexes = {@Index(columnList = "uniqueColumn1,uniqueColumn2", unique = true)})

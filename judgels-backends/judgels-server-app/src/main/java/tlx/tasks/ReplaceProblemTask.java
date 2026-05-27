@@ -6,12 +6,12 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.persistence.ContestClarificationDao;
-import judgels.persistence.ContestLogDao;
-import judgels.persistence.ContestProblemDao;
-import judgels.persistence.ContestProgrammingSubmissionDao;
-import judgels.persistence.ProblemDao;
-import judgels.persistence.ProblemModel;
+import judgels.persistence.dao.ContestClarificationDao;
+import judgels.persistence.dao.ContestLogDao;
+import judgels.persistence.dao.ContestProblemDao;
+import judgels.persistence.dao.ContestProgrammingSubmissionDao;
+import judgels.persistence.dao.ProblemDao;
+import judgels.persistence.model.ProblemModel;
 
 public class ReplaceProblemTask extends Task {
     private final ProblemDao problemDao;

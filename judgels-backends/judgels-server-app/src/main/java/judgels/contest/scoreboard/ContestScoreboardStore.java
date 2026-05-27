@@ -3,8 +3,8 @@ package judgels.contest.scoreboard;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.api.contest.scoreboard.ContestScoreboardType;
-import judgels.persistence.ContestScoreboardDao;
-import judgels.persistence.ContestScoreboardModel;
+import judgels.persistence.dao.ContestScoreboardDao;
+import judgels.persistence.model.ContestScoreboardModel;
 
 public class ContestScoreboardStore {
     private final ContestScoreboardDao scoreboardDao;

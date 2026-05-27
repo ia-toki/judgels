@@ -1,0 +1,33 @@
+package judgels.persistence.hibernate.dao;
+
+import jakarta.inject.Inject;
+import judgels.persistence.dao.ContestProgrammingSubmissionDao;
+import judgels.persistence.model.ContestProgrammingSubmissionModel;
+import org.hibernate.query.Query;
+
+public class ContestProgrammingSubmissionHibernateDao
+        extends AbstractProgrammingSubmissionHibernateDao<ContestProgrammingSubmissionModel>
+        implements ContestProgrammingSubmissionDao {
+
+    @Inject
+    public ContestProgrammingSubmissionHibernateDao(HibernateDaoData data) {
+        super(data);
+    }
+
+    @Override
+    public ContestProgrammingSubmissionModel createSubmissionModel() {
+        return new ContestProgrammingSubmissionModel();
+    }
+
+    @Override
+    public void updateProblemJid(String oldProblemJid, String newProblemJid) {
+        Query<?> query = currentSession().createQuery(
+                "UPDATE uriel_contest_programming_submission "
+                        + "SET problemJid = :newProblemJid "
+                        + "WHERE problemJid = :oldProblemJid");
+
+        query.setParameter("newProblemJid", newProblemJid);
+        query.setParameter("oldProblemJid", oldProblemJid);
+        query.executeUpdate();
+    }
+}

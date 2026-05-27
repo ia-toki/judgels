@@ -26,8 +26,8 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
+import judgels.persistence.actor.ActorChecker;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/{contestJid}/scoreboard")

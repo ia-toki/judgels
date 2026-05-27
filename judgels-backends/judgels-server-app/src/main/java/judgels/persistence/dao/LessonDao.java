@@ -1,0 +1,17 @@
+package judgels.persistence.dao;
+
+import java.util.Collection;
+import java.util.Optional;
+import judgels.persistence.QueryBuilder;
+import judgels.persistence.model.LessonModel;
+
+public interface LessonDao extends JudgelsDao<LessonModel> {
+    LessonQueryBuilder select();
+    Optional<LessonModel> selectBySlug(String slug);
+
+    interface LessonQueryBuilder extends QueryBuilder<LessonModel> {
+        LessonQueryBuilder whereUserCanView(String userJid);
+        LessonQueryBuilder whereTermsMatch(String term);
+        LessonQueryBuilder whereSlugIn(Collection<String> slugs);
+    }
+}

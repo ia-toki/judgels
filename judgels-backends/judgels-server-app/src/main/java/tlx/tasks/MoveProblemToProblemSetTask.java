@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.problem.ProblemType;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ChapterProblemModel;
-import judgels.persistence.ProblemDao;
-import judgels.persistence.ProblemModel;
-import judgels.persistence.ProblemSetDao;
-import judgels.persistence.ProblemSetModel;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.ProblemSetProblemModel;
-import judgels.persistence.TrainingProgrammingSubmissionDao;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.dao.ProblemDao;
+import judgels.persistence.dao.ProblemSetDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
+import judgels.persistence.model.ChapterProblemModel;
+import judgels.persistence.model.ProblemModel;
+import judgels.persistence.model.ProblemSetModel;
+import judgels.persistence.model.ProblemSetProblemModel;
 
 public class MoveProblemToProblemSetTask extends Task {
     private final ProblemDao problemDao;

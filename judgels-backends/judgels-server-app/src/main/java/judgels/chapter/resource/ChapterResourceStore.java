@@ -4,13 +4,13 @@ import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import judgels.persistence.ChapterLessonDao;
-import judgels.persistence.ChapterLessonModel;
-import judgels.persistence.ChapterLessonModel_;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ChapterProblemModel;
-import judgels.persistence.ChapterProblemModel_;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.ChapterLessonDao;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.model.ChapterLessonModel;
+import judgels.persistence.model.ChapterLessonModel_;
+import judgels.persistence.model.ChapterProblemModel;
+import judgels.persistence.model.ChapterProblemModel_;
 
 public class ChapterResourceStore {
     private final ChapterLessonDao lessonDao;

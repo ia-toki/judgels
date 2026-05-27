@@ -12,10 +12,10 @@ import judgels.api.submission.bundle.BundleAnswer;
 import judgels.api.submission.bundle.BundleGradingResult;
 import judgels.api.submission.bundle.BundleSubmission;
 import judgels.fs.FileSystem;
-import judgels.persistence.BundleGradingDao;
-import judgels.persistence.BundleGradingModel;
-import judgels.persistence.BundleSubmissionDao;
-import judgels.persistence.BundleSubmissionModel;
+import judgels.persistence.dao.BundleGradingDao;
+import judgels.persistence.dao.BundleSubmissionDao;
+import judgels.persistence.model.BundleGradingModel;
+import judgels.persistence.model.BundleSubmissionModel;
 import judgels.problem.base.submission.SubmissionFs;
 import judgels.problem.bundle.grading.BundleProblemGrader;
 

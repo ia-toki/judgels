@@ -44,10 +44,10 @@ import judgels.api.contest.module.ScoreboardModuleConfig;
 import judgels.api.contest.module.StyleModuleConfig;
 import judgels.api.contest.module.TrocStyleModuleConfig;
 import judgels.api.contest.module.VirtualModuleConfig;
-import judgels.persistence.ContestModuleDao;
-import judgels.persistence.ContestModuleModel;
-import judgels.persistence.ContestStyleDao;
-import judgels.persistence.ContestStyleModel;
+import judgels.persistence.dao.ContestModuleDao;
+import judgels.persistence.dao.ContestStyleDao;
+import judgels.persistence.model.ContestModuleModel;
+import judgels.persistence.model.ContestStyleModel;
 
 @Singleton
 public class ContestModuleStore {

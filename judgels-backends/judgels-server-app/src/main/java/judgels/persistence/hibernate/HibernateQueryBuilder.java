@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.QueryBuilder;
-import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.model.UnmodifiableModel_;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 

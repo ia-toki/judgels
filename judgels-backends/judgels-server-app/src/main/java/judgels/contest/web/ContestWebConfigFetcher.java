@@ -34,8 +34,8 @@ import judgels.contest.manager.ContestManagerRoleChecker;
 import judgels.contest.problem.ContestProblemRoleChecker;
 import judgels.contest.scoreboard.ContestScoreboardRoleChecker;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
-import judgels.persistence.ContestAnnouncementDao;
-import judgels.persistence.ContestClarificationDao;
+import judgels.persistence.dao.ContestAnnouncementDao;
+import judgels.persistence.dao.ContestClarificationDao;
 
 public class ContestWebConfigFetcher {
     private final ContestRoleChecker roleChecker;

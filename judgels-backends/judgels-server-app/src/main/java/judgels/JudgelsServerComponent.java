@@ -11,12 +11,12 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         // Judgels service
         judgels.service.JudgelsModule.class,
         judgels.JudgelsServerModule.class,
-        judgels.service.persistence.JudgelsPersistenceModule.class,
+        judgels.persistence.JudgelsPersistenceModule.class,
         judgels.service.JudgelsSchedulerModule.class,
 
         // Database
-        judgels.service.hibernate.JudgelsHibernateModule.class,
-        judgels.service.hibernate.JudgelsServerHibernateDaoModule.class,
+        judgels.persistence.hibernate.JudgelsHibernateModule.class,
+        judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         judgels.messaging.rabbitmq.RabbitMQModule.class,

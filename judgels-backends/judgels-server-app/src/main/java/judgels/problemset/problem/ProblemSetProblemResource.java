@@ -46,11 +46,11 @@ import judgels.api.problemset.problem.ProblemSetProblemsResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.difficulty.ProblemDifficultyStore;
+import judgels.persistence.actor.ActorChecker;
 import judgels.problem.ProblemService;
 import judgels.problemset.ProblemSetStore;
 import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 

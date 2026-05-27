@@ -13,7 +13,7 @@ import judgels.contest.ContestTimer;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
 import judgels.contrib.contest.rating.ContestRatingProvider;
-import judgels.persistence.ContestRoleDao;
+import judgels.persistence.dao.ContestRoleDao;
 
 public class ContestContestantRoleChecker {
     private final ContestRoleChecker contestRoleChecker;
