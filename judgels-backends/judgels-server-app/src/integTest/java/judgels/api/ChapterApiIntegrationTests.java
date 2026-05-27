@@ -7,7 +7,7 @@ import judgels.api.chapter.ChapterCreateData;
 import judgels.api.chapter.ChapterUpdateData;
 import org.junit.jupiter.api.Test;
 
-class ChapterApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class ChapterApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin

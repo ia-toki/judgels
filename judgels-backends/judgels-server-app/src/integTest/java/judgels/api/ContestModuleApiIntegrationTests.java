@@ -12,7 +12,7 @@ import judgels.api.contest.module.VirtualModuleConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestModuleApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

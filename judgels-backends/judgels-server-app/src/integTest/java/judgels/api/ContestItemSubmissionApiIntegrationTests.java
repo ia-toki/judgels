@@ -18,7 +18,7 @@ import judgels.contest.ContestItemSubmissionClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestItemSubmissionApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegrationTests {
     private static final String PROBLEM_3_ALIAS = "B";
     private final ContestItemSubmissionClient submissionClient = createClient(ContestItemSubmissionClient.class);
 

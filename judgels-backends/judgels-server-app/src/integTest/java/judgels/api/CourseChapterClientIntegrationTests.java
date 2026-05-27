@@ -17,7 +17,7 @@ import judgels.api.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.api.problem.ProblemType;
 import org.junit.jupiter.api.Test;
 
-class CourseChapterClientIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class CourseChapterClientIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin

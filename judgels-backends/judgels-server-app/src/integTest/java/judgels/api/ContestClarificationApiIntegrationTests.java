@@ -20,7 +20,7 @@ import judgels.contest.ContestClarificationClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestClarificationApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestClarificationApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestClarificationClient clarificationClient = createClient(ContestClarificationClient.class);
 
     private Contest contest;

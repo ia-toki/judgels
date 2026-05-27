@@ -10,7 +10,7 @@ import judgels.contest.ContestEditorialClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ContestEditorialApiIntegrationTests extends BaseUrielApiIntegrationTests {
+public class ContestEditorialApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestEditorialClient editorialClient = createClient(ContestEditorialClient.class);
 
     private Contest contest;

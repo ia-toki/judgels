@@ -10,7 +10,7 @@ import judgels.api.contest.manager.ContestManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestManagerApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestManagerApiIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

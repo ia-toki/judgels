@@ -32,7 +32,7 @@ import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestProblemApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestProblemApiIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

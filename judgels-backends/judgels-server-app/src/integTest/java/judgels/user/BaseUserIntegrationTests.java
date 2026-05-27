@@ -1,4 +1,4 @@
-package judgels.jophiel;
+package judgels.user;
 
 import java.time.Clock;
 import judgels.persistence.TestActorProvider;
@@ -7,13 +7,13 @@ import judgels.service.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import org.hibernate.SessionFactory;
 
-public abstract class BaseJophielIntegrationTests {
-    protected static JophielIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
+public abstract class BaseUserIntegrationTests {
+    protected static UserIntegrationTestComponent createComponent(SessionFactory sessionFactory) {
         return createComponent(sessionFactory, new TestClock());
     }
 
-    protected static JophielIntegrationTestComponent createComponent(SessionFactory sessionFactory, Clock clock) {
-        return DaggerJophielIntegrationTestComponent.builder()
+    protected static UserIntegrationTestComponent createComponent(SessionFactory sessionFactory, Clock clock) {
+        return DaggerUserIntegrationTestComponent.builder()
                 .judgelsHibernateModule(new JudgelsHibernateModule(sessionFactory))
                 .judgelsPersistenceModule(new JudgelsPersistenceModule(clock, new TestActorProvider()))
                 .build();

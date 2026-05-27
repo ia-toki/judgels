@@ -10,7 +10,7 @@ import judgels.api.chapter.problem.ChapterProblemData;
 import judgels.api.problem.ProblemType;
 import org.junit.jupiter.api.Test;
 
-class ChapterProblemApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class ChapterProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin

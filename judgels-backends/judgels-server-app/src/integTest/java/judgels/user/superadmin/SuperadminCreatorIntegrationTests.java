@@ -4,18 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import judgels.api.user.User;
-import judgels.jophiel.BaseJophielIntegrationTests;
-import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.persistence.UserModel;
 import judgels.persistence.hibernate.WithHibernateSession;
 import judgels.role.SuperadminRoleStore;
+import judgels.user.BaseUserIntegrationTests;
+import judgels.user.UserIntegrationTestComponent;
 import judgels.user.UserStore;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserModel.class})
-public class SuperadminCreatorIntegrationTests extends BaseJophielIntegrationTests {
+public class SuperadminCreatorIntegrationTests extends BaseUserIntegrationTests {
     private static final SuperadminCreatorConfiguration CONFIG = new SuperadminCreatorConfiguration.Builder()
             .initialPassword("superpass")
             .build();
@@ -26,7 +26,7 @@ public class SuperadminCreatorIntegrationTests extends BaseJophielIntegrationTes
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
-        JophielIntegrationTestComponent component = createComponent(sessionFactory);
+        UserIntegrationTestComponent component = createComponent(sessionFactory);
         userStore = component.userStore();
         superadminRoleStore = component.superadminRoleStore();
         superadminCreator = new SuperadminCreator(userStore, superadminRoleStore, Optional.of(CONFIG));

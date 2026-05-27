@@ -16,7 +16,7 @@ import judgels.contest.ContestFileClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestFileApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestFileApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestFileClient fileClient = createClient(ContestFileClient.class);
 
     private Contest contest;

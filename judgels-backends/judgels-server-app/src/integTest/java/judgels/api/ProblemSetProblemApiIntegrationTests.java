@@ -13,7 +13,7 @@ import judgels.api.problemset.problem.ProblemSetProblemData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ProblemSetProblemApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class ProblemSetProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @BeforeEach
     void before() {
         contest1 = createContest(CONTEST_1_SLUG);

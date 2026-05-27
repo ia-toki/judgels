@@ -9,7 +9,7 @@ import judgels.api.chapter.lesson.ChapterLesson;
 import judgels.api.chapter.lesson.ChapterLessonData;
 import org.junit.jupiter.api.Test;
 
-class ChapterLessonApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class ChapterLessonApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin

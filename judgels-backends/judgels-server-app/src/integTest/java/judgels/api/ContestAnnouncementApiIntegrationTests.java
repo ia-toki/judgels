@@ -17,7 +17,7 @@ import judgels.contest.ContestAnnouncementClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestAnnouncementApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestAnnouncementApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestAnnouncementClient announcementClient = createClient(ContestAnnouncementClient.class);
 
     private Contest contest;

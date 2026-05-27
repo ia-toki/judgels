@@ -23,7 +23,7 @@ import judgels.contest.ContestScoreboardClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestScoreboardApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestScoreboardApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestScoreboardClient scoreboardClient = createClient(ContestScoreboardClient.class);
 
     private Contest contest;

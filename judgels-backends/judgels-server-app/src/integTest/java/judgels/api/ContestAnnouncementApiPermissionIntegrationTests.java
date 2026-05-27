@@ -12,7 +12,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestAnnouncementApiPermissionIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestAnnouncementApiPermissionIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestAnnouncementClient announcementClient = createClient(ContestAnnouncementClient.class);
 
     private Contest contest;

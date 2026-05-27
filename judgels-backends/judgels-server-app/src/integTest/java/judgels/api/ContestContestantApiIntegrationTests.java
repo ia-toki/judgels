@@ -25,7 +25,7 @@ import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestContestantApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

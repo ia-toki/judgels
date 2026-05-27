@@ -30,7 +30,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ContestApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestApiIntegrationTests extends BaseContestApiIntegrationTests {
     @BeforeAll
     static void beforeAll() {
         Configuration config = new Configuration();
