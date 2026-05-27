@@ -10,9 +10,9 @@ import judgels.course.chapter.CourseChapterStore;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
-import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.service.persistence.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.stats.StatsStore;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 

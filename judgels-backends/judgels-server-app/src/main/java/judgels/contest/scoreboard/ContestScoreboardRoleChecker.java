@@ -10,7 +10,7 @@ import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestTimer;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
-import judgels.persistence.ContestRoleDao;
+import judgels.persistence.dao.ContestRoleDao;
 
 public class ContestScoreboardRoleChecker {
     private final ContestRoleChecker contestRoleChecker;

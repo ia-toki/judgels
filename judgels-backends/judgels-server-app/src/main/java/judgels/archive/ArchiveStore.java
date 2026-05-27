@@ -12,10 +12,10 @@ import judgels.api.archive.Archive;
 import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveErrors;
 import judgels.api.archive.ArchiveUpdateData;
-import judgels.persistence.ArchiveDao;
-import judgels.persistence.ArchiveModel;
-import judgels.persistence.ArchiveModel_;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.ArchiveDao;
+import judgels.persistence.model.ArchiveModel;
+import judgels.persistence.model.ArchiveModel_;
 
 public class ArchiveStore {
     private final ArchiveDao archiveDao;

@@ -11,11 +11,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
-import judgels.persistence.UserDao;
-import judgels.persistence.UserModel;
-import judgels.persistence.UserModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.UserDao;
+import judgels.persistence.model.UserModel;
+import judgels.persistence.model.UserModel_;
 
 public class UserStore {
     private final UserDao userDao;

@@ -8,8 +8,8 @@ import judgels.fs.FileSystem;
 import judgels.git.Git;
 import judgels.git.GitCommit;
 import judgels.lesson.BaseLessonStore;
-import judgels.persistence.LessonDao;
-import judgels.persistence.LessonModel;
+import judgels.persistence.dao.LessonDao;
+import judgels.persistence.model.LessonModel;
 import judgels.problem.base.ProblemFs;
 import judgels.problem.base.ProblemGit;
 

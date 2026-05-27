@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.api.contest.log.ContestLog;
-import judgels.persistence.ContestLogDao;
-import judgels.persistence.ContestLogDao.ContestLogQueryBuilder;
-import judgels.persistence.ContestLogModel;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ContestLogDao;
+import judgels.persistence.dao.ContestLogDao.ContestLogQueryBuilder;
+import judgels.persistence.model.ContestLogModel;
 
 public class ContestLogStore {
     private final ContestLogDao logDao;

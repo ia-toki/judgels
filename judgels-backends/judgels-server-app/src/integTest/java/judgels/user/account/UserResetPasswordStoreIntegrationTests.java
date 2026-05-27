@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.persistence.TestClock;
-import judgels.persistence.UserResetPasswordModel;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.model.UserResetPasswordModel;
 import judgels.user.BaseUserIntegrationTests;
 import judgels.user.UserIntegrationTestComponent;
 import org.hibernate.SessionFactory;

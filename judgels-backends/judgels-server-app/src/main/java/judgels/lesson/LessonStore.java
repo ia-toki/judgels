@@ -12,13 +12,13 @@ import java.util.Optional;
 import judgels.api.lesson.Lesson;
 import judgels.fs.FileSystem;
 import judgels.git.Git;
-import judgels.persistence.LessonDao;
-import judgels.persistence.LessonDao.LessonQueryBuilder;
-import judgels.persistence.LessonModel;
-import judgels.persistence.LessonPartnerDao;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.LessonDao;
+import judgels.persistence.dao.LessonDao.LessonQueryBuilder;
+import judgels.persistence.dao.LessonPartnerDao;
+import judgels.persistence.model.LessonModel;
 
 public final class LessonStore extends BaseLessonStore {
     private final Git lessonGit;

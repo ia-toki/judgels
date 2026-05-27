@@ -1,0 +1,5 @@
+package judgels.persistence.dao;
+
+import judgels.persistence.model.TrainingProgrammingSubmissionModel;
+
+public interface TrainingProgrammingSubmissionDao extends BaseProgrammingSubmissionDao<TrainingProgrammingSubmissionModel> {}

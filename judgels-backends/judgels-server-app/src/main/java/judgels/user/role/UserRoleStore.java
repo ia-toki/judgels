@@ -9,9 +9,9 @@ import judgels.api.role.UserAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserWithRole;
 import judgels.persistence.UnmodifiableModel_;
-import judgels.persistence.UserRoleDao;
-import judgels.persistence.UserRoleModel;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.UserRoleDao;
+import judgels.persistence.model.UserRoleModel;
 import judgels.role.SuperadminRoleStore;
 
 public class UserRoleStore {

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.user.info.UserInfo;
-import judgels.persistence.UserInfoDao;
-import judgels.persistence.UserInfoModel;
+import judgels.persistence.dao.UserInfoDao;
+import judgels.persistence.model.UserInfoModel;
 
 public class UserInfoStore {
     private final UserInfoDao profileDao;

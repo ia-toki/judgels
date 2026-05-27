@@ -7,10 +7,10 @@ import judgels.api.contest.ContestErrors;
 import judgels.api.contest.clarification.ContestClarification;
 import judgels.api.contest.clarification.ContestClarificationData;
 import judgels.api.contest.clarification.ContestClarificationStatus;
-import judgels.persistence.ContestClarificationDao;
-import judgels.persistence.ContestClarificationDao.ContestClarificationQueryBuilder;
-import judgels.persistence.ContestClarificationModel;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ContestClarificationDao;
+import judgels.persistence.dao.ContestClarificationDao.ContestClarificationQueryBuilder;
+import judgels.persistence.model.ContestClarificationModel;
 
 public class ContestClarificationStore {
     private final ContestClarificationDao clarificationDao;

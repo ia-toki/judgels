@@ -30,9 +30,9 @@ import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.resource.ResourceModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.hibernate.JudgelsHibernateModule;
-import judgels.service.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
+import judgels.service.persistence.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.submission.SubmissionModule;
 
 @Component(modules = {

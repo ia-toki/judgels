@@ -15,10 +15,10 @@ import java.util.Set;
 import java.util.function.Function;
 import judgels.api.chapter.problem.ChapterProblem;
 import judgels.api.problem.ProblemType;
-import judgels.persistence.ChapterProblemDao;
-import judgels.persistence.ChapterProblemModel;
-import judgels.persistence.ChapterProblemModel_;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.ChapterProblemDao;
+import judgels.persistence.model.ChapterProblemModel;
+import judgels.persistence.model.ChapterProblemModel_;
 
 public class ChapterProblemStore {
     private final ChapterProblemDao problemDao;

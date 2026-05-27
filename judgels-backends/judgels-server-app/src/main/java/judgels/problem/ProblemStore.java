@@ -5,11 +5,11 @@ import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.problem.ProblemSetProblemInfo;
-import judgels.persistence.ProblemSetDao;
-import judgels.persistence.ProblemSetModel;
-import judgels.persistence.ProblemSetProblemDao;
-import judgels.persistence.ProblemSetProblemModel;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.ProblemSetDao;
+import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.model.ProblemSetModel;
+import judgels.persistence.model.ProblemSetProblemModel;
 
 public class ProblemStore {
     private final ProblemSetDao problemSetDao;

@@ -8,10 +8,10 @@ import judgels.api.course.Course;
 import judgels.api.course.CourseCreateData;
 import judgels.api.course.CourseErrors;
 import judgels.api.course.CourseUpdateData;
-import judgels.persistence.CourseDao;
-import judgels.persistence.CourseModel;
-import judgels.persistence.CourseModel_;
 import judgels.persistence.api.OrderDir;
+import judgels.persistence.dao.CourseDao;
+import judgels.persistence.model.CourseModel;
+import judgels.persistence.model.CourseModel_;
 
 public class CourseStore {
     private final CourseDao courseDao;

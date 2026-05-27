@@ -2,8 +2,8 @@ package judgels.contrib.user.registration;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.contrib.persistence.UserRegistrationEmailDao;
-import judgels.contrib.persistence.UserRegistrationEmailModel;
+import judgels.persistence.dao.UserRegistrationEmailDao;
+import judgels.persistence.model.UserRegistrationEmailModel;
 import judgels.service.RandomCodeGenerator;
 
 public class UserRegistrationEmailStore {
