@@ -58,7 +58,6 @@ judgels:
     gradingRequestQueueName: judgels-grading-request
     gradingResponseQueueName: judgels-grading-response
 
-jophiel:
   userResetPassword:
     enabled: false
     requestEmailTemplate:

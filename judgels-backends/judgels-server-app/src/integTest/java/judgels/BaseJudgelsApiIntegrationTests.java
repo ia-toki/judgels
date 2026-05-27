@@ -40,7 +40,6 @@ import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.contrib.user.registration.UserRegistrationConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
-import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
@@ -105,9 +104,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .baseDataDir(baseDataDir.toAbsolutePath())
                 .appConfig(judgelsAppConfig)
                 .gradingConfig(gradingConfig)
-                .build();
-
-        JophielConfiguration jophielConfig = new JophielConfiguration.Builder()
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
                         .port(9250)
@@ -131,7 +127,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 dbConfig,
                 webSecurityConfig,
                 judgelsConfig,
-                jophielConfig,
                 trainingConfig) {
             {
                 DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
