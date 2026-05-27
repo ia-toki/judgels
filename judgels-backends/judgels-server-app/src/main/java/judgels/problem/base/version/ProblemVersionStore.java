@@ -10,8 +10,8 @@ import judgels.persistence.ProblemModel;
 import judgels.problem.base.BaseProblemStore;
 import judgels.problem.base.ProblemFs;
 import judgels.problem.base.ProblemGit;
-import judgels.sandalphon.Git;
-import judgels.sandalphon.GitCommit;
+import judgels.git.Git;
+import judgels.git.GitCommit;
 
 public class ProblemVersionStore extends BaseProblemStore {
     private final Git problemGit;

@@ -5,7 +5,7 @@ import java.util.Map;
 import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.sandalphon.GitCommit;
+import judgels.git.GitCommit;
 
 public class ListVersionHistoryView extends TemplateView {
     private final List<GitCommit> versions;

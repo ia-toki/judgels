@@ -13,7 +13,7 @@ public final class ProgrammingProblemStatementUtils {
         }
 
         try (InputStream stream = ProgrammingProblemStatementUtils.class.getClassLoader().getResourceAsStream(
-                    "judgels/sandalphon/problem/programming/statement/" + lang + ".html")) {
+                    "judgels/resource/problem/programming/statement/" + lang + ".html")) {
             return new String(stream.readAllBytes());
         } catch (IOException e) {
             return "";

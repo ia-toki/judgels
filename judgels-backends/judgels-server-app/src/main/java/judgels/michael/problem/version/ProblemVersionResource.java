@@ -28,7 +28,7 @@ import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.problem.base.tag.ProblemTagStore;
 import judgels.problem.base.version.ProblemVersionStore;
-import judgels.sandalphon.GitCommit;
+import judgels.git.GitCommit;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {

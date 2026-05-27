@@ -20,8 +20,8 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
         // 3rd parties
         judgels.messaging.rabbitmq.RabbitMQModule.class,
-        judgels.sandalphon.SandalphonClientModule.class,
-        judgels.grading.GradingClientModule.class,
+        judgels.resource.ResourceModule.class,
+        judgels.grading.GradingModule.class,
         judgels.mailer.MailerModule.class,
 
         // User features

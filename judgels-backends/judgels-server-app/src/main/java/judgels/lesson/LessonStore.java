@@ -18,7 +18,7 @@ import judgels.persistence.LessonPartnerDao;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.sandalphon.Git;
+import judgels.git.Git;
 
 public final class LessonStore extends BaseLessonStore {
     private final Git lessonGit;

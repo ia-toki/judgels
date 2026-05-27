@@ -5,10 +5,10 @@ import dagger.Provides;
 import jakarta.inject.Named;
 
 @Module
-public final class GradingClientModule {
+public final class GradingModule {
     private final JudgelsServerGradingConfiguration config;
 
-    public GradingClientModule(JudgelsServerGradingConfiguration config) {
+    public GradingModule(JudgelsServerGradingConfiguration config) {
         this.config = config;
     }
 
