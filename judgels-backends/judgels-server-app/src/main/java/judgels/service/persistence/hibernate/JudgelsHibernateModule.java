@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate;
+package judgels.service.persistence.hibernate;
 
 import dagger.Module;
 import dagger.Provides;
