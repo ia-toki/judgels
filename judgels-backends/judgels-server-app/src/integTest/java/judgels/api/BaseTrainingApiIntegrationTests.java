@@ -6,16 +6,16 @@ import judgels.api.contest.ContestCreateData;
 import judgels.api.lesson.Lesson;
 import judgels.api.problem.Problem;
 import judgels.api.user.User;
-import judgels.archive.ArchiveClient;
-import judgels.chapter.ChapterClient;
-import judgels.chapter.ChapterLessonClient;
-import judgels.chapter.ChapterProblemClient;
 import judgels.contest.ContestClient;
-import judgels.course.CourseChapterClient;
-import judgels.course.CourseClient;
-import judgels.problemset.ProblemSetClient;
-import judgels.problemset.ProblemSetProblemClient;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.archive.ArchiveClient;
+import tlx.chapter.ChapterClient;
+import tlx.chapter.ChapterLessonClient;
+import tlx.chapter.ChapterProblemClient;
+import tlx.course.CourseChapterClient;
+import tlx.course.CourseClient;
+import tlx.problemset.ProblemSetClient;
+import tlx.problemset.ProblemSetProblemClient;
 
 public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";

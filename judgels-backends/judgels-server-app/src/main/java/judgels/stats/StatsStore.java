@@ -15,13 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.chapter.ChapterProgress;
-import judgels.api.course.CourseProgress;
 import judgels.api.problem.ProblemProgress;
 import judgels.api.problem.ProblemStats;
 import judgels.api.problem.ProblemTopStats;
 import judgels.api.problem.ProblemTopStatsEntry;
-import judgels.api.problemset.ProblemSetProgress;
 import judgels.api.stats.UserStats;
 import judgels.api.stats.UserTopStatsEntry;
 import judgels.grading.api.Verdict;
@@ -39,6 +36,9 @@ import judgels.persistence.model.ProblemSetProblemModel;
 import judgels.persistence.model.StatsUserModel_;
 import judgels.persistence.model.StatsUserProblemModel;
 import judgels.persistence.model.StatsUserProblemModel_;
+import tlx.api.chapter.ChapterProgress;
+import tlx.api.course.CourseProgress;
+import tlx.api.problemset.ProblemSetProgress;
 
 public class StatsStore {
     private final CourseChapterDao courseChapterDao;

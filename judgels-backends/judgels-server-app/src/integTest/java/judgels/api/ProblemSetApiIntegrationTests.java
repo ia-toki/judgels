@@ -1,21 +1,21 @@
 package judgels.api;
 
 import static judgels.api.problem.ProblemType.PROGRAMMING;
-import static judgels.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
-import static judgels.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static tlx.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
+import static tlx.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 
 import java.time.Instant;
 import java.util.List;
-import judgels.api.archive.Archive;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.ProblemSetUpdateData;
-import judgels.api.problemset.problem.ProblemSetProblemData;
-import judgels.problemset.ProblemSetClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tlx.api.archive.Archive;
+import tlx.api.archive.ArchiveCreateData;
+import tlx.api.problemset.ProblemSet;
+import tlx.api.problemset.ProblemSetCreateData;
+import tlx.api.problemset.ProblemSetUpdateData;
+import tlx.api.problemset.problem.ProblemSetProblemData;
+import tlx.problemset.ProblemSetClient;
 
 class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @BeforeEach

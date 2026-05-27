@@ -9,11 +9,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import judgels.api.chapter.lesson.ChapterLesson;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ChapterLessonDao;
 import judgels.persistence.model.ChapterLessonModel;
 import judgels.persistence.model.ChapterLessonModel_;
+import tlx.api.chapter.lesson.ChapterLesson;
 
 public class ChapterLessonStore {
     private final ChapterLessonDao lessonDao;

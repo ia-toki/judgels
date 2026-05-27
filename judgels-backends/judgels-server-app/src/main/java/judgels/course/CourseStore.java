@@ -4,14 +4,14 @@ import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import judgels.api.course.Course;
-import judgels.api.course.CourseCreateData;
-import judgels.api.course.CourseErrors;
-import judgels.api.course.CourseUpdateData;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.CourseDao;
 import judgels.persistence.model.CourseModel;
 import judgels.persistence.model.CourseModel_;
+import tlx.api.course.Course;
+import tlx.api.course.CourseCreateData;
+import tlx.api.course.CourseErrors;
+import tlx.api.course.CourseUpdateData;
 
 public class CourseStore {
     private final CourseDao courseDao;
