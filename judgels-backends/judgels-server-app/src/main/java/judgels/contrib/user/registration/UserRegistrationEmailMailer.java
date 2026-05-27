@@ -1,7 +1,7 @@
 package judgels.contrib.user.registration;
 
 import judgels.api.user.User;
-import judgels.jophiel.EmailTemplate;
+import judgels.mailer.EmailTemplate;
 import judgels.mailer.Mailer;
 
 public class UserRegistrationEmailMailer {
