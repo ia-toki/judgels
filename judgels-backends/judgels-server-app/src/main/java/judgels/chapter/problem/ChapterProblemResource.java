@@ -41,7 +41,7 @@ import judgels.grading.api.Verdict;
 import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 import judgels.submission.programming.SubmissionSourceBuilder;

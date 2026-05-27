@@ -38,7 +38,7 @@ import judgels.contrib.api.contest.rating.ContestRatingChanges;
 import judgels.contrib.api.contest.rating.ContestRatingHistoryResponse;
 import judgels.contrib.api.contest.rating.ContestsPendingRatingResponse;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserStore;
 import judgels.user.rating.UserRatingStore;

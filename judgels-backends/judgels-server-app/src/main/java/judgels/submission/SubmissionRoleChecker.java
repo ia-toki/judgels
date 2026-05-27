@@ -4,10 +4,10 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
-import judgels.persistence.actor.Actors;
 import judgels.persistence.dao.StatsUserProblemDao;
 import judgels.persistence.model.StatsUserProblemModel;
 import judgels.role.TrainingAdminRoleChecker;
+import judgels.service.actor.Actors;
 
 public class SubmissionRoleChecker {
     private final TrainingAdminRoleChecker roleChecker;

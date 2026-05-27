@@ -1,7 +1,7 @@
 package judgels.persistence.hibernate.dao;
 
 import java.time.Clock;
-import judgels.persistence.actor.ActorProvider;
+import judgels.persistence.ActorProvider;
 import judgels.persistence.dao.Dao;
 import judgels.persistence.model.Model;
 

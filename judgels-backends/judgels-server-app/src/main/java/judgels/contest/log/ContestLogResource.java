@@ -33,7 +33,7 @@ import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserStore;
 

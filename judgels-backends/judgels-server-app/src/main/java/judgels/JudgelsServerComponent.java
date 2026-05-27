@@ -11,7 +11,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         // Judgels service
         judgels.service.JudgelsModule.class,
         judgels.JudgelsServerModule.class,
-        judgels.persistence.JudgelsPersistenceModule.class,
+        judgels.service.persistence.JudgelsPersistenceModule.class,
         judgels.service.JudgelsSchedulerModule.class,
 
         // Database

@@ -13,7 +13,7 @@ import java.util.Optional;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.role.UserRoleStore;
 

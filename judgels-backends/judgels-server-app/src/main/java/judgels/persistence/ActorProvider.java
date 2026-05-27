@@ -1,4 +1,4 @@
-package judgels.persistence.actor;
+package judgels.persistence;
 
 import java.util.Optional;
 

@@ -51,7 +51,7 @@ import judgels.problem.ProblemUtils;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;

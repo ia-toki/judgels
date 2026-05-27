@@ -37,7 +37,7 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.lesson.ChapterLessonStore;
 import judgels.course.CourseStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 import judgels.user.UserStore;

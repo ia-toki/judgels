@@ -35,7 +35,7 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.resource.ChapterResourceStore;
 import judgels.lesson.LessonService;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/chapters/{chapterJid}/lessons")

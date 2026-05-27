@@ -2,7 +2,7 @@ package judgels.persistence.hibernate.dao;
 
 import jakarta.inject.Inject;
 import java.time.Clock;
-import judgels.persistence.actor.ActorProvider;
+import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 
 public class HibernateDaoData {

@@ -7,12 +7,12 @@ import judgels.chapter.ChapterStore;
 import judgels.chapter.problem.ChapterProblemStore;
 import judgels.course.CourseStore;
 import judgels.course.chapter.CourseChapterStore;
-import judgels.persistence.JudgelsPersistenceModule;
 import judgels.persistence.hibernate.JudgelsHibernateModule;
 import judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.stats.StatsStore;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 

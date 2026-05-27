@@ -1,7 +1,6 @@
 package judgels.persistence;
 
 import java.util.Optional;
-import judgels.persistence.actor.ActorProvider;
 
 public class TestActorProvider implements ActorProvider {
     public static final String ACTOR_JID = "actorJid";

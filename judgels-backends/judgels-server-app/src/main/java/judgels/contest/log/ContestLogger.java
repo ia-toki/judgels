@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.Queue;
 import judgels.api.contest.log.ContestLog;
-import judgels.persistence.actor.ActorProvider;
+import judgels.persistence.ActorProvider;
 
 public class ContestLogger {
     private final ActorProvider actorProvider;

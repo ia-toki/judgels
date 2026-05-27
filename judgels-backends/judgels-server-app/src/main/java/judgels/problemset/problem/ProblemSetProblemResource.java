@@ -50,7 +50,7 @@ import judgels.problem.ProblemService;
 import judgels.problemset.ProblemSetStore;
 import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 

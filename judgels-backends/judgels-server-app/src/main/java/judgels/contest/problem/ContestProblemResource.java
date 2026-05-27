@@ -3,9 +3,9 @@ package judgels.contest.problem;
 import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.persistence.actor.Actors.GUEST;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
+import static judgels.service.actor.Actors.GUEST;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -41,7 +41,7 @@ import judgels.contest.module.ContestModuleStore;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.grading.api.LanguageRestriction;
 import judgels.problem.ProblemService;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.programming.SubmissionStore;
 

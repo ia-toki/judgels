@@ -21,7 +21,7 @@ import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 import judgels.api.user.role.UserWithRole;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

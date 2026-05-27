@@ -1,9 +1,9 @@
 package judgels.training;
 
 import java.time.Clock;
-import judgels.persistence.JudgelsPersistenceModule;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.hibernate.JudgelsHibernateModule;
+import judgels.service.persistence.JudgelsPersistenceModule;
 import org.hibernate.SessionFactory;
 
 public abstract class BaseTrainingIntegrationTests {

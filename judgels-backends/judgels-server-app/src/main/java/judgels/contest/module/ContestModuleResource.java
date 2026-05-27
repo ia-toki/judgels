@@ -23,7 +23,7 @@ import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests/{contestJid}/modules")

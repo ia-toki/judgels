@@ -2,6 +2,7 @@ package judgels.service.jersey;
 
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
+import judgels.service.actor.IpAddressFilter;
 
 public enum JudgelsJerseyFeature implements Feature {
     INSTANCE;

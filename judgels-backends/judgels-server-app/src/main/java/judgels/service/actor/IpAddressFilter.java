@@ -1,11 +1,10 @@
-package judgels.service.jersey;
+package judgels.service.actor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.ext.Provider;
-import judgels.persistence.actor.PerRequestActorProvider;
 
 @Provider
 public class IpAddressFilter implements ContainerRequestFilter {

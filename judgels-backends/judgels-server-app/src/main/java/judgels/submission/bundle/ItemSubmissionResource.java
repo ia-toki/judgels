@@ -43,7 +43,7 @@ import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.SubmissionRoleChecker;
 import judgels.submission.SubmissionUtils;

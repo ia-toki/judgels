@@ -20,7 +20,7 @@ import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveUpdateData;
 import judgels.api.archive.ArchivesResponse;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.ActorChecker;
+import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/archives")
