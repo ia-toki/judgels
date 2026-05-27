@@ -1,7 +1,7 @@
 package judgels.contrib.user.registration;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.jophiel.EmailTemplate;
+import judgels.mailer.EmailTemplate;
 import org.immutables.value.Value;
 
 @Value.Immutable
