@@ -14,11 +14,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.CriteriaPredicate;
+import judgels.persistence.Model_;
 import judgels.persistence.dao.ContestDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.ContestModel;
 import judgels.persistence.model.ContestModel_;
-import judgels.persistence.model.Model_;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.Session;
 

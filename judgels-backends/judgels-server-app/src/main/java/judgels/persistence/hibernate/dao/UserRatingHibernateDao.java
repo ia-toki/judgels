@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import judgels.persistence.api.Page;
 import judgels.persistence.dao.UserRatingDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.UserRatingModel;
 import judgels.persistence.model.UserRatingModel_;
 import org.hibernate.query.Query;

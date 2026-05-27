@@ -4,11 +4,12 @@ import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestProgrammingGradingDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.AbstractProgrammingGradingModel_;
 import judgels.persistence.model.ContestProgrammingGradingModel;
-import judgels.persistence.model.Model_;
 
 public class ContestProgrammingGradingHibernateDao extends AbstractProgrammingGradingHibernateDao<
         ContestProgrammingGradingModel> implements ContestProgrammingGradingDao {

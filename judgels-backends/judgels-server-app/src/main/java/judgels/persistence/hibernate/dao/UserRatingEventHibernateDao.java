@@ -5,6 +5,8 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import judgels.persistence.dao.UserRatingEventDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.UserRatingEventModel;
 import judgels.persistence.model.UserRatingEventModel_;
 

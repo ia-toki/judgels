@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import judgels.persistence.JidChildPrefixes;
+import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "sandalphon_problem")

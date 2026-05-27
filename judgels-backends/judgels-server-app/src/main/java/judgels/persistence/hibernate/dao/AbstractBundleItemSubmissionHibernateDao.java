@@ -1,10 +1,12 @@
 package judgels.persistence.hibernate.dao;
 
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.dao.BaseBundleItemSubmissionDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.AbstractBundleItemSubmissionModel;
 import judgels.persistence.model.AbstractBundleItemSubmissionModel_;
-import judgels.persistence.model.UnmodifiableModel_;
 import org.hibernate.Session;
 
 public abstract class AbstractBundleItemSubmissionHibernateDao<M extends AbstractBundleItemSubmissionModel> extends JudgelsHibernateDao<M> implements BaseBundleItemSubmissionDao<M> {

@@ -11,6 +11,8 @@ import java.util.Set;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.Page;
 import judgels.persistence.dao.ProblemSetProblemDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.ProblemSetProblemModel;
 import judgels.persistence.model.ProblemSetProblemModel_;
 import org.hibernate.query.Query;

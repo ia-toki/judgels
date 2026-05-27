@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.dao.CourseChapterDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.CourseChapterModel;
 import judgels.persistence.model.CourseChapterModel_;
 

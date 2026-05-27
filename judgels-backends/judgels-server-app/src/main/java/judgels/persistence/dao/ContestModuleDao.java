@@ -3,6 +3,7 @@ package judgels.persistence.dao;
 import java.io.PrintWriter;
 import java.util.Optional;
 import judgels.api.contest.module.ContestModuleType;
+import judgels.persistence.Dao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.ContestModuleModel;
 

@@ -3,7 +3,7 @@ package judgels.user;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.persistence.hibernate.JudgelsHibernateModule;
-import judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule;
+import judgels.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.role.SuperadminRoleStore;
 import judgels.service.JudgelsModule;
 import judgels.service.persistence.JudgelsPersistenceModule;

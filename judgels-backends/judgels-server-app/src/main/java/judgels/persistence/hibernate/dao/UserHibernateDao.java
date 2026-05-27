@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.dao.UserDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.UserModel;
 import judgels.persistence.model.UserModel_;
 

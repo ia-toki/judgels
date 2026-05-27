@@ -2,6 +2,7 @@ package judgels.persistence.hibernate.dao;
 
 import jakarta.inject.Inject;
 import judgels.persistence.dao.BundleItemSubmissionDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.BundleItemSubmissionModel;
 import org.hibernate.query.Query;
 

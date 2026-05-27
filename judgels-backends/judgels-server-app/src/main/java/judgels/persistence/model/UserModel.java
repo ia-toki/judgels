@@ -3,6 +3,7 @@ package judgels.persistence.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import judgels.persistence.JidPrefix;
+import judgels.persistence.JudgelsModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user")

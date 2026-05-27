@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate.dao;
+package judgels.persistence.hibernate;
 
 import jakarta.inject.Inject;
 import java.time.Clock;

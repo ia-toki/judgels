@@ -10,6 +10,8 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 import java.util.Map;
 import judgels.persistence.dao.BundleGradingDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.BundleGradingModel;
 import judgels.persistence.model.BundleGradingModel_;
 

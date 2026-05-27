@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate.dao;
+package judgels.persistence.hibernate;
 
 import com.google.common.collect.ImmutableMap;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.persistence.JidGenerator;
-import judgels.persistence.dao.JudgelsDao;
-import judgels.persistence.model.JudgelsModel;
-import judgels.persistence.model.JudgelsModel_;
+import judgels.persistence.JudgelsDao;
+import judgels.persistence.JudgelsModel;
+import judgels.persistence.JudgelsModel_;
 
 public abstract class JudgelsHibernateDao<M extends JudgelsModel> extends HibernateDao<M> implements JudgelsDao<M> {
     public JudgelsHibernateDao(HibernateDaoData data) {

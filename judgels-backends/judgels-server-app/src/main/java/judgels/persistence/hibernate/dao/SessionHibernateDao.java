@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.dao.SessionDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.SessionModel;
 import judgels.persistence.model.SessionModel_;
 

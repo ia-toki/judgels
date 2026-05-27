@@ -6,12 +6,14 @@ import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestContestantDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.model.ContestContestantModel;
 import judgels.persistence.model.ContestContestantModel_;
-import judgels.persistence.model.Model_;
 import org.hibernate.Session;
 
 public class ContestContestantHibernateDao extends HibernateDao<ContestContestantModel> implements ContestContestantDao {

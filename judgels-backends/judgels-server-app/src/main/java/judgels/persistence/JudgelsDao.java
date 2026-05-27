@@ -1,9 +1,8 @@
-package judgels.persistence.dao;
+package judgels.persistence;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import judgels.persistence.model.JudgelsModel;
 
 public interface JudgelsDao<M extends JudgelsModel> extends Dao<M> {
     M findByJid(String jid);

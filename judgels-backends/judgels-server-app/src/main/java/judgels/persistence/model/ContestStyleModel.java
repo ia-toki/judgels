@@ -2,6 +2,7 @@ package judgels.persistence.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "uriel_contest_style")

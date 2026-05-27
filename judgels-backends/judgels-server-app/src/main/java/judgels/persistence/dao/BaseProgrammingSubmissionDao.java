@@ -3,6 +3,7 @@ package judgels.persistence.dao;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Map;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.AbstractProgrammingSubmissionModel;
 

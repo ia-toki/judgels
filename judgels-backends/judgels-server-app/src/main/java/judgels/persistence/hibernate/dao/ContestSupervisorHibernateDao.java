@@ -4,13 +4,15 @@ import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
+import judgels.persistence.Model_;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestSupervisorDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.model.ContestSupervisorModel;
 import judgels.persistence.model.ContestSupervisorModel_;
-import judgels.persistence.model.Model_;
 
 public class ContestSupervisorHibernateDao extends HibernateDao<ContestSupervisorModel> implements ContestSupervisorDao {
     @Inject

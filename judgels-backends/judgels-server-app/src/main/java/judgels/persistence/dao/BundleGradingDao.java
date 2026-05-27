@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.util.List;
 import java.util.Map;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.model.BundleGradingModel;
 
 public interface BundleGradingDao extends JudgelsDao<BundleGradingModel> {

@@ -4,6 +4,8 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.dao.ChapterLessonDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.ChapterLessonModel;
 import judgels.persistence.model.ChapterLessonModel_;
 

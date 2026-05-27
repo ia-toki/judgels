@@ -3,6 +3,8 @@ package judgels.persistence.hibernate.dao;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.persistence.dao.ContestStyleDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.ContestStyleModel;
 import judgels.persistence.model.ContestStyleModel_;
 

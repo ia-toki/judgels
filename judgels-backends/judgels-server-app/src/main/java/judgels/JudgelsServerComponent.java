@@ -16,7 +16,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
         // Database
         judgels.persistence.hibernate.JudgelsHibernateModule.class,
-        judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule.class,
+        judgels.persistence.hibernate.JudgelsServerHibernateDaoModule.class,
 
         // 3rd parties
         judgels.messaging.rabbitmq.RabbitMQModule.class,

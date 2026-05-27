@@ -5,8 +5,8 @@ import java.util.Optional;
 import judgels.contrib.persistence.UserRegistrationEmailDao;
 import judgels.contrib.persistence.UserRegistrationEmailModel;
 import judgels.contrib.persistence.UserRegistrationEmailModel_;
-import judgels.persistence.hibernate.dao.HibernateDao;
-import judgels.persistence.hibernate.dao.HibernateDaoData;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 
 public class UserRegistrationEmailHibernateDao extends HibernateDao<UserRegistrationEmailModel> implements UserRegistrationEmailDao {
     @Inject

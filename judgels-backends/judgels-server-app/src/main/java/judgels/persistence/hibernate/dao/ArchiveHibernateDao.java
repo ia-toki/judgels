@@ -3,6 +3,8 @@ package judgels.persistence.hibernate.dao;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.persistence.dao.ArchiveDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.ArchiveModel;
 import judgels.persistence.model.ArchiveModel_;
 

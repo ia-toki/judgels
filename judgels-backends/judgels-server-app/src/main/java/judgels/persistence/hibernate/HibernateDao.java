@@ -1,9 +1,9 @@
-package judgels.persistence.hibernate.dao;
+package judgels.persistence.hibernate;
 
 import java.time.Clock;
 import judgels.persistence.ActorProvider;
-import judgels.persistence.dao.Dao;
-import judgels.persistence.model.Model;
+import judgels.persistence.Dao;
+import judgels.persistence.Model;
 
 public abstract class HibernateDao<M extends Model> extends UnmodifiableHibernateDao<M> implements Dao<M> {
     private final Clock clock;

@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.util.Collection;
 import java.util.Map;
+import judgels.persistence.Dao;
 import judgels.persistence.model.ProblemLevelModel;
 
 public interface ProblemLevelDao extends Dao<ProblemLevelModel> {

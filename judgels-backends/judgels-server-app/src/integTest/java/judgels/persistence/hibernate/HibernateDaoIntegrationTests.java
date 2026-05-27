@@ -14,8 +14,6 @@ import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.persistence.hibernate.dao.HibernateDao;
-import judgels.persistence.hibernate.dao.HibernateDaoData;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;

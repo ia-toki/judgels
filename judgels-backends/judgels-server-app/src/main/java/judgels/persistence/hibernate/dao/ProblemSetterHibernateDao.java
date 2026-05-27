@@ -3,11 +3,13 @@ package judgels.persistence.hibernate.dao;
 import jakarta.inject.Inject;
 import java.util.List;
 import judgels.api.problem.ProblemSetterRole;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ProblemSetterDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.ProblemSetterModel;
 import judgels.persistence.model.ProblemSetterModel_;
-import judgels.persistence.model.UnmodifiableModel_;
 
 public class ProblemSetterHibernateDao extends UnmodifiableHibernateDao<ProblemSetterModel> implements ProblemSetterDao {
     @Inject

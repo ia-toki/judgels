@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import judgels.persistence.Dao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.Page;
 import judgels.persistence.model.ProblemSetProblemModel;

@@ -3,6 +3,7 @@ package judgels.persistence.dao;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.ProblemModel;
 

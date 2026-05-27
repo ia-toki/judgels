@@ -2,7 +2,6 @@ package judgels.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.persistence.model.JudgelsModel;
 import org.junit.jupiter.api.Test;
 
 class JidGeneratorTests {

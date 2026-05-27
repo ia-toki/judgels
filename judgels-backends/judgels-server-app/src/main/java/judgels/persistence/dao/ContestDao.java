@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.ContestModel;
 

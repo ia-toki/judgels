@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate.dao;
+package judgels.persistence.hibernate;
 
 import static judgels.persistence.CriteriaPredicate.literalFalse;
 
@@ -10,9 +10,8 @@ import java.util.Collection;
 import java.util.Optional;
 import judgels.persistence.ActorProvider;
 import judgels.persistence.CriteriaPredicate;
-import judgels.persistence.dao.UnmodifiableDao;
-import judgels.persistence.hibernate.HibernateQueryBuilder;
-import judgels.persistence.model.UnmodifiableModel;
+import judgels.persistence.UnmodifiableDao;
+import judgels.persistence.UnmodifiableModel;
 
 public abstract class UnmodifiableHibernateDao<M extends UnmodifiableModel> extends AbstractDAO<M> implements UnmodifiableDao<M> {
     private final Clock clock;

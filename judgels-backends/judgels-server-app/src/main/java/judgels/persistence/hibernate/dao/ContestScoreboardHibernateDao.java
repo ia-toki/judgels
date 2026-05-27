@@ -5,12 +5,14 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import judgels.api.contest.scoreboard.ContestScoreboardType;
+import judgels.persistence.Model_;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestScoreboardDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.ContestScoreboardModel;
 import judgels.persistence.model.ContestScoreboardModel_;
-import judgels.persistence.model.Model_;
 
 public class ContestScoreboardHibernateDao extends HibernateDao<ContestScoreboardModel> implements ContestScoreboardDao {
     @Inject

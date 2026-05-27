@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.io.PrintWriter;
 import judgels.persistence.QueryBuilder;
+import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.model.ContestLogModel;
 
 public interface ContestLogDao extends UnmodifiableDao<ContestLogModel> {

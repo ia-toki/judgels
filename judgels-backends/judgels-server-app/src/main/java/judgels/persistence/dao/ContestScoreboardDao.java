@@ -3,6 +3,7 @@ package judgels.persistence.dao;
 import java.io.PrintWriter;
 import java.util.Optional;
 import judgels.api.contest.scoreboard.ContestScoreboardType;
+import judgels.persistence.Dao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.ContestScoreboardModel;
 

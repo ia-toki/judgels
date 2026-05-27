@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import judgels.persistence.UnmodifiableModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user_rating_event")

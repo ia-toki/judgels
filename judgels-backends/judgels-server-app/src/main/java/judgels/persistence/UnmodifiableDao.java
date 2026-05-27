@@ -1,8 +1,6 @@
-package judgels.persistence.dao;
+package judgels.persistence;
 
 import java.util.Optional;
-import judgels.persistence.QueryBuilder;
-import judgels.persistence.model.UnmodifiableModel;
 
 public interface UnmodifiableDao<M extends UnmodifiableModel> {
     void flush();

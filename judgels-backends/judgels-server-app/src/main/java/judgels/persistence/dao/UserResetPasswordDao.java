@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.time.Duration;
 import java.util.Optional;
+import judgels.persistence.Dao;
 import judgels.persistence.model.UserResetPasswordModel;
 
 public interface UserResetPasswordDao extends Dao<UserResetPasswordModel> {

@@ -3,6 +3,7 @@ package judgels.persistence.dao;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import judgels.persistence.Dao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.CourseChapterModel;
 

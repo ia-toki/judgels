@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.io.PrintWriter;
 import java.util.Optional;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.ContestClarificationModel;
 

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.model.AbstractProgrammingGradingModel;
 
 public interface BaseProgrammingGradingDao<M extends AbstractProgrammingGradingModel> extends JudgelsDao<M> {

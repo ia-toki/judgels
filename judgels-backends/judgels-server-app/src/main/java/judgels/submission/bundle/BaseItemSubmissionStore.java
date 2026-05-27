@@ -6,13 +6,13 @@ import java.util.Optional;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.Verdict;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.dao.BaseBundleItemSubmissionDao;
 import judgels.persistence.dao.BaseBundleItemSubmissionDao.BaseBundleItemSubmissionQueryBuilder;
 import judgels.persistence.model.AbstractBundleItemSubmissionModel;
 import judgels.persistence.model.AbstractBundleItemSubmissionModel_;
-import judgels.persistence.model.Model_;
 
 public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel> implements ItemSubmissionStore {
     private final BaseBundleItemSubmissionDao<M> submissionDao;

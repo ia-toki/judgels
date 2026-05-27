@@ -2,6 +2,7 @@ package judgels.persistence.dao;
 
 import java.util.Collection;
 import java.util.Optional;
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.LessonModel;
 

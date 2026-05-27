@@ -3,6 +3,8 @@ package judgels.persistence.hibernate.dao;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.persistence.dao.UserRoleDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.UserRoleModel;
 import judgels.persistence.model.UserRoleModel_;
 

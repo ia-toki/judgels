@@ -1,5 +1,6 @@
 package judgels.persistence.dao;
 
+import judgels.persistence.JudgelsDao;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.model.BundleSubmissionModel;
 

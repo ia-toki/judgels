@@ -10,13 +10,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.persistence.JudgelsModel_;
+import judgels.persistence.Model_;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.BaseProgrammingGradingDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.AbstractProgrammingGradingModel;
 import judgels.persistence.model.AbstractProgrammingGradingModel_;
-import judgels.persistence.model.JudgelsModel_;
-import judgels.persistence.model.Model_;
-import judgels.persistence.model.UnmodifiableModel_;
 
 public abstract class AbstractProgrammingGradingHibernateDao<M extends AbstractProgrammingGradingModel>
         extends JudgelsHibernateDao<M> implements BaseProgrammingGradingDao<M> {

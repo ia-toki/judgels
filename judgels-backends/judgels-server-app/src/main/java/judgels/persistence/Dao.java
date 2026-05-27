@@ -1,6 +1,4 @@
-package judgels.persistence.dao;
-
-import judgels.persistence.model.Model;
+package judgels.persistence;
 
 public interface Dao<M extends Model> extends UnmodifiableDao<M> {
     M update(M model);

@@ -11,14 +11,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import judgels.persistence.JudgelsModel_;
+import judgels.persistence.Model_;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.BaseProgrammingSubmissionDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.AbstractProgrammingSubmissionModel;
 import judgels.persistence.model.AbstractProgrammingSubmissionModel_;
-import judgels.persistence.model.JudgelsModel_;
-import judgels.persistence.model.Model_;
-import judgels.persistence.model.UnmodifiableModel_;
 import org.hibernate.Session;
 
 public abstract class AbstractProgrammingSubmissionHibernateDao<M extends AbstractProgrammingSubmissionModel> extends JudgelsHibernateDao<M> implements BaseProgrammingSubmissionDao<M> {

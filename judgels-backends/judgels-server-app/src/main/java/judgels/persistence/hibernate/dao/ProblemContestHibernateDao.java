@@ -2,11 +2,13 @@ package judgels.persistence.hibernate.dao;
 
 import jakarta.inject.Inject;
 import java.util.List;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ProblemContestDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.ProblemContestModel;
 import judgels.persistence.model.ProblemContestModel_;
-import judgels.persistence.model.UnmodifiableModel_;
 
 public class ProblemContestHibernateDao extends UnmodifiableHibernateDao<ProblemContestModel>
         implements ProblemContestDao {

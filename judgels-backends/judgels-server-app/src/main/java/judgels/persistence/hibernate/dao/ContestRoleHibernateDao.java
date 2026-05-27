@@ -12,6 +12,8 @@ import jakarta.persistence.criteria.Subquery;
 import judgels.api.contest.module.ContestModuleType;
 import judgels.persistence.CriteriaPredicate;
 import judgels.persistence.dao.ContestRoleDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.ContestContestantModel;
 import judgels.persistence.model.ContestContestantModel_;
 import judgels.persistence.model.ContestManagerModel;

@@ -8,9 +8,9 @@ import java.util.Optional;
 import judgels.api.role.UserAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserWithRole;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.UserRoleDao;
-import judgels.persistence.model.UnmodifiableModel_;
 import judgels.persistence.model.UserRoleModel;
 import judgels.role.SuperadminRoleStore;
 

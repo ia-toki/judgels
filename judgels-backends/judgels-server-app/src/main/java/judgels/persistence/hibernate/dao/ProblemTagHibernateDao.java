@@ -12,11 +12,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ProblemTagDao;
+import judgels.persistence.hibernate.HibernateDaoData;
+import judgels.persistence.hibernate.UnmodifiableHibernateDao;
 import judgels.persistence.model.ProblemTagModel;
 import judgels.persistence.model.ProblemTagModel_;
-import judgels.persistence.model.UnmodifiableModel_;
 
 @Singleton
 public class ProblemTagHibernateDao extends UnmodifiableHibernateDao<ProblemTagModel> implements ProblemTagDao {

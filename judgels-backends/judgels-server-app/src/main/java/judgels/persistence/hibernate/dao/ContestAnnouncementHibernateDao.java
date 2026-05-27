@@ -3,12 +3,14 @@ package judgels.persistence.hibernate.dao;
 import jakarta.inject.Inject;
 import java.io.PrintWriter;
 import java.util.List;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestAnnouncementDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
+import judgels.persistence.hibernate.JudgelsHibernateDao;
 import judgels.persistence.model.ContestAnnouncementModel;
 import judgels.persistence.model.ContestAnnouncementModel_;
-import judgels.persistence.model.Model_;
 import org.hibernate.Session;
 
 public class ContestAnnouncementHibernateDao extends JudgelsHibernateDao<ContestAnnouncementModel> implements ContestAnnouncementDao {

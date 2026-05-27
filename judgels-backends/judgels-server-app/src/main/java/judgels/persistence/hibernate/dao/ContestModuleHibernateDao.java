@@ -5,12 +5,14 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import judgels.api.contest.module.ContestModuleType;
+import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ContestModuleDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.hibernate.HibernateQueryBuilder;
 import judgels.persistence.model.ContestModuleModel;
 import judgels.persistence.model.ContestModuleModel_;
-import judgels.persistence.model.Model_;
 import org.hibernate.Session;
 
 public class ContestModuleHibernateDao extends HibernateDao<ContestModuleModel> implements ContestModuleDao {

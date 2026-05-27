@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import judgels.grading.api.Verdict;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.StatsUserProblemModel;
 import judgels.persistence.model.StatsUserProblemModel_;
 import org.hibernate.query.Query;

@@ -20,6 +20,7 @@ import judgels.grading.api.GradingResult;
 import judgels.grading.api.GradingResultDetails;
 import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
+import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.CursorPage;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -28,7 +29,6 @@ import judgels.persistence.dao.BaseProgrammingSubmissionDao;
 import judgels.persistence.dao.BaseProgrammingSubmissionDao.BaseProgrammingSubmissionQueryBuilder;
 import judgels.persistence.model.AbstractProgrammingGradingModel;
 import judgels.persistence.model.AbstractProgrammingSubmissionModel;
-import judgels.persistence.model.UnmodifiableModel_;
 
 public class BaseSubmissionStore<
         SM extends AbstractProgrammingSubmissionModel,

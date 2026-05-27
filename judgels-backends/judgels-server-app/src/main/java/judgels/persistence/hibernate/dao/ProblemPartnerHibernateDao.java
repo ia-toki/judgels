@@ -4,6 +4,8 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import judgels.persistence.dao.ProblemPartnerDao;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.ProblemPartnerModel;
 import judgels.persistence.model.ProblemPartnerModel_;
 

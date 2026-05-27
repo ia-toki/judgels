@@ -1,4 +1,4 @@
-package judgels.persistence.model;
+package judgels.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

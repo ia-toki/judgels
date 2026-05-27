@@ -28,7 +28,7 @@ import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.persistence.hibernate.JudgelsHibernateModule;
-import judgels.persistence.hibernate.dao.JudgelsServerHibernateDaoModule;
+import judgels.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.resource.ResourceModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;

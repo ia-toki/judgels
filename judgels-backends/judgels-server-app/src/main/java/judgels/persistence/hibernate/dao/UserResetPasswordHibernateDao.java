@@ -6,8 +6,10 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+import judgels.persistence.Model_;
 import judgels.persistence.dao.UserResetPasswordDao;
-import judgels.persistence.model.Model_;
+import judgels.persistence.hibernate.HibernateDao;
+import judgels.persistence.hibernate.HibernateDaoData;
 import judgels.persistence.model.UserResetPasswordModel;
 import judgels.persistence.model.UserResetPasswordModel_;
 

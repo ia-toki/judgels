@@ -2,7 +2,7 @@ package judgels.contrib.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import judgels.persistence.model.Model;
+import judgels.persistence.Model;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user_registration_email")
