@@ -11,7 +11,7 @@ import judgels.api.contest.supervisor.ContestSupervisorUpsertData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestSupervisorApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestSupervisorApiIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

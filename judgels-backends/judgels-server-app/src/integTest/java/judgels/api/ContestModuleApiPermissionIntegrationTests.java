@@ -9,7 +9,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestModuleApiPermissionIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestModuleApiPermissionIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @BeforeEach

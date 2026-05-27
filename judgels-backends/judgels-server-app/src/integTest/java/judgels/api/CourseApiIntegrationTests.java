@@ -8,7 +8,7 @@ import judgels.api.course.CourseCreateData;
 import judgels.api.course.CourseUpdateData;
 import org.junit.jupiter.api.Test;
 
-class CourseApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class CourseApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin

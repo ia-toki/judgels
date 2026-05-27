@@ -11,7 +11,7 @@ import judgels.api.contest.ContestUpdateData;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-class ContestApiPermissionIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestApiPermissionIntegrationTests extends BaseContestApiIntegrationTests {
     private Contest contest;
 
     @Test

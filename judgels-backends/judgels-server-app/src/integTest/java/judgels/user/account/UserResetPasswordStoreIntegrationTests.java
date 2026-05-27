@@ -3,17 +3,17 @@ package judgels.user.account;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
-import judgels.jophiel.BaseJophielIntegrationTests;
-import judgels.jophiel.JophielIntegrationTestComponent;
 import judgels.persistence.TestClock;
 import judgels.persistence.UserResetPasswordModel;
 import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.user.BaseUserIntegrationTests;
+import judgels.user.UserIntegrationTestComponent;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserResetPasswordModel.class})
-public class UserResetPasswordStoreIntegrationTests extends BaseJophielIntegrationTests {
+public class UserResetPasswordStoreIntegrationTests extends BaseUserIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private TestClock clock;
@@ -23,7 +23,7 @@ public class UserResetPasswordStoreIntegrationTests extends BaseJophielIntegrati
     void setUpSession(SessionFactory sessionFactory) {
         clock = new TestClock();
 
-        JophielIntegrationTestComponent component = createComponent(sessionFactory, clock);
+        UserIntegrationTestComponent component = createComponent(sessionFactory, clock);
 
         store = component.userResetPasswordStore();
     }

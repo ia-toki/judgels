@@ -6,7 +6,7 @@ import static org.hibernate.cfg.AvailableSettings.DRIVER;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.URL;
 
-import judgels.api.BaseUrielApiIntegrationTests;
+import judgels.api.BaseContestApiIntegrationTests;
 import judgels.contrib.contest.ContestRatingClient;
 import org.h2.Driver;
 import org.hibernate.Session;
@@ -17,7 +17,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ContestRatingApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestRatingApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestRatingClient ratingClient = createClient(ContestRatingClient.class);
 
     @BeforeAll

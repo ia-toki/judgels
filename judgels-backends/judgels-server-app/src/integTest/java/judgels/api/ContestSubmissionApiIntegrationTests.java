@@ -20,7 +20,7 @@ import judgels.contest.ContestSubmissionClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestSubmissionApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestSubmissionApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestSubmissionClient submissionClient = createClient(ContestSubmissionClient.class);
 
     private Contest contest;

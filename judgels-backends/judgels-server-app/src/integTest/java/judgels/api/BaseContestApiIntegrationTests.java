@@ -44,7 +44,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
+public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";
     protected static final String MANAGER = "manager";
     protected static final String SUPERVISOR = "supervisor";
@@ -93,7 +93,7 @@ public abstract class BaseUrielApiIntegrationTests extends BaseJudgelsApiIntegra
     protected ContestProblemClient problemClient = createClient(ContestProblemClient.class);
 
     @BeforeAll
-    static void setUpUriel() {
+    static void setUpContest() {
         manager = createUser("manager");
         managerToken = getToken(manager);
 

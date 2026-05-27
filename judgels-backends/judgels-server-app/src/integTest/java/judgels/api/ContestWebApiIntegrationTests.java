@@ -32,7 +32,7 @@ import judgels.contest.ContestWebClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ContestWebApiIntegrationTests extends BaseUrielApiIntegrationTests {
+class ContestWebApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestWebClient webClient = createClient(ContestWebClient.class);
     private final ContestClarificationClient clarificationClient = createClient(ContestClarificationClient.class);
 

@@ -17,7 +17,7 @@ import judgels.problemset.ProblemSetClient;
 import judgels.problemset.ProblemSetProblemClient;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class BaseJerahmeelApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
+public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";
     protected static final String USER = "user";
     protected static final String USER_A = "userA";
@@ -61,7 +61,7 @@ public abstract class BaseJerahmeelApiIntegrationTests extends BaseJudgelsApiInt
     protected ProblemSetProblemClient problemSetProblemClient = createClient(ProblemSetProblemClient.class);
 
     @BeforeAll
-    static void setUpJerahmeel() {
+    static void setUpTraining() {
         userA = createUser("userA");
         userAToken = getToken(userA);
 

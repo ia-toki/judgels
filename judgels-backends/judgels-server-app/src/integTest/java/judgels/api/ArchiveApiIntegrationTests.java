@@ -8,7 +8,7 @@ import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveUpdateData;
 import org.junit.jupiter.api.Test;
 
-class ArchiveApiIntegrationTests extends BaseJerahmeelApiIntegrationTests {
+class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
     void end_to_end_flow() {
         // as admin
