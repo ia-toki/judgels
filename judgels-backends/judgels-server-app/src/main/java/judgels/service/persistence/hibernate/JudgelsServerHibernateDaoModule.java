@@ -2,8 +2,6 @@ package judgels.service.persistence.hibernate;
 
 import dagger.Module;
 import dagger.Provides;
-import judgels.contrib.hibernate.UserRegistrationEmailHibernateDao;
-import judgels.contrib.persistence.UserRegistrationEmailDao;
 import judgels.persistence.dao.ArchiveDao;
 import judgels.persistence.dao.BundleGradingDao;
 import judgels.persistence.dao.BundleItemSubmissionDao;
@@ -50,6 +48,7 @@ import judgels.persistence.dao.UserDao;
 import judgels.persistence.dao.UserInfoDao;
 import judgels.persistence.dao.UserRatingDao;
 import judgels.persistence.dao.UserRatingEventDao;
+import judgels.persistence.dao.UserRegistrationEmailDao;
 import judgels.persistence.dao.UserResetPasswordDao;
 import judgels.persistence.dao.UserRoleDao;
 import judgels.persistence.hibernate.dao.ArchiveHibernateDao;
@@ -98,6 +97,7 @@ import judgels.persistence.hibernate.dao.UserHibernateDao;
 import judgels.persistence.hibernate.dao.UserInfoHibernateDao;
 import judgels.persistence.hibernate.dao.UserRatingEventHibernateDao;
 import judgels.persistence.hibernate.dao.UserRatingHibernateDao;
+import judgels.persistence.hibernate.dao.UserRegistrationEmailHibernateDao;
 import judgels.persistence.hibernate.dao.UserResetPasswordHibernateDao;
 import judgels.persistence.hibernate.dao.UserRoleHibernateDao;
 
