@@ -33,9 +33,9 @@ import judgels.api.contest.role.ContestRole;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
-import judgels.persistence.actor.ActorChecker;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
+import judgels.service.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/contests")

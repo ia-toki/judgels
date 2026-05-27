@@ -1,4 +1,4 @@
-package judgels.persistence.actor;
+package judgels.service;
 
 import static judgels.persistence.actor.Actors.GUEST;
 
@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
 import judgels.api.session.Session;
+import judgels.persistence.actor.PerRequestActorProvider;
 import judgels.service.api.actor.AuthHeader;
 import judgels.session.SessionStore;
 import org.eclipse.jetty.server.Response;

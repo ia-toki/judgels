@@ -19,8 +19,8 @@ import judgels.api.archive.Archive;
 import judgels.api.archive.ArchiveCreateData;
 import judgels.api.archive.ArchiveUpdateData;
 import judgels.api.archive.ArchivesResponse;
-import judgels.persistence.actor.ActorChecker;
 import judgels.role.TrainingAdminRoleChecker;
+import judgels.service.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
 @Path("/api/v2/archives")

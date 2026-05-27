@@ -16,7 +16,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import judgels.api.user.User;
 import judgels.api.user.info.UserInfo;
-import judgels.persistence.actor.ActorChecker;
+import judgels.service.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

@@ -29,7 +29,7 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.file.FileFs;
 import judgels.fs.FileSystem;
-import judgels.persistence.actor.ActorChecker;
+import judgels.service.ActorChecker;
 import judgels.service.ServiceUtils;
 import judgels.service.api.actor.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;

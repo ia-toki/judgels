@@ -19,7 +19,7 @@ import judgels.api.user.User;
 import judgels.contrib.api.session.SessionWithRegistrationErrors;
 import judgels.contrib.user.registration.UserRegistrationConfiguration;
 import judgels.contrib.user.registration.UserRegistrationEmailStore;
-import judgels.persistence.actor.ActorChecker;
+import judgels.service.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
