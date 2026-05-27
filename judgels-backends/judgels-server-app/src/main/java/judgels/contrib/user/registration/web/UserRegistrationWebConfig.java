@@ -3,8 +3,8 @@ package judgels.contrib.user.registration.web;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
+import judgels.JudgelsServerConfiguration;
 import judgels.contrib.recaptcha.web.RecaptchaWebConfig;
-import judgels.jophiel.JophielConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -15,7 +15,7 @@ public interface UserRegistrationWebConfig {
     @JsonProperty("recaptcha")
     Optional<RecaptchaWebConfig> getRecaptchaConfig();
 
-    static Optional<UserRegistrationWebConfig> fromServerConfig(JophielConfiguration config) {
+    static Optional<UserRegistrationWebConfig> fromServerConfig(JudgelsServerConfiguration config) {
         if (config.getUserRegistrationConfig().isEmpty()) {
             return Optional.empty();
         }

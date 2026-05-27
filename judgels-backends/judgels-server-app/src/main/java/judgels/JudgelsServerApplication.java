@@ -17,7 +17,6 @@ import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.contrib.user.registration.UserRegistrationModule;
 import judgels.contrib.user.registration.web.UserRegistrationWebConfig;
 import judgels.grading.GradingClientModule;
-import judgels.jophiel.JophielConfiguration;
 import judgels.mailer.MailerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
@@ -64,13 +63,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        JophielConfiguration jophielConfig = config.getJophielConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
+                .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
                 .build();
@@ -108,30 +106,29 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     private void runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        JophielConfiguration jophielConfig = config.getJophielConfig();
         TrainingConfiguration trainingConfig = config.getTrainingConfig();
 
         var componentBuilder = DaggerJudgelsServerComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
-                .authModule(new AuthModule(jophielConfig.getAuthConfig()))
+                .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
-                .mailerModule(new MailerModule(jophielConfig.getMailerConfig()))
-                .superadminModule(new SuperadminModule(jophielConfig.getSuperadminCreatorConfig()))
-                .userResetPasswordModule(new UserResetPasswordModule(jophielConfig.getUserResetPasswordConfig()))
-                .sessionModule(new SessionModule(jophielConfig.getSessionConfig()))
-                .webModule(new WebModule(jophielConfig.getWebConfig()))
+                .mailerModule(new MailerModule(judgelsConfig.getMailerConfig()))
+                .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
+                .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
+                .sessionModule(new SessionModule(judgelsConfig.getSessionConfig()))
+                .webModule(new WebModule(judgelsConfig.getWebConfig()))
                 .trainingSubmissionModule(new judgels.training.submission.programming.TrainingSubmissionModule(trainingConfig.getStatsConfig()))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(trainingConfig.getStatsConfig()));
 
         if (JudgelsApp.isTLX()) {
             componentBuilder
-                    .recaptchaModule(new RecaptchaModule(jophielConfig.getRecaptchaConfig()))
+                    .recaptchaModule(new RecaptchaModule(judgelsConfig.getRecaptchaConfig()))
                     .userRegistrationModule(new UserRegistrationModule(
-                            jophielConfig.getUserRegistrationConfig(),
-                            UserRegistrationWebConfig.fromServerConfig(jophielConfig)))
+                            judgelsConfig.getUserRegistrationConfig(),
+                            UserRegistrationWebConfig.fromServerConfig(judgelsConfig)))
                     .contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
 
             if (trainingConfig.getSubmissionConfig().isPresent()) {
