@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.lesson.Lesson;
 import judgels.fs.FileSystem;
+import judgels.git.Git;
 import judgels.persistence.LessonDao;
 import judgels.persistence.LessonDao.LessonQueryBuilder;
 import judgels.persistence.LessonModel;
@@ -18,7 +19,6 @@ import judgels.persistence.LessonPartnerDao;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.git.Git;
 
 public final class LessonStore extends BaseLessonStore {
     private final Git lessonGit;

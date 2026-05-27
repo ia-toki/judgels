@@ -5,13 +5,13 @@ import jakarta.inject.Inject;
 import java.nio.file.Path;
 import java.util.List;
 import judgels.fs.FileSystem;
+import judgels.git.Git;
+import judgels.git.GitCommit;
 import judgels.lesson.BaseLessonStore;
 import judgels.persistence.LessonDao;
 import judgels.persistence.LessonModel;
 import judgels.problem.base.ProblemFs;
 import judgels.problem.base.ProblemGit;
-import judgels.git.Git;
-import judgels.git.GitCommit;
 
 public class LessonVersionStore extends BaseLessonStore {
     private final Git lessonGit;
