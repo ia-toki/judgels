@@ -15,6 +15,7 @@ import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemSetterRole;
 import judgels.api.problem.ProblemType;
 import judgels.fs.FileSystem;
+import judgels.git.Git;
 import judgels.persistence.JidGenerator;
 import judgels.persistence.Model_;
 import judgels.persistence.ProblemDao;
@@ -26,7 +27,6 @@ import judgels.persistence.ProblemSetterModel;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.problem.base.tag.ProblemTags;
-import judgels.sandalphon.Git;
 
 public class ProblemStore extends BaseProblemStore {
     private final Git problemGit;

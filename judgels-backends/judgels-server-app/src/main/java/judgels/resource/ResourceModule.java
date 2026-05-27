@@ -1,4 +1,4 @@
-package judgels.sandalphon;
+package judgels.resource;
 
 import dagger.Module;
 import dagger.Provides;
@@ -6,6 +6,8 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
+import judgels.git.Git;
+import judgels.git.LocalGit;
 import judgels.lesson.LessonFs;
 import judgels.lesson.LessonGit;
 import judgels.problem.base.ProblemFs;
@@ -13,8 +15,8 @@ import judgels.problem.base.ProblemGit;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
-public class SandalphonClientModule {
-    private SandalphonClientModule() {}
+public class ResourceModule {
+    private ResourceModule() {}
 
     @Provides
     @Singleton

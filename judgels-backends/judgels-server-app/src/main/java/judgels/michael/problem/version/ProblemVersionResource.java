@@ -20,6 +20,7 @@ import java.util.Map;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.profile.Profile;
+import judgels.git.GitCommit;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.CommitVersionForm;
 import judgels.michael.resource.ListVersionHistoryView;
@@ -28,7 +29,6 @@ import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.problem.base.tag.ProblemTagStore;
 import judgels.problem.base.version.ProblemVersionStore;
-import judgels.sandalphon.GitCommit;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {

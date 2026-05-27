@@ -1,4 +1,4 @@
-package judgels.sandalphon;
+package judgels.git;
 
 import com.google.common.collect.ImmutableList;
 import java.io.File;

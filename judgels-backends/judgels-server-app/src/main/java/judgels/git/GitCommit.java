@@ -1,4 +1,4 @@
-package judgels.sandalphon;
+package judgels.git;
 
 import java.util.Date;
 

@@ -16,7 +16,7 @@ import judgels.contrib.fs.aws.AwsFsConfiguration;
 import judgels.contrib.recaptcha.RecaptchaModule;
 import judgels.contrib.user.registration.UserRegistrationModule;
 import judgels.contrib.user.registration.web.UserRegistrationWebConfig;
-import judgels.grading.GradingClientModule;
+import judgels.grading.GradingModule;
 import judgels.mailer.MailerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
@@ -70,7 +70,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
+                .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .build();
 
         env.servlets().setSessionHandler(new SessionHandler());
@@ -114,7 +114,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
-                .gradingClientModule(new GradingClientModule(judgelsConfig.getGradingConfig()))
+                .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .mailerModule(new MailerModule(judgelsConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
