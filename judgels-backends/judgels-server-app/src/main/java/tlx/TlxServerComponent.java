@@ -33,30 +33,30 @@ public interface TlxServerComponent {
 
     // Contests
     tlx.contest.rating.ContestRatingResource contestRatingResource();
-    tlx.admin.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
-    tlx.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
+    tlx.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
+    tlx.user.rating.UserRatingAdminResource userRatingAdminResource();
     tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 
     // Training
     tlx.archive.ArchiveResource archiveResource();
-    tlx.admin.archive.ArchiveAdminResource archiveAdminResource();
+    tlx.archive.ArchiveAdminResource archiveAdminResource();
     tlx.curriculum.CurriculumResource curriculumResource();
     tlx.course.CourseResource courseResource();
-    tlx.admin.course.CourseAdminResource courseAdminResource();
+    tlx.course.CourseAdminResource courseAdminResource();
     tlx.chapter.ChapterResource chapterResource();
-    tlx.admin.chapter.ChapterAdminResource chapterAdminResource();
+    tlx.chapter.ChapterAdminResource chapterAdminResource();
     tlx.course.chapter.CourseChapterResource courseChapterResource();
-    tlx.admin.course.chapter.CourseChapterAdminResource courseChapterAdminResource();
+    tlx.course.chapter.CourseChapterAdminResource courseChapterAdminResource();
     tlx.chapter.lesson.ChapterLessonResource chapterLessonResource();
-    tlx.admin.chapter.lesson.ChapterLessonAdminResource chapterLessonAdminResource();
+    tlx.chapter.lesson.ChapterLessonAdminResource chapterLessonAdminResource();
     tlx.chapter.problem.ChapterProblemResource chapterProblemResource();
-    tlx.admin.chapter.problem.ChapterProblemAdminResource chapterProblemAdminResource();
+    tlx.chapter.problem.ChapterProblemAdminResource chapterProblemAdminResource();
     tlx.problem.ProblemResource problemResource();
     tlx.problem.ProblemTagResource problemTagResource();
     tlx.problemset.ProblemSetResource problemSetResource();
-    tlx.admin.problemset.ProblemSetAdminResource problemSetAdminResource();
+    tlx.problemset.ProblemSetAdminResource problemSetAdminResource();
     tlx.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
-    tlx.admin.problemset.problem.ProblemSetProblemAdminResource problemSetProblemAdminResource();
+    tlx.problemset.problem.ProblemSetProblemAdminResource problemSetProblemAdminResource();
     tlx.submission.bundle.ItemSubmissionResource itemSubmissionResource();
     tlx.submission.programming.SubmissionResource submissionResource();
     tlx.stats.UserStatsResource userStatsResource();
