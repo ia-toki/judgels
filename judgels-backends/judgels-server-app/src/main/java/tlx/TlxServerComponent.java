@@ -34,7 +34,7 @@ public interface TlxServerComponent {
     // Contests
     tlx.contest.rating.ContestRatingResource contestRatingResource();
     tlx.admin.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
-    judgels.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
+    tlx.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
     tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 
     // Training
