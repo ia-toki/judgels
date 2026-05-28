@@ -21,13 +21,13 @@ import java.util.Date;
 import java.util.Optional;
 import judgels.api.session.Session;
 import judgels.api.user.User;
-import judgels.contrib.auth.google.GoogleAuth;
-import judgels.contrib.user.registration.UserRegistrationEmailStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.session.SessionStore;
 import judgels.session.SessionTokenGenerator;
 import judgels.user.UserStore;
+import tlx.auth.google.GoogleAuth;
+import tlx.user.registration.UserRegistrationEmailStore;
 
 @Path("/")
 public class IndexResource extends BaseResource {

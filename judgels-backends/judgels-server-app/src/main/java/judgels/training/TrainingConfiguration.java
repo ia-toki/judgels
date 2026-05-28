@@ -17,7 +17,7 @@ public interface TrainingConfiguration {
     Optional<SubmissionConfiguration> getSubmissionConfig();
 
     @JsonProperty("aws")
-    Optional<judgels.contrib.fs.aws.AwsConfiguration> getAwsConfig();
+    Optional<tlx.fs.aws.AwsConfiguration> getAwsConfig();
 
     class Builder extends ImmutableTrainingConfiguration.Builder {}
 }

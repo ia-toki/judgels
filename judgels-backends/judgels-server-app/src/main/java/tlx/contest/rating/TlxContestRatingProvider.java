@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.user.rating.UserRating;
-import judgels.contrib.contest.rating.ContestRatingProvider;
 import tlx.api.user.rating.TlxRating;
 
 public class TlxContestRatingProvider implements ContestRatingProvider {

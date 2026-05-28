@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
 import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
-import judgels.contrib.auth.AuthConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.mailer.MailerConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
@@ -14,6 +13,7 @@ import judgels.user.account.UserResetPasswordConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
+import tlx.auth.AuthConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJudgelsServerConfiguration.class)
@@ -48,10 +48,10 @@ public interface JudgelsServerConfiguration {
     WebConfiguration getWebConfig();
 
     @JsonProperty("recaptcha")
-    Optional<judgels.contrib.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
+    Optional<tlx.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
 
     @JsonProperty("userRegistration")
-    Optional<judgels.contrib.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
+    Optional<tlx.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
 
     @Value.Check
     default void check() {
