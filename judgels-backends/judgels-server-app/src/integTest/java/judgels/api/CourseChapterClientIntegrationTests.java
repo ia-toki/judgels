@@ -4,18 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.ChapterCreateData;
-import judgels.api.chapter.lesson.ChapterLessonData;
-import judgels.api.chapter.problem.ChapterProblemData;
-import judgels.api.course.Course;
-import judgels.api.course.CourseCreateData;
-import judgels.api.course.chapter.CourseChapter;
-import judgels.api.course.chapter.CourseChapterResponse;
-import judgels.api.course.chapter.CourseChapterUserProgressesData;
-import judgels.api.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.api.problem.ProblemType;
 import org.junit.jupiter.api.Test;
+import tlx.api.chapter.Chapter;
+import tlx.api.chapter.ChapterCreateData;
+import tlx.api.chapter.lesson.ChapterLessonData;
+import tlx.api.chapter.problem.ChapterProblemData;
+import tlx.api.course.Course;
+import tlx.api.course.CourseCreateData;
+import tlx.api.course.chapter.CourseChapter;
+import tlx.api.course.chapter.CourseChapterResponse;
+import tlx.api.course.chapter.CourseChapterUserProgressesData;
+import tlx.api.course.chapter.CourseChapterUserProgressesResponse;
 
 class CourseChapterClientIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test

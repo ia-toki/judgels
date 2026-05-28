@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.ChapterCreateData;
-import judgels.api.chapter.ChapterInfo;
-import judgels.api.chapter.ChapterUpdateData;
 import judgels.persistence.dao.ChapterDao;
 import judgels.persistence.dao.CourseChapterDao;
 import judgels.persistence.dao.CourseDao;
 import judgels.persistence.model.ChapterModel;
 import judgels.persistence.model.CourseChapterModel;
 import judgels.persistence.model.CourseModel;
+import tlx.api.chapter.Chapter;
+import tlx.api.chapter.ChapterCreateData;
+import tlx.api.chapter.ChapterInfo;
+import tlx.api.chapter.ChapterUpdateData;
 
 public class ChapterStore {
     private final ChapterDao chapterDao;

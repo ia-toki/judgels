@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import judgels.api.curriculum.Curriculum;
 import judgels.persistence.dao.CurriculumDao;
 import judgels.persistence.model.CurriculumModel;
+import tlx.api.curriculum.Curriculum;
 
 public class CurriculumStore {
     private final CurriculumDao curriculumDao;

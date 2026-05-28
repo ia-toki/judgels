@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemType;
-import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ProblemContestDao;
 import judgels.persistence.dao.ProblemSetDao;
@@ -23,6 +22,7 @@ import judgels.persistence.model.ProblemContestModel;
 import judgels.persistence.model.ProblemSetModel;
 import judgels.persistence.model.ProblemSetProblemModel;
 import judgels.persistence.model.ProblemSetProblemModel_;
+import tlx.api.problemset.problem.ProblemSetProblem;
 
 public class ProblemSetProblemStore {
     private final ProblemSetDao problemSetDao;

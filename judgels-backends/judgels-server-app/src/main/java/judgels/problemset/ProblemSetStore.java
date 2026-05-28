@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.ProblemSetErrors;
-import judgels.api.problemset.ProblemSetUpdateData;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.persistence.dao.ArchiveDao;
@@ -28,6 +24,10 @@ import judgels.persistence.model.ProblemContestModel;
 import judgels.persistence.model.ProblemSetModel;
 import judgels.persistence.model.ProblemSetModel_;
 import judgels.persistence.model.ProblemSetProblemModel;
+import tlx.api.problemset.ProblemSet;
+import tlx.api.problemset.ProblemSetCreateData;
+import tlx.api.problemset.ProblemSetErrors;
+import tlx.api.problemset.ProblemSetUpdateData;
 
 public class ProblemSetStore {
     private final ProblemSetDao problemSetDao;

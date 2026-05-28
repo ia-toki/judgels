@@ -4,14 +4,14 @@ import static judgels.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.ProblemSetErrors;
-import judgels.api.problemset.problem.ProblemSetProblem;
-import judgels.api.problemset.problem.ProblemSetProblemData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tlx.api.archive.ArchiveCreateData;
+import tlx.api.problemset.ProblemSet;
+import tlx.api.problemset.ProblemSetCreateData;
+import tlx.api.problemset.ProblemSetErrors;
+import tlx.api.problemset.problem.ProblemSetProblem;
+import tlx.api.problemset.problem.ProblemSetProblemData;
 
 class ProblemSetProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @BeforeEach

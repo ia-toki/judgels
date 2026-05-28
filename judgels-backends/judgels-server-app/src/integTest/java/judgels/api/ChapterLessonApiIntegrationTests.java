@@ -3,11 +3,11 @@ package judgels.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.ChapterCreateData;
-import judgels.api.chapter.lesson.ChapterLesson;
-import judgels.api.chapter.lesson.ChapterLessonData;
 import org.junit.jupiter.api.Test;
+import tlx.api.chapter.Chapter;
+import tlx.api.chapter.ChapterCreateData;
+import tlx.api.chapter.lesson.ChapterLesson;
+import tlx.api.chapter.lesson.ChapterLessonData;
 
 class ChapterLessonApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test

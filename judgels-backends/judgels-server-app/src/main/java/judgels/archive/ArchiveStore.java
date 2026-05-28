@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import judgels.api.archive.Archive;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.archive.ArchiveErrors;
-import judgels.api.archive.ArchiveUpdateData;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ArchiveDao;
 import judgels.persistence.model.ArchiveModel;
 import judgels.persistence.model.ArchiveModel_;
+import tlx.api.archive.Archive;
+import tlx.api.archive.ArchiveCreateData;
+import tlx.api.archive.ArchiveErrors;
+import tlx.api.archive.ArchiveUpdateData;
 
 public class ArchiveStore {
     private final ArchiveDao archiveDao;

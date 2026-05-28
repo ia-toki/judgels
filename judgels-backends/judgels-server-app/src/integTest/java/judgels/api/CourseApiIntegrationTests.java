@@ -1,12 +1,12 @@
 package judgels.api;
 
-import static judgels.api.course.CourseErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static tlx.api.course.CourseErrors.SLUG_ALREADY_EXISTS;
 
-import judgels.api.course.Course;
-import judgels.api.course.CourseCreateData;
-import judgels.api.course.CourseUpdateData;
 import org.junit.jupiter.api.Test;
+import tlx.api.course.Course;
+import tlx.api.course.CourseCreateData;
+import tlx.api.course.CourseUpdateData;
 
 class CourseApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     @Test
