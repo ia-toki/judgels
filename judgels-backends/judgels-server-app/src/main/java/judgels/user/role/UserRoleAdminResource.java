@@ -1,4 +1,4 @@
-package judgels.admin.user.role;
+package judgels.user.role;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -25,7 +25,6 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
-import judgels.user.role.UserRoleStore;
 
 @Path("/api/v2/admin/user-roles")
 public class UserRoleAdminResource {
