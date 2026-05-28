@@ -5,7 +5,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +29,7 @@ import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
 import org.hibernate.SessionFactory;
+import tlx.TlxScope;
 
 @Module
 public class TrainingSubmissionModule {
@@ -47,14 +47,14 @@ public class TrainingSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingSubmissionFs
     FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
         return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingSubmissionStore
     static SubmissionStore trainingSubmissionStore(
             TrainingProgrammingSubmissionDao submissionDao,
@@ -65,14 +65,14 @@ public class TrainingSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingSubmissionSourceBuilder
     static SubmissionSourceBuilder submissionSourceBuilder(@TrainingSubmissionFs FileSystem submissionFs) {
         return new SubmissionSourceBuilder(submissionFs);
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingSubmissionClient
     static SubmissionClient submissionClient(
             SessionFactory sessionFactory,
@@ -92,7 +92,7 @@ public class TrainingSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingSubmissionRegrader
     static SubmissionRegrader submissionRegrader(
             JudgelsScheduler scheduler,
@@ -108,7 +108,7 @@ public class TrainingSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingGradingResponsePoller
     static GradingResponsePoller gradingResponsePoller(
             JudgelsScheduler scheduler,
@@ -125,7 +125,7 @@ public class TrainingSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingGradingResponseProcessor
     GradingResponseProcessor gradingResponseProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,

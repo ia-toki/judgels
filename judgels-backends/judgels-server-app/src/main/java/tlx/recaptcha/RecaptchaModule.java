@@ -2,8 +2,8 @@ package tlx.recaptcha;
 
 import dagger.Module;
 import dagger.Provides;
-import jakarta.inject.Singleton;
 import java.util.Optional;
+import tlx.TlxScope;
 
 @Module
 public class RecaptchaModule {
@@ -18,7 +18,7 @@ public class RecaptchaModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     Optional<RecaptchaVerifier> recaptchaVerifier() {
         return config.map(c -> new RecaptchaVerifier(c.getSecretKey()));
     }

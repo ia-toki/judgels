@@ -3,7 +3,6 @@ package tlx.tasks;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.persistence.dao.ChapterDao;
@@ -21,13 +20,14 @@ import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.submission.programming.SubmissionStore;
 import judgels.training.submission.programming.StatsProcessor;
 import judgels.training.submission.programming.TrainingSubmissionStore;
+import tlx.TlxScope;
 
 @Module
 public class TlxTaskModule {
     private TlxTaskModule() {}
 
     @Provides
-    @Singleton
+    @TlxScope
     static ReplaceProblemTask replaceProblemTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
@@ -53,7 +53,7 @@ public class TlxTaskModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     static DeleteProblemTask deleteProblemTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
@@ -85,7 +85,7 @@ public class TlxTaskModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     static MoveProblemToChapterTask moveProblemToChapterTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
@@ -111,7 +111,7 @@ public class TlxTaskModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     static MoveProblemToProblemSetTask moveProblemToProblemSetTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
@@ -137,7 +137,7 @@ public class TlxTaskModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     static RefreshContestStatsTask refreshContestStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             @ContestSubmissionStore SubmissionStore submissionStore,
@@ -154,7 +154,7 @@ public class TlxTaskModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     static RefreshProblemSetStatsTask refreshProblemSetStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             @TrainingSubmissionStore SubmissionStore submissionStore,

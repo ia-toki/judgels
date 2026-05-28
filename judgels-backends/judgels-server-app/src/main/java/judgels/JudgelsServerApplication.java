@@ -19,10 +19,12 @@ import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.session.SessionModule;
 import judgels.training.TrainingConfiguration;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
+import judgels.training.submission.programming.TrainingSubmissionModule;
 import judgels.user.account.UserResetPasswordModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.WebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
+import tlx.TlxServerComponent;
 import tlx.auth.AuthModule;
 import tlx.contest.rating.ContestRatingModule;
 import tlx.contest.rating.TlxContestRatingProvider;
@@ -58,7 +60,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         JudgelsApp.initialize(config.getJudgelsConfig().getAppConfig());
 
         runMichael(config, env);
-        runJudgelsServer(config, env);
+        JudgelsServerComponent serverComponent = runJudgelsServer(config, env);
+
+        if (JudgelsApp.isTLX()) {
+            runTlxServer(serverComponent, config, env);
+        }
     }
 
     private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
@@ -104,9 +110,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.lessonVersionResource());
     }
 
-    private void runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
+    private JudgelsServerComponent runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        TrainingConfiguration trainingConfig = config.getTrainingConfig();
 
         var componentBuilder = DaggerJudgelsServerComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
@@ -119,26 +124,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(judgelsConfig.getSessionConfig()))
-                .webModule(new WebModule(judgelsConfig.getWebConfig()))
-                .trainingSubmissionModule(new judgels.training.submission.programming.TrainingSubmissionModule(trainingConfig.getStatsConfig()))
-                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(trainingConfig.getStatsConfig()));
+                .webModule(new WebModule(judgelsConfig.getWebConfig()));
 
         if (JudgelsApp.isTLX()) {
-            componentBuilder
-                    .recaptchaModule(new RecaptchaModule(judgelsConfig.getRecaptchaConfig()))
-                    .userRegistrationModule(new UserRegistrationModule(
-                            judgelsConfig.getUserRegistrationConfig(),
-                            UserRegistrationWebConfig.fromServerConfig(judgelsConfig)))
-                    .contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
-
-            if (trainingConfig.getSubmissionConfig().isPresent()) {
-                if (trainingConfig.getAwsConfig().isPresent() && trainingConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
-                    AwsConfiguration awsConfig = trainingConfig.getAwsConfig().get();
-                    AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) trainingConfig.getSubmissionConfig().get().getFs();
-                    AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
-                    componentBuilder.trainingSubmissionModule(new judgels.training.submission.programming.TrainingSubmissionModule(trainingConfig.getStatsConfig(), submissionFs));
-                }
-            }
+            componentBuilder.contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
         }
 
         JudgelsServerComponent component = componentBuilder.build();
@@ -163,12 +152,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 "session-cleaner",
                 component.sessionCleaner(),
                 Duration.ofDays(1));
-
-        if (JudgelsApp.isTLX()) {
-            env.jersey().register(component.sessionWithGoogleResource());
-            env.jersey().register(component.userAccountWithRegistrationResource());
-            env.jersey().register(component.userRegistrationWebResource());
-        }
 
         // Problems
         env.jersey().register(component.baseProblemResource());
@@ -197,12 +180,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestBundleSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
-        if (JudgelsApp.isTLX()) {
-            env.jersey().register(component.contestRatingResource());
-            env.jersey().register(component.contestRatingAdminResource());
-            env.jersey().register(component.userRatingAdminResource());
-        }
-
         component.scheduler().scheduleWithFixedDelay(
                 "contest-scoreboard-poller",
                 component.contestScoreboardPoller(),
@@ -219,9 +196,44 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.dumpContestTask());
 
-        if (JudgelsApp.isTLX()) {
-            env.admin().addTask(component.tlxReplaceProblemTask());
+        return component;
+    }
+
+    private void runTlxServer(
+            JudgelsServerComponent serverComponent,
+            JudgelsServerApplicationConfiguration config,
+            Environment env) {
+
+        JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
+        TrainingConfiguration trainingConfig = config.getTrainingConfig();
+
+        TrainingSubmissionModule trainingSubmissionModule =
+                new TrainingSubmissionModule(trainingConfig.getStatsConfig());
+        if (trainingConfig.getSubmissionConfig().isPresent()
+                && trainingConfig.getAwsConfig().isPresent()
+                && trainingConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
+            AwsConfiguration awsConfig = trainingConfig.getAwsConfig().get();
+            AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) trainingConfig.getSubmissionConfig().get().getFs();
+            AwsFileSystem submissionFs = new AwsFileSystem(awsConfig, submissionFsConfig);
+            trainingSubmissionModule = new TrainingSubmissionModule(trainingConfig.getStatsConfig(), submissionFs);
         }
+
+        TlxServerComponent component = serverComponent.tlxServerComponentFactory().create(
+                new RecaptchaModule(judgelsConfig.getRecaptchaConfig()),
+                new UserRegistrationModule(UserRegistrationWebConfig.fromServerConfig(judgelsConfig)),
+                trainingSubmissionModule,
+                new TrainingItemSubmissionModule(trainingConfig.getStatsConfig()));
+
+        // Users
+        env.jersey().register(component.sessionWithGoogleResource());
+        env.jersey().register(component.userAccountWithRegistrationResource());
+        env.jersey().register(component.userRegistrationWebResource());
+
+        // Contests
+        env.jersey().register(component.contestRatingResource());
+        env.jersey().register(component.contestRatingAdminResource());
+        env.jersey().register(component.userRatingAdminResource());
+        env.admin().addTask(component.tlxReplaceProblemTask());
 
         // Training
         env.jersey().register(component.archiveResource());
@@ -253,11 +265,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.refreshContestStatsTask());
         env.admin().addTask(component.refreshProblemSetStatsTask());
-
-        if (JudgelsApp.isTLX()) {
-            env.admin().addTask(component.tlxDeleteProblemTask());
-            env.admin().addTask(component.tlxMoveProblemToChapterTask());
-            env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
-        }
+        env.admin().addTask(component.tlxDeleteProblemTask());
+        env.admin().addTask(component.tlxMoveProblemToChapterTask());
+        env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
     }
 }
