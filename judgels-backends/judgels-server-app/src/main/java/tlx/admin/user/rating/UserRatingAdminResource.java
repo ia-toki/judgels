@@ -1,4 +1,4 @@
-package judgels.admin.user.rating;
+package tlx.admin.user.rating;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
