@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { getRatingClass } from '../../../../modules/api/userRating';
-import { updateRatingsMutationOptions } from '../../../../modules/queries/adminUserRating';
+import { updateRatingsMutationOptions } from '../../../../modules/queries/userRating';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 

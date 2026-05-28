@@ -32,7 +32,7 @@ describe('ChapterCreateDialog', () => {
     const name = screen.getByRole('textbox');
     await user.type(name, 'New Chapter');
 
-    nockJerahmeel().post('/admin/chapters', { name: 'New Chapter' }).reply(200);
+    nockJerahmeel().post('/chapters', { name: 'New Chapter' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);

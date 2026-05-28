@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { updateChapterMutationOptions } from '../../../../modules/queries/adminChapter';
+import { updateChapterMutationOptions } from '../../../../modules/queries/chapter';
 import ChapterGeneralEditForm from '../ChapterGeneralEditForm/ChapterGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

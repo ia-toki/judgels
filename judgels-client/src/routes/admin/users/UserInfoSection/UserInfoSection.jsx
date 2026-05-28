@@ -7,10 +7,7 @@ import { useState } from 'react';
 import { getCountryName } from '../../../../assets/data/countries';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { userInfoGender } from '../../../../modules/api/userInfo';
-import {
-  adminUserInfoQueryOptions,
-  updateAdminUserInfoMutationOptions,
-} from '../../../../modules/queries/adminUserInfo';
+import { adminUserInfoQueryOptions, updateAdminUserInfoMutationOptions } from '../../../../modules/queries/userInfo';
 import UserInfoEditForm from '../UserInfoEditForm/UserInfoEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

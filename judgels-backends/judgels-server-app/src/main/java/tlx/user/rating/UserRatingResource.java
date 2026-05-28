@@ -16,13 +16,13 @@ import judgels.user.UserRoleChecker;
 import judgels.user.rating.UserRatingStore;
 import tlx.api.user.rating.UserRatingUpdateData;
 
-@Path("/api/v2/admin/user-rating")
-public class UserRatingAdminResource {
+@Path("/api/v2/user-rating")
+public class UserRatingResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserRatingStore ratingStore;
 
-    @Inject public UserRatingAdminResource() {}
+    @Inject public UserRatingResource() {}
 
     @POST
     @Consumes(APPLICATION_JSON)

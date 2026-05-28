@@ -3,6 +3,8 @@ package tlx.chapter;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import java.util.List;
+import tlx.api.chapter.lesson.ChapterLessonData;
 import tlx.api.chapter.lesson.ChapterLessonStatement;
 import tlx.api.chapter.lesson.ChapterLessonsResponse;
 
@@ -17,4 +19,11 @@ public interface ChapterLessonClient {
             @Param("token") String token,
             @Param("chapterJid") String chapterJid,
             @Param("lessonAlias") String lessonAlias);
+
+    @RequestLine("PUT /api/v2/chapters/{chapterJid}/lessons")
+    @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
+    void setLessons(
+            @Param("token") String token,
+            @Param("chapterJid") String chapterJid,
+            List<ChapterLessonData> data);
 }

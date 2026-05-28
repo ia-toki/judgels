@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { createContestMutationOptions } from '../../../../modules/queries/adminContest';
+import { createContestMutationOptions } from '../../../../modules/queries/contest';
 import ContestCreateForm from '../ContestCreateForm/ContestCreateForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

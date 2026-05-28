@@ -8,11 +8,11 @@ import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 
 public interface UserRoleClient {
-    @RequestLine("GET /api/v2/admin/user-roles")
+    @RequestLine("GET /api/v2/user-roles")
     @Headers("Authorization: Bearer {token}")
     UserRolesResponse getUserRoles(@Param("token") String token);
 
-    @RequestLine("PUT /api/v2/admin/user-roles")
+    @RequestLine("PUT /api/v2/user-roles")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     void setUserRoles(@Param("token") String token, Map<String, UserRole> usernameToRoleMap);
 }

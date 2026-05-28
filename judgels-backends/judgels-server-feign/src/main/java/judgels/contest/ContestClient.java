@@ -5,6 +5,7 @@ import feign.Param;
 import feign.RequestLine;
 import judgels.api.contest.ActiveContestsResponse;
 import judgels.api.contest.Contest;
+import judgels.api.contest.ContestCreateData;
 import judgels.api.contest.ContestDescription;
 import judgels.api.contest.ContestUpdateData;
 import judgels.api.contest.ContestsResponse;
@@ -51,4 +52,8 @@ public interface ContestClient {
     @RequestLine("PUT /api/v2/contests/{contestJid}/virtual/reset")
     @Headers("Authorization: Bearer {token}")
     void resetVirtualContest(@Param("token") String token, @Param("contestJid") String contestJid);
+
+    @RequestLine("POST /api/v2/contests")
+    @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
+    Contest createContest(@Param("token") String token, ContestCreateData data);
 }

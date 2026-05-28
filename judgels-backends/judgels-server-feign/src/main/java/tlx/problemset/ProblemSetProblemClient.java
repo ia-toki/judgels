@@ -3,9 +3,11 @@ package tlx.problemset;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import java.util.List;
 import tlx.api.problemset.problem.ProblemEditorialResponse;
 import tlx.api.problemset.problem.ProblemReportResponse;
 import tlx.api.problemset.problem.ProblemSetProblem;
+import tlx.api.problemset.problem.ProblemSetProblemData;
 import tlx.api.problemset.problem.ProblemSetProblemWorksheet;
 import tlx.api.problemset.problem.ProblemSetProblemsResponse;
 
@@ -41,4 +43,11 @@ public interface ProblemSetProblemClient {
             @Param("token") String token,
             @Param("problemSetJid") String problemSetJid,
             @Param("problemAlias") String problemAlias);
+
+    @RequestLine("PUT /api/v2/problemsets/{problemSetJid}/problems")
+    @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
+    void setProblems(
+            @Param("token") String token,
+            @Param("problemSetJid") String problemSetJid,
+            List<ProblemSetProblemData> data);
 }

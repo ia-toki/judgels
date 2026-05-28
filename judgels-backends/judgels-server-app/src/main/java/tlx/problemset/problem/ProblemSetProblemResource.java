@@ -1,7 +1,9 @@
 package tlx.problemset.problem;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableMap;
@@ -10,8 +12,10 @@ import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -43,9 +47,11 @@ import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
+import tlx.api.problemset.ProblemSetErrors;
 import tlx.api.problemset.problem.ProblemEditorialResponse;
 import tlx.api.problemset.problem.ProblemReportResponse;
 import tlx.api.problemset.problem.ProblemSetProblem;
+import tlx.api.problemset.problem.ProblemSetProblemData;
 import tlx.api.problemset.problem.ProblemSetProblemWorksheet;
 import tlx.api.problemset.problem.ProblemSetProblemsResponse;
 
@@ -216,5 +222,59 @@ public class ProblemSetProblemResource {
         return new ProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();
+    }
+
+    @PUT
+    @Consumes(APPLICATION_JSON)
+    @UnitOfWork
+    public void setProblems(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemSetJid") String problemSetJid,
+            List<ProblemSetProblemData> data) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
+        checkAllowed(roleChecker.isAdmin(actorJid));
+
+        Set<String> aliases = data.stream().map(ProblemSetProblemData::getAlias).collect(Collectors.toSet());
+        Set<String> slugs = data.stream().map(ProblemSetProblemData::getSlug).collect(Collectors.toSet());
+
+        checkArgument(data.size() <= 100, "Cannot set more than 100 problems.");
+        checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
+        checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
+
+        Map<String, String> slugToJidMap = problemService.translateAllowedProblemSlugsToJids(actorJid, slugs);
+
+        Set<String> contestSlugs = data.stream()
+                .map(ProblemSetProblemData::getContestSlugs)
+                .flatMap(List::stream)
+                .collect(Collectors.toSet());
+
+        Map<String, String> contestSlugToJidMap = contestStore.translateSlugsToJids(contestSlugs);
+
+        Set<String> notAllowedContestSlugs = data.stream()
+                .map(ProblemSetProblemData::getContestSlugs)
+                .flatMap(List::stream)
+                .filter(slug -> !contestSlugToJidMap.containsKey(slug))
+                .collect(Collectors.toSet());
+
+        if (!notAllowedContestSlugs.isEmpty()) {
+            throw ProblemSetErrors.contestSlugsNotAllowed(notAllowedContestSlugs);
+        }
+
+        List<ProblemSetProblem> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(p ->
+                new ProblemSetProblem.Builder()
+                        .alias(p.getAlias())
+                        .problemJid(slugToJidMap.get(p.getSlug()))
+                        .type(p.getType())
+                        .contestJids(p.getContestSlugs().stream()
+                                .filter(contestSlugToJidMap::containsKey)
+                                .map(contestSlugToJidMap::get)
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+        Map<String, Boolean> problemVisibilitiesMap = problemStore.setProblems(problemSetJid, setData);
+        problemService.setProblemVisibilityTagsByJids(problemVisibilitiesMap);
     }
 }

@@ -2,8 +2,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { archivesQueryOptions } from '../../../../modules/queries/adminArchive';
-import { problemSetBySlugQueryOptions } from '../../../../modules/queries/adminProblemSet';
+import { archivesQueryOptions } from '../../../../modules/queries/archive';
+import { problemSetBySlugQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetGeneralSection } from '../ProblemSetGeneralSection/ProblemSetGeneralSection';
 import { ProblemSetProblemsSection } from '../ProblemSetProblemsSection/ProblemSetProblemsSection';
 

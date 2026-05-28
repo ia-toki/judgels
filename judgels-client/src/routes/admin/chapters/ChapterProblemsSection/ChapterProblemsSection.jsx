@@ -9,7 +9,7 @@ import { ProblemType } from '../../../../modules/api/problem';
 import {
   chapterProblemsQueryOptions,
   setChapterProblemsMutationOptions,
-} from '../../../../modules/queries/adminChapterProblem';
+} from '../../../../modules/queries/chapterProblem';
 import ChapterProblemsEditForm from '../ChapterProblemsEditForm/ChapterProblemsEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

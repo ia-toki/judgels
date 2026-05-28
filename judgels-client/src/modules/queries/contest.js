@@ -17,6 +17,22 @@ export const contestsQueryOptions = params => {
   });
 };
 
+export const createContestMutationOptions = () => ({
+  mutationFn: async data => {
+    try {
+      await contestAPI.createContest(getToken(), data);
+    } catch (error) {
+      if (error instanceof BadRequestError && error.message === ContestErrors.SlugAlreadyExists) {
+        throw new SubmissionError({ slug: 'Slug already exists' });
+      }
+      throw error;
+    }
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries(contestsQueryOptions());
+  },
+});
+
 export const updateContestMutationOptions = (contestJid, contestSlug) => ({
   mutationFn: async data => {
     try {

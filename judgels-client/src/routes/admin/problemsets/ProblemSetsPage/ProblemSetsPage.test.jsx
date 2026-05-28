@@ -20,7 +20,7 @@ describe('ProblemSetsPage', () => {
     totalCount = 2,
   } = {}) => {
     nockJerahmeel()
-      .get('/admin/problemsets')
+      .get('/problemsets')
       .query(true)
       .reply(200, {
         data: { page: problemSets, totalCount },
