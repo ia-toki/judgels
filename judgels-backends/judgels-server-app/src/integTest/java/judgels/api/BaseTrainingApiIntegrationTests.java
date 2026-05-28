@@ -6,15 +6,22 @@ import judgels.api.contest.ContestCreateData;
 import judgels.api.lesson.Lesson;
 import judgels.api.problem.Problem;
 import judgels.api.user.User;
-import judgels.contest.ContestClient;
+import judgels.contest.ContestAdminClient;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.archive.ArchiveAdminClient;
 import tlx.archive.ArchiveClient;
-import tlx.chapter.ChapterClient;
+import tlx.chapter.ChapterAdminClient;
+import tlx.chapter.ChapterLessonAdminClient;
 import tlx.chapter.ChapterLessonClient;
+import tlx.chapter.ChapterProblemAdminClient;
 import tlx.chapter.ChapterProblemClient;
+import tlx.course.CourseAdminClient;
+import tlx.course.CourseChapterAdminClient;
 import tlx.course.CourseChapterClient;
 import tlx.course.CourseClient;
+import tlx.problemset.ProblemSetAdminClient;
 import tlx.problemset.ProblemSetClient;
+import tlx.problemset.ProblemSetProblemAdminClient;
 import tlx.problemset.ProblemSetProblemClient;
 
 public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
@@ -52,13 +59,20 @@ public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiInte
     protected static Contest contest2;
 
     protected CourseClient courseClient = createClient(CourseClient.class);
-    protected ChapterClient chapterClient = createClient(ChapterClient.class);
+    protected CourseAdminClient courseAdminClient = createClient(CourseAdminClient.class);
+    protected ChapterAdminClient chapterAdminClient = createClient(ChapterAdminClient.class);
     protected CourseChapterClient courseChapterClient = createClient(CourseChapterClient.class);
+    protected CourseChapterAdminClient courseChapterAdminClient = createClient(CourseChapterAdminClient.class);
     protected ChapterProblemClient chapterProblemClient = createClient(ChapterProblemClient.class);
+    protected ChapterProblemAdminClient chapterProblemAdminClient = createClient(ChapterProblemAdminClient.class);
     protected ChapterLessonClient chapterLessonClient = createClient(ChapterLessonClient.class);
+    protected ChapterLessonAdminClient chapterLessonAdminClient = createClient(ChapterLessonAdminClient.class);
     protected ArchiveClient archiveClient = createClient(ArchiveClient.class);
+    protected ArchiveAdminClient archiveAdminClient = createClient(ArchiveAdminClient.class);
     protected ProblemSetClient problemSetClient = createClient(ProblemSetClient.class);
+    protected ProblemSetAdminClient problemSetAdminClient = createClient(ProblemSetAdminClient.class);
     protected ProblemSetProblemClient problemSetProblemClient = createClient(ProblemSetProblemClient.class);
+    protected ProblemSetProblemAdminClient problemSetProblemAdminClient = createClient(ProblemSetProblemAdminClient.class);
 
     @BeforeAll
     static void setUpTraining() {
@@ -80,7 +94,7 @@ public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiInte
     }
 
     protected static Contest createContest(String slug) {
-        return createClient(ContestClient.class).createContest(adminToken, new ContestCreateData.Builder()
+        return createClient(ContestAdminClient.class).createContest(adminToken, new ContestCreateData.Builder()
                 .slug(slug)
                 .build());
     }

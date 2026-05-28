@@ -5,10 +5,10 @@ import judgels.BaseJudgelsApiIntegrationTests;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingClient;
+import tlx.user.UserRatingAdminClient;
 
 public class UserRatingApiPermissionIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final UserRatingClient userRatingClient = createClient(UserRatingClient.class);
+    private final UserRatingAdminClient userRatingAdminClient = createClient(UserRatingAdminClient.class);
 
     @Test
     void update_ratings() {
@@ -17,7 +17,7 @@ public class UserRatingApiPermissionIntegrationTests extends BaseJudgelsApiInteg
     }
 
     private ThrowingCallable updateRatings(String token) {
-        return () -> userRatingClient.updateRatings(token, new UserRatingUpdateData.Builder()
+        return () -> userRatingAdminClient.updateRatings(token, new UserRatingUpdateData.Builder()
                 .time(Instant.now())
                 .eventJid("event-jid")
                 .build());

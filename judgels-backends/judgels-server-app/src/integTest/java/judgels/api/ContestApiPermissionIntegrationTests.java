@@ -100,7 +100,7 @@ class ContestApiPermissionIntegrationTests extends BaseContestApiIntegrationTest
     }
 
     private ThrowingCallable doCreateContest(String token) {
-        return () -> contestClient.createContest(token, new ContestCreateData.Builder()
+        return () -> contestAdminClient.createContest(token, new ContestCreateData.Builder()
                 .slug(randomString())
                 .build());
     }

@@ -1,0 +1,96 @@
+package tlx.chapter.lesson;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.service.ServiceUtils.checkFound;
+
+import com.google.common.collect.Lists;
+import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import judgels.api.lesson.LessonInfo;
+import judgels.chapter.ChapterStore;
+import judgels.chapter.lesson.ChapterLessonStore;
+import judgels.lesson.LessonService;
+import judgels.role.TrainingAdminRoleChecker;
+import judgels.service.actor.ActorChecker;
+import judgels.service.api.actor.AuthHeader;
+import tlx.api.chapter.lesson.ChapterLesson;
+import tlx.api.chapter.lesson.ChapterLessonData;
+import tlx.api.chapter.lesson.ChapterLessonsResponse;
+
+@Path("/api/v2/admin/chapters/{chapterJid}/lessons")
+public class ChapterLessonAdminResource {
+    @Inject protected ActorChecker actorChecker;
+    @Inject protected TrainingAdminRoleChecker roleChecker;
+    @Inject protected ChapterStore chapterStore;
+    @Inject protected ChapterLessonStore lessonStore;
+    @Inject protected LessonService lessonService;
+
+    @Inject public ChapterLessonAdminResource() {}
+
+    @PUT
+    @Consumes(APPLICATION_JSON)
+    @UnitOfWork
+    public void setLessons(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("chapterJid") String chapterJid,
+            List<ChapterLessonData> data) {
+
+        String actorJid = actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+        checkAllowed(roleChecker.isAdmin(actorJid));
+
+        Set<String> aliases = data.stream().map(ChapterLessonData::getAlias).collect(Collectors.toSet());
+        Set<String> slugs = data.stream().map(ChapterLessonData::getSlug).collect(Collectors.toSet());
+
+        checkArgument(data.size() <= 100, "Cannot set more than 100 lessons.");
+        checkArgument(aliases.size() == data.size(), "Lesson aliases must be unique");
+        checkArgument(slugs.size() == data.size(), "Lesson slugs must be unique");
+
+        Map<String, String> slugToJidMap = lessonService.translateAllowedLessonSlugsToJids(actorJid, slugs);
+
+        List<ChapterLesson> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(lesson ->
+                new ChapterLesson.Builder()
+                        .alias(lesson.getAlias())
+                        .lessonJid(slugToJidMap.get(lesson.getSlug()))
+                        .build())
+                .collect(Collectors.toList());
+
+        lessonStore.setLessons(chapterJid, setData);
+    }
+
+    @GET
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public ChapterLessonsResponse getLessons(
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
+            @PathParam("chapterJid") String chapterJid) {
+
+        actorChecker.check(authHeader);
+        checkFound(chapterStore.getChapterByJid(chapterJid));
+
+        List<ChapterLesson> lessons = lessonStore.getLessons(chapterJid);
+
+        var lessonJids = Lists.transform(lessons, ChapterLesson::getLessonJid);
+        Map<String, LessonInfo> lessonsMap = lessonService.getLessons(lessonJids);
+
+        return new ChapterLessonsResponse.Builder()
+                .data(lessons)
+                .lessonsMap(lessonsMap)
+                .build();
+    }
+}

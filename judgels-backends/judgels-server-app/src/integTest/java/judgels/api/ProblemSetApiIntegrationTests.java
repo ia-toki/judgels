@@ -28,20 +28,20 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     void end_to_end_flow() {
         // as admin
 
-        Archive archiveA = archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
+        Archive archiveA = archiveAdminClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive-a")
                 .name("Archive A")
                 .category("Category")
                 .description("Written by [user:userA]")
                 .build());
 
-        Archive archiveB = archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
+        Archive archiveB = archiveAdminClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive-b")
                 .name("Archive B")
                 .category("Category")
                 .build());
 
-        ProblemSet problemSet1 = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet1 = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-1")
                 .name("Problem Set 1")
                 .archiveSlug(archiveA.getSlug())
@@ -49,42 +49,42 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
                 .contestTime(Instant.ofEpochMilli(1))
                 .build());
 
-        ProblemSet problemSet2A = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet2A = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-2a")
                 .name("Problem Set 2A")
                 .archiveSlug(archiveA.getSlug())
                 .contestTime(Instant.ofEpochMilli(2))
                 .build());
 
-        ProblemSet problemSet2B = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet2B = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-2b")
                 .name("Problem Set 2B")
                 .archiveSlug(archiveB.getSlug())
                 .contestTime(Instant.ofEpochMilli(2))
                 .build());
 
-        ProblemSet problemSet9 = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet9 = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-9")
                 .name("Problem Set 9")
                 .archiveSlug(archiveB.getSlug())
                 .contestTime(Instant.ofEpochMilli(9))
                 .build());
 
-        ProblemSet problemSet10 = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet10 = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-10")
                 .name("Problem Set 10")
                 .archiveSlug(archiveB.getSlug())
                 .contestTime(Instant.ofEpochMilli(10))
                 .build());
 
-        ProblemSet problemSet0 = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSet0 = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problem-set-0")
                 .name("Problem Set 0")
                 .archiveSlug(archiveB.getSlug())
                 .contestTime(Instant.ofEpochMilli(0))
                 .build());
 
-        problemSetProblemClient.setProblems(adminToken, problemSet1.getJid(), List.of(
+        problemSetProblemAdminClient.setProblems(adminToken, problemSet1.getJid(), List.of(
                 new ProblemSetProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -92,7 +92,7 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
                         .contestSlugs(List.of(CONTEST_1_SLUG))
                         .build()));
 
-        problemSetProblemClient.setProblems(adminToken, problemSet2A.getJid(), List.of(
+        problemSetProblemAdminClient.setProblems(adminToken, problemSet2A.getJid(), List.of(
                 new ProblemSetProblemData.Builder()
                         .alias("B")
                         .slug(PROBLEM_2_SLUG)
@@ -107,7 +107,7 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         assertThat(problemSet2A.getSlug()).isEqualTo("problem-set-2a");
 
-        assertBadRequest(() -> problemSetClient
+        assertBadRequest(() -> problemSetAdminClient
                 .createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                         .slug("problem-set-1")
                         .name("Problem Set 1")
@@ -115,7 +115,7 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
                         .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertBadRequest(() -> problemSetClient
+        assertBadRequest(() -> problemSetAdminClient
                 .createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                         .slug("problem-set-3")
                         .name("Problem Set 3")
@@ -123,13 +123,13 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
                         .build()))
                 .hasMessageContaining(ARCHIVE_SLUG_NOT_FOUND);
 
-        assertBadRequest(() -> problemSetClient
+        assertBadRequest(() -> problemSetAdminClient
                 .updateProblemSet(adminToken, problemSet2A.getJid(), new ProblemSetUpdateData.Builder()
                         .slug("problem-set-1")
                         .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertBadRequest(() -> problemSetClient
+        assertBadRequest(() -> problemSetAdminClient
                 .updateProblemSet(adminToken, problemSet2A.getJid(), new ProblemSetUpdateData.Builder()
                         .archiveSlug("bogus")
                         .build()))
@@ -142,7 +142,7 @@ class ProblemSetApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         // as user
 
-        assertForbidden(() -> problemSetClient
+        assertForbidden(() -> problemSetAdminClient
                 .createProblemSet(userToken, new ProblemSetCreateData.Builder()
                         .slug("problem-set-3")
                         .name("Problem Set 3")

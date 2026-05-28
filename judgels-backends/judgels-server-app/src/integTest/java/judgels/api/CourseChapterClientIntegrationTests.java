@@ -22,34 +22,34 @@ class CourseChapterClientIntegrationTests extends BaseTrainingApiIntegrationTest
     void end_to_end_flow() {
         // as admin
 
-        Course courseA = courseClient.createCourse(adminToken, new CourseCreateData.Builder()
+        Course courseA = courseAdminClient.createCourse(adminToken, new CourseCreateData.Builder()
                 .slug("course-a")
                 .name("Course A")
                 .build());
-        Course courseB = courseClient.createCourse(adminToken, new CourseCreateData.Builder()
+        Course courseB = courseAdminClient.createCourse(adminToken, new CourseCreateData.Builder()
                 .slug("course-b")
                 .name("Course B")
                 .build());
 
-        Chapter chapterA = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterA = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter A")
                 .build());
-        Chapter chapterB = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterB = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter B")
                 .build());
-        chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter C")
                 .build());
 
-        courseChapterClient.setChapters(adminToken, courseA.getJid(), List.of(
+        courseChapterAdminClient.setChapters(adminToken, courseA.getJid(), List.of(
                 new CourseChapter.Builder().alias("A").chapterJid(chapterA.getJid()).build(),
                 new CourseChapter.Builder().alias("B").chapterJid(chapterB.getJid()).build()));
 
-        chapterProblemClient.setProblems(adminToken, chapterA.getJid(), List.of(
+        chapterProblemAdminClient.setProblems(adminToken, chapterA.getJid(), List.of(
                 new ChapterProblemData.Builder().alias("A").slug(PROBLEM_1_SLUG).type(ProblemType.PROGRAMMING).build(),
                 new ChapterProblemData.Builder().alias("B").slug(PROBLEM_2_SLUG).type(ProblemType.PROGRAMMING).build()));
 
-        chapterLessonClient.setLessons(adminToken, chapterA.getJid(), List.of(
+        chapterLessonAdminClient.setLessons(adminToken, chapterA.getJid(), List.of(
                 new ChapterLessonData.Builder().alias("X").slug(LESSON_1_SLUG).build(),
                 new ChapterLessonData.Builder().alias("Y").slug(LESSON_2_SLUG).build()));
 

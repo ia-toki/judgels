@@ -27,6 +27,7 @@ import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.problem.Problem;
 import judgels.api.user.User;
 import judgels.api.user.rating.UserRating;
+import judgels.contest.ContestAdminClient;
 import judgels.contest.ContestClient;
 import judgels.contest.ContestContestantClient;
 import judgels.contest.ContestManagerClient;
@@ -42,7 +43,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingClient;
+import tlx.user.UserRatingAdminClient;
 
 public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";
@@ -86,6 +87,7 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
     protected static Problem problem3;
 
     protected ContestClient contestClient = createClient(ContestClient.class);
+    protected ContestAdminClient contestAdminClient = createClient(ContestAdminClient.class);
     protected ContestModuleClient moduleClient = createClient(ContestModuleClient.class);
     protected ContestManagerClient managerClient = createClient(ContestManagerClient.class);
     protected ContestSupervisorClient supervisorClient = createClient(ContestSupervisorClient.class);
@@ -152,13 +154,13 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
     }
 
     protected Contest createContest() {
-        return contestClient.createContest(adminToken, new ContestCreateData.Builder()
+        return contestAdminClient.createContest(adminToken, new ContestCreateData.Builder()
                 .slug(randomString())
                 .build());
     }
 
     protected Contest createContest(String slug) {
-        Contest contest = contestClient.createContest(adminToken, new ContestCreateData.Builder()
+        Contest contest = contestAdminClient.createContest(adminToken, new ContestCreateData.Builder()
                 .slug(slug)
                 .build());
         beginContest(contest);
@@ -340,6 +342,6 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
     }
 
     private static void updateRatings(UserRatingUpdateData data) {
-        createClient(UserRatingClient.class).updateRatings(adminToken, data);
+        createClient(UserRatingAdminClient.class).updateRatings(adminToken, data);
     }
 }

@@ -15,10 +15,10 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import tlx.contest.ContestRatingClient;
+import tlx.contest.ContestRatingAdminClient;
 
 class ContestRatingApiIntegrationTests extends BaseContestApiIntegrationTests {
-    private final ContestRatingClient ratingClient = createClient(ContestRatingClient.class);
+    private final ContestRatingAdminClient ratingClient = createClient(ContestRatingAdminClient.class);
 
     @BeforeAll
     static void beforeAll() {
