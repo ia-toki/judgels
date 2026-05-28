@@ -3,7 +3,6 @@ package judgels.training.submission.bundle;
 import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
-import jakarta.inject.Singleton;
 import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.problem.ProblemService;
 import judgels.stats.StatsConfiguration;
@@ -14,6 +13,7 @@ import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.bundle.NoOpItemSubmissionConsumer;
+import tlx.TlxScope;
 
 @Module
 public class TrainingItemSubmissionModule {
@@ -24,20 +24,20 @@ public class TrainingItemSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     ItemSubmissionConsumer itemSubmissionConsumer(StatsProcessor statsProcessor) {
         return statsConfig.getEnabled() ? statsProcessor : new NoOpItemSubmissionConsumer();
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingItemSubmissionStore
     static ItemSubmissionStore itemSubmissionStore(BundleItemSubmissionDao submissionDao) {
         return new BaseItemSubmissionStore<>(submissionDao);
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingItemSubmissionRegradeProcessor
     static ItemSubmissionRegradeProcessor itemSubmissionRegradeProcessor(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
@@ -61,7 +61,7 @@ public class TrainingItemSubmissionModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     @TrainingItemSubmissionRegrader
     static ItemSubmissionRegrader itemSubmissionRegrader(
             @TrainingItemSubmissionStore ItemSubmissionStore itemSubmissionStore,

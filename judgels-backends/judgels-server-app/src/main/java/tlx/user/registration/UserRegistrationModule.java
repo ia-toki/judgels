@@ -2,36 +2,25 @@ package tlx.user.registration;
 
 import dagger.Module;
 import dagger.Provides;
-import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.mailer.Mailer;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;
+import tlx.TlxScope;
 import tlx.auth.google.GoogleAuth;
 import tlx.recaptcha.RecaptchaVerifier;
 import tlx.user.registration.web.UserRegistrationWebConfig;
 
 @Module
 public class UserRegistrationModule {
-    private final Optional<UserRegistrationConfiguration> config;
     private final Optional<UserRegistrationWebConfig> webConfig;
 
     public UserRegistrationModule() {
-        this.config = Optional.empty();
         this.webConfig = Optional.empty();
     }
 
-    public UserRegistrationModule(
-            Optional<UserRegistrationConfiguration> config,
-            Optional<UserRegistrationWebConfig> webConfig) {
-
-        this.config = config;
+    public UserRegistrationModule(Optional<UserRegistrationWebConfig> webConfig) {
         this.webConfig = webConfig;
-    }
-
-    @Provides
-    Optional<UserRegistrationConfiguration> userRegistrationConfig() {
-        return config;
     }
 
     @Provides
@@ -40,8 +29,9 @@ public class UserRegistrationModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     Optional<UserRegisterer> userRegisterer(
+            Optional<UserRegistrationConfiguration> config,
             UserStore userStore,
             UserInfoStore userInfoStore,
             UserRegistrationEmailStore userRegistrationEmailStore,

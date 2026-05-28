@@ -5,7 +5,6 @@ import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestGradingResponsePoller;
 import judgels.service.JudgelsScheduler;
 import judgels.submission.programming.GradingResponsePoller;
-import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
 @Component(modules = {
         // Judgels service
@@ -31,8 +30,6 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.session.SessionModule.class,
         judgels.user.web.WebModule.class,
         tlx.auth.AuthModule.class,
-        tlx.recaptcha.RecaptchaModule.class,
-        tlx.user.registration.UserRegistrationModule.class,
 
         // Problem features
         judgels.submission.SubmissionModule.class,
@@ -45,13 +42,8 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
         tlx.contest.rating.ContestRatingModule.class,
 
-        // Training features
-        judgels.training.submission.programming.TrainingSubmissionModule.class,
-        judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
-
         // Tasks
-        judgels.tasks.JudgelsServerTaskModule.class,
-        tlx.tasks.TlxTaskModule.class})
+        judgels.tasks.JudgelsServerTaskModule.class})
 @Singleton
 public interface JudgelsServerComponent {
     // Users
@@ -69,9 +61,6 @@ public interface JudgelsServerComponent {
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
     judgels.session.SessionCleaner sessionCleaner();
-    tlx.session.SessionWithGoogleResource sessionWithGoogleResource();
-    tlx.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
-    tlx.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 
     // Problems
     judgels.problem.base.ProblemResource baseProblemResource();
@@ -100,40 +89,8 @@ public interface JudgelsServerComponent {
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
     judgels.tasks.DumpContestTask dumpContestTask();
-    tlx.contest.rating.ContestRatingResource contestRatingResource();
-    tlx.admin.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
-    judgels.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
-    tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
-
-    // Training
-    tlx.archive.ArchiveResource archiveResource();
-    tlx.admin.archive.ArchiveAdminResource archiveAdminResource();
-    tlx.curriculum.CurriculumResource curriculumResource();
-    tlx.course.CourseResource courseResource();
-    tlx.admin.course.CourseAdminResource courseAdminResource();
-    tlx.chapter.ChapterResource chapterResource();
-    tlx.admin.chapter.ChapterAdminResource chapterAdminResource();
-    tlx.course.chapter.CourseChapterResource courseChapterResource();
-    tlx.admin.course.chapter.CourseChapterAdminResource courseChapterAdminResource();
-    tlx.chapter.lesson.ChapterLessonResource chapterLessonResource();
-    tlx.admin.chapter.lesson.ChapterLessonAdminResource chapterLessonAdminResource();
-    tlx.chapter.problem.ChapterProblemResource chapterProblemResource();
-    tlx.admin.chapter.problem.ChapterProblemAdminResource chapterProblemAdminResource();
-    tlx.problem.ProblemResource problemResource();
-    tlx.problem.ProblemTagResource problemTagResource();
-    tlx.problemset.ProblemSetResource problemSetResource();
-    tlx.admin.problemset.ProblemSetAdminResource problemSetAdminResource();
-    tlx.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
-    tlx.admin.problemset.problem.ProblemSetProblemAdminResource problemSetProblemAdminResource();
-    tlx.submission.bundle.ItemSubmissionResource itemSubmissionResource();
-    tlx.submission.programming.SubmissionResource submissionResource();
-    tlx.stats.UserStatsResource userStatsResource();
-    @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
-    tlx.tasks.RefreshContestStatsTask refreshContestStatsTask();
-    tlx.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
-    tlx.tasks.DeleteProblemTask tlxDeleteProblemTask();
-    tlx.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
-    tlx.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
 
     JudgelsScheduler scheduler();
+
+    tlx.TlxServerComponent.Factory tlxServerComponentFactory();
 }

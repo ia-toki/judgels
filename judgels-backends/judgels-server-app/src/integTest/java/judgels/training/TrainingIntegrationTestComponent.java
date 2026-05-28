@@ -1,7 +1,6 @@
 package judgels.training;
 
 import dagger.Component;
-import jakarta.inject.Singleton;
 import judgels.archive.ArchiveStore;
 import judgels.chapter.ChapterStore;
 import judgels.chapter.problem.ChapterProblemStore;
@@ -15,6 +14,7 @@ import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.stats.StatsStore;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
+import tlx.TlxScope;
 
 @Component(modules = {
         JudgelsModule.class,
@@ -22,7 +22,7 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
         JudgelsPersistenceModule.class,
         JudgelsServerHibernateDaoModule.class,
         TrainingItemSubmissionModule.class})
-@Singleton
+@TlxScope
 public interface TrainingIntegrationTestComponent {
     CourseStore courseStore();
     CourseChapterStore courseChapterStore();
