@@ -1,17 +1,17 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { archiveBySlugQueryOptions } from '../../modules/queries/adminArchive';
-import { archivesQueryOptions } from '../../modules/queries/adminArchive';
-import { chapterByJidQueryOptions } from '../../modules/queries/adminChapter';
-import { chapterLessonsQueryOptions } from '../../modules/queries/adminChapterLesson';
-import { chapterProblemsQueryOptions } from '../../modules/queries/adminChapterProblem';
-import { courseBySlugQueryOptions } from '../../modules/queries/adminCourse';
-import { courseChaptersQueryOptions } from '../../modules/queries/adminCourseChapter';
-import { problemSetBySlugQueryOptions } from '../../modules/queries/adminProblemSet';
-import { problemSetProblemsQueryOptions } from '../../modules/queries/adminProblemSetProblem';
-import { userByUsernameQueryOptions } from '../../modules/queries/adminUser';
-import { adminUserInfoQueryOptions } from '../../modules/queries/adminUserInfo';
+import { archiveBySlugQueryOptions } from '../../modules/queries/archive';
+import { archivesQueryOptions } from '../../modules/queries/archive';
+import { chapterByJidQueryOptions } from '../../modules/queries/chapter';
+import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
+import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
+import { courseBySlugQueryOptions } from '../../modules/queries/course';
+import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
+import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
+import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
+import { userByUsernameQueryOptions } from '../../modules/queries/user';
+import { adminUserInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 

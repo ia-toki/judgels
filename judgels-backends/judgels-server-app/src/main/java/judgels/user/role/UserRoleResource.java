@@ -26,15 +26,15 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
 
-@Path("/api/v2/admin/user-roles")
-public class UserRoleAdminResource {
+@Path("/api/v2/user-roles")
+public class UserRoleResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
     @Inject protected UserRoleStore userRoleStore;
     @Inject protected ProfileStore profileStore;
 
-    @Inject public UserRoleAdminResource() {}
+    @Inject public UserRoleResource() {}
 
     @GET
     @Produces(APPLICATION_JSON)

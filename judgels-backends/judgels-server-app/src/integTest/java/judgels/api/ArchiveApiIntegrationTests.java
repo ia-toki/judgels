@@ -13,7 +13,7 @@ class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     void end_to_end_flow() {
         // as admin
 
-        Archive archiveA = archiveAdminClient.createArchive(adminToken, new ArchiveCreateData.Builder()
+        Archive archiveA = archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive-a")
                 .name("Archive A")
                 .category("Category")
@@ -25,7 +25,7 @@ class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
         assertThat(archiveA.getCategory()).isEqualTo("Category");
         assertThat(archiveA.getDescription()).isEqualTo("This is archive A");
 
-        Archive archiveB = archiveAdminClient.createArchive(adminToken, new ArchiveCreateData.Builder()
+        Archive archiveB = archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive-b")
                 .name("Archive B")
                 .category("Category")
@@ -34,7 +34,7 @@ class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         assertThat(archiveB.getSlug()).isEqualTo("archive-b");
 
-        assertBadRequest(() -> archiveAdminClient
+        assertBadRequest(() -> archiveClient
                 .createArchive(adminToken, new ArchiveCreateData.Builder()
                         .slug("archive-a")
                         .name("A")
@@ -42,7 +42,7 @@ class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
                         .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertBadRequest(() -> archiveAdminClient
+        assertBadRequest(() -> archiveClient
                 .updateArchive(adminToken, archiveB.getJid(), new ArchiveUpdateData.Builder()
                         .slug("archive-a")
                         .build()))
@@ -53,7 +53,7 @@ class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         // as user
 
-        assertForbidden(() -> archiveAdminClient
+        assertForbidden(() -> archiveClient
                 .createArchive(userToken, new ArchiveCreateData.Builder()
                         .slug("archive-c")
                         .name("Archive C")

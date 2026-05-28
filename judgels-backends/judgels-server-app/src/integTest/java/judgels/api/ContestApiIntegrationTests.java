@@ -54,7 +54,7 @@ class ContestApiIntegrationTests extends BaseContestApiIntegrationTests {
         assertNotFound(() -> contestClient.getContestBySlug(adminToken, "bogus"));
         assertNotFound(() -> contestClient.getContestDescription(adminToken, "bogus"));
 
-        Contest contest = contestAdminClient.createContest(adminToken, new ContestCreateData.Builder()
+        Contest contest = contestClient.createContest(adminToken, new ContestCreateData.Builder()
                 .slug("contest")
                 .build());
 
@@ -104,7 +104,7 @@ class ContestApiIntegrationTests extends BaseContestApiIntegrationTests {
     @Test
     void create_contest__bad_request() {
         createContest("contest");
-        assertBadRequest(() -> contestAdminClient.createContest(adminToken, new ContestCreateData.Builder()
+        assertBadRequest(() -> contestClient.createContest(adminToken, new ContestCreateData.Builder()
                 .slug("contest")
                 .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);

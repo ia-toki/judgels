@@ -55,7 +55,7 @@ describe('ChapterGeneralSection', () => {
     await user.clear(name);
     await user.type(name, 'New Chapter');
 
-    nockJerahmeel().post('/admin/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
+    nockJerahmeel().post('/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 

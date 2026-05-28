@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { updateProblemSetMutationOptions } from '../../../../modules/queries/adminProblemSet';
+import { updateProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
 import ProblemSetGeneralEditForm from '../ProblemSetGeneralEditForm/ProblemSetGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

@@ -10,15 +10,15 @@ import judgels.api.user.UsersResponse;
 import judgels.api.user.UsersUpsertResponse;
 
 public interface UserClient {
-    @RequestLine("GET /api/v2/admin/users")
+    @RequestLine("GET /api/v2/users")
     @Headers("Authorization: Bearer {token}")
     UsersResponse getUsers(@Param("token") String token);
 
-    @RequestLine("POST /api/v2/admin/users")
+    @RequestLine("POST /api/v2/users")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     User createUser(@Param("token") String token, UserData data);
 
-    @RequestLine("POST /api/v2/admin/users/batch-upsert")
+    @RequestLine("POST /api/v2/users/batch-upsert")
     @Headers({"Authorization: Bearer {token}", "Content-Type: text/plain"})
     UsersUpsertResponse upsertUsers(@Param("token") String token, String csv);
 
@@ -26,7 +26,7 @@ public interface UserClient {
     @Headers("Authorization: Bearer {token}")
     User getUser(@Param("token") String token, @Param("userJid") String userJid);
 
-    @RequestLine("GET /api/v2/admin/users/username/{username}")
+    @RequestLine("GET /api/v2/users/username/{username}")
     @Headers("Authorization: Bearer {token}")
     User getUserByUsername(@Param("token") String token, @Param("username") String username);
 

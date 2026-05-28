@@ -51,13 +51,11 @@ public interface JudgelsServerComponent {
     judgels.session.SessionResource sessionResource();
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
-    judgels.user.UserAdminResource userAdminResource();
     judgels.user.account.UserAccountResource userAccountResource();
     judgels.user.avatar.UserAvatarResource userAvatarResource();
     judgels.user.info.UserInfoResource userProfileResource();
-    judgels.user.info.UserInfoAdminResource userInfoAdminResource();
     judgels.user.rating.UserRatingResource userRatingResource();
-    judgels.user.role.UserRoleAdminResource userRoleAdminResource();
+    judgels.user.role.UserRoleResource userRoleResource();
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
     judgels.session.SessionCleaner sessionCleaner();
@@ -70,7 +68,6 @@ public interface JudgelsServerComponent {
 
     // Contests
     judgels.contest.ContestResource contestResource();
-    judgels.contest.ContestAdminResource contestAdminResource();
     judgels.contest.web.ContestWebResource contestWebResource();
     judgels.contest.announcement.ContestAnnouncementResource contestAnnouncementResource();
     judgels.contest.clarification.ContestClarificationResource contestClarificationResource();

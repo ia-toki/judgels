@@ -24,24 +24,24 @@ class ProblemSetProblemApiIntegrationTests extends BaseTrainingApiIntegrationTes
     void end_to_end_flow() {
         // as admin
 
-        archiveAdminClient.createArchive(adminToken, new ArchiveCreateData.Builder()
+        archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive")
                 .name("Archive")
                 .category("Category")
                 .build());
 
-        ProblemSet problemSetA = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSetA = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problemset-a")
                 .name("ProblemSet A")
                 .archiveSlug("archive")
                 .build());
-        ProblemSet problemSetB = problemSetAdminClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
+        ProblemSet problemSetB = problemSetClient.createProblemSet(adminToken, new ProblemSetCreateData.Builder()
                 .slug("problemset-b")
                 .name("ProblemSet B")
                 .archiveSlug("archive")
                 .build());
 
-        problemSetProblemAdminClient.setProblems(adminToken, problemSetA.getJid(), List.of(
+        problemSetProblemClient.setProblems(adminToken, problemSetA.getJid(), List.of(
                 new ProblemSetProblemData.Builder()
                         .alias("A")
                         .slug(PROBLEM_1_SLUG)
@@ -51,7 +51,7 @@ class ProblemSetProblemApiIntegrationTests extends BaseTrainingApiIntegrationTes
                 new ProblemSetProblemData.Builder().alias("B").slug(PROBLEM_2_SLUG).type(PROGRAMMING).build())
         );
 
-        assertForbidden(() -> problemSetProblemAdminClient
+        assertForbidden(() -> problemSetProblemClient
                 .setProblems(adminToken, problemSetA.getJid(), List.of(
                         new ProblemSetProblemData.Builder()
                         .alias("A")
@@ -77,7 +77,7 @@ class ProblemSetProblemApiIntegrationTests extends BaseTrainingApiIntegrationTes
 
         // as user
 
-        assertForbidden(() -> problemSetProblemAdminClient
+        assertForbidden(() -> problemSetProblemClient
                 .setProblems(userToken, problemSetA.getJid(), List.of()));
 
         response = problemSetProblemClient.getProblems(userToken, problemSetA.getJid());

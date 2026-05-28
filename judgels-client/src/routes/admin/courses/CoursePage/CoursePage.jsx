@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { courseBySlugQueryOptions } from '../../../../modules/queries/adminCourse';
+import { courseBySlugQueryOptions } from '../../../../modules/queries/course';
 import { CourseChaptersSection } from '../CourseChaptersSection/CourseChaptersSection';
 import { CourseGeneralSection } from '../CourseGeneralSection/CourseGeneralSection';
 

@@ -9,12 +9,10 @@ import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
 import org.junit.jupiter.api.Test;
 import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingAdminClient;
 import tlx.user.UserRatingClient;
 
 public class UserRatingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserRatingClient userRatingClient = createClient(UserRatingClient.class);
-    private final UserRatingAdminClient userRatingAdminClient = createClient(UserRatingAdminClient.class);
 
     @Test
     void update_ratings() {
@@ -22,7 +20,7 @@ public class UserRatingApiIntegrationTests extends BaseJudgelsApiIntegrationTest
         User budi = createUser("budi");
 
         Instant firstTime = Instant.ofEpochSecond(10);
-        userRatingAdminClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
+        userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
                 .time(firstTime)
                 .eventJid("open-contest-1-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(2000, 1000))
@@ -30,7 +28,7 @@ public class UserRatingApiIntegrationTests extends BaseJudgelsApiIntegrationTest
                 .build());
 
         Instant secondTime = Instant.ofEpochSecond(100);
-        userRatingAdminClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
+        userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("open-contest-2-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(3000, 1500))

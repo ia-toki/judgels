@@ -6,7 +6,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
-import { problemSetsQueryOptions } from '../../../../modules/queries/adminProblemSet';
+import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 
 const PAGE_SIZE = 20;

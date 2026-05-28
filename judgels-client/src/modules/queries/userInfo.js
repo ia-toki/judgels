@@ -16,3 +16,16 @@ export const updateUserInfoMutationOptions = userJid => ({
     queryClient.invalidateQueries(userInfoQueryOptions(userJid));
   },
 });
+
+export const adminUserInfoQueryOptions = userJid =>
+  queryOptions({
+    queryKey: ['admin', 'user', userJid, 'info'],
+    queryFn: () => userInfoAPI.getInfo(getToken(), userJid),
+  });
+
+export const updateAdminUserInfoMutationOptions = userJid => ({
+  mutationFn: info => userInfoAPI.updateInfo(getToken(), userJid, info),
+  onSuccess: () => {
+    queryClient.invalidateQueries(adminUserInfoQueryOptions(userJid));
+  },
+});

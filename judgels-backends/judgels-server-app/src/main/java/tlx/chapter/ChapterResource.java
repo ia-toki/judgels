@@ -1,4 +1,4 @@
-package tlx.archive;
+package tlx.chapter;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -14,32 +14,34 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import java.util.Optional;
-import judgels.archive.ArchiveStore;
+import java.util.List;
+import judgels.chapter.ChapterStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import tlx.api.archive.Archive;
-import tlx.api.archive.ArchiveCreateData;
-import tlx.api.archive.ArchiveUpdateData;
-import tlx.api.archive.ArchivesResponse;
+import tlx.api.chapter.Chapter;
+import tlx.api.chapter.ChapterCreateData;
+import tlx.api.chapter.ChapterUpdateData;
+import tlx.api.chapter.ChaptersResponse;
 
-@Path("/api/v2/admin/archives")
-public class ArchiveAdminResource {
+@Path("/api/v2/chapters")
+public class ChapterResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected TrainingAdminRoleChecker roleChecker;
-    @Inject protected ArchiveStore archiveStore;
+    @Inject protected ChapterStore chapterStore;
 
-    @Inject public ArchiveAdminResource() {}
+    @Inject public ChapterResource() {}
 
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ArchivesResponse getArchives(@HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader) {
-        actorChecker.check(authHeader);
+    public ChaptersResponse getChapters(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+        String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return new ArchivesResponse.Builder()
-                .data(archiveStore.getArchives())
+        List<Chapter> chapters = chapterStore.getChapters();
+        return new ChaptersResponse.Builder()
+                .data(chapters)
                 .build();
     }
 
@@ -47,30 +49,30 @@ public class ArchiveAdminResource {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Archive createArchive(
+    public Chapter createChapter(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            ArchiveCreateData data) {
+            ChapterCreateData data) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return archiveStore.createArchive(data);
+        return chapterStore.createChapter(data);
     }
 
     @POST
-    @Path("/{archiveJid}")
+    @Path("/{chapterJid}")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Archive updateArchive(
+    public Chapter updateChapter(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("archiveJid") String archiveJid,
-            ArchiveUpdateData data) {
+            @PathParam("chapterJid") String chapterJid,
+            ChapterUpdateData data) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkFound(archiveStore.getArchiveByJid(archiveJid));
+        checkFound(chapterStore.getChapterByJid(chapterJid));
         checkAllowed(roleChecker.isAdmin(actorJid));
 
-        return archiveStore.updateArchive(archiveJid, data);
+        return chapterStore.updateChapter(chapterJid, data);
     }
 }

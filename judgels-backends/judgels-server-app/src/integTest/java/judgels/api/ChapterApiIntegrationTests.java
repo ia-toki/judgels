@@ -12,30 +12,30 @@ class ChapterApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     void end_to_end_flow() {
         // as admin
 
-        Chapter chapterA = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterA = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter A")
                 .build());
-        chapterA = chapterAdminClient.updateChapter(adminToken, chapterA.getJid(), new ChapterUpdateData.Builder()
+        chapterA = chapterClient.updateChapter(adminToken, chapterA.getJid(), new ChapterUpdateData.Builder()
                 .name("Really Chapter A")
                 .build());
 
         assertThat(chapterA.getName()).isEqualTo("Really Chapter A");
 
-        Chapter chapterB = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterB = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter B")
                 .build());
 
         assertThat(chapterB.getName()).isEqualTo("Chapter B");
 
-        var response = chapterAdminClient.getChapters(adminToken);
+        var response = chapterClient.getChapters(adminToken);
         assertThat(response.getData()).containsExactly(chapterB, chapterA);
 
         // as user
 
-        assertForbidden(() -> chapterAdminClient
+        assertForbidden(() -> chapterClient
                 .createChapter(userToken, new ChapterCreateData.Builder().name("Chapter C").build()));
 
-        assertForbidden(() -> chapterAdminClient
+        assertForbidden(() -> chapterClient
                 .getChapters(userToken));
     }
 }

@@ -1,17 +1,17 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { adminCourseChapterAPI } from '../api/admin/courseChapter';
+import { courseChapterAPI } from '../api/courseChapter';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const courseChaptersQueryOptions = courseJid =>
   queryOptions({
-    queryKey: ['admin', 'course', courseJid, 'chapters'],
-    queryFn: () => adminCourseChapterAPI.getChapters(getToken(), courseJid),
+    queryKey: ['course', courseJid, 'chapters'],
+    queryFn: () => courseChapterAPI.getChapters(getToken(), courseJid),
   });
 
 export const setCourseChaptersMutationOptions = courseJid => ({
-  mutationFn: data => adminCourseChapterAPI.setChapters(getToken(), courseJid, data),
+  mutationFn: data => courseChapterAPI.setChapters(getToken(), courseJid, data),
   onSuccess: () => {
     queryClient.invalidateQueries(courseChaptersQueryOptions(courseJid));
   },

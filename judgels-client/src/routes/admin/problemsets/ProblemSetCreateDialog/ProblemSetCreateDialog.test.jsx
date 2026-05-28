@@ -47,7 +47,7 @@ describe('ProblemSetCreateDialog', () => {
     await user.type(contestTime, '2100-01-01 00:00');
 
     nockJerahmeel()
-      .post('/admin/problemsets', {
+      .post('/problemsets', {
         slug: 'new-problemSet',
         name: 'New problemSet',
         archiveSlug: 'New archive',

@@ -13,12 +13,12 @@ import judgels.profile.ProfileClient;
 import judgels.user.UserClient;
 import org.junit.jupiter.api.Test;
 import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingAdminClient;
+import tlx.user.UserRatingClient;
 
 public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final ProfileClient profileClient = createClient(ProfileClient.class);
     private final UserClient userClient = createClient(UserClient.class);
-    private final UserRatingAdminClient userRatingAdminClient = createClient(UserRatingAdminClient.class);
+    private final UserRatingClient userRatingClient = createClient(UserRatingClient.class);
 
     @Test
     void get_profiles() {
@@ -45,7 +45,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .build());
 
         Instant firstTime = Instant.ofEpochSecond(10);
-        userRatingAdminClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
+        userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
                 .time(firstTime)
                 .eventJid("contest-1-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(2000, 1000))
@@ -53,7 +53,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .build());
 
         Instant secondTime = Instant.ofEpochSecond(100);
-        userRatingAdminClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
+        userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
                 .time(secondTime)
                 .eventJid("contest-2-jid")
                 .putRatingsMap(andi.getJid(), UserRating.of(2100, 1500))

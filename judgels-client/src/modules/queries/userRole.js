@@ -1,17 +1,17 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { adminUserRoleAPI } from '../api/admin/userRole';
+import { userRoleAPI } from '../api/userRole';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const userRolesQueryOptions = () =>
   queryOptions({
     queryKey: ['userRoles'],
-    queryFn: () => adminUserRoleAPI.getUserRoles(getToken()),
+    queryFn: () => userRoleAPI.getUserRoles(getToken()),
   });
 
 export const setUserRolesMutationOptions = () => ({
-  mutationFn: usernameToRoleMap => adminUserRoleAPI.setUserRoles(getToken(), usernameToRoleMap),
+  mutationFn: usernameToRoleMap => userRoleAPI.setUserRoles(getToken(), usernameToRoleMap),
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['userRoles'] });
   },

@@ -1,9 +1,9 @@
-import { APP_CONFIG } from '../../../conf';
-import { get, put } from '../http';
+import { APP_CONFIG } from '../../conf';
+import { get, put } from './http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/admin/user-roles`;
+const baseURL = `${APP_CONFIG.apiUrl}/user-roles`;
 
-export const adminUserRoleAPI = {
+export const userRoleAPI = {
   getUserRoles: token => {
     return get(baseURL, token);
   },

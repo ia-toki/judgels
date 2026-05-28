@@ -3,7 +3,7 @@ import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { userByUsernameQueryOptions } from '../../../../modules/queries/adminUser';
+import { userByUsernameQueryOptions } from '../../../../modules/queries/user';
 import { UserInfoSection } from '../UserInfoSection/UserInfoSection';
 
 export default function UserPage() {

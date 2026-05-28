@@ -35,7 +35,7 @@ describe('UserUpsertDialog', () => {
     await user.type(textarea, 'username,password,email\nandi,pass1,andi@example.com');
 
     nockJophiel()
-      .post('/admin/users/batch-upsert', 'username,password,email\nandi,pass1,andi@example.com')
+      .post('/users/batch-upsert', 'username,password,email\nandi,pass1,andi@example.com')
       .reply(200, {
         createdUsernames: ['andi'],
         updatedUsernames: [],

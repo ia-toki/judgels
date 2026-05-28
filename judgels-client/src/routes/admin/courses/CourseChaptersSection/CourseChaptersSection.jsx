@@ -8,7 +8,7 @@ import { Alias } from '../../../../components/forms/validations';
 import {
   courseChaptersQueryOptions,
   setCourseChaptersMutationOptions,
-} from '../../../../modules/queries/adminCourseChapter';
+} from '../../../../modules/queries/courseChapter';
 import CourseChaptersEditForm from '../CourseChaptersEditForm/CourseChaptersEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

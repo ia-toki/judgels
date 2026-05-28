@@ -21,7 +21,7 @@ describe('UsersPage', () => {
     },
   } = {}) => {
     nockJophiel()
-      .get('/admin/users')
+      .get('/users')
       .query(true)
       .reply(200, {
         data: {

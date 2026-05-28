@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { updateArchiveMutationOptions } from '../../../../modules/queries/adminArchive';
+import { updateArchiveMutationOptions } from '../../../../modules/queries/archive';
 import ArchiveGeneralEditForm from '../ArchiveGeneralEditForm/ArchiveGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
-import { coursesQueryOptions } from '../../../../modules/queries/adminCourse';
+import { coursesQueryOptions } from '../../../../modules/queries/course';
 import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 
 export default function CoursesPage() {

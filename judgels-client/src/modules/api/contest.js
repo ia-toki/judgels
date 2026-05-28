@@ -24,6 +24,10 @@ export function baseContestURL(contestJid) {
 }
 
 export const contestAPI = {
+  createContest: (token, data) => {
+    return post(baseContestsURL, token, data);
+  },
+
   updateContest: (token, contestJid, data) => {
     return post(`${baseContestURL(contestJid)}`, token, data);
   },

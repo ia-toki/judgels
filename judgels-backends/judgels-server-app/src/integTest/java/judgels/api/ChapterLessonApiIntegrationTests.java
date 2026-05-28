@@ -14,14 +14,14 @@ class ChapterLessonApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     void end_to_end_flow() {
         // as admin
 
-        Chapter chapterA = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterA = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter A")
                 .build());
-        Chapter chapterB = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterB = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter B")
                 .build());
 
-        chapterLessonAdminClient.setLessons(adminToken, chapterA.getJid(), List.of(
+        chapterLessonClient.setLessons(adminToken, chapterA.getJid(), List.of(
                 new ChapterLessonData.Builder().alias("A").slug(LESSON_1_SLUG).build(),
                 new ChapterLessonData.Builder().alias("B").slug(LESSON_2_SLUG).build()));
 
@@ -35,7 +35,7 @@ class ChapterLessonApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         // assert user
 
-        assertForbidden(() -> chapterLessonAdminClient
+        assertForbidden(() -> chapterLessonClient
                 .setLessons(userToken, chapterA.getJid(), List.of()));
 
         response = chapterLessonClient.getLessons(userToken, chapterA.getJid());

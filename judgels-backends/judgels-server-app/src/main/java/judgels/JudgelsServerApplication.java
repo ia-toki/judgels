@@ -131,13 +131,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
-        env.jersey().register(component.userAdminResource());
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
-        env.jersey().register(component.userInfoAdminResource());
         env.jersey().register(component.userRatingResource());
-        env.jersey().register(component.userRoleAdminResource());
+        env.jersey().register(component.userRoleResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
 
@@ -156,7 +154,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         // Contests
         env.jersey().register(component.contestResource());
-        env.jersey().register(component.contestAdminResource());
         env.jersey().register(component.contestWebResource());
         env.jersey().register(component.contestAnnouncementResource());
         env.jersey().register(component.contestClarificationResource());
@@ -224,29 +221,21 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         // Contests
         env.jersey().register(component.contestRatingResource());
-        env.jersey().register(component.contestRatingAdminResource());
-        env.jersey().register(component.userRatingAdminResource());
+        env.jersey().register(component.userRatingResource());
         env.admin().addTask(component.tlxReplaceProblemTask());
 
         // Training
         env.jersey().register(component.archiveResource());
-        env.jersey().register(component.archiveAdminResource());
         env.jersey().register(component.curriculumResource());
         env.jersey().register(component.courseResource());
-        env.jersey().register(component.courseAdminResource());
-        env.jersey().register(component.chapterAdminResource());
+        env.jersey().register(component.chapterResource());
         env.jersey().register(component.courseChapterResource());
-        env.jersey().register(component.courseChapterAdminResource());
         env.jersey().register(component.chapterLessonResource());
-        env.jersey().register(component.chapterLessonAdminResource());
         env.jersey().register(component.chapterProblemResource());
-        env.jersey().register(component.chapterProblemAdminResource());
         env.jersey().register(component.problemResource());
         env.jersey().register(component.problemTagResource());
         env.jersey().register(component.problemSetResource());
-        env.jersey().register(component.problemSetAdminResource());
         env.jersey().register(component.problemSetProblemResource());
-        env.jersey().register(component.problemSetProblemAdminResource());
         env.jersey().register(component.itemSubmissionResource());
         env.jersey().register(component.submissionResource());
         env.jersey().register(component.userStatsResource());

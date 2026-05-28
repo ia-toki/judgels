@@ -68,7 +68,7 @@ describe('CourseGeneralSection', () => {
     await user.type(description, 'New Description');
 
     nockJerahmeel()
-      .post('/admin/courses/JIDCOURSE1', {
+      .post('/courses/JIDCOURSE1', {
         slug: 'new-course',
         name: 'New Course',
         description: 'New Description',
