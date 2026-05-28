@@ -38,7 +38,6 @@ import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
-import judgels.contrib.user.registration.UserRegistrationConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.mailer.MailerConfiguration;
 import judgels.service.feign.FeignClients;
@@ -59,6 +58,7 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.user.registration.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;

@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.persistence.dao.ContestAnnouncementDao;
 import judgels.persistence.dao.ContestClarificationDao;
 import judgels.persistence.dao.ContestContestantDao;
@@ -17,9 +16,6 @@ import judgels.persistence.dao.ContestProgrammingGradingDao;
 import judgels.persistence.dao.ContestProgrammingSubmissionDao;
 import judgels.persistence.dao.ContestScoreboardDao;
 import judgels.persistence.dao.ContestSupervisorDao;
-import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
-import judgels.training.submission.programming.TrainingSubmissionStore;
 
 @Module
 public class JudgelsServerTaskModule {
@@ -70,39 +66,5 @@ public class JudgelsServerTaskModule {
                         logDao,
                         programmingSubmissionDao,
                         programmingGradingDao});
-    }
-
-    @Provides
-    @Singleton
-    static RefreshContestStatsTask refreshContestStatsTask(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @ContestSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                RefreshContestStatsTask.class,
-                new Class<?>[] {
-                        SubmissionStore.class,
-                        StatsProcessor.class},
-                new Object[] {
-                        submissionStore,
-                        statsProcessor});
-    }
-
-    @Provides
-    @Singleton
-    static RefreshProblemSetStatsTask refreshProblemSetStatsTask(
-            UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
-            @TrainingSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
-
-        return unitOfWorkAwareProxyFactory.create(
-                RefreshProblemSetStatsTask.class,
-                new Class<?>[] {
-                        SubmissionStore.class,
-                        StatsProcessor.class},
-                new Object[] {
-                        submissionStore,
-                        statsProcessor});
     }
 }

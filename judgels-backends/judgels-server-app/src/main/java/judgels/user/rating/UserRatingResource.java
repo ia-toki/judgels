@@ -15,10 +15,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import judgels.api.user.rating.UserRatingEvent;
-import judgels.contrib.api.user.rating.UserRatingUpdateData;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
+import tlx.api.user.rating.UserRatingUpdateData;
 
 @Path("/api/v2/user-rating")
 public class UserRatingResource {

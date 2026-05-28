@@ -30,9 +30,9 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.user.account.UserResetPasswordModule.class,
         judgels.session.SessionModule.class,
         judgels.user.web.WebModule.class,
-        judgels.contrib.auth.AuthModule.class,
-        judgels.contrib.recaptcha.RecaptchaModule.class,
-        judgels.contrib.user.registration.UserRegistrationModule.class,
+        tlx.auth.AuthModule.class,
+        tlx.recaptcha.RecaptchaModule.class,
+        tlx.user.registration.UserRegistrationModule.class,
 
         // Problem features
         judgels.submission.SubmissionModule.class,
@@ -43,7 +43,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
         judgels.contest.log.ContestLogModule.class,
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
-        judgels.contrib.contest.rating.ContestRatingModule.class,
+        tlx.contest.rating.ContestRatingModule.class,
 
         // Training features
         judgels.training.submission.programming.TrainingSubmissionModule.class,
@@ -69,9 +69,9 @@ public interface JudgelsServerComponent {
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
     judgels.session.SessionCleaner sessionCleaner();
-    judgels.contrib.session.SessionWithGoogleResource sessionWithGoogleResource();
-    judgels.contrib.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
-    judgels.contrib.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
+    tlx.session.SessionWithGoogleResource sessionWithGoogleResource();
+    tlx.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
+    tlx.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 
     // Problems
     judgels.problem.base.ProblemResource baseProblemResource();
@@ -100,8 +100,8 @@ public interface JudgelsServerComponent {
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
     judgels.tasks.DumpContestTask dumpContestTask();
-    judgels.contrib.contest.rating.ContestRatingResource contestRatingResource();
-    judgels.admin.contrib.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
+    tlx.contest.rating.ContestRatingResource contestRatingResource();
+    tlx.admin.contest.rating.ContestRatingAdminResource contestRatingAdminResource();
     judgels.admin.user.rating.UserRatingAdminResource userRatingAdminResource();
     tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
 
@@ -129,8 +129,8 @@ public interface JudgelsServerComponent {
     tlx.submission.programming.SubmissionResource submissionResource();
     tlx.stats.UserStatsResource userStatsResource();
     @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
-    judgels.tasks.RefreshContestStatsTask refreshContestStatsTask();
-    judgels.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
+    tlx.tasks.RefreshContestStatsTask refreshContestStatsTask();
+    tlx.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
     tlx.tasks.DeleteProblemTask tlxDeleteProblemTask();
     tlx.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
     tlx.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();

@@ -33,8 +33,6 @@ import judgels.contest.ContestManagerClient;
 import judgels.contest.ContestModuleClient;
 import judgels.contest.ContestProblemClient;
 import judgels.contest.ContestSupervisorClient;
-import judgels.contrib.api.user.rating.UserRatingUpdateData;
-import judgels.contrib.user.UserRatingClient;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -43,6 +41,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.api.user.rating.UserRatingUpdateData;
+import tlx.user.UserRatingClient;
 
 public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";

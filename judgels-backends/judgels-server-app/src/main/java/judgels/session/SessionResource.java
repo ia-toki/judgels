@@ -16,13 +16,13 @@ import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.session.SessionErrors;
 import judgels.api.user.User;
-import judgels.contrib.api.session.SessionWithRegistrationErrors;
-import judgels.contrib.user.registration.UserRegistrationConfiguration;
-import judgels.contrib.user.registration.UserRegistrationEmailStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
+import tlx.api.session.SessionWithRegistrationErrors;
+import tlx.user.registration.UserRegistrationConfiguration;
+import tlx.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/session")
 public class SessionResource {
