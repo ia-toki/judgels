@@ -1,19 +1,15 @@
 package tlx.chapter.problem;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -24,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import judgels.api.problem.ProblemEditorialInfo;
 import judgels.api.problem.ProblemInfo;
 import judgels.api.problem.ProblemProgress;
@@ -37,7 +32,6 @@ import judgels.grading.api.SubmissionSource;
 import judgels.grading.api.Verdict;
 import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
@@ -46,14 +40,12 @@ import judgels.submission.programming.SubmissionStore;
 import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
 import judgels.training.submission.programming.TrainingSubmissionStore;
 import tlx.api.chapter.problem.ChapterProblem;
-import tlx.api.chapter.problem.ChapterProblemData;
 import tlx.api.chapter.problem.ChapterProblemWorksheet;
 import tlx.api.chapter.problem.ChapterProblemsResponse;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
     @Inject protected ChapterResourceStore resourceStore;
     @Inject protected ChapterProblemStore chapterProblemStore;
@@ -64,38 +56,6 @@ public class ChapterProblemResource {
     @Inject protected ProblemService problemService;
 
     @Inject public ChapterProblemResource() {}
-
-    @PUT
-    @Consumes(APPLICATION_JSON)
-    @UnitOfWork
-    public void setProblems(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("chapterJid") String chapterJid,
-            List<ChapterProblemData> data) {
-
-        String actorJid = actorChecker.check(authHeader);
-        checkFound(chapterStore.getChapterByJid(chapterJid));
-        checkAllowed(roleChecker.isAdmin(actorJid));
-
-        Set<String> aliases = data.stream().map(ChapterProblemData::getAlias).collect(Collectors.toSet());
-        Set<String> slugs = data.stream().map(ChapterProblemData::getSlug).collect(Collectors.toSet());
-
-        checkArgument(data.size() <= 100, "Cannot set more than 100 problems.");
-        checkArgument(aliases.size() == data.size(), "Problem aliases must be unique");
-        checkArgument(slugs.size() == data.size(), "Problem slugs must be unique");
-
-        Map<String, String> slugToJidMap = problemService.translateAllowedProblemSlugsToJids(actorJid, slugs);
-
-        List<ChapterProblem> setData = data.stream().filter(cp -> slugToJidMap.containsKey(cp.getSlug())).map(problem ->
-                new ChapterProblem.Builder()
-                        .alias(problem.getAlias())
-                        .problemJid(slugToJidMap.get(problem.getSlug()))
-                        .type(problem.getType())
-                        .build())
-                .collect(Collectors.toList());
-
-        chapterProblemStore.setProblems(chapterJid, setData);
-    }
 
     @GET
     @Produces(APPLICATION_JSON)

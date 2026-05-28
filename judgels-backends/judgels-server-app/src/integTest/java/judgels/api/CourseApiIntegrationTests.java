@@ -13,7 +13,7 @@ class CourseApiIntegrationTests extends BaseTrainingApiIntegrationTests {
     void end_to_end_flow() {
         // as admin
 
-        Course courseA = courseClient.createCourse(adminToken, new CourseCreateData.Builder()
+        Course courseA = courseAdminClient.createCourse(adminToken, new CourseCreateData.Builder()
                 .slug("course-a")
                 .name("Course A")
                 .description("This is course A")
@@ -23,18 +23,18 @@ class CourseApiIntegrationTests extends BaseTrainingApiIntegrationTests {
         assertThat(courseA.getName()).isEqualTo("Course A");
         assertThat(courseA.getDescription()).isEqualTo("This is course A");
 
-        Course courseB = courseClient.createCourse(adminToken, new CourseCreateData.Builder()
+        Course courseB = courseAdminClient.createCourse(adminToken, new CourseCreateData.Builder()
                 .slug("course-b")
                 .name("Course B")
                 .build());
 
         assertThat(courseB.getSlug()).isEqualTo("course-b");
 
-        assertBadRequest(() -> courseClient
+        assertBadRequest(() -> courseAdminClient
                 .createCourse(adminToken, new CourseCreateData.Builder().slug("course-a").name("Course A").build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
-        assertBadRequest(() -> courseClient
+        assertBadRequest(() -> courseAdminClient
                 .updateCourse(adminToken, courseB.getJid(), new CourseUpdateData.Builder().slug("course-a").build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
@@ -43,7 +43,7 @@ class CourseApiIntegrationTests extends BaseTrainingApiIntegrationTests {
 
         // as user
 
-        assertForbidden(() -> courseClient
+        assertForbidden(() -> courseAdminClient
                 .createCourse(userToken, new CourseCreateData.Builder().slug("course-c").name("Course C").build()));
 
         response = courseClient.getCourses(userToken);

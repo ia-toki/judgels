@@ -15,14 +15,14 @@ class ChapterProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests 
     void end_to_end_flow() {
         // as admin
 
-        Chapter chapterA = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterA = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter A")
                 .build());
-        Chapter chapterB = chapterClient.createChapter(adminToken, new ChapterCreateData.Builder()
+        Chapter chapterB = chapterAdminClient.createChapter(adminToken, new ChapterCreateData.Builder()
                 .name("Chapter B")
                 .build());
 
-        chapterProblemClient.setProblems(adminToken, chapterA.getJid(), List.of(
+        chapterProblemAdminClient.setProblems(adminToken, chapterA.getJid(), List.of(
                 new ChapterProblemData.Builder().alias("A").slug(PROBLEM_1_SLUG).type(ProblemType.PROGRAMMING).build(),
                 new ChapterProblemData.Builder().alias("B").slug(PROBLEM_2_SLUG).type(ProblemType.PROGRAMMING).build()));
 
@@ -36,7 +36,7 @@ class ChapterProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests 
 
         // assert user
 
-        assertForbidden(() -> chapterProblemClient
+        assertForbidden(() -> chapterProblemAdminClient
                 .setProblems(userToken, chapterA.getJid(), List.of()));
 
         response = chapterProblemClient.getProblems(userToken, chapterA.getJid());

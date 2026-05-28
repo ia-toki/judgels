@@ -1,4 +1,4 @@
-package judgels.admin.user.info;
+package judgels.user.info;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -20,7 +20,6 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
-import judgels.user.info.UserInfoStore;
 
 @Path("/api/v2/admin/users/{userJid}/info")
 public class UserInfoAdminResource {

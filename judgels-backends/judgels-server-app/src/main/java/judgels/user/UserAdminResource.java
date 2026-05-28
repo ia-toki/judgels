@@ -1,4 +1,4 @@
-package judgels.admin.user;
+package judgels.user;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -31,9 +31,6 @@ import judgels.persistence.api.Page;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.session.SessionStore;
-import judgels.user.UserCreator;
-import judgels.user.UserRoleChecker;
-import judgels.user.UserStore;
 
 @Path("/api/v2/admin/users")
 public class UserAdminResource {

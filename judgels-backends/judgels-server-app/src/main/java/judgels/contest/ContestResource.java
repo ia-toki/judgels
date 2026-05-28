@@ -24,15 +24,12 @@ import java.util.stream.Collectors;
 import judgels.api.contest.ActiveContestsResponse;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestConfig;
-import judgels.api.contest.ContestCreateData;
 import judgels.api.contest.ContestDescription;
 import judgels.api.contest.ContestUpdateData;
 import judgels.api.contest.ContestsResponse;
-import judgels.api.contest.module.IcpcStyleModuleConfig;
 import judgels.api.contest.role.ContestRole;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.log.ContestLogger;
-import judgels.contest.module.ContestModuleStore;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
@@ -46,7 +43,6 @@ public class ContestResource {
     @Inject protected ContestRoleChecker contestRoleChecker;
     @Inject protected ContestStore contestStore;
     @Inject protected ContestLogger contestLogger;
-    @Inject protected ContestModuleStore moduleStore;
     @Inject protected ContestContestantStore contestantStore;
     @Inject protected ProfileStore profileStore;
 
@@ -190,25 +186,6 @@ public class ContestResource {
                 .data(contests)
                 .rolesMap(rolesMap)
                 .build();
-    }
-
-    @POST
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork
-    public Contest createContest(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            ContestCreateData data) {
-
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(contestRoleChecker.canAdminister(actorJid));
-
-        Contest contest = contestStore.createContest(data);
-        moduleStore.upsertIcpcStyleModule(contest.getJid(), new IcpcStyleModuleConfig.Builder().build());
-
-        contestLogger.log(contest.getJid(), "CREATE_CONTEST");
-
-        return contest;
     }
 
     @GET

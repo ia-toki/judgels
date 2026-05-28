@@ -3,7 +3,6 @@ package tlx.problemset;
 import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
 import com.google.common.collect.Collections2;
@@ -32,17 +31,14 @@ import judgels.persistence.api.Page;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 import judgels.user.UserStore;
 import tlx.api.archive.Archive;
 import tlx.api.problemset.ProblemSet;
-import tlx.api.problemset.ProblemSetCreateData;
 import tlx.api.problemset.ProblemSetProgress;
 import tlx.api.problemset.ProblemSetStatsResponse;
-import tlx.api.problemset.ProblemSetUpdateData;
 import tlx.api.problemset.ProblemSetUserProgressesData;
 import tlx.api.problemset.ProblemSetUserProgressesResponse;
 import tlx.api.problemset.ProblemSetsResponse;
@@ -53,7 +49,6 @@ public class ProblemSetResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
-    @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ProblemSetStore problemSetStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected ArchiveStore archiveStore;
@@ -134,37 +129,6 @@ public class ProblemSetResource {
     @UnitOfWork(readOnly = true)
     public ProblemSet getProblemSetBySlug(@PathParam("problemSetSlug") String problemSetSlug) {
         return checkFound(problemSetStore.getProblemSetBySlug(problemSetSlug));
-    }
-
-    @POST
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork
-    public ProblemSet createProblemSet(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            ProblemSetCreateData data) {
-
-        String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.isAdmin(actorJid));
-
-        return problemSetStore.createProblemSet(data);
-    }
-
-    @POST
-    @Path("/{problemSetJid}")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork
-    public ProblemSet updateProblemSet(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("problemSetJid") String problemSetJid,
-            ProblemSetUpdateData data) {
-
-        String actorJid = actorChecker.check(authHeader);
-        checkFound(problemSetStore.getProblemSetByJid(problemSetJid));
-        checkAllowed(roleChecker.isAdmin(actorJid));
-
-        return problemSetStore.updateProblemSet(problemSetJid, data);
     }
 
     @GET
