@@ -1,4 +1,4 @@
-package tlx.contest.rating;
+package judgels.contest.rating;
 
 import java.util.List;
 import java.util.Map;

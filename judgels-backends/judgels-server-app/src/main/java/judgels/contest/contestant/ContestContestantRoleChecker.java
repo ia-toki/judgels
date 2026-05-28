@@ -11,9 +11,9 @@ import judgels.api.user.rating.UserRating;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestTimer;
 import judgels.contest.module.ContestModuleStore;
+import judgels.contest.rating.ContestRatingProvider;
 import judgels.contest.supervisor.ContestSupervisorStore;
 import judgels.persistence.dao.ContestRoleDao;
-import tlx.contest.rating.ContestRatingProvider;
 
 public class ContestContestantRoleChecker {
     private final ContestRoleChecker contestRoleChecker;

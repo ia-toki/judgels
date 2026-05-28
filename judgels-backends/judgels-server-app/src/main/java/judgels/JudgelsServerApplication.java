@@ -26,8 +26,6 @@ import judgels.user.web.WebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 import tlx.TlxServerComponent;
 import tlx.auth.AuthModule;
-import tlx.contest.rating.ContestRatingModule;
-import tlx.contest.rating.TlxContestRatingProvider;
 import tlx.fs.aws.AwsConfiguration;
 import tlx.fs.aws.AwsFileSystem;
 import tlx.fs.aws.AwsFsConfiguration;
@@ -113,7 +111,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     private JudgelsServerComponent runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
-        var componentBuilder = DaggerJudgelsServerComponent.builder()
+        JudgelsServerComponent component = DaggerJudgelsServerComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
@@ -124,13 +122,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
                 .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(judgelsConfig.getSessionConfig()))
-                .webModule(new WebModule(judgelsConfig.getWebConfig()));
-
-        if (JudgelsApp.isTLX()) {
-            componentBuilder.contestRatingModule(new ContestRatingModule(new TlxContestRatingProvider()));
-        }
-
-        JudgelsServerComponent component = componentBuilder.build();
+                .webModule(new WebModule(judgelsConfig.getWebConfig()))
+                .build();
 
         component.superadminCreator().ensureSuperadminExists();
 

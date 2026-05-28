@@ -30,6 +30,7 @@ import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
+import judgels.contest.rating.ContestRatingProvider;
 import judgels.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.contest.scoreboard.ContestScoreboardStore;
 import judgels.contest.scoreboard.RawContestScoreboard;

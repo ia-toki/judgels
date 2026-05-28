@@ -40,7 +40,7 @@ import judgels.submission.programming.GradingResponsePoller;
         judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
         judgels.contest.log.ContestLogModule.class,
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
-        tlx.contest.rating.ContestRatingModule.class,
+        judgels.contest.rating.ContestRatingModule.class,
 
         // Tasks
         judgels.tasks.JudgelsServerTaskModule.class})
