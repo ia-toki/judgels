@@ -23,7 +23,7 @@ public class RefreshProblemSetStatsTask extends Task {
             @TrainingSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
-        super("jerahmeel-refresh-problem-set-stats");
+        super("refresh-problem-set-stats");
 
         this.submissionStore = submissionStore;
         this.statsProcessor = statsProcessor;

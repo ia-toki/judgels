@@ -49,7 +49,7 @@ public class DumpContestTask extends Task {
             ContestProgrammingSubmissionDao programmingSubmissionDao,
             ContestProgrammingGradingDao programmingGradingDao) {
 
-        super("uriel-dump-contest");
+        super("dump-contest");
 
         this.contestDao = contestDao;
         this.moduleDao = moduleDao;

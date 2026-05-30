@@ -222,7 +222,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         // Contests
         env.jersey().register(component.contestRatingResource());
         env.jersey().register(component.userRatingResource());
-        env.admin().addTask(component.tlxReplaceProblemTask());
+        env.admin().addTask(component.tlxReplaceContestProblemTask());
 
         // Training
         env.jersey().register(component.archiveResource());
@@ -246,8 +246,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.refreshContestStatsTask());
         env.admin().addTask(component.refreshProblemSetStatsTask());
-        env.admin().addTask(component.tlxDeleteProblemTask());
-        env.admin().addTask(component.tlxMoveProblemToChapterTask());
-        env.admin().addTask(component.tlxMoveProblemToProblemSetTask());
+        env.admin().addTask(component.tlxDeleteTrainingProblemTask());
+        env.admin().addTask(component.tlxMoveTrainingProblemToChapterTask());
+        env.admin().addTask(component.tlxMoveTrainingProblemToProblemSetTask());
     }
 }

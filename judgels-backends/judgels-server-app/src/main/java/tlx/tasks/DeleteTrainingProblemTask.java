@@ -15,7 +15,7 @@ import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.persistence.model.ProblemModel;
 
-public class DeleteProblemTask extends Task {
+public class DeleteTrainingProblemTask extends Task {
     private final ProblemDao problemDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
@@ -24,7 +24,7 @@ public class DeleteProblemTask extends Task {
     private final BundleItemSubmissionDao bundleItemSubmissionDao;
     private final StatsUserProblemDao statsUserProblemDao;
 
-    public DeleteProblemTask(
+    public DeleteTrainingProblemTask(
             ProblemDao problemDao,
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
@@ -33,7 +33,7 @@ public class DeleteProblemTask extends Task {
             BundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 
-        super("jerahmeel-delete-problem");
+        super("delete-training-problem");
 
         this.problemDao = problemDao;
         this.chapterProblemDao = chapterProblemDao;

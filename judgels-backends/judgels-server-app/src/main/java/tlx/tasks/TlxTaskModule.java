@@ -28,7 +28,7 @@ public class TlxTaskModule {
 
     @Provides
     @TlxScope
-    static ReplaceProblemTask replaceProblemTask(
+    static ReplaceContestProblemTask replaceContestProblemTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
             ContestProblemDao contestProblemDao,
@@ -37,7 +37,7 @@ public class TlxTaskModule {
             ContestLogDao contestLogDao) {
 
         return unitOfWorkAwareProxyFactory.create(
-                ReplaceProblemTask.class,
+                ReplaceContestProblemTask.class,
                 new Class<?>[] {
                         ProblemDao.class,
                         ContestProblemDao.class,
@@ -54,7 +54,7 @@ public class TlxTaskModule {
 
     @Provides
     @TlxScope
-    static DeleteProblemTask deleteProblemTask(
+    static DeleteTrainingProblemTask deleteTrainingProblemTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
             ChapterProblemDao chapterProblemDao,
@@ -65,7 +65,7 @@ public class TlxTaskModule {
             StatsUserProblemDao statsUserProblemDao) {
 
         return unitOfWorkAwareProxyFactory.create(
-                DeleteProblemTask.class,
+                DeleteTrainingProblemTask.class,
                 new Class<?>[] {
                         ProblemDao.class,
                         ChapterProblemDao.class,
@@ -86,7 +86,7 @@ public class TlxTaskModule {
 
     @Provides
     @TlxScope
-    static MoveProblemToChapterTask moveProblemToChapterTask(
+    static MoveTrainingProblemToChapterTask moveTrainingProblemToChapterTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
             ChapterDao chapterDao,
@@ -95,7 +95,7 @@ public class TlxTaskModule {
             TrainingProgrammingSubmissionDao programmingSubmissionDao) {
 
         return unitOfWorkAwareProxyFactory.create(
-                MoveProblemToChapterTask.class,
+                MoveTrainingProblemToChapterTask.class,
                 new Class<?>[] {
                         ProblemDao.class,
                         ChapterDao.class,
@@ -112,7 +112,7 @@ public class TlxTaskModule {
 
     @Provides
     @TlxScope
-    static MoveProblemToProblemSetTask moveProblemToProblemSetTask(
+    static MoveTrainingProblemToProblemSetTask moveTrainingProblemToProblemSetTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ProblemDao problemDao,
             ProblemSetDao problemSetDao,
@@ -121,7 +121,7 @@ public class TlxTaskModule {
             TrainingProgrammingSubmissionDao programmingSubmissionDao) {
 
         return unitOfWorkAwareProxyFactory.create(
-                MoveProblemToProblemSetTask.class,
+                MoveTrainingProblemToProblemSetTask.class,
                 new Class<?>[] {
                         ProblemDao.class,
                         ProblemSetDao.class,

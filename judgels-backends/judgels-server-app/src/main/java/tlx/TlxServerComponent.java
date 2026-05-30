@@ -34,7 +34,7 @@ public interface TlxServerComponent {
     // Contests
     tlx.contest.rating.ContestRatingResource contestRatingResource();
     tlx.user.rating.UserRatingResource userRatingResource();
-    tlx.tasks.ReplaceProblemTask tlxReplaceProblemTask();
+    tlx.tasks.ReplaceContestProblemTask tlxReplaceContestProblemTask();
 
     // Training
     tlx.archive.ArchiveResource archiveResource();
@@ -54,7 +54,7 @@ public interface TlxServerComponent {
     @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
     tlx.tasks.RefreshContestStatsTask refreshContestStatsTask();
     tlx.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
-    tlx.tasks.DeleteProblemTask tlxDeleteProblemTask();
-    tlx.tasks.MoveProblemToChapterTask tlxMoveProblemToChapterTask();
-    tlx.tasks.MoveProblemToProblemSetTask tlxMoveProblemToProblemSetTask();
+    tlx.tasks.DeleteTrainingProblemTask tlxDeleteTrainingProblemTask();
+    tlx.tasks.MoveTrainingProblemToChapterTask tlxMoveTrainingProblemToChapterTask();
+    tlx.tasks.MoveTrainingProblemToProblemSetTask tlxMoveTrainingProblemToProblemSetTask();
 }

@@ -13,21 +13,21 @@ import judgels.persistence.dao.ContestProgrammingSubmissionDao;
 import judgels.persistence.dao.ProblemDao;
 import judgels.persistence.model.ProblemModel;
 
-public class ReplaceProblemTask extends Task {
+public class ReplaceContestProblemTask extends Task {
     private final ProblemDao problemDao;
     private final ContestProblemDao contestProblemDao;
     private final ContestProgrammingSubmissionDao contestProgrammingSubmissionDao;
     private final ContestLogDao contestLogDao;
     private final ContestClarificationDao contestClarificationDao;
 
-    public ReplaceProblemTask(
+    public ReplaceContestProblemTask(
             ProblemDao problemDao,
             ContestProblemDao contestProblemDao,
             ContestProgrammingSubmissionDao contestProgrammingSubmissionDao,
             ContestClarificationDao contestClarificationDao,
             ContestLogDao contestLogDao) {
 
-        super("uriel-replace-problem");
+        super("replace-contest-problem");
 
         this.problemDao = problemDao;
         this.contestProblemDao = contestProblemDao;

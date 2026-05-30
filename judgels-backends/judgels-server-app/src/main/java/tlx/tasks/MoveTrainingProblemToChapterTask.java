@@ -7,34 +7,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.problem.ProblemType;
+import judgels.persistence.dao.ChapterDao;
 import judgels.persistence.dao.ChapterProblemDao;
 import judgels.persistence.dao.ProblemDao;
-import judgels.persistence.dao.ProblemSetDao;
 import judgels.persistence.dao.ProblemSetProblemDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
+import judgels.persistence.model.ChapterModel;
 import judgels.persistence.model.ChapterProblemModel;
 import judgels.persistence.model.ProblemModel;
-import judgels.persistence.model.ProblemSetModel;
 import judgels.persistence.model.ProblemSetProblemModel;
 
-public class MoveProblemToProblemSetTask extends Task {
+public class MoveTrainingProblemToChapterTask extends Task {
     private final ProblemDao problemDao;
-    private final ProblemSetDao problemSetDao;
+    private final ChapterDao chapterDao;
     private final ChapterProblemDao chapterProblemDao;
     private final ProblemSetProblemDao problemSetProblemDao;
     private final TrainingProgrammingSubmissionDao programmingSubmissionDao;
 
-    public MoveProblemToProblemSetTask(
+    public MoveTrainingProblemToChapterTask(
             ProblemDao problemDao,
-            ProblemSetDao problemSetDao,
+            ChapterDao chapterDao,
             ChapterProblemDao chapterProblemDao,
             ProblemSetProblemDao problemSetProblemDao,
             TrainingProgrammingSubmissionDao programmingSubmissionDao) {
 
-        super("jerahmeel-move-problem-to-problem-set");
+        super("move-training-problem-to-chapter");
 
         this.problemDao = problemDao;
-        this.problemSetDao = problemSetDao;
+        this.chapterDao = chapterDao;
         this.chapterProblemDao = chapterProblemDao;
         this.problemSetProblemDao = problemSetProblemDao;
         this.programmingSubmissionDao = programmingSubmissionDao;
@@ -49,11 +49,11 @@ public class MoveProblemToProblemSetTask extends Task {
         }
         String problemSlug = problemSlugs.get(0);
 
-        List<String> toProblemSetJids = parameters.get("toProblemSetJid");
-        if (toProblemSetJids == null || toProblemSetJids.isEmpty()) {
+        List<String> toChapterJids = parameters.get("toChapterJid");
+        if (toChapterJids == null || toChapterJids.isEmpty()) {
             return;
         }
-        String toProblemSetJid = toProblemSetJids.get(0);
+        String toChapterJid = toChapterJids.get(0);
 
         List<String> aliases = parameters.get("alias");
         if (aliases == null || aliases.isEmpty()) {
@@ -67,30 +67,30 @@ public class MoveProblemToProblemSetTask extends Task {
         }
         String problemJid = maybeProblemModel.get().jid;
 
-        Optional<ProblemSetModel> maybeProblemSetModel = problemSetDao.selectByJid(toProblemSetJid);
-        if (maybeProblemSetModel.isEmpty()) {
+        Optional<ChapterModel> maybeChapterModel = chapterDao.selectByJid(toChapterJid);
+        if (maybeChapterModel.isEmpty()) {
             return;
         }
 
-        List<ProblemSetProblemModel> problemSetProblemModels = problemSetProblemDao.selectAllByProblemJid(problemJid);
-        if (!problemSetProblemModels.isEmpty()) {
-            for (ProblemSetProblemModel model : problemSetProblemModels) {
-                model.problemSetJid = toProblemSetJid;
-                model.alias = alias;
-                problemSetProblemDao.update(model);
-            }
+        Optional<ChapterProblemModel> maybeChapterProblemModel = chapterProblemDao.selectByProblemJid(problemJid);
+        if (maybeChapterProblemModel.isPresent()) {
+            ChapterProblemModel model = maybeChapterProblemModel.get();
+
+            model.chapterJid = toChapterJid;
+            model.alias = alias;
+            chapterProblemDao.update(model);
         } else {
-            ProblemSetProblemModel model = new ProblemSetProblemModel();
-            model.problemSetJid = toProblemSetJid;
+            ChapterProblemModel model = new ChapterProblemModel();
+            model.chapterJid = toChapterJid;
             model.alias = alias;
             model.problemJid = problemJid;
             model.type = ProblemType.PROGRAMMING.name();
-            problemSetProblemDao.insert(model);
+            chapterProblemDao.insert(model);
         }
 
-        Optional<ChapterProblemModel> maybeChapterProblemModel = chapterProblemDao.selectByProblemJid(problemJid);
-        maybeChapterProblemModel.ifPresent(chapterProblemDao::delete);
+        List<ProblemSetProblemModel> problemSetProblemModels = problemSetProblemDao.selectAllByProblemJid(problemJid);
+        problemSetProblemModels.forEach(problemSetProblemDao::delete);
 
-        programmingSubmissionDao.updateContainerJid(problemJid, toProblemSetJid);
+        programmingSubmissionDao.updateContainerJid(problemJid, toChapterJid);
     }
 }
