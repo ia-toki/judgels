@@ -1,5 +1,4 @@
 package judgels.user.account;
-
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -13,6 +12,7 @@ import java.util.Optional;
 import judgels.api.user.User;
 import judgels.api.user.account.PasswordResetData;
 import judgels.user.UserStore;
+import tlx.user.account.UserPasswordResetter;
 
 @Path("/api/v2/user-account")
 public class UserAccountResource {

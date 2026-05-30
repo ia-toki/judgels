@@ -1,4 +1,4 @@
-package tlx.problem;
+package judgels.problem;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -9,10 +9,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Map;
 import java.util.stream.Collectors;
+import judgels.api.problem.ProblemTagCategory;
+import judgels.api.problem.ProblemTagOption;
+import judgels.api.problem.ProblemTagsResponse;
 import judgels.problem.base.tag.ProblemTagStore;
-import tlx.api.problem.ProblemTagCategory;
-import tlx.api.problem.ProblemTagOption;
-import tlx.api.problem.ProblemTagsResponse;
 
 @Path("/api/v2/problems/tags")
 public class ProblemTagResource {

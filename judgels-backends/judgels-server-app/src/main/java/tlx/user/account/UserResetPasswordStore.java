@@ -1,4 +1,4 @@
-package judgels.user.account;
+package tlx.user.account;
 
 import jakarta.inject.Inject;
 import java.time.Duration;

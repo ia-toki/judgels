@@ -1,4 +1,4 @@
-package judgels.role;
+package tlx.role;
 
 import jakarta.inject.Inject;
 import judgels.api.role.TrainingAdminRole;

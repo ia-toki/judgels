@@ -1,4 +1,4 @@
-package judgels.user.account;
+package tlx.user.account;
 
 import java.time.Duration;
 import judgels.api.user.User;

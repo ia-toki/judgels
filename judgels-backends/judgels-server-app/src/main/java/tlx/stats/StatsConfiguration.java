@@ -1,4 +1,4 @@
-package judgels.stats;
+package tlx.stats;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

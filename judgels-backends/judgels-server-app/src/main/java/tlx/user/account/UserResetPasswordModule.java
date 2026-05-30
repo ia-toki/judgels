@@ -1,11 +1,10 @@
-package judgels.user.account;
-
+package tlx.user.account;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.mailer.Mailer;
 import judgels.user.UserStore;
+import tlx.mailer.Mailer;
 
 @Module
 public class UserResetPasswordModule {

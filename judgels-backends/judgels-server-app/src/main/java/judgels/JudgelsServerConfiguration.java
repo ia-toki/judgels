@@ -6,14 +6,14 @@ import java.nio.file.Path;
 import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
-import judgels.mailer.MailerConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.session.SessionConfiguration;
-import judgels.user.account.UserResetPasswordConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
 import tlx.auth.AuthConfiguration;
+import tlx.mailer.MailerConfiguration;
+import tlx.user.account.UserResetPasswordConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJudgelsServerConfiguration.class)

@@ -15,13 +15,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.List;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import tlx.api.chapter.Chapter;
 import tlx.api.chapter.ChapterCreateData;
 import tlx.api.chapter.ChapterUpdateData;
 import tlx.api.chapter.ChaptersResponse;
+import tlx.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/chapters")
 public class ChapterResource {

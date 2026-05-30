@@ -1,4 +1,4 @@
-package judgels.mailer;
+package tlx.mailer;
 
 import dagger.Module;
 import dagger.Provides;

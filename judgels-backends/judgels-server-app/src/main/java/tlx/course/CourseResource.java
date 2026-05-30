@@ -18,7 +18,6 @@ import jakarta.ws.rs.Produces;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import tlx.api.course.Course;
@@ -28,6 +27,7 @@ import tlx.api.course.CourseUpdateData;
 import tlx.api.course.CoursesResponse;
 import tlx.api.curriculum.Curriculum;
 import tlx.curriculum.CurriculumStore;
+import tlx.role.TrainingAdminRoleChecker;
 import tlx.stats.StatsStore;
 
 @Path("/api/v2/courses")

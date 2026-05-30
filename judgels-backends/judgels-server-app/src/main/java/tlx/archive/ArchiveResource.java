@@ -15,13 +15,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import tlx.api.archive.Archive;
 import tlx.api.archive.ArchiveCreateData;
 import tlx.api.archive.ArchiveUpdateData;
 import tlx.api.archive.ArchivesResponse;
+import tlx.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/archives")
 public class ArchiveResource {

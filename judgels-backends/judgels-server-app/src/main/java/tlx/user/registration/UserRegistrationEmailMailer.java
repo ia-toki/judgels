@@ -1,8 +1,8 @@
 package tlx.user.registration;
 
 import judgels.api.user.User;
-import judgels.mailer.EmailTemplate;
-import judgels.mailer.Mailer;
+import tlx.mailer.EmailTemplate;
+import tlx.mailer.Mailer;
 
 public class UserRegistrationEmailMailer {
     private final Mailer mailer;
