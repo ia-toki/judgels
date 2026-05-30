@@ -14,13 +14,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.Optional;
 import java.util.Set;
-import judgels.difficulty.ProblemDifficultyStore;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import tlx.api.problem.ProblemSetProblemInfo;
 import tlx.api.problem.ProblemsResponse;
+import tlx.difficulty.ProblemDifficultyStore;
 import tlx.stats.StatsStore;
 
 @Path("/api/v2/problems")
