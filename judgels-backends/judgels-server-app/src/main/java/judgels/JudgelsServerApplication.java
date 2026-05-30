@@ -118,9 +118,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
-                .mailerModule(new MailerModule(judgelsConfig.getMailerConfig()))
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
-                .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
                 .sessionModule(new SessionModule(judgelsConfig.getSessionConfig()))
                 .webModule(new WebModule(judgelsConfig.getWebConfig()))
                 .build();
@@ -131,7 +129,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
-        env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
         env.jersey().register(component.userRatingResource());
@@ -144,15 +141,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.sessionCleaner(),
                 Duration.ofDays(1));
 
-        // Problems
-        env.jersey().register(component.baseProblemResource());
+        env.jersey().register(component.problemResource());
+        env.jersey().register(component.problemTagResource());
         env.jersey().register(component.lessonResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
             env.lifecycle().manage(component.problemGradingResponsePoller());
         }
 
-        // Contests
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestWebResource());
         env.jersey().register(component.contestAnnouncementResource());
@@ -209,22 +205,20 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         }
 
         TlxServerComponent component = serverComponent.tlxServerComponentFactory().create(
+                new MailerModule(judgelsConfig.getMailerConfig()),
                 new RecaptchaModule(judgelsConfig.getRecaptchaConfig()),
                 new UserRegistrationModule(UserRegistrationWebConfig.fromServerConfig(judgelsConfig)),
+                new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()),
                 trainingSubmissionModule,
                 new TrainingItemSubmissionModule(trainingConfig.getStatsConfig()));
 
-        // Users
-        env.jersey().register(component.sessionWithGoogleResource());
-        env.jersey().register(component.userAccountWithRegistrationResource());
+        env.jersey().register(component.sessionResource());
+        env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userRegistrationWebResource());
 
-        // Contests
         env.jersey().register(component.contestRatingResource());
         env.jersey().register(component.userRatingResource());
-        env.admin().addTask(component.tlxReplaceContestProblemTask());
 
-        // Training
         env.jersey().register(component.archiveResource());
         env.jersey().register(component.curriculumResource());
         env.jersey().register(component.courseResource());
@@ -233,7 +227,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.chapterLessonResource());
         env.jersey().register(component.chapterProblemResource());
         env.jersey().register(component.problemResource());
-        env.jersey().register(component.problemTagResource());
         env.jersey().register(component.problemSetResource());
         env.jersey().register(component.problemSetProblemResource());
         env.jersey().register(component.itemSubmissionResource());
@@ -244,10 +237,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.lifecycle().manage(component.trainingGradingResponsePoller());
         }
 
+        env.admin().addTask(component.deleteTrainingProblemTask());
+        env.admin().addTask(component.moveTrainingProblemToChapterTask());
+        env.admin().addTask(component.moveTrainingProblemToProblemSetTask());
         env.admin().addTask(component.refreshContestStatsTask());
         env.admin().addTask(component.refreshProblemSetStatsTask());
-        env.admin().addTask(component.tlxDeleteTrainingProblemTask());
-        env.admin().addTask(component.tlxMoveTrainingProblemToChapterTask());
-        env.admin().addTask(component.tlxMoveTrainingProblemToProblemSetTask());
+        env.admin().addTask(component.replaceContestProblemTask());
     }
 }

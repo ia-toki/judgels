@@ -2,8 +2,8 @@ package tlx.mailer;
 
 import dagger.Module;
 import dagger.Provides;
-import jakarta.inject.Singleton;
 import java.util.Optional;
+import tlx.TlxScope;
 
 @Module
 public class MailerModule {
@@ -14,7 +14,7 @@ public class MailerModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     public Optional<Mailer> mailer() {
         return config.map(Mailer::new);
     }

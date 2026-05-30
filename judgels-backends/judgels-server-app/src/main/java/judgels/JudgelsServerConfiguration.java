@@ -11,9 +11,6 @@ import judgels.session.SessionConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
-import tlx.auth.AuthConfiguration;
-import tlx.mailer.MailerConfiguration;
-import tlx.user.account.UserResetPasswordConfiguration;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableJudgelsServerConfiguration.class)
@@ -30,13 +27,13 @@ public interface JudgelsServerConfiguration {
     JudgelsServerGradingConfiguration getGradingConfig();
 
     @JsonProperty("auth")
-    Optional<AuthConfiguration> getAuthConfig();
+    Optional<tlx.auth.AuthConfiguration> getAuthConfig();
 
     @JsonProperty("mailer")
-    Optional<MailerConfiguration> getMailerConfig();
+    Optional<tlx.mailer.MailerConfiguration> getMailerConfig();
 
     @JsonProperty("userResetPassword")
-    UserResetPasswordConfiguration getUserResetPasswordConfig();
+    tlx.user.account.UserResetPasswordConfiguration getUserResetPasswordConfig();
 
     @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();

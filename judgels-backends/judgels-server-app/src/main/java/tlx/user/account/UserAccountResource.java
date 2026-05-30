@@ -12,6 +12,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
 import judgels.api.user.User;
+import judgels.api.user.account.PasswordResetData;
 import judgels.user.UserStore;
 import tlx.api.user.account.GoogleUserRegistrationData;
 import tlx.api.user.account.UserRegistrationData;
@@ -19,12 +20,13 @@ import tlx.user.registration.UserRegisterer;
 import tlx.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/user-account")
-public class UserAccountWithRegistrationResource {
+public class UserAccountResource {
     @Inject protected UserStore userStore;
+    @Inject protected Optional<UserPasswordResetter> userPasswordResetter;
     @Inject protected Optional<UserRegisterer> userRegisterer;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
-    @Inject public UserAccountWithRegistrationResource() {}
+    @Inject public UserAccountResource() {}
 
     @POST
     @Path("/register")
@@ -58,5 +60,24 @@ public class UserAccountWithRegistrationResource {
         User user = checkFound(userStore.getUserByEmail(email)
                 .filter(u -> !userRegistrationEmailStore.isUserActivated(u.getJid())));
         checkFound(userRegisterer).resendActivationEmail(user);
+    }
+
+    @POST
+    @Path("/request-reset-password/{email}")
+    @UnitOfWork
+    public void requestToResetPassword(@PathParam("email") String email) {
+        Optional<User> user = userStore.getUserByEmail(email);
+
+        if (user.isPresent()) {
+            checkFound(userPasswordResetter).request(user.get(), email);
+        }
+    }
+
+    @POST
+    @Path("/reset-password")
+    @Consumes(APPLICATION_JSON)
+    @UnitOfWork
+    public void resetPassword(PasswordResetData data) {
+        checkFound(userPasswordResetter).reset(data);
     }
 }
