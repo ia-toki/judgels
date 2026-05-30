@@ -23,7 +23,7 @@ public class RefreshContestStatsTask extends Task {
             @ContestSubmissionStore SubmissionStore submissionStore,
             StatsProcessor statsProcessor) {
 
-        super("jerahmeel-refresh-contest-stats");
+        super("refresh-contest-stats");
 
         this.submissionStore = submissionStore;
         this.statsProcessor = statsProcessor;
