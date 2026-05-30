@@ -1,4 +1,4 @@
-package judgels.difficulty;
+package tlx.difficulty;
 
 import jakarta.inject.Inject;
 import java.util.Collection;

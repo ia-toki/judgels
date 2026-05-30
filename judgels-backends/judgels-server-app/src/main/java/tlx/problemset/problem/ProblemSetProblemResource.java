@@ -38,7 +38,6 @@ import judgels.api.problem.ProblemTopStats;
 import judgels.api.problem.ProblemType;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
-import judgels.difficulty.ProblemDifficultyStore;
 import judgels.problem.ProblemService;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
@@ -53,6 +52,7 @@ import tlx.api.problemset.problem.ProblemSetProblem;
 import tlx.api.problemset.problem.ProblemSetProblemData;
 import tlx.api.problemset.problem.ProblemSetProblemWorksheet;
 import tlx.api.problemset.problem.ProblemSetProblemsResponse;
+import tlx.difficulty.ProblemDifficultyStore;
 import tlx.stats.StatsStore;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
