@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.lesson.ChapterLessonStore;
-import judgels.course.CourseStore;
-import judgels.course.chapter.CourseChapterStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -42,6 +38,9 @@ import tlx.api.course.chapter.CourseChapterResponse;
 import tlx.api.course.chapter.CourseChapterUserProgressesData;
 import tlx.api.course.chapter.CourseChapterUserProgressesResponse;
 import tlx.api.course.chapter.CourseChaptersResponse;
+import tlx.chapter.ChapterStore;
+import tlx.chapter.lesson.ChapterLessonStore;
+import tlx.course.CourseStore;
 
 @Path("/api/v2/courses/{courseJid}/chapters")
 public class CourseChapterResource {

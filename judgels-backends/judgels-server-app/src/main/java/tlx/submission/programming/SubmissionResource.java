@@ -36,8 +36,6 @@ import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
 import judgels.api.submission.programming.SubmissionWithSource;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.problem.ChapterProblemStore;
 import judgels.grading.api.GradingOptions;
 import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;
@@ -54,10 +52,6 @@ import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.TrainingSubmissionClient;
-import judgels.training.submission.programming.TrainingSubmissionRegrader;
-import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
-import judgels.training.submission.programming.TrainingSubmissionStore;
 import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import tlx.api.chapter.Chapter;
@@ -65,6 +59,12 @@ import tlx.api.chapter.problem.ChapterProblem;
 import tlx.api.problemset.ProblemSet;
 import tlx.api.problemset.problem.ProblemSetProblem;
 import tlx.api.submission.programming.TrainingSubmissionsResponse;
+import tlx.chapter.ChapterStore;
+import tlx.chapter.problem.ChapterProblemStore;
+import tlx.training.submission.programming.TrainingSubmissionClient;
+import tlx.training.submission.programming.TrainingSubmissionRegrader;
+import tlx.training.submission.programming.TrainingSubmissionSourceBuilder;
+import tlx.training.submission.programming.TrainingSubmissionStore;
 
 @Path("/api/v2/submissions/programming")
 public class SubmissionResource {

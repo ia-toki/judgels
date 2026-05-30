@@ -7,7 +7,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import judgels.curriculum.CurriculumStore;
 import tlx.api.curriculum.CurriculumsResponse;
 
 @Path("/api/v2/curriculums")
