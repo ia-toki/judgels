@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import judgels.api.problem.ProblemDifficulty;
 import judgels.api.problem.ProblemStats;
 import judgels.persistence.dao.ProblemLevelDao;
-import judgels.stats.StatsStore;
+import tlx.stats.StatsStore;
 
 public class ProblemDifficultyStore {
     private final StatsStore statsStore;

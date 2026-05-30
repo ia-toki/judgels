@@ -19,9 +19,9 @@ import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.stats.StatsStore;
 import tlx.api.problem.ProblemSetProblemInfo;
 import tlx.api.problem.ProblemsResponse;
+import tlx.stats.StatsStore;
 
 @Path("/api/v2/problems")
 public class ProblemResource {

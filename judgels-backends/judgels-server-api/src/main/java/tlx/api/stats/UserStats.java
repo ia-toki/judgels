@@ -1,4 +1,4 @@
-package judgels.api.stats;
+package tlx.api.stats;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;

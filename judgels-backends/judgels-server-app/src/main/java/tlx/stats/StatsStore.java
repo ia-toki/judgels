@@ -1,4 +1,4 @@
-package judgels.stats;
+package tlx.stats;
 
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
@@ -19,8 +19,6 @@ import judgels.api.problem.ProblemProgress;
 import judgels.api.problem.ProblemStats;
 import judgels.api.problem.ProblemTopStats;
 import judgels.api.problem.ProblemTopStatsEntry;
-import judgels.api.stats.UserStats;
-import judgels.api.stats.UserTopStatsEntry;
 import judgels.grading.api.Verdict;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
@@ -39,6 +37,8 @@ import judgels.persistence.model.StatsUserProblemModel_;
 import tlx.api.chapter.ChapterProgress;
 import tlx.api.course.CourseProgress;
 import tlx.api.problemset.ProblemSetProgress;
+import tlx.api.stats.UserStats;
+import tlx.api.stats.UserTopStatsEntry;
 
 public class StatsStore {
     private final CourseChapterDao courseChapterDao;
