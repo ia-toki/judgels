@@ -3,7 +3,6 @@ package tlx.api.stats;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
 import judgels.api.profile.Profile;
-import judgels.api.stats.UserTopStatsEntry;
 import judgels.persistence.api.Page;
 import org.immutables.value.Value;
 

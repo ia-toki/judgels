@@ -34,7 +34,6 @@ import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.stats.StatsStore;
 import judgels.user.UserStore;
 import tlx.api.archive.Archive;
 import tlx.api.problemset.ProblemSet;
@@ -47,6 +46,7 @@ import tlx.api.problemset.ProblemSetUserProgressesResponse;
 import tlx.api.problemset.ProblemSetsResponse;
 import tlx.api.problemset.problem.ProblemSetProblem;
 import tlx.archive.ArchiveStore;
+import tlx.stats.StatsStore;
 
 @Path("/api/v2/problemsets")
 public class ProblemSetResource {

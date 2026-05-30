@@ -37,7 +37,6 @@ import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.stats.StatsStore;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
 import tlx.api.chapter.problem.ChapterProblem;
@@ -46,6 +45,7 @@ import tlx.api.chapter.problem.ChapterProblemWorksheet;
 import tlx.api.chapter.problem.ChapterProblemsResponse;
 import tlx.chapter.ChapterStore;
 import tlx.chapter.resource.ChapterResourceStore;
+import tlx.stats.StatsStore;
 import tlx.training.submission.programming.TrainingSubmissionSourceBuilder;
 import tlx.training.submission.programming.TrainingSubmissionStore;
 

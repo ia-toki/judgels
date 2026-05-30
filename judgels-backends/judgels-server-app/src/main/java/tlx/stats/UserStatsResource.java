@@ -13,12 +13,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.Map;
 import judgels.api.profile.Profile;
-import judgels.api.stats.UserStats;
-import judgels.api.stats.UserTopStatsEntry;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.stats.StatsStore;
 import judgels.user.UserStore;
+import tlx.api.stats.UserStats;
+import tlx.api.stats.UserTopStatsEntry;
 import tlx.api.stats.UserTopStatsResponse;
 
 @Path("/api/v2/stats/users")

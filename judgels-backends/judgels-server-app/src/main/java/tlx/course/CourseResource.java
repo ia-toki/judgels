@@ -21,7 +21,6 @@ import java.util.Optional;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.stats.StatsStore;
 import tlx.api.course.Course;
 import tlx.api.course.CourseCreateData;
 import tlx.api.course.CourseProgress;
@@ -29,6 +28,7 @@ import tlx.api.course.CourseUpdateData;
 import tlx.api.course.CoursesResponse;
 import tlx.api.curriculum.Curriculum;
 import tlx.curriculum.CurriculumStore;
+import tlx.stats.StatsStore;
 
 @Path("/api/v2/courses")
 public class CourseResource {
