@@ -8,15 +8,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
+import judgels.api.user.UserData;
+import judgels.api.user.account.PasswordResetData;
 import judgels.session.SessionClient;
+import judgels.user.UserClient;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 import tlx.api.session.SessionWithRegistrationErrors;
 import tlx.api.user.account.UserRegistrationData;
-import tlx.user.UserAccountWithRegistrationClient;
+import tlx.user.UserAccountClient;
 
-class UserAccountWithRegistrationApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final UserAccountWithRegistrationClient accountClient = createClient(UserAccountWithRegistrationClient.class);
+class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
+    private final UserClient userClient = createClient(UserClient.class);
+    private final UserAccountClient accountClient = createClient(UserAccountClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
 
     @Test
@@ -80,6 +84,55 @@ class UserAccountWithRegistrationApiIntegrationTests extends BaseJudgelsApiInteg
 
         // resend activation email with expired code
         assertNotFound(() -> accountClient.resendActivationEmail("alfa@domain.com"));
+
+        wiser.stop();
+    }
+
+    @Test
+    void reset_password() {
+        Wiser wiser = new Wiser();
+        wiser.setPort(9250);
+        wiser.start();
+
+        // allow requesting to reset random email in order not to leak info
+        assertPermitted(() -> accountClient.requestToResetPassword("delta@domain.com"));
+
+        userClient.createUser(adminToken, new UserData.Builder()
+                .username("delta")
+                .password("pass")
+                .email("delta@domain.com")
+                .build());
+
+        accountClient.requestToResetPassword("delta@domain.com");
+
+        // can still log in if password is not actually reset
+        assertPermitted(() -> sessionClient.logIn(Credentials.of("delta", "pass")));
+
+        String email = readEmail(wiser, 0);
+        String emailCode = extractEmailCode(email);
+
+        // request to reset password again
+        accountClient.requestToResetPassword("delta@domain.com");
+
+        String email2 = readEmail(wiser, 1);
+        String emailCode2 = extractEmailCode(email2);
+
+        // assert that code is the same (not expired yet)
+        assertThat(emailCode2).isEqualTo(emailCode);
+
+        // reset the password
+        accountClient.resetPassword(PasswordResetData.of(emailCode, "newPass"));
+
+        readEmail(wiser, 2);
+
+        // request to reset password again
+        accountClient.requestToResetPassword("delta@domain.com");
+
+        String email3 = readEmail(wiser, 3);
+        String emailCode3 = extractEmailCode(email3);
+
+        // assert that previous code has expired and a new one is generated
+        assertThat(emailCode3).isNotEqualTo(emailCode2);
 
         wiser.stop();
     }

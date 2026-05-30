@@ -1,9 +1,9 @@
 package tlx.user.account;
 import dagger.Module;
 import dagger.Provides;
-import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.user.UserStore;
+import tlx.TlxScope;
 import tlx.mailer.Mailer;
 
 @Module
@@ -15,7 +15,7 @@ public class UserResetPasswordModule {
     }
 
     @Provides
-    @Singleton
+    @TlxScope
     Optional<UserPasswordResetter> userPasswordResetter(
             UserStore userStore,
             UserResetPasswordStore userResetPasswordStore,

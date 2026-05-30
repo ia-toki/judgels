@@ -7,51 +7,40 @@ import judgels.service.JudgelsScheduler;
 import judgels.submission.programming.GradingResponsePoller;
 
 @Component(modules = {
-        // Judgels service
-        judgels.service.JudgelsModule.class,
         judgels.JudgelsServerModule.class,
-        judgels.service.persistence.JudgelsPersistenceModule.class,
+        judgels.service.JudgelsModule.class,
         judgels.service.JudgelsSchedulerModule.class,
-
-        // Database
+        judgels.service.persistence.JudgelsPersistenceModule.class,
         judgels.service.persistence.hibernate.JudgelsHibernateModule.class,
         judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule.class,
 
-        // 3rd parties
-        judgels.messaging.rabbitmq.RabbitMQModule.class,
-        judgels.resource.ResourceModule.class,
-        judgels.grading.GradingModule.class,
-        tlx.mailer.MailerModule.class,
-
-        // User features
         judgels.user.superadmin.SuperadminModule.class,
         judgels.user.avatar.UserAvatarModule.class,
-        tlx.user.account.UserResetPasswordModule.class,
-        judgels.session.SessionModule.class,
         judgels.user.web.WebModule.class,
-        tlx.auth.AuthModule.class,
+        judgels.session.SessionModule.class,
 
-        // Problem features
+        judgels.messaging.rabbitmq.RabbitMQModule.class,
+        judgels.grading.GradingModule.class,
+        judgels.file.FileModule.class,
+
+        judgels.resource.ResourceModule.class,
         judgels.submission.SubmissionModule.class,
 
-        // Contest features
-        judgels.file.FileModule.class,
         judgels.contest.submission.programming.ContestSubmissionModule.class,
         judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
         judgels.contest.log.ContestLogModule.class,
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
         judgels.contest.rating.ContestRatingModule.class,
 
-        // Tasks
-        judgels.tasks.JudgelsServerTaskModule.class})
+        judgels.tasks.JudgelsServerTaskModule.class,
+
+        tlx.auth.AuthModule.class})
 @Singleton
 public interface JudgelsServerComponent {
-    // Users
     judgels.profile.ProfileResource profileResource();
     judgels.session.SessionResource sessionResource();
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
-    judgels.user.account.UserAccountResource userAccountResource();
     judgels.user.avatar.UserAvatarResource userAvatarResource();
     judgels.user.info.UserInfoResource userProfileResource();
     judgels.user.rating.UserRatingResource userRatingResource();
@@ -60,13 +49,11 @@ public interface JudgelsServerComponent {
     judgels.user.web.UserWebResource userWebResource();
     judgels.session.SessionCleaner sessionCleaner();
 
-    // Problems
-    judgels.problem.base.ProblemResource baseProblemResource();
+    judgels.problem.base.ProblemResource problemResource();
+    judgels.problem.ProblemTagResource problemTagResource();
     judgels.lesson.LessonResource lessonResource();
-    @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
     GradingResponsePoller problemGradingResponsePoller();
 
-    // Contests
     judgels.contest.ContestResource contestResource();
     judgels.contest.web.ContestWebResource contestWebResource();
     judgels.contest.announcement.ContestAnnouncementResource contestAnnouncementResource();
@@ -85,6 +72,8 @@ public interface JudgelsServerComponent {
     judgels.contest.supervisor.ContestSupervisorResource contestSupervisorResource();
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
+    @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
+
     judgels.tasks.DumpContestTask dumpContestTask();
 
     JudgelsScheduler scheduler();
