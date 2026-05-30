@@ -18,8 +18,6 @@ import jakarta.ws.rs.Produces;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.course.CourseStore;
-import judgels.curriculum.CurriculumStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -30,6 +28,7 @@ import tlx.api.course.CourseProgress;
 import tlx.api.course.CourseUpdateData;
 import tlx.api.course.CoursesResponse;
 import tlx.api.curriculum.Curriculum;
+import tlx.curriculum.CurriculumStore;
 
 @Path("/api/v2/courses")
 public class CourseResource {

@@ -18,9 +18,9 @@ import judgels.persistence.dao.StatsUserProblemDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
-import judgels.training.submission.programming.TrainingSubmissionStore;
 import tlx.TlxScope;
+import tlx.training.submission.programming.StatsProcessor;
+import tlx.training.submission.programming.TrainingSubmissionStore;
 
 @Module
 public class TlxTaskModule {

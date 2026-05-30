@@ -44,7 +44,6 @@ import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
 import judgels.session.SessionConfiguration;
 import judgels.stats.StatsConfiguration;
-import judgels.training.TrainingConfiguration;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
 import judgels.user.account.UserResetPasswordConfiguration;
@@ -58,6 +57,7 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import tlx.training.TrainingConfiguration;
 import tlx.user.registration.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {

@@ -3,7 +3,7 @@ package judgels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
-import judgels.training.TrainingConfiguration;
+import tlx.training.TrainingConfiguration;
 
 public class JudgelsServerApplicationConfiguration extends Configuration {
     private final DataSourceFactory databaseConfig;

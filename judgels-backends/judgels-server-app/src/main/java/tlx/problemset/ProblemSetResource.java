@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemProgress;
 import judgels.api.profile.Profile;
-import judgels.archive.ArchiveStore;
 import judgels.persistence.api.Page;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
@@ -47,6 +46,7 @@ import tlx.api.problemset.ProblemSetUserProgressesData;
 import tlx.api.problemset.ProblemSetUserProgressesResponse;
 import tlx.api.problemset.ProblemSetsResponse;
 import tlx.api.problemset.problem.ProblemSetProblem;
+import tlx.archive.ArchiveStore;
 
 @Path("/api/v2/problemsets")
 public class ProblemSetResource {

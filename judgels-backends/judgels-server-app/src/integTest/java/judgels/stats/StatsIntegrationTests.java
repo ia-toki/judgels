@@ -25,11 +25,6 @@ import judgels.api.stats.UserTopStatsEntry;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
-import judgels.archive.ArchiveStore;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.problem.ChapterProblemStore;
-import judgels.course.CourseStore;
-import judgels.course.chapter.CourseChapterStore;
 import judgels.grading.api.GradingResultDetails;
 import judgels.grading.api.SandboxExecutionResult;
 import judgels.grading.api.SandboxExecutionStatus;
@@ -49,8 +44,6 @@ import judgels.persistence.model.StatsUserModel;
 import judgels.persistence.model.StatsUserProblemModel;
 import judgels.problemset.ProblemSetStore;
 import judgels.problemset.problem.ProblemSetProblemStore;
-import judgels.training.BaseTrainingIntegrationTests;
-import judgels.training.TrainingIntegrationTestComponent;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,6 +61,13 @@ import tlx.api.problemset.ProblemSet;
 import tlx.api.problemset.ProblemSetCreateData;
 import tlx.api.problemset.ProblemSetProgress;
 import tlx.api.problemset.problem.ProblemSetProblem;
+import tlx.archive.ArchiveStore;
+import tlx.chapter.ChapterStore;
+import tlx.chapter.problem.ChapterProblemStore;
+import tlx.course.CourseStore;
+import tlx.course.chapter.CourseChapterStore;
+import tlx.training.BaseTrainingIntegrationTests;
+import tlx.training.TrainingIntegrationTestComponent;
 
 @WithHibernateSession(models = {
         ArchiveModel.class,
@@ -97,8 +97,8 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
     private ProblemSetProblemStore problemSetProblemStore;
     private StatsStore statsStore;
 
-    private judgels.training.submission.programming.StatsProcessor programmingStatsProcessor;
-    private judgels.training.submission.bundle.StatsProcessor bundleStatsProcessor;
+    private tlx.training.submission.programming.StatsProcessor programmingStatsProcessor;
+    private tlx.training.submission.bundle.StatsProcessor bundleStatsProcessor;
 
 
     @BeforeEach

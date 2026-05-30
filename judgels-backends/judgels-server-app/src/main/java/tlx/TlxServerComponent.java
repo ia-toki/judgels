@@ -2,11 +2,11 @@ package tlx;
 
 import dagger.Subcomponent;
 import judgels.submission.programming.GradingResponsePoller;
-import judgels.training.submission.bundle.TrainingItemSubmissionModule;
-import judgels.training.submission.programming.TrainingGradingResponsePoller;
-import judgels.training.submission.programming.TrainingSubmissionModule;
 import tlx.recaptcha.RecaptchaModule;
 import tlx.tasks.TlxTaskModule;
+import tlx.training.submission.bundle.TrainingItemSubmissionModule;
+import tlx.training.submission.programming.TrainingGradingResponsePoller;
+import tlx.training.submission.programming.TrainingSubmissionModule;
 import tlx.user.registration.UserRegistrationModule;
 
 @Subcomponent(modules = {

@@ -34,7 +34,6 @@ import judgels.api.submission.SubmissionConfig;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
-import judgels.chapter.problem.ChapterProblemStore;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.problemset.problem.ProblemSetProblemStore;
@@ -47,13 +46,14 @@ import judgels.submission.bundle.ItemSubmissionConsumer;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
-import judgels.training.submission.bundle.TrainingItemSubmissionRegrader;
-import judgels.training.submission.bundle.TrainingItemSubmissionStore;
 import judgels.user.UserStore;
 import tlx.api.chapter.problem.ChapterProblem;
 import tlx.api.problemset.problem.ProblemSetProblem;
 import tlx.api.submission.bundle.TrainingItemSubmissionsResponse;
 import tlx.api.submission.bundle.TrainingSubmissionSummaryResponse;
+import tlx.chapter.problem.ChapterProblemStore;
+import tlx.training.submission.bundle.TrainingItemSubmissionRegrader;
+import tlx.training.submission.bundle.TrainingItemSubmissionStore;
 
 @Path("/api/v2/submissions/bundle")
 public class ItemSubmissionResource {

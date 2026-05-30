@@ -30,9 +30,6 @@ import judgels.api.problem.ProblemInfo;
 import judgels.api.problem.ProblemProgress;
 import judgels.api.problem.ProblemType;
 import judgels.api.submission.programming.Submission;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.problem.ChapterProblemStore;
-import judgels.chapter.resource.ChapterResourceStore;
 import judgels.grading.api.SubmissionSource;
 import judgels.grading.api.Verdict;
 import judgels.problem.ProblemService;
@@ -43,12 +40,14 @@ import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
-import judgels.training.submission.programming.TrainingSubmissionStore;
 import tlx.api.chapter.problem.ChapterProblem;
 import tlx.api.chapter.problem.ChapterProblemData;
 import tlx.api.chapter.problem.ChapterProblemWorksheet;
 import tlx.api.chapter.problem.ChapterProblemsResponse;
+import tlx.chapter.ChapterStore;
+import tlx.chapter.resource.ChapterResourceStore;
+import tlx.training.submission.programming.TrainingSubmissionSourceBuilder;
+import tlx.training.submission.programming.TrainingSubmissionStore;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {
