@@ -1,4 +1,4 @@
-package judgels.problemset.problem;
+package tlx.problemset.problem;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

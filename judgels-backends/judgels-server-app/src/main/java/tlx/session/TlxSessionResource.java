@@ -20,12 +20,12 @@ import tlx.api.session.GoogleCredentials;
 import tlx.auth.google.GoogleAuth;
 
 @Path("/api/v2/session")
-public class SessionWithGoogleResource {
+public class TlxSessionResource {
     @Inject protected UserStore userStore;
     @Inject protected SessionStore sessionStore;
     @Inject protected Optional<GoogleAuth> googleAuth;
 
-    @Inject public SessionWithGoogleResource() {}
+    @Inject public TlxSessionResource() {}
 
     @POST
     @Path("/login-google")

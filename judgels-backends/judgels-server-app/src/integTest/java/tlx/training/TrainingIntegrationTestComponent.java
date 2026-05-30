@@ -1,8 +1,6 @@
 package tlx.training;
 
 import dagger.Component;
-import judgels.problemset.ProblemSetStore;
-import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.service.persistence.hibernate.JudgelsHibernateModule;
@@ -13,6 +11,8 @@ import tlx.chapter.ChapterStore;
 import tlx.chapter.problem.ChapterProblemStore;
 import tlx.course.CourseStore;
 import tlx.course.chapter.CourseChapterStore;
+import tlx.problemset.ProblemSetStore;
+import tlx.problemset.problem.ProblemSetProblemStore;
 import tlx.stats.StatsStore;
 import tlx.training.submission.bundle.TrainingItemSubmissionModule;
 

@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import judgels.api.lesson.LessonInfo;
 import judgels.api.lesson.LessonStatement;
 import judgels.lesson.LessonService;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import tlx.api.chapter.lesson.ChapterLesson;
@@ -37,6 +36,7 @@ import tlx.api.chapter.lesson.ChapterLessonStatement;
 import tlx.api.chapter.lesson.ChapterLessonsResponse;
 import tlx.chapter.ChapterStore;
 import tlx.chapter.resource.ChapterResourceStore;
+import tlx.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/chapters/{chapterJid}/lessons")
 public class ChapterLessonResource {

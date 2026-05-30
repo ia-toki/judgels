@@ -21,12 +21,12 @@ import judgels.submission.programming.GradingResponsePoller;
         judgels.messaging.rabbitmq.RabbitMQModule.class,
         judgels.resource.ResourceModule.class,
         judgels.grading.GradingModule.class,
-        judgels.mailer.MailerModule.class,
+        tlx.mailer.MailerModule.class,
 
         // User features
         judgels.user.superadmin.SuperadminModule.class,
         judgels.user.avatar.UserAvatarModule.class,
-        judgels.user.account.UserResetPasswordModule.class,
+        tlx.user.account.UserResetPasswordModule.class,
         judgels.session.SessionModule.class,
         judgels.user.web.WebModule.class,
         tlx.auth.AuthModule.class,

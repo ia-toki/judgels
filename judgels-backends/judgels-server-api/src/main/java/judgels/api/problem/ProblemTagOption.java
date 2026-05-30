@@ -1,4 +1,4 @@
-package tlx.api.problem;
+package judgels.api.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

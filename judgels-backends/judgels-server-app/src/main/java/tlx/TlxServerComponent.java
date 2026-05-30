@@ -27,7 +27,7 @@ public interface TlxServerComponent {
     }
 
     // Users
-    tlx.session.SessionWithGoogleResource sessionWithGoogleResource();
+    tlx.session.TlxSessionResource sessionWithGoogleResource();
     tlx.user.account.UserAccountWithRegistrationResource userAccountWithRegistrationResource();
     tlx.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
 
@@ -45,7 +45,7 @@ public interface TlxServerComponent {
     tlx.chapter.lesson.ChapterLessonResource chapterLessonResource();
     tlx.chapter.problem.ChapterProblemResource chapterProblemResource();
     tlx.problem.ProblemResource problemResource();
-    tlx.problem.ProblemTagResource problemTagResource();
+    judgels.problem.ProblemTagResource problemTagResource();
     tlx.problemset.ProblemSetResource problemSetResource();
     tlx.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
     tlx.submission.bundle.ItemSubmissionResource itemSubmissionResource();

@@ -1,4 +1,4 @@
-package judgels.problemset;
+package tlx.problemset;
 
 import static java.util.stream.Collectors.toMap;
 

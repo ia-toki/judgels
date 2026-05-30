@@ -3,11 +3,11 @@ package tlx.user.registration;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
-import judgels.mailer.Mailer;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;
 import tlx.TlxScope;
 import tlx.auth.google.GoogleAuth;
+import tlx.mailer.Mailer;
 import tlx.recaptcha.RecaptchaVerifier;
 import tlx.user.registration.web.UserRegistrationWebConfig;
 

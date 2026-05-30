@@ -8,8 +8,8 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.session.SessionStore;
-import judgels.user.account.UserResetPasswordStore;
 import judgels.user.avatar.UserAvatarIntegrationTestModule;
+import tlx.user.account.UserResetPasswordStore;
 
 @Component(modules = {
         JudgelsServerHibernateDaoModule.class,

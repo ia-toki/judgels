@@ -1,8 +1,8 @@
 package tlx.user.registration;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.mailer.EmailTemplate;
 import org.immutables.value.Value;
+import tlx.mailer.EmailTemplate;
 
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserRegistrationConfiguration.class)

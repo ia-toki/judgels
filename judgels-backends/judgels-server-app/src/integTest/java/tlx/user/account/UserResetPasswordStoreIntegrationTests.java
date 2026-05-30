@@ -1,4 +1,4 @@
-package judgels.user.account;
+package tlx.user.account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

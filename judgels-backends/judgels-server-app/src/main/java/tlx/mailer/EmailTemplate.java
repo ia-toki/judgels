@@ -1,4 +1,4 @@
-package judgels.mailer;
+package tlx.mailer;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

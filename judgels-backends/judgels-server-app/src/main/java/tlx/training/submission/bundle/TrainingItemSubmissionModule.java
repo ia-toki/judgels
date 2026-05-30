@@ -5,7 +5,6 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.problem.ProblemService;
-import judgels.stats.StatsConfiguration;
 import judgels.submission.bundle.BaseItemSubmissionStore;
 import judgels.submission.bundle.ItemSubmissionConsumer;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
@@ -14,6 +13,7 @@ import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.bundle.NoOpItemSubmissionConsumer;
 import tlx.TlxScope;
+import tlx.stats.StatsConfiguration;
 
 @Module
 public class TrainingItemSubmissionModule {

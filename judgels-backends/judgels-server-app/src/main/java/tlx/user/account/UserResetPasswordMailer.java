@@ -1,8 +1,8 @@
-package judgels.user.account;
+package tlx.user.account;
 
 import judgels.api.user.User;
-import judgels.mailer.EmailTemplate;
-import judgels.mailer.Mailer;
+import tlx.mailer.EmailTemplate;
+import tlx.mailer.Mailer;
 
 public class UserResetPasswordMailer {
     private final Mailer mailer;
