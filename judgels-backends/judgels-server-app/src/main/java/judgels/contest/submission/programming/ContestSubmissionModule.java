@@ -94,7 +94,7 @@ public class ContestSubmissionModule {
                 sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-contest",
                 messageClient,
                 mapper);
     }
@@ -134,7 +134,7 @@ public class ContestSubmissionModule {
         ExecutorService executorService = scheduler.createExecutorService("contest-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-contest",
                 (ThreadPoolExecutor) executorService,
                 processor);
     }
