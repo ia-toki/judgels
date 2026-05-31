@@ -125,9 +125,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         component.superadminCreator().ensureSuperadminExists();
 
-        // Users
         env.jersey().register(component.sessionResource());
-        env.jersey().register(component.profileResource());
         env.jersey().register(component.userResource());
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userProfileResource());
@@ -135,19 +133,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userRoleResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
-
-        component.scheduler().scheduleWithFixedDelay(
-                "session-cleaner",
-                component.sessionCleaner(),
-                Duration.ofDays(1));
+        env.jersey().register(component.profileResource());
 
         env.jersey().register(component.problemResource());
         env.jersey().register(component.problemTagResource());
         env.jersey().register(component.lessonResource());
-
-        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.problemGradingResponsePoller());
-        }
 
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestWebResource());
@@ -162,9 +152,14 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestModuleResource());
         env.jersey().register(component.contestProblemResource());
         env.jersey().register(component.contestScoreboardResource());
-        env.jersey().register(component.contestProgrammingSubmissionResource());
-        env.jersey().register(component.contestBundleSubmissionResource());
+        env.jersey().register(component.contestSubmissionResource());
+        env.jersey().register(component.contestItemSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
+
+        component.scheduler().scheduleWithFixedDelay(
+                "session-cleaner",
+                component.sessionCleaner(),
+                Duration.ofDays(1));
 
         component.scheduler().scheduleWithFixedDelay(
                 "contest-scoreboard-poller",
@@ -177,6 +172,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofSeconds(3));
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
+            env.lifecycle().manage(component.problemGradingResponsePoller());
             env.lifecycle().manage(component.contestGradingResponsePoller());
         }
 
@@ -215,9 +211,9 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userRegistrationWebResource());
+        env.jersey().register(component.userRatingResource());
 
         env.jersey().register(component.contestRatingResource());
-        env.jersey().register(component.userRatingResource());
 
         env.jersey().register(component.archiveResource());
         env.jersey().register(component.curriculumResource());
