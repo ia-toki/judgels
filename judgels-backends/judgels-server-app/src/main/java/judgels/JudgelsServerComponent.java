@@ -37,7 +37,6 @@ import judgels.submission.programming.GradingResponsePoller;
         tlx.auth.AuthModule.class})
 @Singleton
 public interface JudgelsServerComponent {
-    judgels.profile.ProfileResource profileResource();
     judgels.session.SessionResource sessionResource();
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
@@ -47,12 +46,11 @@ public interface JudgelsServerComponent {
     judgels.user.role.UserRoleResource userRoleResource();
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
-    judgels.session.SessionCleaner sessionCleaner();
+    judgels.profile.ProfileResource profileResource();
 
     judgels.problem.base.ProblemResource problemResource();
     judgels.problem.ProblemTagResource problemTagResource();
     judgels.lesson.LessonResource lessonResource();
-    GradingResponsePoller problemGradingResponsePoller();
 
     judgels.contest.ContestResource contestResource();
     judgels.contest.web.ContestWebResource contestWebResource();
@@ -67,11 +65,14 @@ public interface JudgelsServerComponent {
     judgels.contest.module.ContestModuleResource contestModuleResource();
     judgels.contest.problem.ContestProblemResource contestProblemResource();
     judgels.contest.scoreboard.ContestScoreboardResource contestScoreboardResource();
-    judgels.contest.submission.programming.ContestSubmissionResource contestProgrammingSubmissionResource();
-    judgels.contest.submission.bundle.ContestItemSubmissionResource contestBundleSubmissionResource();
+    judgels.contest.submission.programming.ContestSubmissionResource contestSubmissionResource();
+    judgels.contest.submission.bundle.ContestItemSubmissionResource contestItemSubmissionResource();
     judgels.contest.supervisor.ContestSupervisorResource contestSupervisorResource();
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
+
+    judgels.session.SessionCleaner sessionCleaner();
+    GradingResponsePoller problemGradingResponsePoller();
     @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
 
     judgels.tasks.DumpContestTask dumpContestTask();
