@@ -86,7 +86,7 @@ public class TrainingSubmissionModule {
                 sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-training",
                 messageClient,
                 mapper);
     }
@@ -119,7 +119,7 @@ public class TrainingSubmissionModule {
         ExecutorService executorService = scheduler.createExecutorService("training-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-training",
                 (ThreadPoolExecutor) executorService,
                 processor);
     }

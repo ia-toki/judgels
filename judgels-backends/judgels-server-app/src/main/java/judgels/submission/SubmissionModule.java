@@ -70,7 +70,7 @@ public class SubmissionModule {
                 sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-problem",
                 messageClient,
                 mapper);
     }
@@ -101,7 +101,7 @@ public class SubmissionModule {
         ExecutorService executorService = scheduler.createExecutorService("problem-grading-response-processor-%d", 10);
         return new GradingResponsePoller(
                 messageListener,
-                gradingResponseQueueName,
+                gradingResponseQueueName + "-problem",
                 (ThreadPoolExecutor) executorService,
                 processor);
     }
