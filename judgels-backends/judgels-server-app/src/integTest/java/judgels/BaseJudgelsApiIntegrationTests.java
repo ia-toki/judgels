@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.api.lesson.Lesson;
@@ -127,7 +128,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 dbConfig,
                 webSecurityConfig,
                 judgelsConfig,
-                trainingConfig) {
+                Optional.of(trainingConfig)) {
             {
                 DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
 
