@@ -10,14 +10,14 @@ import tlx.stats.StatsConfiguration;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableTrainingConfiguration.class)
 public interface TrainingConfiguration {
-    @JsonProperty("stats")
-    StatsConfiguration getStatsConfig();
+    @JsonProperty("aws")
+    Optional<tlx.fs.aws.AwsConfiguration> getAwsConfig();
 
     @JsonProperty("submission")
     Optional<SubmissionConfiguration> getSubmissionConfig();
 
-    @JsonProperty("aws")
-    Optional<tlx.fs.aws.AwsConfiguration> getAwsConfig();
+    @JsonProperty("stats")
+    StatsConfiguration getStatsConfig();
 
     class Builder extends ImmutableTrainingConfiguration.Builder {}
 }

@@ -80,7 +80,3 @@ judgels:
 
   web:
     announcements: []
-
-training:
-  stats:
-    enabled: false
