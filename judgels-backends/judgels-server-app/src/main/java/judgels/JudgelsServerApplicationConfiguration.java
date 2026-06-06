@@ -3,19 +3,20 @@ package judgels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
+import java.util.Optional;
 import tlx.training.TrainingConfiguration;
 
 public class JudgelsServerApplicationConfiguration extends Configuration {
     private final DataSourceFactory databaseConfig;
     private final WebSecurityConfiguration webSecurityConfig;
     private final JudgelsServerConfiguration judgelsConfig;
-    private final TrainingConfiguration trainingConfig;
+    private final Optional<TrainingConfiguration> trainingConfig;
 
     public JudgelsServerApplicationConfiguration(
             @JsonProperty("database") DataSourceFactory databaseConfig,
             @JsonProperty("webSecurity") WebSecurityConfiguration webSecurityConfig,
             @JsonProperty("judgels") JudgelsServerConfiguration judgelsConfig,
-            @JsonProperty("training") TrainingConfiguration trainingConfig) {
+            @JsonProperty("training") Optional<TrainingConfiguration> trainingConfig) {
 
         this.databaseConfig = databaseConfig;
         this.webSecurityConfig = webSecurityConfig;
@@ -35,7 +36,7 @@ public class JudgelsServerApplicationConfiguration extends Configuration {
         return judgelsConfig;
     }
 
-    public TrainingConfiguration getTrainingConfig() {
+    public Optional<TrainingConfiguration> getTrainingConfig() {
         return trainingConfig;
     }
 }

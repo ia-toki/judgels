@@ -187,7 +187,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             Environment env) {
 
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
-        TrainingConfiguration trainingConfig = config.getTrainingConfig();
+        TrainingConfiguration trainingConfig = config.getTrainingConfig().get();
 
         TrainingSubmissionModule trainingSubmissionModule =
                 new TrainingSubmissionModule(trainingConfig.getStatsConfig());
