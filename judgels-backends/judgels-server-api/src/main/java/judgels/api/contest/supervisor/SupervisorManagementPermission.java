@@ -7,7 +7,6 @@ public enum SupervisorManagementPermission {
     SUBMISSION,
     CLARIFICATION,
     CONTESTANT,
-    TEAM,
     SCOREBOARD,
     FILE
 }
