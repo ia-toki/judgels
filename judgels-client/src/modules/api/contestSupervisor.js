@@ -9,7 +9,6 @@ export const SupervisorManagementPermission = {
   Problems: 'PROBLEM',
   Submissions: 'SUBMISSION',
   Clarifications: 'CLARIFICATION',
-  Teams: 'TEAM',
   Scoreboard: 'SCOREBOARD',
   Files: 'FILE',
 };
@@ -20,7 +19,6 @@ export const supervisorManagementPermissionShortNamesMap = {
   [SupervisorManagementPermission.Problems]: 'PROB',
   [SupervisorManagementPermission.Submissions]: 'SUBM',
   [SupervisorManagementPermission.Clarifications]: 'CLAR',
-  [SupervisorManagementPermission.Teams]: 'TEAM',
   [SupervisorManagementPermission.Scoreboard]: 'SCOR',
   [SupervisorManagementPermission.Files]: 'FILE',
 };
