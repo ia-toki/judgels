@@ -18,7 +18,7 @@ judgels:
     password: guest
 
   grading:
-    gradingRequestQueueName: gabriel-grading-request
+    gradingRequestQueueName: judgels-grading-request
     numWorkerThreads: 2
 
     cache:
