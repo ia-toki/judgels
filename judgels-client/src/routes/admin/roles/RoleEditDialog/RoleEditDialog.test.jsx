@@ -11,8 +11,8 @@ import { RoleEditDialog } from './RoleEditDialog';
 describe('RoleEditDialog', () => {
   const currentData = {
     data: [
-      { userJid: 'userJid1', role: { jophiel: 'ADMIN', sandalphon: 'ADMIN', uriel: 'ADMIN', jerahmeel: 'ADMIN' } },
-      { userJid: 'userJid2', role: { sandalphon: 'ADMIN' } },
+      { userJid: 'userJid1', role: { account: 'ADMIN', problem: 'ADMIN', contest: 'ADMIN', training: 'ADMIN' } },
+      { userJid: 'userJid2', role: { problem: 'ADMIN' } },
     ],
     profilesMap: {
       userJid1: { username: 'andi' },
@@ -50,8 +50,8 @@ describe('RoleEditDialog', () => {
 
     nockApi()
       .put('/user-roles', {
-        andi: { jophiel: 'ADMIN', sandalphon: 'ADMIN' },
-        caca: { sandalphon: 'ADMIN' },
+        andi: { account: 'ADMIN', problem: 'ADMIN' },
+        caca: { problem: 'ADMIN' },
       })
       .reply(200);
 

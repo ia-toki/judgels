@@ -12,7 +12,7 @@ describe('AppRoutes', () => {
   };
 
   test('Jophiel admin', () => {
-    testAppRoutes({ jophiel: UserAdminRole.Admin }, [
+    testAppRoutes({ account: UserAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',
@@ -23,7 +23,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jophiel superadmin', () => {
-    testAppRoutes({ jophiel: UserAdminRole.Superadmin }, [
+    testAppRoutes({ account: UserAdminRole.Superadmin }, [
       'admin',
       'contests',
       'courses',
@@ -34,7 +34,7 @@ describe('AppRoutes', () => {
   });
 
   test('Uriel admin', () => {
-    testAppRoutes({ uriel: ContestAdminRole.Admin }, [
+    testAppRoutes({ contest: ContestAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',
@@ -45,7 +45,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jerahmeel admin', () => {
-    testAppRoutes({ jerahmeel: TrainingAdminRole.Admin }, [
+    testAppRoutes({ training: TrainingAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',

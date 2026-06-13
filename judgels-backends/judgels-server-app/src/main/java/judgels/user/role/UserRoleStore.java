@@ -38,10 +38,10 @@ public class UserRoleStore {
                 userRoleDao.delete(model);
             } else {
                 UserRole role = userRolesMap.get(model.userJid);
-                if (role.getJophiel().isEmpty()
-                        && role.getSandalphon().isEmpty()
-                        && role.getUriel().isEmpty()
-                        && role.getJerahmeel().isEmpty()) {
+                if (role.getAccount().isEmpty()
+                        && role.getProblem().isEmpty()
+                        && role.getContest().isEmpty()
+                        && role.getTraining().isEmpty()) {
                     userRoleDao.delete(model);
                 }
             }
@@ -49,10 +49,10 @@ public class UserRoleStore {
 
         for (var entry : userRolesMap.entrySet()) {
             UserRole role = entry.getValue();
-            if (role.getJophiel().isEmpty()
-                    && role.getSandalphon().isEmpty()
-                    && role.getUriel().isEmpty()
-                    && role.getJerahmeel().isEmpty()) {
+            if (role.getAccount().isEmpty()
+                    && role.getProblem().isEmpty()
+                    && role.getContest().isEmpty()
+                    && role.getTraining().isEmpty()) {
                 continue;
             }
             upsertRole(entry.getKey(), entry.getValue());
@@ -77,10 +77,10 @@ public class UserRoleStore {
         UserRole.Builder role = new UserRole.Builder();
 
         if (superadminRoleStore.isSuperadmin(userJid)) {
-            role.jophiel(UserAdminRole.SUPERADMIN.name());
-            role.sandalphon("ADMIN");
-            role.uriel("ADMIN");
-            role.jerahmeel("ADMIN");
+            role.account(UserAdminRole.SUPERADMIN.name());
+            role.problem("ADMIN");
+            role.contest("ADMIN");
+            role.training("ADMIN");
         } else {
             Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
             if (maybeModel.isPresent()) {
@@ -94,24 +94,24 @@ public class UserRoleStore {
     private UserRole fromModel(UserRoleModel model) {
         UserRole.Builder role = new UserRole.Builder();
         if (model.jophiel != null) {
-            role.jophiel(model.jophiel);
+            role.account(model.jophiel);
         }
         if (model.sandalphon != null) {
-            role.sandalphon(model.sandalphon);
+            role.problem(model.sandalphon);
         }
         if (model.uriel != null) {
-            role.uriel(model.uriel);
+            role.contest(model.uriel);
         }
         if (model.jerahmeel != null) {
-            role.jerahmeel(model.jerahmeel);
+            role.training(model.jerahmeel);
         }
         return role.build();
     }
 
     private void toModel(UserRole role, UserRoleModel model) {
-        model.jophiel = role.getJophiel().orElse(null);
-        model.sandalphon = role.getSandalphon().orElse(null);
-        model.uriel = role.getUriel().orElse(null);
-        model.jerahmeel = role.getJerahmeel().orElse(null);
+        model.jophiel = role.getAccount().orElse(null);
+        model.sandalphon = role.getProblem().orElse(null);
+        model.uriel = role.getContest().orElse(null);
+        model.jerahmeel = role.getTraining().orElse(null);
     }
 }

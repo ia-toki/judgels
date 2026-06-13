@@ -14,10 +14,10 @@ const appRoutes = [
       path: '/admin',
     },
     visible: role =>
-      role.jophiel === UserAdminRole.Superadmin ||
-      role.jophiel === UserAdminRole.Admin ||
-      role.uriel === ContestAdminRole.Admin ||
-      (isTLX() && role.jerahmeel === TrainingAdminRole.Admin),
+      role.account === UserAdminRole.Superadmin ||
+      role.account === UserAdminRole.Admin ||
+      role.contest === ContestAdminRole.Admin ||
+      (isTLX() && role.training === TrainingAdminRole.Admin),
   },
   {
     id: 'contests',

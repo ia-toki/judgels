@@ -15,6 +15,6 @@ public class TrainingAdminRoleChecker {
 
     public boolean isAdmin(String userJid) {
         UserRole role = userRoleStore.getRole(userJid);
-        return role.getJerahmeel().orElse("").equals(TrainingAdminRole.ADMIN.name());
+        return role.getTraining().orElse("").equals(TrainingAdminRole.ADMIN.name());
     }
 }

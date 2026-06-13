@@ -15,12 +15,12 @@ public class ProblemAdminRoleChecker {
     }
 
     public boolean isAdmin(Actor actor) {
-        return actor.getRole().getSandalphon().orElse("").equals(ProblemAdminRole.ADMIN.name());
+        return actor.getRole().getProblem().orElse("").equals(ProblemAdminRole.ADMIN.name());
     }
 
     public boolean isAdmin(String userJid) {
         UserRole role = userRoleStore.getRole(userJid);
-        return role.getSandalphon().orElse("").equals(ProblemAdminRole.ADMIN.name());
+        return role.getProblem().orElse("").equals(ProblemAdminRole.ADMIN.name());
     }
 
     public boolean isWriter(Actor actor) {

@@ -20,6 +20,6 @@ public class UserRoleApiPermissionIntegrationTests extends BaseJudgelsApiIntegra
     private ThrowingCallable getSetRoles(String token) {
         return callAll(
                 () -> userRoleClient.getUserRoles(token),
-                () -> userRoleClient.setUserRoles(token, Map.of("admin", new UserRole.Builder().jophiel("ADMIN").build())));
+                () -> userRoleClient.setUserRoles(token, Map.of("admin", new UserRole.Builder().account("ADMIN").build())));
     }
 }

@@ -17,6 +17,6 @@ public class ContestAdminRoleChecker {
 
     public boolean isAdmin(String userJid) {
         UserRole role = userRoleStore.getRole(userJid);
-        return role.getUriel().orElse("").equals(ContestAdminRole.ADMIN.name());
+        return role.getContest().orElse("").equals(ContestAdminRole.ADMIN.name());
     }
 }

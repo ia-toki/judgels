@@ -32,10 +32,10 @@ export default function RolesPage() {
       return (
         <tr key={entry.userJid}>
           <td>{username}</td>
-          <td>{role.jophiel || '-'}</td>
-          <td>{role.sandalphon || '-'}</td>
-          <td>{role.uriel || '-'}</td>
-          <td>{role.jerahmeel || '-'}</td>
+          <td>{role.account || '-'}</td>
+          <td>{role.problem || '-'}</td>
+          <td>{role.contest || '-'}</td>
+          <td>{role.training || '-'}</td>
         </tr>
       );
     });
@@ -46,7 +46,7 @@ export default function RolesPage() {
           <tr>
             <th>User</th>
             <th>Account</th>
-            <th>Problem/Lesson</th>
+            <th>Problem</th>
             <th>Contest</th>
             <th>Training</th>
           </tr>

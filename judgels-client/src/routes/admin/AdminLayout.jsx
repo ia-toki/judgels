@@ -24,58 +24,69 @@ export default function AdminLayout() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  const isJophielAdmin = role.jophiel === UserAdminRole.Admin || role.jophiel === UserAdminRole.Superadmin;
-  const isUrielAdmin = role.uriel === ContestAdminRole.Admin;
-  const isJerahmeelAdmin = isTLX() && role.jerahmeel === TrainingAdminRole.Admin;
+  const isAccountAdmin = role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin;
+  const isContestAdmin = role.contest === ContestAdminRole.Admin;
+  const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
 
   const sidebarItems = [
     {
-      path: 'users',
-      titleIcon: <People />,
-      title: 'Users',
-      visible: isJophielAdmin,
+      title: 'Account',
+      visible: isAccountAdmin,
+      children: [
+        {
+          path: 'users',
+          titleIcon: <People />,
+          title: 'Users',
+        },
+        {
+          path: 'roles',
+          titleIcon: <Shield />,
+          title: 'Roles',
+        },
+        {
+          path: 'ratings',
+          titleIcon: <TimelineLineChart />,
+          title: 'Ratings',
+          visible: isTLX(),
+        },
+      ].filter(child => child.visible !== false),
     },
     {
-      path: 'roles',
-      titleIcon: <Shield />,
-      title: 'Roles',
-      visible: isJophielAdmin,
+      title: 'Contest',
+      visible: isContestAdmin,
+      children: [
+        {
+          path: 'contests',
+          titleIcon: <Console />,
+          title: 'Contests',
+        },
+      ],
     },
     {
-      path: 'ratings',
-      titleIcon: <TimelineLineChart />,
-      title: 'Ratings',
-      visible: isTLX() && isJophielAdmin,
-    },
-    {
-      path: 'contests',
-      titleIcon: <Console />,
-      title: 'Contests',
-      visible: isUrielAdmin,
-    },
-    {
-      path: 'courses',
-      titleIcon: <PredictiveAnalysis />,
-      title: 'Courses',
-      visible: isJerahmeelAdmin,
-    },
-    {
-      path: 'chapters',
-      titleIcon: <Properties />,
-      title: 'Chapters',
-      visible: isJerahmeelAdmin,
-    },
-    {
-      path: 'archives',
-      titleIcon: <Box />,
-      title: 'Archives',
-      visible: isJerahmeelAdmin,
-    },
-    {
-      path: 'problemsets',
-      titleIcon: <PanelStats />,
-      title: 'Problemsets',
-      visible: isJerahmeelAdmin,
+      title: 'Training',
+      visible: isTrainingAdmin,
+      children: [
+        {
+          path: 'courses',
+          titleIcon: <PredictiveAnalysis />,
+          title: 'Courses',
+        },
+        {
+          path: 'chapters',
+          titleIcon: <Properties />,
+          title: 'Chapters',
+        },
+        {
+          path: 'archives',
+          titleIcon: <Box />,
+          title: 'Archives',
+        },
+        {
+          path: 'problemsets',
+          titleIcon: <PanelStats />,
+          title: 'Problemsets',
+        },
+      ],
     },
   ].filter(item => item.visible);
 

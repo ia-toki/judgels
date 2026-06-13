@@ -20,7 +20,7 @@ function buildCsvFromData(response) {
     const profile = profilesMap[entry.userJid];
     const username = profile ? profile.username : entry.userJid;
     const { role } = entry;
-    return [username, role.jophiel || '', role.sandalphon || '', role.uriel || '', role.jerahmeel || ''].join(',');
+    return [username, role.account || '', role.problem || '', role.contest || '', role.training || ''].join(',');
   });
 
   return lines.join('\n');
@@ -35,22 +35,22 @@ function parseCsvToRoleMap(csv) {
 
   for (const line of lines) {
     const parts = line.split(',').map(s => s.trim());
-    const [username, jophiel, sandalphon, uriel, jerahmeel] = parts;
+    const [username, account, problem, contest, training] = parts;
     if (!username) {
       continue;
     }
     const role = {};
-    if (jophiel) {
-      role.jophiel = jophiel;
+    if (account) {
+      role.account = account;
     }
-    if (sandalphon) {
-      role.sandalphon = sandalphon;
+    if (problem) {
+      role.problem = problem;
     }
-    if (uriel) {
-      role.uriel = uriel;
+    if (contest) {
+      role.contest = contest;
     }
-    if (jerahmeel) {
-      role.jerahmeel = jerahmeel;
+    if (training) {
+      role.training = training;
     }
     map[username] = role;
   }
@@ -107,20 +107,20 @@ export function RoleEditDialog({ currentData }) {
                 />
                 <Collapse isOpen={isInstructionOpen}>
                   <h5>Row format</h5>
-                  <pre>{'<username>,<jophiel role>,<sandalphon role>,<uriel role>,<jerahmeel role>'}</pre>
+                  <pre>{'<username>,<account role>,<problem role>,<contest role>,<training role>'}</pre>
                   <br />
                   <ul>
                     <li>
-                      <code>jophiel role</code>: user management role
+                      <code>account role</code>: account management role
                     </li>
                     <li>
-                      <code>sandalphon role</code>: problem/lesson management role
+                      <code>problem role</code>: problem management role
                     </li>
                     <li>
-                      <code>uriel role</code>: contest management role
+                      <code>contest role</code>: contest management role
                     </li>
                     <li>
-                      <code>jerahmeel role</code>: training management role
+                      <code>training role</code>: training management role
                     </li>
                   </ul>
                   <br />

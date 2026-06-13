@@ -49,6 +49,7 @@ export default function ContentWithSidebar({
         path: item.path,
         titleIcon: item.titleIcon,
         title: item.title,
+        children: item.children && item.children.filter(child => !child.disabled),
       }));
     const sidebarWidget = renderSidebarWidget();
 
@@ -91,7 +92,9 @@ export default function ContentWithSidebar({
 
   const renderSidebarWidget = () => {
     const activeItemPath = getActiveItemPath();
-    const activeItem = items.find(item => item.path === activeItemPath);
+    const activeItem = items
+      .flatMap(item => (item.children ? item.children : [item]))
+      .find(item => item.path === activeItemPath);
 
     if (!activeItem || !activeItem.widgetComponent) {
       return null;

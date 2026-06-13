@@ -120,10 +120,10 @@ public class RoleResource extends BaseAccountResource {
         for (UserWithRole userWithRole : userWithRoles) {
             List<String> row = new ArrayList<>();
             row.add(profilesMap.get(userWithRole.getUserJid()).getUsername());
-            row.add(userWithRole.getRole().getJophiel().orElse(""));
-            row.add(userWithRole.getRole().getSandalphon().orElse(""));
-            row.add(userWithRole.getRole().getUriel().orElse(""));
-            row.add(userWithRole.getRole().getJerahmeel().orElse(""));
+            row.add(userWithRole.getRole().getAccount().orElse(""));
+            row.add(userWithRole.getRole().getProblem().orElse(""));
+            row.add(userWithRole.getRole().getContest().orElse(""));
+            row.add(userWithRole.getRole().getTraining().orElse(""));
             rows.add(String.join(",", row));
         }
         return String.join("\r\n", rows);
@@ -159,37 +159,37 @@ public class RoleResource extends BaseAccountResource {
 
             UserRole.Builder role = new UserRole.Builder();
 
-            String jophiel = tokens[1].trim();
-            if (!jophiel.isEmpty()) {
-                if (jophiel.equals("ADMIN")) {
-                    role.jophiel(jophiel);
+            String account = tokens[1].trim();
+            if (!account.isEmpty()) {
+                if (account.equals("ADMIN")) {
+                    role.account(account);
                 } else {
                     return Optional.empty();
                 }
             }
 
-            String sandalphon = tokens[2].trim();
-            if (!sandalphon.isEmpty()) {
-                if (sandalphon.equals("ADMIN")) {
-                    role.sandalphon(sandalphon);
+            String problem = tokens[2].trim();
+            if (!problem.isEmpty()) {
+                if (problem.equals("ADMIN")) {
+                    role.problem(problem);
                 } else {
                     return Optional.empty();
                 }
             }
 
-            String uriel = tokens[3].trim();
-            if (!uriel.isEmpty()) {
-                if (uriel.equals("ADMIN")) {
-                    role.uriel(uriel);
+            String contest = tokens[3].trim();
+            if (!contest.isEmpty()) {
+                if (contest.equals("ADMIN")) {
+                    role.contest(contest);
                 } else {
                     return Optional.empty();
                 }
             }
 
-            String jerahmeel = tokens[4].trim();
-            if (!jerahmeel.isEmpty()) {
-                if (jerahmeel.equals("ADMIN")) {
-                    role.jerahmeel(jerahmeel);
+            String training = tokens[4].trim();
+            if (!training.isEmpty()) {
+                if (training.equals("ADMIN")) {
+                    role.training(training);
                 } else {
                     return Optional.empty();
                 }
