@@ -12,13 +12,13 @@ export default function AdminIndexPage() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  if (role.jophiel === UserAdminRole.Admin || role.jophiel === UserAdminRole.Superadmin) {
+  if (role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin) {
     return <Navigate to="/admin/users" />;
   }
-  if (role.uriel === ContestAdminRole.Admin) {
+  if (role.contest === ContestAdminRole.Admin) {
     return <Navigate to="/admin/contests" />;
   }
-  if (isTLX() && role.jerahmeel === TrainingAdminRole.Admin) {
+  if (isTLX() && role.training === TrainingAdminRole.Admin) {
     return <Navigate to="/admin/courses" />;
   }
   return <Navigate to="/" />;

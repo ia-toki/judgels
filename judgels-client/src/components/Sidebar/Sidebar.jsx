@@ -13,7 +13,7 @@ export class Sidebar extends PureComponent {
   render() {
     const { title, action, activeItemPath, items, widget, onResolveItemUrl } = this.props;
 
-    const tabs = items.map(item => {
+    const renderTab = item => {
       const ItemIcon = widget ? ChevronDown : ChevronRight;
 
       const icon = item.path === activeItemPath && <ItemIcon className="card-sidebar__arrow" />;
@@ -28,6 +28,18 @@ export class Sidebar extends PureComponent {
           {icon}
         </Tab>
       );
+    };
+
+    const tabs = items.flatMap(item => {
+      if (item.children) {
+        return [
+          <div key={item.title} className="card-sidebar__group">
+            {item.title}
+          </div>,
+          ...item.children.map(renderTab),
+        ];
+      }
+      return [renderTab(item)];
     });
 
     const tabsContainer = (

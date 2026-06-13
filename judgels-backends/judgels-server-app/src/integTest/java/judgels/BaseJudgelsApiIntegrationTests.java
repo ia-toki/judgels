@@ -151,10 +151,10 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
         admin = createUser("admin");
         adminToken = getToken(admin);
         createClient(UserRoleClient.class).setUserRoles(superadminToken, Map.of("admin", new UserRole.Builder()
-                .jophiel("ADMIN")
-                .sandalphon("ADMIN")
-                .uriel("ADMIN")
-                .jerahmeel("ADMIN")
+                .account("ADMIN")
+                .problem("ADMIN")
+                .contest("ADMIN")
+                .training("ADMIN")
                 .build()));
 
         user = createUser("user");

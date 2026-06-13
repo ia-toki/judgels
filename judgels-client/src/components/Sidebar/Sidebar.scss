@@ -75,6 +75,25 @@
   }
 }
 
+.card-sidebar__group {
+  padding: 0 20px;
+  margin-top: 16px;
+  line-height: 30px;
+  height: 30px;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  .bp6-light & {
+    color: $secondary-text-color;
+  }
+
+  .bp6-dark & {
+    color: $dark-secondary-text-color;
+  }
+}
+
 .card-sidebar__arrow {
   position: absolute;
   right: 10px;
