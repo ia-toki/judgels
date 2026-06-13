@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestSupervisorAddDialog } from './ContestSupervisorAddDialog';
 
 describe('ContestSupervisorAddDialog', () => {
@@ -42,7 +42,7 @@ describe('ContestSupervisorAddDialog', () => {
     const clarificationPermission = screen.getByRole('checkbox', { name: /clarifications/i });
     await user.click(clarificationPermission);
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid/supervisors/batch-upsert', {
         usernames: ['andi', 'budi', 'caca'],
         managementPermissions: ['ANNOUNCEMENT', 'CLARIFICATION'],

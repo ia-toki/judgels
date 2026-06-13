@@ -1,7 +1,7 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { Circle, Confirm, Dashboard } from '@blueprintjs/icons';
 
-import { VerdictCode } from '../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../modules/api/gradingVerdict';
 
 import './ChapterProblemProgressTag.scss';
 

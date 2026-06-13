@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { UserInfoSection } from './UserInfoSection';
 
 describe('UserInfoSection', () => {
@@ -20,7 +20,7 @@ describe('UserInfoSection', () => {
   };
 
   const renderComponent = async () => {
-    nockJophiel().get('/users/JIDUSER123/info').reply(200, {
+    nockApi().get('/users/JIDUSER123/info').reply(200, {
       name: 'Andi Smith',
       gender: 'MALE',
       country: 'ID',
@@ -98,7 +98,7 @@ describe('UserInfoSection', () => {
     await u.clear(institutionCity);
     await u.type(institutionCity, 'London');
 
-    nockJophiel()
+    nockApi()
       .put('/users/JIDUSER123/info', {
         name: 'Caca',
         gender: 'FEMALE',

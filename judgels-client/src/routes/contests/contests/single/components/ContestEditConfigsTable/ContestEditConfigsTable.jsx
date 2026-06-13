@@ -4,7 +4,7 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
-import { getGradingLanguageName } from '../../../../../../modules/api/gabriel/language.js';
+import { getGradingLanguageName } from '../../../../../../modules/api/gradingLanguage.js';
 
 import './ContestEditConfigsTable.scss';
 

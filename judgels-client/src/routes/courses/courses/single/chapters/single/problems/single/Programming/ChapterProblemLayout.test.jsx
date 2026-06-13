@@ -10,7 +10,7 @@ import { act, render, screen } from '@testing-library/react';
 
 import { WebPrefsProvider } from '../../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../../test/QueryClientProviderWrapper';
-import { nockJerahmeel } from '../../../../../../../../../utils/nock';
+import { nockApi } from '../../../../../../../../../utils/nock';
 import ChapterProblemLayout from './ChapterProblemLayout';
 
 describe('ChapterProblemLayout', () => {
@@ -42,8 +42,8 @@ describe('ChapterProblemLayout', () => {
     };
     const renderNavigation = () => null;
 
-    nockJerahmeel().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
-    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+    nockApi().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockApi().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({

@@ -3,7 +3,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import UserPage from './UserPage';
 
 describe('UserPage', () => {
@@ -12,13 +12,13 @@ describe('UserPage', () => {
   });
 
   const renderComponent = async () => {
-    nockJophiel().get('/users/username/andi').reply(200, {
+    nockApi().get('/users/username/andi').reply(200, {
       jid: 'JIDUSER123',
       username: 'andi',
       email: 'andi@example.com',
     });
 
-    nockJophiel().get('/users/JIDUSER123/info').reply(200, {
+    nockApi().get('/users/JIDUSER123/info').reply(200, {
       name: 'Andi Smith',
       gender: 'MALE',
       country: 'ID',

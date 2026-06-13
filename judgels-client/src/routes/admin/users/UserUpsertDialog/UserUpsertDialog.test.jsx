@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { UserUpsertDialog } from './UserUpsertDialog';
 
 describe('UserUpsertDialog', () => {
@@ -34,7 +34,7 @@ describe('UserUpsertDialog', () => {
     const textarea = screen.getByRole('textbox');
     await user.type(textarea, 'username,password,email\nandi,pass1,andi@example.com');
 
-    nockJophiel()
+    nockApi()
       .post('/users/batch-upsert', 'username,password,email\nandi,pass1,andi@example.com')
       .reply(200, {
         createdUsernames: ['andi'],

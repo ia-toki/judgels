@@ -5,7 +5,7 @@ import { ContestScoreboardType } from '../../../../../../modules/api/contestScor
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestScoreboardPage from './ContestScoreboardPage';
 
 describe('ContestScoreboardPage', () => {
@@ -34,16 +34,13 @@ describe('ContestScoreboardPage', () => {
   };
 
   const renderComponent = async ({ scoreboard: sb } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: ContestStyle.ICPC,
     });
 
-    nockUriel()
-      .get('/contests/contestJid/scoreboard')
-      .query({ frozen: false, showClosedProblems: false })
-      .reply(200, sb);
+    nockApi().get('/contests/contestJid/scoreboard').query({ frozen: false, showClosedProblems: false }).reply(200, sb);
 
     await act(async () => {
       render(

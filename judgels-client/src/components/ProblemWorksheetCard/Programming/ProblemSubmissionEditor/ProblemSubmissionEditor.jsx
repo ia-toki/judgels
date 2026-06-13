@@ -9,8 +9,8 @@ import {
   getGradingLanguageEditorSubmissionFilename,
   getGradingLanguageEditorSubmissionHint,
   gradingLanguageNamesMap,
-} from '../../../../modules/api/gabriel/language.js';
-import { VerdictCode } from '../../../../modules/api/gabriel/verdict.js';
+} from '../../../../modules/api/gradingLanguage.js';
+import { VerdictCode } from '../../../../modules/api/gradingVerdict.js';
 import { decodeBase64 } from '../../../../utils/base64';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor';

@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestRegistrantsDialog from './ContestRegistrantsDialog';
 
 describe('ContestRegistrantsDialog', () => {
@@ -12,12 +12,12 @@ describe('ContestRegistrantsDialog', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/contestants/approved')
       .reply(200, {
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],

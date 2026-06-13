@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ContestCreateDialog } from './ContestCreateDialog';
 
 describe('ContestCreateDialog', () => {
@@ -31,7 +31,7 @@ describe('ContestCreateDialog', () => {
     const slug = screen.getByRole('textbox');
     await user.type(slug, 'new-contest');
 
-    nockUriel().post('/contests', { slug: 'new-contest' }).reply(200);
+    nockApi().post('/contests', { slug: 'new-contest' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);

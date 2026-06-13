@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestClarificationCreateDialog } from './ContestClarificationCreateDialog';
 
 describe('ContestClarificationCreateDialog', () => {
@@ -47,7 +47,7 @@ describe('ContestClarificationCreateDialog', () => {
     const question = screen.getByRole('textbox', { name: /question/i });
     await user.type(question, 'Is snack provided?');
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid/clarifications', {
         topicJid: 'contestJid',
         title: 'Snack',

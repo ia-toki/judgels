@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { RoleEditDialog } from './RoleEditDialog';
 
 describe('RoleEditDialog', () => {
@@ -48,7 +48,7 @@ describe('RoleEditDialog', () => {
     await user.clear(textarea);
     await user.type(textarea, 'andi,ADMIN,ADMIN,,\ncaca,,ADMIN,,');
 
-    nockJophiel()
+    nockApi()
       .put('/user-roles', {
         andi: { jophiel: 'ADMIN', sandalphon: 'ADMIN' },
         caca: { sandalphon: 'ADMIN' },

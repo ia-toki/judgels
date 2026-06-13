@@ -36,29 +36,33 @@ import judgels.persistence.model.ProblemSetModel;
 import judgels.persistence.model.ProblemSetProblemModel;
 import judgels.persistence.model.ProblemSetterModel;
 import judgels.persistence.model.ProblemTagModel;
+import judgels.persistence.model.ProgrammingGradingModel;
+import judgels.persistence.model.ProgrammingSubmissionModel;
 import judgels.persistence.model.SessionModel;
 import judgels.persistence.model.StatsUserModel;
 import judgels.persistence.model.StatsUserProblemModel;
+import judgels.persistence.model.TrainingProgrammingGradingModel;
+import judgels.persistence.model.TrainingProgrammingSubmissionModel;
 import judgels.persistence.model.UserInfoModel;
 import judgels.persistence.model.UserModel;
+import judgels.persistence.model.UserRatingEventModel;
 import judgels.persistence.model.UserRatingModel;
+import judgels.persistence.model.UserRegistrationEmailModel;
 import judgels.persistence.model.UserResetPasswordModel;
 import judgels.persistence.model.UserRoleModel;
 
 public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerApplicationConfiguration> {
     public JudgelsServerHibernateBundle() {
         super(
-                // Jophiel
                 SessionModel.class,
                 UserModel.class,
                 UserInfoModel.class,
                 UserRatingModel.class,
                 UserResetPasswordModel.class,
                 UserRoleModel.class,
-                judgels.persistence.model.UserRatingEventModel.class,
-                judgels.persistence.model.UserRegistrationEmailModel.class,
+                UserRatingEventModel.class,
+                UserRegistrationEmailModel.class,
 
-                // Sandalphon
                 BundleGradingModel.class,
                 BundleSubmissionModel.class,
                 LessonModel.class,
@@ -67,10 +71,9 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 ProblemPartnerModel.class,
                 ProblemSetterModel.class,
                 ProblemTagModel.class,
-                judgels.persistence.model.ProgrammingGradingModel.class,
-                judgels.persistence.model.ProgrammingSubmissionModel.class,
+                ProgrammingGradingModel.class,
+                ProgrammingSubmissionModel.class,
 
-                // Uriel
                 ContestModel.class,
                 ContestAnnouncementModel.class,
                 ContestBundleItemSubmissionModel.class,
@@ -86,7 +89,6 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 ContestSupervisorModel.class,
                 ContestLogModel.class,
 
-                // Jerahmeel
                 ArchiveModel.class,
                 CurriculumModel.class,
                 ChapterModel.class,
@@ -94,8 +96,8 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 ChapterProblemModel.class,
                 CourseModel.class,
                 CourseChapterModel.class,
-                judgels.persistence.model.TrainingProgrammingGradingModel.class,
-                judgels.persistence.model.TrainingProgrammingSubmissionModel.class,
+                TrainingProgrammingGradingModel.class,
+                TrainingProgrammingSubmissionModel.class,
                 BundleItemSubmissionModel.class,
                 ProblemContestModel.class,
                 ProblemLevelModel.class,

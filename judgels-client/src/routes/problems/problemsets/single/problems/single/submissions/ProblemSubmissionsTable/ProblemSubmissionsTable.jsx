@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
 import { GradingVerdictTag } from '../../../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import { getGradingLanguageName } from '../../../../../../../../modules/api/gabriel/language.js';
+import { getGradingLanguageName } from '../../../../../../../../modules/api/gradingLanguage.js';
 
 import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
 

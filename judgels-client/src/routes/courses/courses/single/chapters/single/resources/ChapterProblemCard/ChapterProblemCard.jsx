@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
-import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
 
 import './ChapterProblemCard.scss';

@@ -6,7 +6,7 @@ import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../../../utils/nock';
+import { nockApi } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
 describe('BundleContestProblemPage', () => {
@@ -15,13 +15,13 @@ describe('BundleContestProblemPage', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel().persist().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().persist().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: 'BUNDLE',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/problems/C/bundle/worksheet')
       .query({ language: 'id' })
       .reply(200, {
@@ -58,7 +58,7 @@ describe('BundleContestProblemPage', () => {
         },
       });
 
-    nockUriel()
+    nockApi()
       .get('/contests/submissions/bundle/answers')
       .query({ contestJid: 'contestJid', problemAlias: 'C' })
       .reply(200, {});
@@ -84,7 +84,7 @@ describe('BundleContestProblemPage', () => {
 
     await screen.findByText('somestatement');
 
-    const createSubmission = nockUriel()
+    const createSubmission = nockApi()
       .post('/contests/submissions/bundle', {
         containerJid: 'contestJid',
         problemJid: 'problemJid',

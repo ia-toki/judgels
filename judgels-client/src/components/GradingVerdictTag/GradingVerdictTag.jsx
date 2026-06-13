@@ -1,7 +1,7 @@
 import { Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { VerdictCode } from '../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../modules/api/gradingVerdict';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
 
 import './GradingVerdictTag.scss';

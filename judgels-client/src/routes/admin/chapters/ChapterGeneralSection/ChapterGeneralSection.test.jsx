@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ChapterGeneralSection } from './ChapterGeneralSection';
 
 describe('ChapterGeneralSection', () => {
@@ -55,7 +55,7 @@ describe('ChapterGeneralSection', () => {
     await user.clear(name);
     await user.type(name, 'New Chapter');
 
-    nockJerahmeel().post('/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
+    nockApi().post('/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 

@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestEditDescriptionTab from './ContestEditDescriptionTab';
 
 describe('ContestEditDescriptionTab', () => {
@@ -14,12 +14,12 @@ describe('ContestEditDescriptionTab', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel().get('/contests/contestJid/description').reply(200, {
+    nockApi().get('/contests/contestJid/description').reply(200, {
       description: 'current description',
     });
 
@@ -47,7 +47,7 @@ describe('ContestEditDescriptionTab', () => {
     await user.clear(description);
     await user.type(description, 'new description');
 
-    nockUriel().post('/contests/contestJid/description', { description: 'new description' }).reply(200);
+    nockApi().post('/contests/contestJid/description', { description: 'new description' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);

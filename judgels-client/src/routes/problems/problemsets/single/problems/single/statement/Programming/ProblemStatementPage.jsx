@@ -5,7 +5,7 @@ import { ContentCard } from '../../../../../../../../components/ContentCard/Cont
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { sendGAEvent } from '../../../../../../../../ga';
-import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gabriel/language.js';
+import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gradingLanguage.js';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,

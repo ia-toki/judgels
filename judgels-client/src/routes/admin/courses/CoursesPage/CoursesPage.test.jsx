@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import CoursesPage from './CoursesPage';
 
 describe('CoursesPage', () => {
@@ -17,7 +17,7 @@ describe('CoursesPage', () => {
       { jid: 'JIDCOURSE2', id: 2, slug: 'course-2', name: 'Course 2' },
     ],
   } = {}) => {
-    nockJerahmeel().get('/courses').reply(200, { data: courses });
+    nockApi().get('/courses').reply(200, { data: courses });
 
     await act(async () =>
       render(

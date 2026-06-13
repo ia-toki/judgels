@@ -11,11 +11,11 @@ import judgels.service.api.JudgelsServiceException;
 public class ContestErrors {
     private ContestErrors() {}
 
-    public static final String JID_ALREADY_EXISTS = "Uriel:ContestJidAlreadyExists";
-    public static final String SLUG_ALREADY_EXISTS = "Uriel:ContestSlugAlreadyExists";
-    public static final String PROBLEM_SLUGS_NOT_ALLOWED = "Uriel:ContestProblemSlugsNotAllowed";
-    public static final String WRONG_PROBLEM_TYPE = "Uriel:WrongProblemType";
-    public static final String CLARIFICATION_ALREADY_ANSWERED = "Uriel:ClarificationAlreadyAnswered";
+    public static final String JID_ALREADY_EXISTS = "ContestJidAlreadyExists";
+    public static final String SLUG_ALREADY_EXISTS = "ContestSlugAlreadyExists";
+    public static final String PROBLEM_SLUGS_NOT_ALLOWED = "ContestProblemSlugsNotAllowed";
+    public static final String WRONG_PROBLEM_TYPE = "WrongProblemType";
+    public static final String CLARIFICATION_ALREADY_ANSWERED = "ClarificationAlreadyAnswered";
 
     public static JudgelsServiceException jidAlreadyExists(String jid) {
         Map<String, Object> args = new HashMap<>();

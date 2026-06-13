@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel, nockUriel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import RatingsPage from './RatingsPage';
 
 describe('RatingsPage', () => {
@@ -51,7 +51,7 @@ describe('RatingsPage', () => {
     ],
     ratingChangesMap = mockRatingChangesMap,
   } = {}) => {
-    nockUriel().get('/contest-rating/pending').reply(200, {
+    nockApi().get('/contest-rating/pending').reply(200, {
       data: contests,
       ratingChangesMap,
     });
@@ -120,7 +120,7 @@ describe('RatingsPage', () => {
     const viewButton = within(rows[1]).getByRole('button', { name: /view rating changes/i });
     await user.click(viewButton);
 
-    nockJophiel()
+    nockApi()
       .post('/user-rating', {
         eventJid: 'contestJid1',
         time: 150,

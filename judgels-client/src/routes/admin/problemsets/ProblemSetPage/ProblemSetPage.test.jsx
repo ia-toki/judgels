@@ -3,7 +3,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import ProblemSetPage from './ProblemSetPage';
 
 describe('ProblemSetPage', () => {
@@ -12,7 +12,7 @@ describe('ProblemSetPage', () => {
   });
 
   const renderComponent = async () => {
-    nockJerahmeel().get('/problemsets/slug/problemset-1').reply(200, {
+    nockApi().get('/problemsets/slug/problemset-1').reply(200, {
       jid: 'JIDPROBLEMSET1',
       slug: 'problemset-1',
       name: 'Problemset 1',
@@ -21,13 +21,13 @@ describe('ProblemSetPage', () => {
       contestTime: 1609459200000,
     });
 
-    nockJerahmeel()
+    nockApi()
       .get('/archives')
       .reply(200, {
         data: [{ jid: 'JIDARCHIVE1', slug: 'archive-1', name: 'Archive 1' }],
       });
 
-    nockJerahmeel()
+    nockApi()
       .get('/problemsets/JIDPROBLEMSET1/problems')
       .reply(200, {
         data: [{ alias: 'A', problemJid: 'JIDPROBLEM1', type: 'PROGRAMMING', contestJids: [] }],

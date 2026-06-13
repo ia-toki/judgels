@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ChapterCreateDialog } from './ChapterCreateDialog';
 
 describe('ChapterCreateDialog', () => {
@@ -32,7 +32,7 @@ describe('ChapterCreateDialog', () => {
     const name = screen.getByRole('textbox');
     await user.type(name, 'New Chapter');
 
-    nockJerahmeel().post('/chapters', { name: 'New Chapter' }).reply(200);
+    nockApi().post('/chapters', { name: 'New Chapter' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);

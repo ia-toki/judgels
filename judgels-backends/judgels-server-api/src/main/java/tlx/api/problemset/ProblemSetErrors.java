@@ -10,9 +10,9 @@ import judgels.service.api.JudgelsServiceException;
 public class ProblemSetErrors {
     private ProblemSetErrors() {}
 
-    public static final String SLUG_ALREADY_EXISTS = "Jerahmeel:ProblemSetSlugAlreadyExists";
-    public static final String ARCHIVE_SLUG_NOT_FOUND = "Jerahmeel:ArchiveSlugNotFound";
-    public static final String CONTEST_SLUGS_NOT_ALLOWED = "Jerahmeel:ContestSlugsNotAllowed";
+    public static final String SLUG_ALREADY_EXISTS = "ProblemSetSlugAlreadyExists";
+    public static final String ARCHIVE_SLUG_NOT_FOUND = "ArchiveSlugNotFound";
+    public static final String CONTEST_SLUGS_NOT_ALLOWED = "ContestSlugsNotAllowed";
 
     public static JudgelsServiceException slugAlreadyExists(String slug) {
         Map<String, Object> args = new HashMap<>();

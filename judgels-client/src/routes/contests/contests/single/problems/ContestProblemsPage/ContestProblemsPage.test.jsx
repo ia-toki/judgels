@@ -4,7 +4,7 @@ import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestProblemsPage from './ContestProblemsPage';
 
 describe('ContestProblemsPage', () => {
@@ -13,12 +13,12 @@ describe('ContestProblemsPage', () => {
   });
 
   const renderComponent = async ({ problems = [], canManage } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/problems')
       .reply(200, {
         data: problems,

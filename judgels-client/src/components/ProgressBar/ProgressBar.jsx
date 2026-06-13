@@ -1,7 +1,7 @@
 import { ProgressBar as BlueprintProgressBar, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { getVerdictIntent } from '../../modules/api/gabriel/verdict';
+import { getVerdictIntent } from '../../modules/api/gradingVerdict';
 
 import './ProgressBar.scss';
 

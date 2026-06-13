@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
-import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
 import { chapterProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
 import {

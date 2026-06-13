@@ -4,7 +4,7 @@ import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../../../../../utils/nock';
+import { nockApi } from '../../../../../../../../utils/nock';
 import ChapterResourcesPage from './ChapterResourcesPage';
 
 describe('ChapterResourcesPage', () => {
@@ -22,12 +22,10 @@ describe('ChapterResourcesPage', () => {
       { problemJid: 'problemJid2', alias: 'B' },
     ],
   } = {}) => {
-    nockJerahmeel()
-      .get('/courses/slug/courseSlug')
-      .reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
-    nockJerahmeel().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+    nockApi().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
+    nockApi().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
-    nockJerahmeel()
+    nockApi()
       .get('/chapters/chapterJid/lessons')
       .reply(200, {
         data: lessons,
@@ -45,7 +43,7 @@ describe('ChapterResourcesPage', () => {
         },
       });
 
-    nockJerahmeel()
+    nockApi()
       .get('/chapters/chapterJid/problems')
       .reply(200, {
         data: problems,

@@ -3,7 +3,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import CoursePage from './CoursePage';
 
 describe('CoursePage', () => {
@@ -12,7 +12,7 @@ describe('CoursePage', () => {
   });
 
   const renderComponent = async () => {
-    nockJerahmeel().get('/courses/slug/course-1').reply(200, {
+    nockApi().get('/courses/slug/course-1').reply(200, {
       id: 1,
       jid: 'JIDCOURSE1',
       slug: 'course-1',
@@ -20,7 +20,7 @@ describe('CoursePage', () => {
       description: 'Description 1',
     });
 
-    nockJerahmeel()
+    nockApi()
       .get('/courses/JIDCOURSE1/chapters')
       .reply(200, {
         data: [{ alias: 'A', chapterJid: 'JIDCHAPTER1' }],

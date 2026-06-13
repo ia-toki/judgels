@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestFilesPage from './ContestFilesPage';
 
 describe('ContestFilesPage', () => {
@@ -19,12 +19,12 @@ describe('ContestFilesPage', () => {
       { name: 'solutions.zip', size: 100, lastModifiedTime: 12345 },
     ],
   } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/files')
       .reply(200, {
         data: files,
@@ -80,7 +80,7 @@ describe('ContestFilesPage', () => {
     const fileInput = await screen.findByLabelText(/file/i);
     await user.upload(fileInput, file);
 
-    nockUriel()
+    nockApi()
       .post(
         '/contests/contestJid/files',
         body => body.includes('name="file"') && body.includes('Content-Type: text/plain\r\n\r\ncontent\r\n')

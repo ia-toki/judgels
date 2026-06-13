@@ -6,7 +6,7 @@ import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDuration } from '../../../../../../utils/duration';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestEditConfigsTab from './ContestEditConfigsTab';
 
 describe('ContestEditConfigsTab', () => {
@@ -48,12 +48,12 @@ describe('ContestEditConfigsTab', () => {
       },
     },
   } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel().get('/contests/contestJid/modules/config').reply(200, config);
+    nockApi().get('/contests/contestJid/modules/config').reply(200, config);
 
     await act(async () =>
       render(
@@ -116,7 +116,7 @@ describe('ContestEditConfigsTab', () => {
     await user.clear(editorialPreface);
     await user.type(editorialPreface, '<p>Thank you for your participation.</p>');
 
-    nockUriel()
+    nockApi()
       .put('/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: [] },
@@ -176,7 +176,7 @@ describe('ContestEditConfigsTab', () => {
     const icpcAllowAllLanguages = screen.getByRole('checkbox', { name: /\(all\)/i });
     await user.click(icpcAllowAllLanguages);
 
-    nockUriel()
+    nockApi()
       .put('/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: [] },
@@ -217,7 +217,7 @@ describe('ContestEditConfigsTab', () => {
     const icpcAllowedLanguagesPython3 = screen.getByRole('checkbox', { name: /python 3/i });
     await user.click(icpcAllowedLanguagesPython3);
 
-    nockUriel()
+    nockApi()
       .put('/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: ['Pascal', 'Python3'] },

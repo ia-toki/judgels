@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ArchiveGeneralSection } from './ArchiveGeneralSection';
 
 describe('ArchiveGeneralSection', () => {
@@ -73,7 +73,7 @@ describe('ArchiveGeneralSection', () => {
     await user.clear(description);
     await user.type(description, 'New Description');
 
-    nockJerahmeel()
+    nockApi()
       .post('/archives/JIDARCHIVE1', {
         slug: 'new-archive',
         name: 'New Archive',

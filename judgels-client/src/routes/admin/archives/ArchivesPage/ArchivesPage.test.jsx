@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import ArchivesPage from './ArchivesPage';
 
 describe('ArchivesPage', () => {
@@ -17,7 +17,7 @@ describe('ArchivesPage', () => {
       { jid: 'JIDARCHIVE2', id: 2, slug: 'archive-2', name: 'Archive 2', category: 'Category 2' },
     ],
   } = {}) => {
-    nockJerahmeel().get('/archives').reply(200, { data: archives });
+    nockApi().get('/archives').reply(200, { data: archives });
 
     await act(async () =>
       render(

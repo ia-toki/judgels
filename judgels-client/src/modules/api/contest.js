@@ -12,9 +12,9 @@ export const ContestStyle = {
 };
 
 export const ContestErrors = {
-  SlugAlreadyExists: 'Uriel:ContestSlugAlreadyExists',
-  ProblemSlugsNotAllowed: 'Uriel:ContestProblemSlugsNotAllowed',
-  ClarificationAlreadyAnswered: 'Uriel:ClarificationAlreadyAnswered',
+  SlugAlreadyExists: 'ContestSlugAlreadyExists',
+  ProblemSlugsNotAllowed: 'ContestProblemSlugsNotAllowed',
+  ClarificationAlreadyAnswered: 'ClarificationAlreadyAnswered',
 };
 
 export const baseContestsURL = `${APP_CONFIG.apiUrl}/contests`;

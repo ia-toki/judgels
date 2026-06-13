@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestContestantRemoveDialog } from './ContestContestantRemoveDialog';
 
 describe('ContestContestantRemoveDialog', () => {
@@ -36,7 +36,7 @@ describe('ContestContestantRemoveDialog', () => {
     const usernames = screen.getByRole('textbox');
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid/contestants/batch-delete', ['andi', 'budi', 'caca'])
       .reply(200, { deletedContestantProfilesMap: {} });
 

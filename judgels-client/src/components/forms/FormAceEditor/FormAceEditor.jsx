@@ -7,7 +7,7 @@ import 'ace-builds/src-noconflict/mode-plain_text';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/theme-tomorrow_night';
 
-import { getGradingLanguageFamily } from '../../../modules/api/gabriel/language';
+import { getGradingLanguageFamily } from '../../../modules/api/gradingLanguage';
 import { useWebPrefs } from '../../../modules/webPrefs';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 import { getIntent } from '../meta';

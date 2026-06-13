@@ -8,7 +8,7 @@ import judgels.service.api.JudgelsServiceException;
 public class SessionWithRegistrationErrors {
     private SessionWithRegistrationErrors() {}
 
-    public static final String USER_NOT_ACTIVATED = "Jophiel:UserNotActivated";
+    public static final String USER_NOT_ACTIVATED = "UserNotActivated";
 
     public static JudgelsServiceException userNotActivated(String email) {
         Map<String, Object> args = new HashMap<>();
