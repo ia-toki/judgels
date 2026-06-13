@@ -65,19 +65,19 @@ judgels:
     gradingResponseQueueName: judgels-grading-response
 
   auth:
-{% if jophiel_auth_google_clientId is defined %}
+{% if auth_google_clientId is defined %}
     google:
-      clientId: {{ jophiel_auth_google_clientId }}
+      clientId: {{ auth_google_clientId }}
 {% endif %}
 
-{% if jophiel_mailer_host is defined %}
+{% if mailer_host is defined %}
   mailer:
-    host: {{ jophiel_mailer_host }}
-    port: {{ jophiel_mailer_port }}
-    useSsl: {{ jophiel_mailer_useSsl }}
-    username: {{ jophiel_mailer_username }}
-    password: {{ jophiel_mailer_password }}
-    sender: {{ jophiel_mailer_sender }}
+    host: {{ mailer_host }}
+    port: {{ mailer_port }}
+    useSsl: {{ mailer_useSsl }}
+    username: {{ mailer_username }}
+    password: {{ mailer_password }}
+    sender: {{ mailer_sender }}
 {% endif %}
 
 {% if recaptcha_siteKey is defined %}
@@ -87,12 +87,12 @@ judgels:
 {% endif %}
 
   userRegistration:
-    enabled: {{ jophiel_userRegistration_enabled | default(false, true) }}
-{% if jophiel_userRegistration_enabled | default(false, true) %}
-    useRecaptcha: {{ jophiel_userRegistration_useRecaptcha }}
+    enabled: {{ userRegistration_enabled | default(false, true) }}
+{% if userRegistration_enabled | default(false, true) %}
+    useRecaptcha: {{ userRegistration_useRecaptcha }}
     activationEmailTemplate:
-      subject: {{ jophiel_userRegistration_activationEmailTemplate_subject }}
-      body: {{ jophiel_userRegistration_activationEmailTemplate_body }}
+      subject: {{ userRegistration_activationEmailTemplate_subject }}
+      body: {{ userRegistration_activationEmailTemplate_body }}
 {% else %}
     useRecaptcha: false
     activationEmailTemplate:
@@ -101,14 +101,14 @@ judgels:
 {% endif %}
 
   userResetPassword:
-    enabled: {{ jophiel_userResetPassword_enabled | default(false, true) }}
-{% if jophiel_userResetPassword_enabled | default(false, true) %}
+    enabled: {{ userResetPassword_enabled | default(false, true) }}
+{% if userResetPassword_enabled | default(false, true) %}
     requestEmailTemplate:
-      subject: {{ jophiel_userResetPassword_requestEmailTemplate_subject }}
-      body: {{ jophiel_userResetPassword_requestEmailTemplate_body }}
+      subject: {{ userResetPassword_requestEmailTemplate_subject }}
+      body: {{ userResetPassword_requestEmailTemplate_body }}
     resetEmailTemplate:
-      subject: {{ jophiel_userResetPassword_resetEmailTemplate_subject }}
-      body: {{ jophiel_userResetPassword_resetEmailTemplate_body }}
+      subject: {{ userResetPassword_resetEmailTemplate_subject }}
+      body: {{ userResetPassword_resetEmailTemplate_body }}
 {% else %}
     requestEmailTemplate:
       subject: UNUSED
@@ -119,31 +119,31 @@ judgels:
 {% endif %}
 
   superadmin:
-    initialPassword: {{ jophiel_superadmin_initialPassword }}
+    initialPassword: {{ superadmin_initialPassword }}
 
   session:
-    maxConcurrentSessionsPerUser: {{ jophiel_session_maxConcurrentSessionsPerUser }}
-    disableLogout: {{ jophiel_session_disableLogout }}
+    maxConcurrentSessionsPerUser: {{ session_maxConcurrentSessionsPerUser }}
+    disableLogout: {{ session_disableLogout }}
 
   web:
     announcements: []
 
 {% if app_licenseKey is defined %}
 training:
-{% if jerahmeel_aws_accessKey is defined %}
+{% if training_aws_accessKey is defined %}
   aws:
-    accessKey: {{ jerahmeel_aws_accessKey }}
-    secretKey: {{ jerahmeel_aws_secretKey }}
-    s3BucketRegionId: {{ jerahmeel_aws_s3BucketRegionId }}
+    accessKey: {{ training_aws_accessKey }}
+    secretKey: {{ training_aws_secretKey }}
+    s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
 {% endif %}
 
   submission:
     fs:
-      type: {{ jerahmeel_submission_fs_type | default('local', true) }}
-{% if jerahmeel_submission_fs_type | default('local', true) != 'local' %}
-      s3BucketName: {{ jerahmeel_submission_fs_s3BucketName }}
+      type: {{ training_submission_fs_type | default('local', true) }}
+{% if training_submission_fs_type | default('local', true) != 'local' %}
+      s3BucketName: {{ training_submission_fs_s3BucketName }}
 {% endif %}
 
   stats:
-    enabled: {{ jerahmeel_stats_enabled | default(false, true) }}
+    enabled: {{ training_stats_enabled | default(false, true) }}
 {% endif %}
