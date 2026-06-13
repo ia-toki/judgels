@@ -6,7 +6,7 @@ import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../utils/datetime';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ProblemSetCreateDialog } from './ProblemSetCreateDialog';
 
 describe('ProblemSetCreateDialog', () => {
@@ -46,7 +46,7 @@ describe('ProblemSetCreateDialog', () => {
     await user.clear(contestTime);
     await user.type(contestTime, '2100-01-01 00:00');
 
-    nockJerahmeel()
+    nockApi()
       .post('/problemsets', {
         slug: 'new-problemSet',
         name: 'New problemSet',

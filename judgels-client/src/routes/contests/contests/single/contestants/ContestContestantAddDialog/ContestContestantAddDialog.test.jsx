@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestContestantAddDialog } from './ContestContestantAddDialog';
 
 describe('ContestContestantAddDialog', () => {
@@ -36,7 +36,7 @@ describe('ContestContestantAddDialog', () => {
     const usernames = screen.getByRole('textbox');
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid/contestants/batch-upsert', ['andi', 'budi', 'caca'])
       .reply(200, { insertedContestantProfilesMap: {}, alreadyContestantProfilesMap: {} });
 

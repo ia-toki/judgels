@@ -4,7 +4,7 @@ import { setSession } from '../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestAnnouncementsPage from './ContestAnnouncementsPage';
 
 describe('ContestAnnouncementsPage', () => {
@@ -32,12 +32,12 @@ describe('ContestAnnouncementsPage', () => {
     canSupervise,
     canManage,
   } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/announcements')
       .reply(200, {
         data: {

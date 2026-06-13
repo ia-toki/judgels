@@ -5,7 +5,7 @@ import { setSession } from '../../../../../../../../modules/session';
 import { WebPrefsProvider } from '../../../../../../../../modules/webPrefs';
 import { QueryClientProviderWrapper } from '../../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../../../utils/nock';
+import { nockApi } from '../../../../../../../../utils/nock';
 import ContestProblemPage from './ContestProblemPage';
 
 describe('ProgrammingContestProblemPage', () => {
@@ -14,12 +14,12 @@ describe('ProgrammingContestProblemPage', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/problems/C/programming/worksheet')
       .query({ language: 'id' })
       .reply(200, {
@@ -70,7 +70,7 @@ describe('ProgrammingContestProblemPage', () => {
 
     await screen.findByText('Lorem ipsum');
 
-    const createSubmission = nockUriel()
+    const createSubmission = nockApi()
       .post(
         '/contests/submissions/programming',
         body =>

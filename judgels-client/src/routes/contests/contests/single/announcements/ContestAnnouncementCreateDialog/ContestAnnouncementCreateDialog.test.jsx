@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestAnnouncementCreateDialog } from './ContestAnnouncementCreateDialog';
 
 describe('ContestAnnouncementCreateDialog', () => {
@@ -40,7 +40,7 @@ describe('ContestAnnouncementCreateDialog', () => {
     const content = screen.getByRole('textbox', { name: /content/i });
     await user.type(content, 'Snack is provided.');
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid/announcements', {
         title: 'Snack',
         content: 'Snack is provided.',

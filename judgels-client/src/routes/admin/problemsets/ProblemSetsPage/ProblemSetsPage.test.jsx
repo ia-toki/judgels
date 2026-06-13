@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import ProblemSetsPage from './ProblemSetsPage';
 
 describe('ProblemSetsPage', () => {
@@ -19,7 +19,7 @@ describe('ProblemSetsPage', () => {
     archiveSlugsMap = { JIDARCHIVE1: 'archive-1' },
     totalCount = 2,
   } = {}) => {
-    nockJerahmeel()
+    nockApi()
       .get('/problemsets')
       .query(true)
       .reply(200, {

@@ -3,7 +3,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import { setSession } from '../../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../../utils/nock';
+import { nockApi } from '../../../../../../../utils/nock';
 import ContestSubmissionsPage from './ContestSubmissionsPage';
 
 describe('ContestSubmissionsPage', () => {
@@ -41,13 +41,13 @@ describe('ContestSubmissionsPage', () => {
     canSupervise = false,
     canManage = false,
   } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: 'ICPC',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/submissions/programming')
       .query({ contestJid: 'contestJid' })
       .reply(200, {

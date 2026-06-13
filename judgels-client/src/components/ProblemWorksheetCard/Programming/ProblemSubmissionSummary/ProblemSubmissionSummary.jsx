@@ -1,8 +1,8 @@
 import { Button, Intent, ProgressBar, Tag } from '@blueprintjs/core';
 import { Clipboard, Cross } from '@blueprintjs/icons';
 
-import { getGradingLanguageSyntaxHighlighterValue } from '../../../../modules/api/gabriel/language';
-import { VerdictCode } from '../../../../modules/api/gabriel/verdict';
+import { getGradingLanguageSyntaxHighlighterValue } from '../../../../modules/api/gradingLanguage';
+import { VerdictCode } from '../../../../modules/api/gradingVerdict';
 import { ButtonLink } from '../../../ButtonLink/ButtonLink';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import SourceCode from '../../../SourceCode/SourceCode';

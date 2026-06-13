@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { CourseGeneralSection } from './CourseGeneralSection';
 
 describe('CourseGeneralSection', () => {
@@ -67,7 +67,7 @@ describe('CourseGeneralSection', () => {
     await user.clear(description);
     await user.type(description, 'New Description');
 
-    nockJerahmeel()
+    nockApi()
       .post('/courses/JIDCOURSE1', {
         slug: 'new-course',
         name: 'New Course',

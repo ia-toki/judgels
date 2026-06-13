@@ -4,9 +4,9 @@ import { APP_CONFIG } from '../../conf';
 import { get, post } from './http';
 
 export const ProblemSetErrors = {
-  SlugAlreadyExists: 'Jerahmeel:ProblemSetSlugAlreadyExists',
-  ArchiveSlugNotFound: 'Jerahmeel:ArchiveSlugNotFound',
-  ContestSlugsNotAllowed: 'Jerahmeel:ContestSlugsNotAllowed',
+  SlugAlreadyExists: 'ProblemSetSlugAlreadyExists',
+  ArchiveSlugNotFound: 'ArchiveSlugNotFound',
+  ContestSlugsNotAllowed: 'ContestSlugsNotAllowed',
 };
 
 export const baseProblemSetsURL = `${APP_CONFIG.apiUrl}/problemsets`;

@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import ContestsPage from './ContestsPage';
 
 describe('ContestsPage', () => {
@@ -17,7 +17,7 @@ describe('ContestsPage', () => {
       { jid: 'JIDCONTEST2', id: 2, slug: 'contest-2', name: 'Contest 2' },
     ],
   } = {}) => {
-    nockUriel()
+    nockApi()
       .get('/contests?')
       .reply(200, {
         data: { page: contests, totalCount: contests.length },

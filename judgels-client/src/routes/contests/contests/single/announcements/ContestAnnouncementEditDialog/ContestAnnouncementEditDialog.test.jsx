@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestAnnouncementEditDialog } from './ContestAnnouncementEditDialog';
 
 describe('ContestAnnouncementEditDialog', () => {
@@ -51,7 +51,7 @@ describe('ContestAnnouncementEditDialog', () => {
     await user.clear(content);
     await user.type(content, 'Snack is NOT provided.');
 
-    nockUriel()
+    nockApi()
       .put('/contests/contestJid/announcements/announcementJid123', {
         title: 'Snack edited',
         content: 'Snack is NOT provided.',

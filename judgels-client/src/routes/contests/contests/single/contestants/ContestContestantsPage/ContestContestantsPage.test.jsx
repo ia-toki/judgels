@@ -3,7 +3,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestContestantsPage from './ContestContestantsPage';
 
 describe('ContestContestantsPage', () => {
@@ -15,12 +15,12 @@ describe('ContestContestantsPage', () => {
     contestants = [{ userJid: 'userJid1' }, { userJid: 'userJid2' }],
     canManage,
   } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel()
+    nockApi()
       .get('/contests/contestJid/contestants')
       .reply(200, {
         data: {

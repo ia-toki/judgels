@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { ProblemSubmissionCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionCard/ProblemSubmissionCard.jsx';
 import { ProblemSubmissionEditor } from '../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemSubmissionEditor/ProblemSubmissionEditor';
 import { sendGAEvent } from '../../../../../../../../../../ga';
-import { isOutputOnly } from '../../../../../../../../../../modules/api/gabriel/engine.js';
-import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gabriel/language.js';
+import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
+import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
 import { submissionProgrammingAPI } from '../../../../../../../../../../modules/api/submissionProgramming';
 import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
 import {

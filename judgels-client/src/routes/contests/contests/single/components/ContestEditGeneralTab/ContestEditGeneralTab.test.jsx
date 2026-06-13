@@ -7,7 +7,7 @@ import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientPr
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestEditGeneralTab from './ContestEditGeneralTab';
 
 describe('ContestEditGeneralTab', () => {
@@ -16,7 +16,7 @@ describe('ContestEditGeneralTab', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel()
+    nockApi()
       .get('/contests/slug/contest-a')
       .reply(200, {
         jid: 'contestJid',
@@ -63,7 +63,7 @@ describe('ContestEditGeneralTab', () => {
     await user.clear(duration);
     await user.type(duration, '6h');
 
-    nockUriel()
+    nockApi()
       .post('/contests/contestJid', {
         slug: 'contest-b',
         name: 'Contest B',
@@ -73,7 +73,7 @@ describe('ContestEditGeneralTab', () => {
       })
       .reply(200);
 
-    nockUriel()
+    nockApi()
       .get('/contests/slug/contest-b')
       .reply(200, {
         jid: 'contestJid',

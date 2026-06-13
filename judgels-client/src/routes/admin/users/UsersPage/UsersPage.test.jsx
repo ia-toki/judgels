@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import UsersPage from './UsersPage';
 
 describe('UsersPage', () => {
@@ -20,7 +20,7 @@ describe('UsersPage', () => {
       userJid1: '2024-01-15T10:00:00Z',
     },
   } = {}) => {
-    nockJophiel()
+    nockApi()
       .get('/users')
       .query(true)
       .reply(200, {

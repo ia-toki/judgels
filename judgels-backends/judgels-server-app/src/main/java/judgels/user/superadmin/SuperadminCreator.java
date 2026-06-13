@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class SuperadminCreator {
     private static final Logger LOGGER = LoggerFactory.getLogger(SuperadminCreator.class);
     private static final String SUPERADMIN_USERNAME = "superadmin";
-    private static final String SUPERADMIN_INITIAL_EMAIL = SUPERADMIN_USERNAME + "@jophiel.judgels";
+    private static final String SUPERADMIN_INITIAL_EMAIL = SUPERADMIN_USERNAME + "@judgels.com";
 
     private final UserStore userStore;
     private final SuperadminRoleStore superadminRoleStore;

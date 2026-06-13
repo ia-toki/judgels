@@ -2,12 +2,12 @@ import { act, render, screen } from '@testing-library/react';
 
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import ContestsPage from './ContestsPage';
 
 describe('ContestsPage', () => {
   const renderComponent = async contests => {
-    nockUriel()
+    nockApi()
       .get('/contests')
       .reply(200, {
         data: {

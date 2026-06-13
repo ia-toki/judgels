@@ -8,7 +8,7 @@ import { FormTableCheckbox } from '../../../../../../components/forms/FormTableC
 import { FormTableInput } from '../../../../../../components/forms/FormTableInput/FormTableInput';
 import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { NonnegativeNumber, Required, composeValidators } from '../../../../../../components/forms/validations';
-import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gabriel/language.js';
+import { getGradingLanguageName, gradingLanguages } from '../../../../../../modules/api/gradingLanguage.js';
 
 import './ContestEditConfigsForm.scss';
 

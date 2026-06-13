@@ -2,7 +2,7 @@ import { APP_CONFIG } from '../../conf';
 import { get, post } from './http';
 
 export const CourseErrors = {
-  SlugAlreadyExists: 'Jerahmeel:CourseSlugAlreadyExists',
+  SlugAlreadyExists: 'CourseSlugAlreadyExists',
 };
 
 export const baseCoursesURL = `${APP_CONFIG.apiUrl}/courses`;

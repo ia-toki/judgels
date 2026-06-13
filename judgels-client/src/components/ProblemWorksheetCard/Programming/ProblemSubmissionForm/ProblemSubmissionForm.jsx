@@ -2,8 +2,8 @@ import { Button, Callout, Intent } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
 import { Field, Form } from 'react-final-form';
 
-import { isOutputOnly } from '../../../../modules/api/gabriel/engine';
-import { gradingLanguageNamesMap } from '../../../../modules/api/gabriel/language.js';
+import { isOutputOnly } from '../../../../modules/api/gradingEngine';
+import { gradingLanguageNamesMap } from '../../../../modules/api/gradingLanguage.js';
 import FormAceEditor from '../../../forms/FormAceEditor/FormAceEditor.jsx';
 import { FormTableFileInput } from '../../../forms/FormTableFileInput/FormTableFileInput';
 import { FormTableSelect2 } from '../../../forms/FormTableSelect2/FormTableSelect2';

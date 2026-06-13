@@ -6,7 +6,7 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { allLanguagesAllowed } from '../../../../../../modules/api/gabriel/language';
+import { allLanguagesAllowed } from '../../../../../../modules/api/gradingLanguage';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
   contestModuleConfigQueryOptions,

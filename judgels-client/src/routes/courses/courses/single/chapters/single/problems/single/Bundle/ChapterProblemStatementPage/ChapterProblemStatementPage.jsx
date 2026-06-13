@@ -5,7 +5,7 @@ import { ContentCard } from '../../../../../../../../../../components/ContentCar
 import StatementLanguageWidget from '../../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { VerdictCode } from '../../../../../../../../../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../../../../../../../../../modules/api/gradingVerdict';
 import {
   chapterBundleLatestSubmissionsQueryOptions,
   createChapterBundleItemSubmissionMutationOptions,

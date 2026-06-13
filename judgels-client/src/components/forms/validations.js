@@ -1,4 +1,4 @@
-import { getGradingLanguageFilenameExtensions } from '../../modules/api/gabriel/language.js';
+import { getGradingLanguageFilenameExtensions } from '../../modules/api/gradingLanguage.js';
 
 export const Required = value => (value ? undefined : 'Required');
 

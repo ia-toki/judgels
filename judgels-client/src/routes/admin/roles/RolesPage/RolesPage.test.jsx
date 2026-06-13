@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJophiel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import RolesPage from './RolesPage';
 
 describe('RolesPage', () => {
@@ -21,7 +21,7 @@ describe('RolesPage', () => {
       userJid2: { username: 'budi' },
     },
   } = {}) => {
-    nockJophiel().get('/user-roles').reply(200, {
+    nockApi().get('/user-roles').reply(200, {
       data: roles,
       profilesMap,
     });

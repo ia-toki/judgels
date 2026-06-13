@@ -9,7 +9,7 @@ import judgels.service.api.JudgelsServiceException;
 public class ChapterErrors {
     private ChapterErrors() {}
 
-    public static final String WRONG_PROBLEM_TYPE = "Jerahmeel:WrongProblemType";
+    public static final String WRONG_PROBLEM_TYPE = "WrongProblemType";
 
     public static JudgelsServiceException wrongProblemType(ProblemType problemType) {
         Map<String, Object> args = new HashMap<>();

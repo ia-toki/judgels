@@ -2,9 +2,9 @@ import { APP_CONFIG } from '../../conf';
 import { post } from './http';
 
 export const SessionErrors = {
-  UserNotActivated: 'Jophiel:UserNotActivated',
-  UserMaxConcurrentSessionsExceeded: 'Jophiel:UserMaxConcurrentSessionsExceeded',
-  LogoutDisabled: 'Jophiel:LogoutDisabled',
+  UserNotActivated: 'UserNotActivated',
+  UserMaxConcurrentSessionsExceeded: 'UserMaxConcurrentSessionsExceeded',
+  LogoutDisabled: 'LogoutDisabled',
 };
 
 const baseUrl = `${APP_CONFIG.apiUrl}/session`;

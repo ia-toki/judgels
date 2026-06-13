@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { contestSubmissionProgrammingAPI } from '../api/contestSubmissionProgramming';
 import { NotFoundError } from '../api/error';
-import { getGradingLanguageEditorSubmissionFilename } from '../api/gabriel/language';
+import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLanguage';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

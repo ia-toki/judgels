@@ -6,8 +6,8 @@ import judgels.service.api.JudgelsServiceException;
 public class SessionErrors {
     private SessionErrors() {}
 
-    public static final String USER_MAX_CONCURRENT_SESSIONS_EXCEEDED = "Jophiel:UserMaxConcurrentSessionsExceeded";
-    public static final String LOGOUT_DISABLED = "Jophiel:LogoutDisabled";
+    public static final String USER_MAX_CONCURRENT_SESSIONS_EXCEEDED = "UserMaxConcurrentSessionsExceeded";
+    public static final String LOGOUT_DISABLED = "LogoutDisabled";
 
     public static JudgelsServiceException userMaxConcurrentSessionsExceeded() {
         return new JudgelsServiceException(Status.FORBIDDEN, USER_MAX_CONCURRENT_SESSIONS_EXCEEDED);

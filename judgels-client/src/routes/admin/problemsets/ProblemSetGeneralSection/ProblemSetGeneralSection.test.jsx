@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { ProblemSetGeneralSection } from './ProblemSetGeneralSection';
 
 describe('ProblemSetGeneralSection', () => {
@@ -70,7 +70,7 @@ describe('ProblemSetGeneralSection', () => {
     await user.clear(archive);
     await user.type(archive, 'new-archive');
 
-    nockJerahmeel()
+    nockApi()
       .post('/problemsets/JIDPROBLEMSET1', body => {
         return body.slug === 'new-problemset' && body.name === 'New Problemset' && body.archiveSlug === 'new-archive';
       })

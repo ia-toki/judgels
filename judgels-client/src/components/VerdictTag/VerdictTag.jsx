@@ -1,6 +1,6 @@
 import { Tag } from '@blueprintjs/core';
 
-import { getVerdictDisplayName, getVerdictIntent } from '../../modules/api/gabriel/verdict';
+import { getVerdictDisplayName, getVerdictIntent } from '../../modules/api/gradingVerdict';
 
 import './VerdictTag.scss';
 

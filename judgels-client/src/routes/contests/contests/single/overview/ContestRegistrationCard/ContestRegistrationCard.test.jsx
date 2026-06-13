@@ -3,7 +3,7 @@ import { act, render, waitFor } from '@testing-library/react';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestRegistrationCard from './ContestRegistrationCard';
 
 describe('ContestRegistrationCard', () => {
@@ -12,14 +12,14 @@ describe('ContestRegistrationCard', () => {
   });
 
   const renderComponent = async ({ contestantState = 'NONE' } = {}) => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
-    nockUriel().get('/contests/slug/contest-slug/config').reply(200, {});
+    nockApi().get('/contests/slug/contest-slug/config').reply(200, {});
 
-    nockUriel().get('/contests/contestJid/contestants/me/state').reply(200, JSON.stringify(contestantState));
-    nockUriel().get('/contests/contestJid/contestants/approved/count').reply(200, 10);
+    nockApi().get('/contests/contestJid/contestants/me/state').reply(200, JSON.stringify(contestantState));
+    nockApi().get('/contests/contestJid/contestants/approved/count').reply(200, 10);
 
     await act(async () =>
       render(

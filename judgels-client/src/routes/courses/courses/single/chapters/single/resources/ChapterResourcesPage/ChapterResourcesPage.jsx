@@ -3,7 +3,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
-import { VerdictCode } from '../../../../../../../../modules/api/gabriel/verdict';
+import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { getLessonName } from '../../../../../../../../modules/api/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/problem';
 import { chapterLessonsQueryOptions } from '../../../../../../../../modules/queries/chapterLesson';

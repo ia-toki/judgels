@@ -4,7 +4,7 @@ import nock from 'nock';
 
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import { ContestProblemEditDialog } from './ContestProblemEditDialog';
 
 describe('ContestProblemEditDialog', () => {
@@ -65,7 +65,7 @@ describe('ContestProblemEditDialog', () => {
     await user.clear(problems);
     await user.type(problems, 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20');
 
-    nockUriel()
+    nockApi()
       .put('/contests/contestJid/problems', [
         { alias: 'P', slug: 'qq1', status: 'OPEN' },
         { alias: 'Q', slug: 'qq2', status: 'OPEN', submissionsLimit: 20 },

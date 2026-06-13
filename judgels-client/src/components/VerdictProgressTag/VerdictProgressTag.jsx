@@ -1,7 +1,7 @@
 import { Tag } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import { VerdictCode, getVerdictIntent } from '../../modules/api/gabriel/verdict';
+import { VerdictCode, getVerdictIntent } from '../../modules/api/gradingVerdict';
 
 export const VerdictProgressTag = ({ className, verdict, score }) => {
   const intent = getVerdictIntent(verdict);

@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
-import { nockUriel } from '../../../../../../utils/nock';
+import { nockApi } from '../../../../../../utils/nock';
 import ContestEditModulesTab from './ContestEditModulesTab';
 
 describe('ContestEditModulesTab', () => {
@@ -12,12 +12,12 @@ describe('ContestEditModulesTab', () => {
   });
 
   const renderComponent = async () => {
-    nockUriel().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockUriel().get('/contests/contestJid/modules').reply(200, ['REGISTRATION', 'CLARIFICATION', 'FILE']);
+    nockApi().get('/contests/contestJid/modules').reply(200, ['REGISTRATION', 'CLARIFICATION', 'FILE']);
 
     await act(async () =>
       render(

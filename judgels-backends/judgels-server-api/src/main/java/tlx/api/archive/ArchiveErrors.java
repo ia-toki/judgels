@@ -8,7 +8,7 @@ import judgels.service.api.JudgelsServiceException;
 public class ArchiveErrors {
     private ArchiveErrors() {}
 
-    public static final String SLUG_ALREADY_EXISTS = "Jerahmeel:ArchiveSlugAlreadyExists";
+    public static final String SLUG_ALREADY_EXISTS = "ArchiveSlugAlreadyExists";
 
     public static JudgelsServiceException slugAlreadyExists(String slug) {
         Map<String, Object> args = new HashMap<>();

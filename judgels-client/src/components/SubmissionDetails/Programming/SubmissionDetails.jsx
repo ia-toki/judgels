@@ -3,13 +3,13 @@ import { Download, Lock } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 
-import { isInteractive, isOutputOnly } from '../../../modules/api/gabriel/engine';
+import { isInteractive, isOutputOnly } from '../../../modules/api/gradingEngine';
 import {
   getGradingLanguageName,
   getGradingLanguageSyntaxHighlighterValue,
-} from '../../../modules/api/gabriel/language.js';
-import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gabriel/submission';
-import { VerdictCode } from '../../../modules/api/gabriel/verdict';
+} from '../../../modules/api/gradingLanguage.js';
+import { DEFAULT_SOURCE_KEY } from '../../../modules/api/gradingSubmission';
+import { VerdictCode } from '../../../modules/api/gradingVerdict';
 import { constructProblemName } from '../../../modules/api/problem';
 import { decodeBase64 } from '../../../utils/base64';
 import { ContentCard } from '../../ContentCard/ContentCard';

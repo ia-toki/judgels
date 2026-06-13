@@ -5,7 +5,7 @@ import nock from 'nock';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
-import { nockJerahmeel } from '../../../../utils/nock';
+import { nockApi } from '../../../../utils/nock';
 import { CourseCreateDialog } from './CourseCreateDialog';
 
 describe('CourseCreateDialog', () => {
@@ -38,7 +38,7 @@ describe('CourseCreateDialog', () => {
     const description = screen.getByRole('textbox', { name: /description/i });
     await user.type(description, 'New description');
 
-    nockJerahmeel()
+    nockApi()
       .post('/courses', {
         slug: 'new-course',
         name: 'New course',
