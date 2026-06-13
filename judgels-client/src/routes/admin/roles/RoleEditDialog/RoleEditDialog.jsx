@@ -6,6 +6,7 @@ import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { Required } from '../../../../components/forms/validations';
+import { isTLX } from '../../../../conf';
 import { setUserRolesMutationOptions } from '../../../../modules/queries/userRole';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -20,7 +21,11 @@ function buildCsvFromData(response) {
     const profile = profilesMap[entry.userJid];
     const username = profile ? profile.username : entry.userJid;
     const { role } = entry;
-    return [username, role.account || '', role.problem || '', role.contest || '', role.training || ''].join(',');
+    const cols = [username, role.account || '', role.problem || '', role.contest || ''];
+    if (isTLX()) {
+      cols.push(role.training || '');
+    }
+    return cols.join(',');
   });
 
   return lines.join('\n');
@@ -49,7 +54,7 @@ function parseCsvToRoleMap(csv) {
     if (contest) {
       role.contest = contest;
     }
-    if (training) {
+    if (isTLX() && training) {
       role.training = training;
     }
     map[username] = role;
@@ -107,7 +112,11 @@ export function RoleEditDialog({ currentData }) {
                 />
                 <Collapse isOpen={isInstructionOpen}>
                   <h5>Row format</h5>
-                  <pre>{'<username>,<account role>,<problem role>,<contest role>,<training role>'}</pre>
+                  <pre>
+                    {isTLX()
+                      ? '<username>,<account role>,<problem role>,<contest role>,<training role>'
+                      : '<username>,<account role>,<problem role>,<contest role>'}
+                  </pre>
                   <br />
                   <ul>
                     <li>
@@ -119,9 +128,11 @@ export function RoleEditDialog({ currentData }) {
                     <li>
                       <code>contest role</code>: contest management role
                     </li>
-                    <li>
-                      <code>training role</code>: training management role
-                    </li>
+                    {isTLX() && (
+                      <li>
+                        <code>training role</code>: training management role
+                      </li>
+                    )}
                   </ul>
                   <br />
                   <p>
@@ -129,7 +140,9 @@ export function RoleEditDialog({ currentData }) {
                   </p>
                   <hr />
                   <h5>Example</h5>
-                  <pre>{`andi,ADMIN,ADMIN,ADMIN,ADMIN\nbudi,,ADMIN,,`}</pre>
+                  <pre>
+                    {isTLX() ? `andi,ADMIN,ADMIN,ADMIN,ADMIN\nbudi,,ADMIN,,` : `andi,ADMIN,ADMIN,ADMIN\nbudi,,ADMIN,`}
+                  </pre>
                   <hr />
                 </Collapse>
 

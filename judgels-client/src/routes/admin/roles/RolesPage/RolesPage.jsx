@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { isTLX } from '../../../../conf';
 import { userRolesQueryOptions } from '../../../../modules/queries/userRole';
 import { RoleEditDialog } from '../RoleEditDialog/RoleEditDialog';
 
@@ -35,7 +36,7 @@ export default function RolesPage() {
           <td>{role.account || '-'}</td>
           <td>{role.problem || '-'}</td>
           <td>{role.contest || '-'}</td>
-          <td>{role.training || '-'}</td>
+          {isTLX() && <td>{role.training || '-'}</td>}
         </tr>
       );
     });
@@ -48,7 +49,7 @@ export default function RolesPage() {
             <th>Account</th>
             <th>Problem</th>
             <th>Contest</th>
-            <th>Training</th>
+            {isTLX() && <th>Training</th>}
           </tr>
         </thead>
         <tbody>{rows}</tbody>
