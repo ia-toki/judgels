@@ -15,9 +15,9 @@ window.conf = {
     trackingId: '{{ googleAnalytics_trackingId }}',
   },
 {% endif %}
-{% if jophiel_auth_google_clientId is defined %}
+{% if auth_google_clientId is defined %}
   googleAuth: {
-    clientId: '{{ jophiel_auth_google_clientId }}',
+    clientId: '{{ auth_google_clientId }}',
   },
 {% endif %}
 };

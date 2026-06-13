@@ -1,4 +1,4 @@
-app_version: "3.0.0-bleeding"
+app_version: latest
 app_name: Judgels
 app_slogan: Programming Contest System
 app_title: <h1>Welcome to Judgels</h1>
@@ -22,8 +22,8 @@ db_password: pass # <------------------------------------------ CHANGE THIS !!!
 rabbitmq_username: judgels
 rabbitmq_password: pass # <------------------------------------ CHANGE THIS !!!
 
-jophiel_superadmin_initialPassword: superadmin # <------------- CHANGE THIS !!!
-jophiel_session_maxConcurrentSessionsPerUser: -1
-jophiel_session_disableLogout: false
+superadmin_initialPassword: superadmin # <------------- CHANGE THIS !!!
+session_maxConcurrentSessionsPerUser: -1
+session_disableLogout: false
 
-gabriel_grading_numWorkerThreads: 1
+grading_numWorkerThreads: 1
