@@ -156,6 +156,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestItemSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
+        env.jersey().register(component.settingResource());
+
         component.scheduler().scheduleWithFixedDelay(
                 "session-cleaner",
                 component.sessionCleaner(),

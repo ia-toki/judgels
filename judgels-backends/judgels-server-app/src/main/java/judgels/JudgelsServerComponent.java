@@ -71,6 +71,8 @@ public interface JudgelsServerComponent {
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
 
+    judgels.setting.SettingResource settingResource();
+
     judgels.session.SessionCleaner sessionCleaner();
     GradingResponsePoller problemGradingResponsePoller();
     @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();

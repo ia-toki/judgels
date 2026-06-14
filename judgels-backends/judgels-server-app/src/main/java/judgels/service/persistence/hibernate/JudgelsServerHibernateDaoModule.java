@@ -40,6 +40,7 @@ import judgels.persistence.dao.ProblemTagDao;
 import judgels.persistence.dao.ProgrammingGradingDao;
 import judgels.persistence.dao.ProgrammingSubmissionDao;
 import judgels.persistence.dao.SessionDao;
+import judgels.persistence.dao.SettingDao;
 import judgels.persistence.dao.StatsUserDao;
 import judgels.persistence.dao.StatsUserProblemDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
@@ -89,6 +90,7 @@ import judgels.persistence.hibernate.dao.ProblemTagHibernateDao;
 import judgels.persistence.hibernate.dao.ProgrammingGradingHibernateDao;
 import judgels.persistence.hibernate.dao.ProgrammingSubmissionHibernateDao;
 import judgels.persistence.hibernate.dao.SessionHibernateDao;
+import judgels.persistence.hibernate.dao.SettingHibernateDao;
 import judgels.persistence.hibernate.dao.StatsUserHibernateDao;
 import judgels.persistence.hibernate.dao.StatsUserProblemHibernateDao;
 import judgels.persistence.hibernate.dao.TrainingProgrammingGradingHibernateDao;
@@ -328,6 +330,11 @@ public class JudgelsServerHibernateDaoModule {
 
     @Provides
     static BundleItemSubmissionDao bundleItemSubmissionDao(BundleItemSubmissionHibernateDao dao) {
+        return dao;
+    }
+
+    @Provides
+    static SettingDao settingDao(SettingHibernateDao dao) {
         return dao;
     }
 

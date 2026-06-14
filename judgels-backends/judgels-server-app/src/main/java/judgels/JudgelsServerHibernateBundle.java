@@ -39,6 +39,7 @@ import judgels.persistence.model.ProblemTagModel;
 import judgels.persistence.model.ProgrammingGradingModel;
 import judgels.persistence.model.ProgrammingSubmissionModel;
 import judgels.persistence.model.SessionModel;
+import judgels.persistence.model.SettingModel;
 import judgels.persistence.model.StatsUserModel;
 import judgels.persistence.model.StatsUserProblemModel;
 import judgels.persistence.model.TrainingProgrammingGradingModel;
@@ -55,6 +56,7 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
     public JudgelsServerHibernateBundle() {
         super(
                 SessionModel.class,
+                SettingModel.class,
                 UserModel.class,
                 UserInfoModel.class,
                 UserRatingModel.class,

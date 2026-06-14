@@ -123,13 +123,14 @@ export default function ContentWithSidebar({
   };
 
   const getActiveItemPath = () => {
-    if (location.pathname === basePath) {
-      return '';
-    }
+    const relativePath = location.pathname.slice(basePath.length).replace(/^\//, '');
 
-    const currentPath = location.pathname + '/';
-    const nextSlashPos = currentPath.indexOf('/', basePath.length + 1);
-    return currentPath.substring(basePath.length + 1, nextSlashPos);
+    const itemPaths = items.flatMap(item => (item.children ? item.children.map(child => child.path) : [item.path]));
+    const matchedPath = itemPaths
+      .filter(path => path && (relativePath === path || relativePath.startsWith(path + '/')))
+      .sort((a, b) => b.length - a.length)[0];
+
+    return matchedPath ?? relativePath.split('/')[0];
   };
 
   return (
