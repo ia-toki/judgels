@@ -125,9 +125,7 @@ export default function ContentWithSidebar({
   const getActiveItemPath = () => {
     const relativePath = location.pathname.slice(basePath.length).replace(/^\//, '');
 
-    const itemPaths = items.flatMap(item =>
-      item.children ? item.children.map(child => child.path) : [item.path]
-    );
+    const itemPaths = items.flatMap(item => (item.children ? item.children.map(child => child.path) : [item.path]));
     const matchedPath = itemPaths
       .filter(path => path && (relativePath === path || relativePath.startsWith(path + '/')))
       .sort((a, b) => b.length - a.length)[0];
