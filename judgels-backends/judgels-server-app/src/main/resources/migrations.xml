@@ -7,4 +7,5 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="migrations/000_init.xml"/>
+    <include file="migrations/001_add_judgels_setting.xml"/>
 </databaseChangeLog>

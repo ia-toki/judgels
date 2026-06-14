@@ -1,0 +1,54 @@
+package judgels.setting;
+
+import jakarta.inject.Inject;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import judgels.api.setting.AppSettings;
+import judgels.api.setting.AppSettingsUpdateData;
+import judgels.api.setting.Settings;
+import judgels.persistence.dao.SettingDao;
+import judgels.persistence.model.SettingModel;
+
+public class SettingStore {
+    private static final String KEY_APP_NAME = "app_name";
+    private static final String KEY_APP_SLOGAN = "app_slogan";
+
+    private final SettingDao settingDao;
+
+    @Inject
+    public SettingStore(SettingDao settingDao) {
+        this.settingDao = settingDao;
+    }
+
+    public Settings getSettings() {
+        Map<String, String> settings = settingDao.select().all().stream()
+                .collect(Collectors.toMap(m -> m.settingKey, m -> m.settingValue));
+
+        return new Settings.Builder()
+                .app(new AppSettings.Builder()
+                        .name(settings.getOrDefault(KEY_APP_NAME, ""))
+                        .slogan(settings.getOrDefault(KEY_APP_SLOGAN, ""))
+                        .build())
+                .build();
+    }
+
+    public void updateAppSettings(AppSettingsUpdateData data) {
+        data.getName().ifPresent(value -> upsertSetting(KEY_APP_NAME, value));
+        data.getSlogan().ifPresent(value -> upsertSetting(KEY_APP_SLOGAN, value));
+    }
+
+    private void upsertSetting(String key, String value) {
+        Optional<SettingModel> maybeModel = settingDao.selectByKey(key);
+        if (maybeModel.isPresent()) {
+            SettingModel model = maybeModel.get();
+            model.settingValue = value;
+            settingDao.update(model);
+        } else {
+            SettingModel model = new SettingModel();
+            model.settingKey = key;
+            model.settingValue = value;
+            settingDao.insert(model);
+        }
+    }
+}

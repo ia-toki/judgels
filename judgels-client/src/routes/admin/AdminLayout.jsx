@@ -1,5 +1,6 @@
 import {
   Box,
+  Cog,
   Console,
   PanelStats,
   People,
@@ -25,6 +26,7 @@ export default function AdminLayout() {
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
   const isAccountAdmin = role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin;
+  const isSuperadmin = role.account === UserAdminRole.Superadmin;
   const isContestAdmin = role.contest === ContestAdminRole.Admin;
   const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
 
@@ -85,6 +87,17 @@ export default function AdminLayout() {
           path: 'problemsets',
           titleIcon: <PanelStats />,
           title: 'Problemsets',
+        },
+      ],
+    },
+    {
+      title: 'Settings',
+      visible: isSuperadmin,
+      children: [
+        {
+          path: 'settings/app',
+          titleIcon: <Cog />,
+          title: 'App',
         },
       ],
     },
