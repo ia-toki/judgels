@@ -18,6 +18,7 @@ import judgels.submission.programming.GradingResponsePoller;
         judgels.user.avatar.UserAvatarModule.class,
         judgels.user.web.WebModule.class,
         judgels.session.SessionModule.class,
+        judgels.setting.SettingModule.class,
 
         judgels.messaging.rabbitmq.RabbitMQModule.class,
         judgels.grading.GradingModule.class,
@@ -72,6 +73,7 @@ public interface JudgelsServerComponent {
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
 
     judgels.setting.SettingResource settingResource();
+    judgels.setting.SettingCreator settingCreator();
 
     judgels.session.SessionCleaner sessionCleaner();
     GradingResponsePoller problemGradingResponsePoller();
