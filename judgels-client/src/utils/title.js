@@ -1,5 +1,6 @@
-import { APP_CONFIG } from '../conf';
+import { getAppName } from '../modules/webConfig';
 
 export function createDocumentTitle(title) {
-  return title ? `${title} | ${APP_CONFIG.name}` : APP_CONFIG.name;
+  const appName = getAppName();
+  return title ? `${title} | ${appName}` : appName;
 }

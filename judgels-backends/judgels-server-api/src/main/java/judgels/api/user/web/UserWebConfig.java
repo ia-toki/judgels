@@ -10,6 +10,8 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserWebConfig.class)
 public interface UserWebConfig {
+    String getAppName();
+    String getAppSlogan();
     UserRole getRole();
     Optional<Profile> getProfile();
     List<String> getAnnouncements();
