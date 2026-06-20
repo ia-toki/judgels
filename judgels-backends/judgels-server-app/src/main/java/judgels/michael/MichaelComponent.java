@@ -5,8 +5,6 @@ import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.grading.GradingModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
-import judgels.michael.account.role.RoleResource;
-import judgels.michael.account.user.UserResource;
 import judgels.michael.index.IndexResource;
 import judgels.michael.lesson.LessonResource;
 import judgels.michael.lesson.partner.LessonPartnerResource;
@@ -57,8 +55,6 @@ import tlx.auth.AuthModule;
 @Singleton
 public interface MichaelComponent {
     IndexResource indexResource();
-    UserResource userResource();
-    RoleResource roleResource();
     ProblemResource problemResource();
     ProblemStatementResource problemStatementResource();
     ProblemStatementRenderResources.InEditProblemStatement problemStatementRenderResourceInEditProblemStatement();

@@ -42,10 +42,6 @@ public abstract class BaseResource {
         template.setUsername(actor.getUsername());
         template.setAvatarUrl(actor.getAvatarUrl());
 
-        if (userRoleChecker.canAdminister(actor.getUserJid())) {
-            template.addSidebarMenu("accounts", "Accounts", "/accounts/users");
-        }
-
         template.addSidebarMenu("problems", "Problems", "/problems");
         template.addSidebarMenu("lessons", "Lessons", "/lessons");
         return template;
