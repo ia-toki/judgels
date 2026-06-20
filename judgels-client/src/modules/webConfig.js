@@ -6,9 +6,9 @@ function getUserWebConfig() {
 }
 
 export function getAppName() {
-  return getUserWebConfig()?.appName || 'Judgels';
+  return getUserWebConfig()?.appName;
 }
 
 export function getAppSlogan() {
-  return getUserWebConfig()?.appSlogan || 'Programming Contest System';
+  return getUserWebConfig()?.appSlogan;
 }
