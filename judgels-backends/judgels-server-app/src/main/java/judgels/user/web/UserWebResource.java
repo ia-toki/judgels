@@ -10,11 +10,13 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
+import judgels.api.setting.AppSettings;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.setting.SettingStore;
 import judgels.user.role.UserRoleStore;
 
 @Path("/api/v2/user-web")
@@ -23,6 +25,7 @@ public class UserWebResource {
     @Inject protected UserRoleStore roleStore;
     @Inject protected ProfileStore profileStore;
     @Inject protected WebConfiguration webConfig;
+    @Inject protected SettingStore settingStore;
 
     @Inject public UserWebResource() {}
 
@@ -31,7 +34,10 @@ public class UserWebResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UserWebConfig getWebConfig(@HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader) {
+        AppSettings app = settingStore.getSettings().getApp();
         UserWebConfig.Builder config = new UserWebConfig.Builder()
+                .appName(app.getName())
+                .appSlogan(app.getSlogan())
                 .announcements(webConfig.getAnnouncements());
 
         if (!authHeader.isPresent()) {
