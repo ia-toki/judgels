@@ -218,8 +218,10 @@ public class SubmissionResource {
                     .reasonNotAllowedToViewSource(reasonNotAllowedToViewSource.get())
                     .build();
         } else {
+            SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true);
             submissionWithSource = new SubmissionWithSource.Builder()
                     .submission(submission)
+                    .source(source)
                     .build();
         }
 
