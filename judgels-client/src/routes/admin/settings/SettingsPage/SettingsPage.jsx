@@ -13,7 +13,7 @@ import { settingsQueryOptions, updateAppSettingsMutationOptions } from '../../..
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export default function AppSettingsPage() {
+export default function SettingsPage() {
   const { data } = useQuery(settingsQueryOptions());
 
   const updateAppSettingsMutation = useMutation(updateAppSettingsMutationOptions());
@@ -85,7 +85,7 @@ export default function AppSettingsPage() {
   };
 
   return (
-    <ContentCard title="App settings">
+    <ContentCard title="Settings">
       {renderAction()}
       {renderContent()}
     </ContentCard>
