@@ -51,7 +51,7 @@ export default function AdminLayout() {
           visible: isTLX(),
         },
         {
-          path: 'settings/app',
+          path: 'settings',
           titleIcon: <Cog />,
           title: 'Settings',
         },
