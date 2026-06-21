@@ -8,7 +8,7 @@ export const settingAPI = {
     return get(baseURL, token);
   },
 
-  updateAppSettings: (token, data) => {
-    return put(`${baseURL}/app`, token, data);
+  updateSettings: (token, data) => {
+    return put(baseURL, token, data);
   },
 };

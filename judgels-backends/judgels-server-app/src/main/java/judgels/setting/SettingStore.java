@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.setting.AppSettings;
-import judgels.api.setting.AppSettingsUpdateData;
 import judgels.api.setting.Settings;
 import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
@@ -33,9 +32,10 @@ public class SettingStore {
                 .build();
     }
 
-    public void updateAppSettings(AppSettingsUpdateData data) {
-        data.getName().ifPresent(value -> upsertSetting(KEY_APP_NAME, value));
-        data.getSlogan().ifPresent(value -> upsertSetting(KEY_APP_SLOGAN, value));
+    public void updateSettings(Settings settings) {
+        AppSettings app = settings.getApp();
+        upsertSetting(KEY_APP_NAME, app.getName());
+        upsertSetting(KEY_APP_SLOGAN, app.getSlogan());
     }
 
     private void upsertSetting(String key, String value) {
