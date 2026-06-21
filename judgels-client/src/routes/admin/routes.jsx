@@ -132,10 +132,10 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
-  const adminSettingsAppRoute = createRoute({
+  const adminSettingsRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'settings/app',
-    component: lazyRouteComponent(retryImport(() => import('./settings/AppSettingsPage/AppSettingsPage'))),
+    path: 'settings',
+    component: lazyRouteComponent(retryImport(() => import('./settings/SettingsPage/SettingsPage'))),
   });
 
   return adminRoute.addChildren([
@@ -153,6 +153,6 @@ export const createAdminRoutes = appRoute => {
     adminArchiveRoute,
     adminProblemSetsRoute,
     adminProblemSetRoute,
-    adminSettingsAppRoute,
+    adminSettingsRoute,
   ]);
 };

@@ -9,14 +9,14 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
-import { settingsQueryOptions, updateAppSettingsMutationOptions } from '../../../../modules/queries/setting';
+import { settingsQueryOptions, updateSettingsMutationOptions } from '../../../../modules/queries/setting';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export default function AppSettingsPage() {
+export default function SettingsPage() {
   const { data } = useQuery(settingsQueryOptions());
 
-  const updateAppSettingsMutation = useMutation(updateAppSettingsMutationOptions());
+  const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -46,7 +46,7 @@ export default function AppSettingsPage() {
         slogan: app.slogan,
       };
       return (
-        <Form onSubmit={updateAppSettings} initialValues={initialValues}>
+        <Form onSubmit={updateSettings} initialValues={initialValues}>
           {({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
               <HTMLTable striped>
@@ -74,9 +74,9 @@ export default function AppSettingsPage() {
     return <FormTable rows={rows} />;
   };
 
-  const updateAppSettings = values => {
-    updateAppSettingsMutation.mutate(
-      { name: values.name, slogan: values.slogan },
+  const updateSettings = values => {
+    updateSettingsMutation.mutate(
+      { app: { name: values.name, slogan: values.slogan } },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
       }
@@ -85,7 +85,7 @@ export default function AppSettingsPage() {
   };
 
   return (
-    <ContentCard title="App settings">
+    <ContentCard title="Settings">
       {renderAction()}
       {renderContent()}
     </ContentCard>

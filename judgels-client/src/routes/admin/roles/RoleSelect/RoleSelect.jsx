@@ -11,7 +11,7 @@ export const roleNames = { '': '-', ADMIN: 'Admin' };
 
 export function getRoleFields() {
   const fields = [
-    { key: 'account', label: 'Account' },
+    { key: 'account', label: 'System' },
     { key: 'problem', label: 'Problem' },
     { key: 'contest', label: 'Contest' },
   ];

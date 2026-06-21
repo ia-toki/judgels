@@ -12,16 +12,16 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import judgels.api.setting.AppSettingsUpdateData;
+import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
-import judgels.role.SuperadminRoleStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.user.UserRoleChecker;
 
 @Path("/api/v2/settings")
 public class SettingResource {
     @Inject protected ActorChecker actorChecker;
-    @Inject protected SuperadminRoleStore superadminRoleStore;
+    @Inject protected UserRoleChecker roleChecker;
     @Inject protected SettingStore store;
 
     @Inject public SettingResource() {}
@@ -31,24 +31,23 @@ public class SettingResource {
     @UnitOfWork(readOnly = true)
     public Settings getSettings(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(superadminRoleStore.isSuperadmin(actorJid));
+        checkAllowed(roleChecker.canAdminister(actorJid));
 
         return store.getSettings();
     }
 
     @PUT
-    @Path("/app")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public Settings updateAppSettings(
+    public Settings updateSettings(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            AppSettingsUpdateData data) {
+            SettingUpdateData data) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(superadminRoleStore.isSuperadmin(actorJid));
+        checkAllowed(roleChecker.canAdminister(actorJid));
 
-        store.updateAppSettings(data);
+        store.updateSettings(data);
 
         return store.getSettings();
     }

@@ -2,7 +2,7 @@ package judgels.setting;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import judgels.api.setting.AppSettings;
-import judgels.api.setting.AppSettingsUpdateData;
+import judgels.api.setting.SettingUpdateData;
 
 public class SettingCreator {
     private final SettingStore settingStore;
@@ -15,13 +15,12 @@ public class SettingCreator {
     public void initializeSettings() {
         AppSettings app = settingStore.getSettings().getApp();
 
-        AppSettingsUpdateData.Builder data = new AppSettingsUpdateData.Builder();
-        if (app.getName().isEmpty()) {
-            data.name("Judgels");
-        }
-        if (app.getSlogan().isEmpty()) {
-            data.slogan("Programming Contest System");
-        }
-        settingStore.updateAppSettings(data.build());
+        SettingUpdateData data = new SettingUpdateData.Builder()
+                .app(new AppSettings.Builder()
+                        .name(app.getName().isEmpty() ? "Judgels" : app.getName())
+                        .slogan(app.getSlogan().isEmpty() ? "Programming Contest System" : app.getSlogan())
+                        .build())
+                .build();
+        settingStore.updateSettings(data);
     }
 }

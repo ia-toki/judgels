@@ -26,13 +26,12 @@ export default function AdminLayout() {
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
   const isAccountAdmin = role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin;
-  const isSuperadmin = role.account === UserAdminRole.Superadmin;
   const isContestAdmin = role.contest === ContestAdminRole.Admin;
   const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
 
   const sidebarItems = [
     {
-      title: 'Account',
+      title: 'System',
       visible: isAccountAdmin,
       children: [
         {
@@ -50,6 +49,11 @@ export default function AdminLayout() {
           titleIcon: <TimelineLineChart />,
           title: 'Ratings',
           visible: isTLX(),
+        },
+        {
+          path: 'settings',
+          titleIcon: <Cog />,
+          title: 'Settings',
         },
       ].filter(child => child.visible !== false),
     },
@@ -87,17 +91,6 @@ export default function AdminLayout() {
           path: 'problemsets',
           titleIcon: <PanelStats />,
           title: 'Problemsets',
-        },
-      ],
-    },
-    {
-      title: 'Settings',
-      visible: isSuperadmin,
-      children: [
-        {
-          path: 'settings/app',
-          titleIcon: <Cog />,
-          title: 'App',
         },
       ],
     },

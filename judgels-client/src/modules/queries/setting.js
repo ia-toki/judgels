@@ -11,8 +11,8 @@ export const settingsQueryOptions = () =>
     queryFn: () => settingAPI.getSettings(getToken()),
   });
 
-export const updateAppSettingsMutationOptions = () => ({
-  mutationFn: data => settingAPI.updateAppSettings(getToken(), data),
+export const updateSettingsMutationOptions = () => ({
+  mutationFn: data => settingAPI.updateSettings(getToken(), data),
   onSuccess: () => {
     queryClient.invalidateQueries(settingsQueryOptions());
     queryClient.invalidateQueries(userWebConfigQueryOptions());
