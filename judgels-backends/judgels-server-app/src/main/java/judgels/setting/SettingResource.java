@@ -12,6 +12,7 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -41,12 +42,12 @@ public class SettingResource {
     @UnitOfWork
     public Settings updateSettings(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            Settings settings) {
+            SettingUpdateData data) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        store.updateSettings(settings);
+        store.updateSettings(data);
 
         return store.getSettings();
     }
