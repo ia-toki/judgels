@@ -2,7 +2,9 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 import { parse, stringify } from 'query-string';
 
 import { LoadingState } from '../components/LoadingState/LoadingState';
+import { NotFoundPage } from '../components/NotFoundPage/NotFoundPage';
 import { APP_CONFIG } from '../conf';
+import { NotFoundError } from '../modules/api/error';
 import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
 import { queryClient } from '../modules/queryClient';
 import App from './App';
@@ -42,7 +44,10 @@ const appChildren = [
 
 const routeTree = rootRoute.addChildren([appRoute.addChildren(appChildren)]);
 
-function DefaultErrorComponent() {
+function DefaultErrorComponent({ error }) {
+  if (error instanceof NotFoundError) {
+    return <NotFoundPage />;
+  }
   return (
     <div style={{ padding: 20, textAlign: 'center' }}>
       <p>Something went wrong.</p>
@@ -57,6 +62,7 @@ export const router = createRouter({
   scrollRestoration: true,
   defaultPendingComponent: () => <LoadingState large />,
   defaultErrorComponent: DefaultErrorComponent,
+  defaultNotFoundComponent: NotFoundPage,
   parseSearch: searchStr => parse(searchStr),
   stringifySearch: searchObj => {
     const str = stringify(searchObj);
