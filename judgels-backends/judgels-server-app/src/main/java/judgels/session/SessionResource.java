@@ -14,9 +14,11 @@ import jakarta.ws.rs.Produces;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.session.SessionErrors;
+import judgels.api.setting.SessionSettings;
 import judgels.api.user.User;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.setting.SettingStore;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
 
@@ -27,7 +29,7 @@ public class SessionResource {
     @Inject protected UserStore userStore;
     @Inject protected SessionLoginValidator loginValidator;
     @Inject protected SessionStore sessionStore;
-    @Inject protected SessionConfiguration sessionConfiguration;
+    @Inject protected SettingStore settingStore;
 
     @Inject public SessionResource() {}
 
@@ -44,8 +46,9 @@ public class SessionResource {
 
         loginValidator.validate(user);
 
+        SessionSettings sessionSettings = settingStore.getSettings().getSession();
         if (!roleChecker.canAdminister(user.getJid())) {
-            int maxConcurrentSessionsPerUser = sessionConfiguration.getMaxConcurrentSessionsPerUser();
+            int maxConcurrentSessionsPerUser = sessionSettings.getMaxConcurrentSessionsPerUser();
             if (maxConcurrentSessionsPerUser >= 0) {
                 if (sessionStore.getSessionsByUserJid(user.getJid()).size() >= maxConcurrentSessionsPerUser) {
                     throw SessionErrors.userMaxConcurrentSessionsExceeded();
@@ -61,7 +64,7 @@ public class SessionResource {
     @UnitOfWork
     public void logOut(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        if (!roleChecker.canAdminister(actorJid) && sessionConfiguration.getDisableLogout()) {
+        if (!roleChecker.canAdminister(actorJid) && settingStore.getSettings().getSession().getDisableLogout()) {
             throw SessionErrors.logoutDisabled();
         }
 

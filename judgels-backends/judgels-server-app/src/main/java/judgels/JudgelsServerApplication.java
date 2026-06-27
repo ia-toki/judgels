@@ -117,7 +117,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
                 .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
-                .sessionModule(new SessionModule(judgelsConfig.getSessionConfig()))
+                .sessionModule(new SessionModule())
                 .webModule(new WebModule(judgelsConfig.getWebConfig()))
                 .build();
 
