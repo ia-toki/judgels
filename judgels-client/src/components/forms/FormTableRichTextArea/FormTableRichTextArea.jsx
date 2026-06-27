@@ -12,7 +12,7 @@ export function FormTableRichTextArea(props) {
   return (
     <FormTableInput {...props}>
       <Suspense fallback={null}>
-        <LazyTinyMCETextArea onChange={input.onChange} />
+        <LazyTinyMCETextArea onChange={input.onChange} id={input.name} />
       </Suspense>
       <textarea id={input.name} rows={rows} {...input} className="tinymce form-table-rich-textarea" />
     </FormTableInput>

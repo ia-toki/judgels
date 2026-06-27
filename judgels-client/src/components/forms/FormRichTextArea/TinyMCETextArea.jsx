@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 let isTinyMCEScriptAdded = false;
 
-function TinyMCETextArea({ onChange }) {
+function TinyMCETextArea({ onChange, id }) {
   const [isLoaded, setIsLoaded] = useState(!!window.tinymce);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function TinyMCETextArea({ onChange }) {
     }
 
     tinymce.init({
-      selector: '.tinymce',
+      selector: `#${id}`,
       skin_url: '/tinymce/skins/lightgray',
       content_css: '/skins/judgels/content.css',
       branding: false,
@@ -63,7 +63,14 @@ function TinyMCETextArea({ onChange }) {
         });
       },
     });
-  });
+
+    return () => {
+      const editor = tinymce.get(id);
+      if (editor) {
+        editor.remove();
+      }
+    };
+  }, [isLoaded, id]);
 
   return null;
 }
