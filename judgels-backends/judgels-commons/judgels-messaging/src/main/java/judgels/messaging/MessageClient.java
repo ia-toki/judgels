@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.MessageProperties;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import judgels.messaging.api.Message;
 import judgels.messaging.rabbitmq.RabbitMQ;
@@ -15,14 +16,19 @@ public class MessageClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageClient.class);
 
     private final ObjectMapper objectMapper;
-    private final RabbitMQ rabbitMQ;
+    private final Optional<RabbitMQ> rabbitMQ;
 
-    public MessageClient(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
+    public MessageClient(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ) {
         this.objectMapper = objectMapper;
         this.rabbitMQ = rabbitMQ;
     }
 
     public void sendMessage(String sourceQueueName, String targetQueueName, String type, String content) {
+        if (rabbitMQ.isEmpty()) {
+            LOGGER.info("RabbitMQ is not configured; skipping sending message");
+            return;
+        }
+
         Message message = new Message.Builder()
                 .sourceQueueName(sourceQueueName)
                 .type(type)
@@ -38,7 +44,7 @@ public class MessageClient {
 
         Channel channel = null;
         try {
-            channel = rabbitMQ.getConnection().createChannel();
+            channel = rabbitMQ.get().getConnection().createChannel();
             channel.queueDeclare(targetQueueName, true, false, false, null);
             channel.basicPublish("", targetQueueName, MessageProperties.PERSISTENT_BASIC, queueMessage.getBytes());
         } catch (IOException | TimeoutException e) {
