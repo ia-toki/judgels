@@ -1,4 +1,4 @@
-import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -6,13 +6,14 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { updateSettingsMutationOptions } from '../../../../modules/queries/setting';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function AppSection({ app }) {
+export function HomeSection({ home = { banner: '' } }) {
   const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
   const [isEditing, setIsEditing] = useState(false);
@@ -35,19 +36,13 @@ export function AppSection({ app }) {
   const renderContent = () => {
     if (isEditing) {
       const initialValues = {
-        name: app.name,
-        slogan: app.slogan,
+        banner: home.banner,
       };
       return (
         <Form onSubmit={updateSettings} initialValues={initialValues}>
           {({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
-              <HTMLTable striped>
-                <tbody>
-                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="name" label="Name" />
-                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="slogan" label="Slogan" />
-                </tbody>
-              </HTMLTable>
+              <Field component={FormRichTextArea} rows={10} name="banner" label="Banner" />
 
               <hr />
               <ActionButtons justifyContent="end">
@@ -60,16 +55,13 @@ export function AppSection({ app }) {
       );
     }
 
-    const rows = [
-      { key: 'name', title: 'Name', value: app.name },
-      { key: 'slogan', title: 'Slogan', value: app.slogan },
-    ];
+    const rows = [{ key: 'banner', title: 'Banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   const updateSettings = values => {
     updateSettingsMutation.mutate(
-      { app: { name: values.name, slogan: values.slogan } },
+      { home: { banner: values.banner || '' } },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
       }
@@ -78,7 +70,7 @@ export function AppSection({ app }) {
   };
 
   return (
-    <ContentCard title="App settings">
+    <ContentCard title="Home settings">
       {renderEditButton()}
       {renderContent()}
     </ContentCard>

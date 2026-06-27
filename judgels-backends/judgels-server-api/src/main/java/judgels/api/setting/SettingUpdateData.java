@@ -8,6 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSettingUpdateData.class)
 public interface SettingUpdateData {
     Optional<AppSettings> getApp();
+    Optional<HomeSettings> getHome();
     Optional<SessionSettings> getSession();
 
     class Builder extends ImmutableSettingUpdateData.Builder {}

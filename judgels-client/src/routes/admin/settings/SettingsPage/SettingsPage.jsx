@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { settingsQueryOptions } from '../../../../modules/queries/setting';
 import { AppSection } from './AppSection';
+import { HomeSection } from './HomeSection';
 import { SessionSection } from './SessionSection';
 
 export default function SettingsPage() {
@@ -16,6 +17,7 @@ export default function SettingsPage() {
   return (
     <Flex flexDirection="column" gap={2}>
       <AppSection app={data.app} />
+      <HomeSection home={data.home} />
       <SessionSection session={data.session} />
     </Flex>
   );

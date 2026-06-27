@@ -12,6 +12,7 @@ import org.immutables.value.Value;
 public interface UserWebConfig {
     String getAppName();
     String getAppSlogan();
+    String getHomeBanner();
     UserRole getRole();
     Optional<Profile> getProfile();
     List<String> getAnnouncements();
