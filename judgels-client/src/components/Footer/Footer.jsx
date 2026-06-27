@@ -7,8 +7,7 @@ export function Footer() {
     <div className="footer">
       <hr />
       <small className="footer__text">
-        <Flex justifyContent="space-between">
-          <div>© Ikatan Alumni TOKI</div>
+        <Flex justifyContent="end">
           <div>
             Powered by <a href="https://github.com/ia-toki/judgels">Judgels</a>
           </div>
