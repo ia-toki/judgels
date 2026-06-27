@@ -44,8 +44,8 @@ export function AppSection({ app }) {
             <form onSubmit={handleSubmit}>
               <HTMLTable striped>
                 <tbody>
-                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="name" label="App name" />
-                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="slogan" label="App slogan" />
+                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="name" label="Name" />
+                  <Field component={FormTableTextInput} keyStyles={keyStyles} name="slogan" label="Slogan" />
                 </tbody>
               </HTMLTable>
 
@@ -61,8 +61,8 @@ export function AppSection({ app }) {
     }
 
     const rows = [
-      { key: 'name', title: 'App name', value: app.name },
-      { key: 'slogan', title: 'App slogan', value: app.slogan },
+      { key: 'name', title: 'Name', value: app.name },
+      { key: 'slogan', title: 'Slogan', value: app.slogan },
     ];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };

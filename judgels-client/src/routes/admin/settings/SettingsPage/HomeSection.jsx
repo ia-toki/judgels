@@ -42,7 +42,7 @@ export function HomeSection({ home = { banner: '' } }) {
         <Form onSubmit={updateSettings} initialValues={initialValues}>
           {({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
-              <Field component={FormRichTextArea} rows={10} name="banner" label="Home banner" />
+              <Field component={FormRichTextArea} rows={10} name="banner" label="Banner" />
 
               <hr />
               <ActionButtons justifyContent="end">
@@ -55,7 +55,7 @@ export function HomeSection({ home = { banner: '' } }) {
       );
     }
 
-    const rows = [{ key: 'banner', title: 'Home banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
+    const rows = [{ key: 'banner', title: 'Banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
