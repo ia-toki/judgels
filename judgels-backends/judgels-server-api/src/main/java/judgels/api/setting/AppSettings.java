@@ -6,6 +6,9 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableAppSettings.class)
 public interface AppSettings {
+    String DEFAULT_NAME = "Judgels";
+    String DEFAULT_SLOGAN = "Programming Contest System";
+
     String getName();
     String getSlogan();
 

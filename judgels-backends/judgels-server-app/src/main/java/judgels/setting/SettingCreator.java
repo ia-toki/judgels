@@ -15,10 +15,14 @@ public class SettingCreator {
     public void initializeSettings() {
         AppSettings app = settingStore.getSettings().getApp();
 
+        if (!app.getName().isEmpty() && !app.getSlogan().isEmpty()) {
+            return;
+        }
+
         SettingUpdateData data = new SettingUpdateData.Builder()
                 .app(new AppSettings.Builder()
-                        .name(app.getName().isEmpty() ? "Judgels" : app.getName())
-                        .slogan(app.getSlogan().isEmpty() ? "Programming Contest System" : app.getSlogan())
+                        .name(app.getName().isEmpty() ? AppSettings.DEFAULT_NAME : app.getName())
+                        .slogan(app.getSlogan().isEmpty() ? AppSettings.DEFAULT_SLOGAN : app.getSlogan())
                         .build())
                 .build();
         settingStore.updateSettings(data);

@@ -12,12 +12,6 @@ import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
 
 public class SettingStore {
-    private static final String KEY_APP_NAME = "app_name";
-    private static final String KEY_APP_SLOGAN = "app_slogan";
-    private static final String KEY_SESSION_DISABLE_LOGOUT = "session_disable_logout";
-    private static final String KEY_SESSION_MAX_CONCURRENT_SESSIONS_PER_USER =
-            "session_max_concurrent_sessions_per_user";
-
     private final SettingDao settingDao;
 
     @Inject
@@ -31,27 +25,27 @@ public class SettingStore {
 
         return new Settings.Builder()
                 .app(new AppSettings.Builder()
-                        .name(settings.getOrDefault(KEY_APP_NAME, ""))
-                        .slogan(settings.getOrDefault(KEY_APP_SLOGAN, ""))
+                        .name(settings.getOrDefault("app_name", ""))
+                        .slogan(settings.getOrDefault("app_slogan", ""))
                         .build())
                 .session(new SessionSettings.Builder()
                         .disableLogout(Boolean.parseBoolean(
-                                settings.getOrDefault(KEY_SESSION_DISABLE_LOGOUT, "false")))
+                                settings.getOrDefault("session_disable_logout", "false")))
                         .maxConcurrentSessionsPerUser(Integer.parseInt(
-                                settings.getOrDefault(KEY_SESSION_MAX_CONCURRENT_SESSIONS_PER_USER, "-1")))
+                                settings.getOrDefault("session_max_concurrent_sessions_per_user", "-1")))
                         .build())
                 .build();
     }
 
     public void updateSettings(SettingUpdateData data) {
         data.getApp().ifPresent(app -> {
-            upsertSetting(KEY_APP_NAME, app.getName());
-            upsertSetting(KEY_APP_SLOGAN, app.getSlogan());
+            upsertSetting("app_name", app.getName());
+            upsertSetting("app_slogan", app.getSlogan());
         });
         data.getSession().ifPresent(session -> {
-            upsertSetting(KEY_SESSION_DISABLE_LOGOUT, String.valueOf(session.getDisableLogout()));
+            upsertSetting("session_disable_logout", String.valueOf(session.getDisableLogout()));
             upsertSetting(
-                    KEY_SESSION_MAX_CONCURRENT_SESSIONS_PER_USER,
+                    "session_max_concurrent_sessions_per_user",
                     String.valueOf(session.getMaxConcurrentSessionsPerUser()));
         });
     }
