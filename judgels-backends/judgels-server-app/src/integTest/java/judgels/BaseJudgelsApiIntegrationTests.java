@@ -40,6 +40,7 @@ import judgels.api.user.role.UserRole;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
 import judgels.user.UserClient;
@@ -100,7 +101,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .gradingResponseQueueName("grading-response")
                 .build();
 
-        JudgelsServerConfiguration judgelsConfig = new JudgelsServerConfiguration.Builder()
+        JudgelsServerConfiguration.Builder judgelsConfigBuilder = new JudgelsServerConfiguration.Builder()
                 .baseDataDir(baseDataDir.toAbsolutePath())
                 .appConfig(judgelsAppConfig)
                 .gradingConfig(gradingConfig)
@@ -115,8 +116,13 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
                 .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
-                .webConfig(WebConfiguration.DEFAULT)
-                .build();
+                .webConfig(WebConfiguration.DEFAULT);
+
+        if (System.getenv("CI") != null) {
+            judgelsConfigBuilder.rabbitMQConfig(RabbitMQConfiguration.DEFAULT);
+        }
+
+        JudgelsServerConfiguration judgelsConfig = judgelsConfigBuilder.build();
 
         TrainingConfiguration trainingConfig = new TrainingConfiguration.Builder()
                 .statsConfig(StatsConfiguration.DEFAULT)

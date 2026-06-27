@@ -11,13 +11,16 @@ import judgels.messaging.MessageListener;
 @Module
 public class RabbitMQModule {
     private final RabbitMQConfiguration config;
+    private final boolean enabled;
 
     public RabbitMQModule(RabbitMQConfiguration config) {
         this.config = config;
+        this.enabled = true;
     }
 
     public RabbitMQModule(Optional<RabbitMQConfiguration> config) {
         this.config = config.orElse(RabbitMQConfiguration.DEFAULT);
+        this.enabled = config.isPresent();
     }
 
     @Provides
@@ -29,7 +32,7 @@ public class RabbitMQModule {
     @Provides
     @Singleton
     MessageClient messageClient(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
-        return new MessageClient(objectMapper, rabbitMQ);
+        return new MessageClient(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty());
     }
 
     @Provides
