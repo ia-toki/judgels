@@ -21,7 +21,5 @@ rabbitmq_username: judgels
 rabbitmq_password: pass # <------------------------------------ CHANGE THIS !!!
 
 superadmin_initialPassword: superadmin # <------------- CHANGE THIS !!!
-session_maxConcurrentSessionsPerUser: -1
-session_disableLogout: false
 
 grading_numWorkerThreads: 1

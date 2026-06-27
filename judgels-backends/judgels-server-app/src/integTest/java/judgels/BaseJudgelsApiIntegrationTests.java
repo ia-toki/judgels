@@ -42,7 +42,6 @@ import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
-import judgels.session.SessionConfiguration;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
@@ -116,7 +115,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
                 .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
-                .sessionConfig(SessionConfiguration.DEFAULT)
                 .webConfig(WebConfiguration.DEFAULT)
                 .build();
 

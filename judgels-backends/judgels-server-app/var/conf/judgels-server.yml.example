@@ -74,9 +74,5 @@ judgels:
   superadmin:
     initialPassword: superadmin
 
-  session:
-    maxConcurrentSessionsPerUser: -1
-    disableLogout: false
-
   web:
     announcements: []

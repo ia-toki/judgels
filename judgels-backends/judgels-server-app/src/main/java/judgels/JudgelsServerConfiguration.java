@@ -7,7 +7,6 @@ import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
-import judgels.session.SessionConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
@@ -37,9 +36,6 @@ public interface JudgelsServerConfiguration {
 
     @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
-
-    @JsonProperty("session")
-    SessionConfiguration getSessionConfig();
 
     @JsonProperty("web")
     WebConfiguration getWebConfig();
