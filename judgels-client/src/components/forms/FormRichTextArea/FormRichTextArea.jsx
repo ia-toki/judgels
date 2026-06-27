@@ -11,7 +11,7 @@ export function FormRichTextArea({ rows, input, label, meta }) {
   return (
     <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
       <Suspense fallback={null}>
-        <LazyTinyMCETextArea onChange={input.onChange} />
+        <LazyTinyMCETextArea onChange={input.onChange} id={input.name} />
       </Suspense>
       <textarea id={input.name} rows={rows} {...input} className="tinymce" />
       <FormInputValidation meta={meta} />
