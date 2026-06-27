@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.setting.AppSettings;
+import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SessionSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
@@ -28,6 +29,9 @@ public class SettingStore {
                         .name(settings.getOrDefault("app_name", ""))
                         .slogan(settings.getOrDefault("app_slogan", ""))
                         .build())
+                .home(new HomeSettings.Builder()
+                        .banner(settings.getOrDefault("home_banner", ""))
+                        .build())
                 .session(new SessionSettings.Builder()
                         .disableLogout(Boolean.parseBoolean(
                                 settings.getOrDefault("session_disable_logout", "false")))
@@ -41,6 +45,9 @@ public class SettingStore {
         data.getApp().ifPresent(app -> {
             upsertSetting("app_name", app.getName());
             upsertSetting("app_slogan", app.getSlogan());
+        });
+        data.getHome().ifPresent(home -> {
+            upsertSetting("home_banner", home.getBanner());
         });
         data.getSession().ifPresent(session -> {
             upsertSetting("session_disable_logout", String.valueOf(session.getDisableLogout()));

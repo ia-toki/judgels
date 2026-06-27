@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableSettings.class)
 public interface Settings {
     AppSettings getApp();
+    HomeSettings getHome();
     SessionSettings getSession();
 
     class Builder extends ImmutableSettings.Builder {}

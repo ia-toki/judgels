@@ -27,21 +27,14 @@
   }
 }
 
-.home-banner__title {
-  font-size: 32px;
-}
-
-.home-banner__title h1 {
+.home-banner__text h1 {
   font-size: 32px;
   line-height: 32px;
 }
 
-.home-banner__description {
+.home-banner__text h2 {
   margin-top: 40px;
   font-family: $accent-font;
-}
-
-.home-banner__description h2 {
   font-size: 18px !important;
   font-weight: normal !important;
   line-height: 24px !important;

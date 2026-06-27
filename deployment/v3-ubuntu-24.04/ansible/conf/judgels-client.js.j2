@@ -1,13 +1,6 @@
 window.conf = {
   mode: '{{ app_mode | default('JUDGELS', true) }}',
   apiUrl: 'https://{{ nginx_domain_judgels_server_api }}/v2',
-  welcomeBanner: {
-    title: '{{ app_title }}',
-    description: '{{ app_description }}',
-  },
-{% if app_footer is defined %}
-  footer: '{{ app_footer }}',
-{% endif %}
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
     trackingId: '{{ googleAnalytics_trackingId }}',

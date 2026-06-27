@@ -3,8 +3,9 @@ import { Intent } from '@blueprintjs/core';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
-import { APP_CONFIG, isTLX } from '../../../conf';
+import { isTLX } from '../../../conf';
 import { useSession } from '../../../modules/session';
+import { getHomeBanner } from '../../../modules/webConfig';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 
@@ -21,13 +22,8 @@ export default function HomePage() {
     return (
       <div className="home-banner">
         <div className="home-banner__contents">
-          <div>
-            <div className="home-banner__text home-banner__title">
-              <HtmlText>{APP_CONFIG.welcomeBanner.title}</HtmlText>
-            </div>
-            <div className="home-banner__text home-banner__description">
-              <HtmlText>{APP_CONFIG.welcomeBanner.description}</HtmlText>
-            </div>
+          <div className="home-banner__text">
+            <HtmlText>{getHomeBanner() || ''}</HtmlText>
           </div>
           <div className="home-banner__buttons">
             {isTLX() && (

@@ -10,7 +10,7 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
-import judgels.api.setting.AppSettings;
+import judgels.api.setting.Settings;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.profile.ProfileStore;
@@ -34,10 +34,11 @@ public class UserWebResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public UserWebConfig getWebConfig(@HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader) {
-        AppSettings app = settingStore.getSettings().getApp();
+        Settings settings = settingStore.getSettings();
         UserWebConfig.Builder config = new UserWebConfig.Builder()
-                .appName(app.getName())
-                .appSlogan(app.getSlogan())
+                .appName(settings.getApp().getName())
+                .appSlogan(settings.getApp().getSlogan())
+                .homeBanner(settings.getHome().getBanner())
                 .announcements(webConfig.getAnnouncements());
 
         if (!authHeader.isPresent()) {

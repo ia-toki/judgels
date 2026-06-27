@@ -12,3 +12,7 @@ export function getAppName() {
 export function getAppSlogan() {
   return getUserWebConfig()?.appSlogan;
 }
+
+export function getHomeBanner() {
+  return getUserWebConfig()?.homeBanner;
+}
