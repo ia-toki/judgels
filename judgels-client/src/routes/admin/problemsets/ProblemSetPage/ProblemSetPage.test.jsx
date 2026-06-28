@@ -1,4 +1,6 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
@@ -46,7 +48,7 @@ describe('ProblemSetPage', () => {
     );
   };
 
-  test('renders problemset details', async () => {
+  test('details', async () => {
     await renderComponent();
 
     await screen.findByText(/Problemset 1/);
@@ -79,5 +81,63 @@ describe('ProblemSetPage', () => {
             .map(cell => cell.textContent)
         )
     ).toEqual([['A', 'problem-1', '']]);
+  });
+
+  test('general form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[0]);
+
+    const slug = screen.getByRole('textbox', { name: /^slug/i });
+    expect(slug).toHaveValue('problemset-1');
+    await user.clear(slug);
+    await user.type(slug, 'new-problemset');
+
+    const name = screen.getByRole('textbox', { name: /^name/i });
+    expect(name).toHaveValue('Problemset 1');
+    await user.clear(name);
+    await user.type(name, 'New Problemset');
+
+    const archive = screen.getByRole('textbox', { name: /archive slug/i });
+    expect(archive).toHaveValue('archive-1');
+    await user.clear(archive);
+    await user.type(archive, 'new-archive');
+
+    nockApi()
+      .post('/problemsets/JIDPROBLEMSET1', body => {
+        return body.slug === 'new-problemset' && body.name === 'New Problemset' && body.archiveSlug === 'new-archive';
+      })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('problems form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[1]);
+
+    const problems = document.querySelector('textarea[name="problems"]');
+    expect(problems).toHaveValue('A,problem-1');
+    await user.clear(problems);
+    await user.type(problems, 'A,new-problem');
+
+    nockApi()
+      .put('/problemsets/JIDPROBLEMSET1/problems', [
+        { alias: 'A', slug: 'new-problem', type: 'PROGRAMMING', contestSlugs: [] },
+      ])
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });
