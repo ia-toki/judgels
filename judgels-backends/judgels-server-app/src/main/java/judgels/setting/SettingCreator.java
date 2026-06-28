@@ -31,6 +31,7 @@ public class SettingCreator {
             data.app(new AppSettings.Builder()
                     .name(app.getName().isEmpty() ? AppSettings.DEFAULT_NAME : app.getName())
                     .slogan(app.getSlogan().isEmpty() ? AppSettings.DEFAULT_SLOGAN : app.getSlogan())
+                    .announcement(app.getAnnouncement())
                     .build());
         }
         if (!homeInitialized) {

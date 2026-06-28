@@ -4,7 +4,7 @@ import { Outlet } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useEffect } from 'react';
 
-import Announcements from '../components/Announcements/Announcements';
+import Announcement from '../components/Announcement/Announcement';
 import { AppContent } from '../components/AppContent/AppContent';
 import { Footer } from '../components/Footer/Footer';
 import Header from '../components/Header/Header';
@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <div className={classNames({ 'bp6-light': !isDarkMode, 'bp6-dark': isDarkMode })}>
-      <Announcements />
+      <Announcement />
       <Header items={visibleAppRoutes} homeRoute={homeRoute} />
       <AppContent>
         <PortalProvider portalClassName={isDarkMode ? 'bp6-dark' : 'bp6-light'}>

@@ -1,0 +1,23 @@
+.bp6-navbar.announcement {
+  height: auto;
+  padding: 8px 16px;
+  background-color: #394b59;
+}
+
+.announcement__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+  }
+}
+
+.announcement__icon {
+  flex-shrink: 0;
+  margin-right: 8px;
+}

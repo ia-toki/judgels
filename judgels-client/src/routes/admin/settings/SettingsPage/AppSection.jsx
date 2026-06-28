@@ -6,6 +6,8 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
+import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { updateSettingsMutationOptions } from '../../../../modules/queries/setting';
@@ -37,6 +39,7 @@ export function AppSection({ app }) {
       const initialValues = {
         name: app.name,
         slogan: app.slogan,
+        announcement: app.announcement,
       };
       return (
         <Form onSubmit={updateSettings} initialValues={initialValues}>
@@ -48,6 +51,8 @@ export function AppSection({ app }) {
                   <Field component={FormTableTextInput} keyStyles={keyStyles} name="slogan" label="Slogan" />
                 </tbody>
               </HTMLTable>
+
+              <Field component={FormRichTextArea} rows={5} name="announcement" label="Announcement" />
 
               <hr />
               <ActionButtons justifyContent="end">
@@ -63,13 +68,14 @@ export function AppSection({ app }) {
     const rows = [
       { key: 'name', title: 'Name', value: app.name },
       { key: 'slogan', title: 'Slogan', value: app.slogan },
+      { key: 'announcement', title: 'Announcement', value: <HtmlText>{app.announcement || ''}</HtmlText> },
     ];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   const updateSettings = values => {
     updateSettingsMutation.mutate(
-      { app: { name: values.name, slogan: values.slogan } },
+      { app: { name: values.name, slogan: values.slogan, announcement: values.announcement || '' } },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
       }
