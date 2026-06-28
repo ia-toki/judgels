@@ -92,7 +92,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
         setEditionAsTLX();
 
         JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
-                .name("Judgels")
                 .build();
 
         JudgelsServerGradingConfiguration gradingConfig = new JudgelsServerGradingConfiguration.Builder()

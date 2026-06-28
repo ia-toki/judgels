@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import judgels.api.actor.Actor;
-import judgels.app.JudgelsAppConfiguration;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
+import judgels.setting.SettingStore;
 import judgels.user.UserRoleChecker;
 
 public abstract class BaseResource {
-    @Inject protected JudgelsAppConfiguration appConfig;
+    @Inject protected SettingStore settingStore;
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker userRoleChecker;
 
@@ -33,7 +33,7 @@ public abstract class BaseResource {
     }
 
     protected HtmlTemplate newTemplate() {
-        return new HtmlTemplate(appConfig.getName());
+        return new HtmlTemplate(settingStore.getSettings().getApp().getName());
     }
 
     protected HtmlTemplate newTemplate(Actor actor) {
