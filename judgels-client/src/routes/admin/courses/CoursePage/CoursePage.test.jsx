@@ -1,4 +1,6 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
@@ -38,7 +40,7 @@ describe('CoursePage', () => {
     );
   };
 
-  test('renders course details', async () => {
+  test('details', async () => {
     await renderComponent();
 
     await screen.findByText(/Course 1/);
@@ -69,5 +71,63 @@ describe('CoursePage', () => {
             .map(cell => cell.textContent)
         )
     ).toEqual([['A', 'Chapter 1']]);
+  });
+
+  test('general form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[0]);
+
+    const slug = screen.getByRole('textbox', { name: /slug/i });
+    expect(slug).toHaveValue('course-1');
+    await user.clear(slug);
+    await user.type(slug, 'new-course');
+
+    const name = screen.getAllByRole('textbox', { name: /name/i });
+    expect(name[0]).toHaveValue('Course 1');
+    await user.clear(name[0]);
+    await user.type(name[0], 'New Course');
+
+    const description = document.querySelector('textarea[name="description"]');
+    expect(description).toHaveValue('Description 1');
+    await user.clear(description);
+    await user.type(description, 'New Description');
+
+    nockApi()
+      .post('/courses/JIDCOURSE1', {
+        slug: 'new-course',
+        name: 'New Course',
+        description: 'New Description',
+      })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('chapters form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[1]);
+
+    const chapters = document.querySelector('textarea[name="chapters"]');
+    expect(chapters).toHaveValue('A,JIDCHAPTER1');
+    await user.clear(chapters);
+    await user.type(chapters, 'A,JIDCHAPTER2');
+
+    nockApi()
+      .put('/courses/JIDCOURSE1/chapters', [{ alias: 'A', chapterJid: 'JIDCHAPTER2' }])
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });

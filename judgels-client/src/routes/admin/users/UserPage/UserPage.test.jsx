@@ -1,4 +1,6 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
@@ -41,7 +43,7 @@ describe('UserPage', () => {
     );
   };
 
-  test('renders user details', async () => {
+  test('details', async () => {
     await renderComponent();
 
     await screen.findAllByText(/andi/);
@@ -78,5 +80,80 @@ describe('UserPage', () => {
       ['Institution province/state', 'Massachusetts'],
       ['Institution city', 'Cambridge'],
     ]);
+  });
+
+  test('info form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    await user.click(await screen.findByRole('button', { name: /edit/i }));
+
+    const names = screen.getAllByRole('textbox', { name: /name/i });
+    expect(names[0]).toHaveValue('Andi Smith');
+    await user.clear(names[0]);
+    await user.type(names[0], 'Caca');
+
+    const gender = screen.getByRole('combobox', { name: /gender/i });
+    expect(gender).toHaveValue('MALE');
+    await user.selectOptions(gender, 'FEMALE');
+
+    const countries = screen.getAllByRole('combobox', { name: /country/i });
+    expect(countries[0]).toHaveValue('ID');
+    await user.selectOptions(countries[0], 'US');
+
+    const homeAddress = document.querySelector('textarea[name="homeAddress"]');
+    expect(homeAddress).toHaveValue('123 Main St');
+    await user.clear(homeAddress);
+    await user.type(homeAddress, '456 Oak Ave');
+
+    const shirtSize = screen.getByRole('combobox', { name: /shirt size/i });
+    expect(shirtSize).toHaveValue('M');
+    await user.selectOptions(shirtSize, 'L');
+
+    expect(names[1]).toHaveValue('MIT');
+    await user.clear(names[1]);
+    await user.type(names[1], 'Stanford');
+
+    expect(countries[1]).toHaveValue('US');
+    await user.selectOptions(countries[1], 'GB');
+
+    const institutionProvince = screen.getByRole('textbox', { name: /institution province/i });
+    expect(institutionProvince).toHaveValue('Massachusetts');
+    await user.clear(institutionProvince);
+    await user.type(institutionProvince, 'England');
+
+    const institutionCity = screen.getByRole('textbox', { name: /institution city/i });
+    expect(institutionCity).toHaveValue('Cambridge');
+    await user.clear(institutionCity);
+    await user.type(institutionCity, 'London');
+
+    nockApi()
+      .put('/users/JIDUSER123/info', {
+        name: 'Caca',
+        gender: 'FEMALE',
+        country: 'US',
+        homeAddress: '456 Oak Ave',
+        shirtSize: 'L',
+        institutionName: 'Stanford',
+        institutionCountry: 'GB',
+        institutionProvince: 'England',
+        institutionCity: 'London',
+      })
+      .reply(200, {
+        name: 'Caca',
+        gender: 'FEMALE',
+        country: 'US',
+        homeAddress: '456 Oak Ave',
+        shirtSize: 'L',
+        institutionName: 'Stanford',
+        institutionCountry: 'GB',
+        institutionProvince: 'England',
+        institutionCity: 'London',
+      });
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 });
