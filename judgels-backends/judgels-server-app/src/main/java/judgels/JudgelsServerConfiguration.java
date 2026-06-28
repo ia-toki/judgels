@@ -8,7 +8,6 @@ import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
-import judgels.user.web.WebConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -36,9 +35,6 @@ public interface JudgelsServerConfiguration {
 
     @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
-
-    @JsonProperty("web")
-    WebConfiguration getWebConfig();
 
     @JsonProperty("recaptcha")
     Optional<tlx.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();

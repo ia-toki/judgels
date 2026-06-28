@@ -24,7 +24,6 @@ public class UserWebResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleStore roleStore;
     @Inject protected ProfileStore profileStore;
-    @Inject protected WebConfiguration webConfig;
     @Inject protected SettingStore settingStore;
 
     @Inject public UserWebResource() {}
@@ -38,8 +37,8 @@ public class UserWebResource {
         UserWebConfig.Builder config = new UserWebConfig.Builder()
                 .appName(settings.getApp().getName())
                 .appSlogan(settings.getApp().getSlogan())
-                .homeBanner(settings.getHome().getBanner())
-                .announcements(webConfig.getAnnouncements());
+                .appAnnouncement(settings.getApp().getAnnouncement())
+                .homeBanner(settings.getHome().getBanner());
 
         if (!authHeader.isPresent()) {
             config.role(new UserRole.Builder().build());

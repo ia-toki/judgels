@@ -16,7 +16,6 @@ import judgels.submission.programming.GradingResponsePoller;
 
         judgels.user.superadmin.SuperadminModule.class,
         judgels.user.avatar.UserAvatarModule.class,
-        judgels.user.web.WebModule.class,
         judgels.session.SessionModule.class,
         judgels.setting.SettingModule.class,
 

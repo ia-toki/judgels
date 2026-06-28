@@ -46,7 +46,6 @@ import judgels.session.SessionClient;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
-import judgels.user.web.WebConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -115,8 +114,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                         .build())
                 .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
                 .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
-                .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
-                .webConfig(WebConfiguration.DEFAULT);
+                .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT);
 
         if (System.getenv("CI") != null) {
             judgelsConfigBuilder.rabbitMQConfig(RabbitMQConfiguration.DEFAULT);

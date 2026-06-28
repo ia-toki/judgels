@@ -28,6 +28,8 @@ public class SettingStore {
                 .app(new AppSettings.Builder()
                         .name(settings.getOrDefault("app_name", ""))
                         .slogan(settings.getOrDefault("app_slogan", ""))
+                        .announcement(Optional.ofNullable(settings.get("app_announcement"))
+                                .filter(announcement -> !announcement.isEmpty()))
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner(settings.getOrDefault("home_banner", ""))
@@ -45,6 +47,7 @@ public class SettingStore {
         data.getApp().ifPresent(app -> {
             upsertSetting("app_name", app.getName());
             upsertSetting("app_slogan", app.getSlogan());
+            upsertSetting("app_announcement", app.getAnnouncement().orElse(""));
         });
         data.getHome().ifPresent(home -> {
             upsertSetting("home_banner", home.getBanner());

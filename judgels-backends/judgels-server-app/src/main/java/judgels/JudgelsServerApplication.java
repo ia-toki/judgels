@@ -17,7 +17,6 @@ import judgels.service.jersey.JudgelsJerseyFeature;
 import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.session.SessionModule;
 import judgels.user.superadmin.SuperadminModule;
-import judgels.user.web.WebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 import tlx.TlxServerComponent;
 import tlx.auth.AuthModule;
@@ -118,7 +117,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
                 .sessionModule(new SessionModule())
-                .webModule(new WebModule(judgelsConfig.getWebConfig()))
                 .build();
 
         component.superadminCreator().ensureSuperadminExists();
