@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestInfo;
+import judgels.api.contest.module.DivisionModuleConfig;
 import judgels.api.contest.scoreboard.Scoreboard;
 import judgels.api.contest.scoreboard.ScoreboardEntry;
 import judgels.api.profile.Profile;
@@ -30,6 +31,7 @@ import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
+import judgels.contest.module.ContestModuleStore;
 import judgels.contest.rating.ContestRatingProvider;
 import judgels.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.contest.scoreboard.ContestScoreboardStore;
@@ -49,6 +51,7 @@ public class ContestRatingResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected ContestRoleChecker contestRoleChecker;
     @Inject protected ContestStore contestStore;
+    @Inject protected ContestModuleStore moduleStore;
     @Inject protected ContestScoreboardStore scoreboardStore;
     @Inject protected ContestScoreboardBuilder scoreboardBuilder;
     @Inject protected ContestRatingProvider ratingProvider;
@@ -118,12 +121,22 @@ public class ContestRatingResource {
 
         Map<String, Profile> profilesMap = profileStore.getProfiles(ranksMap.keySet(), contest.getBeginTime());
 
+        // If the contest allows higher divisions to participate unofficially, only contestants in
+        // the contest's own division are rated; the higher-division participants are left untouched.
+        Optional<DivisionModuleConfig> divisionConfig = moduleStore.getDivisionModuleConfig(contest.getJid());
+        boolean officialDivisionOnly =
+                divisionConfig.isPresent() && divisionConfig.get().getAllowHigherDivisionsUnofficially();
+
         List<String> contestantJids = Lists.newArrayList();
         Map<String, UserRating> currentRatingsMap = new HashMap<>();
 
         for (Map.Entry<String, Profile> entry : profilesMap.entrySet()) {
             String contestantJid = entry.getKey();
             Optional<UserRating> rating = entry.getValue().getRating();
+
+            if (officialDivisionOnly && !ratingProvider.isRatingInDivision(rating, divisionConfig.get().getDivision())) {
+                continue;
+            }
 
             contestantJids.add(contestantJid);
             if (rating.isPresent()) {

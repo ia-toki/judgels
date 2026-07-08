@@ -132,7 +132,8 @@ public class BundleScoreboardProcessorTests {
                     Map.of(),
                     profilesMap,
                     List.of(),
-                    submissions);
+                    submissions,
+                    Set.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                     new BundleScoreboardEntry.Builder()
@@ -208,7 +209,8 @@ public class BundleScoreboardProcessorTests {
                         Map.of(),
                         profilesMap,
                         List.of(),
-                        submissions);
+                        submissions,
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
@@ -268,7 +270,8 @@ public class BundleScoreboardProcessorTests {
                         Map.of(),
                         profilesMap,
                         List.of(),
-                        submissions);
+                        submissions,
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()

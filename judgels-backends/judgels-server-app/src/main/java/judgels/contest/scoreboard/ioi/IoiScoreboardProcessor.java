@@ -75,7 +75,8 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions) {
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids) {
 
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 
@@ -208,7 +209,7 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        entries = sortEntriesAndAssignRanks(getComparator(ioiStyleModuleConfig), entries);
+        entries = sortEntriesAndAssignRanks(getComparator(ioiStyleModuleConfig), entries, unofficialContestantJids);
 
         return new ScoreboardProcessResult.Builder()
                .entries(entries)
@@ -271,7 +272,12 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
             newEntries.add(newEntry);
         }
 
-        newEntries = sortEntriesAndAssignRanks(getComparator(config), newEntries);
+        // Preserve unofficial participants (rank 0 from the original processing) across the re-rank.
+        Set<String> unofficialContestantJids = content.getEntries().stream()
+                .filter(e -> e.getRank() == 0)
+                .map(IoiScoreboardEntry::getContestantJid)
+                .collect(Collectors.toSet());
+        newEntries = sortEntriesAndAssignRanks(getComparator(config), newEntries, unofficialContestantJids);
 
         return new IoiScoreboard.Builder()
                 .state(newState)
@@ -287,23 +293,30 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
 
     private static List<IoiScoreboardEntry> sortEntriesAndAssignRanks(
             IoiScoreboardEntryComparator comparator,
-            List<IoiScoreboardEntry> entries) {
+            List<IoiScoreboardEntry> entries,
+            Set<String> unofficialContestantJids) {
 
         entries.sort(comparator);
 
         ImmutableList.Builder<IoiScoreboardEntry> newEntries = ImmutableList.builder();
 
-        int previousRank = 0;
-        for (int i = 0; i < entries.size(); i++) {
-            int assignedRank;
-            if (i == 0 || comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
-                assignedRank = i + 1;
-            } else {
-                assignedRank = previousRank;
+        int officialRank = 0;
+        int officialCount = 0;
+        IoiScoreboardEntry previousOfficial = null;
+        for (IoiScoreboardEntry entry : entries) {
+            if (unofficialContestantJids.contains(entry.getContestantJid())) {
+                newEntries.add(new IoiScoreboardEntry.Builder().from(entry).rank(0).build());
+                continue;
             }
-            previousRank = assignedRank;
 
-            newEntries.add(new IoiScoreboardEntry.Builder().from(entries.get(i)).rank(assignedRank).build());
+            officialCount++;
+            if (previousOfficial == null
+                    || comparator.compareWithoutTieBreakerForEqualRanks(entry, previousOfficial) != 0) {
+                officialRank = officialCount;
+            }
+            previousOfficial = entry;
+
+            newEntries.add(new IoiScoreboardEntry.Builder().from(entry).rank(officialRank).build());
         }
 
         return newEntries.build();

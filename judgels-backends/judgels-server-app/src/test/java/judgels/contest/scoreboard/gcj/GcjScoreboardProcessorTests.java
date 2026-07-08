@@ -91,7 +91,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     problemScoringConfigsMap,
                     profilesMap,
                     submissions,
-                    List.of());
+                    List.of(),
+                    Set.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                     new GcjScoreboardEntry.Builder()
@@ -142,7 +143,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -193,7 +195,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -245,7 +248,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -294,7 +298,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -359,7 +364,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -436,7 +442,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -505,7 +512,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         baseSubmissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -555,7 +563,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -605,7 +614,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -655,7 +665,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -736,7 +747,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -765,7 +777,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         List.of(),
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -785,7 +798,8 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)

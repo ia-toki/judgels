@@ -15,5 +15,10 @@ public interface DivisionModuleConfig extends ModuleConfig {
 
     int getDivision();
 
+    @Value.Default
+    default boolean getAllowHigherDivisionsUnofficially() {
+        return false;
+    }
+
     class Builder extends ImmutableDivisionModuleConfig.Builder {}
 }

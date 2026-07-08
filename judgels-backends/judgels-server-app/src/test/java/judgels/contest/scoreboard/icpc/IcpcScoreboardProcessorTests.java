@@ -92,7 +92,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     problemScoringConfigsMap,
                     profilesMap,
                     submissions,
-                    List.of());
+                    List.of(),
+                    Set.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                     new IcpcScoreboardEntry.Builder()
@@ -127,6 +128,46 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                             .build());
         }
 
+        @Test
+        void unofficial_contestants_are_shown_but_not_ranked() {
+            Set<ContestContestant> threeContestants = ImmutableSet.of(
+                    new ContestContestant.Builder().userJid("c1").build(),
+                    new ContestContestant.Builder().userJid("c2").build(),
+                    new ContestContestant.Builder().userJid("c3").build());
+            Map<String, Set<ContestContestant>> threeContestantsMap = Map.of(contest.getJid(), threeContestants);
+            Map<String, Profile> threeProfilesMap = ImmutableMap.of(
+                    "c1", new Profile.Builder().username("c1").build(),
+                    "c2", new Profile.Builder().username("c2").build(),
+                    "c3", new Profile.Builder().username("c3").build());
+
+            // Sorted order is c2 (2 solved), then c3 (1 solved, earlier), then c1 (1 solved, later).
+            List<Submission> submissions = ImmutableList.of(
+                    createSubmission(1, 300, "c2", "p1", 100, Verdict.ACCEPTED),
+                    createSubmission(2, 360, "c2", "p2", 100, Verdict.ACCEPTED),
+                    createSubmission(3, 300, "c3", "p1", 100, Verdict.ACCEPTED),
+                    createSubmission(4, 400, "c1", "p2", 100, Verdict.ACCEPTED));
+
+            ScoreboardProcessResult result = scoreboardProcessor.process(
+                    state,
+                    Optional.empty(),
+                    styleModuleConfig,
+                    threeContestantsMap,
+                    contestBeginTimesMap,
+                    Map.of(),
+                    problemScoringConfigsMap,
+                    threeProfilesMap,
+                    submissions,
+                    List.of(),
+                    Set.of("c3"));
+
+            // c3 is unofficial: shown in place but rank 0; official c1/c2 get dense ranks 1 and 2.
+            assertThat(Lists.transform(result.getEntries(), e -> Map.entry(e.getContestantJid(), e.getRank())))
+                    .containsExactly(
+                            Map.entry("c2", 1),
+                            Map.entry("c3", 0),
+                            Map.entry("c1", 2));
+        }
+
         @Nested
         class ProblemOrdering {
             private List<Submission> submissions = ImmutableList.of(
@@ -145,7 +186,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -197,7 +239,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -252,7 +295,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -303,7 +347,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -371,7 +416,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -451,7 +497,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -523,7 +570,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         baseSubmissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -575,7 +623,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -627,7 +676,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -679,7 +729,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (IcpcScoreboardEntry) e)).containsExactly(
                         new IcpcScoreboardEntry.Builder()
@@ -765,7 +816,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -798,7 +850,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         List.of(),
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -818,7 +871,8 @@ class IcpcScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new IcpcScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)

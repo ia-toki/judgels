@@ -86,6 +86,15 @@ describe('IcpcScoreboardTable', () => {
     expect(ranks).toEqual(['?', '?']);
   });
 
+  test('unofficial ranks show dashes', async () => {
+    const entries = mockScoreboard.content.entries.map((entry, i) => (i === 1 ? { ...entry, rank: 0 } : entry));
+    const scoreboard = { ...mockScoreboard, content: { entries } };
+    await renderComponent({ scoreboard });
+    const rows = screen.getAllByRole('row').slice(1);
+    const ranks = rows.map(row => within(row).getAllByRole('cell')[0].textContent);
+    expect(ranks).toEqual(['1', '-']);
+  });
+
   test('display names', async () => {
     await renderComponent();
     const rows = screen.getAllByRole('row').slice(1);

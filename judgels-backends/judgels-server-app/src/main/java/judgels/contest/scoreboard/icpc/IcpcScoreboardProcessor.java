@@ -72,7 +72,8 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions) {
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids) {
 
         IcpcStyleModuleConfig icpcStyleModuleConfig = (IcpcStyleModuleConfig) styleModuleConfig;
 
@@ -215,7 +216,7 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        entries = sortEntriesAndAssignRanks(entries);
+        entries = sortEntriesAndAssignRanks(entries, unofficialContestantJids);
 
         return new ScoreboardProcessResult.Builder()
                 .entries(entries)
@@ -239,18 +240,30 @@ public class IcpcScoreboardProcessor implements ScoreboardProcessor {
                 .build();
     }
 
-    private List<IcpcScoreboardEntry> sortEntriesAndAssignRanks(List<IcpcScoreboardEntry> entries) {
+    private List<IcpcScoreboardEntry> sortEntriesAndAssignRanks(
+            List<IcpcScoreboardEntry> entries, Set<String> unofficialContestantJids) {
         ScoreboardEntryComparator<IcpcScoreboardEntry> comparator = new StandardIcpcScoreboardEntryComparator();
         entries.sort(comparator);
 
         List<IcpcScoreboardEntry> result = new ArrayList<>();
 
-        int currentRank = 1;
-        for (int i = 0; i < entries.size(); i++) {
-            if (i != 0 && comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
-                currentRank = i + 1;
+        int officialRank = 0;
+        int officialCount = 0;
+        IcpcScoreboardEntry previousOfficial = null;
+        for (IcpcScoreboardEntry entry : entries) {
+            if (unofficialContestantJids.contains(entry.getContestantJid())) {
+                result.add(new IcpcScoreboardEntry.Builder().from(entry).rank(0).build());
+                continue;
             }
-            result.add(new IcpcScoreboardEntry.Builder().from(entries.get(i)).rank(currentRank).build());
+
+            officialCount++;
+            if (previousOfficial == null
+                    || comparator.compareWithoutTieBreakerForEqualRanks(entry, previousOfficial) != 0) {
+                officialRank = officialCount;
+            }
+            previousOfficial = entry;
+
+            result.add(new IcpcScoreboardEntry.Builder().from(entry).rank(officialRank).build());
         }
 
         return result;

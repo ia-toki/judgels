@@ -72,7 +72,8 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions) {
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids) {
 
         GcjStyleModuleConfig gcjStyleModuleConfig = (GcjStyleModuleConfig) styleModuleConfig;
 
@@ -210,7 +211,7 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                     .build());
         }
 
-        entries = sortEntriesAndAssignRanks(entries);
+        entries = sortEntriesAndAssignRanks(entries, unofficialContestantJids);
 
         return new ScoreboardProcessResult.Builder()
                 .entries(entries)
@@ -231,18 +232,30 @@ public class GcjScoreboardProcessor implements ScoreboardProcessor {
                 .build();
     }
 
-    private List<GcjScoreboardEntry> sortEntriesAndAssignRanks(List<GcjScoreboardEntry> entries) {
+    private List<GcjScoreboardEntry> sortEntriesAndAssignRanks(
+            List<GcjScoreboardEntry> entries, Set<String> unofficialContestantJids) {
         ScoreboardEntryComparator<GcjScoreboardEntry> comparator = new StandardGcjScoreboardEntryComparator();
         entries.sort(comparator);
 
         List<GcjScoreboardEntry> result = new ArrayList<>();
 
-        int currentRank = 1;
-        for (int i = 0; i < entries.size(); i++) {
-            if (i != 0 && comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
-                currentRank = i + 1;
+        int officialRank = 0;
+        int officialCount = 0;
+        GcjScoreboardEntry previousOfficial = null;
+        for (GcjScoreboardEntry entry : entries) {
+            if (unofficialContestantJids.contains(entry.getContestantJid())) {
+                result.add(new GcjScoreboardEntry.Builder().from(entry).rank(0).build());
+                continue;
             }
-            result.add(new GcjScoreboardEntry.Builder().from(entries.get(i)).rank(currentRank).build());
+
+            officialCount++;
+            if (previousOfficial == null
+                    || comparator.compareWithoutTieBreakerForEqualRanks(entry, previousOfficial) != 0) {
+                officialRank = officialCount;
+            }
+            previousOfficial = entry;
+
+            result.add(new GcjScoreboardEntry.Builder().from(entry).rank(officialRank).build());
         }
 
         return result;

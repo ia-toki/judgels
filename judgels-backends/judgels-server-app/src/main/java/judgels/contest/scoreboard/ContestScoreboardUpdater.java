@@ -21,6 +21,7 @@ import judgels.api.contest.Contest;
 import judgels.api.contest.ContestStyle;
 import judgels.api.contest.contestant.ContestContestant;
 import judgels.api.contest.module.ContestModulesConfig;
+import judgels.api.contest.module.DivisionModuleConfig;
 import judgels.api.contest.module.ExternalScoreboardModuleConfig;
 import judgels.api.contest.module.StyleModuleConfig;
 import judgels.api.contest.problem.ContestProblem;
@@ -31,11 +32,13 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.programming.Submission;
+import judgels.api.user.rating.UserRating;
 import judgels.contest.ContestStore;
 import judgels.contest.ContestTimer;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
+import judgels.contest.rating.ContestRatingProvider;
 import judgels.grading.api.ScoringConfig;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
@@ -57,6 +60,7 @@ public class ContestScoreboardUpdater {
     private final ContestScoreboardPusher scoreboardPusher;
     private final ProfileStore profileStore;
     private final ProblemService problemService;
+    private final ContestRatingProvider ratingProvider;
 
     public ContestScoreboardUpdater(
             ObjectMapper objectMapper,
@@ -72,7 +76,8 @@ public class ContestScoreboardUpdater {
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
             ProfileStore profileStore,
-            ProblemService problemService) {
+            ProblemService problemService,
+            ContestRatingProvider ratingProvider) {
 
         this.objectMapper = objectMapper;
         this.contestTimer = contestTimer;
@@ -88,6 +93,7 @@ public class ContestScoreboardUpdater {
         this.scoreboardPusher = scoreboardPusher;
         this.profileStore = profileStore;
         this.problemService = problemService;
+        this.ratingProvider = ratingProvider;
     }
 
     @UnitOfWork
@@ -179,6 +185,21 @@ public class ContestScoreboardUpdater {
 
         Map<String, Profile> profilesMap = profileStore.getProfiles(contestantJidsSet, contest.getBeginTime());
 
+        // If the contest lets higher divisions participate unofficially, contestants outside the
+        // contest's own division are shown on the scoreboard but excluded from rank numbering.
+        Set<String> unofficialContestantJids = new HashSet<>();
+        Optional<DivisionModuleConfig> divisionConfig = moduleStore.getDivisionModuleConfig(contest.getJid());
+        if (divisionConfig.isPresent() && divisionConfig.get().getAllowHigherDivisionsUnofficially()) {
+            int division = divisionConfig.get().getDivision();
+            for (String contestantJid : contestantJidsSet) {
+                Optional<UserRating> rating = Optional.ofNullable(profilesMap.get(contestantJid))
+                        .flatMap(Profile::getRating);
+                if (!ratingProvider.isRatingInDivision(rating, division)) {
+                    unofficialContestantJids.add(contestantJid);
+                }
+            }
+        }
+
         Map<String, ScoringConfig> problemScoringConfigsMap = contest.getStyle() == ContestStyle.BUNDLE
                 ? Map.of()
                 : problemService.getProgrammingProblemScoringConfigs(problemJidsSet);
@@ -226,7 +247,8 @@ public class ContestScoreboardUpdater {
                     problemScoringConfigsMap,
                     profilesMap,
                     programmingSubmissions,
-                    bundleItemSubmissions);
+                    bundleItemSubmissions,
+                    unofficialContestantJids);
 
             Scoreboard scoreboard = processor.create(state, result.getEntries());
 
@@ -248,7 +270,8 @@ public class ContestScoreboardUpdater {
 
         if (contestTimer.hasEnded(contest)) {
             for (ScoreboardEntry e : scoreboards.get(OFFICIAL).getContent().getEntries()) {
-                if (e.hasSubmission()) {
+                // rank <= 0 means unofficial (or incognito); such contestants get no final rank.
+                if (e.hasSubmission() && e.getRank() > 0) {
                     contestantStore.updateContestantFinalRank(contest.getJid(), e.getContestantJid(), e.getRank());
                 }
             }

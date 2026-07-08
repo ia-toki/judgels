@@ -203,6 +203,11 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
       validate: Required,
       keyClassName: 'contest-edit-configs-form__key',
     };
+    const divisionAllowHigherDivisionsUnofficiallyField = {
+      name: 'divisionAllowHigherDivisionsUnofficially',
+      label: 'Allow higher divisions to participate unofficially?',
+      keyClassName: 'contest-edit-configs-form__key',
+    };
 
     return (
       <div className="contest-edit-configs-form__config">
@@ -210,6 +215,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
         <HTMLTable striped>
           <tbody>
             <Field component={FormTableTextInput} {...divisionDivisionField} />
+            <Field component={FormTableCheckbox} {...divisionAllowHigherDivisionsUnofficiallyField} />
           </tbody>
         </HTMLTable>
       </div>

@@ -95,7 +95,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                     problemScoringConfigsMap,
                     profilesMap,
                     submissions,
-                    List.of());
+                    List.of(),
+                    Set.of());
 
             assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                     new TrocScoreboardEntry.Builder()
@@ -146,7 +147,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -197,7 +199,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -249,7 +252,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -298,7 +302,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -363,7 +368,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -440,7 +446,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -509,7 +516,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         baseSubmissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -559,7 +567,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -609,7 +618,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -659,7 +669,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (TrocScoreboardEntry) e)).containsExactly(
                         new TrocScoreboardEntry.Builder()
@@ -741,7 +752,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -772,7 +784,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         List.of(),
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -792,7 +805,8 @@ class TrocScoreboardProcessorTests extends AbstractProgrammingScoreboardProcesso
                         problemScoringConfigsMap,
                         profilesMap,
                         submissions,
-                        List.of());
+                        List.of(),
+                        Set.of());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new TrocScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)

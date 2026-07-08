@@ -11,6 +11,7 @@ import judgels.contest.ContestTimer;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
+import judgels.contest.rating.ContestRatingProvider;
 import judgels.contest.submission.bundle.ContestItemSubmissionStore;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.problem.ProblemService;
@@ -66,7 +67,8 @@ public class ContestScoreboardUpdaterModule {
             ScoreboardProcessorRegistry scoreboardProcessorRegistry,
             ContestScoreboardPusher scoreboardPusher,
             ProfileStore profileStore,
-            ProblemService problemService) {
+            ProblemService problemService,
+            ContestRatingProvider ratingProvider) {
 
         return unitOfWorkAwareProxyFactory.create(
                 ContestScoreboardUpdater.class,
@@ -84,7 +86,8 @@ public class ContestScoreboardUpdaterModule {
                         ScoreboardProcessorRegistry.class,
                         ContestScoreboardPusher.class,
                         ProfileStore.class,
-                        ProblemService.class},
+                        ProblemService.class,
+                        ContestRatingProvider.class},
                 new Object[] {
                         objectMapper,
                         contestTimer,
@@ -99,6 +102,7 @@ public class ContestScoreboardUpdaterModule {
                         scoreboardProcessorRegistry,
                         scoreboardPusher,
                         profileStore,
-                        problemService});
+                        problemService,
+                        ratingProvider});
     }
 }
