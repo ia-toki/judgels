@@ -66,6 +66,25 @@ class ContestHistoryApiIntegrationTests extends BaseContestApiIntegrationTests {
         assertThat(history.getContestsMap().get(contest.getJid()).getSlug()).isEqualTo(contest.getSlug());
     }
 
+    @Test
+    void get_public_history__unofficial() {
+        Contest contest = buildContest()
+                .modules(ContestModuleType.REGISTRATION)
+                .contestants(CONTESTANT_A)
+                .ended()
+                .build();
+
+        // Unofficial contestants get final rank 0: the contest still shows up in their history,
+        // but with no official rank.
+        setFinalRank(contest.getJid(), contestantA.getJid(), 0);
+
+        ContestHistoryResponse history = historyClient.getPublicHistory(CONTESTANT_A);
+        assertThat(history.getData()).hasSize(1);
+        assertThat(history.getData().get(0).getContestJid()).isEqualTo(contest.getJid());
+        assertThat(history.getData().get(0).getRank()).isEqualTo(0);
+        assertThat(history.getContestsMap()).containsKey(contest.getJid());
+    }
+
     private static void setFinalRank(String contestJid, String userJid, int rank) {
         Session session = openSession();
         Transaction txn = session.beginTransaction();

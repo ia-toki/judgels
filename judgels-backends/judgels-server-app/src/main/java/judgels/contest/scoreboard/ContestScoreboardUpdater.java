@@ -271,8 +271,10 @@ public class ContestScoreboardUpdater {
 
         if (contestTimer.hasEnded(contest)) {
             for (ScoreboardEntry e : scoreboards.get(OFFICIAL).getContent().getEntries()) {
-                // rank <= 0 means unofficial (or incognito); such contestants get no final rank.
-                if (e.hasSubmission() && e.getRank() > 0) {
+                // Unofficial contestants have rank 0. They still get a final rank row, so the contest
+                // shows up in their contest history, but with no official rank. Always writing the rank
+                // (instead of skipping) also means a re-run overwrites any rank from a previous run.
+                if (e.hasSubmission()) {
                     contestantStore.updateContestantFinalRank(contest.getJid(), e.getContestantJid(), e.getRank());
                 }
             }

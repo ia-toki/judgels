@@ -77,7 +77,7 @@ function renderRows(response) {
         <td>
           <ContestLink contest={contestsMap[event.contestJid]} />
         </td>
-        <td>{event.rank}</td>
+        <td>{event.rank === 0 ? '-' : event.rank}</td>
         <td>{ratingChange}</td>
         <td>{ratingDiff}</td>
       </tr>
