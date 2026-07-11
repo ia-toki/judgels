@@ -74,8 +74,6 @@ class ContestHistoryApiIntegrationTests extends BaseContestApiIntegrationTests {
                 .ended()
                 .build();
 
-        // Unofficial contestants get final rank 0: the contest still shows up in their history,
-        // but with no official rank.
         setFinalRank(contest.getJid(), contestantA.getJid(), 0);
 
         ContestHistoryResponse history = historyClient.getPublicHistory(CONTESTANT_A);
