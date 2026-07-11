@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestStyle;
@@ -738,7 +737,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             void empty_new_submissions() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
                         .scoreboardState(state)
-                        .incrementalContent(Optional.of(incrementalContent))
+                        .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
                         .contestBeginTimesMap(contestBeginTimesMap)
@@ -756,7 +755,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             void existing_incremental_content() {
                 ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
                         .scoreboardState(state)
-                        .incrementalContent(Optional.of(incrementalContent))
+                        .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
                         .contestBeginTimesMap(contestBeginTimesMap)
