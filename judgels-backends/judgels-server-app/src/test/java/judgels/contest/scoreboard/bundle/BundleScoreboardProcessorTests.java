@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestStyle;
@@ -23,6 +22,7 @@ import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.Verdict;
+import judgels.contest.scoreboard.ScoreboardProcessRequest;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -122,18 +122,15 @@ public class BundleScoreboardProcessorTests {
                             .build()
             );
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(
-                    state,
-                    Optional.empty(),
-                    styleModuleConfig,
-                    contestContestantsMap,
-                    contestBeginTimesMap,
-                    contestFreezeTimesMap,
-                    Map.of(),
-                    profilesMap,
-                    List.of(),
-                    submissions,
-                    Set.of());
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                    .scoreboardState(state)
+                    .styleModuleConfig(styleModuleConfig)
+                    .contestContestantsMap(contestContestantsMap)
+                    .contestBeginTimesMap(contestBeginTimesMap)
+                    .contestFreezeTimesMap(contestFreezeTimesMap)
+                    .profilesMap(profilesMap)
+                    .bundleItemSubmissions(submissions)
+                    .build());
 
             assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                     new BundleScoreboardEntry.Builder()
@@ -199,18 +196,15 @@ public class BundleScoreboardProcessorTests {
                                 .build()
                 );
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        Map.of(),
-                        profilesMap,
-                        List.of(),
-                        submissions,
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .profilesMap(profilesMap)
+                        .bundleItemSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()
@@ -260,18 +254,15 @@ public class BundleScoreboardProcessorTests {
                                 .build()
                 );
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        Map.of(),
-                        profilesMap,
-                        List.of(),
-                        submissions,
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .profilesMap(profilesMap)
+                        .bundleItemSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (BundleScoreboardEntry) e)).containsExactly(
                         new BundleScoreboardEntry.Builder()

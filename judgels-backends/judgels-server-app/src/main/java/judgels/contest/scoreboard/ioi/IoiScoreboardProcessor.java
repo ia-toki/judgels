@@ -26,11 +26,11 @@ import judgels.api.contest.scoreboard.IoiScoreboard.IoiScoreboardEntry;
 import judgels.api.contest.scoreboard.ScoreboardEntry;
 import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
-import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
 import judgels.api.user.rating.UserRating;
 import judgels.contest.scoreboard.ScoreboardIncrementalContent;
+import judgels.contest.scoreboard.ScoreboardProcessRequest;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.contest.scoreboard.ScoreboardProcessor;
 import judgels.grading.api.ScoringConfig;
@@ -65,18 +65,17 @@ public class IoiScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardProcessResult process(
-            ScoreboardState scoreboardState,
-            Optional<ScoreboardIncrementalContent> incrementalContent,
-            StyleModuleConfig styleModuleConfig,
-            Map<String, Set<ContestContestant>> contestContestantsMap,
-            Map<String, Instant> contestBeginTimesMap,
-            Map<String, Instant> contestFreezeTimesMap,
-            Map<String, ScoringConfig> problemScoringConfigsMap,
-            Map<String, Profile> profilesMap,
-            List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Set<String> unofficialContestantJids) {
+    public ScoreboardProcessResult process(ScoreboardProcessRequest request) {
+        ScoreboardState scoreboardState = request.getScoreboardState();
+        Optional<ScoreboardIncrementalContent> incrementalContent = request.getIncrementalContent();
+        StyleModuleConfig styleModuleConfig = request.getStyleModuleConfig();
+        Map<String, Set<ContestContestant>> contestContestantsMap = request.getContestContestantsMap();
+        Map<String, Instant> contestBeginTimesMap = request.getContestBeginTimesMap();
+        Map<String, Instant> contestFreezeTimesMap = request.getContestFreezeTimesMap();
+        Map<String, ScoringConfig> problemScoringConfigsMap = request.getProblemScoringConfigsMap();
+        Map<String, Profile> profilesMap = request.getProfilesMap();
+        List<Submission> programmingSubmissions = request.getProgrammingSubmissions();
+        Set<String> unofficialContestantJids = request.getUnofficialContestantJids();
 
         IoiStyleModuleConfig ioiStyleModuleConfig = (IoiStyleModuleConfig) styleModuleConfig;
 

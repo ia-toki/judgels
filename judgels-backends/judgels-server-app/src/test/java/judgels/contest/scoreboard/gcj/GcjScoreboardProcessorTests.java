@@ -23,6 +23,7 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.contest.scoreboard.AbstractProgrammingScoreboardProcessorTests;
+import judgels.contest.scoreboard.ScoreboardProcessRequest;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.grading.api.ScoringConfig;
 import judgels.grading.api.Verdict;
@@ -81,18 +82,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createSubmission(4, 410, "c1", "p2", 100, Verdict.ACCEPTED),
                     createSubmission(5, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(
-                    state,
-                    Optional.empty(),
-                    styleModuleConfig,
-                    contestContestantsMap,
-                    contestBeginTimesMap,
-                    Map.of(),
-                    problemScoringConfigsMap,
-                    profilesMap,
-                    submissions,
-                    List.of(),
-                    Set.of());
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                    .scoreboardState(state)
+                    .styleModuleConfig(styleModuleConfig)
+                    .contestContestantsMap(contestContestantsMap)
+                    .contestBeginTimesMap(contestBeginTimesMap)
+                    .problemScoringConfigsMap(problemScoringConfigsMap)
+                    .profilesMap(profilesMap)
+                    .programmingSubmissions(submissions)
+                    .build());
 
             assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                     new GcjScoreboardEntry.Builder()
@@ -133,18 +131,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void base_case() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -185,18 +180,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .problemPoints(ImmutableList.of(10, 1))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -238,18 +230,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p2", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -288,18 +277,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 900, "c2", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c1", "p1", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -354,18 +340,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 660, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -432,18 +415,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(2, 900, "c1", "p2", 0, Verdict.WRONG_ANSWER),
                         createSubmission(3, 900, "c3", "p2", 0, Verdict.WRONG_ANSWER));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -502,18 +482,16 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void no_pending() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        baseSubmissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(baseSubmissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -553,18 +531,16 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 501, "c1", "p1", 100, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -604,18 +580,16 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 501, "c1", "p2", 0, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -655,18 +629,16 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 500, "c1", "p2", 0, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        contestFreezeTimesMap,
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .contestFreezeTimesMap(contestFreezeTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(Lists.transform(result.getEntries(), e -> (GcjScoreboardEntry) e)).containsExactly(
                         new GcjScoreboardEntry.Builder()
@@ -737,18 +709,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_initial_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.empty(),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
@@ -767,18 +736,15 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_new_submissions() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.of(incrementalContent),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        List.of(),
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .incrementalContent(Optional.of(incrementalContent))
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .build());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .from(incrementalContent)
@@ -788,18 +754,16 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void existing_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(
-                        state,
-                        Optional.of(incrementalContent),
-                        styleModuleConfig,
-                        contestContestantsMap,
-                        contestBeginTimesMap,
-                        Map.of(),
-                        problemScoringConfigsMap,
-                        profilesMap,
-                        submissions,
-                        List.of(),
-                        Set.of());
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                        .scoreboardState(state)
+                        .incrementalContent(Optional.of(incrementalContent))
+                        .styleModuleConfig(styleModuleConfig)
+                        .contestContestantsMap(contestContestantsMap)
+                        .contestBeginTimesMap(contestBeginTimesMap)
+                        .problemScoringConfigsMap(problemScoringConfigsMap)
+                        .profilesMap(profilesMap)
+                        .programmingSubmissions(submissions)
+                        .build());
 
                 assertThat(result.getIncrementalContent()).isEqualTo(new GcjScoreboardIncrementalContent.Builder()
                         .lastSubmissionId(9)
