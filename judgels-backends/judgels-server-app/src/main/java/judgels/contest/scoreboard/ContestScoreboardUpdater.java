@@ -271,8 +271,7 @@ public class ContestScoreboardUpdater {
 
         if (contestTimer.hasEnded(contest)) {
             for (ScoreboardEntry e : scoreboards.get(OFFICIAL).getContent().getEntries()) {
-                // rank <= 0 means unofficial (or incognito); such contestants get no final rank.
-                if (e.hasSubmission() && e.getRank() > 0) {
+                if (e.hasSubmission()) {
                     contestantStore.updateContestantFinalRank(contest.getJid(), e.getContestantJid(), e.getRank());
                 }
             }

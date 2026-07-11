@@ -46,10 +46,11 @@ class ContestHistoryApiIntegrationTests extends BaseContestApiIntegrationTests {
 
         Contest contest = buildContest()
                 .modules(ContestModuleType.REGISTRATION)
-                .contestants(CONTESTANT)
+                .contestants(CONTESTANT, CONTESTANT_A)
                 .ended()
                 .build();
         setFinalRank(contest.getJid(), contestant.getJid(), 3);
+        setFinalRank(contest.getJid(), contestantA.getJid(), 0);
 
         userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
                 .time(Instant.ofEpochSecond(100))
@@ -64,6 +65,13 @@ class ContestHistoryApiIntegrationTests extends BaseContestApiIntegrationTests {
         assertThat(history.getData().get(0).getRating()).contains(UserRating.of(1500, 1400));
         assertThat(history.getContestsMap()).containsKey(contest.getJid());
         assertThat(history.getContestsMap().get(contest.getJid()).getSlug()).isEqualTo(contest.getSlug());
+
+        ContestHistoryResponse unofficialHistory = historyClient.getPublicHistory(CONTESTANT_A);
+        assertThat(unofficialHistory.getData()).hasSize(1);
+        assertThat(unofficialHistory.getData().get(0).getContestJid()).isEqualTo(contest.getJid());
+        assertThat(unofficialHistory.getData().get(0).getRank()).isEqualTo(0);
+        assertThat(unofficialHistory.getData().get(0).getRating()).isEmpty();
+        assertThat(unofficialHistory.getContestsMap()).containsKey(contest.getJid());
     }
 
     private static void setFinalRank(String contestJid, String userJid, int rank) {
