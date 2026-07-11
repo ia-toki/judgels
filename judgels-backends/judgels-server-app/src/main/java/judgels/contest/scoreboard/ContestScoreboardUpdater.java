@@ -237,18 +237,19 @@ public class ContestScoreboardUpdater {
             Optional<ScoreboardIncrementalContent> incrementalContent = Optional.ofNullable(
                     incrementalMark.getIncrementalContents().get(type));
 
-            ScoreboardProcessResult result = processor.process(
-                    state,
-                    incrementalContent,
-                    styleModuleConfig,
-                    contestContestantsMap,
-                    contestBeginTimesMap,
-                    contestFreezeTimesMap,
-                    problemScoringConfigsMap,
-                    profilesMap,
-                    programmingSubmissions,
-                    bundleItemSubmissions,
-                    unofficialContestantJids);
+            ScoreboardProcessResult result = processor.process(new ScoreboardProcessParams.Builder()
+                    .scoreboardState(state)
+                    .incrementalContent(incrementalContent)
+                    .styleModuleConfig(styleModuleConfig)
+                    .contestContestantsMap(contestContestantsMap)
+                    .contestBeginTimesMap(contestBeginTimesMap)
+                    .contestFreezeTimesMap(contestFreezeTimesMap)
+                    .problemScoringConfigsMap(problemScoringConfigsMap)
+                    .profilesMap(profilesMap)
+                    .programmingSubmissions(programmingSubmissions)
+                    .bundleItemSubmissions(bundleItemSubmissions)
+                    .unofficialContestantJids(unofficialContestantJids)
+                    .build());
 
             Scoreboard scoreboard = processor.create(state, result.getEntries());
 

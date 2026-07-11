@@ -20,13 +20,11 @@ import judgels.api.contest.scoreboard.BundleScoreboard.BundleScoreboardContent;
 import judgels.api.contest.scoreboard.BundleScoreboard.BundleScoreboardEntry;
 import judgels.api.contest.scoreboard.ScoreboardEntry;
 import judgels.api.contest.scoreboard.ScoreboardState;
-import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.ItemSubmission;
-import judgels.api.submission.programming.Submission;
 import judgels.contest.scoreboard.ScoreboardIncrementalContent;
+import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.contest.scoreboard.ScoreboardProcessor;
-import judgels.grading.api.ScoringConfig;
 
 public class BundleScoreboardProcessor implements ScoreboardProcessor {
     @Override
@@ -54,18 +52,13 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardProcessResult process(
-            ScoreboardState scoreboardState,
-            Optional<ScoreboardIncrementalContent> incrementalContent,
-            StyleModuleConfig styleModuleConfig,
-            Map<String, Set<ContestContestant>> contestContestantsMap,
-            Map<String, Instant> contestBeginTimesMap,
-            Map<String, Instant> contestFreezeTimesMap,
-            Map<String, ScoringConfig> problemScoringConfigsMap,
-            Map<String, Profile> profilesMap,
-            List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions,
-            Set<String> unofficialContestantJids) {
+    public ScoreboardProcessResult process(ScoreboardProcessParams param) {
+        ScoreboardState scoreboardState = param.getScoreboardState();
+        Optional<ScoreboardIncrementalContent> incrementalContent = param.getIncrementalContent();
+        StyleModuleConfig styleModuleConfig = param.getStyleModuleConfig();
+        Map<String, Set<ContestContestant>> contestContestantsMap = param.getContestContestantsMap();
+        List<ItemSubmission> bundleItemSubmissions = param.getBundleItemSubmissions();
+        Set<String> unofficialContestantJids = param.getUnofficialContestantJids();
 
         List<String> problemJids = scoreboardState.getProblemJids();
 
