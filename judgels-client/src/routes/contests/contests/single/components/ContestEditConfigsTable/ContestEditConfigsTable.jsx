@@ -111,12 +111,17 @@ export function ContestEditConfigsTable({ config }) {
     );
   };
 
-  const renderDivisionConfig = ({ division }) => {
+  const renderDivisionConfig = ({ division, allowHigherDivisionsUnofficially }) => {
     const rows = [
       {
         key: 'divisionDivision',
         title: 'Division',
         value: <>{division}</>,
+      },
+      {
+        key: 'divisionAllowHigherDivisionsUnofficially',
+        title: 'Allow higher divisions to participate unofficially?',
+        value: allowHigherDivisionsUnofficially ? <SmallTick /> : <SmallCross />,
       },
     ];
     return (

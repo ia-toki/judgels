@@ -13,7 +13,7 @@ export function BundleScoreboardTable({ userJid, scoreboard, profilesMap, onClic
 
   const renderRow = entry => {
     let cells = [
-      <td key="rank">{entry.rank === -1 ? '?' : entry.rank}</td>,
+      <td key="rank">{entry.rank === -1 ? '?' : entry.rank === 0 ? '-' : entry.rank}</td>,
       <td key="contestantJid" className="contestant-cell">
         <UserRef profile={profilesMap[entry.contestantJid]} />
       </td>,

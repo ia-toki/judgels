@@ -64,7 +64,8 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions) {
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids) {
 
         List<String> problemJids = scoreboardState.getProblemJids();
 
@@ -119,7 +120,8 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
                 })
                 .collect(Collectors.toList());
 
-        entries = sortEntriesAndAssignRanks(new UsingTotalScoresBundleScoreboardEntryComparator(), entries);
+        entries = sortEntriesAndAssignRanks(
+                new UsingTotalScoresBundleScoreboardEntryComparator(), entries, unofficialContestantJids);
         return new ScoreboardProcessResult.Builder()
                 .entries(entries)
                 .incrementalContent(new BundleScoreboardIncrementalContent())
@@ -136,23 +138,30 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
 
     private static List<BundleScoreboardEntry> sortEntriesAndAssignRanks(
             UsingTotalScoresBundleScoreboardEntryComparator comparator,
-            List<BundleScoreboardEntry> entries) {
+            List<BundleScoreboardEntry> entries,
+            Set<String> unofficialContestantJids) {
 
         entries.sort(comparator);
 
         ImmutableList.Builder<BundleScoreboardEntry> newEntries = ImmutableList.builder();
 
-        int previousRank = 0;
-        for (int i = 0; i < entries.size(); i++) {
-            int assignedRank;
-            if (i == 0 || comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
-                assignedRank = i + 1;
-            } else {
-                assignedRank = previousRank;
+        int officialRank = 0;
+        int officialCount = 0;
+        BundleScoreboardEntry previousOfficial = null;
+        for (BundleScoreboardEntry entry : entries) {
+            if (unofficialContestantJids.contains(entry.getContestantJid())) {
+                newEntries.add(new BundleScoreboardEntry.Builder().from(entry).rank(0).build());
+                continue;
             }
-            previousRank = assignedRank;
 
-            newEntries.add(new BundleScoreboardEntry.Builder().from(entries.get(i)).rank(assignedRank).build());
+            officialCount++;
+            if (previousOfficial == null
+                    || comparator.compareWithoutTieBreakerForEqualRanks(entry, previousOfficial) != 0) {
+                officialRank = officialCount;
+            }
+            previousOfficial = entry;
+
+            newEntries.add(new BundleScoreboardEntry.Builder().from(entry).rank(officialRank).build());
         }
 
         return newEntries.build();

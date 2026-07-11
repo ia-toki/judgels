@@ -28,6 +28,7 @@ describe('ContestEditConfigsTab', () => {
       },
       division: {
         division: 1,
+        allowHigherDivisionsUnofficially: false,
       },
       editorial: {
         preface: '<p>Thank you</p>',
@@ -89,6 +90,11 @@ describe('ContestEditConfigsTab', () => {
     await user.clear(divisionDivision);
     await user.type(divisionDivision, '2');
 
+    const divisionAllowHigherDivisionsUnofficially = screen.getByRole('checkbox', {
+      name: /allow higher divisions to participate unofficially/i,
+    });
+    await user.click(divisionAllowHigherDivisionsUnofficially);
+
     const frozenScoreboardFreezeTime = screen.getByRole('textbox', { name: /freeze time/i });
     await user.clear(frozenScoreboardFreezeTime);
     await user.type(frozenScoreboardFreezeTime, '1h 5m');
@@ -130,6 +136,7 @@ describe('ContestEditConfigsTab', () => {
         },
         division: {
           division: 2,
+          allowHigherDivisionsUnofficially: true,
         },
         frozenScoreboard: {
           isOfficialScoreboardAllowed: true,

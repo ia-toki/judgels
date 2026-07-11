@@ -22,6 +22,7 @@ public interface ScoreboardProcessor {
 
     boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
 
+    // Contestants in unofficialContestantJids are shown but excluded from rank numbering (rank 0).
     ScoreboardProcessResult process(
             ScoreboardState scoreboardState,
             Optional<ScoreboardIncrementalContent> incrementalContent,
@@ -32,7 +33,8 @@ public interface ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions);
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids);
 
     ScoreboardEntry clearEntryRank(ScoreboardEntry entry);
 }

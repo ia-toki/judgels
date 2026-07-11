@@ -72,7 +72,8 @@ public class TrocScoreboardProcessor implements ScoreboardProcessor {
             Map<String, ScoringConfig> problemScoringConfigsMap,
             Map<String, Profile> profilesMap,
             List<Submission> programmingSubmissions,
-            List<ItemSubmission> bundleItemSubmissions) {
+            List<ItemSubmission> bundleItemSubmissions,
+            Set<String> unofficialContestantJids) {
 
         TrocStyleModuleConfig trocStyleModuleConfig = (TrocStyleModuleConfig) styleModuleConfig;
 
@@ -218,7 +219,7 @@ public class TrocScoreboardProcessor implements ScoreboardProcessor {
                             .collect(Collectors.toList()))
                     .build());
         }
-        entries = sortEntriesAndAssignRanks(entries);
+        entries = sortEntriesAndAssignRanks(entries, unofficialContestantJids);
 
         return new ScoreboardProcessResult.Builder()
                 .entries(entries)
@@ -240,18 +241,30 @@ public class TrocScoreboardProcessor implements ScoreboardProcessor {
                 .build();
     }
 
-    private List<TrocScoreboardEntry> sortEntriesAndAssignRanks(List<TrocScoreboardEntry> entries) {
+    private List<TrocScoreboardEntry> sortEntriesAndAssignRanks(
+            List<TrocScoreboardEntry> entries, Set<String> unofficialContestantJids) {
         ScoreboardEntryComparator<TrocScoreboardEntry> comparator = new StandardTrocScoreboardEntryComparator();
         entries.sort(comparator);
 
         List<TrocScoreboardEntry> result = new ArrayList<>();
 
-        int currentRank = 1;
-        for (int i = 0; i < entries.size(); i++) {
-            if (i != 0 && comparator.compareWithoutTieBreakerForEqualRanks(entries.get(i), entries.get(i - 1)) != 0) {
-                currentRank = i + 1;
+        int officialRank = 0;
+        int officialCount = 0;
+        TrocScoreboardEntry previousOfficial = null;
+        for (TrocScoreboardEntry entry : entries) {
+            if (unofficialContestantJids.contains(entry.getContestantJid())) {
+                result.add(new TrocScoreboardEntry.Builder().from(entry).rank(0).build());
+                continue;
             }
-            result.add(new TrocScoreboardEntry.Builder().from(entries.get(i)).rank(currentRank).build());
+
+            officialCount++;
+            if (previousOfficial == null
+                    || comparator.compareWithoutTieBreakerForEqualRanks(entry, previousOfficial) != 0) {
+                officialRank = officialCount;
+            }
+            previousOfficial = entry;
+
+            result.add(new TrocScoreboardEntry.Builder().from(entry).rank(officialRank).build());
         }
 
         return result;

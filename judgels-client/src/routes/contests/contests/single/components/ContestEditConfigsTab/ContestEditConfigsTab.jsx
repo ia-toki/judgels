@@ -104,6 +104,7 @@ export default function ContestEditConfigsTab() {
         initialValues = {
           ...initialValues,
           divisionDivision: division.division,
+          divisionAllowHigherDivisionsUnofficially: division.allowHigherDivisionsUnofficially,
         };
       }
       if (editorial) {
@@ -215,7 +216,10 @@ export default function ContestEditConfigsTab() {
     if (division) {
       newConfig = {
         ...newConfig,
-        division: { division: +data.divisionDivision },
+        division: {
+          division: +data.divisionDivision,
+          allowHigherDivisionsUnofficially: data.divisionAllowHigherDivisionsUnofficially,
+        },
       };
     }
     if (editorial) {
