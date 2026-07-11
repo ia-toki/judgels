@@ -26,7 +26,7 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.contest.scoreboard.AbstractProgrammingScoreboardProcessorTests;
-import judgels.contest.scoreboard.ScoreboardProcessRequest;
+import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.grading.api.LanguageRestriction;
 import judgels.grading.api.ScoringConfig;
@@ -81,7 +81,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createMilliSubmission(2, 20, "c1", "p2", 50, Verdict.OK),
                     createMilliSubmission(3, 25, "c1", "p1", 0, Verdict.WRONG_ANSWER));
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                     .scoreboardState(state)
                     .styleModuleConfig(styleModuleConfig)
                     .contestContestantsMap(contestContestantsMap)
@@ -127,7 +127,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createMilliSubmission(2, 22, "c1", "p2", 50, Verdict.OK),
                     createMilliSubmission(3, 25, "c1", "p2", 90, Verdict.WRONG_ANSWER));
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                     .scoreboardState(state)
                     .styleModuleConfig(styleModuleConfig)
                     .contestContestantsMap(contestContestantsMap)
@@ -192,7 +192,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_initial_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -245,7 +245,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void existing_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)
@@ -306,7 +306,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void base_case() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -350,7 +350,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .addProblemAliases("B", "A")
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -431,7 +431,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             void sorted_without_last_affecting_penalty() {
                 styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(false).build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -474,7 +474,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
             void sorted_with_last_affecting_penalty() {
                 styleModuleConfig = new IoiStyleModuleConfig.Builder().usingLastAffectingPenalty(true).build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -548,7 +548,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_initial_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -575,7 +575,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_new_submissions() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)
@@ -593,7 +593,7 @@ class IoiScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void existing_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)

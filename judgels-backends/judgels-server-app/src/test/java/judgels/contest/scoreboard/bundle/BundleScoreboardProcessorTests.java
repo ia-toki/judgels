@@ -22,7 +22,7 @@ import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.Verdict;
-import judgels.contest.scoreboard.ScoreboardProcessRequest;
+import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -122,7 +122,7 @@ public class BundleScoreboardProcessorTests {
                             .build()
             );
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                     .scoreboardState(state)
                     .styleModuleConfig(styleModuleConfig)
                     .contestContestantsMap(contestContestantsMap)
@@ -196,7 +196,7 @@ public class BundleScoreboardProcessorTests {
                                 .build()
                 );
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -254,7 +254,7 @@ public class BundleScoreboardProcessorTests {
                                 .build()
                 );
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)

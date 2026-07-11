@@ -22,7 +22,7 @@ import judgels.api.contest.scoreboard.ScoreboardEntry;
 import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.contest.scoreboard.ScoreboardIncrementalContent;
-import judgels.contest.scoreboard.ScoreboardProcessRequest;
+import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.contest.scoreboard.ScoreboardProcessor;
 
@@ -52,13 +52,13 @@ public class BundleScoreboardProcessor implements ScoreboardProcessor {
     }
 
     @Override
-    public ScoreboardProcessResult process(ScoreboardProcessRequest request) {
-        ScoreboardState scoreboardState = request.getScoreboardState();
-        Optional<ScoreboardIncrementalContent> incrementalContent = request.getIncrementalContent();
-        StyleModuleConfig styleModuleConfig = request.getStyleModuleConfig();
-        Map<String, Set<ContestContestant>> contestContestantsMap = request.getContestContestantsMap();
-        List<ItemSubmission> bundleItemSubmissions = request.getBundleItemSubmissions();
-        Set<String> unofficialContestantJids = request.getUnofficialContestantJids();
+    public ScoreboardProcessResult process(ScoreboardProcessParams param) {
+        ScoreboardState scoreboardState = param.getScoreboardState();
+        Optional<ScoreboardIncrementalContent> incrementalContent = param.getIncrementalContent();
+        StyleModuleConfig styleModuleConfig = param.getStyleModuleConfig();
+        Map<String, Set<ContestContestant>> contestContestantsMap = param.getContestContestantsMap();
+        List<ItemSubmission> bundleItemSubmissions = param.getBundleItemSubmissions();
+        Set<String> unofficialContestantJids = param.getUnofficialContestantJids();
 
         List<String> problemJids = scoreboardState.getProblemJids();
 

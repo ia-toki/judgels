@@ -22,7 +22,7 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.contest.scoreboard.AbstractProgrammingScoreboardProcessorTests;
-import judgels.contest.scoreboard.ScoreboardProcessRequest;
+import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import judgels.grading.api.ScoringConfig;
 import judgels.grading.api.Verdict;
@@ -81,7 +81,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                     createSubmission(4, 410, "c1", "p2", 100, Verdict.ACCEPTED),
                     createSubmission(5, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
-            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+            ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                     .scoreboardState(state)
                     .styleModuleConfig(styleModuleConfig)
                     .contestContestantsMap(contestContestantsMap)
@@ -130,7 +130,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void base_case() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -179,7 +179,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .problemPoints(ImmutableList.of(10, 1))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -229,7 +229,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 300, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p2", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -276,7 +276,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 900, "c2", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c1", "p1", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -339,7 +339,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(1, 660, "c1", "p1", 100, Verdict.ACCEPTED),
                         createSubmission(2, 900, "c2", "p1", 100, Verdict.ACCEPTED));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -414,7 +414,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         createSubmission(2, 900, "c1", "p2", 0, Verdict.WRONG_ANSWER),
                         createSubmission(3, 900, "c3", "p2", 0, Verdict.WRONG_ANSWER));
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -481,7 +481,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void no_pending() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -530,7 +530,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 501, "c1", "p1", 100, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -579,7 +579,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 501, "c1", "p2", 0, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -628,7 +628,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
                         .add(createSubmission(4, 500, "c1", "p2", 0, Verdict.PENDING))
                         .build();
 
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -708,7 +708,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_initial_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .styleModuleConfig(styleModuleConfig)
                         .contestContestantsMap(contestContestantsMap)
@@ -735,7 +735,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void empty_new_submissions() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)
@@ -753,7 +753,7 @@ class GcjScoreboardProcessorTests extends AbstractProgrammingScoreboardProcessor
 
             @Test
             void existing_incremental_content() {
-                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessRequest.Builder()
+                ScoreboardProcessResult result = scoreboardProcessor.process(new ScoreboardProcessParams.Builder()
                         .scoreboardState(state)
                         .incrementalContent(incrementalContent)
                         .styleModuleConfig(styleModuleConfig)

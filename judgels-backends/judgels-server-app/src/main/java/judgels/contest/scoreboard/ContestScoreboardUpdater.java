@@ -237,7 +237,7 @@ public class ContestScoreboardUpdater {
             Optional<ScoreboardIncrementalContent> incrementalContent = Optional.ofNullable(
                     incrementalMark.getIncrementalContents().get(type));
 
-            ScoreboardProcessResult result = processor.process(new ScoreboardProcessRequest.Builder()
+            ScoreboardProcessResult result = processor.process(new ScoreboardProcessParams.Builder()
                     .scoreboardState(state)
                     .incrementalContent(incrementalContent)
                     .styleModuleConfig(styleModuleConfig)

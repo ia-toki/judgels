@@ -13,7 +13,7 @@ public interface ScoreboardProcessor {
 
     boolean requiresGradingDetails(StyleModuleConfig styleModuleConfig);
 
-    ScoreboardProcessResult process(ScoreboardProcessRequest request);
+    ScoreboardProcessResult process(ScoreboardProcessParams param);
 
     ScoreboardEntry clearEntryRank(ScoreboardEntry entry);
 }

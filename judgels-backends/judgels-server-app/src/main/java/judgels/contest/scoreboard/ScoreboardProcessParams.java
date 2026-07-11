@@ -15,7 +15,7 @@ import judgels.grading.api.ScoringConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
-public interface ScoreboardProcessRequest {
+public interface ScoreboardProcessParams {
     ScoreboardState getScoreboardState();
     Optional<ScoreboardIncrementalContent> getIncrementalContent();
     StyleModuleConfig getStyleModuleConfig();
@@ -30,5 +30,5 @@ public interface ScoreboardProcessRequest {
     // Contestants who are shown on the scoreboard but excluded from rank numbering (rank 0).
     Set<String> getUnofficialContestantJids();
 
-    class Builder extends ImmutableScoreboardProcessRequest.Builder {}
+    class Builder extends ImmutableScoreboardProcessParams.Builder {}
 }
