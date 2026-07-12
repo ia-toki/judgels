@@ -20,7 +20,9 @@ export class HtmlText extends Component {
     if (profilesMap) {
       Object.keys(profilesMap).forEach(userJid => {
         const profile = profilesMap[userJid];
-        str = str.replace('[user:' + profile.username + ']', renderToString(<UserRef profile={profile} useAnchor />));
+        str = str
+          .split('[user:' + profile.username + ']')
+          .join(renderToString(<UserRef profile={profile} useAnchor />));
       });
     }
 
