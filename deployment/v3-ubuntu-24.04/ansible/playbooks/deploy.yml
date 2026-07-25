@@ -6,7 +6,10 @@
     - name: judgels-server-migrate
     - name: judgels-server-deploy
     - name: judgels-client-deploy
+    - name: nginx-http-deploy
+      when: not (nginx_certbot_enabled | default(true) | bool)
     - name: nginx-certbot-deploy
+      when: nginx_certbot_enabled | default(true) | bool
       vars:
         domains:
           - name: judgels-server-api
