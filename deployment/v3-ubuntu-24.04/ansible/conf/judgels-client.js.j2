@@ -1,6 +1,10 @@
 window.conf = {
   mode: '{{ app_mode | default('JUDGELS', true) }}',
+{% if nginx_certbot_enabled | default(true) | bool %}
   apiUrl: 'https://{{ nginx_domain_judgels_server_api }}/v2',
+{% else %}
+  apiUrl: '/api/v2',
+{% endif %}
 {% if googleAnalytics_trackingId is defined %}
   googleAnalytics: {
     trackingId: '{{ googleAnalytics_trackingId }}',
