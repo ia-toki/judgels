@@ -47,9 +47,11 @@ webSecurity:
 judgels:
   baseDataDir: var/data
 
-  app:
 {% if app_licenseKey is defined %}
+  app:
     licenseKey: {{ app_licenseKey }}
+{% else %}
+  app: {}
 {% endif %}
 
 {% if rabbitmq_username is defined %}
