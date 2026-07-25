@@ -39,6 +39,7 @@
       slurp:
         path: "{{ playbook_dir }}/../env/judgels-grader.pub"
       delegate_to: localhost
+      become: false
       register: judgels_grader_pubkey
     
     - name: Add the public key to the authorized_keys file

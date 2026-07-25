@@ -1,5 +1,6 @@
 - hosts: core
   gather_facts: false
+  become: true
   roles:
     - name: rabbitmq-deploy
     - name: judgels-server-migrate
@@ -22,5 +23,6 @@
 
 - hosts: grader
   gather_facts: false
+  become: true
   roles:
     - name: judgels-grader-deploy
