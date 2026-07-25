@@ -1,5 +1,6 @@
 - hosts: core
   gather_facts: true
+  become: true
   vars:
     db_dump_file: /opt/judgels/server/var/tmp/judgels-{{ ansible_date_time.epoch }}.sql
   tasks:
@@ -24,18 +25,23 @@
         state: directory
       delegate_to: localhost
       connection: local
+      become: false
 
     - name: Download judgels database dump file
       synchronize:
         mode: pull
         src: "{{ db_dump_file }}"
         dest: "{{ dump_dir }}/mysql/"
-    
+        rsync_path: sudo rsync
+      become: false
+
     - name: Download MySQL logs
       synchronize:
         mode: pull
         src: /var/log/mysql/
         dest: "{{ dump_dir }}/mysql"
+        rsync_path: sudo rsync
+      become: false
 
     - name: Create judgels-server directory
       file:
@@ -43,12 +49,15 @@
         state: directory
       delegate_to: localhost
       connection: local
+      become: false
 
     - name: Download judgels-server data
       synchronize:
         mode: pull
         src: /opt/judgels/server/var/data/
         dest: "{{ dump_dir }}/judgels-server"
+        rsync_path: sudo rsync
+      become: false
 
     - name: Create system directory
       file:
@@ -56,9 +65,12 @@
         state: directory
       delegate_to: localhost
       connection: local
+      become: false
 
     - name: Download system logs
       synchronize:
         mode: pull
         src: /var/log/auth.log
         dest: "{{ dump_dir }}/system"
+        rsync_path: sudo rsync
+      become: false

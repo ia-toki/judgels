@@ -1,5 +1,6 @@
 - hosts: all
   gather_facts: false
+  become: true
   roles:
     - name: python-install
     - name: docker-install
@@ -7,6 +8,7 @@
 
 - hosts: core
   gather_facts: false
+  become: true
   roles:
     - name: mysql-install
     - name: nginx-install
@@ -18,12 +20,14 @@
 
 - hosts: core
   gather_facts: false
+  become: true
   roles:
     - name: judgels-server-provision
     - name: judgels-client-provision
 
 - hosts: grader
   gather_facts: false
+  become: true
   roles:
     - name: isolate-provision
     - name: judgels-grader-provision
