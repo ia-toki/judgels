@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class JudgelsApp {
     private static final Logger LOGGER = LoggerFactory.getLogger(JudgelsApp.class);
+    private static final String TLX_MODE = "TLX";
     private static final String TLX_HASH = "73d675663861b55f68aef37a9edce4e90392c0a3a11ffed47893d774a6203bf6";
 
     private static JudgelsAppEdition edition = JudgelsAppEdition.FREE;
@@ -38,6 +39,11 @@ public class JudgelsApp {
     }
 
     private static void initializeEdition(JudgelsAppConfiguration config) {
+        if (config.getMode().filter(TLX_MODE::equals).isPresent()) {
+            edition = JudgelsAppEdition.TLX;
+            return;
+        }
+
         if (config.getLicenseKey().isEmpty()) {
             return;
         }
