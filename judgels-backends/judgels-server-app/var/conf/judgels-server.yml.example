@@ -47,7 +47,7 @@ judgels:
   baseDataDir: var/data
 
   app:
-    name: Judgels
+    mode: JUDGELS
 
 #  rabbitmq:
 #    host: localhost

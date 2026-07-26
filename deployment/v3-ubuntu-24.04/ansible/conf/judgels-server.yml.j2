@@ -47,11 +47,10 @@ webSecurity:
 judgels:
   baseDataDir: var/data
 
-{% if app_licenseKey is defined %}
   app:
+    mode: {{ app_mode | default('JUDGELS', true) }}
+{% if app_licenseKey is defined %}
     licenseKey: {{ app_licenseKey }}
-{% else %}
-  app: {}
 {% endif %}
 
 {% if rabbitmq_username is defined %}
@@ -122,7 +121,7 @@ judgels:
   superadmin:
     initialPassword: {{ superadmin_initialPassword }}
 
-{% if app_licenseKey is defined %}
+{% if app_mode | default('JUDGELS', true) == 'TLX' or app_licenseKey is defined %}
 training:
 {% if training_aws_accessKey is defined %}
   aws:
