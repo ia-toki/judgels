@@ -1,4 +1,0 @@
-- hosts: grader
-  gather_facts: false
-  roles:
-    - name: judgels-grader-deploy

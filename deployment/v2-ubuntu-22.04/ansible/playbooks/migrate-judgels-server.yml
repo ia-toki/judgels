@@ -1,4 +1,0 @@
-- hosts: core
-  gather_facts: false
-  roles:
-    - name: judgels-server-migrate
