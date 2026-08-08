@@ -1,6 +1,5 @@
 package judgels.user;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
@@ -63,8 +62,6 @@ public class UserResource {
 
         String actorJid = actorChecker.check(authHeader);
         boolean canAdminister = roleChecker.canAdminister(actorJid);
-
-        checkArgument(usernames.size() <= 100, "Cannot get more than 100 users.");
 
         Map<String, User> usersMap = userStore.getUsersByUsername(Set.copyOf(usernames));
         List<User> users = usernames.stream()
