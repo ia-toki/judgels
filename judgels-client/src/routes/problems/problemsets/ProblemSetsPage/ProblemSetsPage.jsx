@@ -24,7 +24,7 @@ export default function ProblemSetsPage() {
     return (
       <>
         <Flex justifyContent="end">{renderFilter()}</Flex>
-        {renderFilterResultsBanner()}
+        <div>{renderFilterResultsBanner()}</div>
         <hr />
       </>
     );
