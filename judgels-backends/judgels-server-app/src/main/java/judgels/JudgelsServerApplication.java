@@ -207,6 +207,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 trainingSubmissionModule,
                 new TrainingItemSubmissionModule(trainingConfig.getStatsConfig()));
 
+        component.curriculumCreator().ensureCurriculumExists();
+
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.userAccountResource());
         env.jersey().register(component.userRegistrationWebResource());
