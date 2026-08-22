@@ -1,6 +1,7 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { createChapterMutationOptions } from '../../../../modules/queries/chapter';
@@ -9,6 +10,7 @@ import ChapterCreateForm from '../ChapterCreateForm/ChapterCreateForm';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function ChapterCreateDialog() {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const createChapterMutation = useMutation(createChapterMutationOptions);
@@ -31,8 +33,9 @@ export function ChapterCreateDialog() {
 
   const createChapter = async data => {
     await createChapterMutation.mutateAsync(data, {
-      onSuccess: () => {
+      onSuccess: chapter => {
         setIsDialogOpen(false);
+        navigate({ to: `/admin/chapters/${chapter.jid}` });
         toastActions.showSuccessToast('Chapter created.');
       },
     });

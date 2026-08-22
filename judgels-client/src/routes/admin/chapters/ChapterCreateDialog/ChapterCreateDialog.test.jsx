@@ -32,7 +32,7 @@ describe('ChapterCreateDialog', () => {
     const name = screen.getByRole('textbox');
     await user.type(name, 'New Chapter');
 
-    nockApi().post('/chapters', { name: 'New Chapter' }).reply(200);
+    nockApi().post('/chapters', { name: 'New Chapter' }).reply(200, { jid: 'chapterJid', name: 'New Chapter' });
 
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);

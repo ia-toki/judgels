@@ -1,6 +1,7 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { createCourseMutationOptions } from '../../../../modules/queries/course';
@@ -9,6 +10,7 @@ import CourseCreateForm from '../CourseCreateForm/CourseCreateForm';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function CourseCreateDialog() {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const createCourseMutation = useMutation(createCourseMutationOptions);
@@ -31,8 +33,9 @@ export function CourseCreateDialog() {
 
   const createCourse = async data => {
     await createCourseMutation.mutateAsync(data, {
-      onSuccess: () => {
+      onSuccess: (_data, { slug }) => {
         setIsDialogOpen(false);
+        navigate({ to: `/admin/courses/${slug}` });
         toastActions.showSuccessToast('Course created.');
       },
     });
