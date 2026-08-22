@@ -1,6 +1,7 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { createArchiveMutationOptions } from '../../../../modules/queries/archive';
@@ -9,6 +10,7 @@ import ArchiveCreateForm from '../ArchiveCreateForm/ArchiveCreateForm';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function ArchiveCreateDialog() {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const createArchiveMutation = useMutation(createArchiveMutationOptions);
@@ -31,8 +33,9 @@ export function ArchiveCreateDialog() {
 
   const createArchive = async data => {
     await createArchiveMutation.mutateAsync(data, {
-      onSuccess: () => {
+      onSuccess: (_data, { slug }) => {
         setIsDialogOpen(false);
+        navigate({ to: `/admin/archives/${slug}` });
         toastActions.showSuccessToast('Archive created.');
       },
     });

@@ -1,6 +1,7 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { createProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
@@ -9,6 +10,7 @@ import ProblemSetCreateForm from '../ProblemSetCreateForm/ProblemSetCreateForm';
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function ProblemSetCreateDialog() {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const createProblemSetMutation = useMutation(createProblemSetMutationOptions);
@@ -39,8 +41,9 @@ export function ProblemSetCreateDialog() {
         contestTime: new Date(data.contestTime).getTime(),
       },
       {
-        onSuccess: () => {
+        onSuccess: (_data, { slug }) => {
           setIsDialogOpen(false);
+          navigate({ to: `/admin/problemsets/${slug}` });
           toastActions.showSuccessToast('Problemset created.');
         },
       }
