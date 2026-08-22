@@ -2,6 +2,7 @@ package tlx;
 
 import dagger.Subcomponent;
 import judgels.submission.programming.GradingResponsePoller;
+import tlx.curriculum.CurriculumModule;
 import tlx.mailer.MailerModule;
 import tlx.recaptcha.RecaptchaModule;
 import tlx.tasks.TlxTaskModule;
@@ -16,6 +17,7 @@ import tlx.user.registration.UserRegistrationModule;
         RecaptchaModule.class,
         UserRegistrationModule.class,
         UserResetPasswordModule.class,
+        CurriculumModule.class,
         TrainingSubmissionModule.class,
         TrainingItemSubmissionModule.class,
         TlxTaskModule.class})
@@ -37,6 +39,7 @@ public interface TlxServerComponent {
     tlx.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
     tlx.user.rating.UserRatingResource userRatingResource();
     tlx.contest.rating.ContestRatingResource contestRatingResource();
+    tlx.curriculum.CurriculumCreator curriculumCreator();
     tlx.curriculum.CurriculumResource curriculumResource();
     tlx.archive.ArchiveResource archiveResource();
     tlx.course.CourseResource courseResource();

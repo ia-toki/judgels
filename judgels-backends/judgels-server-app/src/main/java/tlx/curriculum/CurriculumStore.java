@@ -33,6 +33,13 @@ public class CurriculumStore {
                 CurriculumStore::fromModel);
     }
 
+    public Curriculum createCurriculum(String name, String description) {
+        CurriculumModel model = new CurriculumModel();
+        model.name = name;
+        model.description = description;
+        return fromModel(curriculumDao.insert(model));
+    }
+
     private static Curriculum fromModel(CurriculumModel m) {
         return new Curriculum.Builder()
                 .name(m.name)

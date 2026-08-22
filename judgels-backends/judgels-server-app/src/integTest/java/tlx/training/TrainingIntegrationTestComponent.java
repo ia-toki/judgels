@@ -11,6 +11,7 @@ import tlx.chapter.ChapterStore;
 import tlx.chapter.problem.ChapterProblemStore;
 import tlx.course.CourseStore;
 import tlx.course.chapter.CourseChapterStore;
+import tlx.curriculum.CurriculumStore;
 import tlx.problemset.ProblemSetStore;
 import tlx.problemset.problem.ProblemSetProblemStore;
 import tlx.stats.StatsStore;
@@ -24,6 +25,7 @@ import tlx.training.submission.bundle.TrainingItemSubmissionModule;
         TrainingItemSubmissionModule.class})
 @TlxScope
 public interface TrainingIntegrationTestComponent {
+    CurriculumStore curriculumStore();
     CourseStore courseStore();
     CourseChapterStore courseChapterStore();
     ChapterStore chapterStore();
