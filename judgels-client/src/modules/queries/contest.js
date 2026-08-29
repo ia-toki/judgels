@@ -6,6 +6,7 @@ import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
 import { problemSetAPI } from '../api/problemSet';
 import { SubmissionError } from '../form/submissionError';
 import { contestContestantsQueryOptions } from '../queries/contestContestant';
+import { contestWebConfigQueryOptions } from '../queries/contestWeb';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -46,6 +47,7 @@ export const updateContestMutationOptions = (contestJid, contestSlug) => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(contestBySlugQueryOptions(contestSlug));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
 

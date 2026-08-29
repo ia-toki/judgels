@@ -37,5 +37,6 @@ export const upsertContestModuleConfigMutationOptions = contestJid => ({
   mutationFn: config => contestModuleAPI.upsertConfig(getToken(), contestJid, config),
   onSuccess: () => {
     queryClient.invalidateQueries(contestModuleConfigQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
