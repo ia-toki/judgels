@@ -2,6 +2,7 @@ import {
   Box,
   Cog,
   Console,
+  Learning,
   PanelStats,
   People,
   PredictiveAnalysis,
@@ -72,6 +73,11 @@ export default function AdminLayout() {
       title: 'Training',
       visible: isTrainingAdmin,
       children: [
+        {
+          path: 'curriculums',
+          titleIcon: <Learning />,
+          title: 'Curriculum',
+        },
         {
           path: 'courses',
           titleIcon: <PredictiveAnalysis />,

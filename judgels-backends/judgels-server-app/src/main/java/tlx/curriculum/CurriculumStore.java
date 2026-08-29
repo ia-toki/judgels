@@ -7,6 +7,7 @@ import java.util.Optional;
 import judgels.persistence.dao.CurriculumDao;
 import judgels.persistence.model.CurriculumModel;
 import tlx.api.curriculum.Curriculum;
+import tlx.api.curriculum.CurriculumUpdateData;
 
 public class CurriculumStore {
     private final CurriculumDao curriculumDao;
@@ -33,6 +34,10 @@ public class CurriculumStore {
                 CurriculumStore::fromModel);
     }
 
+    public Optional<Curriculum> getCurriculumByJid(String curriculumJid) {
+        return curriculumDao.selectByJid(curriculumJid).map(CurriculumStore::fromModel);
+    }
+
     public Curriculum createCurriculum(String name, String description) {
         CurriculumModel model = new CurriculumModel();
         model.name = name;
@@ -40,8 +45,16 @@ public class CurriculumStore {
         return fromModel(curriculumDao.insert(model));
     }
 
+    public Curriculum updateCurriculum(String curriculumJid, CurriculumUpdateData data) {
+        CurriculumModel model = curriculumDao.findByJid(curriculumJid);
+        data.getName().ifPresent(name -> model.name = name);
+        data.getDescription().ifPresent(description -> model.description = description);
+        return fromModel(curriculumDao.update(model));
+    }
+
     private static Curriculum fromModel(CurriculumModel m) {
         return new Curriculum.Builder()
+                .jid(m.jid)
                 .name(m.name)
                 .description(m.description)
                 .build();
