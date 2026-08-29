@@ -1,7 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
-import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
@@ -29,7 +29,7 @@ export default function ArchiveCreateForm({ onSubmit, renderFormComponents }) {
   const descriptionField = {
     name: 'description',
     label: 'Description',
-    rows: 5,
+    rows: 15,
   };
 
   const fields = (
@@ -37,7 +37,7 @@ export default function ArchiveCreateForm({ onSubmit, renderFormComponents }) {
       <Field component={FormTextInput} {...slugField} />
       <Field component={FormTextInput} {...nameField} />
       <Field component={FormTextInput} {...categoryField} />
-      <Field component={FormTextArea} {...descriptionField} />
+      <Field component={FormRichTextArea} {...descriptionField} />
     </>
   );
 

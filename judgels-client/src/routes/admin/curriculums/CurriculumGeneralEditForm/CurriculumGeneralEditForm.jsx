@@ -3,7 +3,7 @@ import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
-import { FormTableRichTextArea } from '../../../../components/forms/FormTableRichTextArea/FormTableRichTextArea';
+import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { Required } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
@@ -21,7 +21,6 @@ const descriptionField = {
   keyStyles,
   name: 'description',
   label: 'Description',
-  rows: 15,
 };
 
 export default function CurriculumGeneralEditForm({ onSubmit, initialValues, onCancel }) {
@@ -33,7 +32,7 @@ export default function CurriculumGeneralEditForm({ onSubmit, initialValues, onC
             <HTMLTable striped>
               <tbody>
                 <Field component={FormTableTextInput} {...nameField} />
-                <Field component={FormTableRichTextArea} {...descriptionField} />
+                <Field component={FormTableTextArea} {...descriptionField} />
               </tbody>
             </HTMLTable>
             <ActionButtons justifyContent="end">
