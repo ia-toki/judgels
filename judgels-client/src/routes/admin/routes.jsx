@@ -8,6 +8,7 @@ import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson'
 import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
+import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
@@ -61,6 +62,21 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminRoute,
     path: 'contests',
     component: lazyRouteComponent(retryImport(() => import('./contests/ContestsPage/ContestsPage'))),
+  });
+
+  const adminCurriculumsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'curriculums',
+    component: lazyRouteComponent(retryImport(() => import('./curriculums/CurriculumsPage/CurriculumsPage'))),
+  });
+
+  const adminCurriculumRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'curriculums/$curriculumJid',
+    component: lazyRouteComponent(retryImport(() => import('./curriculums/CurriculumPage/CurriculumPage'))),
+    loader: async ({ params: { curriculumJid } }) => {
+      await queryClient.ensureQueryData(curriculumByJidQueryOptions(curriculumJid));
+    },
   });
 
   const adminCoursesRoute = createRoute({
@@ -145,6 +161,8 @@ export const createAdminRoutes = appRoute => {
     adminRolesRoute,
     adminRatingsRoute,
     adminContestsRoute,
+    adminCurriculumsRoute,
+    adminCurriculumRoute,
     adminCoursesRoute,
     adminCourseRoute,
     adminChaptersRoute,

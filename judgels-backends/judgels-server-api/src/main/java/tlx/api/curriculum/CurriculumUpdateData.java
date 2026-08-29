@@ -5,11 +5,10 @@ import java.util.Optional;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableCurriculum.class)
-public interface Curriculum {
-    String getJid();
-    String getName();
+@JsonDeserialize(as = ImmutableCurriculumUpdateData.class)
+public interface CurriculumUpdateData {
+    Optional<String> getName();
     Optional<String> getDescription();
 
-    class Builder extends ImmutableCurriculum.Builder {}
+    class Builder extends ImmutableCurriculumUpdateData.Builder {}
 }
