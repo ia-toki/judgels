@@ -4,6 +4,7 @@ import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { updateProblemSetMutationOptions } from '../../../../modules/queries/problemSet';
 import ProblemSetGeneralEditForm from '../ProblemSetGeneralEditForm/ProblemSetGeneralEditForm';
@@ -22,7 +23,7 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
     { key: 'name', title: 'Name', value: problemSet.name },
     { key: 'archiveSlug', title: 'Archive slug', value: archiveSlug },
     { key: 'contestTime', title: 'Contest time', value: new Date(problemSet.contestTime).toISOString() },
-    { key: 'description', title: 'Description', value: problemSet.description },
+    { key: 'description', title: 'Description', value: <HtmlText>{problemSet.description || ''}</HtmlText> },
   ];
 
   const updateProblemSet = async data => {

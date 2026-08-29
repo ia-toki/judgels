@@ -4,6 +4,7 @@ import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { updateCourseMutationOptions } from '../../../../modules/queries/course';
 import CourseGeneralEditForm from '../CourseGeneralEditForm/CourseGeneralEditForm';
@@ -20,7 +21,7 @@ export function CourseGeneralSection({ course }) {
   const rows = [
     { key: 'slug', title: 'Slug', value: course.slug },
     { key: 'name', title: 'Name', value: course.name },
-    { key: 'description', title: 'Description', value: course.description },
+    { key: 'description', title: 'Description', value: <HtmlText>{course.description || ''}</HtmlText> },
   ];
 
   const updateCourse = async data => {

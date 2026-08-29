@@ -4,6 +4,7 @@ import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { updateArchiveMutationOptions } from '../../../../modules/queries/archive';
 import ArchiveGeneralEditForm from '../ArchiveGeneralEditForm/ArchiveGeneralEditForm';
@@ -21,7 +22,7 @@ export function ArchiveGeneralSection({ archive }) {
     { key: 'slug', title: 'Slug', value: archive.slug },
     { key: 'name', title: 'Name', value: archive.name },
     { key: 'category', title: 'Category', value: archive.category },
-    { key: 'description', title: 'Description', value: archive.description },
+    { key: 'description', title: 'Description', value: <HtmlText>{archive.description || ''}</HtmlText> },
   ];
 
   const updateArchive = async data => {
