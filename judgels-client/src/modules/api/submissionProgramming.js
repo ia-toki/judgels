@@ -33,7 +33,4 @@ export const submissionProgrammingAPI = {
     const params = stringify({ containerJid, username, problemJid, problemAlias });
     return post(`${baseSubmissionsURL}/regrade?${params}`, token);
   },
-
-  getSubmissionSourceImage: (submissionJid, isDarkMode) =>
-    Promise.resolve(`${baseSubmissionsURL}/${submissionJid}/image${isDarkMode ? '/dark' : ''}`),
 };

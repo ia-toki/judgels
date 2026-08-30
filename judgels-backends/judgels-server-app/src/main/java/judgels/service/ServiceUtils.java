@@ -8,12 +8,6 @@ import static jakarta.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,12 +18,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.imageio.ImageIO;
 
 public class ServiceUtils {
     private ServiceUtils() {}
@@ -64,74 +54,6 @@ public class ServiceUtils {
                     .header(CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
                     .build();
         }
-    }
-
-    public static Response buildLightImageResponseFromText(String text, Date lastModifiedStream) {
-        return buildImageResponseFromText(
-                text,
-                lastModifiedStream,
-                new Color(24, 32, 38),
-                Color.WHITE,
-                new Color(240, 240, 240));
-    }
-
-    public static Response buildDarkImageResponseFromText(String text, Date lastModifiedStream) {
-        return buildImageResponseFromText(
-                text,
-                lastModifiedStream,
-                new Color(204, 204, 204),
-                new Color(48, 64, 77),
-                new Color(57, 75, 89));
-    }
-
-    public static Response buildImageResponseFromText(
-            String text, Date lastModifiedStream,
-            Color textColor,
-            Color backgroundColor,
-            Color lineNumberBackgroundColor) {
-
-        int fontSize = 13;
-        int margin = 20;
-        int charWidth = 8;
-        int charHeight = 16;
-
-        List<String> textList = Arrays.asList(text.split("\\r?\\n"))
-                .stream()
-                .map(s -> " " + s.replaceAll("\t", "    "))
-                .collect(Collectors.toList());
-        int maxDigitLineNumber = String.valueOf(textList.size()).length();
-        String lineNumTemplate = String.format(" %%%dd ", maxDigitLineNumber);
-        int prefixCharCount = String.format(lineNumTemplate, 0).length();
-        Font font = new Font(Font.MONOSPACED, Font.PLAIN, fontSize);
-        int longestText = textList.stream().map(String::length).max(Integer::compareTo).get();
-        int width = charWidth * (prefixCharCount + longestText) + 2 * margin;
-        int height = charHeight * textList.size() + margin;
-
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = img.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2d.setFont(font);
-        g2d.setColor(backgroundColor);
-        g2d.fillRect(0, 0, img.getWidth(), img.getHeight());
-        g2d.setColor(lineNumberBackgroundColor);
-        g2d.fillRect(0, 0, prefixCharCount * charWidth, img.getHeight());
-
-        int nextLinePosition = margin;
-
-        g2d.setColor(textColor);
-        for (int i = 0; i < textList.size(); i++) {
-            String s = textList.get(i);
-            g2d.drawString(String.format(lineNumTemplate, i + 1), 0, nextLinePosition);
-            g2d.drawString(s, prefixCharCount * charWidth, nextLinePosition);
-            nextLinePosition += charHeight;
-        }
-        g2d.dispose();
-
-        Response.ResponseBuilder response = Response.ok();
-        response.header(CACHE_CONTROL, "no-transform,public,max-age=300,s-maxage=900");
-        response.header(LAST_MODIFIED, lastModifiedStream);
-
-        return buildImageResponse(response, img);
     }
 
     public static Response buildMediaResponse(String imageUrl, Optional<String> ifModifiedSince) {
@@ -200,20 +122,6 @@ public class ServiceUtils {
     private static Response buildMediaResponse(Response.ResponseBuilder response, InputStream stream, String type) {
         response.header(CONTENT_TYPE, type);
         response.entity(stream);
-        return response.build();
-    }
-
-    private static Response buildImageResponse(Response.ResponseBuilder response, BufferedImage img) {
-        response.header(CONTENT_TYPE, "image/jpg");
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(img, "jpg", baos);
-            response.entity(baos.toByteArray());
-        } catch (IOException e) {
-            return Response.serverError().build();
-        }
-
         return response.build();
     }
 }

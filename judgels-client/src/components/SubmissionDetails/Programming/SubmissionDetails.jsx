@@ -24,7 +24,6 @@ import './SubmissionDetails.scss';
 export function SubmissionDetails({
   submission: { gradingEngine, gradingLanguage, time, latestGrading },
   source,
-  sourceImageUrl,
   profile,
   problemName,
   problemAlias,
@@ -378,14 +377,7 @@ export function SubmissionDetails({
         );
       }
 
-      return (
-        <>
-          {renderSourceFilesHeading()}
-          <ContentCard>
-            <img src={sourceImageUrl} className="submission-details-image" alt="submission" />
-          </ContentCard>
-        </>
-      );
+      return null;
     }
 
     const { details, verdict } = grading;

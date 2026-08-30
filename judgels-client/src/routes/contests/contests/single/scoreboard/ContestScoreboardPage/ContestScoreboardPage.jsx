@@ -9,19 +9,14 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { SubmissionImageDialog } from '../../../../../../components/SubmissionImageDialog/SubmissionImageDialog';
 import { ContestStyle } from '../../../../../../modules/api/contest';
 import { ContestScoreboardType } from '../../../../../../modules/api/contestScoreboard';
-import { contestSubmissionProgrammingAPI } from '../../../../../../modules/api/contestSubmissionProgramming';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
   contestScoreboardQueryOptions,
   refreshContestScoreboardMutationOptions,
 } from '../../../../../../modules/queries/contestScoreboard';
-import { contestSubmissionInfoQueryOptions } from '../../../../../../modules/queries/contestSubmissionProgramming';
-import { queryClient } from '../../../../../../modules/queryClient';
 import { useSession } from '../../../../../../modules/session';
-import { getWebPrefs } from '../../../../../../modules/webPrefs';
 import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardTable';
 import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
 import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
@@ -51,10 +46,7 @@ function ContestScoreboardPage() {
 
   const refreshMutation = useMutation(refreshContestScoreboardMutationOptions(contest.jid));
 
-  const [isSubmissionImageDialogOpen, setIsSubmissionImageDialogOpen] = useState(false);
   const [isSubmissionsDialogOpen, setIsSubmissionsDialogOpen] = useState(false);
-  const [submissionImageUrl, setSubmissionImageUrl] = useState(undefined);
-  const [submissionDialogTitle, setSubmissionDialogTitle] = useState('');
   const [submissionsDialogProps, setSubmissionsDialogProps] = useState(undefined);
 
   const renderScoreboardUpdatedTime = () => {
@@ -164,24 +156,6 @@ function ContestScoreboardPage() {
     });
   };
 
-  const openSubmissionImage = async (contestantJid, problemJid) => {
-    const {
-      data: { scoreboard },
-    } = response;
-
-    const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
-    const problemAlias = scoreboard.state.problemAliases[problemIndex];
-
-    const { isDarkMode } = getWebPrefs();
-    const [info, imageUrl] = await Promise.all([
-      queryClient.fetchQuery(contestSubmissionInfoQueryOptions(contest.jid, contestantJid, problemJid)),
-      contestSubmissionProgrammingAPI.getSubmissionSourceImage(contest.jid, contestantJid, problemJid, isDarkMode),
-    ]);
-    setSubmissionDialogTitle(`Submission #${info.id} by ${info.profile.username} for problem ${problemAlias}`);
-    setSubmissionImageUrl(imageUrl);
-    setIsSubmissionImageDialogOpen(true);
-  };
-
   const openSubmissionSummary = contestantJid => {
     const { profilesMap } = response;
 
@@ -204,15 +178,10 @@ function ContestScoreboardPage() {
     const {
       data: scoreboard,
       profilesMap,
-      config: { canViewSubmissions, canViewSubmissionDetails },
+      config: { canViewSubmissions },
     } = response;
 
-    let onClickSubmissionCell;
-    if (canViewSubmissionDetails) {
-      onClickSubmissionCell = openSubmissionsDialog;
-    } else if (canViewSubmissions) {
-      onClickSubmissionCell = openSubmissionImage;
-    }
+    const onClickSubmissionCell = canViewSubmissions ? openSubmissionsDialog : undefined;
 
     if (contest.style === ContestStyle.TROC) {
       return (
@@ -220,7 +189,6 @@ function ContestScoreboardPage() {
           userJid={userJid}
           scoreboard={scoreboard.scoreboard}
           profilesMap={profilesMap}
-          canViewSubmissions={canViewSubmissions}
           onClickSubmissionCell={onClickSubmissionCell}
         />
       );
@@ -274,13 +242,6 @@ function ContestScoreboardPage() {
       {renderFrozenScoreboardNotice()}
       {renderScoreboard()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalEntries} />}
-      {isSubmissionImageDialogOpen && (
-        <SubmissionImageDialog
-          onClose={() => setIsSubmissionImageDialogOpen(false)}
-          title={submissionDialogTitle}
-          imageUrl={submissionImageUrl}
-        />
-      )}
       {isSubmissionsDialogOpen && (
         <ContestUserProblemSubmissionsDialog
           onClose={() => setIsSubmissionsDialogOpen(false)}

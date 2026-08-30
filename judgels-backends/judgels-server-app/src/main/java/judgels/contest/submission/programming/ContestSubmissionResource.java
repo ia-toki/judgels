@@ -7,8 +7,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
-import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
-import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -29,7 +27,6 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +43,6 @@ import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
-import judgels.api.submission.programming.SubmissionInfo;
 import judgels.api.submission.programming.SubmissionWithSource;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.contest.ContestStore;
@@ -185,12 +181,17 @@ public class ContestSubmissionResource {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canSupervise(actorJid, contest));
+        checkAllowed(submissionRoleChecker.canViewOthers(actorJid, contest));
 
         List<Submission> submissions = submissionStore.getUserProblemSubmissions(
                 contest.getJid(),
                 userJid,
                 problemJid);
+
+        // Non-supervisors may only see the latest submission, not the earlier attempts.
+        if (!submissionRoleChecker.canSupervise(actorJid, contest) && submissions.size() > 1) {
+            submissions = submissions.subList(0, 1);
+        }
 
         Optional<SubmissionSource> latestSubmissionSource = submissions.isEmpty()
                 ? Optional.empty()
@@ -236,63 +237,6 @@ public class ContestSubmissionResource {
                 .problemName(ProblemUtils.getProblemName(problem, language))
                 .containerName(contest.getName())
                 .build();
-    }
-
-    @GET
-    @Path("/info")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork(readOnly = true)
-    public SubmissionInfo getSubmissionInfo(
-            @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") String userJid,
-            @QueryParam("problemJid") String problemJid) {
-
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
-
-        Submission submission = checkFound(submissionStore
-                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        Profile profile = this.profileStore.getProfile(userJid);
-
-        return new SubmissionInfo.Builder().id(submission.getId()).profile(profile).build();
-    }
-
-    @GET
-    @Path("/image")
-    @Produces("image/png")
-    @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceImage(
-            @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") String userJid,
-            @QueryParam("problemJid") String problemJid) {
-
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
-
-        Submission submission = checkFound(submissionStore
-                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
-
-        return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
-    }
-
-    @GET
-    @Path("/image/dark")
-    @Produces("image/png")
-    @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceDarkImage(
-            @QueryParam("contestJid") String contestJid,
-            @QueryParam("userJid") String userJid,
-            @QueryParam("problemJid") String problemJid) {
-
-        Contest contest = checkFound(contestStore.getContestByJid(contestJid));
-        checkAllowed(submissionRoleChecker.canViewAll(contest));
-
-        Submission submission = checkFound(submissionStore
-                .getLatestSubmission(Optional.of(contestJid), Optional.of(userJid), Optional.of(problemJid)));
-        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
-
-        return buildDarkImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST

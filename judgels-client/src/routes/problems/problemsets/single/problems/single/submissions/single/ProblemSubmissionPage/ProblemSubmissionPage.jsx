@@ -1,12 +1,11 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
-import { submissionProgrammingAPI } from '../../../../../../../../../modules/api/submissionProgramming';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
@@ -21,11 +20,9 @@ export default function ProblemSubmissionPage() {
   const { problemSetSlug, problemAlias, submissionId } = useParams({ strict: false });
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
-  const { statementLanguage, isDarkMode } = useWebPrefs();
+  const { statementLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(submissionWithSourceQueryOptions(+submissionId, { language: statementLanguage }));
-
-  const [sourceImageUrl, setSourceImageUrl] = useState(undefined);
 
   useEffect(() => {
     if (response) {
@@ -37,10 +34,6 @@ export default function ProblemSubmissionPage() {
       }
 
       document.title = createDocumentTitle(`Submission #${data.submission.id}`);
-
-      if (!data.source && !data.reasonNotAllowedToViewSource) {
-        submissionProgrammingAPI.getSubmissionSourceImage(data.submission.jid, isDarkMode).then(setSourceImageUrl);
-      }
     }
   }, [response]);
 
@@ -56,7 +49,6 @@ export default function ProblemSubmissionPage() {
         submission={submissionWithSource.submission}
         source={submissionWithSource.source}
         reasonNotAllowedToViewSource={submissionWithSource.reasonNotAllowedToViewSource}
-        sourceImageUrl={sourceImageUrl}
         profile={profile}
         problemName={problemName}
         problemAlias={problemAlias}

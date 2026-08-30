@@ -7,7 +7,7 @@ import feign.RequestLine;
 import feign.Response;
 import feign.form.FormData;
 import judgels.api.contest.submission.programming.ContestSubmissionsResponse;
-import judgels.api.submission.programming.SubmissionInfo;
+import judgels.api.contest.submission.programming.ContestUserProblemSubmissionsResponse;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
 
 public interface ContestSubmissionClient {
@@ -23,27 +23,17 @@ public interface ContestSubmissionClient {
             @Param("contestJid") String contestJid,
             @QueryMap GetSubmissionsParams params);
 
+    @RequestLine("GET /api/v2/contests/submissions/programming/user-problem?contestJid={contestJid}&userJid={userJid}&problemJid={problemJid}")
+    @Headers("Authorization: Bearer {token}")
+    ContestUserProblemSubmissionsResponse getUserProblemSubmissions(
+            @Param("token") String token,
+            @Param("contestJid") String contestJid,
+            @Param("userJid") String userJid,
+            @Param("problemJid") String problemJid);
+
     @RequestLine("GET /api/v2/contests/submissions/programming/id/{submissionId}")
     @Headers("Authorization: Bearer {token}")
     SubmissionWithSourceResponse getSubmissionWithSourceById(@Param("token") String token, @Param("submissionId") long submissionId);
-
-    @RequestLine("GET /api/v2/contests/submissions/programming/info?contestJid={contestJid}&userJid={userJid}&problemJid={problemJid}")
-    SubmissionInfo getSubmissionInfo(
-            @Param("contestJid") String contestJid,
-            @Param("userJid") String userJid,
-            @Param("problemJid") String problemJid);
-
-    @RequestLine("GET /api/v2/contests/submissions/programming/image?contestJid={contestJid}&userJid={userJid}&problemJid={problemJid}")
-    Response getSubmissionSourceImage(
-            @Param("contestJid") String contestJid,
-            @Param("userJid") String userJid,
-            @Param("problemJid") String problemJid);
-
-    @RequestLine("GET /api/v2/contests/submissions/programming/image/dark?contestJid={contestJid}&userJid={userJid}&problemJid={problemJid}")
-    Response getSubmissionSourceDarkImage(
-            @Param("contestJid") String contestJid,
-            @Param("userJid") String userJid,
-            @Param("problemJid") String problemJid);
 
     @RequestLine("POST /api/v2/contests/submissions/programming")
     @Headers({"Authorization: Bearer {token}", "Content-Type: multipart/form-data"})

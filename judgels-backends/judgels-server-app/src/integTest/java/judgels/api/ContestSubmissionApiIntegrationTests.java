@@ -1,10 +1,10 @@
 package judgels.api;
 
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static java.util.stream.Collectors.toList;
 import static judgels.api.contest.module.ContestModuleType.REGISTRATION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import feign.form.FormData;
 import java.util.LinkedHashMap;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 import judgels.api.contest.Contest;
 import judgels.api.contest.submission.ContestSubmissionConfig;
+import judgels.api.contest.submission.programming.ContestUserProblemSubmissionsResponse;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.submission.programming.Submission;
-import judgels.api.submission.programming.SubmissionInfo;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
 import judgels.contest.ContestSubmissionClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -162,6 +162,32 @@ class ContestSubmissionApiIntegrationTests extends BaseContestApiIntegrationTest
     }
 
     @Test
+    void get_other_user_submissions() {
+        submit(contestantAToken, problem1.getJid());
+        submit(contestantAToken, problem1.getJid());
+        Submission latestSubmission = getSubmission(contestantAToken);
+
+        assertThatThrownBy(() -> submissionClient.getUserProblemSubmissions(
+                contestantBToken, contest.getJid(), contestantA.getJid(), problem1.getJid()))
+                .hasMessageContaining("403");
+
+        endContest(contest);
+
+        ContestUserProblemSubmissionsResponse response = submissionClient.getUserProblemSubmissions(
+                supervisorAToken, contest.getJid(), contestantA.getJid(), problem1.getJid());
+        assertThat(response.getData()).hasSize(2).startsWith(latestSubmission);
+
+        response = submissionClient.getUserProblemSubmissions(
+                contestantBToken, contest.getJid(), contestantA.getJid(), problem1.getJid());
+        assertThat(response.getData()).containsExactly(latestSubmission);
+        assertThat(response.getLatestSubmissionSource()).isPresent();
+
+        assertThatThrownBy(() ->
+                submissionClient.getSubmissionWithSourceById(contestantBToken, latestSubmission.getId()))
+                .hasMessageContaining("403");
+    }
+
+    @Test
     void get_submission_with_source() {
         submit(contestantAToken, problem1.getJid());
         Submission submission = getSubmission(contestantAToken);
@@ -179,24 +205,6 @@ class ContestSubmissionApiIntegrationTests extends BaseContestApiIntegrationTest
         assertThat(response.getProblemName()).isEqualTo("Problem 1");
         assertThat(response.getProblemAlias()).isEqualTo("A");
         assertThat(response.getContainerName()).isEqualTo(contest.getName());
-    }
-
-    @Test
-    void get_submission_info_image() {
-        submit(contestantAToken, problem1.getJid());
-        Submission submission = getSubmission(contestantAToken);
-
-        endContest(contest);
-
-        SubmissionInfo info = submissionClient.getSubmissionInfo(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(info.getId()).isEqualTo(submission.getId());
-        assertThat(info.getProfile().getUsername()).isEqualTo(CONTESTANT_A);
-
-        var response = submissionClient.getSubmissionSourceImage(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(response.headers().get(CONTENT_TYPE)).contains("image/jpg");
-
-        response = submissionClient.getSubmissionSourceDarkImage(contest.getJid(), contestantA.getJid(), problem1.getJid());
-        assertThat(response.headers().get(CONTENT_TYPE)).contains("image/jpg");
     }
 
     private void submit(String token, String problemJid) {
