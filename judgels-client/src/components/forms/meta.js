@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 
 export function isValid(meta) {
-  return !meta.touched || meta.valid;
+  return !((meta.touched && meta.modified) || meta.submitFailed) || meta.valid;
 }
 
 export function getIntent(meta) {
