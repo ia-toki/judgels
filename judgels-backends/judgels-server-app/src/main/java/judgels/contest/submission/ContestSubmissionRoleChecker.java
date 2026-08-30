@@ -49,8 +49,8 @@ public class ContestSubmissionRoleChecker {
                 && contestTimer.hasStarted(contest, userJid);
     }
 
-    public boolean canViewAll(Contest contest) {
-        return contestTimer.hasEnded(contest) && contestRoleChecker.canView(Actors.GUEST, contest);
+    public boolean canViewOthers(String userJid, Contest contest) {
+        return canSupervise(userJid, contest) || canViewAll(contest);
     }
 
     public boolean canSupervise(String userJid, Contest contest) {
@@ -60,5 +60,9 @@ public class ContestSubmissionRoleChecker {
     public boolean canManage(String userJid, Contest contest) {
         return contestRoleChecker.canManage(userJid, contest)
                 || supervisorStore.isSupervisorWithManagementPermission(contest.getJid(), userJid, SUBMISSION);
+    }
+
+    private boolean canViewAll(Contest contest) {
+        return contestTimer.hasEnded(contest) && contestRoleChecker.canView(Actors.GUEST, contest);
     }
 }

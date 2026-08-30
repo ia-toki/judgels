@@ -40,13 +40,6 @@ export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId
   });
 };
 
-export const contestSubmissionInfoQueryOptions = (contestJid, userJid, problemJid) => {
-  return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', userJid, problemJid, 'info'],
-    queryFn: () => contestSubmissionProgrammingAPI.getSubmissionInfo(contestJid, userJid, problemJid),
-  });
-};
-
 export const createProgrammingSubmissionMutationOptions = (contestJid, problemJid) => ({
   mutationFn: async data => {
     let sources = {};

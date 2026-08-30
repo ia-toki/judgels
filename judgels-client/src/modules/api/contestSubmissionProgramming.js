@@ -38,14 +38,4 @@ export const contestSubmissionProgrammingAPI = {
   downloadSubmission: (token, submissionJid) => {
     return download(`${baseURL}/${submissionJid}/download`, token);
   },
-
-  getSubmissionSourceImage: (contestJid, userJid, problemJid, isDarkMode) => {
-    const params = stringify({ contestJid, userJid, problemJid });
-    return Promise.resolve(`${baseURL}/image${isDarkMode ? '/dark' : ''}?${params}`);
-  },
-
-  getSubmissionInfo: (contestJid, userJid, problemJid) => {
-    const params = stringify({ contestJid, userJid, problemJid });
-    return get(`${baseURL}/info?${params}`);
-  },
 };

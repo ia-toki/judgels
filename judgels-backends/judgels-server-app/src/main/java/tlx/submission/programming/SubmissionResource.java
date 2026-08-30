@@ -4,8 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.service.ServiceUtils.buildDarkImageResponseFromText;
-import static judgels.service.ServiceUtils.buildLightImageResponseFromText;
 import static judgels.service.ServiceUtils.checkAllowed;
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -21,8 +19,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Response;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -233,28 +229,6 @@ public class SubmissionResource {
                 .containerPath(containerPath)
                 .containerName(containerName)
                 .build();
-    }
-
-    @GET
-    @Path("/{submissionJid}/image")
-    @Produces("image/png")
-    @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceImage(@PathParam("submissionJid") String submissionJid) {
-        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
-        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
-
-        return buildLightImageResponseFromText(source, Date.from(submission.getTime()));
-    }
-
-    @GET
-    @Path("/{submissionJid}/image/dark")
-    @Produces("image/png")
-    @UnitOfWork(readOnly = true)
-    public Response getSubmissionSourceDarkImage(@PathParam("submissionJid") String submissionJid) {
-        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
-        String source = submissionSourceBuilder.fromPastSubmission(submission.getJid(), true).asString();
-
-        return buildDarkImageResponseFromText(source, Date.from(submission.getTime()));
     }
 
     @POST
