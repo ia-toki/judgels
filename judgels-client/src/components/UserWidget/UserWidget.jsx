@@ -1,10 +1,11 @@
-import { Alignment, Menu, MenuDivider, Navbar, Popover, Position } from '@blueprintjs/core';
+import { Alignment, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
 import { getRatingClass } from '../../modules/api/userRating';
+import { logOutMutationOptions } from '../../modules/queries/session';
 import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 import { useSession } from '../../modules/session';
@@ -13,17 +14,23 @@ import MenuItemLink from '../MenuItemLink/MenuItemLink';
 import './UserWidget.scss';
 
 export function UserWidget({ user, profile, items, homeRoute }) {
+  const navigate = useNavigate();
   const { data: avatarUrl } = useQuery({
     ...avatarUrlQueryOptions(user?.jid),
     enabled: !!user,
   });
+  const logOutMutation = useMutation(logOutMutationOptions);
+
+  const logOut = () => {
+    logOutMutation.mutate(undefined, { onSuccess: () => navigate({ to: '/' }) });
+  };
 
   const renderForUser = () => {
     const menuItems = (
       <>
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
         {isTLX() && <MenuItemLink text="My account" to="/account" />}
-        <MenuItemLink text="Log out" to="/logout" />
+        <MenuItem text="Log out" onClick={logOut} />
       </>
     );
 
