@@ -35,7 +35,7 @@ export function RoleSelect({ label, value, onChange }) {
       items={roleValues}
       activeItem={value}
       filterable={false}
-      popoverProps={{ usePortal: false }}
+      popoverProps={{ usePortal: false, targetTagName: 'span' }}
       onItemSelect={onChange}
       itemRenderer={(item, { handleClick, modifiers }) => (
         <MenuItem active={modifiers.active} key={item || 'none'} text={roleNames[item]} onClick={handleClick} />
