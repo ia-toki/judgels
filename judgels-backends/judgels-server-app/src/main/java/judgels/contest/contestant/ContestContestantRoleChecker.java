@@ -85,10 +85,22 @@ public class ContestContestantRoleChecker {
     }
 
     private boolean canRegisterInDivision(Optional<UserRating> rating, Contest contest) {
-        Optional<DivisionModuleConfig> config = moduleStore.getDivisionModuleConfig(contest.getJid());
-        if (!config.isPresent()) {
+        Optional<DivisionModuleConfig> maybeConfig = moduleStore.getDivisionModuleConfig(contest.getJid());
+        if (!maybeConfig.isPresent()) {
             return true;
         }
-        return ratingProvider.isRatingInDivision(rating, config.get().getDivision());
+        DivisionModuleConfig config = maybeConfig.get();
+        if (ratingProvider.isRatingInDivision(rating, config.getDivision())) {
+            return true;
+        }
+        if (!config.getAllowHigherDivisionsUnofficially()) {
+            return false;
+        }
+        for (int division = 1; division < config.getDivision(); division++) {
+            if (ratingProvider.isRatingInDivision(rating, division)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

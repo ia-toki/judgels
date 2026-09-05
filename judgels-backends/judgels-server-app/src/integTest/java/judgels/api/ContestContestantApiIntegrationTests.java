@@ -63,6 +63,32 @@ class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTest
 
         contestantClient.unregisterMyselfAsContestant(userAToken, contest.getJid());
         assertThat(contestantClient.getMyContestantState(userAToken, contest.getJid())).isEqualTo(REGISTRABLE);
+
+        enableModule(contest, DIVISION, new ContestModulesConfig.Builder()
+                .division(new DivisionModuleConfig.Builder().division(2).build())
+                .build());
+        assertThat(contestantClient.getMyContestantState(userToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE);
+        assertThat(contestantClient.getMyContestantState(userAToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE_WRONG_DIVISION);
+        assertThat(contestantClient.getMyContestantState(userBToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE);
+
+        enableModule(contest, DIVISION, new ContestModulesConfig.Builder()
+                .division(new DivisionModuleConfig.Builder()
+                        .division(2)
+                        .allowHigherDivisionsUnofficially(true)
+                        .build())
+                .build());
+        assertThat(contestantClient.getMyContestantState(userToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE);
+        assertThat(contestantClient.getMyContestantState(userAToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE);
+        assertThat(contestantClient.getMyContestantState(userBToken, contest.getJid()))
+                .isEqualTo(REGISTRABLE);
+
+        contestantClient.registerMyselfAsContestant(userAToken, contest.getJid());
+        assertThat(contestantClient.getMyContestantState(userAToken, contest.getJid())).isEqualTo(REGISTRANT);
     }
 
     @Test
