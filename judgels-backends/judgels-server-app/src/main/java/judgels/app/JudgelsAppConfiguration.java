@@ -8,7 +8,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableJudgelsAppConfiguration.class)
 public interface JudgelsAppConfiguration {
     Optional<String> getMode();
-    Optional<String> getLicenseKey();
 
     class Builder extends ImmutableJudgelsAppConfiguration.Builder {}
 }
