@@ -32,7 +32,7 @@ export function FormTableSelect2(props) {
         onItemSelect={onChange}
         inputProps={inputProps}
         filterable={false}
-        popoverProps={{ usePortal: false }}
+        popoverProps={{ usePortal: false, targetTagName: 'span' }}
       >
         <Button
           disabled={disabled}

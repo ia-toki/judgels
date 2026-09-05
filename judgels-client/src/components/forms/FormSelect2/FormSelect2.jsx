@@ -30,7 +30,7 @@ export function FormSelect2({ input, className, label, meta, optionValues, optio
         onItemSelect={onChange}
         inputProps={{ ...inputProps, autoComplete: 'off' }}
         filterable={isUsingFilter}
-        popoverProps={{ usePortal: false }}
+        popoverProps={{ usePortal: false, targetTagName: 'span' }}
       >
         <Button
           data-key={inputProps.name}
