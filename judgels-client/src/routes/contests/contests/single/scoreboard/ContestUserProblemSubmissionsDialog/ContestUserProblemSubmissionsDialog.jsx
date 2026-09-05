@@ -1,4 +1,5 @@
 import { Classes, Dialog } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -84,7 +85,9 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
       canOutsideClickClose={true}
       enforceFocus={true}
     >
-      <div className={Classes.DIALOG_BODY}>{renderContent()}</div>
+      <Flex asChild flexDirection="column" gap={2}>
+        <div className={Classes.DIALOG_BODY}>{renderContent()}</div>
+      </Flex>
     </Dialog>
   );
 }
