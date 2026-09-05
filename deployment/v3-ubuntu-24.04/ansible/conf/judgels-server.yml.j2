@@ -49,9 +49,6 @@ judgels:
 
   app:
     mode: {{ app_mode | default('JUDGELS', true) }}
-{% if app_licenseKey is defined %}
-    licenseKey: {{ app_licenseKey }}
-{% endif %}
 
 {% if rabbitmq_username is defined %}
   rabbitmq:
@@ -121,7 +118,7 @@ judgels:
   superadmin:
     initialPassword: {{ superadmin_initialPassword }}
 
-{% if app_mode | default('JUDGELS', true) == 'TLX' or app_licenseKey is defined %}
+{% if app_mode | default('JUDGELS', true) == 'TLX' %}
 training:
 {% if training_aws_accessKey is defined %}
   aws:
