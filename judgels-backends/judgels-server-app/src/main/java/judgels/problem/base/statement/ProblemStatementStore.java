@@ -144,6 +144,18 @@ public class ProblemStatementStore extends BaseProblemStore {
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
+    public void deleteAllStatementMediaFiles(String userJid, String problemJid) {
+        Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
+        problemFs.removeFile(mediaDirPath);
+        problemFs.createDirectory(mediaDirPath);
+        problemFs.createFile(mediaDirPath.resolve(".gitkeep"));
+    }
+
+    public void deleteStatementMediaFile(String userJid, String problemJid, String filename) {
+        Path mediaFilePath = getStatementMediaDirPath(userJid, problemJid).resolve(filename);
+        problemFs.removeFile(mediaFilePath);
+    }
+
     public List<FileInfo> getStatementMediaFiles(String userJid, String problemJid) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, problemJid);
         return problemFs.listFilesInDirectory(mediaDirPath);

@@ -104,6 +104,15 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
         updateGradingLastUpdateTime(userJid, problemJid);
     }
 
+    public void deleteAllGradingTestDataFiles(String userJid, String problemJid) {
+        Path testDataDirPath = getGradingTestDataDirPath(userJid, problemJid);
+        problemFs.removeFile(testDataDirPath);
+        problemFs.createDirectory(testDataDirPath);
+        problemFs.createFile(testDataDirPath.resolve(".gitkeep"));
+
+        updateGradingLastUpdateTime(userJid, problemJid);
+    }
+
     public void uploadGradingHelperFile(String userJid, String problemJid, InputStream helperFile, String filename) {
         problemFs.uploadPublicFile(getGradingHelpersDirPath(userJid, problemJid).resolve(filename), helperFile);
 
@@ -112,6 +121,27 @@ public final class ProgrammingProblemStore extends BaseProblemStore {
 
     public void uploadGradingHelperFileZipped(String userJid, String problemJid, InputStream helperFileZipped) {
         problemFs.uploadZippedFiles(getGradingHelpersDirPath(userJid, problemJid), helperFileZipped);
+
+        updateGradingLastUpdateTime(userJid, problemJid);
+    }
+
+    public void deleteAllGradingHelperFiles(String userJid, String problemJid) {
+        Path helpersDirPath = getGradingHelpersDirPath(userJid, problemJid);
+        problemFs.removeFile(helpersDirPath);
+        problemFs.createDirectory(helpersDirPath);
+        problemFs.createFile(helpersDirPath.resolve(".gitkeep"));
+
+        updateGradingLastUpdateTime(userJid, problemJid);
+    }
+
+    public void deleteGradingTestDataFile(String userJid, String problemJid, String filename) {
+        problemFs.removeFile(getGradingTestDataDirPath(userJid, problemJid).resolve(filename));
+
+        updateGradingLastUpdateTime(userJid, problemJid);
+    }
+
+    public void deleteGradingHelperFile(String userJid, String problemJid, String filename) {
+        problemFs.removeFile(getGradingHelpersDirPath(userJid, problemJid).resolve(filename));
 
         updateGradingLastUpdateTime(userJid, problemJid);
     }

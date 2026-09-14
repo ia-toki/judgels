@@ -20,6 +20,13 @@
   <#if files?size == 0>
     <p>No files.</p>
   <#else>
+    <#if canEdit>
+      <form method="POST" action="${currentPath}/delete-all" class="text-right" style="margin-bottom: 10px">
+        <@ui.button type="submit" intent="danger" size="xs" onclick="return confirm('Are you sure to delete all files?')">
+          <span class="glyphicon glyphicon-trash"></span> Delete all
+        </@ui.button>
+      </form>
+    </#if>
     <@ui.table>
       <thead>
         <tr>
@@ -40,6 +47,13 @@
               <@ui.buttonLink size="xs" to="${currentPath}/${file.name}">
                 <span class="glyphicon glyphicon-download"></span>
               </@ui.buttonLink>
+              <#if canEdit>
+                <form method="POST" action="${currentPath}/${file.name}/delete" style="display: inline">
+                  <@ui.button type="submit" intent="danger" size="xs" onclick="return confirm('Are you sure to delete ${file.name?js_string}?')">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </@ui.button>
+                </form>
+              </#if>
             </td>
           </tr>
         </#list>

@@ -119,6 +119,18 @@ public class ProblemEditorialStore extends BaseProblemStore {
         problemFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
+    public void deleteAllEditorialMediaFiles(String userJid, String problemJid) {
+        Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
+        problemFs.removeFile(mediaDirPath);
+        problemFs.createDirectory(mediaDirPath);
+        problemFs.createFile(mediaDirPath.resolve(".gitkeep"));
+    }
+
+    public void deleteEditorialMediaFile(String userJid, String problemJid, String filename) {
+        Path mediaFilePath = getEditorialMediaDirPath(userJid, problemJid).resolve(filename);
+        problemFs.removeFile(mediaFilePath);
+    }
+
     public List<FileInfo> getEditorialMediaFiles(String userJid, String problemJid) {
         Path mediaDirPath = getEditorialMediaDirPath(userJid, problemJid);
         return problemFs.listFilesInDirectory(mediaDirPath);

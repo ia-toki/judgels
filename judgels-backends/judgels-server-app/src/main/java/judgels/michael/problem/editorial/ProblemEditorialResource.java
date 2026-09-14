@@ -167,6 +167,38 @@ public class ProblemEditorialResource extends BaseProblemResource {
         return redirect("/problems/" + problemId + "/editorials/media");
     }
 
+    @POST
+    @Path("/media/delete-all")
+    @UnitOfWork
+    public Response deleteAllEditorialMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        editorialStore.deleteAllEditorialMediaFiles(actor.getUserJid(), problem.getJid());
+
+        return redirect("/problems/" + problemId + "/editorials/media");
+    }
+
+    @POST
+    @Path("/media/{filename}/delete")
+    @UnitOfWork
+    public Response deleteEditorialMediaFile(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("filename") String filename) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        editorialStore.deleteEditorialMediaFile(actor.getUserJid(), problem.getJid(), filename);
+
+        return redirect("/problems/" + problemId + "/editorials/media");
+    }
+
     @GET
     @Path("/media/{filename}")
     @UnitOfWork(readOnly = true)

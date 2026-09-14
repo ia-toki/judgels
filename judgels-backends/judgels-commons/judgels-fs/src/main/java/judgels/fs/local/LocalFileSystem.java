@@ -81,7 +81,12 @@ public final class LocalFileSystem implements FileSystem {
     @Override
     public void removeFile(Path filePath) {
         try {
-            FileUtils.deleteDirectory(baseDir.resolve(filePath).toFile());
+            File file = baseDir.resolve(filePath).toFile();
+            if (file.isDirectory()) {
+                FileUtils.deleteDirectory(file);
+            } else {
+                Files.deleteIfExists(file.toPath());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

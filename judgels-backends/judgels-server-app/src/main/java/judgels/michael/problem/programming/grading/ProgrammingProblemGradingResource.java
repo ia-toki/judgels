@@ -194,6 +194,38 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
         return redirect("/problems/programming/" + problemId + "/grading/testdata");
     }
 
+    @POST
+    @Path("/testdata/delete-all")
+    @UnitOfWork
+    public Response deleteAllGradingTestDataFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        programmingProblemStore.deleteAllGradingTestDataFiles(actor.getUserJid(), problem.getJid());
+
+        return redirect("/problems/programming/" + problemId + "/grading/testdata");
+    }
+
+    @POST
+    @Path("/testdata/{filename}/delete")
+    @UnitOfWork
+    public Response deleteGradingTestDataFile(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("filename") String filename) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        programmingProblemStore.deleteGradingTestDataFile(actor.getUserJid(), problem.getJid(), filename);
+
+        return redirect("/problems/programming/" + problemId + "/grading/testdata");
+    }
+
     @GET
     @Path("/testdata/{filename}")
     @UnitOfWork(readOnly = true)
@@ -247,6 +279,38 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
             problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
             programmingProblemStore.uploadGradingHelperFileZipped(actor.getUserJid(), problem.getJid(), fileZippedStream);
         }
+
+        return redirect("/problems/programming/" + problemId + "/grading/helpers");
+    }
+
+    @POST
+    @Path("/helpers/delete-all")
+    @UnitOfWork
+    public Response deleteAllGradingHelperFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        programmingProblemStore.deleteAllGradingHelperFiles(actor.getUserJid(), problem.getJid());
+
+        return redirect("/problems/programming/" + problemId + "/grading/helpers");
+    }
+
+    @POST
+    @Path("/helpers/{filename}/delete")
+    @UnitOfWork
+    public Response deleteGradingHelperFile(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("filename") String filename) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        programmingProblemStore.deleteGradingHelperFile(actor.getUserJid(), problem.getJid(), filename);
 
         return redirect("/problems/programming/" + problemId + "/grading/helpers");
     }
