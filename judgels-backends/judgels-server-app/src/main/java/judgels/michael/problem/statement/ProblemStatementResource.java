@@ -127,6 +127,38 @@ public class ProblemStatementResource extends BaseProblemResource {
         return redirect("/problems/" + problemId + "/statements/media");
     }
 
+    @POST
+    @Path("/media/delete-all")
+    @UnitOfWork
+    public Response deleteAllStatementMediaFiles(@Context HttpServletRequest req, @PathParam("problemId") int problemId) {
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        statementStore.deleteAllStatementMediaFiles(actor.getUserJid(), problem.getJid());
+
+        return redirect("/problems/" + problemId + "/statements/media");
+    }
+
+    @POST
+    @Path("/media/{filename}/delete")
+    @UnitOfWork
+    public Response deleteStatementMediaFile(
+            @Context HttpServletRequest req,
+            @PathParam("problemId") int problemId,
+            @PathParam("filename") String filename) {
+
+        Actor actor = actorChecker.check(req);
+        Problem problem = checkFound(problemStore.getProblemById(problemId));
+        checkAllowed(roleChecker.canEdit(actor, problem));
+
+        problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
+        statementStore.deleteStatementMediaFile(actor.getUserJid(), problem.getJid(), filename);
+
+        return redirect("/problems/" + problemId + "/statements/media");
+    }
+
     @GET
     @Path("/media/{filename}")
     @UnitOfWork(readOnly = true)

@@ -143,6 +143,38 @@ public class LessonStatementResource extends BaseLessonResource {
         return redirect("/lessons/" + lessonId + "/statements/media");
     }
 
+    @POST
+    @Path("/media/delete-all")
+    @UnitOfWork
+    public Response deleteAllStatementMediaFiles(@Context HttpServletRequest req, @PathParam("lessonId") int lessonId) {
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
+        checkAllowed(roleChecker.canEdit(actor, lesson));
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        statementStore.deleteAllStatementMediaFiles(actor.getUserJid(), lesson.getJid());
+
+        return redirect("/lessons/" + lessonId + "/statements/media");
+    }
+
+    @POST
+    @Path("/media/{filename}/delete")
+    @UnitOfWork
+    public Response deleteStatementMediaFile(
+            @Context HttpServletRequest req,
+            @PathParam("lessonId") int lessonId,
+            @PathParam("filename") String filename) {
+
+        Actor actor = actorChecker.check(req);
+        Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
+        checkAllowed(roleChecker.canEdit(actor, lesson));
+
+        lessonStore.createUserCloneIfNotExists(actor.getUserJid(), lesson.getJid());
+        statementStore.deleteStatementMediaFile(actor.getUserJid(), lesson.getJid(), filename);
+
+        return redirect("/lessons/" + lessonId + "/statements/media");
+    }
+
     @GET
     @Path("/media/{filename}")
     @UnitOfWork(readOnly = true)

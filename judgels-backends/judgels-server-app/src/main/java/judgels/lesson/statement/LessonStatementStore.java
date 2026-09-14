@@ -139,6 +139,18 @@ public class LessonStatementStore extends BaseLessonStore {
         lessonFs.uploadZippedFiles(mediaDirPath, mediaFileZipped);
     }
 
+    public void deleteAllStatementMediaFiles(String userJid, String lessonJid) {
+        Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
+        lessonFs.removeFile(mediaDirPath);
+        lessonFs.createDirectory(mediaDirPath);
+        lessonFs.createFile(mediaDirPath.resolve(".gitkeep"));
+    }
+
+    public void deleteStatementMediaFile(String userJid, String lessonJid, String filename) {
+        Path mediaFilePath = getStatementMediaDirPath(userJid, lessonJid).resolve(filename);
+        lessonFs.removeFile(mediaFilePath);
+    }
+
     public List<FileInfo> getStatementMediaFiles(String userJid, String lessonJid) {
         Path mediaDirPath = getStatementMediaDirPath(userJid, lessonJid);
         return lessonFs.listFilesInDirectory(mediaDirPath);
