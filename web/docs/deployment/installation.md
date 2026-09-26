@@ -15,14 +15,16 @@ We will install Judgels by running an Ansible playbook from a local workstation,
 1. On the local workstation, clone the Judgels repository (https://github.com/ia-toki/judgels).
    - We'll assume that we clone to `~/judgels`.
 1. Go to `deployment`. In this directory, you will see multiple deployment playbook directories, in the form of `<major Judgels version>-<Ubuntu version>`.
-1. Pick one of the directories. It is highly recommended that the VMs you spin up later have the exact same OS. For the purpose of this documentation, let's say you pick `v2-ubuntu-24.04`.
-1. Copy the directory `deployment/v2-ubuntu-24.04/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
+1. Pick one of the directories. It is highly recommended that the VMs you spin up later have the exact same OS. For the purpose of this documentation, let's say you pick `v3-ubuntu-24.04`.
+   - The major version in the directory name must match the Judgels version you are deploying. `v2-ubuntu-24.04` only works for Judgels 2.x, and is kept for existing deployments that have not migrated yet. To deploy Judgels 3.x, pick a `v3-` directory.
+   - If you are upgrading an existing Judgels 2.x deployment, follow the [Migrating from v2 to v3](/docs/migration-guides/2to3) guide instead of this page.
+1. Copy the directory `deployment/v3-ubuntu-24.04/ansible/env-example` from the cloned Judgels repository. We'll assume that we copy it and rename as `~/judgels-env`:
    ```
-   cp -R ~/judgels/deployment/v2-ubuntu-24.04/ansible/env-example ~/judgels-env
+   cp -R ~/judgels/deployment/v3-ubuntu-24.04/ansible/env-example ~/judgels-env
    ```
-1. Inside `deployment/v2-ubuntu-24.04/ansible`, create a symbolic link to the env directory as `env`:
+1. Inside `deployment/v3-ubuntu-24.04/ansible`, create a symbolic link to the env directory as `env`:
    ```
-   cd ~/judgels/deployment/v2-ubuntu-24.04/ansible
+   cd ~/judgels/deployment/v3-ubuntu-24.04/ansible
    ln -s ~/judgels-env env
    ```
 
@@ -53,7 +55,7 @@ In `vars.yml`, generate different random strings for these values:
    * The root password of the MySQL installation.
 - `db_password`
    * The password of the `judgels` database.
-- `jophiel_superadmin_initialPassword`:
+- `superadmin_initialPassword`:
    * The password for the auto-generated initial `superadmin` user.
 - `rabbitmq_password`
    * The password for the server and grader apps to connect to RabbitMQ.
@@ -73,10 +75,10 @@ In `vars.yml`, generate different random strings for these values:
 
 ### F. Running Ansible playbooks
 
-1. Go to `deployment/v2-ubuntu-24.04/ansible`.
+1. Go to `deployment/v3-ubuntu-24.04/ansible`.
 1. Optional: if the Ubuntu version that you picked is the latest version, you can edit the Judgels version value in `env/vars.yml`, e.g.:
    ```
-   app_version: '2.23.0'
+   app_version: '3.0.0'
    ```
    You can get the latest version from https://github.com/ia-toki/judgels/releases. Enter the version without the `v` prefix. DO NOT edit the version if the Ubuntu version is not the latest one! It's pre-filled with the latest Judgels version that is compatible with the Ubuntu version.
 1. If you generate a different ssh key filename, edit the following variable in `env/vars.yml` to allow access to root:
@@ -108,7 +110,16 @@ Wait until everything is done. After the playbooks finished, do these verificati
 
 Congratulations, you have just deployed Judgels successfully!
 
-### G. Deploying more graders
+### G. Setting up the app identity
+
+A fresh deployment starts with a placeholder name and home page. To customize them, open the contestant web interface, log in as `superadmin`, and go to the **Admin** tab, then **System** → **Settings**:
+
+- **App settings**: the **Name** and **Slogan** shown in the header, and an optional **Announcement** shown to all users.
+- **Home settings**: the **Banner** shown on the home page.
+
+These are stored in the database, so they can be changed at any time without redeploying.
+
+### H. Deploying more graders
 
 If you want to add more graders:
 
