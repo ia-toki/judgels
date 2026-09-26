@@ -52,6 +52,9 @@ This page lists some technical details that Judgels admins should know in order 
 
 - The management web interface is available at `http://<core VM IP>:15672`.
 - To check the current grading queue, log in to the management web interface above using the credentials from `vars.yml` -> {`rabbitmq_username`, `rabbitmq_password`}, then click the Queues tab.
+- Judgels uses the following queues:
+  * `judgels-grading-request`: grading requests, sent by the server and consumed by the graders.
+  * `judgels-grading-response-problem`, `judgels-grading-response-contest`, `judgels-grading-response-training`: grading results, sent by the graders and consumed by the server.
 
 ### Grader VM
 

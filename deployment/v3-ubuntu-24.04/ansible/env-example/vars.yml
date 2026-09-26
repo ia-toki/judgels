@@ -1,4 +1,4 @@
-app_version: latest
+app_version: "3.0.0"
 
 nginx_certbot_enabled: true
 nginx_certbot_email: admin@judgels.com
