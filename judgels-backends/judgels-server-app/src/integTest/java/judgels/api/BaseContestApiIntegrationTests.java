@@ -27,12 +27,14 @@ import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.problem.Problem;
 import judgels.api.user.User;
 import judgels.api.user.rating.UserRating;
+import judgels.api.user.rating.UserRatingUpdateData;
 import judgels.contest.ContestClient;
 import judgels.contest.ContestContestantClient;
 import judgels.contest.ContestManagerClient;
 import judgels.contest.ContestModuleClient;
 import judgels.contest.ContestProblemClient;
 import judgels.contest.ContestSupervisorClient;
+import judgels.user.UserRatingClient;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,8 +43,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingClient;
 
 public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     protected static final String ADMIN = "admin";

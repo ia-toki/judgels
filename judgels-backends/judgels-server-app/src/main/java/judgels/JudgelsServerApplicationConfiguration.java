@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 import java.util.Optional;
-import tlx.training.TrainingConfiguration;
+import judgels.training.TrainingConfiguration;
 
 public class JudgelsServerApplicationConfiguration extends Configuration {
     private final DataSourceFactory databaseConfig;

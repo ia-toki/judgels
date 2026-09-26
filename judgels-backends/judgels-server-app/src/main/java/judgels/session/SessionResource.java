@@ -2,6 +2,7 @@ package judgels.session;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static judgels.service.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -11,23 +12,31 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import java.util.Optional;
 import judgels.api.session.Credentials;
+import judgels.api.session.GoogleCredentials;
 import judgels.api.session.Session;
 import judgels.api.session.SessionErrors;
+import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.setting.SessionSettings;
 import judgels.api.user.User;
+import judgels.auth.google.GoogleAuth;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.setting.SettingStore;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
+import judgels.user.registration.UserRegistrationConfiguration;
+import judgels.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/session")
 public class SessionResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
-    @Inject protected SessionLoginValidator loginValidator;
+    @Inject protected Optional<UserRegistrationConfiguration> userRegistrationConfig;
+    @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
+    @Inject protected Optional<GoogleAuth> googleAuth;
     @Inject protected SessionStore sessionStore;
     @Inject protected SettingStore settingStore;
 
@@ -44,7 +53,11 @@ public class SessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        loginValidator.validate(user);
+        if (userRegistrationConfig.isPresent() && userRegistrationConfig.get().getEnabled()) {
+            if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
+                throw SessionWithRegistrationErrors.userNotActivated(user.getEmail());
+            }
+        }
 
         SessionSettings sessionSettings = settingStore.getSettings().getSession();
         if (!roleChecker.canAdminister(user.getJid())) {
@@ -56,6 +69,18 @@ public class SessionResource {
             }
         }
 
+        return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
+    }
+
+    @POST
+    @Path("/login-google")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork
+    public Session logInWithGoogle(GoogleCredentials credentials) {
+        String email = checkFound(googleAuth).verifyIdToken(credentials.getIdToken()).getEmail();
+
+        User user = userStore.getUserByEmail(email).orElseThrow(ForbiddenException::new);
         return sessionStore.createSession(SessionTokenGenerator.newToken(), user.getJid());
     }
 

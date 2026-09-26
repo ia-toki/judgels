@@ -11,7 +11,9 @@ import judgels.api.contest.Contest;
 import judgels.api.contest.history.ContestHistoryResponse;
 import judgels.api.contest.module.ContestModuleType;
 import judgels.api.user.rating.UserRating;
+import judgels.api.user.rating.UserRatingUpdateData;
 import judgels.contest.ContestHistoryClient;
+import judgels.user.UserRatingClient;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,8 +21,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import tlx.api.user.rating.UserRatingUpdateData;
-import tlx.user.UserRatingClient;
 
 class ContestHistoryApiIntegrationTests extends BaseContestApiIntegrationTests {
     private final ContestHistoryClient historyClient = createClient(ContestHistoryClient.class);
