@@ -174,8 +174,8 @@ jobs:
         if: steps.changed-files.outputs.web == '1'
         run: |
           cd web
-          yarn install
-          yarn build
+          npm ci
+          npm run build
 
       - name: Install SSH key
         if: steps.changed-files.outputs.web == '1'
