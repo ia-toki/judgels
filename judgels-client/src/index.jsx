@@ -7,6 +7,7 @@ import 'typeface-roboto';
 
 import { initGA } from './ga';
 import { queryClient } from './modules/queryClient';
+import { getUser } from './modules/session';
 import { WebPrefsProvider } from './modules/webPrefs';
 import { router } from './routes/router';
 
@@ -25,7 +26,7 @@ root.render(
     client={queryClient}
     persistOptions={{
       persister,
-      buster: '6',
+      buster: `6:${getUser()?.jid || ''}`,
       dehydrateOptions: {
         shouldDehydrateQuery: query => {
           if (query.state.status !== 'success') return false;
