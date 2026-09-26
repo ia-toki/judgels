@@ -52,6 +52,6 @@ export const logOutMutationOptions = {
       throw error;
     }
     clearSession();
-    queryClient.invalidateQueries(userWebConfigQueryOptions());
+    queryClient.resetQueries();
   },
 };
