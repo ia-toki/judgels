@@ -2,11 +2,11 @@ package judgels.fs;
 
 import java.nio.file.Path;
 import java.util.Optional;
+import judgels.fs.aws.AwsConfiguration;
+import judgels.fs.aws.AwsFileSystem;
+import judgels.fs.aws.AwsFsConfiguration;
 import judgels.fs.local.LocalFileSystem;
 import judgels.fs.local.LocalFsConfiguration;
-import tlx.fs.aws.AwsConfiguration;
-import tlx.fs.aws.AwsFileSystem;
-import tlx.fs.aws.AwsFsConfiguration;
 
 public class FileSystems {
     private FileSystems() {}

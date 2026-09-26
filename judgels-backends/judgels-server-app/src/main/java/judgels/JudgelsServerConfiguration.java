@@ -5,8 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
 import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
+import judgels.auth.AuthConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.mailer.MailerConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
+import judgels.recaptcha.RecaptchaConfiguration;
+import judgels.user.account.UserResetPasswordConfiguration;
+import judgels.user.registration.UserRegistrationConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.immutables.value.Value;
 
@@ -25,22 +30,22 @@ public interface JudgelsServerConfiguration {
     JudgelsServerGradingConfiguration getGradingConfig();
 
     @JsonProperty("auth")
-    Optional<tlx.auth.AuthConfiguration> getAuthConfig();
+    Optional<AuthConfiguration> getAuthConfig();
 
     @JsonProperty("mailer")
-    Optional<tlx.mailer.MailerConfiguration> getMailerConfig();
+    Optional<MailerConfiguration> getMailerConfig();
 
     @JsonProperty("userResetPassword")
-    tlx.user.account.UserResetPasswordConfiguration getUserResetPasswordConfig();
+    UserResetPasswordConfiguration getUserResetPasswordConfig();
 
     @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
 
     @JsonProperty("recaptcha")
-    Optional<tlx.recaptcha.RecaptchaConfiguration> getRecaptchaConfig();
+    Optional<RecaptchaConfiguration> getRecaptchaConfig();
 
     @JsonProperty("userRegistration")
-    Optional<tlx.user.registration.UserRegistrationConfiguration> getUserRegistrationConfig();
+    Optional<UserRegistrationConfiguration> getUserRegistrationConfig();
 
     @Value.Check
     default void check() {

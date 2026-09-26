@@ -5,6 +5,7 @@ import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestGradingResponsePoller;
 import judgels.service.JudgelsScheduler;
 import judgels.submission.programming.GradingResponsePoller;
+import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
 @Component(modules = {
         judgels.JudgelsServerModule.class,
@@ -32,23 +33,33 @@ import judgels.submission.programming.GradingResponsePoller;
         judgels.contest.scoreboard.ContestScoreboardUpdaterModule.class,
         judgels.contest.rating.ContestRatingModule.class,
 
-        judgels.tasks.JudgelsServerTaskModule.class,
+        judgels.training.submission.programming.TrainingSubmissionModule.class,
+        judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
+        judgels.curriculum.CurriculumModule.class,
 
-        tlx.auth.AuthModule.class})
+        judgels.auth.AuthModule.class,
+        judgels.mailer.MailerModule.class,
+        judgels.recaptcha.RecaptchaModule.class,
+        judgels.user.registration.UserRegistrationModule.class,
+        judgels.user.account.UserResetPasswordModule.class,
+
+        judgels.tasks.JudgelsServerTaskModule.class})
 @Singleton
 public interface JudgelsServerComponent {
     judgels.session.SessionResource sessionResource();
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
+    judgels.user.account.UserAccountResource userAccountResource();
     judgels.user.avatar.UserAvatarResource userAvatarResource();
     judgels.user.info.UserInfoResource userProfileResource();
     judgels.user.rating.UserRatingResource userRatingResource();
     judgels.user.role.UserRoleResource userRoleResource();
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
+    judgels.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
     judgels.profile.ProfileResource profileResource();
 
-    judgels.problem.base.ProblemResource problemResource();
+    judgels.problem.base.ProblemResource baseProblemResource();
     judgels.problem.ProblemTagResource problemTagResource();
     judgels.lesson.LessonResource lessonResource();
 
@@ -70,6 +81,22 @@ public interface JudgelsServerComponent {
     judgels.contest.supervisor.ContestSupervisorResource contestSupervisorResource();
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
+    judgels.contest.rating.ContestRatingResource contestRatingResource();
+
+    judgels.curriculum.CurriculumCreator curriculumCreator();
+    judgels.curriculum.CurriculumResource curriculumResource();
+    judgels.archive.ArchiveResource archiveResource();
+    judgels.course.CourseResource courseResource();
+    judgels.chapter.ChapterResource chapterResource();
+    judgels.course.chapter.CourseChapterResource courseChapterResource();
+    judgels.chapter.lesson.ChapterLessonResource chapterLessonResource();
+    judgels.chapter.problem.ChapterProblemResource chapterProblemResource();
+    judgels.problem.ProblemResource problemResource();
+    judgels.problemset.ProblemSetResource problemSetResource();
+    judgels.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
+    judgels.submission.bundle.ItemSubmissionResource itemSubmissionResource();
+    judgels.submission.programming.SubmissionResource submissionResource();
+    judgels.stats.UserStatsResource userStatsResource();
 
     judgels.setting.SettingResource settingResource();
     judgels.setting.SettingCreator settingCreator();
@@ -77,10 +104,15 @@ public interface JudgelsServerComponent {
     judgels.session.SessionCleaner sessionCleaner();
     GradingResponsePoller problemGradingResponsePoller();
     @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
+    @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
 
     judgels.tasks.DumpContestTask dumpContestTask();
+    judgels.tasks.DeleteTrainingProblemTask deleteTrainingProblemTask();
+    judgels.tasks.MoveTrainingProblemToChapterTask moveTrainingProblemToChapterTask();
+    judgels.tasks.MoveTrainingProblemToProblemSetTask moveTrainingProblemToProblemSetTask();
+    judgels.tasks.RefreshContestStatsTask refreshContestStatsTask();
+    judgels.tasks.RefreshProblemSetStatsTask refreshProblemSetStatsTask();
+    judgels.tasks.ReplaceContestProblemTask replaceContestProblemTask();
 
     JudgelsScheduler scheduler();
-
-    tlx.TlxServerComponent.Factory tlxServerComponentFactory();
 }

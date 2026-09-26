@@ -40,11 +40,16 @@ import judgels.api.user.role.UserRole;
 import judgels.app.BaseJudgelsAppIntegrationTests;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.mailer.MailerConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.service.feign.FeignClients;
 import judgels.session.SessionClient;
+import judgels.stats.StatsConfiguration;
+import judgels.training.TrainingConfiguration;
 import judgels.user.UserClient;
 import judgels.user.UserRoleClient;
+import judgels.user.account.UserResetPasswordConfiguration;
+import judgels.user.registration.UserRegistrationConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -54,11 +59,6 @@ import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import tlx.mailer.MailerConfiguration;
-import tlx.stats.StatsConfiguration;
-import tlx.training.TrainingConfiguration;
-import tlx.user.account.UserResetPasswordConfiguration;
-import tlx.user.registration.UserRegistrationConfiguration;
 
 public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;

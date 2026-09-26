@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import judgels.app.JudgelsAppConfiguration;
 import judgels.service.JudgelsBaseDataDir;
-import tlx.user.registration.UserRegistrationConfiguration;
+import judgels.user.registration.UserRegistrationConfiguration;
 
 @Module
 public class JudgelsServerModule {

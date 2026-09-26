@@ -3,6 +3,7 @@ package judgels.michael;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
+import judgels.auth.AuthModule;
 import judgels.grading.GradingModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.index.IndexResource;
@@ -31,7 +32,6 @@ import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.submission.SubmissionModule;
-import tlx.auth.AuthModule;
 
 @Component(modules = {
         // Judgels service

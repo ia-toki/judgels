@@ -16,13 +16,34 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.api.archive.Archive;
+import judgels.api.archive.ArchiveCreateData;
+import judgels.api.chapter.Chapter;
+import judgels.api.chapter.ChapterCreateData;
+import judgels.api.chapter.ChapterProgress;
+import judgels.api.chapter.problem.ChapterProblem;
+import judgels.api.course.Course;
+import judgels.api.course.CourseCreateData;
+import judgels.api.course.CourseProgress;
+import judgels.api.course.chapter.CourseChapter;
 import judgels.api.problem.ProblemProgress;
 import judgels.api.problem.ProblemStats;
 import judgels.api.problem.ProblemTopStats;
 import judgels.api.problem.ProblemTopStatsEntry;
+import judgels.api.problemset.ProblemSet;
+import judgels.api.problemset.ProblemSetCreateData;
+import judgels.api.problemset.ProblemSetProgress;
+import judgels.api.problemset.problem.ProblemSetProblem;
+import judgels.api.stats.UserStats;
+import judgels.api.stats.UserTopStatsEntry;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
+import judgels.archive.ArchiveStore;
+import judgels.chapter.ChapterStore;
+import judgels.chapter.problem.ChapterProblemStore;
+import judgels.course.CourseStore;
+import judgels.course.chapter.CourseChapterStore;
 import judgels.grading.api.GradingResultDetails;
 import judgels.grading.api.SandboxExecutionResult;
 import judgels.grading.api.SandboxExecutionStatus;
@@ -40,35 +61,13 @@ import judgels.persistence.model.ProblemSetModel;
 import judgels.persistence.model.ProblemSetProblemModel;
 import judgels.persistence.model.StatsUserModel;
 import judgels.persistence.model.StatsUserProblemModel;
+import judgels.problemset.ProblemSetStore;
+import judgels.problemset.problem.ProblemSetProblemStore;
+import judgels.training.BaseTrainingIntegrationTests;
+import judgels.training.TrainingIntegrationTestComponent;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tlx.api.archive.Archive;
-import tlx.api.archive.ArchiveCreateData;
-import tlx.api.chapter.Chapter;
-import tlx.api.chapter.ChapterCreateData;
-import tlx.api.chapter.ChapterProgress;
-import tlx.api.chapter.problem.ChapterProblem;
-import tlx.api.course.Course;
-import tlx.api.course.CourseCreateData;
-import tlx.api.course.CourseProgress;
-import tlx.api.course.chapter.CourseChapter;
-import tlx.api.problemset.ProblemSet;
-import tlx.api.problemset.ProblemSetCreateData;
-import tlx.api.problemset.ProblemSetProgress;
-import tlx.api.problemset.problem.ProblemSetProblem;
-import tlx.api.stats.UserStats;
-import tlx.api.stats.UserTopStatsEntry;
-import tlx.archive.ArchiveStore;
-import tlx.chapter.ChapterStore;
-import tlx.chapter.problem.ChapterProblemStore;
-import tlx.course.CourseStore;
-import tlx.course.chapter.CourseChapterStore;
-import tlx.problemset.ProblemSetStore;
-import tlx.problemset.problem.ProblemSetProblemStore;
-import tlx.stats.StatsStore;
-import tlx.training.BaseTrainingIntegrationTests;
-import tlx.training.TrainingIntegrationTestComponent;
 
 @WithHibernateSession(models = {
         ArchiveModel.class,
@@ -98,8 +97,8 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
     private ProblemSetProblemStore problemSetProblemStore;
     private StatsStore statsStore;
 
-    private tlx.training.submission.programming.StatsProcessor programmingStatsProcessor;
-    private tlx.training.submission.bundle.StatsProcessor bundleStatsProcessor;
+    private judgels.training.submission.programming.StatsProcessor programmingStatsProcessor;
+    private judgels.training.submission.bundle.StatsProcessor bundleStatsProcessor;
 
 
     @BeforeEach
