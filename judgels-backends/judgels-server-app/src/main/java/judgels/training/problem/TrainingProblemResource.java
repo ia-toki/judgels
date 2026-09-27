@@ -1,4 +1,4 @@
-package judgels.problem;
+package judgels.training.problem;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -18,13 +18,13 @@ import judgels.api.training.problem.ProblemSetProblemInfo;
 import judgels.api.training.problem.ProblemsResponse;
 import judgels.difficulty.ProblemDifficultyStore;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.stats.StatsStore;
-import judgels.training.problem.TrainingProblemStore;
 
-@Path("/api/v2/problems")
-public class ProblemResource {
+@Path("/api/v4/training/problems")
+public class TrainingProblemResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
@@ -33,7 +33,7 @@ public class ProblemResource {
     @Inject protected ProblemDifficultyStore difficultyStore;
     @Inject protected ProblemService problemService;
 
-    @Inject public ProblemResource() {}
+    @Inject public TrainingProblemResource() {}
 
     @GET
     @Produces(APPLICATION_JSON)
