@@ -15,13 +15,13 @@ import judgels.problem.base.statement.ProblemStatementStore;
 import judgels.service.ServiceUtils;
 
 @Path("/api/v2/problems/{problemJid}")
-public class ProblemResource {
+public class ProblemRenderResource {
     private final ProblemStore problemStore;
     private final ProblemStatementStore statementStore;
     private final ProblemEditorialStore editorialStore;
 
     @Inject
-    public ProblemResource(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore) {
+    public ProblemRenderResource(ProblemStore problemStore, ProblemStatementStore statementStore, ProblemEditorialStore editorialStore) {
         this.problemStore = problemStore;
         this.statementStore = statementStore;
         this.editorialStore = editorialStore;

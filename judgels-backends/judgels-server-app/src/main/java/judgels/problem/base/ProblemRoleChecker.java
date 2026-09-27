@@ -21,6 +21,10 @@ public class ProblemRoleChecker {
         this.partnerStore = partnerStore;
     }
 
+    public boolean isAdmin(String actorJid) {
+        return roleChecker.isAdmin(actorJid);
+    }
+
     public boolean isAdmin(Actor actor) {
         return roleChecker.isAdmin(actor);
     }
@@ -29,41 +33,61 @@ public class ProblemRoleChecker {
         return roleChecker.isWriter(actor);
     }
 
+    public boolean canView(String actorJid, Problem problem) {
+        return isAuthorOrAbove(actorJid, problem)
+                || isPartner(actorJid, problem);
+    }
+
     public boolean canView(Actor actor, Problem problem) {
-        return isAuthorOrAbove(actor, problem)
-                || isPartner(actor, problem);
+        return canView(actor.getUserJid(), problem);
+    }
+
+    public boolean canEdit(String actorJid, Problem problem) {
+        return isAuthorOrAbove(actorJid, problem)
+                || isPartnerWithUpdatePermission(actorJid, problem);
     }
 
     public boolean canEdit(Actor actor, Problem problem) {
-        return isAuthorOrAbove(actor, problem)
-                || isPartnerWithUpdatePermission(actor, problem);
+        return canEdit(actor.getUserJid(), problem);
     }
 
-    public Optional<String> canSubmit(Actor actor, Problem problem) {
-        if (!canEdit(actor, problem)) {
+    public Optional<String> canSubmit(String actorJid, Problem problem) {
+        if (!canEdit(actorJid, problem)) {
             return Optional.of("Submission not allowed.");
         }
-        if (problemStore.userCloneExists(actor.getUserJid(), problem.getJid())) {
+        if (problemStore.userCloneExists(actorJid, problem.getJid())) {
             return Optional.of("Submission not allowed if there are local changes.");
         }
         return Optional.empty();
     }
 
+    public Optional<String> canSubmit(Actor actor, Problem problem) {
+        return canSubmit(actor.getUserJid(), problem);
+    }
+
+    public boolean isAuthor(String actorJid, Problem problem) {
+        return problem.getAuthorJid().equals(actorJid);
+    }
+
     public boolean isAuthor(Actor actor, Problem problem) {
-        return problem.getAuthorJid().equals(actor.getUserJid());
+        return isAuthor(actor.getUserJid(), problem);
+    }
+
+    public boolean isAuthorOrAbove(String actorJid, Problem problem) {
+        return isAdmin(actorJid) || isAuthor(actorJid, problem);
     }
 
     public boolean isAuthorOrAbove(Actor actor, Problem problem) {
-        return roleChecker.isAdmin(actor) || isAuthor(actor, problem);
+        return isAuthorOrAbove(actor.getUserJid(), problem);
     }
 
-    private boolean isPartner(Actor actor, Problem problem) {
-        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actor.getUserJid());
+    private boolean isPartner(String actorJid, Problem problem) {
+        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actorJid);
         return partner.isPresent();
     }
 
-    private boolean isPartnerWithUpdatePermission(Actor actor, Problem problem) {
-        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actor.getUserJid());
+    private boolean isPartnerWithUpdatePermission(String actorJid, Problem problem) {
+        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actorJid);
         return partner.isPresent() && partner.get().getPermission() == PartnerPermission.UPDATE;
     }
 }

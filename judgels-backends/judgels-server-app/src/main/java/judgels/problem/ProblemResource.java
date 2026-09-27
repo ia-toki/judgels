@@ -1,4 +1,4 @@
-package judgels.lesson;
+package judgels.problem;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -13,41 +13,45 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.Optional;
-import judgels.api.lesson.Lesson;
-import judgels.api.lesson.LessonsResponse;
+import java.util.Set;
+import judgels.api.problem.Problem;
+import judgels.api.problem.ProblemsResponse;
 import judgels.persistence.api.Page;
+import judgels.problem.base.ProblemRoleChecker;
+import judgels.problem.base.ProblemStore;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 
-@Path("/api/v4/lessons")
-public class LessonResource {
+@Path("/api/v4/problems")
+public class ProblemResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ActorChecker actorChecker;
-    @Inject protected LessonRoleChecker roleChecker;
-    @Inject protected LessonStore lessonStore;
+    @Inject protected ProblemRoleChecker roleChecker;
+    @Inject protected ProblemStore problemStore;
     @Inject protected ProfileStore profileStore;
 
-    @Inject public LessonResource() {}
+    @Inject public ProblemResource() {}
 
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public LessonsResponse getLessons(
+    public ProblemsResponse getProblems(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("term") @DefaultValue("") String termFilter,
+            @QueryParam("tags") Set<String> tagsFilter,
             @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
 
         Optional<String> userJid = roleChecker.isAdmin(actorJid) ? Optional.empty() : Optional.of(actorJid);
-        Page<Lesson> lessons = lessonStore.getLessons(userJid, termFilter, pageNumber, PAGE_SIZE);
+        Page<Problem> problems = problemStore.getProblems(userJid, termFilter, tagsFilter, pageNumber, PAGE_SIZE);
 
-        var authorJids = Lists.transform(lessons.getPage(), Lesson::getAuthorJid);
+        var authorJids = Lists.transform(problems.getPage(), Problem::getAuthorJid);
 
-        return new LessonsResponse.Builder()
-                .data(lessons)
+        return new ProblemsResponse.Builder()
+                .data(problems)
                 .profilesMap(profileStore.getProfiles(authorJids))
                 .build();
     }

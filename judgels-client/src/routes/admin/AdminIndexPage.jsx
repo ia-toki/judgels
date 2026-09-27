@@ -3,6 +3,7 @@ import { Navigate } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
+import { ProblemAdminRole } from '../../modules/api/problemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
 import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
@@ -20,6 +21,9 @@ export default function AdminIndexPage() {
   }
   if (isTLX() && role.training === TrainingAdminRole.Admin) {
     return <Navigate to="/admin/courses" />;
+  }
+  if (role.problem === ProblemAdminRole.Admin) {
+    return <Navigate to="/admin/problems" />;
   }
   return <Navigate to="/" />;
 }

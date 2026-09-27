@@ -28,21 +28,18 @@ import java.util.stream.Collectors;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemSetterRole;
-import judgels.api.problem.ProblemType;
 import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
+import judgels.problem.ProblemCreator;
 import judgels.problem.base.tag.ProblemTagStore;
-import judgels.problem.bundle.BundleProblemStore;
-import judgels.problem.programming.ProgrammingProblemStore;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {
     private static final int PAGE_SIZE = 20;
 
-    @Inject protected BundleProblemStore bundleProblemStore;
-    @Inject protected ProgrammingProblemStore programmingProblemStore;
+    @Inject protected ProblemCreator problemCreator;
     @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemResource() {}
@@ -107,19 +104,12 @@ public class ProblemResource extends BaseProblemResource {
             return ok(renderNewProblem(actor, form));
         }
 
-        ProblemType type = form.gradingEngine.equals("Bundle") ? ProblemType.BUNDLE : ProblemType.PROGRAMMING;
-        Problem problem = problemStore.createProblem(type, form.slug, form.additionalNote);
-
-        statementStore.initStatements(problem.getJid(), type, form.initialLanguage);
-
-        if (type == ProblemType.BUNDLE) {
-            bundleProblemStore.initBundleProblem(problem.getJid());
-        } else {
-            programmingProblemStore.initProgrammingProblem(problem.getJid(), form.gradingEngine);
-            tagStore.refreshDerivedTags(problem.getJid());
-        }
-
-        problemStore.initRepository(actor.getUserJid(), problem.getJid());
+        Problem problem = problemCreator.createProblem(
+                actor.getUserJid(),
+                form.slug,
+                form.gradingEngine,
+                form.additionalNote,
+                form.initialLanguage);
 
         setCurrentStatementLanguage(req, form.initialLanguage);
         return redirect("/problems/" + problem.getType().name().toLowerCase() + "/" + problem.getId() + "/statements");
