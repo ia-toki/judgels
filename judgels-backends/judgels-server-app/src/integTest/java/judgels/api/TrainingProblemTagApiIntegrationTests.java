@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.problem.ProblemTagCategory;
-import judgels.api.problem.ProblemTagOption;
-import judgels.api.problem.ProblemTagsResponse;
-import judgels.problem.ProblemTagClient;
+import judgels.api.training.problem.ProblemTagCategory;
+import judgels.api.training.problem.ProblemTagOption;
+import judgels.api.training.problem.ProblemTagsResponse;
+import judgels.training.problem.TrainingProblemTagClient;
 import org.junit.jupiter.api.Test;
 
-class ProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final ProblemTagClient problemTagClient = createClient(ProblemTagClient.class);
+class TrainingProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
+    private final TrainingProblemTagClient problemTagClient = createClient(TrainingProblemTagClient.class);
 
     @Test
     void get_problem_tags() {

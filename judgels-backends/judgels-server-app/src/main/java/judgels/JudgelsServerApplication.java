@@ -235,6 +235,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.trainingItemSubmissionResource());
             env.jersey().register(component.trainingSubmissionResource());
             env.jersey().register(component.userStatsResource());
+            env.jersey().register(component.trainingProblemTagResource());
+            env.jersey().register(component.trainingUserStatsResource());
 
             if (judgelsConfig.getRabbitMQConfig().isPresent()) {
                 env.lifecycle().manage(component.trainingGradingResponsePoller());
