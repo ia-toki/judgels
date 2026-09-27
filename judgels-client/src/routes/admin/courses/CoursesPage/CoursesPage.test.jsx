@@ -17,7 +17,7 @@ describe('CoursesPage', () => {
       { jid: 'JIDCOURSE2', id: 2, slug: 'course-2', name: 'Course 2' },
     ],
   } = {}) => {
-    nockApi().get('/courses').reply(200, { data: courses });
+    nockApi().get('/v2/courses').reply(200, { data: courses });
 
     await act(async () =>
       render(

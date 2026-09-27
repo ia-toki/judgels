@@ -15,7 +15,7 @@ describe('ArchivePage', () => {
 
   const renderComponent = async () => {
     nockApi()
-      .get('/archives')
+      .get('/v2/archives')
       .reply(200, {
         data: [
           {
@@ -90,7 +90,7 @@ describe('ArchivePage', () => {
     await user.type(description, 'New Description');
 
     nockApi()
-      .post('/archives/JIDARCHIVE1', {
+      .post('/v2/archives/JIDARCHIVE1', {
         slug: 'new-archive',
         name: 'New Archive',
         category: 'New Category',

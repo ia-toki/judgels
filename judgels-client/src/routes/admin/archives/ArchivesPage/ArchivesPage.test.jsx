@@ -17,7 +17,7 @@ describe('ArchivesPage', () => {
       { jid: 'JIDARCHIVE2', id: 2, slug: 'archive-2', name: 'Archive 2', category: 'Category 2' },
     ],
   } = {}) => {
-    nockApi().get('/archives').reply(200, { data: archives });
+    nockApi().get('/v2/archives').reply(200, { data: archives });
 
     await act(async () =>
       render(

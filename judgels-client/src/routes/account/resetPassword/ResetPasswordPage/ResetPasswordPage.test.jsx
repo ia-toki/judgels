@@ -31,7 +31,7 @@ describe('ResetPasswordPage', () => {
     const confirmPassword = screen.getByLabelText(/^confirm new password$/i);
     await user.type(confirmPassword, 'pass');
 
-    nockApi().post('/user-account/reset-password', { emailCode: 'code123', newPassword: 'pass' }).reply(200);
+    nockApi().post('/v2/user-account/reset-password', { emailCode: 'code123', newPassword: 'pass' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /reset password/i });
     await user.click(submitButton);

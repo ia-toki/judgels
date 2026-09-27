@@ -15,7 +15,7 @@ describe('ChapterPage', () => {
 
   const renderComponent = async () => {
     nockApi()
-      .get('/chapters')
+      .get('/v2/chapters')
       .reply(200, {
         data: [
           {
@@ -27,14 +27,14 @@ describe('ChapterPage', () => {
       });
 
     nockApi()
-      .get('/chapters/JIDCHAPTER1/lessons')
+      .get('/v2/chapters/JIDCHAPTER1/lessons')
       .reply(200, {
         data: [{ alias: 'A', lessonJid: 'JIDLESSON1' }],
         lessonsMap: { JIDLESSON1: { slug: 'lesson-1' } },
       });
 
     nockApi()
-      .get('/chapters/JIDCHAPTER1/problems')
+      .get('/v2/chapters/JIDCHAPTER1/problems')
       .reply(200, {
         data: [{ alias: 'A', problemJid: 'JIDPROBLEM1', type: 'PROGRAMMING' }],
         problemsMap: { JIDPROBLEM1: { slug: 'problem-1' } },
@@ -104,7 +104,7 @@ describe('ChapterPage', () => {
     await user.clear(name);
     await user.type(name, 'New Chapter');
 
-    nockApi().post('/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
+    nockApi().post('/v2/chapters/JIDCHAPTER1', { name: 'New Chapter' }).reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
@@ -125,7 +125,7 @@ describe('ChapterPage', () => {
     await user.type(lessons, 'A,intro');
 
     nockApi()
-      .put('/chapters/JIDCHAPTER1/lessons', [{ alias: 'A', slug: 'intro' }])
+      .put('/v2/chapters/JIDCHAPTER1/lessons', [{ alias: 'A', slug: 'intro' }])
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
@@ -147,7 +147,7 @@ describe('ChapterPage', () => {
     await user.type(problems, 'A,new-problem');
 
     nockApi()
-      .put('/chapters/JIDCHAPTER1/problems', [{ alias: 'A', slug: 'new-problem', type: 'PROGRAMMING' }])
+      .put('/v2/chapters/JIDCHAPTER1/problems', [{ alias: 'A', slug: 'new-problem', type: 'PROGRAMMING' }])
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));

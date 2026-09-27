@@ -12,12 +12,12 @@ describe('ContestEditModulesTab', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockApi().get('/contests/contestJid/modules').reply(200, ['REGISTRATION', 'CLARIFICATION', 'FILE']);
+    nockApi().get('/v2/contests/contestJid/modules').reply(200, ['REGISTRATION', 'CLARIFICATION', 'FILE']);
 
     await act(async () =>
       render(

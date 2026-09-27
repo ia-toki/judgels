@@ -39,7 +39,7 @@ describe('CourseCreateDialog', () => {
     await user.type(description, 'New description');
 
     nockApi()
-      .post('/courses', {
+      .post('/v2/courses', {
         slug: 'new-course',
         name: 'New course',
         description: 'New description',

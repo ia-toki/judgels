@@ -16,7 +16,7 @@ export function constructProblemName(title, alias) {
   return (alias ? alias + '. ' : '') + (title || '');
 }
 
-export const baseProblemsURL = `${APP_CONFIG.apiUrl}/problems`;
+export const baseProblemsURL = `${APP_CONFIG.apiUrl}/v2/problems`;
 
 export const problemAPI = {
   getProblems: (token, tags, page) => {

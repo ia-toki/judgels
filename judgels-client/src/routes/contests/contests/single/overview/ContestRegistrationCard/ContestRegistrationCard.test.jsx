@@ -12,14 +12,14 @@ describe('ContestRegistrationCard', () => {
   });
 
   const renderComponent = async ({ contestantState = 'NONE' } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
-    nockApi().get('/contests/slug/contest-slug/config').reply(200, {});
+    nockApi().get('/v2/contests/slug/contest-slug/config').reply(200, {});
 
-    nockApi().get('/contests/contestJid/contestants/me/state').reply(200, JSON.stringify(contestantState));
-    nockApi().get('/contests/contestJid/contestants/approved/count').reply(200, 10);
+    nockApi().get('/v2/contests/contestJid/contestants/me/state').reply(200, JSON.stringify(contestantState));
+    nockApi().get('/v2/contests/contestJid/contestants/approved/count').reply(200, 10);
 
     await act(async () =>
       render(

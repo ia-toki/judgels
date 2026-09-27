@@ -5,7 +5,7 @@ export const CourseErrors = {
   SlugAlreadyExists: 'CourseSlugAlreadyExists',
 };
 
-export const baseCoursesURL = `${APP_CONFIG.apiUrl}/courses`;
+export const baseCoursesURL = `${APP_CONFIG.apiUrl}/v2/courses`;
 
 export function baseCourseURL(courseJid) {
   return `${baseCoursesURL}/${courseJid}`;

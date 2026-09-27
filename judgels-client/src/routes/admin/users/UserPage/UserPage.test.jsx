@@ -14,13 +14,13 @@ describe('UserPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/users/username/andi').reply(200, {
+    nockApi().get('/v2/users/username/andi').reply(200, {
       jid: 'JIDUSER123',
       username: 'andi',
       email: 'andi@example.com',
     });
 
-    nockApi().get('/users/JIDUSER123/info').reply(200, {
+    nockApi().get('/v2/users/JIDUSER123/info').reply(200, {
       name: 'Andi Smith',
       gender: 'MALE',
       country: 'ID',
@@ -129,7 +129,7 @@ describe('UserPage', () => {
     await user.type(institutionCity, 'London');
 
     nockApi()
-      .put('/users/JIDUSER123/info', {
+      .put('/v2/users/JIDUSER123/info', {
         name: 'Caca',
         gender: 'FEMALE',
         country: 'US',

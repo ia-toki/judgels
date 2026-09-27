@@ -14,12 +14,12 @@ describe('ContestEditDescriptionTab', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockApi().get('/contests/contestJid/description').reply(200, {
+    nockApi().get('/v2/contests/contestJid/description').reply(200, {
       description: 'current description',
     });
 
@@ -47,7 +47,7 @@ describe('ContestEditDescriptionTab', () => {
     await user.clear(description);
     await user.type(description, 'new description');
 
-    nockApi().post('/contests/contestJid/description', { description: 'new description' }).reply(200);
+    nockApi().post('/v2/contests/contestJid/description', { description: 'new description' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);

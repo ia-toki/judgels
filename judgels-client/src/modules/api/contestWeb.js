@@ -33,7 +33,7 @@ export const ContestState = {
   Paused: 'PAUSED',
 };
 
-const baseURL = `${APP_CONFIG.apiUrl}/contest-web`;
+const baseURL = `${APP_CONFIG.apiUrl}/v2/contest-web`;
 
 export const contestWebAPI = {
   getContestBySlugWithWebConfig: (token, contestSlug) => {

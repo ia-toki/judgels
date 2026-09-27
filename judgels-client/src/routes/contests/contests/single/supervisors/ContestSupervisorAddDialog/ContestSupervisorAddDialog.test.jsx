@@ -43,7 +43,7 @@ describe('ContestSupervisorAddDialog', () => {
     await user.click(clarificationPermission);
 
     nockApi()
-      .post('/contests/contestJid/supervisors/batch-upsert', {
+      .post('/v2/contests/contestJid/supervisors/batch-upsert', {
         usernames: ['andi', 'budi', 'caca'],
         managementPermissions: ['ANNOUNCEMENT', 'CLARIFICATION'],
       })

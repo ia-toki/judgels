@@ -31,7 +31,7 @@ describe('ContestCreateDialog', () => {
     const slug = screen.getByRole('textbox');
     await user.type(slug, 'new-contest');
 
-    nockApi().post('/contests', { slug: 'new-contest' }).reply(200);
+    nockApi().post('/v2/contests', { slug: 'new-contest' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);

@@ -18,7 +18,7 @@ describe('ContestsPage', () => {
     ],
   } = {}) => {
     nockApi()
-      .get('/contests?')
+      .get('/v2/contests?')
       .reply(200, {
         data: { page: contests, totalCount: contests.length },
         config: { canAdminister: true },

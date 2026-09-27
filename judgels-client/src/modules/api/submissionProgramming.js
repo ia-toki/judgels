@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from '../../conf';
 import { get, post, postMultipart } from './http';
 
-export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/submissions/programming`;
+export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v2/submissions/programming`;
 
 export const submissionProgrammingAPI = {
   getSubmission: submissionJid => {

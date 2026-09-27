@@ -22,11 +22,11 @@ describe('ChapterResourcesPage', () => {
       { problemJid: 'problemJid2', alias: 'B' },
     ],
   } = {}) => {
-    nockApi().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
-    nockApi().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+    nockApi().get('/v2/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug', name: 'Course' });
+    nockApi().get('/v2/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     nockApi()
-      .get('/chapters/chapterJid/lessons')
+      .get('/v2/chapters/chapterJid/lessons')
       .reply(200, {
         data: lessons,
         lessonsMap: {
@@ -44,7 +44,7 @@ describe('ChapterResourcesPage', () => {
       });
 
     nockApi()
-      .get('/chapters/chapterJid/problems')
+      .get('/v2/chapters/chapterJid/problems')
       .reply(200, {
         data: problems,
         problemsMap: {

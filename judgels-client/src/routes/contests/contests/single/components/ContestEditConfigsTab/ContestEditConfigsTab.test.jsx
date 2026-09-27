@@ -49,12 +49,12 @@ describe('ContestEditConfigsTab', () => {
       },
     },
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockApi().get('/contests/contestJid/modules/config').reply(200, config);
+    nockApi().get('/v2/contests/contestJid/modules/config').reply(200, config);
 
     await act(async () =>
       render(
@@ -123,7 +123,7 @@ describe('ContestEditConfigsTab', () => {
     await user.type(editorialPreface, '<p>Thank you for your participation.</p>');
 
     nockApi()
-      .put('/contests/contestJid/modules/config', {
+      .put('/v2/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: [] },
           wrongSubmissionPenalty: 25,
@@ -184,7 +184,7 @@ describe('ContestEditConfigsTab', () => {
     await user.click(icpcAllowAllLanguages);
 
     nockApi()
-      .put('/contests/contestJid/modules/config', {
+      .put('/v2/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: [] },
           wrongSubmissionPenalty: 20,
@@ -225,7 +225,7 @@ describe('ContestEditConfigsTab', () => {
     await user.click(icpcAllowedLanguagesPython3);
 
     nockApi()
-      .put('/contests/contestJid/modules/config', {
+      .put('/v2/contests/contestJid/modules/config', {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: ['Pascal', 'Python3'] },
           wrongSubmissionPenalty: 20,

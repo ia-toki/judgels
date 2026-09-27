@@ -28,7 +28,7 @@ describe('CoursesPage', () => {
     ],
   } = {}) => {
     nockApi()
-      .get('/courses')
+      .get('/v2/courses')
       .reply(200, {
         data: courses,
         curriculum: {

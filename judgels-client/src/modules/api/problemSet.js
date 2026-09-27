@@ -9,7 +9,7 @@ export const ProblemSetErrors = {
   ContestSlugsNotAllowed: 'ContestSlugsNotAllowed',
 };
 
-export const baseProblemSetsURL = `${APP_CONFIG.apiUrl}/problemsets`;
+export const baseProblemSetsURL = `${APP_CONFIG.apiUrl}/v2/problemsets`;
 
 export function baseProblemSetURL(problemSetJid) {
   return `${baseProblemSetsURL}/${problemSetJid}`;

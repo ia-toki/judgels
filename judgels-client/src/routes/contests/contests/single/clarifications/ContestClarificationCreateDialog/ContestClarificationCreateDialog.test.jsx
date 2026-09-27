@@ -48,7 +48,7 @@ describe('ContestClarificationCreateDialog', () => {
     await user.type(question, 'Is snack provided?');
 
     nockApi()
-      .post('/contests/contestJid/clarifications', {
+      .post('/v2/contests/contestJid/clarifications', {
         topicJid: 'contestJid',
         title: 'Snack',
         question: 'Is snack provided?',

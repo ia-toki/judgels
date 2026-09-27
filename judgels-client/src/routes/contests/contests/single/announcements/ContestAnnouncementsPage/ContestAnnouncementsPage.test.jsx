@@ -32,13 +32,13 @@ describe('ContestAnnouncementsPage', () => {
     canSupervise,
     canManage,
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/announcements')
+      .get('/v2/contests/contestJid/announcements')
       .reply(200, {
         data: {
           page: announcements,

@@ -12,13 +12,13 @@ describe('ContestRegistrantsDialog', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/contestants/approved')
+      .get('/v2/contests/contestJid/contestants/approved')
       .reply(200, {
         data: ['userJid1', 'userJid2', 'userJid3', 'userJid4', 'userJid5', 'userJid6'],
         profilesMap: {

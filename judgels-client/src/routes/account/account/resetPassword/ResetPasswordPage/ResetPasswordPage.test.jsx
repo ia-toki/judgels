@@ -28,7 +28,7 @@ describe('ResetPasswordPage', () => {
 
     const user = userEvent.setup();
 
-    nockApi().post('/user-account/request-reset-password/user@domain.com').reply(200);
+    nockApi().post('/v2/user-account/request-reset-password/user@domain.com').reply(200);
 
     const submitButton = screen.getByRole('button', { name: /request to reset password/i });
     await user.click(submitButton);

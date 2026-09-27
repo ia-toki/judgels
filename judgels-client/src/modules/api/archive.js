@@ -5,7 +5,7 @@ export const ArchiveErrors = {
   SlugAlreadyExists: 'ArchiveSlugAlreadyExists',
 };
 
-export const baseArchivesURL = `${APP_CONFIG.apiUrl}/archives`;
+export const baseArchivesURL = `${APP_CONFIG.apiUrl}/v2/archives`;
 
 export function baseArchiveURL(archiveJid) {
   return `${baseArchivesURL}/${archiveJid}`;

@@ -28,13 +28,13 @@ describe('ContestLogsPage', () => {
       },
     ],
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/logs')
+      .get('/v2/contests/contestJid/logs')
       .reply(200, {
         data: {
           page: logs,

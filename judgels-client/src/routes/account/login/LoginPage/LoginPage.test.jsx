@@ -31,8 +31,10 @@ describe('LoginPage', () => {
     const password = screen.getByLabelText(/password/i);
     await user.type(password, 'pass');
 
-    nockApi().post('/session/login', { usernameOrEmail: 'user', password: 'pass' }).reply(200, { token: 'token123' });
-    nockApi().get('/users/me').reply(200, { jid: 'userJid', username: 'user' });
+    nockApi()
+      .post('/v2/session/login', { usernameOrEmail: 'user', password: 'pass' })
+      .reply(200, { token: 'token123' });
+    nockApi().get('/v2/users/me').reply(200, { jid: 'userJid', username: 'user' });
 
     const submitButton = screen.getByRole('button', { name: /log in/i });
     await user.click(submitButton);

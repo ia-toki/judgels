@@ -15,14 +15,14 @@ describe('BundleContestProblemPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().persist().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().persist().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: 'BUNDLE',
     });
 
     nockApi()
-      .get('/contests/contestJid/problems/C/bundle/worksheet')
+      .get('/v2/contests/contestJid/problems/C/bundle/worksheet')
       .query({ language: 'id' })
       .reply(200, {
         defaultLanguage: 'fakelang',
@@ -59,7 +59,7 @@ describe('BundleContestProblemPage', () => {
       });
 
     nockApi()
-      .get('/contests/submissions/bundle/answers')
+      .get('/v2/contests/submissions/bundle/answers')
       .query({ contestJid: 'contestJid', problemAlias: 'C' })
       .reply(200, {});
 
@@ -85,7 +85,7 @@ describe('BundleContestProblemPage', () => {
     await screen.findByText('somestatement');
 
     const createSubmission = nockApi()
-      .post('/contests/submissions/bundle', {
+      .post('/v2/contests/submissions/bundle', {
         containerJid: 'contestJid',
         problemJid: 'problemJid',
         itemJid: 'fakeitemjid',

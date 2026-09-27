@@ -41,7 +41,7 @@ describe('ContestAnnouncementCreateDialog', () => {
     await user.type(content, 'Snack is provided.');
 
     nockApi()
-      .post('/contests/contestJid/announcements', {
+      .post('/v2/contests/contestJid/announcements', {
         title: 'Snack',
         content: 'Snack is provided.',
         status: 'PUBLISHED',

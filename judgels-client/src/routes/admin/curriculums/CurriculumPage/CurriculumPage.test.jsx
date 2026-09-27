@@ -15,7 +15,7 @@ describe('CurriculumPage', () => {
 
   const renderComponent = async () => {
     nockApi()
-      .get('/curriculums')
+      .get('/v2/curriculums')
       .reply(200, { data: [{ jid: 'JIDCURRICULUM1', name: 'Curriculum 1', description: 'Description 1' }] });
 
     await act(async () =>
@@ -68,7 +68,7 @@ describe('CurriculumPage', () => {
     await user.type(description, 'New Description');
 
     nockApi()
-      .post('/curriculums/JIDCURRICULUM1', {
+      .post('/v2/curriculums/JIDCURRICULUM1', {
         name: 'New Curriculum',
         description: 'New Description',
       })

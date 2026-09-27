@@ -28,7 +28,7 @@ describe('ForgotPasswordPage', () => {
     const email = screen.getByRole('textbox');
     await user.type(email, 'email@domain.com');
 
-    nockApi().post('/user-account/request-reset-password/email@domain.com').reply(200);
+    nockApi().post('/v2/user-account/request-reset-password/email@domain.com').reply(200);
 
     const submitButton = screen.getByRole('button', { name: /request to reset password/i });
     await user.click(submitButton);

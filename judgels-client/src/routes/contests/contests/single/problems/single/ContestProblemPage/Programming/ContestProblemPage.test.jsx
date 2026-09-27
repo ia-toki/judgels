@@ -14,13 +14,13 @@ describe('ProgrammingContestProblemPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/problems/C/programming/worksheet')
+      .get('/v2/contests/contestJid/problems/C/programming/worksheet')
       .query({ language: 'id' })
       .reply(200, {
         defaultLanguage: 'en',
@@ -72,7 +72,7 @@ describe('ProgrammingContestProblemPage', () => {
 
     const createSubmission = nockApi()
       .post(
-        '/contests/submissions/programming',
+        '/v2/contests/submissions/programming',
         body =>
           body.includes('name="contestJid"\r\n\r\ncontestJid\r\n') &&
           body.includes('name="problemJid"\r\n\r\nproblemJid\r\n') &&

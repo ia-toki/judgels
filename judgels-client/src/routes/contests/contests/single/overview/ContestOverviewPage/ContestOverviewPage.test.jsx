@@ -12,17 +12,17 @@ describe('ContestOverviewPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
-    nockApi().get('/contests/contestJid/description').reply(200, {
+    nockApi().get('/v2/contests/contestJid/description').reply(200, {
       description: 'Contest description',
     });
 
-    nockApi().get('/contests/contestJid/contestants/me/state').reply(200, JSON.stringify('NONE'));
-    nockApi().get('/contests/contestJid/contestants/approved/count').reply(200, 0);
+    nockApi().get('/v2/contests/contestJid/contestants/me/state').reply(200, JSON.stringify('NONE'));
+    nockApi().get('/v2/contests/contestJid/contestants/approved/count').reply(200, 0);
 
     await act(async () =>
       render(

@@ -13,7 +13,7 @@ describe('ProblemSetsPage', () => {
   });
 
   const renderComponent = async (response, initialEntries = ['/']) => {
-    nockApi().get('/problemsets').query(true).reply(200, response);
+    nockApi().get('/v2/problemsets').query(true).reply(200, response);
 
     await act(async () =>
       render(

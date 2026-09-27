@@ -9,7 +9,7 @@ import RegisterPage from './RegisterPage';
 
 describe('RegisterPage', () => {
   const renderComponent = async () => {
-    nockApi().get('/users/registration/web/config').reply(200, { useRecaptcha: false });
+    nockApi().get('/v2/users/registration/web/config').reply(200, { useRecaptcha: false });
 
     await act(async () =>
       render(
@@ -42,10 +42,10 @@ describe('RegisterPage', () => {
     const confirmPassword = screen.getByLabelText(/confirm password/i);
     await user.type(confirmPassword, 'pass');
 
-    nockApi().get('/user-search/username-exists/user').reply(200, false);
-    nockApi().get('/user-search/email-exists/email@domain.com').reply(200, false);
+    nockApi().get('/v2/user-search/username-exists/user').reply(200, false);
+    nockApi().get('/v2/user-search/email-exists/email@domain.com').reply(200, false);
     nockApi()
-      .post('/user-account/register', {
+      .post('/v2/user-account/register', {
         username: 'user',
         name: 'name',
         email: 'email@domain.com',

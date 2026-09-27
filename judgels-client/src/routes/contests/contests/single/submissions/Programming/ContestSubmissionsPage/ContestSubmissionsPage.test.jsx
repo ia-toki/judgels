@@ -41,14 +41,14 @@ describe('ContestSubmissionsPage', () => {
     canSupervise = false,
     canManage = false,
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: 'ICPC',
     });
 
     nockApi()
-      .get('/contests/submissions/programming')
+      .get('/v2/contests/submissions/programming')
       .query({ contestJid: 'contestJid' })
       .reply(200, {
         data: { page: submissions, totalCount: submissions.length },

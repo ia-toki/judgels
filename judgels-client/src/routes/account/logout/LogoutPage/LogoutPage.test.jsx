@@ -13,7 +13,7 @@ describe('LogoutPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().post('/session/logout').reply(200);
+    nockApi().post('/v2/session/logout').reply(200);
 
     await act(async () =>
       render(

@@ -17,7 +17,7 @@ export const ContestErrors = {
   ClarificationAlreadyAnswered: 'ClarificationAlreadyAnswered',
 };
 
-export const baseContestsURL = `${APP_CONFIG.apiUrl}/contests`;
+export const baseContestsURL = `${APP_CONFIG.apiUrl}/v2/contests`;
 
 export function baseContestURL(contestJid) {
   return `${baseContestsURL}/${contestJid}`;

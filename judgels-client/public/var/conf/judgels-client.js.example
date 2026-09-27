@@ -1,4 +1,4 @@
 window.conf = {
   mode: 'JUDGELS',
-  apiUrl: 'http://localhost:9101/api/v2',
+  apiUrl: 'http://localhost:9101/api',
 };
