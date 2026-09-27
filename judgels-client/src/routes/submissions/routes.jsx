@@ -1,7 +1,10 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { submissionWithSourceQueryOptions, submissionsQueryOptions } from '../../modules/queries/submissionProgramming';
+import {
+  submissionWithSourceQueryOptions,
+  submissionsQueryOptions,
+} from '../../modules/queries/trainingSubmissionProgramming';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';

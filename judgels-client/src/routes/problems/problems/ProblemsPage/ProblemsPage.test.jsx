@@ -14,7 +14,7 @@ describe('ProblemsPage', () => {
 
   const renderComponent = async () => {
     nockApi()
-      .get('/v2/problems')
+      .get('/v4/training/problems')
       .query(true)
       .reply(200, {
         data: { page: [], totalCount: 0 },

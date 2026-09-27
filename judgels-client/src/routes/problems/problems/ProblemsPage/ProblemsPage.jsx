@@ -8,7 +8,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemType, getProblemName } from '../../../../modules/api/problem';
-import { problemsQueryOptions } from '../../../../modules/queries/problem';
+import { problemsQueryOptions } from '../../../../modules/queries/trainingProblem';
 
 const PAGE_SIZE = 20;
 

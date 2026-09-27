@@ -10,7 +10,7 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../../modules/queries/problemSet';
-import { submissionWithSourceQueryOptions } from '../../../../../../../../../modules/queries/submissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../../../../../../../../modules/queries/trainingSubmissionProgramming';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 

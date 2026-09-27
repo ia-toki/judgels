@@ -3,7 +3,6 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/problem';
 import { archivesQueryOptions } from '../../modules/queries/archive';
-import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/problem';
 import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
@@ -18,7 +17,8 @@ import {
   problemSetBundleSubmissionsQueryOptions,
 } from '../../modules/queries/problemSetSubmissionBundle';
 import { problemSetProgrammingSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmissionProgramming';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
+import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/trainingProblem';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmissionProgramming';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';

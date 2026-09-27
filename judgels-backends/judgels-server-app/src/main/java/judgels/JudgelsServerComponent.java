@@ -60,7 +60,6 @@ public interface JudgelsServerComponent {
     judgels.profile.ProfileResource profileResource();
 
     judgels.problem.base.ProblemResource baseProblemResource();
-    judgels.problem.ProblemTagResource problemTagResource();
     judgels.lesson.LessonResource lessonResource();
 
     judgels.contest.ContestResource contestResource();
@@ -91,15 +90,11 @@ public interface JudgelsServerComponent {
     judgels.course.chapter.CourseChapterResource courseChapterResource();
     judgels.chapter.lesson.ChapterLessonResource chapterLessonResource();
     judgels.chapter.problem.ChapterProblemResource chapterProblemResource();
-    judgels.problem.ProblemResource problemResource();
     judgels.training.problem.TrainingProblemResource trainingProblemResource();
     judgels.problemset.ProblemSetResource problemSetResource();
     judgels.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
-    judgels.submission.bundle.ItemSubmissionResource itemSubmissionResource();
-    judgels.submission.programming.SubmissionResource submissionResource();
     judgels.training.submission.bundle.TrainingItemSubmissionResource trainingItemSubmissionResource();
     judgels.training.submission.programming.TrainingSubmissionResource trainingSubmissionResource();
-    judgels.stats.UserStatsResource userStatsResource();
     judgels.training.problem.TrainingProblemTagResource trainingProblemTagResource();
     judgels.training.stats.TrainingUserStatsResource trainingUserStatsResource();
 

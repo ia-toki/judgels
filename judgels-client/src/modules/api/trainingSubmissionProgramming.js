@@ -3,9 +3,9 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from '../../conf';
 import { get, post, postMultipart } from './http';
 
-export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v2/submissions/programming`;
+export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v4/training/submissions/programming`;
 
-export const submissionProgrammingAPI = {
+export const trainingSubmissionProgrammingAPI = {
   getSubmission: submissionJid => {
     return get(`${baseSubmissionsURL}/${submissionJid}`);
   },
