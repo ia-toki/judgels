@@ -167,8 +167,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 Duration.ofDays(1));
 
         // Problems
-        env.jersey().register(component.baseProblemResource());
+        env.jersey().register(component.problemResource());
+        env.jersey().register(component.problemRenderResource());
         env.jersey().register(component.lessonResource());
+        env.jersey().register(component.lessonRenderResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
             env.lifecycle().manage(component.problemGradingResponsePoller());

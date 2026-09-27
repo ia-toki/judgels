@@ -22,6 +22,7 @@ import java.util.Optional;
 import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.api.profile.Profile;
+import judgels.lesson.LessonCreator;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
@@ -29,6 +30,8 @@ import judgels.persistence.api.Page;
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
     private static final int PAGE_SIZE = 20;
+
+    @Inject protected LessonCreator lessonCreator;
 
     @Inject public LessonResource() {}
 
@@ -89,11 +92,7 @@ public class LessonResource extends BaseLessonResource {
             return ok(renderNewLesson(actor, form));
         }
 
-        Lesson lesson = lessonStore.createLesson(form.slug, form.additionalNote);
-
-        statementStore.initStatements(lesson.getJid(), form.initialLanguage);
-
-        lessonStore.initRepository(actor.getUserJid(), lesson.getJid());
+        Lesson lesson = lessonCreator.createLesson(actor.getUserJid(), form.slug, form.additionalNote, form.initialLanguage);
 
         setCurrentStatementLanguage(req, form.initialLanguage);
         return redirect("/lessons/" + lesson.getId() + "/statements");

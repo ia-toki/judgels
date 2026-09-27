@@ -1,8 +1,10 @@
 import {
+  Book,
   Box,
   Cog,
   Console,
   Learning,
+  Manual,
   PanelStats,
   People,
   PredictiveAnalysis,
@@ -17,6 +19,7 @@ import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithS
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
+import { ProblemAdminRole } from '../../modules/api/problemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
 import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
@@ -29,6 +32,7 @@ export default function AdminLayout() {
   const isAccountAdmin = role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin;
   const isContestAdmin = role.contest === ContestAdminRole.Admin;
   const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
+  const isProblemAdmin = role.problem === ProblemAdminRole.Admin;
 
   const sidebarItems = [
     {
@@ -66,6 +70,22 @@ export default function AdminLayout() {
           path: 'contests',
           titleIcon: <Console />,
           title: 'Contests',
+        },
+      ],
+    },
+    {
+      title: 'Problem',
+      visible: isProblemAdmin,
+      children: [
+        {
+          path: 'problems',
+          titleIcon: <Manual />,
+          title: 'Problems',
+        },
+        {
+          path: 'lessons',
+          titleIcon: <Book />,
+          title: 'Lessons',
         },
       ],
     },

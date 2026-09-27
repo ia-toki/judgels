@@ -148,6 +148,18 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'problems',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
+  });
+
+  const adminLessonsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'lessons',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonsPage/LessonsPage'))),
+  });
+
   const adminSettingsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'settings',
@@ -171,6 +183,8 @@ export const createAdminRoutes = appRoute => {
     adminArchiveRoute,
     adminProblemSetsRoute,
     adminProblemSetRoute,
+    adminProblemsRoute,
+    adminLessonsRoute,
     adminSettingsRoute,
   ]);
 };

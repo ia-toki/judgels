@@ -44,6 +44,17 @@ describe('AppRoutes', () => {
     ]);
   });
 
+  test('Sandalphon admin', () => {
+    testAppRoutes({ problem: ProblemAdminRole.Admin }, [
+      'admin',
+      'contests',
+      'courses',
+      'problems',
+      'submissions',
+      'ranking',
+    ]);
+  });
+
   test('Jerahmeel admin', () => {
     testAppRoutes({ training: TrainingAdminRole.Admin }, [
       'admin',

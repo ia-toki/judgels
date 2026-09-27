@@ -19,6 +19,10 @@ public class LessonRoleChecker {
         this.partnerStore = partnerStore;
     }
 
+    public boolean isAdmin(String actorJid) {
+        return roleChecker.isAdmin(actorJid);
+    }
+
     public boolean isAdmin(Actor actor) {
         return roleChecker.isAdmin(actor);
     }
@@ -27,31 +31,43 @@ public class LessonRoleChecker {
         return roleChecker.isWriter(actor);
     }
 
+    public boolean canView(String actorJid, Lesson lesson) {
+        return isAuthorOrAbove(actorJid, lesson)
+                || isPartner(actorJid, lesson);
+    }
+
     public boolean canView(Actor actor, Lesson lesson) {
-        return isAuthorOrAbove(actor, lesson)
-                || isPartner(actor, lesson);
+        return canView(actor.getUserJid(), lesson);
+    }
+
+    public boolean canEdit(String actorJid, Lesson lesson) {
+        return isAuthorOrAbove(actorJid, lesson)
+                || isPartnerWithUpdatePermission(actorJid, lesson);
     }
 
     public boolean canEdit(Actor actor, Lesson lesson) {
-        return isAuthorOrAbove(actor, lesson)
-                || isPartnerWithUpdatePermission(actor, lesson);
+        return canEdit(actor.getUserJid(), lesson);
+    }
+
+    public boolean isAuthor(String actorJid, Lesson lesson) {
+        return lesson.getAuthorJid().equals(actorJid);
     }
 
     public boolean isAuthor(Actor actor, Lesson lesson) {
-        return lesson.getAuthorJid().equals(actor.getUserJid());
+        return isAuthor(actor.getUserJid(), lesson);
     }
 
-    private boolean isAuthorOrAbove(Actor actor, Lesson lesson) {
-        return roleChecker.isAdmin(actor) || isAuthor(actor, lesson);
+    public boolean isAuthorOrAbove(String actorJid, Lesson lesson) {
+        return isAdmin(actorJid) || isAuthor(actorJid, lesson);
     }
 
-    private boolean isPartner(Actor actor, Lesson lesson) {
-        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actor.getUserJid());
+    private boolean isPartner(String actorJid, Lesson lesson) {
+        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actorJid);
         return partner.isPresent();
     }
 
-    private boolean isPartnerWithUpdatePermission(Actor actor, Lesson lesson) {
-        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actor.getUserJid());
+    private boolean isPartnerWithUpdatePermission(String actorJid, Lesson lesson) {
+        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actorJid);
         return partner.isPresent() && partner.get().getPermission() == PartnerPermission.UPDATE;
     }
 }
