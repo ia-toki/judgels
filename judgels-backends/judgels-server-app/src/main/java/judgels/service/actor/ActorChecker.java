@@ -44,9 +44,4 @@ public class ActorChecker {
 
         return actorJid;
     }
-
-    public void clear() {
-        PerRequestActorProvider.clearJid();
-        PerRequestActorProvider.clearIpAddress();
-    }
 }
