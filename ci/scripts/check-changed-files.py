@@ -83,10 +83,10 @@ with open(os.environ['GITHUB_EVENT_PATH']) as event_path:
     if 'pull_request' in event:
         head_sha = event['pull_request']['head']['sha']
         base_sha = event['pull_request']['base']['sha']
-        force_ci = False
+        force_ci = FORCE_CI in run('git log -1 --format=%B {}'.format(head_sha))
     else:
         head_sha = event['after']
-        base_sha = event['before'] if event['ref'] == 'refs/heads/master' else 'origin/master'
+        base_sha = event['before']
         force_ci = FORCE_CI in event['head_commit']['message']
 
     check(head_sha, base_sha, force_ci)
