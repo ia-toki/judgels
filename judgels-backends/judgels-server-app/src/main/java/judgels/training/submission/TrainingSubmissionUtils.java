@@ -1,7 +1,7 @@
-package judgels.submission;
+package judgels.training.submission;
 
-public class SubmissionUtils {
-    private SubmissionUtils() {}
+public class TrainingSubmissionUtils {
+    private TrainingSubmissionUtils() {}
 
     public static boolean isProblemSet(String jid) {
         return jid.startsWith("JIDPRSE");

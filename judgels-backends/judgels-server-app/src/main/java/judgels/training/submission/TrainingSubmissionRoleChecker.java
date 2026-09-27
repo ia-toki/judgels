@@ -1,4 +1,4 @@
-package judgels.submission;
+package judgels.training.submission;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
@@ -9,12 +9,12 @@ import judgels.persistence.model.StatsUserProblemModel;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.Actors;
 
-public class SubmissionRoleChecker {
+public class TrainingSubmissionRoleChecker {
     private final TrainingAdminRoleChecker roleChecker;
     private final StatsUserProblemDao statsUserProblemDao;
 
     @Inject
-    public SubmissionRoleChecker(TrainingAdminRoleChecker roleChecker, StatsUserProblemDao statsUserProblemDao) {
+    public TrainingSubmissionRoleChecker(TrainingAdminRoleChecker roleChecker, StatsUserProblemDao statsUserProblemDao) {
         this.roleChecker = roleChecker;
         this.statsUserProblemDao = statsUserProblemDao;
     }

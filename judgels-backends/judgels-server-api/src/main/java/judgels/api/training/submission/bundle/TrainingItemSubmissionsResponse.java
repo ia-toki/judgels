@@ -1,7 +1,7 @@
-package judgels.api.submission.bundle;
+package judgels.api.training.submission.bundle;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.api.submission.SubmissionConfig;
+import judgels.api.training.submission.SubmissionConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable
