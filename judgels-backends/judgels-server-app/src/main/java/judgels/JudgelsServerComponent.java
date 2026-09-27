@@ -100,6 +100,8 @@ public interface JudgelsServerComponent {
     judgels.training.submission.bundle.TrainingItemSubmissionResource trainingItemSubmissionResource();
     judgels.training.submission.programming.TrainingSubmissionResource trainingSubmissionResource();
     judgels.stats.UserStatsResource userStatsResource();
+    judgels.training.problem.TrainingProblemTagResource trainingProblemTagResource();
+    judgels.training.stats.TrainingUserStatsResource trainingUserStatsResource();
 
     judgels.setting.SettingResource settingResource();
     judgels.setting.SettingCreator settingCreator();
