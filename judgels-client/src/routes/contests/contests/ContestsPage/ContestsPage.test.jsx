@@ -8,7 +8,7 @@ import ContestsPage from './ContestsPage';
 describe('ContestsPage', () => {
   const renderComponent = async contests => {
     nockApi()
-      .get('/contests')
+      .get('/v2/contests')
       .reply(200, {
         data: {
           page: contests,

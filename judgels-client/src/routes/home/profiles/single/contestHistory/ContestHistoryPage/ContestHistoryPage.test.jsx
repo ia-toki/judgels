@@ -7,7 +7,7 @@ import ContestHistoryPage from './ContestHistoryPage';
 
 describe('ContestHistoryPage', () => {
   const renderComponent = async response => {
-    nockApi().get('/contest-history/public').query({ username: 'username1' }).reply(200, response);
+    nockApi().get('/v2/contest-history/public').query({ username: 'username1' }).reply(200, response);
 
     await act(async () =>
       render(

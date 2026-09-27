@@ -8,7 +8,7 @@ import ActivatePage from './ActivatePage';
 
 describe('ActivatePage', () => {
   const renderComponent = async () => {
-    nockApi().post('/user-account/activate/code123').reply(200);
+    nockApi().post('/v2/user-account/activate/code123').reply(200);
 
     await act(async () =>
       render(

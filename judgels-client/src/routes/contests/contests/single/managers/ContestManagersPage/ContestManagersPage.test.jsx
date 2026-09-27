@@ -12,13 +12,13 @@ describe('ContestManagersPage', () => {
   });
 
   const renderComponent = async ({ managers = [], canManage = false } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/managers')
+      .get('/v2/contests/contestJid/managers')
       .reply(200, {
         data: {
           page: managers,

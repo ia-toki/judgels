@@ -7,7 +7,7 @@ export const SessionErrors = {
   LogoutDisabled: 'LogoutDisabled',
 };
 
-const baseUrl = `${APP_CONFIG.apiUrl}/session`;
+const baseUrl = `${APP_CONFIG.apiUrl}/v2/session`;
 
 export const sessionAPI = {
   logIn: (usernameOrEmail, password) => {

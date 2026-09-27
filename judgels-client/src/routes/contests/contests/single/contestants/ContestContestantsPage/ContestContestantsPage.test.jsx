@@ -15,13 +15,13 @@ describe('ContestContestantsPage', () => {
     contestants = [{ userJid: 'userJid1' }, { userJid: 'userJid2' }],
     canManage,
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/contestants')
+      .get('/v2/contests/contestJid/contestants')
       .reply(200, {
         data: {
           page: contestants,

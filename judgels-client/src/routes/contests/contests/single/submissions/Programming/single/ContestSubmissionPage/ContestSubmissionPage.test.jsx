@@ -13,13 +13,13 @@ describe('ContestSubmissionPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/submissions/programming/id/10')
+      .get('/v2/contests/submissions/programming/id/10')
       .query({ language: 'en' })
       .reply(200, {
         data: {

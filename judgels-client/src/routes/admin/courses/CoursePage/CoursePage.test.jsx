@@ -14,7 +14,7 @@ describe('CoursePage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/courses/slug/course-1').reply(200, {
+    nockApi().get('/v2/courses/slug/course-1').reply(200, {
       id: 1,
       jid: 'JIDCOURSE1',
       slug: 'course-1',
@@ -23,7 +23,7 @@ describe('CoursePage', () => {
     });
 
     nockApi()
-      .get('/courses/JIDCOURSE1/chapters')
+      .get('/v2/courses/JIDCOURSE1/chapters')
       .reply(200, {
         data: [{ alias: 'A', chapterJid: 'JIDCHAPTER1' }],
         chaptersMap: { JIDCHAPTER1: { name: 'Chapter 1' } },
@@ -97,7 +97,7 @@ describe('CoursePage', () => {
     await user.type(description, 'New Description');
 
     nockApi()
-      .post('/courses/JIDCOURSE1', {
+      .post('/v2/courses/JIDCOURSE1', {
         slug: 'new-course',
         name: 'New Course',
         description: 'New Description',
@@ -123,7 +123,7 @@ describe('CoursePage', () => {
     await user.type(chapters, 'A,JIDCHAPTER2');
 
     nockApi()
-      .put('/courses/JIDCOURSE1/chapters', [{ alias: 'A', chapterJid: 'JIDCHAPTER2' }])
+      .put('/v2/courses/JIDCOURSE1/chapters', [{ alias: 'A', chapterJid: 'JIDCHAPTER2' }])
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));

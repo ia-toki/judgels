@@ -33,7 +33,7 @@ describe('ContestClarificationAnswerBox', () => {
     const answer = screen.getByRole('textbox');
     await user.type(answer, 'Yes.');
 
-    nockApi().put('/contests/contestJid/clarifications/clarificationJid123/answer', { answer: 'Yes.' }).reply(200);
+    nockApi().put('/v2/contests/contestJid/clarifications/clarificationJid123/answer', { answer: 'Yes.' }).reply(200);
 
     const submitButton = screen.getByRole('button', { name: /answer/i });
     await user.click(submitButton);

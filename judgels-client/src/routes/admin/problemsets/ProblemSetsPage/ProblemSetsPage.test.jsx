@@ -20,7 +20,7 @@ describe('ProblemSetsPage', () => {
     totalCount = 2,
   } = {}) => {
     nockApi()
-      .get('/problemsets')
+      .get('/v2/problemsets')
       .query(true)
       .reply(200, {
         data: { page: problemSets, totalCount },

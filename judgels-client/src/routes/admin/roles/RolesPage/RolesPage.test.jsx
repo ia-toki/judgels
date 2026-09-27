@@ -23,7 +23,7 @@ describe('RolesPage', () => {
       userJid2: { username: 'budi' },
     },
   } = {}) => {
-    nockApi().get('/user-roles').reply(200, {
+    nockApi().get('/v2/user-roles').reply(200, {
       data: roles,
       profilesMap,
     });
@@ -101,7 +101,7 @@ describe('RolesPage', () => {
     await selectRole(user, 'contest role for caca', 'Admin');
 
     nockApi()
-      .put('/user-roles', {
+      .put('/v2/user-roles', {
         andi: { problem: 'ADMIN' },
         caca: { problem: 'ADMIN', contest: 'ADMIN' },
       })

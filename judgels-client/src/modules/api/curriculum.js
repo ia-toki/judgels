@@ -1,7 +1,7 @@
 import { APP_CONFIG } from '../../conf';
 import { get, post } from './http';
 
-export const baseCurriculumsURL = `${APP_CONFIG.apiUrl}/curriculums`;
+export const baseCurriculumsURL = `${APP_CONFIG.apiUrl}/v2/curriculums`;
 
 export function baseCurriculumURL(curriculumJid) {
   return `${baseCurriculumsURL}/${curriculumJid}`;

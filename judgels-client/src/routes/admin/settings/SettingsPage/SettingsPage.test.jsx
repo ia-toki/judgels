@@ -20,7 +20,7 @@ describe('SettingsPage', () => {
   };
 
   const renderComponent = async () => {
-    nockApi().get('/settings').reply(200, settings);
+    nockApi().get('/v2/settings').reply(200, settings);
 
     await act(async () =>
       render(
@@ -60,7 +60,7 @@ describe('SettingsPage', () => {
     await user.type(name, 'New Judge');
 
     nockApi()
-      .put('/settings', { app: { name: 'New Judge', slogan: 'Programming Contest System', announcement: 'Hi' } })
+      .put('/v2/settings', { app: { name: 'New Judge', slogan: 'Programming Contest System', announcement: 'Hi' } })
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
@@ -82,7 +82,7 @@ describe('SettingsPage', () => {
     await user.type(banner, 'New banner');
 
     nockApi()
-      .put('/settings', { home: { banner: 'New banner' } })
+      .put('/v2/settings', { home: { banner: 'New banner' } })
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
@@ -105,7 +105,7 @@ describe('SettingsPage', () => {
     await user.click(screen.getByLabelText(/disable logout/i));
 
     nockApi()
-      .put('/settings', { session: { disableLogout: true, maxConcurrentSessionsPerUser: 10 } })
+      .put('/v2/settings', { session: { disableLogout: true, maxConcurrentSessionsPerUser: 10 } })
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));

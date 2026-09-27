@@ -21,7 +21,7 @@ describe('UsersPage', () => {
     },
   } = {}) => {
     nockApi()
-      .get('/users')
+      .get('/v2/users')
       .query(true)
       .reply(200, {
         data: {

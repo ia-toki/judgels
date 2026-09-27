@@ -34,13 +34,16 @@ describe('ContestScoreboardPage', () => {
   };
 
   const renderComponent = async ({ scoreboard: sb } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
       style: ContestStyle.ICPC,
     });
 
-    nockApi().get('/contests/contestJid/scoreboard').query({ frozen: false, showClosedProblems: false }).reply(200, sb);
+    nockApi()
+      .get('/v2/contests/contestJid/scoreboard')
+      .query({ frozen: false, showClosedProblems: false })
+      .reply(200, sb);
 
     await act(async () => {
       render(

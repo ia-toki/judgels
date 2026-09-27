@@ -14,13 +14,13 @@ describe('InfoPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/users/JIDUSER1').reply(200, {
+    nockApi().get('/v2/users/JIDUSER1').reply(200, {
       jid: 'JIDUSER1',
       username: 'andi',
       email: 'andi@domain.com',
     });
 
-    nockApi().get('/users/JIDUSER1/info').reply(200, {
+    nockApi().get('/v2/users/JIDUSER1/info').reply(200, {
       name: 'Andi',
       gender: 'MALE',
       country: 'ID',
@@ -63,7 +63,7 @@ describe('InfoPage', () => {
     await user.type(name, 'New Andi');
 
     nockApi()
-      .put('/users/JIDUSER1/info', body => body.name === 'New Andi')
+      .put('/v2/users/JIDUSER1/info', body => body.name === 'New Andi')
       .reply(200, {});
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));

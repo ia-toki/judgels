@@ -66,7 +66,7 @@ describe('ContestProblemEditDialog', () => {
     await user.type(problems, 'P, qq1\n Q,qq2,OPEN,20\nR,qq3,CLOSED \nS,qq4,CLOSED,20');
 
     nockApi()
-      .put('/contests/contestJid/problems', [
+      .put('/v2/contests/contestJid/problems', [
         { alias: 'P', slug: 'qq1', status: 'OPEN' },
         { alias: 'Q', slug: 'qq2', status: 'OPEN', submissionsLimit: 20 },
         { alias: 'R', slug: 'qq3', status: 'CLOSED' },

@@ -15,7 +15,7 @@ server {
     server_name {{ domain.fqdn }};
     access_log off;
 
-    location ~ /(api/)?v2 {
+    location ~ ^(/api)?/v[0-9]+/ {
         rewrite ^(?:/api)?(.*) /api$1 break;
         include proxy_params;
         proxy_pass http://judgels_server_api;

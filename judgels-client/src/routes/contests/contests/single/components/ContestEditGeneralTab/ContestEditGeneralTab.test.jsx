@@ -17,7 +17,7 @@ describe('ContestEditGeneralTab', () => {
 
   const renderComponent = async () => {
     nockApi()
-      .get('/contests/slug/contest-a')
+      .get('/v2/contests/slug/contest-a')
       .reply(200, {
         jid: 'contestJid',
         slug: 'contest-a',
@@ -64,7 +64,7 @@ describe('ContestEditGeneralTab', () => {
     await user.type(duration, '6h');
 
     nockApi()
-      .post('/contests/contestJid', {
+      .post('/v2/contests/contestJid', {
         slug: 'contest-b',
         name: 'Contest B',
         style: 'ICPC',
@@ -74,7 +74,7 @@ describe('ContestEditGeneralTab', () => {
       .reply(200);
 
     nockApi()
-      .get('/contests/slug/contest-b')
+      .get('/v2/contests/slug/contest-b')
       .reply(200, {
         jid: 'contestJid',
         slug: 'contest-b',

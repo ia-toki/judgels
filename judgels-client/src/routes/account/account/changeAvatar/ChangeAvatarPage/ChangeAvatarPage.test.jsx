@@ -13,7 +13,7 @@ describe('ChangeAvatarPage', () => {
   });
 
   const renderComponent = async avatarExists => {
-    nockApi().get('/users/JIDUSER1/avatar/exists').reply(200, avatarExists);
+    nockApi().get('/v2/users/JIDUSER1/avatar/exists').reply(200, avatarExists);
 
     await act(async () =>
       render(

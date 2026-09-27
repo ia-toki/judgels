@@ -19,13 +19,13 @@ describe('ContestFilesPage', () => {
       { name: 'solutions.zip', size: 100, lastModifiedTime: 12345 },
     ],
   } = {}) => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/files')
+      .get('/v2/contests/contestJid/files')
       .reply(200, {
         data: files,
         config: { canManage: true },
@@ -82,7 +82,7 @@ describe('ContestFilesPage', () => {
 
     nockApi()
       .post(
-        '/contests/contestJid/files',
+        '/v2/contests/contestJid/files',
         body => body.includes('name="file"') && body.includes('Content-Type: text/plain\r\n\r\ncontent\r\n')
       )
       .reply(200);

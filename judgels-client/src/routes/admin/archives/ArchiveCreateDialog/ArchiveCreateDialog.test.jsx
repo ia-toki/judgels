@@ -42,7 +42,7 @@ describe('ArchiveCreateDialog', () => {
     await user.type(description, 'New description');
 
     nockApi()
-      .post('/archives', {
+      .post('/v2/archives', {
         slug: 'new-archive',
         name: 'New archive',
         category: 'New category',

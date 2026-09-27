@@ -12,7 +12,7 @@ export const Verdict = {
   WRONG_ANSWER: 'WRONG_ANSWER',
 };
 
-export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/submissions/bundle`;
+export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v2/submissions/bundle`;
 
 export const submissionBundleAPI = {
   getSubmissions: (token, containerJid, username, problemAlias, page) => {

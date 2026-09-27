@@ -42,8 +42,8 @@ describe('ChapterProblemLayout', () => {
     };
     const renderNavigation = () => null;
 
-    nockApi().get('/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
-    nockApi().get('/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
+    nockApi().get('/v2/courses/slug/courseSlug').reply(200, { jid: 'courseJid', slug: 'courseSlug' });
+    nockApi().get('/v2/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     const rootRoute = createRootRoute({ component: Outlet });
     const layoutRoute = createRoute({

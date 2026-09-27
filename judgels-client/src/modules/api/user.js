@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import { APP_CONFIG } from '../../conf';
 import { get, post, postText } from './http';
 
-export const baseUsersURL = `${APP_CONFIG.apiUrl}/users`;
+export const baseUsersURL = `${APP_CONFIG.apiUrl}/v2/users`;
 
 export function baseUserURL(userJid) {
   return `${baseUsersURL}/${userJid}`;

@@ -14,7 +14,7 @@ describe('ProblemSetPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/problemsets/slug/problemset-1').reply(200, {
+    nockApi().get('/v2/problemsets/slug/problemset-1').reply(200, {
       jid: 'JIDPROBLEMSET1',
       slug: 'problemset-1',
       name: 'Problemset 1',
@@ -24,13 +24,13 @@ describe('ProblemSetPage', () => {
     });
 
     nockApi()
-      .get('/archives')
+      .get('/v2/archives')
       .reply(200, {
         data: [{ jid: 'JIDARCHIVE1', slug: 'archive-1', name: 'Archive 1' }],
       });
 
     nockApi()
-      .get('/problemsets/JIDPROBLEMSET1/problems')
+      .get('/v2/problemsets/JIDPROBLEMSET1/problems')
       .reply(200, {
         data: [{ alias: 'A', problemJid: 'JIDPROBLEM1', type: 'PROGRAMMING', contestJids: [] }],
         problemsMap: { JIDPROBLEM1: { slug: 'problem-1' } },
@@ -107,7 +107,7 @@ describe('ProblemSetPage', () => {
     await user.type(archive, 'new-archive');
 
     nockApi()
-      .post('/problemsets/JIDPROBLEMSET1', body => {
+      .post('/v2/problemsets/JIDPROBLEMSET1', body => {
         return body.slug === 'new-problemset' && body.name === 'New Problemset' && body.archiveSlug === 'new-archive';
       })
       .reply(200);
@@ -131,7 +131,7 @@ describe('ProblemSetPage', () => {
     await user.type(problems, 'A,new-problem');
 
     nockApi()
-      .put('/problemsets/JIDPROBLEMSET1/problems', [
+      .put('/v2/problemsets/JIDPROBLEMSET1/problems', [
         { alias: 'A', slug: 'new-problem', type: 'PROGRAMMING', contestSlugs: [] },
       ])
       .reply(200);

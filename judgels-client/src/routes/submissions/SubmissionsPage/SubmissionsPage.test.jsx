@@ -14,7 +14,7 @@ describe('SubmissionsPage', () => {
 
   const renderComponent = async page => {
     nockApi()
-      .get('/submissions/programming')
+      .get('/v2/submissions/programming')
       .query(true)
       .reply(200, {
         data: { page, hasPreviousPage: false, hasNextPage: false },

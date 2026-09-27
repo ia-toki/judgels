@@ -14,7 +14,7 @@ describe('CurriculumsPage', () => {
   const renderComponent = async ({
     curriculums = [{ jid: 'JIDCURRICULUM1', name: 'Curriculum 1', description: 'Description 1' }],
   } = {}) => {
-    nockApi().get('/curriculums').reply(200, { data: curriculums });
+    nockApi().get('/v2/curriculums').reply(200, { data: curriculums });
 
     await act(async () =>
       render(

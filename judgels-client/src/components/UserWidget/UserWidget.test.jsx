@@ -44,7 +44,7 @@ describe('UserWidget', () => {
 
   test('logs out in place', async () => {
     setSession('token', { jid: 'jid123' });
-    nockApi().post('/session/logout').reply(200);
+    nockApi().post('/v2/session/logout').reply(200);
 
     const { container } = await renderComponent({
       user: { jid: 'jid123', username: 'user', email: 'user@domain.com' },

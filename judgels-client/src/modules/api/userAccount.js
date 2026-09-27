@@ -1,7 +1,7 @@
 import { APP_CONFIG } from '../../conf';
 import { post } from './http';
 
-const baseURL = `${APP_CONFIG.apiUrl}/user-account`;
+const baseURL = `${APP_CONFIG.apiUrl}/v2/user-account`;
 
 export const userAccountAPI = {
   registerUser: data => {

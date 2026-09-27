@@ -13,13 +13,13 @@ describe('ContestEditorialPage', () => {
   });
 
   const renderComponent = async () => {
-    nockApi().get('/contests/slug/contest-slug').reply(200, {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
     });
 
     nockApi()
-      .get('/contests/contestJid/editorial')
+      .get('/v2/contests/contestJid/editorial')
       .query({ language: 'en' })
       .reply(200, {
         preface: '<p>Thanks for participating.</p>',

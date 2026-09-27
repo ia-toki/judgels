@@ -17,7 +17,7 @@ describe('ChaptersPage', () => {
       { jid: 'JIDCHAPTER2', id: 2, name: 'Chapter 2' },
     ],
   } = {}) => {
-    nockApi().get('/chapters').reply(200, { data: chapters });
+    nockApi().get('/v2/chapters').reply(200, { data: chapters });
 
     await act(async () =>
       render(

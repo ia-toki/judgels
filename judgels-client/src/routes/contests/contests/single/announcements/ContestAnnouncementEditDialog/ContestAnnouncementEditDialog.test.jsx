@@ -52,7 +52,7 @@ describe('ContestAnnouncementEditDialog', () => {
     await user.type(content, 'Snack is NOT provided.');
 
     nockApi()
-      .put('/contests/contestJid/announcements/announcementJid123', {
+      .put('/v2/contests/contestJid/announcements/announcementJid123', {
         title: 'Snack edited',
         content: 'Snack is NOT provided.',
         status: 'PUBLISHED',
