@@ -97,6 +97,8 @@ public interface JudgelsServerComponent {
     judgels.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
     judgels.submission.bundle.ItemSubmissionResource itemSubmissionResource();
     judgels.submission.programming.SubmissionResource submissionResource();
+    judgels.training.submission.bundle.TrainingItemSubmissionResource trainingItemSubmissionResource();
+    judgels.training.submission.programming.TrainingSubmissionResource trainingSubmissionResource();
     judgels.stats.UserStatsResource userStatsResource();
 
     judgels.setting.SettingResource settingResource();
