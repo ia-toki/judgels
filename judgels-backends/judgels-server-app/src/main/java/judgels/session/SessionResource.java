@@ -94,6 +94,5 @@ public class SessionResource {
         }
 
         sessionStore.deleteSessionByToken(authHeader.getBearerToken());
-        actorChecker.clear();
     }
 }
