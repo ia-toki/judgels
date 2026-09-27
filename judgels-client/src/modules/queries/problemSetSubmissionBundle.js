@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { submissionBundleAPI } from '../api/submissionBundle';
+import { trainingSubmissionBundleAPI } from '../api/trainingSubmissionBundle';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -8,7 +8,7 @@ export const problemSetBundleSubmissionsQueryOptions = (problemSetJid, params) =
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', ...(params ? [params] : [])],
-    queryFn: () => submissionBundleAPI.getSubmissions(getToken(), problemSetJid, username, problemAlias, page),
+    queryFn: () => trainingSubmissionBundleAPI.getSubmissions(getToken(), problemSetJid, username, problemAlias, page),
   });
 };
 
@@ -16,19 +16,20 @@ export const problemSetBundleSubmissionSummaryQueryOptions = (problemSetJid, par
   const { problemJid, username, language } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
-    queryFn: () => submissionBundleAPI.getSubmissionSummary(getToken(), problemSetJid, problemJid, username, language),
+    queryFn: () =>
+      trainingSubmissionBundleAPI.getSubmissionSummary(getToken(), problemSetJid, problemJid, username, language),
   });
 };
 
 export const problemSetBundleLatestSubmissionsQueryOptions = (problemSetJid, problemAlias) =>
   queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'latest', problemAlias],
-    queryFn: () => submissionBundleAPI.getLatestSubmissions(getToken(), problemSetJid, problemAlias),
+    queryFn: () => trainingSubmissionBundleAPI.getLatestSubmissions(getToken(), problemSetJid, problemAlias),
   });
 
 export const createProblemSetBundleItemSubmissionMutationOptions = (problemSetJid, problemAlias) => ({
   mutationFn: async ({ problemJid, itemJid, answer }) => {
-    await submissionBundleAPI.createItemSubmission(getToken(), {
+    await trainingSubmissionBundleAPI.createItemSubmission(getToken(), {
       containerJid: problemSetJid,
       problemJid,
       itemJid,
@@ -41,7 +42,7 @@ export const createProblemSetBundleItemSubmissionMutationOptions = (problemSetJi
 });
 
 export const regradeProblemSetBundleSubmissionMutationOptions = problemSetJid => ({
-  mutationFn: submissionJid => submissionBundleAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionBundleAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetBundleSubmissionsQueryOptions(problemSetJid));
     queryClient.invalidateQueries(problemSetBundleSubmissionSummaryQueryOptions(problemSetJid));
@@ -50,7 +51,7 @@ export const regradeProblemSetBundleSubmissionMutationOptions = problemSetJid =>
 
 export const regradeProblemSetBundleSubmissionsMutationOptions = problemSetJid => ({
   mutationFn: ({ userJid, problemJid } = {}) =>
-    submissionBundleAPI.regradeSubmissions(getToken(), problemSetJid, userJid, problemJid),
+    trainingSubmissionBundleAPI.regradeSubmissions(getToken(), problemSetJid, userJid, problemJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetBundleSubmissionsQueryOptions(problemSetJid));
     queryClient.invalidateQueries(problemSetBundleSubmissionSummaryQueryOptions(problemSetJid));

@@ -168,7 +168,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         // Problems
         env.jersey().register(component.baseProblemResource());
-        env.jersey().register(component.problemTagResource());
         env.jersey().register(component.lessonResource());
 
         if (judgelsConfig.getRabbitMQConfig().isPresent()) {
@@ -226,15 +225,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.courseChapterResource());
             env.jersey().register(component.chapterLessonResource());
             env.jersey().register(component.chapterProblemResource());
-            env.jersey().register(component.problemResource());
             env.jersey().register(component.trainingProblemResource());
             env.jersey().register(component.problemSetResource());
             env.jersey().register(component.problemSetProblemResource());
-            env.jersey().register(component.itemSubmissionResource());
-            env.jersey().register(component.submissionResource());
             env.jersey().register(component.trainingItemSubmissionResource());
             env.jersey().register(component.trainingSubmissionResource());
-            env.jersey().register(component.userStatsResource());
             env.jersey().register(component.trainingProblemTagResource());
             env.jersey().register(component.trainingUserStatsResource());
 

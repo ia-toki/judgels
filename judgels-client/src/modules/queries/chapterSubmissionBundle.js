@@ -1,13 +1,13 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { submissionBundleAPI } from '../api/submissionBundle';
+import { trainingSubmissionBundleAPI } from '../api/trainingSubmissionBundle';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
 export const chapterBundleLatestSubmissionsQueryOptions = (chapterJid, problemAlias) =>
   queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'latest', problemAlias],
-    queryFn: () => submissionBundleAPI.getLatestSubmissions(getToken(), chapterJid, problemAlias),
+    queryFn: () => trainingSubmissionBundleAPI.getLatestSubmissions(getToken(), chapterJid, problemAlias),
   });
 
 export const chapterBundleSubmissionSummaryQueryOptions = (chapterJid, params) => {
@@ -15,13 +15,20 @@ export const chapterBundleSubmissionSummaryQueryOptions = (chapterJid, params) =
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', ...(params ? [params] : [])],
     queryFn: () =>
-      submissionBundleAPI.getSubmissionSummary(getToken(), chapterJid, undefined, undefined, problemAlias, language),
+      trainingSubmissionBundleAPI.getSubmissionSummary(
+        getToken(),
+        chapterJid,
+        undefined,
+        undefined,
+        problemAlias,
+        language
+      ),
   });
 };
 
 export const createChapterBundleItemSubmissionMutationOptions = (chapterJid, problemAlias) => ({
   mutationFn: async ({ problemJid, itemJid, answer }) => {
-    await submissionBundleAPI.createItemSubmission(getToken(), {
+    await trainingSubmissionBundleAPI.createItemSubmission(getToken(), {
       containerJid: chapterJid,
       problemJid,
       itemJid,

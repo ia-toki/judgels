@@ -12,7 +12,7 @@ import {
   courseChaptersQueryOptions,
   coursesQueryOptions,
 } from '../../modules/queries/course';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/submissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmissionProgramming';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';

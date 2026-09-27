@@ -6,7 +6,7 @@ import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { topUserStatsQueryOptions } from '../../../../modules/queries/stats';
+import { topUserStatsQueryOptions } from '../../../../modules/queries/trainingStats';
 
 import './ScoresPage.scss';
 

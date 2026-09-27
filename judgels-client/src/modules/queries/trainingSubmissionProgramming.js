@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { submissionProgrammingAPI } from '../api/submissionProgramming';
+import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmissionProgramming';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -9,7 +9,15 @@ export const submissionsQueryOptions = params => {
   return queryOptions({
     queryKey: ['submissions', ...(params ? [params] : [])],
     queryFn: () =>
-      submissionProgrammingAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
+      trainingSubmissionProgrammingAPI.getSubmissions(
+        getToken(),
+        undefined,
+        username,
+        undefined,
+        undefined,
+        beforeId,
+        afterId
+      ),
   });
 };
 
@@ -17,12 +25,12 @@ export const submissionWithSourceQueryOptions = (submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
     queryKey: ['submissions', submissionId, 'source', ...(params ? [params] : [])],
-    queryFn: () => submissionProgrammingAPI.getSubmissionWithSource(getToken(), submissionId, language),
+    queryFn: () => trainingSubmissionProgrammingAPI.getSubmissionWithSource(getToken(), submissionId, language),
   });
 };
 
 export const regradeSubmissionMutationOptions = {
-  mutationFn: submissionJid => submissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(submissionsQueryOptions());
   },
@@ -30,7 +38,7 @@ export const regradeSubmissionMutationOptions = {
 
 export const regradeSubmissionsMutationOptions = {
   mutationFn: ({ username } = {}) =>
-    submissionProgrammingAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
+    trainingSubmissionProgrammingAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
   onSuccess: () => {
     queryClient.invalidateQueries(submissionsQueryOptions());
   },

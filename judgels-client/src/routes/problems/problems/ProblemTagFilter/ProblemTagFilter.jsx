@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { problemTagsQueryOptions } from '../../../../modules/queries/problem';
+import { problemTagsQueryOptions } from '../../../../modules/queries/trainingProblem';
 
 import './ProblemTagFilter.scss';
 

@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLanguage';
-import { submissionProgrammingAPI } from '../api/submissionProgramming';
+import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmissionProgramming';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -10,7 +10,7 @@ export const problemSetProgrammingSubmissionsQueryOptions = (problemJid, params)
   return queryOptions({
     queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
     queryFn: () =>
-      submissionProgrammingAPI.getSubmissions(
+      trainingSubmissionProgrammingAPI.getSubmissions(
         getToken(),
         undefined,
         username,
@@ -36,7 +36,7 @@ export const createProblemSetProgrammingSubmissionMutationOptions = (problemSetJ
       sources['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
-    await submissionProgrammingAPI.createSubmission(
+    await trainingSubmissionProgrammingAPI.createSubmission(
       getToken(),
       problemSetJid,
       problemJid,
@@ -47,14 +47,14 @@ export const createProblemSetProgrammingSubmissionMutationOptions = (problemSetJ
 });
 
 export const regradeProblemSetProgrammingSubmissionMutationOptions = problemJid => ({
-  mutationFn: submissionJid => submissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
   },
 });
 
 export const regradeProblemSetProgrammingSubmissionsMutationOptions = problemJid => ({
-  mutationFn: () => submissionProgrammingAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
+  mutationFn: () => trainingSubmissionProgrammingAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
   },

@@ -17,7 +17,7 @@ describe('ChapterProblemSubmissionPage', () => {
     nockApi().get('/v2/courses/courseJid/chapters/chapter-1').reply(200, { jid: 'chapterJid', name: 'Chapter 1' });
 
     nockApi()
-      .get('/v2/submissions/programming/id/10')
+      .get('/v4/training/submissions/programming/id/10')
       .query(true)
       .reply(200, {
         data: {

@@ -5,7 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
 import { basicProfileQueryOptions, userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
-import { userStatsQueryOptions } from '../../../../../../modules/queries/stats';
+import { userStatsQueryOptions } from '../../../../../../modules/queries/trainingStats';
 import { avatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';

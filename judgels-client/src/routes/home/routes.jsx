@@ -8,7 +8,7 @@ import {
   profileSubmissionsQueryOptions,
   userJidByUsernameQueryOptions,
 } from '../../modules/queries/profile';
-import { userStatsQueryOptions } from '../../modules/queries/stats';
+import { userStatsQueryOptions } from '../../modules/queries/trainingStats';
 import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';

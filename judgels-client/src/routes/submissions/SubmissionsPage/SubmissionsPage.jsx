@@ -7,7 +7,7 @@ import SubmissionUserFilter from '../../../components/SubmissionUserFilter/Submi
 import {
   regradeSubmissionMutationOptions,
   submissionsQueryOptions,
-} from '../../../modules/queries/submissionProgramming';
+} from '../../../modules/queries/trainingSubmissionProgramming';
 import { useSession } from '../../../modules/session';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 

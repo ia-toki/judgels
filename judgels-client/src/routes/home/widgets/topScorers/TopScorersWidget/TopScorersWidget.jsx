@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
-import { topUserStatsQueryOptions } from '../../../../../modules/queries/stats';
+import { topUserStatsQueryOptions } from '../../../../../modules/queries/trainingStats';
 
 import './TopScorersWidget.scss';
 
