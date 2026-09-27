@@ -22,7 +22,8 @@ public interface TrainingSubmissionClient {
     TrainingSubmissionsResponse getSubmissions(@Param("token") String token, @QueryMap GetSubmissionsParams params);
 
     @RequestLine("GET /api/v4/training/submissions/programming/{submissionJid}")
-    Submission getSubmission(@Param("submissionJid") String submissionJid);
+    @Headers("Authorization: Bearer {token}")
+    Submission getSubmission(@Param("token") String token, @Param("submissionJid") String submissionJid);
 
     @RequestLine("GET /api/v4/training/submissions/programming/id/{submissionId}")
     @Headers("Authorization: Bearer {token}")
