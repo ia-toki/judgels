@@ -16,14 +16,14 @@ export default function AdminIndexPage() {
   if (role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin) {
     return <Navigate to="/admin/users" />;
   }
+  if (role.problem === ProblemAdminRole.Admin) {
+    return <Navigate to="/admin/problems" />;
+  }
   if (role.contest === ContestAdminRole.Admin) {
     return <Navigate to="/admin/contests" />;
   }
   if (isTLX() && role.training === TrainingAdminRole.Admin) {
     return <Navigate to="/admin/courses" />;
-  }
-  if (role.problem === ProblemAdminRole.Admin) {
-    return <Navigate to="/admin/problems" />;
   }
   return <Navigate to="/" />;
 }

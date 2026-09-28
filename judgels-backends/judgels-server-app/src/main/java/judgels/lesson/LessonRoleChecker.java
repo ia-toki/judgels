@@ -7,14 +7,14 @@ import judgels.api.lesson.Lesson;
 import judgels.api.resource.Partner;
 import judgels.api.resource.PartnerPermission;
 import judgels.lesson.partner.LessonPartnerStore;
-import judgels.role.ProblemAdminRoleChecker;
+import judgels.role.TrainingAdminRoleChecker;
 
 public class LessonRoleChecker {
-    private final ProblemAdminRoleChecker roleChecker;
+    private final TrainingAdminRoleChecker roleChecker;
     private final LessonPartnerStore partnerStore;
 
     @Inject
-    public LessonRoleChecker(ProblemAdminRoleChecker roleChecker, LessonPartnerStore partnerStore) {
+    public LessonRoleChecker(TrainingAdminRoleChecker roleChecker, LessonPartnerStore partnerStore) {
         this.roleChecker = roleChecker;
         this.partnerStore = partnerStore;
     }
@@ -28,7 +28,7 @@ public class LessonRoleChecker {
     }
 
     public boolean isWriter(Actor actor) {
-        return roleChecker.isWriter(actor);
+        return true; // TODO(fushar): create separate role if necessary
     }
 
     public boolean canView(String actorJid, Lesson lesson) {
