@@ -13,6 +13,7 @@ import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
 } from '../../../../../../../../../../modules/queries/course';
+import { getToken } from '../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';
 
@@ -61,7 +62,7 @@ export default function ChapterProblemWorkspacePage() {
     };
   };
 
-  const getSubmission = submissionJid => trainingSubmissionProgrammingAPI.getSubmission(submissionJid);
+  const getSubmission = submissionJid => trainingSubmissionProgrammingAPI.getSubmission(getToken(), submissionJid);
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {

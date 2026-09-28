@@ -6,8 +6,8 @@ import { get, post, postMultipart } from './http';
 export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v4/training/submissions/programming`;
 
 export const trainingSubmissionProgrammingAPI = {
-  getSubmission: submissionJid => {
-    return get(`${baseSubmissionsURL}/${submissionJid}`);
+  getSubmission: (token, submissionJid) => {
+    return get(`${baseSubmissionsURL}/${submissionJid}`, token);
   },
 
   getSubmissions: (token, containerJid, username, problemJid, problemAlias, beforeId, afterId) => {

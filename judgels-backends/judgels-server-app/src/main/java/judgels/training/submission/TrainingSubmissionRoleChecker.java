@@ -19,6 +19,10 @@ public class TrainingSubmissionRoleChecker {
         this.statsUserProblemDao = statsUserProblemDao;
     }
 
+    public boolean canViewOwn(String userJid, String submissionUserJid) {
+        return canManage(userJid) || userJid.equals(submissionUserJid);
+    }
+
     public Optional<String> canViewProblemSetSource(String userJid, String submissionUserJid, String problemJid) {
         if (Actors.GUEST.equals(userJid)) {
             return Optional.of("Log in to view submission.");
