@@ -63,31 +63,22 @@ export default function AdminLayout() {
       ].filter(child => child.visible !== false),
     },
     {
-      title: 'Contest',
-      visible: isContestAdmin,
-      children: [
-        {
-          path: 'contests',
-          titleIcon: <Console />,
-          title: 'Contests',
-        },
-      ],
-    },
-    {
-      title: 'Problem',
-      visible: isProblemAdmin,
+      title: 'Competition',
+      visible: isContestAdmin || isProblemAdmin,
       children: [
         {
           path: 'problems',
           titleIcon: <Manual />,
           title: 'Problems',
+          visible: isProblemAdmin,
         },
         {
-          path: 'lessons',
-          titleIcon: <Book />,
-          title: 'Lessons',
+          path: 'contests',
+          titleIcon: <Console />,
+          title: 'Contests',
+          visible: isContestAdmin,
         },
-      ],
+      ].filter(child => child.visible !== false),
     },
     {
       title: 'Training',
@@ -107,6 +98,11 @@ export default function AdminLayout() {
           path: 'chapters',
           titleIcon: <Properties />,
           title: 'Chapters',
+        },
+        {
+          path: 'lessons',
+          titleIcon: <Book />,
+          title: 'Lessons',
         },
         {
           path: 'archives',
