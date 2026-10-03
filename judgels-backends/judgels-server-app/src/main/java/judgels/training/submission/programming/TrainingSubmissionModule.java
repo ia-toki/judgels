@@ -29,6 +29,7 @@ import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
 import judgels.training.stats.StatsConfiguration;
+import judgels.training.stats.SubmissionStatsProcessor;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -126,7 +127,7 @@ public class TrainingSubmissionModule {
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             ObjectMapper mapper,
             @TrainingSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
+            SubmissionStatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 GradingResponseProcessor.class,

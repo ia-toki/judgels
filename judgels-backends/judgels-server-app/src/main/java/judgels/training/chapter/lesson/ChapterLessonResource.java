@@ -35,15 +35,15 @@ import judgels.lesson.LessonService;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.training.chapter.ChapterNavigationStore;
 import judgels.training.chapter.ChapterStore;
-import judgels.training.chapter.resource.ChapterResourceStore;
 
 @Path("/api/v2/chapters/{chapterJid}/lessons")
 public class ChapterLessonResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
-    @Inject protected ChapterResourceStore resourceStore;
+    @Inject protected ChapterNavigationStore navigationStore;
     @Inject protected ChapterLessonStore lessonStore;
     @Inject protected LessonService lessonService;
 
@@ -121,16 +121,16 @@ public class ChapterLessonResource {
         LessonInfo lessonInfo = lessonService.getLesson(lessonJid);
         LessonStatement statement = lessonService.getLessonStatement(req, uriInfo, lesson.getLessonJid(), language);
 
-        List<Optional<String>> previousAndNextResourcePaths =
-                resourceStore.getPreviousAndNextResourcePathsForLesson(chapterJid, lessonAlias);
+        List<Optional<String>> previousAndNextPaths =
+                navigationStore.getPreviousAndNextPathsForLesson(chapterJid, lessonAlias);
 
         return new ChapterLessonStatement.Builder()
                 .defaultLanguage(lessonInfo.getDefaultLanguage())
                 .languages(lessonInfo.getTitlesByLanguage().keySet())
                 .lesson(lesson)
                 .statement(statement)
-                .previousResourcePath(previousAndNextResourcePaths.get(0))
-                .nextResourcePath(previousAndNextResourcePaths.get(1))
+                .previousResourcePath(previousAndNextPaths.get(0))
+                .nextResourcePath(previousAndNextPaths.get(1))
                 .build();
     }
 }

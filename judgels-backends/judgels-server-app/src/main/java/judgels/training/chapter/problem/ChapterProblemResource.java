@@ -42,8 +42,8 @@ import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.training.chapter.ChapterNavigationStore;
 import judgels.training.chapter.ChapterStore;
-import judgels.training.chapter.resource.ChapterResourceStore;
 import judgels.training.problemset.problem.ProblemSetProblemStore;
 import judgels.training.stats.StatsStore;
 import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
@@ -54,7 +54,7 @@ public class ChapterProblemResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected TrainingAdminRoleChecker roleChecker;
     @Inject protected ChapterStore chapterStore;
-    @Inject protected ChapterResourceStore resourceStore;
+    @Inject protected ChapterNavigationStore navigationStore;
     @Inject protected ChapterProblemStore chapterProblemStore;
     @Inject protected ProblemSetProblemStore problemSetProblemStore;
     @Inject protected StatsStore statsStore;
@@ -144,8 +144,8 @@ public class ChapterProblemResource {
                 ? Optional.empty()
                 : Optional.of("You must log in to submit.");
 
-        List<Optional<String>> previousAndNextResourcePaths =
-                resourceStore.getPreviousAndNextResourcePathsForProblem(chapterJid, problemAlias);
+        List<Optional<String>> previousAndNextPaths =
+                navigationStore.getPreviousAndNextPathsForProblem(chapterJid, problemAlias);
         List<List<String>> problemSetProblemPaths = problemSetProblemStore.getProblemSetProblemPaths(problemJid);
         ProblemProgress progress = statsStore.getProblemProgressesMap(actorJid, Set.of(problemJid)).get(problemJid);
         Optional<ProblemEditorialInfo> editorial = progress.getVerdict().equals(Verdict.ACCEPTED.getCode())
@@ -166,8 +166,8 @@ public class ChapterProblemResource {
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .previousResourcePath(previousAndNextResourcePaths.get(0))
-                    .nextResourcePath(previousAndNextResourcePaths.get(1))
+                    .previousResourcePath(previousAndNextPaths.get(0))
+                    .nextResourcePath(previousAndNextPaths.get(1))
                     .worksheet(new judgels.api.problem.programming.ProblemWorksheet.Builder()
                             .from(problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
@@ -184,8 +184,8 @@ public class ChapterProblemResource {
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .previousResourcePath(previousAndNextResourcePaths.get(0))
-                    .nextResourcePath(previousAndNextResourcePaths.get(1))
+                    .previousResourcePath(previousAndNextPaths.get(0))
+                    .nextResourcePath(previousAndNextPaths.get(1))
                     .worksheet(new judgels.api.problem.bundle.ProblemWorksheet.Builder()
                             .from(problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)

@@ -13,6 +13,7 @@ import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.bundle.NoOpItemSubmissionConsumer;
+import judgels.training.stats.ItemSubmissionStatsProcessor;
 import judgels.training.stats.StatsConfiguration;
 
 @Module
@@ -25,7 +26,7 @@ public class TrainingItemSubmissionModule {
 
     @Provides
     @Singleton
-    ItemSubmissionConsumer itemSubmissionConsumer(StatsProcessor statsProcessor) {
+    ItemSubmissionConsumer itemSubmissionConsumer(ItemSubmissionStatsProcessor statsProcessor) {
         return statsConfig.getEnabled() ? statsProcessor : new NoOpItemSubmissionConsumer();
     }
 

@@ -20,6 +20,7 @@ import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.training.stats.ProblemDifficultyStore;
 import judgels.training.stats.StatsStore;
 
 @Path("/api/v4/training/problems")

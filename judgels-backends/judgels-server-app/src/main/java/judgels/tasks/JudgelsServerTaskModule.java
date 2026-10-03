@@ -27,7 +27,7 @@ import judgels.persistence.dao.TrainingBundleItemSubmissionDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
+import judgels.training.stats.SubmissionStatsProcessor;
 import judgels.training.submission.programming.TrainingSubmissionStore;
 
 @Module
@@ -196,13 +196,13 @@ public class JudgelsServerTaskModule {
     static RefreshContestStatsTask refreshContestStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             @ContestSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
+            SubmissionStatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 RefreshContestStatsTask.class,
                 new Class<?>[] {
                         SubmissionStore.class,
-                        StatsProcessor.class},
+                        SubmissionStatsProcessor.class},
                 new Object[] {
                         submissionStore,
                         statsProcessor});
@@ -213,13 +213,13 @@ public class JudgelsServerTaskModule {
     static RefreshProblemSetStatsTask refreshProblemSetStatsTask(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             @TrainingSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
+            SubmissionStatsProcessor statsProcessor) {
 
         return unitOfWorkAwareProxyFactory.create(
                 RefreshProblemSetStatsTask.class,
                 new Class<?>[] {
                         SubmissionStore.class,
-                        StatsProcessor.class},
+                        SubmissionStatsProcessor.class},
                 new Object[] {
                         submissionStore,
                         statsProcessor});

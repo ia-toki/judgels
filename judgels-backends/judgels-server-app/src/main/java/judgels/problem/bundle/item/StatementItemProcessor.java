@@ -1,4 +1,4 @@
-package judgels.problem.bundle;
+package judgels.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

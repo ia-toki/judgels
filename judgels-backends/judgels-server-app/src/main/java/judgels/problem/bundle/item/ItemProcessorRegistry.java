@@ -1,4 +1,4 @@
-package judgels.problem.bundle;
+package judgels.problem.bundle.item;
 
 import jakarta.inject.Inject;
 import judgels.api.problem.bundle.ItemType;
