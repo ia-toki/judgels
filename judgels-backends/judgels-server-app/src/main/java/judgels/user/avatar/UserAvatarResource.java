@@ -5,8 +5,8 @@ import static jakarta.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static jakarta.ws.rs.core.HttpHeaders.IF_MODIFIED_SINCE;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import com.google.common.io.Files;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Optional;
 import judgels.api.user.User;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.core.api.actor.AuthHeader;
 import judgels.fs.FileSystem;
 import judgels.session.ActorChecker;
@@ -74,9 +74,9 @@ public class UserAvatarResource {
 
         Optional<String> avatarFilename = userStore.getUserAvatarFilename(userJid);
         if (avatarFilename.isPresent()) {
-            return ServiceUtils.buildMediaResponse(avatarFs.getPublicFileUrl(Paths.get(avatarFilename.get())), ifModifiedSince);
+            return JudgelsResponseBuilders.buildMediaResponse(avatarFs.getPublicFileUrl(Paths.get(avatarFilename.get())), ifModifiedSince);
         }
-        return ServiceUtils.buildMediaResponse(
+        return JudgelsResponseBuilders.buildMediaResponse(
                 UserAvatarResource.class.getClassLoader().getResourceAsStream(DEFAULT_AVATAR),
                 "image/png",
                 new Date(1532822400),

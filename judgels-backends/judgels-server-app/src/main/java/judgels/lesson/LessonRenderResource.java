@@ -1,6 +1,6 @@
 package judgels.lesson;
 
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -10,7 +10,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.lesson.statement.LessonStatementStore;
 
 @Path("/api/v2/lessons/{lessonJid}")
@@ -35,6 +35,6 @@ public class LessonRenderResource {
         checkFound(lessonStore.getLessonByJid(lessonJid));
         String mediaUrl = statementStore.getStatementMediaFileURL(null, lessonJid, mediaFilename);
 
-        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
+        return JudgelsResponseBuilders.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 }

@@ -7,13 +7,13 @@ import jakarta.annotation.Nullable;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JudgelsServiceError {
+public class JudgelsApiError {
     private final int code;
     private final String message;
     @Nullable private final Map<String, Object> args;
 
     @JsonCreator
-    public JudgelsServiceError(
+    public JudgelsApiError(
             @JsonProperty("code") int code,
             @JsonProperty("message") String message,
             @JsonProperty("args") @Nullable Map<String, Object> args) {

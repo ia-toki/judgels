@@ -1,8 +1,8 @@
 package judgels.michael.problem.bundle.statement;
 
 import static java.util.stream.Collectors.toList;
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;

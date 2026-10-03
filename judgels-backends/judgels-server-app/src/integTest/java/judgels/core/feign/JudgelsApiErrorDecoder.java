@@ -5,17 +5,17 @@ import feign.Response;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
 import judgels.JudgelsObjectMappers;
-import judgels.core.api.JudgelsServiceError;
-import judgels.core.api.JudgelsServiceException;
+import judgels.core.api.JudgelsApiError;
+import judgels.core.api.JudgelsApiException;
 
-public class JudgelsServiceErrorDecoder implements ErrorDecoder {
+public class JudgelsApiErrorDecoder implements ErrorDecoder {
     private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
 
     @Override
     public Exception decode(String methodKey, Response response) {
         try {
-            JudgelsServiceError error = MAPPER.readValue(response.body().asInputStream(), JudgelsServiceError.class);
-            return new JudgelsServiceException(
+            JudgelsApiError error = MAPPER.readValue(response.body().asInputStream(), JudgelsApiError.class);
+            return new JudgelsApiException(
                     jakarta.ws.rs.core.Response.Status.fromStatusCode(error.getCode()),
                     error.getMessage(),
                     error.getArgs());

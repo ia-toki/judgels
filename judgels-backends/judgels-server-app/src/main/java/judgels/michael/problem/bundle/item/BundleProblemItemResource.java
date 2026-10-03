@@ -1,7 +1,7 @@
 package judgels.michael.problem.bundle.item;
 
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;

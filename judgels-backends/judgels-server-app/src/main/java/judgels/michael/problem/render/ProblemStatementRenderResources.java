@@ -1,7 +1,7 @@
 package judgels.michael.problem.render;
 
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.michael.problem.BaseProblemResource;
 
 public abstract class ProblemStatementRenderResources extends BaseProblemResource {
@@ -30,7 +30,7 @@ public abstract class ProblemStatementRenderResources extends BaseProblemResourc
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), problem.getJid(), mediaFilename);
-        return ServiceUtils.buildMediaResponse(mediaUrl, Optional.empty());
+        return JudgelsResponseBuilders.buildMediaResponse(mediaUrl, Optional.empty());
     }
 
     // page path: /problems/{problemId}/statements/edit

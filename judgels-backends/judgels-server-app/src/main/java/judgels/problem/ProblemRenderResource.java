@@ -1,6 +1,6 @@
 package judgels.problem;
 
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -10,7 +10,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.statement.ProblemStatementStore;
 
@@ -38,7 +38,7 @@ public class ProblemRenderResource {
         checkFound(problemStore.getProblemByJid(problemJid));
         String mediaUrl = statementStore.getStatementMediaFileURL(null, problemJid, mediaFilename);
 
-        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
+        return JudgelsResponseBuilders.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 
     @GET
@@ -52,6 +52,6 @@ public class ProblemRenderResource {
         checkFound(problemStore.getProblemByJid(problemJid));
         String mediaUrl = editorialStore.getEditorialMediaFileURL(null, problemJid, mediaFilename);
 
-        return ServiceUtils.buildMediaResponse(mediaUrl, ifModifiedSince);
+        return JudgelsResponseBuilders.buildMediaResponse(mediaUrl, ifModifiedSince);
     }
 }

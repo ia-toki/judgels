@@ -1,8 +1,8 @@
 package judgels.michael.problem.editorial;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;
@@ -26,7 +26,7 @@ import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemEditorial;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.fs.FileInfo;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditStatementForm;
@@ -212,7 +212,7 @@ public class ProblemEditorialResource extends BaseProblemResource {
         checkAllowed(roleChecker.canView(actor, problem));
 
         String mediaUrl = editorialStore.getEditorialMediaFileURL(actor.getUserJid(), problem.getJid(), filename);
-        return ServiceUtils.buildDownloadResponse(mediaUrl);
+        return JudgelsResponseBuilders.buildDownloadResponse(mediaUrl);
     }
 
     @GET
