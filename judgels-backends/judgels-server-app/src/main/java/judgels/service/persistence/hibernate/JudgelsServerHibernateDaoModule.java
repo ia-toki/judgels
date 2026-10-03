@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import judgels.persistence.dao.ArchiveDao;
 import judgels.persistence.dao.BundleGradingDao;
-import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.persistence.dao.BundleSubmissionDao;
 import judgels.persistence.dao.ChapterDao;
 import judgels.persistence.dao.ChapterLessonDao;
@@ -31,7 +30,6 @@ import judgels.persistence.dao.LessonDao;
 import judgels.persistence.dao.LessonPartnerDao;
 import judgels.persistence.dao.ProblemContestDao;
 import judgels.persistence.dao.ProblemDao;
-import judgels.persistence.dao.ProblemLevelDao;
 import judgels.persistence.dao.ProblemPartnerDao;
 import judgels.persistence.dao.ProblemSetDao;
 import judgels.persistence.dao.ProblemSetProblemDao;
@@ -43,6 +41,8 @@ import judgels.persistence.dao.SessionDao;
 import judgels.persistence.dao.SettingDao;
 import judgels.persistence.dao.StatsUserDao;
 import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.dao.TrainingBundleItemSubmissionDao;
+import judgels.persistence.dao.TrainingProblemLevelDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.persistence.dao.UserDao;
@@ -54,7 +54,6 @@ import judgels.persistence.dao.UserResetPasswordDao;
 import judgels.persistence.dao.UserRoleDao;
 import judgels.persistence.hibernate.dao.ArchiveHibernateDao;
 import judgels.persistence.hibernate.dao.BundleGradingHibernateDao;
-import judgels.persistence.hibernate.dao.BundleItemSubmissionHibernateDao;
 import judgels.persistence.hibernate.dao.BundleSubmissionHibernateDao;
 import judgels.persistence.hibernate.dao.ChapterHibernateDao;
 import judgels.persistence.hibernate.dao.ChapterLessonHibernateDao;
@@ -81,7 +80,6 @@ import judgels.persistence.hibernate.dao.LessonHibernateDao;
 import judgels.persistence.hibernate.dao.LessonPartnerHibernateDao;
 import judgels.persistence.hibernate.dao.ProblemContestHibernateDao;
 import judgels.persistence.hibernate.dao.ProblemHibernateDao;
-import judgels.persistence.hibernate.dao.ProblemLevelHibernateDao;
 import judgels.persistence.hibernate.dao.ProblemPartnerHibernateDao;
 import judgels.persistence.hibernate.dao.ProblemSetHibernateDao;
 import judgels.persistence.hibernate.dao.ProblemSetProblemHibernateDao;
@@ -93,6 +91,8 @@ import judgels.persistence.hibernate.dao.SessionHibernateDao;
 import judgels.persistence.hibernate.dao.SettingHibernateDao;
 import judgels.persistence.hibernate.dao.StatsUserHibernateDao;
 import judgels.persistence.hibernate.dao.StatsUserProblemHibernateDao;
+import judgels.persistence.hibernate.dao.TrainingBundleItemSubmissionHibernateDao;
+import judgels.persistence.hibernate.dao.TrainingProblemLevelHibernateDao;
 import judgels.persistence.hibernate.dao.TrainingProgrammingGradingHibernateDao;
 import judgels.persistence.hibernate.dao.TrainingProgrammingSubmissionHibernateDao;
 import judgels.persistence.hibernate.dao.UserHibernateDao;
@@ -314,7 +314,7 @@ public class JudgelsServerHibernateDaoModule {
     }
 
     @Provides
-    static ProblemLevelDao problemLevelDao(ProblemLevelHibernateDao dao) {
+    static TrainingProblemLevelDao trainingProblemLevelDao(TrainingProblemLevelHibernateDao dao) {
         return dao;
     }
 
@@ -329,7 +329,7 @@ public class JudgelsServerHibernateDaoModule {
     }
 
     @Provides
-    static BundleItemSubmissionDao bundleItemSubmissionDao(BundleItemSubmissionHibernateDao dao) {
+    static TrainingBundleItemSubmissionDao trainingBundleItemSubmissionDao(TrainingBundleItemSubmissionHibernateDao dao) {
         return dao;
     }
 

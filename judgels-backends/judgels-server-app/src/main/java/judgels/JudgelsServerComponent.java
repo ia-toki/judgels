@@ -35,7 +35,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
         judgels.training.submission.programming.TrainingSubmissionModule.class,
         judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
-        judgels.curriculum.CurriculumModule.class,
+        judgels.training.curriculum.CurriculumModule.class,
 
         judgels.auth.AuthModule.class,
         judgels.mailer.MailerModule.class,
@@ -84,17 +84,17 @@ public interface JudgelsServerComponent {
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
     judgels.contest.rating.ContestRatingResource contestRatingResource();
 
-    judgels.curriculum.CurriculumCreator curriculumCreator();
-    judgels.curriculum.CurriculumResource curriculumResource();
-    judgels.archive.ArchiveResource archiveResource();
-    judgels.course.CourseResource courseResource();
-    judgels.chapter.ChapterResource chapterResource();
-    judgels.course.chapter.CourseChapterResource courseChapterResource();
-    judgels.chapter.lesson.ChapterLessonResource chapterLessonResource();
-    judgels.chapter.problem.ChapterProblemResource chapterProblemResource();
+    judgels.training.curriculum.CurriculumCreator curriculumCreator();
+    judgels.training.curriculum.CurriculumResource curriculumResource();
+    judgels.training.archive.ArchiveResource archiveResource();
+    judgels.training.course.CourseResource courseResource();
+    judgels.training.chapter.ChapterResource chapterResource();
+    judgels.training.course.chapter.CourseChapterResource courseChapterResource();
+    judgels.training.chapter.lesson.ChapterLessonResource chapterLessonResource();
+    judgels.training.chapter.problem.ChapterProblemResource chapterProblemResource();
     judgels.training.problem.TrainingProblemResource trainingProblemResource();
-    judgels.problemset.ProblemSetResource problemSetResource();
-    judgels.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
+    judgels.training.problemset.ProblemSetResource problemSetResource();
+    judgels.training.problemset.problem.ProblemSetProblemResource problemSetProblemResource();
     judgels.training.submission.bundle.TrainingItemSubmissionResource trainingItemSubmissionResource();
     judgels.training.submission.programming.TrainingSubmissionResource trainingSubmissionResource();
     judgels.training.problem.TrainingProblemTagResource trainingProblemTagResource();

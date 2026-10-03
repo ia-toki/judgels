@@ -5,7 +5,6 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestSubmissionStore;
-import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.persistence.dao.ChapterDao;
 import judgels.persistence.dao.ChapterProblemDao;
 import judgels.persistence.dao.ContestAnnouncementDao;
@@ -24,6 +23,7 @@ import judgels.persistence.dao.ProblemDao;
 import judgels.persistence.dao.ProblemSetDao;
 import judgels.persistence.dao.ProblemSetProblemDao;
 import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.dao.TrainingBundleItemSubmissionDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.submission.programming.SubmissionStore;
@@ -116,7 +116,7 @@ public class JudgelsServerTaskModule {
             ProblemSetProblemDao problemSetProblemDao,
             TrainingProgrammingSubmissionDao programmingSubmissionDao,
             TrainingProgrammingGradingDao programmingGradingDao,
-            BundleItemSubmissionDao bundleItemSubmissionDao,
+            TrainingBundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 
         return unitOfWorkAwareProxyFactory.create(
@@ -127,7 +127,7 @@ public class JudgelsServerTaskModule {
                         ProblemSetProblemDao.class,
                         TrainingProgrammingSubmissionDao.class,
                         TrainingProgrammingGradingDao.class,
-                        BundleItemSubmissionDao.class,
+                        TrainingBundleItemSubmissionDao.class,
                         StatsUserProblemDao.class},
                 new Object[] {
                         problemDao,

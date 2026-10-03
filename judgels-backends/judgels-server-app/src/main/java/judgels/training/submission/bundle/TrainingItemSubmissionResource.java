@@ -26,22 +26,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import judgels.api.chapter.problem.ChapterProblem;
 import judgels.api.problem.bundle.BundleItem;
 import judgels.api.problem.bundle.Item;
 import judgels.api.problem.bundle.ItemType;
-import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
-import judgels.api.training.submission.SubmissionConfig;
+import judgels.api.training.chapter.problem.ChapterProblem;
+import judgels.api.training.problemset.problem.ProblemSetProblem;
+import judgels.api.training.submission.TrainingSubmissionConfig;
 import judgels.api.training.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.training.submission.bundle.TrainingSubmissionSummaryResponse;
-import judgels.chapter.problem.ChapterProblemStore;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
-import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -49,6 +47,8 @@ import judgels.submission.bundle.ItemSubmissionConsumer;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
+import judgels.training.chapter.problem.ChapterProblemStore;
+import judgels.training.problemset.problem.ProblemSetProblemStore;
 import judgels.training.submission.TrainingSubmissionRoleChecker;
 import judgels.training.submission.TrainingSubmissionUtils;
 import judgels.user.UserStore;
@@ -100,7 +100,7 @@ public class TrainingItemSubmissionResource {
 
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
-        SubmissionConfig config = new SubmissionConfig.Builder()
+        TrainingSubmissionConfig config = new TrainingSubmissionConfig.Builder()
                 .canManage(canManage)
                 .problemJids(problemJids)
                 .build();
@@ -260,7 +260,7 @@ public class TrainingItemSubmissionResource {
         Map<String, String> problemNamesMap = problemService.getProblemNames(ImmutableSet.copyOf(problemJids), language);
         Profile profile = profileStore.getProfile(userJid);
 
-        SubmissionConfig config = new SubmissionConfig.Builder()
+        TrainingSubmissionConfig config = new TrainingSubmissionConfig.Builder()
                 .canManage(canManage)
                 .userJids(ImmutableList.of(userJid))
                 .problemJids(problemJids)

@@ -18,7 +18,6 @@ import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
-import judgels.stats.StatsConfiguration;
 import judgels.submission.programming.BaseSubmissionStore;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.submission.programming.GradingResponseProcessor;
@@ -29,6 +28,7 @@ import judgels.submission.programming.SubmissionRegradeProcessor;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.training.stats.StatsConfiguration;
 import org.hibernate.SessionFactory;
 
 @Module

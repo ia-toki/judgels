@@ -1,0 +1,42 @@
+package judgels.training.curriculum;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import judgels.api.training.curriculum.Curriculum;
+import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.model.CurriculumModel;
+import judgels.training.BaseTrainingIntegrationTests;
+import judgels.training.TrainingIntegrationTestComponent;
+import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+@WithHibernateSession(models = {CurriculumModel.class})
+public class CurriculumCreatorIntegrationTests extends BaseTrainingIntegrationTests {
+    private CurriculumStore curriculumStore;
+    private CurriculumCreator curriculumCreator;
+
+    @BeforeEach
+    void setUpSession(SessionFactory sessionFactory) {
+        TrainingIntegrationTestComponent component = createComponent(sessionFactory);
+        curriculumStore = component.curriculumStore();
+        curriculumCreator = new CurriculumCreator(curriculumStore);
+    }
+
+    @Test
+    void ensure_curriculum_exists() {
+        // initially, there is no curriculum
+        assertThat(curriculumStore.getCurriculum()).isEmpty();
+
+        curriculumCreator.ensureCurriculumExists();
+
+        // now, a curriculum exists
+        Curriculum curriculum = curriculumStore.getCurriculum().get();
+        assertThat(curriculum.getName()).isEqualTo("Curriculum");
+
+        curriculumCreator.ensureCurriculumExists();
+
+        // no new curriculum is created
+        assertThat(curriculumStore.getCurriculums()).hasSize(1);
+    }
+}
