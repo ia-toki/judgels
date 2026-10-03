@@ -7,7 +7,6 @@ include ':judgels-commons:judgels-service-core'
 
 include ':judgels-server-api'
 include ':judgels-server-app'
-include ':judgels-server-feign'
 include ':judgels-grader-api'
 include ':judgels-grader-app'
 include ':judgels-grader-engines'
