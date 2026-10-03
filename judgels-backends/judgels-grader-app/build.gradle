@@ -10,6 +10,7 @@ dependencies {
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.guava:guava:$guavaVersion"
+    implementation "io.dropwizard:dropwizard-core:$dropwizardVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
