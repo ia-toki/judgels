@@ -2,7 +2,6 @@ rootProject.name = 'judgels-backends'
 
 include ':judgels-commons:judgels-fs'
 include ':judgels-commons:judgels-mapper'
-include ':judgels-commons:judgels-messaging'
 include ':judgels-commons:judgels-service-core'
 
 include ':judgels-server-api'

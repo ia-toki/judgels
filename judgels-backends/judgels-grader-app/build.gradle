@@ -5,7 +5,6 @@ apply plugin: 'application'
 
 dependencies {
     implementation project(':judgels-commons:judgels-service-core')
-    implementation project(':judgels-commons:judgels-messaging')
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
 
