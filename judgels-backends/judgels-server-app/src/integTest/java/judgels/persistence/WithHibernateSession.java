@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

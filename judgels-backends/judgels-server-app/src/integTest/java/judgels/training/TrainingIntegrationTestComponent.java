@@ -2,9 +2,8 @@ package judgels.training;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
-import judgels.persistence.hibernate.JudgelsHibernateModule;
-import judgels.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.chapter.ChapterStore;
@@ -21,7 +20,6 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
         JudgelsModule.class,
         JudgelsHibernateModule.class,
         JudgelsPersistenceModule.class,
-        JudgelsServerHibernateDaoModule.class,
         TrainingItemSubmissionModule.class})
 @Singleton
 public interface TrainingIntegrationTestComponent {

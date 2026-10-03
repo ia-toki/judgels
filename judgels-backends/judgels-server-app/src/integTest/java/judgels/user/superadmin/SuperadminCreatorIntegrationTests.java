@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import judgels.api.user.User;
-import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.WithHibernateSession;
 import judgels.persistence.model.UserModel;
 import judgels.role.SuperadminRoleStore;
 import judgels.user.BaseUserIntegrationTests;

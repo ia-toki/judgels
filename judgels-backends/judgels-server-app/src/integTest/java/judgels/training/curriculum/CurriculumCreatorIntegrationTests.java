@@ -3,7 +3,7 @@ package judgels.training.curriculum;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.api.training.curriculum.Curriculum;
-import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.WithHibernateSession;
 import judgels.persistence.model.CurriculumModel;
 import judgels.training.BaseTrainingIntegrationTests;
 import judgels.training.TrainingIntegrationTestComponent;

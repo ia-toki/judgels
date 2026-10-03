@@ -1,17 +1,16 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import jakarta.inject.Inject;
 import java.time.Clock;
-import judgels.persistence.ActorProvider;
 import org.hibernate.SessionFactory;
 
-public class HibernateDaoData {
+public class DaoData {
     private final SessionFactory sessionFactory;
     private final Clock clock;
     private final ActorProvider actorProvider;
 
     @Inject
-    public HibernateDaoData(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+    public DaoData(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
         this.sessionFactory = sessionFactory;
         this.clock = clock;
         this.actorProvider = actorProvider;
