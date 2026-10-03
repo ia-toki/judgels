@@ -54,7 +54,7 @@ import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.scoreboard.ScoreboardIncrementalMarker;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
 import judgels.contest.supervisor.ContestSupervisorStore;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.grading.api.LanguageRestriction;
 import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.Page;

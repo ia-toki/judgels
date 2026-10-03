@@ -1,4 +1,4 @@
-package judgels.core.actor;
+package judgels.core;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.container.ContainerRequestContext;

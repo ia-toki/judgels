@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.api.training.problem.ProblemSetProblemInfo;
 import judgels.api.training.problem.TrainingProblemsResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.session.ActorChecker;

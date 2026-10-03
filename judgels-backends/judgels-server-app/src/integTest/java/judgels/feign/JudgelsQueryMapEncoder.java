@@ -1,4 +1,4 @@
-package judgels.core.feign;
+package judgels.feign;
 
 import feign.QueryMapEncoder;
 import feign.querymap.FieldQueryMapEncoder;

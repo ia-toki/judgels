@@ -35,7 +35,7 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;

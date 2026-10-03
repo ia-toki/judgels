@@ -32,7 +32,7 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;

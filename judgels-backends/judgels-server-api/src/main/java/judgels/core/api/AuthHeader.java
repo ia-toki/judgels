@@ -1,4 +1,4 @@
-package judgels.core.api.actor;
+package judgels.core.api;
 
 import org.immutables.value.Value;
 

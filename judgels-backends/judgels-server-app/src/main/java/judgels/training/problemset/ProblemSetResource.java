@@ -37,7 +37,7 @@ import judgels.api.training.problemset.ProblemSetUserProgressesResponse;
 import judgels.api.training.problemset.ProblemSetsResponse;
 import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.stats.ProblemProgress;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;

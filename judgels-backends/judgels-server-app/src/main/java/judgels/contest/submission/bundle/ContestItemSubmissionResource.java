@@ -49,7 +49,7 @@ import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.problem.ContestProblemRoleChecker;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.submission.ContestSubmissionRoleChecker;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
