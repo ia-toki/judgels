@@ -38,8 +38,8 @@ import judgels.contest.problem.ContestProblemStore;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 
 @Path("/api/v2/contests/{contestJid}/clarifications")
 public class ContestClarificationResource {

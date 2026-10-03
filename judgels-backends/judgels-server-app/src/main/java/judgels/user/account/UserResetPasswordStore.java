@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.Optional;
 import judgels.persistence.dao.UserResetPasswordDao;
 import judgels.persistence.model.UserResetPasswordModel;
-import judgels.service.RandomCodeGenerator;
+import judgels.user.RandomCodeGenerator;
 
 public class UserResetPasswordStore {
     private final UserResetPasswordDao userResetPasswordDao;

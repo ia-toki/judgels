@@ -18,8 +18,8 @@ import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemsResponse;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 
 @Path("/api/v4/problems")
 public class ProblemResource {

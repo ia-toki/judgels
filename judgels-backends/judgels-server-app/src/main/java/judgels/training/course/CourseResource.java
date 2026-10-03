@@ -25,8 +25,8 @@ import judgels.api.training.course.CourseUpdateData;
 import judgels.api.training.course.CoursesResponse;
 import judgels.api.training.curriculum.Curriculum;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.training.curriculum.CurriculumStore;
 import judgels.training.stats.StatsStore;
 

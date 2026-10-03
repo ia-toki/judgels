@@ -18,8 +18,8 @@ import judgels.api.contest.web.ContestWebConfig;
 import judgels.api.contest.web.ContestWithWebConfig;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 
 @Path("/api/v2/contest-web")
 public class ContestWebResource {

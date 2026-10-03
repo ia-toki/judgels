@@ -36,8 +36,8 @@ import judgels.api.user.UsersResponse;
 import judgels.api.user.UsersUpsertResponse;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.session.SessionStore;
 
 @Path("/api/v2/users")

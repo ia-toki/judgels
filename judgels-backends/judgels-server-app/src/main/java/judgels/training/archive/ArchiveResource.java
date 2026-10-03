@@ -20,8 +20,8 @@ import judgels.api.training.archive.ArchiveCreateData;
 import judgels.api.training.archive.ArchiveUpdateData;
 import judgels.api.training.archive.ArchivesResponse;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 
 @Path("/api/v2/archives")
 public class ArchiveResource {

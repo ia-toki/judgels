@@ -33,8 +33,8 @@ import judgels.api.training.chapter.lesson.ChapterLessonStatement;
 import judgels.api.training.chapter.lesson.ChapterLessonsResponse;
 import judgels.lesson.LessonService;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.training.chapter.ChapterNavigationStore;
 import judgels.training.chapter.ChapterStore;
 

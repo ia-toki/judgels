@@ -14,8 +14,8 @@ import judgels.api.setting.Settings;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.setting.SettingStore;
 import judgels.user.role.UserRoleStore;
 
