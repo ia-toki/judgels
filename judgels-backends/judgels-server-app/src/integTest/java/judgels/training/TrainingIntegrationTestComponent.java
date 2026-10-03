@@ -2,10 +2,10 @@ package judgels.training;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import judgels.persistence.JudgelsPersistenceModule;
+import judgels.persistence.hibernate.JudgelsHibernateModule;
+import judgels.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.JudgelsModule;
-import judgels.service.persistence.JudgelsPersistenceModule;
-import judgels.service.persistence.hibernate.JudgelsHibernateModule;
-import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.problem.ChapterProblemStore;

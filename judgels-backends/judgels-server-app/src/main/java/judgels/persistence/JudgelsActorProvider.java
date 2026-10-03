@@ -1,7 +1,7 @@
-package judgels.service.actor;
+package judgels.persistence;
 
 import java.util.Optional;
-import judgels.persistence.ActorProvider;
+import judgels.service.actor.PerRequestActorProvider;
 
 public class JudgelsActorProvider implements ActorProvider {
     @Override
