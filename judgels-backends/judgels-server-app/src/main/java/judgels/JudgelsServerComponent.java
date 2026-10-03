@@ -11,9 +11,9 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.JudgelsServerModule.class,
         judgels.service.JudgelsModule.class,
         judgels.service.JudgelsSchedulerModule.class,
-        judgels.service.persistence.JudgelsPersistenceModule.class,
-        judgels.service.persistence.hibernate.JudgelsHibernateModule.class,
-        judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule.class,
+        judgels.persistence.JudgelsPersistenceModule.class,
+        judgels.persistence.hibernate.JudgelsHibernateModule.class,
+        judgels.persistence.hibernate.JudgelsServerHibernateDaoModule.class,
 
         judgels.user.superadmin.SuperadminModule.class,
         judgels.user.avatar.UserAvatarModule.class,

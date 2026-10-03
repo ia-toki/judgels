@@ -26,11 +26,11 @@ import judgels.michael.problem.render.ProblemEditorialRenderResources;
 import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
+import judgels.persistence.JudgelsPersistenceModule;
+import judgels.persistence.hibernate.JudgelsHibernateModule;
+import judgels.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
-import judgels.service.persistence.JudgelsPersistenceModule;
-import judgels.service.persistence.hibernate.JudgelsHibernateModule;
-import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
 import judgels.submission.SubmissionModule;
 
 @Component(modules = {

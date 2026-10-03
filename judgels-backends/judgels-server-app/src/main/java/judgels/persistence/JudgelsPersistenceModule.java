@@ -1,10 +1,8 @@
-package judgels.service.persistence;
+package judgels.persistence;
 
 import dagger.Module;
 import dagger.Provides;
 import java.time.Clock;
-import judgels.persistence.ActorProvider;
-import judgels.service.actor.JudgelsActorProvider;
 
 @Module
 public class JudgelsPersistenceModule {

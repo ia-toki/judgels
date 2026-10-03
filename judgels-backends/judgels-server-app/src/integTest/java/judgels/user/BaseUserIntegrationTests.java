@@ -1,10 +1,10 @@
 package judgels.user;
 
 import java.time.Clock;
+import judgels.persistence.JudgelsPersistenceModule;
 import judgels.persistence.TestActorProvider;
 import judgels.persistence.TestClock;
-import judgels.service.persistence.JudgelsPersistenceModule;
-import judgels.service.persistence.hibernate.JudgelsHibernateModule;
+import judgels.persistence.hibernate.JudgelsHibernateModule;
 import org.hibernate.SessionFactory;
 
 public abstract class BaseUserIntegrationTests {
