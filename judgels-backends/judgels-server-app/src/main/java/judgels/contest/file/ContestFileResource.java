@@ -30,8 +30,8 @@ import judgels.contest.log.ContestLogger;
 import judgels.file.FileFs;
 import judgels.fs.FileSystem;
 import judgels.service.ServiceUtils;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

@@ -16,8 +16,8 @@ import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.api.user.rating.UserRatingUpdateData;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.user.UserRoleChecker;
 
 @Path("/api/v2/user-rating")

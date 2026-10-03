@@ -1,4 +1,4 @@
-package judgels.service;
+package judgels.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

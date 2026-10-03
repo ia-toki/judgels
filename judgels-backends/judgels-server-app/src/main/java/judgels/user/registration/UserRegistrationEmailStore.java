@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.persistence.dao.UserRegistrationEmailDao;
 import judgels.persistence.model.UserRegistrationEmailModel;
-import judgels.service.RandomCodeGenerator;
+import judgels.user.RandomCodeGenerator;
 
 public class UserRegistrationEmailStore {
     private final UserRegistrationEmailDao userRegistrationEmailDao;

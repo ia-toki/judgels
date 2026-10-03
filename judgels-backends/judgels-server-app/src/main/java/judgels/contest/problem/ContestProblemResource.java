@@ -41,8 +41,8 @@ import judgels.contest.module.ContestModuleStore;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.grading.api.LanguageRestriction;
 import judgels.problem.ProblemService;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.submission.programming.SubmissionStore;
 
 @Path("/api/v2/contests/{contestJid}/problems")

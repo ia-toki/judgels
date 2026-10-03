@@ -1,4 +1,4 @@
-package judgels.service;
+package judgels.user;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

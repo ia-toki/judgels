@@ -18,8 +18,8 @@ import judgels.api.training.curriculum.Curriculum;
 import judgels.api.training.curriculum.CurriculumUpdateData;
 import judgels.api.training.curriculum.CurriculumsResponse;
 import judgels.role.TrainingAdminRoleChecker;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 
 @Path("/api/v2/curriculums")
 public class CurriculumResource {

@@ -33,8 +33,8 @@ import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.user.UserStore;
 
 @Path("/api/v2/contests/{contestJid}/managers")

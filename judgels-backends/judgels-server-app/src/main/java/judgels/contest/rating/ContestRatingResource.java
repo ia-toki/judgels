@@ -40,8 +40,8 @@ import judgels.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.contest.scoreboard.ContestScoreboardStore;
 import judgels.contest.scoreboard.RawContestScoreboard;
 import judgels.profile.ProfileStore;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.user.UserStore;
 import judgels.user.rating.UserRatingStore;
 

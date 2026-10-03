@@ -18,8 +18,8 @@ import judgels.api.training.problem.ProblemSetProblemInfo;
 import judgels.api.training.problem.TrainingProblemsResponse;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
-import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
+import judgels.session.ActorChecker;
 import judgels.training.stats.ProblemDifficultyStore;
 import judgels.training.stats.StatsStore;
 
