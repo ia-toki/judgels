@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.core.api.JudgelsServiceException;
+import judgels.core.api.JudgelsApiException;
 
 public class ProblemSetErrors {
     private ProblemSetErrors() {}
@@ -14,21 +14,21 @@ public class ProblemSetErrors {
     public static final String ARCHIVE_SLUG_NOT_FOUND = "ArchiveSlugNotFound";
     public static final String CONTEST_SLUGS_NOT_ALLOWED = "ContestSlugsNotAllowed";
 
-    public static JudgelsServiceException slugAlreadyExists(String slug) {
+    public static JudgelsApiException slugAlreadyExists(String slug) {
         Map<String, Object> args = new HashMap<>();
         args.put("slug", slug);
-        return new JudgelsServiceException(Status.BAD_REQUEST, SLUG_ALREADY_EXISTS, args);
+        return new JudgelsApiException(Status.BAD_REQUEST, SLUG_ALREADY_EXISTS, args);
     }
 
-    public static JudgelsServiceException archiveSlugNotFound(String archiveSlug) {
+    public static JudgelsApiException archiveSlugNotFound(String archiveSlug) {
         Map<String, Object> args = new HashMap<>();
         args.put("archiveSlug", archiveSlug);
-        return new JudgelsServiceException(Status.BAD_REQUEST, ARCHIVE_SLUG_NOT_FOUND, args);
+        return new JudgelsApiException(Status.BAD_REQUEST, ARCHIVE_SLUG_NOT_FOUND, args);
     }
 
-    public static JudgelsServiceException contestSlugsNotAllowed(Set<String> contestSlugs) {
+    public static JudgelsApiException contestSlugsNotAllowed(Set<String> contestSlugs) {
         Map<String, Object> args = new HashMap<>();
         args.put("contestSlugs", contestSlugs.stream().collect(Collectors.joining(", ")));
-        return new JudgelsServiceException(Status.FORBIDDEN, CONTEST_SLUGS_NOT_ALLOWED, args);
+        return new JudgelsApiException(Status.FORBIDDEN, CONTEST_SLUGS_NOT_ALLOWED, args);
     }
 }

@@ -3,12 +3,12 @@ package judgels.core.api;
 import jakarta.ws.rs.core.Response;
 import java.util.Map;
 
-public class JudgelsServiceException extends RuntimeException {
+public class JudgelsApiException extends RuntimeException {
     private final int code;
     private final String message;
     private final Map<String, Object> args;
 
-    public JudgelsServiceException(Response.Status status, String message, Map<String, Object> args) {
+    public JudgelsApiException(Response.Status status, String message, Map<String, Object> args) {
         super((Throwable) null);
 
         this.code = status.getStatusCode();
@@ -16,7 +16,7 @@ public class JudgelsServiceException extends RuntimeException {
         this.args = args;
     }
 
-    public JudgelsServiceException(Response.Status status, String message) {
+    public JudgelsApiException(Response.Status status, String message) {
         this(status, message, null);
     }
 

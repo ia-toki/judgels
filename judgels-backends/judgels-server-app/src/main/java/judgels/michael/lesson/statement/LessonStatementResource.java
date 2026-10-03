@@ -1,8 +1,8 @@
 package judgels.michael.lesson.statement;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;
@@ -26,7 +26,7 @@ import judgels.api.lesson.Lesson;
 import judgels.api.lesson.LessonStatement;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.fs.FileInfo;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.EditStatementForm;
@@ -188,7 +188,7 @@ public class LessonStatementResource extends BaseLessonResource {
         checkAllowed(roleChecker.canView(actor, lesson));
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actor.getUserJid(), lesson.getJid(), filename);
-        return ServiceUtils.buildDownloadResponse(mediaUrl);
+        return JudgelsResponseBuilders.buildDownloadResponse(mediaUrl);
     }
 
     @GET

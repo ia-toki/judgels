@@ -1,8 +1,8 @@
 package judgels.michael.problem.programming.grading;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.core.ServiceUtils.checkAllowed;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkAllowed;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.List;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
-import judgels.core.ServiceUtils;
+import judgels.core.JudgelsResponseBuilders;
 import judgels.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.LanguageRestriction;
@@ -239,7 +239,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
         checkAllowed(roleChecker.canView(actor, problem));
 
         String testDataFileUrl = programmingProblemStore.getGradingTestDataFileURL(actor.getUserJid(), problem.getJid(), filename);
-        return ServiceUtils.buildDownloadResponse(testDataFileUrl);
+        return JudgelsResponseBuilders.buildDownloadResponse(testDataFileUrl);
     }
 
     @GET
@@ -328,7 +328,7 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
         checkAllowed(roleChecker.canView(actor, problem));
 
         String helperFileUrl = programmingProblemStore.getGradingHelperFileURL(actor.getUserJid(), problem.getJid(), filename);
-        return ServiceUtils.buildDownloadResponse(helperFileUrl);
+        return JudgelsResponseBuilders.buildDownloadResponse(helperFileUrl);
     }
 
     @GET

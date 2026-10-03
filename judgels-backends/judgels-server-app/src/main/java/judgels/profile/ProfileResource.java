@@ -1,7 +1,7 @@
 package judgels.profile;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;

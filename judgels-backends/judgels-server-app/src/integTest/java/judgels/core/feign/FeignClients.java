@@ -16,7 +16,7 @@ public class FeignClients {
                 .encoder(new FormEncoder(new JudgelsEncoder(new JacksonEncoder(JudgelsObjectMappers.OBJECT_MAPPER))))
                 .queryMapEncoder(new JudgelsQueryMapEncoder())
                 .decoder(new JudgelsDecoder(new JacksonDecoder(JudgelsObjectMappers.OBJECT_MAPPER)))
-                .errorDecoder(new JudgelsServiceErrorDecoder())
+                .errorDecoder(new JudgelsApiErrorDecoder())
                 .client(new OkHttpClient())
                 .target(clientClass, uri);
 

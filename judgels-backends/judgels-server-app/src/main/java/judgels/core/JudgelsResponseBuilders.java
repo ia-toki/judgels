@@ -5,8 +5,6 @@ import static jakarta.ws.rs.core.HttpHeaders.CONTENT_DISPOSITION;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.HttpHeaders.LAST_MODIFIED;
 
-import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,24 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-public class ServiceUtils {
-    private ServiceUtils() {}
-
-    public static <T> T checkFound(Optional<T> obj) {
-        return obj.orElseThrow(NotFoundException::new);
-    }
-
-    public static void checkAllowed(boolean allowed) {
-        if (!allowed) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public static void checkAllowed(Optional<String> reasonNotAllowed) {
-        if (reasonNotAllowed.isPresent()) {
-            throw new ForbiddenException(reasonNotAllowed.get());
-        }
-    }
+public class JudgelsResponseBuilders {
+    private JudgelsResponseBuilders() {}
 
     public static Response buildDownloadResponse(String fileUrl) {
         try {

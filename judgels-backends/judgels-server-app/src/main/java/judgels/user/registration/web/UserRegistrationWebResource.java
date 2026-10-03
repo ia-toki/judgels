@@ -1,7 +1,7 @@
 package judgels.user.registration.web;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.core.ServiceUtils.checkFound;
+import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
