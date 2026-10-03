@@ -1,6 +1,6 @@
 # Judgels
 
-Judgels is a platform where authors write problems and lessons; users solve the problems in contests and in training, and read the lessons in training. It runs as three apps: the server (`judgels-backends/judgels-server-app`), which does everything except grading programming submissions; the grader (`judgels-backends/judgels-grader-app`), which does that grading; and the client (`judgels-client`), the web app that users, authors and admins use.
+Judgels is a platform where authors write problems and lessons; users solve the problems in contests and in training, and read the lessons in training. It runs as three apps: the server, which does everything except grading programming submissions; the grader, which does that grading; and the client, the web app that users, authors and admins use.
 
 ## Language
 
@@ -17,7 +17,7 @@ The part of Judgels that hosts catalog problems and lessons for users: contest o
 A user's answer to a problem, or to one item of a bundle problem, made in a container. It is graded when it is made and again on each regrade; its latest grading gives its current verdict.
 
 **Grading**:
-Checking an answer against its problem to produce a verdict. Grading sees only the problem and the answer, never the submission, user or container behind it.
+Checking an answer against its problem to produce a verdict.
 
 ### Catalog
 
@@ -31,7 +31,7 @@ A problem solved by submitting source code, graded against its test data.
 A problem made of items (multiple-choice, short-answer or essay questions, plus statement-only items), each answered on its own.
 
 **Lesson**:
-A piece of reading material with its statements. It is in the catalog even though only training shows it today.
+A piece of reading material with its statements.
 
 **Test submission**:
 A submission an author makes against their own problem while writing it, outside any host.
@@ -65,8 +65,17 @@ _Avoid_: Problemset (in prose)
 **Container**:
 A place where catalog problems and lessons are hosted under an alias, and where submissions are made: a contest, a chapter or a problem set. A test submission's container is the problem itself.
 
-**Contest problem**, **Chapter problem**, **Problem set problem**, **Chapter lesson**:
-A catalog problem or lesson hosted in a container under an alias, with the settings that container gives it.
+**Contest problem**:
+A catalog problem hosted in a contest under an alias, with the settings the contest gives it.
+
+**Chapter problem**:
+A catalog problem hosted in a chapter under an alias, with the settings the chapter gives it.
+
+**Problem set problem**:
+A catalog problem hosted in a problem set under an alias, with the settings the problem set gives it.
+
+**Chapter lesson**:
+A catalog lesson hosted in a chapter under an alias.
 
 ### Grading
 
@@ -89,3 +98,7 @@ A user who can see, create and manage every problem.
 
 **Training admin**:
 A user who manages training, including every lesson.
+
+**System admin**:
+A user who manages every user, the roles users hold and the site settings.
+_Avoid_: User admin, account admin
