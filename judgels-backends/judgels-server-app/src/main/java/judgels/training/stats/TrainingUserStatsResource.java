@@ -18,7 +18,6 @@ import judgels.api.training.stats.UserTopStatsEntry;
 import judgels.api.training.stats.UserTopStatsResponse;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.stats.StatsStore;
 import judgels.user.UserStore;
 
 @Path("/api/v4/training/stats/users")

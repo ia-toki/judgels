@@ -5,11 +5,11 @@ import static judgels.api.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.problem.ProblemSetProblemData;
+import judgels.api.training.archive.ArchiveCreateData;
 import judgels.api.training.problem.ProblemSetProblemInfo;
+import judgels.api.training.problemset.ProblemSet;
+import judgels.api.training.problemset.ProblemSetCreateData;
+import judgels.api.training.problemset.problem.ProblemSetProblemData;
 import judgels.training.problem.TrainingProblemClient;
 import org.junit.jupiter.api.Test;
 

@@ -2,9 +2,9 @@ package judgels.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.ChapterCreateData;
-import judgels.api.chapter.ChapterUpdateData;
+import judgels.api.training.chapter.Chapter;
+import judgels.api.training.chapter.ChapterCreateData;
+import judgels.api.training.chapter.ChapterUpdateData;
 import org.junit.jupiter.api.Test;
 
 class ChapterApiIntegrationTests extends BaseTrainingApiIntegrationTests {

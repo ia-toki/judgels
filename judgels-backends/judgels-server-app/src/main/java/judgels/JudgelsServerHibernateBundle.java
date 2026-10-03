@@ -4,7 +4,6 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import judgels.persistence.model.ArchiveModel;
 import judgels.persistence.model.BundleGradingModel;
-import judgels.persistence.model.BundleItemSubmissionModel;
 import judgels.persistence.model.BundleSubmissionModel;
 import judgels.persistence.model.ChapterLessonModel;
 import judgels.persistence.model.ChapterModel;
@@ -29,7 +28,6 @@ import judgels.persistence.model.CurriculumModel;
 import judgels.persistence.model.LessonModel;
 import judgels.persistence.model.LessonPartnerModel;
 import judgels.persistence.model.ProblemContestModel;
-import judgels.persistence.model.ProblemLevelModel;
 import judgels.persistence.model.ProblemModel;
 import judgels.persistence.model.ProblemPartnerModel;
 import judgels.persistence.model.ProblemSetModel;
@@ -42,6 +40,8 @@ import judgels.persistence.model.SessionModel;
 import judgels.persistence.model.SettingModel;
 import judgels.persistence.model.StatsUserModel;
 import judgels.persistence.model.StatsUserProblemModel;
+import judgels.persistence.model.TrainingBundleItemSubmissionModel;
+import judgels.persistence.model.TrainingProblemLevelModel;
 import judgels.persistence.model.TrainingProgrammingGradingModel;
 import judgels.persistence.model.TrainingProgrammingSubmissionModel;
 import judgels.persistence.model.UserInfoModel;
@@ -100,9 +100,9 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 CourseChapterModel.class,
                 TrainingProgrammingGradingModel.class,
                 TrainingProgrammingSubmissionModel.class,
-                BundleItemSubmissionModel.class,
+                TrainingBundleItemSubmissionModel.class,
                 ProblemContestModel.class,
-                ProblemLevelModel.class,
+                TrainingProblemLevelModel.class,
                 ProblemSetModel.class,
                 ProblemSetProblemModel.class,
                 StatsUserModel.class,

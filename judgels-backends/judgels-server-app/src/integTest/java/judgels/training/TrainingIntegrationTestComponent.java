@@ -2,19 +2,19 @@ package judgels.training;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
-import judgels.archive.ArchiveStore;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.problem.ChapterProblemStore;
-import judgels.course.CourseStore;
-import judgels.course.chapter.CourseChapterStore;
-import judgels.curriculum.CurriculumStore;
-import judgels.problemset.ProblemSetStore;
-import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.service.JudgelsModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
 import judgels.service.persistence.hibernate.JudgelsHibernateModule;
 import judgels.service.persistence.hibernate.JudgelsServerHibernateDaoModule;
-import judgels.stats.StatsStore;
+import judgels.training.archive.ArchiveStore;
+import judgels.training.chapter.ChapterStore;
+import judgels.training.chapter.problem.ChapterProblemStore;
+import judgels.training.course.CourseStore;
+import judgels.training.course.chapter.CourseChapterStore;
+import judgels.training.curriculum.CurriculumStore;
+import judgels.training.problemset.ProblemSetStore;
+import judgels.training.problemset.problem.ProblemSetProblemStore;
+import judgels.training.stats.StatsStore;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 
 @Component(modules = {

@@ -1,19 +1,19 @@
 package judgels.api;
 
 import static judgels.api.problem.ProblemType.PROGRAMMING;
-import static judgels.api.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
-import static judgels.api.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
+import static judgels.api.training.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
+import static judgels.api.training.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
 import java.util.List;
-import judgels.api.archive.Archive;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.ProblemSetUpdateData;
-import judgels.api.problemset.problem.ProblemSetProblemData;
-import judgels.problemset.ProblemSetClient;
+import judgels.api.training.archive.Archive;
+import judgels.api.training.archive.ArchiveCreateData;
+import judgels.api.training.problemset.ProblemSet;
+import judgels.api.training.problemset.ProblemSetCreateData;
+import judgels.api.training.problemset.ProblemSetUpdateData;
+import judgels.api.training.problemset.problem.ProblemSetProblemData;
+import judgels.training.problemset.ProblemSetClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

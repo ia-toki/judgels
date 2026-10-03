@@ -1,11 +1,11 @@
 package judgels.api;
 
-import static judgels.api.archive.ArchiveErrors.SLUG_ALREADY_EXISTS;
+import static judgels.api.training.archive.ArchiveErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.api.archive.Archive;
-import judgels.api.archive.ArchiveCreateData;
-import judgels.api.archive.ArchiveUpdateData;
+import judgels.api.training.archive.Archive;
+import judgels.api.training.archive.ArchiveCreateData;
+import judgels.api.training.archive.ArchiveUpdateData;
 import org.junit.jupiter.api.Test;
 
 class ArchiveApiIntegrationTests extends BaseTrainingApiIntegrationTests {

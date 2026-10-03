@@ -6,14 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import jakarta.ws.rs.core.Form;
 import java.util.List;
 import java.util.Map;
-import judgels.api.archive.ArchiveCreateData;
 import judgels.api.problem.bundle.ItemType;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.ProblemSetCreateData;
-import judgels.api.problemset.problem.ProblemSetProblemData;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
 import judgels.api.submission.bundle.Verdict;
+import judgels.api.training.archive.ArchiveCreateData;
+import judgels.api.training.problemset.ProblemSet;
+import judgels.api.training.problemset.ProblemSetCreateData;
+import judgels.api.training.problemset.problem.ProblemSetProblemData;
 import judgels.training.submission.TrainingItemSubmissionClient;
 import org.junit.jupiter.api.Test;
 

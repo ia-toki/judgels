@@ -6,11 +6,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.persistence.dao.BundleItemSubmissionDao;
 import judgels.persistence.dao.ChapterProblemDao;
 import judgels.persistence.dao.ProblemDao;
 import judgels.persistence.dao.ProblemSetProblemDao;
 import judgels.persistence.dao.StatsUserProblemDao;
+import judgels.persistence.dao.TrainingBundleItemSubmissionDao;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.persistence.model.ProblemModel;
@@ -21,7 +21,7 @@ public class DeleteTrainingProblemTask extends Task {
     private final ProblemSetProblemDao problemSetProblemDao;
     private final TrainingProgrammingSubmissionDao programmingSubmissionDao;
     private final TrainingProgrammingGradingDao programmingGradingDao;
-    private final BundleItemSubmissionDao bundleItemSubmissionDao;
+    private final TrainingBundleItemSubmissionDao bundleItemSubmissionDao;
     private final StatsUserProblemDao statsUserProblemDao;
 
     public DeleteTrainingProblemTask(
@@ -30,7 +30,7 @@ public class DeleteTrainingProblemTask extends Task {
             ProblemSetProblemDao problemSetProblemDao,
             TrainingProgrammingSubmissionDao programmingSubmissionDao,
             TrainingProgrammingGradingDao programmingGradingDao,
-            BundleItemSubmissionDao bundleItemSubmissionDao,
+            TrainingBundleItemSubmissionDao bundleItemSubmissionDao,
             StatsUserProblemDao statsUserProblemDao) {
 
         super("delete-training-problem");

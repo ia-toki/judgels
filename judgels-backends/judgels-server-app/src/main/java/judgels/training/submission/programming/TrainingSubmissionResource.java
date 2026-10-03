@@ -24,28 +24,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.problem.ChapterProblem;
 import judgels.api.problem.ProblemInfo;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
-import judgels.api.problemset.ProblemSet;
-import judgels.api.problemset.problem.ProblemSetProblem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
 import judgels.api.submission.programming.SubmissionWithSource;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
-import judgels.api.training.submission.SubmissionConfig;
+import judgels.api.training.chapter.Chapter;
+import judgels.api.training.chapter.problem.ChapterProblem;
+import judgels.api.training.problemset.ProblemSet;
+import judgels.api.training.problemset.problem.ProblemSetProblem;
+import judgels.api.training.submission.TrainingSubmissionConfig;
 import judgels.api.training.submission.programming.TrainingSubmissionsResponse;
-import judgels.chapter.ChapterStore;
-import judgels.chapter.problem.ChapterProblemStore;
 import judgels.grading.api.GradingOptions;
 import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;
 import judgels.problem.ProblemService;
 import judgels.problem.ProblemUtils;
-import judgels.problemset.ProblemSetStore;
-import judgels.problemset.problem.ProblemSetProblemStore;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
@@ -53,6 +49,10 @@ import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.training.chapter.ChapterStore;
+import judgels.training.chapter.problem.ChapterProblemStore;
+import judgels.training.problemset.ProblemSetStore;
+import judgels.training.problemset.problem.ProblemSetProblemStore;
 import judgels.training.submission.TrainingSubmissionRoleChecker;
 import judgels.training.submission.TrainingSubmissionUtils;
 import judgels.user.UserStore;
@@ -113,7 +113,7 @@ public class TrainingSubmissionResource {
 
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
-        SubmissionConfig config = new SubmissionConfig.Builder()
+        TrainingSubmissionConfig config = new TrainingSubmissionConfig.Builder()
                 .canManage(canManage)
                 .problemJids(problemJids)
                 .build();

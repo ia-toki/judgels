@@ -4,17 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-import judgels.api.chapter.Chapter;
-import judgels.api.chapter.ChapterCreateData;
-import judgels.api.chapter.lesson.ChapterLessonData;
-import judgels.api.chapter.problem.ChapterProblemData;
-import judgels.api.course.Course;
-import judgels.api.course.CourseCreateData;
-import judgels.api.course.chapter.CourseChapter;
-import judgels.api.course.chapter.CourseChapterResponse;
-import judgels.api.course.chapter.CourseChapterUserProgressesData;
-import judgels.api.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.api.problem.ProblemType;
+import judgels.api.training.chapter.Chapter;
+import judgels.api.training.chapter.ChapterCreateData;
+import judgels.api.training.chapter.lesson.ChapterLessonData;
+import judgels.api.training.chapter.problem.ChapterProblemData;
+import judgels.api.training.course.Course;
+import judgels.api.training.course.CourseCreateData;
+import judgels.api.training.course.chapter.CourseChapter;
+import judgels.api.training.course.chapter.CourseChapterResponse;
+import judgels.api.training.course.chapter.CourseChapterUserProgressesData;
+import judgels.api.training.course.chapter.CourseChapterUserProgressesResponse;
 import org.junit.jupiter.api.Test;
 
 class CourseChapterClientIntegrationTests extends BaseTrainingApiIntegrationTests {

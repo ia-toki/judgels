@@ -15,13 +15,12 @@ import jakarta.ws.rs.QueryParam;
 import java.util.Optional;
 import java.util.Set;
 import judgels.api.training.problem.ProblemSetProblemInfo;
-import judgels.api.training.problem.ProblemsResponse;
-import judgels.difficulty.ProblemDifficultyStore;
+import judgels.api.training.problem.TrainingProblemsResponse;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.stats.StatsStore;
+import judgels.training.stats.StatsStore;
 
 @Path("/api/v4/training/problems")
 public class TrainingProblemResource {
@@ -38,7 +37,7 @@ public class TrainingProblemResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemsResponse getProblems(
+    public TrainingProblemsResponse getProblems(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("tags") Set<String> tags,
             @QueryParam("page") @DefaultValue("1") int pageNumber) {
@@ -48,7 +47,7 @@ public class TrainingProblemResource {
         // HACK: the query is very slow. In the meantime, when the number of problems is large,
         // we return empty and force the user to filter by tags.
         if (tags.isEmpty() && problemStore.getTotalProblems() > 1000) {
-            return new ProblemsResponse.Builder()
+            return new TrainingProblemsResponse.Builder()
                     .data(new Page.Builder<ProblemSetProblemInfo>().totalCount(0).build())
                     .build();
         }
@@ -61,7 +60,7 @@ public class TrainingProblemResource {
         Page<ProblemSetProblemInfo> problems = problemStore.getProblems(allowedProblemJids, pageNumber, PAGE_SIZE);
         var problemJids = Lists.transform(problems.getPage(), ProblemSetProblemInfo::getProblemJid);
 
-        return new ProblemsResponse.Builder()
+        return new TrainingProblemsResponse.Builder()
                 .data(problems)
                 .problemsMap(problemService.getProblems(problemJids))
                 .problemMetadatasMap(problemService.getProblemMetadatas(problemJids))
