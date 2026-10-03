@@ -2,8 +2,8 @@ package judgels.contest.log;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -31,9 +31,9 @@ import judgels.contest.ContestStore;
 import judgels.contest.contestant.ContestContestantStore;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
+import judgels.core.api.actor.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.user.UserStore;
 

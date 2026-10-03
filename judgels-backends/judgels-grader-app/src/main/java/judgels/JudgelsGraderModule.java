@@ -5,7 +5,7 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.time.Clock;
-import judgels.service.JudgelsBaseDataDir;
+import judgels.core.JudgelsBaseDataDir;
 
 @Module
 public class JudgelsGraderModule {

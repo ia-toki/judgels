@@ -2,7 +2,7 @@ package judgels.user.role;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkAllowed;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -20,8 +20,8 @@ import judgels.api.profile.Profile;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 import judgels.api.user.role.UserWithRole;
+import judgels.core.api.actor.AuthHeader;
 import judgels.profile.ProfileStore;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

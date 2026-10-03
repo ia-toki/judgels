@@ -2,8 +2,8 @@ package judgels.user.info;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -16,7 +16,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import judgels.api.user.User;
 import judgels.api.user.info.UserInfo;
-import judgels.service.api.actor.AuthHeader;
+import judgels.core.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

@@ -2,7 +2,7 @@ package judgels.session;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -21,7 +21,7 @@ import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.setting.SessionSettings;
 import judgels.api.user.User;
 import judgels.auth.google.GoogleAuth;
-import judgels.service.api.actor.AuthHeader;
+import judgels.core.api.actor.AuthHeader;
 import judgels.setting.SettingStore;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

@@ -1,0 +1,26 @@
+package judgels.core.feign;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Response;
+import feign.codec.ErrorDecoder;
+import java.io.IOException;
+import judgels.JudgelsObjectMappers;
+import judgels.core.api.JudgelsServiceError;
+import judgels.core.api.JudgelsServiceException;
+
+public class JudgelsServiceErrorDecoder implements ErrorDecoder {
+    private static final ObjectMapper MAPPER = JudgelsObjectMappers.OBJECT_MAPPER;
+
+    @Override
+    public Exception decode(String methodKey, Response response) {
+        try {
+            JudgelsServiceError error = MAPPER.readValue(response.body().asInputStream(), JudgelsServiceError.class);
+            return new JudgelsServiceException(
+                    jakarta.ws.rs.core.Response.Status.fromStatusCode(error.getCode()),
+                    error.getMessage(),
+                    error.getArgs());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

@@ -1,8 +1,8 @@
 package judgels.michael.problem.statement;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;
@@ -26,6 +26,7 @@ import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemStatement;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
+import judgels.core.ServiceUtils;
 import judgels.fs.FileInfo;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditStatementForm;
@@ -33,7 +34,6 @@ import judgels.michael.resource.EditStatementView;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.resource.ListStatementLanguagesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.service.ServiceUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

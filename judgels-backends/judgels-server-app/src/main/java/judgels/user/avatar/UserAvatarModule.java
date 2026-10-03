@@ -5,9 +5,9 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
+import judgels.core.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
-import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class UserAvatarModule {

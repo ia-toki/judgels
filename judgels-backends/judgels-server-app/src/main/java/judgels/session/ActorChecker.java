@@ -1,14 +1,14 @@
 package judgels.session;
 
-import static judgels.service.actor.Actors.GUEST;
+import static judgels.core.actor.Actors.GUEST;
 
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
 import judgels.api.session.Session;
-import judgels.service.actor.PerRequestActorProvider;
-import judgels.service.api.actor.AuthHeader;
+import judgels.core.actor.PerRequestActorProvider;
+import judgels.core.api.actor.AuthHeader;
 import org.eclipse.jetty.server.Response;
 
 public class ActorChecker {

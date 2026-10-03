@@ -9,8 +9,8 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import judgels.core.JudgelsBaseDataDir;
 import judgels.messaging.MessageListener;
-import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class GradingModule {

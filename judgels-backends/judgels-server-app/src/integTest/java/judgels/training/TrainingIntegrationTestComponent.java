@@ -2,9 +2,9 @@ package judgels.training;
 
 import dagger.Component;
 import jakarta.inject.Singleton;
+import judgels.core.JudgelsModule;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
-import judgels.service.JudgelsModule;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.problem.ChapterProblemStore;

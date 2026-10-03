@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import judgels.api.contest.log.ContestLog;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
-import judgels.service.JudgelsScheduler;
+import judgels.core.JudgelsScheduler;
 
 @Module
 public class ContestLogModule {

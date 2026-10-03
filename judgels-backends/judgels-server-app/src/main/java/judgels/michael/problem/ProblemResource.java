@@ -1,7 +1,7 @@
 package judgels.michael.problem;
 
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
