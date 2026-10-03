@@ -1,4 +1,4 @@
-package judgels.resource;
+package judgels.catalog;
 
 import dagger.Module;
 import dagger.Provides;
@@ -10,13 +10,13 @@ import judgels.git.Git;
 import judgels.git.LocalGit;
 import judgels.lesson.LessonFs;
 import judgels.lesson.LessonGit;
-import judgels.problem.base.ProblemFs;
-import judgels.problem.base.ProblemGit;
+import judgels.problem.ProblemFs;
+import judgels.problem.ProblemGit;
 import judgels.service.JudgelsBaseDataDir;
 
 @Module
-public class ResourceModule {
-    private ResourceModule() {}
+public class CatalogModule {
+    private CatalogModule() {}
 
     @Provides
     @Singleton

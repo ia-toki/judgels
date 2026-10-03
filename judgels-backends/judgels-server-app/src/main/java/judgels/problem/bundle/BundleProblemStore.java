@@ -5,7 +5,7 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import judgels.api.problem.bundle.BundleItemsConfig;
 import judgels.fs.FileSystem;
-import judgels.problem.base.ProblemFs;
+import judgels.problem.ProblemFs;
 
 public final class BundleProblemStore extends BaseBundleProblemStore {
     private final ObjectMapper mapper;

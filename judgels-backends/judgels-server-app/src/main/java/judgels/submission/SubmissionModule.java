@@ -15,7 +15,6 @@ import judgels.messaging.MessageClient;
 import judgels.messaging.MessageListener;
 import judgels.persistence.dao.ProgrammingGradingDao;
 import judgels.persistence.dao.ProgrammingSubmissionDao;
-import judgels.problem.base.submission.SubmissionFs;
 import judgels.service.JudgelsBaseDataDir;
 import judgels.service.JudgelsScheduler;
 import judgels.submission.programming.BaseSubmissionStore;

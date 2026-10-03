@@ -3,7 +3,7 @@ package judgels.michael.template;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.problem.base.tag.ProblemTags;
+import judgels.problem.tag.ProblemTags;
 
 public class SearchProblemsWidget {
     private final int pageNumber;

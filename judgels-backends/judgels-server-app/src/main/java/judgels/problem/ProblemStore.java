@@ -1,4 +1,4 @@
-package judgels.problem.base;
+package judgels.problem;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -26,7 +26,7 @@ import judgels.persistence.dao.ProblemPartnerDao;
 import judgels.persistence.dao.ProblemSetterDao;
 import judgels.persistence.model.ProblemModel;
 import judgels.persistence.model.ProblemSetterModel;
-import judgels.problem.base.tag.ProblemTags;
+import judgels.problem.tag.ProblemTags;
 
 public class ProblemStore extends BaseProblemStore {
     private final Git problemGit;

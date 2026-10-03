@@ -1,4 +1,4 @@
-package judgels.problem.base.partner;
+package judgels.problem.partner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.problem.partner.ProblemPartnerChildConfig;
 import judgels.api.problem.partner.ProblemPartnerConfig;
-import judgels.api.resource.Partner;
-import judgels.api.resource.PartnerPermission;
 import judgels.persistence.dao.ProblemPartnerDao;
 import judgels.persistence.model.ProblemPartnerModel;
 

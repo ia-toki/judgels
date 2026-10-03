@@ -1,4 +1,4 @@
-package judgels.problem.base.tag;
+package judgels.problem.tag;
 
 import static java.util.stream.Collectors.toSet;
 

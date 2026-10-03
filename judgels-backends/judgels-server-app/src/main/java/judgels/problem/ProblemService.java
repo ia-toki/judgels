@@ -1,7 +1,7 @@
 package judgels.problem;
 
 import static java.util.stream.Collectors.toMap;
-import static judgels.resource.LanguageUtils.simplifyLanguageCode;
+import static judgels.catalog.LanguageUtils.simplifyLanguageCode;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,16 +28,15 @@ import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.programming.ProblemLimits;
 import judgels.api.problem.programming.ProblemSkeleton;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.catalog.StatementLanguageStatus;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.ScoringConfig;
-import judgels.problem.base.ProblemStore;
-import judgels.problem.base.editorial.ProblemEditorialStore;
-import judgels.problem.base.statement.ProblemStatementStore;
-import judgels.problem.base.tag.ProblemTagStore;
 import judgels.problem.bundle.ItemProcessorRegistry;
 import judgels.problem.bundle.item.BundleItemStore;
+import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.programming.ProgrammingProblemStore;
-import judgels.resource.StatementLanguageStatus;
+import judgels.problem.statement.ProblemStatementStore;
+import judgels.problem.tag.ProblemTagStore;
 import judgels.role.ProblemAdminRoleChecker;
 
 public class ProblemService {

@@ -1,4 +1,4 @@
-package judgels.problem.base.editorial;
+package judgels.problem.editorial;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemEditorial;
+import judgels.catalog.StatementLanguageStatus;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
-import judgels.problem.base.BaseProblemStore;
-import judgels.problem.base.ProblemFs;
-import judgels.resource.StatementLanguageStatus;
+import judgels.problem.BaseProblemStore;
+import judgels.problem.ProblemFs;
 
 public class ProblemEditorialStore extends BaseProblemStore {
     @Inject

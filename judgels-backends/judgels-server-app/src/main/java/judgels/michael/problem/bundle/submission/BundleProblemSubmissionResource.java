@@ -28,8 +28,8 @@ import judgels.api.submission.bundle.BundleSubmission;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
-import judgels.problem.bundle.submission.BundleSubmissionClient;
-import judgels.problem.bundle.submission.BundleSubmissionStore;
+import judgels.submission.bundle.BundleSubmissionClient;
+import judgels.submission.bundle.BundleSubmissionStore;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {

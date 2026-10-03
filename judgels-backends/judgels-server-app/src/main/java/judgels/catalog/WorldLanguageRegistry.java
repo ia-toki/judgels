@@ -1,4 +1,4 @@
-package judgels.resource;
+package judgels.catalog;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

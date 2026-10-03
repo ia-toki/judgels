@@ -2,10 +2,10 @@ package judgels.michael.problem;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.grading.engines.GradingEngineRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class NewProblemView extends TemplateView {
     public NewProblemView(HtmlTemplate template, NewProblemForm form) {

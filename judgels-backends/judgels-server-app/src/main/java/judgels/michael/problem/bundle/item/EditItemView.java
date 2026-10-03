@@ -4,11 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.problem.bundle.BundleItem;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 import judgels.problem.bundle.item.ItemEngineRegistry;
-import judgels.resource.WorldLanguageRegistry;
 
 public class EditItemView extends TemplateView {
     private final BundleItem item;

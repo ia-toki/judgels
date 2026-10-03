@@ -1,4 +1,4 @@
-package judgels.resource;
+package judgels.catalog;
 
 public class LanguageUtils {
     private LanguageUtils() {}

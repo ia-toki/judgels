@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.actor.Actor;
+import judgels.api.catalog.Partner;
 import judgels.api.problem.Problem;
 import judgels.api.profile.Profile;
-import judgels.api.resource.Partner;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.base.partner.ProblemPartnerStore;
+import judgels.problem.partner.ProblemPartnerStore;
 
 @Path("/problems/{problemId}/partners")
 public class ProblemPartnerResource extends BaseProblemResource {

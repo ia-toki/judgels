@@ -1,4 +1,4 @@
-package judgels.problem.bundle.submission;
+package judgels.submission.bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -16,8 +16,8 @@ import judgels.persistence.dao.BundleGradingDao;
 import judgels.persistence.dao.BundleSubmissionDao;
 import judgels.persistence.model.BundleGradingModel;
 import judgels.persistence.model.BundleSubmissionModel;
-import judgels.problem.base.submission.SubmissionFs;
 import judgels.problem.bundle.grading.BundleProblemGrader;
+import judgels.submission.SubmissionFs;
 
 public class BundleSubmissionClient {
     private final ObjectMapper mapper;

@@ -14,7 +14,7 @@ import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.bundle.ItemType;
 import judgels.fs.FileSystem;
 import judgels.persistence.JidGenerator;
-import judgels.problem.base.ProblemFs;
+import judgels.problem.ProblemFs;
 import judgels.problem.bundle.BaseBundleProblemStore;
 
 public class BundleItemStore extends BaseBundleProblemStore {

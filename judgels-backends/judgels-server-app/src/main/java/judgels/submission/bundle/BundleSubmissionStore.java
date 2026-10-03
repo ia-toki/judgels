@@ -1,4 +1,4 @@
-package judgels.problem.bundle.submission;
+package judgels.submission.bundle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

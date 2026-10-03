@@ -1,4 +1,4 @@
-package judgels.problem.base.version;
+package judgels.problem.version;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
@@ -9,9 +9,9 @@ import judgels.git.Git;
 import judgels.git.GitCommit;
 import judgels.persistence.dao.ProblemDao;
 import judgels.persistence.model.ProblemModel;
-import judgels.problem.base.BaseProblemStore;
-import judgels.problem.base.ProblemFs;
-import judgels.problem.base.ProblemGit;
+import judgels.problem.BaseProblemStore;
+import judgels.problem.ProblemFs;
+import judgels.problem.ProblemGit;
 
 public class ProblemVersionStore extends BaseProblemStore {
     private final Git problemGit;

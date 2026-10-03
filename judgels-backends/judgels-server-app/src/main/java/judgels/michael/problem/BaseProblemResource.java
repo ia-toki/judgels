@@ -8,10 +8,10 @@ import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemType;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.base.ProblemRoleChecker;
-import judgels.problem.base.ProblemStore;
-import judgels.problem.base.editorial.ProblemEditorialStore;
-import judgels.problem.base.statement.ProblemStatementStore;
+import judgels.problem.ProblemRoleChecker;
+import judgels.problem.ProblemStore;
+import judgels.problem.editorial.ProblemEditorialStore;
+import judgels.problem.statement.ProblemStatementStore;
 import judgels.profile.ProfileStore;
 import judgels.user.UserStore;
 

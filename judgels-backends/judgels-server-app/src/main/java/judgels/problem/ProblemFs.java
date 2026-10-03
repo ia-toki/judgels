@@ -1,4 +1,4 @@
-package judgels.problem.base;
+package judgels.problem;
 
 import jakarta.inject.Qualifier;
 import java.lang.annotation.ElementType;

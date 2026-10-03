@@ -1,9 +1,9 @@
 package judgels.michael.lesson;
 
 import java.util.Map;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class NewLessonView extends TemplateView {
     public NewLessonView(HtmlTemplate template, NewLessonForm form) {

@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.lesson.LessonStatement;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class ViewStatementView extends TemplateView {
     private final LessonStatement statement;

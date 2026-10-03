@@ -1,10 +1,10 @@
 package judgels.michael.resource;
 
 import java.util.Map;
+import judgels.catalog.StatementLanguageStatus;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.StatementLanguageStatus;
-import judgels.resource.WorldLanguageRegistry;
 
 public class ListStatementLanguagesView extends TemplateView {
     private final Map<String, StatementLanguageStatus> availableLanguages;

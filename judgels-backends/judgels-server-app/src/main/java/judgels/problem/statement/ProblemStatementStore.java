@@ -1,4 +1,4 @@
-package judgels.problem.base.statement;
+package judgels.problem.statement;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 import judgels.api.problem.ProblemStatement;
 import judgels.api.problem.ProblemType;
 import judgels.api.problem.programming.ProblemSkeleton;
+import judgels.catalog.StatementLanguageStatus;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.grading.languages.GradingLanguageRegistry;
-import judgels.problem.base.BaseProblemStore;
-import judgels.problem.base.ProblemFs;
+import judgels.problem.BaseProblemStore;
+import judgels.problem.ProblemFs;
 import judgels.problem.bundle.statement.BundleProblemStatementUtils;
 import judgels.problem.programming.statement.ProgrammingProblemStatementUtils;
-import judgels.resource.StatementLanguageStatus;
 import org.apache.commons.io.FilenameUtils;
 
 public class ProblemStatementStore extends BaseProblemStore {

@@ -24,7 +24,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.grading.GradingModule.class,
         judgels.file.FileModule.class,
 
-        judgels.resource.ResourceModule.class,
+        judgels.catalog.CatalogModule.class,
         judgels.submission.SubmissionModule.class,
 
         judgels.contest.submission.programming.ContestSubmissionModule.class,
@@ -60,7 +60,7 @@ public interface JudgelsServerComponent {
     judgels.profile.ProfileResource profileResource();
 
     judgels.problem.ProblemResource problemResource();
-    judgels.problem.base.ProblemRenderResource problemRenderResource();
+    judgels.problem.ProblemRenderResource problemRenderResource();
     judgels.lesson.LessonResource lessonResource();
     judgels.lesson.LessonRenderResource lessonRenderResource();
 

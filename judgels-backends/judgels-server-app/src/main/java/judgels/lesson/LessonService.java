@@ -1,6 +1,6 @@
 package judgels.lesson;
 
-import static judgels.resource.LanguageUtils.simplifyLanguageCode;
+import static judgels.catalog.LanguageUtils.simplifyLanguageCode;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 import judgels.api.lesson.Lesson;
 import judgels.api.lesson.LessonInfo;
 import judgels.api.lesson.LessonStatement;
+import judgels.catalog.StatementLanguageStatus;
 import judgels.lesson.statement.LessonStatementStore;
-import judgels.resource.StatementLanguageStatus;
 import judgels.role.ProblemAdminRoleChecker;
 
 public class LessonService {

@@ -3,11 +3,10 @@ package judgels.problem;
 import jakarta.inject.Inject;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemType;
-import judgels.problem.base.ProblemStore;
-import judgels.problem.base.statement.ProblemStatementStore;
-import judgels.problem.base.tag.ProblemTagStore;
 import judgels.problem.bundle.BundleProblemStore;
 import judgels.problem.programming.ProgrammingProblemStore;
+import judgels.problem.statement.ProblemStatementStore;
+import judgels.problem.tag.ProblemTagStore;
 
 public class ProblemCreator {
     private final ProblemStore problemStore;
