@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.lesson.partner.LessonPartnerConfig;
-import judgels.api.resource.Partner;
-import judgels.api.resource.PartnerPermission;
 import judgels.persistence.dao.LessonPartnerDao;
 import judgels.persistence.model.LessonPartnerModel;
 

@@ -3,9 +3,9 @@ package judgels.lesson;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.api.actor.Actor;
+import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.lesson.Lesson;
-import judgels.api.resource.Partner;
-import judgels.api.resource.PartnerPermission;
 import judgels.lesson.partner.LessonPartnerStore;
 import judgels.role.TrainingAdminRoleChecker;
 

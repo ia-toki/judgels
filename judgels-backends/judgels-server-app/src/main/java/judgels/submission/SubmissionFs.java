@@ -1,4 +1,4 @@
-package judgels.problem.base.submission;
+package judgels.submission;
 
 import jakarta.inject.Qualifier;
 import java.lang.annotation.Retention;

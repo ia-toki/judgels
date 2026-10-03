@@ -10,8 +10,8 @@ import judgels.git.GitCommit;
 import judgels.lesson.BaseLessonStore;
 import judgels.persistence.dao.LessonDao;
 import judgels.persistence.model.LessonModel;
-import judgels.problem.base.ProblemFs;
-import judgels.problem.base.ProblemGit;
+import judgels.problem.ProblemFs;
+import judgels.problem.ProblemGit;
 
 public class LessonVersionStore extends BaseLessonStore {
     private final Git lessonGit;

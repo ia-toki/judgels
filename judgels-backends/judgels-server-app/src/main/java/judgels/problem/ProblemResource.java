@@ -17,8 +17,6 @@ import java.util.Set;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemsResponse;
 import judgels.persistence.api.Page;
-import judgels.problem.base.ProblemRoleChecker;
-import judgels.problem.base.ProblemStore;
 import judgels.profile.ProfileStore;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;

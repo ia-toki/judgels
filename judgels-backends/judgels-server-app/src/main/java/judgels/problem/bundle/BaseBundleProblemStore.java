@@ -3,7 +3,7 @@ package judgels.problem.bundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.file.Path;
 import judgels.fs.FileSystem;
-import judgels.problem.base.BaseProblemStore;
+import judgels.problem.BaseProblemStore;
 
 public abstract class BaseBundleProblemStore extends BaseProblemStore {
     protected BaseBundleProblemStore(ObjectMapper mapper, FileSystem fs) {

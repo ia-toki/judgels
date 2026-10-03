@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.problem.ProblemEditorial;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class ViewEditorialView extends TemplateView {
     private final ProblemEditorial editorial;

@@ -27,8 +27,8 @@ import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.base.tag.ProblemTagStore;
-import judgels.problem.base.version.ProblemVersionStore;
+import judgels.problem.tag.ProblemTagStore;
+import judgels.problem.version.ProblemVersionStore;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {

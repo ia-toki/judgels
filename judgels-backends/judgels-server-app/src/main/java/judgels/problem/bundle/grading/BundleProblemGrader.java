@@ -10,10 +10,10 @@ import judgels.api.problem.bundle.ItemType;
 import judgels.api.submission.bundle.BundleAnswer;
 import judgels.api.submission.bundle.BundleGradingResult;
 import judgels.api.submission.bundle.ItemGradingResult;
-import judgels.problem.base.statement.ProblemStatementStore;
 import judgels.problem.bundle.item.BundleItemStore;
 import judgels.problem.bundle.item.ItemEngine;
 import judgels.problem.bundle.item.ItemEngineRegistry;
+import judgels.problem.statement.ProblemStatementStore;
 
 public final class BundleProblemGrader {
     private final BundleItemStore itemStore;

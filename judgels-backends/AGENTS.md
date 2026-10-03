@@ -4,7 +4,7 @@ Server packages, DTO packages (`judgels.api.…`), Feign clients and client API 
 
 | Layer | Packages | API paths |
 |---|---|---|
-| Catalog | `judgels.problem.*`, `judgels.lesson.*` | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
+| Catalog | `judgels.problem.*`, `judgels.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
 | Host | `judgels.contest.*`, `judgels.training.*` | `/api/v2/contests/...`; training at `/api/v2/{curriculums,courses,chapters,archives,problemsets}/...` and `/api/v4/training/...` |
 | Submission | `judgels.submission.*` | none |
 | Grading | `judgels.grading.*` | none |

@@ -1,12 +1,12 @@
-package judgels.problem.base;
+package judgels.problem;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
 import judgels.api.actor.Actor;
+import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.problem.Problem;
-import judgels.api.resource.Partner;
-import judgels.api.resource.PartnerPermission;
-import judgels.problem.base.partner.ProblemPartnerStore;
+import judgels.problem.partner.ProblemPartnerStore;
 import judgels.role.ProblemAdminRoleChecker;
 
 public class ProblemRoleChecker {

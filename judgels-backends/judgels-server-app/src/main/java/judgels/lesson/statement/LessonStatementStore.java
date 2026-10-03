@@ -12,13 +12,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.lesson.LessonStatement;
+import judgels.catalog.StatementLanguageStatus;
 import judgels.fs.FileInfo;
 import judgels.fs.FileSystem;
 import judgels.lesson.BaseLessonStore;
 import judgels.lesson.LessonFs;
 import judgels.persistence.dao.LessonDao;
-import judgels.problem.base.statement.ProblemStatementUtils;
-import judgels.resource.StatementLanguageStatus;
+import judgels.problem.statement.ProblemStatementUtils;
 
 public class LessonStatementStore extends BaseLessonStore {
     private final LessonDao lessonDao;

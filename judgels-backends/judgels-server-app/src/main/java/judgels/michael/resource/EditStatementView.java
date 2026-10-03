@@ -3,9 +3,9 @@ package judgels.michael.resource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class EditStatementView extends TemplateView {
     private final String language;

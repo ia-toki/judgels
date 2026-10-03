@@ -1,9 +1,9 @@
 package judgels.michael.problem.editorial;
 
 import java.util.Map;
+import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.resource.WorldLanguageRegistry;
 
 public class NewEditorialView extends TemplateView {
     private final boolean canEdit;

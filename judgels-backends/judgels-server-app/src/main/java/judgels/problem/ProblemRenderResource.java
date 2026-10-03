@@ -1,4 +1,4 @@
-package judgels.problem.base;
+package judgels.problem;
 
 import static judgels.service.ServiceUtils.checkFound;
 
@@ -10,8 +10,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import judgels.problem.base.editorial.ProblemEditorialStore;
-import judgels.problem.base.statement.ProblemStatementStore;
+import judgels.problem.editorial.ProblemEditorialStore;
+import judgels.problem.statement.ProblemStatementStore;
 import judgels.service.ServiceUtils;
 
 @Path("/api/v2/problems/{problemJid}")

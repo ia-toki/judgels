@@ -1,4 +1,4 @@
-package judgels.api.resource;
+package judgels.api.catalog;
 
 import org.immutables.value.Value;
 

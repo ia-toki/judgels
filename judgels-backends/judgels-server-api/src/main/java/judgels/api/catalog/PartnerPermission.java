@@ -1,4 +1,4 @@
-package judgels.resource;
+package judgels.api.catalog;
 
 public enum PartnerPermission {
     VIEW,

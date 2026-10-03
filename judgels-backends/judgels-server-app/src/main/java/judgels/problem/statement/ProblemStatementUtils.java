@@ -1,4 +1,4 @@
-package judgels.problem.base.statement;
+package judgels.problem.statement;
 
 import java.util.Map;
 

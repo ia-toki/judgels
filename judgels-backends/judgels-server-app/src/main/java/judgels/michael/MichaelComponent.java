@@ -4,6 +4,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.auth.AuthModule;
+import judgels.catalog.CatalogModule;
 import judgels.grading.GradingModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.index.IndexResource;
@@ -25,7 +26,6 @@ import judgels.michael.problem.render.ProblemEditorialRenderResources;
 import judgels.michael.problem.render.ProblemStatementRenderResources;
 import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
-import judgels.resource.ResourceModule;
 import judgels.service.JudgelsModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.persistence.JudgelsPersistenceModule;
@@ -48,7 +48,7 @@ import judgels.submission.SubmissionModule;
         AuthModule.class,
         RabbitMQModule.class,
         GradingModule.class,
-        ResourceModule.class,
+        CatalogModule.class,
 
         // Features
         SubmissionModule.class})

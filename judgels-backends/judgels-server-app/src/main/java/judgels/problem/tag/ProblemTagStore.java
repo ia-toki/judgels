@@ -1,7 +1,7 @@
-package judgels.problem.base.tag;
+package judgels.problem.tag;
 
-import static judgels.resource.StatementLanguageStatus.DISABLED;
-import static judgels.resource.StatementLanguageStatus.ENABLED;
+import static judgels.catalog.StatementLanguageStatus.DISABLED;
+import static judgels.catalog.StatementLanguageStatus.ENABLED;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import judgels.grading.api.GradingConfig;
 import judgels.persistence.dao.ProblemTagDao;
 import judgels.persistence.model.ProblemTagModel;
-import judgels.problem.base.editorial.ProblemEditorialStore;
-import judgels.problem.base.statement.ProblemStatementStore;
+import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.programming.ProgrammingProblemStore;
+import judgels.problem.statement.ProblemStatementStore;
 
 public class ProblemTagStore {
     private final ProblemTagDao tagDao;

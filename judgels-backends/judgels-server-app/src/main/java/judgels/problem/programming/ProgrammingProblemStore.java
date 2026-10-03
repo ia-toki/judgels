@@ -15,8 +15,8 @@ import judgels.grading.api.LanguageRestriction;
 import judgels.grading.api.Osn2024Hacks;
 import judgels.grading.api.ScoringConfig;
 import judgels.grading.engines.GradingEngineRegistry;
-import judgels.problem.base.BaseProblemStore;
-import judgels.problem.base.ProblemFs;
+import judgels.problem.BaseProblemStore;
+import judgels.problem.ProblemFs;
 
 public final class ProgrammingProblemStore extends BaseProblemStore {
     @Inject
