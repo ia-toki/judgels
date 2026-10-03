@@ -17,7 +17,7 @@ import jakarta.ws.rs.Produces;
 import judgels.api.training.curriculum.Curriculum;
 import judgels.api.training.curriculum.CurriculumUpdateData;
 import judgels.api.training.curriculum.CurriculumsResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 

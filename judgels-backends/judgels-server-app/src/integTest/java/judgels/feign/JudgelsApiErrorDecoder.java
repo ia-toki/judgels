@@ -1,4 +1,4 @@
-package judgels.core.feign;
+package judgels.feign;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;

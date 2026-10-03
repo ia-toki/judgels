@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemsResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;

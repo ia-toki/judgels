@@ -16,7 +16,7 @@ import jakarta.ws.rs.QueryParam;
 import java.util.List;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.api.user.rating.UserRatingUpdateData;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.user.UserRoleChecker;
 

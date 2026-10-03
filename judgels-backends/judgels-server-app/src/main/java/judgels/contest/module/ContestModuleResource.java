@@ -22,7 +22,7 @@ import judgels.api.contest.module.ContestModulesConfig;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 

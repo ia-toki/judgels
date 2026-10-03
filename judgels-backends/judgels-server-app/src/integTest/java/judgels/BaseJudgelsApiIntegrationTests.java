@@ -39,7 +39,7 @@ import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
 import judgels.core.BaseJudgelsAppIntegrationTests;
 import judgels.core.JudgelsAppConfiguration;
-import judgels.core.feign.FeignClients;
+import judgels.feign.FeignClients;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.mailer.MailerConfiguration;
 import judgels.messaging.rabbitmq.RabbitMQConfiguration;

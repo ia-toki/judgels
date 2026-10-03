@@ -33,7 +33,7 @@ import judgels.api.training.course.chapter.CourseChapterResponse;
 import judgels.api.training.course.chapter.CourseChapterUserProgressesData;
 import judgels.api.training.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.api.training.course.chapter.CourseChaptersResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 import judgels.training.chapter.ChapterStore;

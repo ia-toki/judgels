@@ -20,7 +20,7 @@ import judgels.api.profile.Profile;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 import judgels.api.user.role.UserWithRole;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 import judgels.user.UserRoleChecker;

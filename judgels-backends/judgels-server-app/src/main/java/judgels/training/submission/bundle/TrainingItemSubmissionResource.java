@@ -38,7 +38,7 @@ import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.submission.TrainingSubmissionConfig;
 import judgels.api.training.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.training.submission.bundle.TrainingSubmissionSummaryResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;

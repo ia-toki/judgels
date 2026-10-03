@@ -1,4 +1,4 @@
-package judgels.core.api.actor;
+package judgels.core.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

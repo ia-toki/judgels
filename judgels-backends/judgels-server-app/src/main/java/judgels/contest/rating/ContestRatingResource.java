@@ -39,7 +39,7 @@ import judgels.contest.module.ContestModuleStore;
 import judgels.contest.scoreboard.ContestScoreboardBuilder;
 import judgels.contest.scoreboard.ContestScoreboardStore;
 import judgels.contest.scoreboard.RawContestScoreboard;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 import judgels.user.UserStore;

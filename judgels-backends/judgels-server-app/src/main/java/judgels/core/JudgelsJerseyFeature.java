@@ -1,8 +1,7 @@
-package judgels.core.jersey;
+package judgels.core;
 
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
-import judgels.core.actor.PerRequestActorFilter;
 
 public enum JudgelsJerseyFeature implements Feature {
     INSTANCE;

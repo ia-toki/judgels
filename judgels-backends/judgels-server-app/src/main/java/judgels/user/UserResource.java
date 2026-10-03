@@ -34,7 +34,7 @@ import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.UsersResponse;
 import judgels.api.user.UsersUpsertResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import judgels.session.ActorChecker;

@@ -18,7 +18,7 @@ import judgels.api.contest.web.ContestWebConfig;
 import judgels.api.contest.web.ContestWithWebConfig;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.session.ActorChecker;
 
 @Path("/api/v2/contest-web")
