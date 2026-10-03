@@ -1,3 +1,9 @@
+# Domain language
+
+`CONTEXT.md` defines the domain terms. Read it before naming anything in the code.
+
+Before placing or naming backend code (a package, an API path, a DTO or a Feign client), read `judgels-backends/AGENTS.md`, which applies those terms to the backend layout.
+
 # Commits and pull requests
 
 Subject: `<area>: <Summary>`, with area lowercase and summary in sentence case, e.g. `contest: Allow higher division to participate unofficially`.
