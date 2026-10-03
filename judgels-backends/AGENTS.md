@@ -27,4 +27,6 @@ API paths follow the layers under `/api/v4` only; `/api/v2` holds the older path
 
 # Tests
 
-Run `./gradlew :<module>:check` for the module you changed, from `judgels-backends`. Always name the module: a bare `./gradlew check` runs every module and takes too long.
+Run `./gradlew :<module>:check -x integTest` for the module you changed, from `judgels-backends`. Always name the module: a bare `./gradlew check` runs every module and takes too long.
+
+Leave the integration tests to CI: they take too long to run locally. The command above still compiles them, so a rename that breaks one fails here. Run `./gradlew :<module>:integTest --tests '<class>'` only for an integration test you changed.

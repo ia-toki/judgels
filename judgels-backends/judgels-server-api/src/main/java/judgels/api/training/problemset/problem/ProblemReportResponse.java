@@ -6,7 +6,7 @@ import java.util.Map;
 import judgels.api.contest.ContestInfo;
 import judgels.api.problem.ProblemMetadata;
 import judgels.api.profile.Profile;
-import judgels.api.training.problem.ProblemDifficulty;
+import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemProgress;
 import judgels.api.training.stats.ProblemTopStats;
 import org.immutables.value.Value;

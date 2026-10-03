@@ -1,4 +1,4 @@
-package judgels.training.chapter.resource;
+package judgels.training.chapter;
 
 import jakarta.inject.Inject;
 import java.util.ArrayList;
@@ -12,17 +12,17 @@ import judgels.persistence.model.ChapterLessonModel_;
 import judgels.persistence.model.ChapterProblemModel;
 import judgels.persistence.model.ChapterProblemModel_;
 
-public class ChapterResourceStore {
+public class ChapterNavigationStore {
     private final ChapterLessonDao lessonDao;
     private final ChapterProblemDao problemDao;
 
     @Inject
-    public ChapterResourceStore(ChapterLessonDao lessonDao, ChapterProblemDao problemDao) {
+    public ChapterNavigationStore(ChapterLessonDao lessonDao, ChapterProblemDao problemDao) {
         this.lessonDao = lessonDao;
         this.problemDao = problemDao;
     }
 
-    public List<Optional<String>> getPreviousAndNextResourcePathsForLesson(String chapterJid, String lessonAlias) {
+    public List<Optional<String>> getPreviousAndNextPathsForLesson(String chapterJid, String lessonAlias) {
         List<String> paths = new ArrayList<>();
         for (ChapterLessonModel model : getLessons(chapterJid)) {
             paths.add("/lessons/" + model.alias);
@@ -50,7 +50,7 @@ public class ChapterResourceStore {
         return List.of(prev, next);
     }
 
-    public List<Optional<String>> getPreviousAndNextResourcePathsForProblem(String chapterJid, String problemAlias) {
+    public List<Optional<String>> getPreviousAndNextPathsForProblem(String chapterJid, String problemAlias) {
         List<String> paths = new ArrayList<>();
         for (ChapterProblemModel model : getProblems(chapterJid)) {
             paths.add("/problems/" + model.alias);

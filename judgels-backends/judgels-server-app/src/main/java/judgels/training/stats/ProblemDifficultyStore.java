@@ -1,4 +1,4 @@
-package judgels.training.problem;
+package judgels.training.stats;
 
 import jakarta.inject.Inject;
 import java.util.Collection;
@@ -7,10 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import judgels.api.training.problem.ProblemDifficulty;
+import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemStats;
 import judgels.persistence.dao.TrainingProblemLevelDao;
-import judgels.training.stats.StatsStore;
 
 public class ProblemDifficultyStore {
     private final StatsStore statsStore;

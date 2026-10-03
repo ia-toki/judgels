@@ -12,16 +12,16 @@ import java.util.Optional;
 import judgels.api.submission.programming.Submission;
 import judgels.persistence.api.Page;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
+import judgels.training.stats.SubmissionStatsProcessor;
 import judgels.training.submission.programming.TrainingSubmissionStore;
 
 public class RefreshProblemSetStatsTask extends Task {
     private final SubmissionStore submissionStore;
-    private final StatsProcessor statsProcessor;
+    private final SubmissionStatsProcessor statsProcessor;
 
     public RefreshProblemSetStatsTask(
             @TrainingSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
+            SubmissionStatsProcessor statsProcessor) {
 
         super("refresh-problem-set-stats");
 

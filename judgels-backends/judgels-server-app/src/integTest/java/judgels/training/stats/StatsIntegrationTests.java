@@ -97,8 +97,8 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
     private ProblemSetProblemStore problemSetProblemStore;
     private StatsStore statsStore;
 
-    private judgels.training.submission.programming.StatsProcessor programmingStatsProcessor;
-    private judgels.training.submission.bundle.StatsProcessor bundleStatsProcessor;
+    private judgels.training.stats.SubmissionStatsProcessor programmingStatsProcessor;
+    private judgels.training.stats.ItemSubmissionStatsProcessor bundleStatsProcessor;
 
 
     @BeforeEach

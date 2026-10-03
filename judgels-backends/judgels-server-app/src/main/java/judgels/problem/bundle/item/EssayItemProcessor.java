@@ -1,24 +1,23 @@
-package judgels.problem.bundle;
+package judgels.problem.bundle.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Optional;
+import judgels.api.problem.bundle.EssayItemConfig;
 import judgels.api.problem.bundle.Item;
 import judgels.api.problem.bundle.ItemConfig;
-import judgels.api.problem.bundle.ShortAnswerItemConfig;
 import judgels.problem.ProblemUtils;
 
-public class ShortAnswerItemProcessor implements ItemProcessor {
+public class EssayItemProcessor implements ItemProcessor {
     @Override
     public ItemConfig parseItemConfigFromString(ObjectMapper objectMapper, String json) throws IOException {
-        return objectMapper.readValue(json, ShortAnswerItemConfig.class);
+        return objectMapper.readValue(json, EssayItemConfig.class);
     }
 
     @Override
     public Item replaceRenderUrls(Item item, String apiUrl, String problemJid) {
         return new Item.Builder()
                 .from(item)
-                .config(new ShortAnswerItemConfig.Builder()
+                .config(new EssayItemConfig.Builder()
                         .from(item.getConfig())
                         .statement(
                                 ProblemUtils.replaceProblemRenderUrls(
@@ -31,12 +30,6 @@ public class ShortAnswerItemProcessor implements ItemProcessor {
 
     @Override
     public Item removeAnswerKey(Item item) {
-        return new Item.Builder()
-                .from(item)
-                .config(new ShortAnswerItemConfig.Builder()
-                        .from(item.getConfig())
-                        .gradingRegex(Optional.empty())
-                        .build())
-                .build();
+        return item;
     }
 }

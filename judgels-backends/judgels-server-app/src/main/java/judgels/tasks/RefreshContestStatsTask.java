@@ -13,15 +13,15 @@ import judgels.api.submission.programming.Submission;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.persistence.api.Page;
 import judgels.submission.programming.SubmissionStore;
-import judgels.training.submission.programming.StatsProcessor;
+import judgels.training.stats.SubmissionStatsProcessor;
 
 public class RefreshContestStatsTask extends Task {
     private final SubmissionStore submissionStore;
-    private final StatsProcessor statsProcessor;
+    private final SubmissionStatsProcessor statsProcessor;
 
     public RefreshContestStatsTask(
             @ContestSubmissionStore SubmissionStore submissionStore,
-            StatsProcessor statsProcessor) {
+            SubmissionStatsProcessor statsProcessor) {
 
         super("refresh-contest-stats");
 

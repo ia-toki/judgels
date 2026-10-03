@@ -34,6 +34,6 @@ public interface TrainingIntegrationTestComponent {
     ProblemSetStore problemSetStore();
     ProblemSetProblemStore problemSetProblemStore();
     StatsStore statsStore();
-    judgels.training.submission.programming.StatsProcessor programmingStatsProcessor();
-    judgels.training.submission.bundle.StatsProcessor bundleStatsProcessor();
+    judgels.training.stats.SubmissionStatsProcessor programmingStatsProcessor();
+    judgels.training.stats.ItemSubmissionStatsProcessor bundleStatsProcessor();
 }

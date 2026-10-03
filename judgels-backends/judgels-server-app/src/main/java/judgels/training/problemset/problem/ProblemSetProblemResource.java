@@ -34,7 +34,6 @@ import judgels.api.problem.ProblemInfo;
 import judgels.api.problem.ProblemMetadata;
 import judgels.api.problem.ProblemType;
 import judgels.api.profile.Profile;
-import judgels.api.training.problem.ProblemDifficulty;
 import judgels.api.training.problemset.ProblemSetErrors;
 import judgels.api.training.problemset.problem.ProblemEditorialResponse;
 import judgels.api.training.problemset.problem.ProblemReportResponse;
@@ -42,6 +41,7 @@ import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.problemset.problem.ProblemSetProblemData;
 import judgels.api.training.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.api.training.problemset.problem.ProblemSetProblemsResponse;
+import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemProgress;
 import judgels.api.training.stats.ProblemTopStats;
 import judgels.contest.ContestStore;
@@ -50,8 +50,8 @@ import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.service.actor.ActorChecker;
 import judgels.service.api.actor.AuthHeader;
-import judgels.training.problem.ProblemDifficultyStore;
 import judgels.training.problemset.ProblemSetStore;
+import judgels.training.stats.ProblemDifficultyStore;
 import judgels.training.stats.StatsStore;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
