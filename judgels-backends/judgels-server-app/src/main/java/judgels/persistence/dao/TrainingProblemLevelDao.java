@@ -1,10 +1,47 @@
 package judgels.persistence.dao;
 
+import com.google.common.collect.ImmutableMap;
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import judgels.persistence.Dao;
+import judgels.persistence.DaoData;
 import judgels.persistence.model.TrainingProblemLevelModel;
+import org.hibernate.query.Query;
 
-public interface TrainingProblemLevelDao extends Dao<TrainingProblemLevelModel> {
-    Map<String, Integer> selectAllAverageByProblemJids(Collection<String> problemJids);
+public class TrainingProblemLevelDao extends Dao<TrainingProblemLevelModel> {
+
+    @Inject
+    public TrainingProblemLevelDao(DaoData data) {
+        super(data);
+    }
+
+    public Map<String, Integer> selectAllAverageByProblemJids(Collection<String> problemJids) {
+        if (problemJids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String q = ""
+                + "SELECT problemJid, AVG(level) "
+                + "FROM jerahmeel_problem_level "
+                + "WHERE problemJid IN :problemJids "
+                + "GROUP BY problemJid";
+
+        Query<Tuple> query = currentSession().createQuery(q, Tuple.class);
+        query.setParameterList("problemJids", problemJids);
+
+        List<Tuple> data = query.getResultList();
+
+        ImmutableMap.Builder<String, Integer> res = ImmutableMap.builder();
+        for (Tuple t : data) {
+            String problemJid = t.get(0, String.class);
+            int level = (int) (double) t.get(1, Double.class);
+            level = (level + 99) / 100 * 100;
+            res.put(problemJid, level);
+        }
+        return res.build();
+    }
 }

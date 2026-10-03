@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import static judgels.persistence.TestClock.NOW;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,9 +9,6 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import judgels.persistence.ActorProvider;
-import judgels.persistence.TestActorProvider;
-import judgels.persistence.TestClock;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
 import org.hibernate.Session;
@@ -19,12 +16,12 @@ import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {ExampleModel.class})
-class HibernateDaoIntegrationTests {
+class DaoIntegrationTests {
     @Test
     void crud_flow(SessionFactory sessionFactory) {
         TestClock clock = new TestClock();
         TestActorProvider actorProvider = new TestActorProvider("actor1", "ip1");
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, clock, actorProvider);
+        ExampleDao dao = new ExampleDao(sessionFactory, clock, actorProvider);
 
         assertThat(dao.selectById(1)).isEmpty();
 
@@ -88,7 +85,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_unique(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "value1";
@@ -121,7 +118,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_paged(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         Page<ExampleModel> data = dao.select().paged(1, 10);
         assertThat(data.getTotalCount()).isZero();
@@ -164,7 +161,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_paged_by_columns(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a1";
@@ -242,7 +239,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_paged_by_column_in(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a";
@@ -289,7 +286,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_with_custom_predicates(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "a";
@@ -326,7 +323,7 @@ class HibernateDaoIntegrationTests {
 
     @Test
     void select_with_order(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column1 = "b";
@@ -356,13 +353,13 @@ class HibernateDaoIntegrationTests {
         assertThat(models).containsExactly(model3, model1, model2);
     }
 
-    private static class ExampleHibernateDao extends HibernateDao<ExampleModel> {
-        ExampleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-            super(new HibernateDaoData(sessionFactory, clock, actorProvider));
+    private static class ExampleDao extends Dao<ExampleModel> {
+        ExampleDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+            super(new DaoData(sessionFactory, clock, actorProvider));
         }
 
-        public ExampleHibernateQueryBuilder select() {
-            return new ExampleHibernateQueryBuilder(currentSession());
+        public ExampleQueryBuilder select() {
+            return new ExampleQueryBuilder(currentSession());
         }
 
         Optional<ExampleModel> selectByUniqueColumn(String value) {
@@ -376,27 +373,27 @@ class HibernateDaoIntegrationTests {
                     .unique();
         }
 
-        private static class ExampleHibernateQueryBuilder extends HibernateQueryBuilder<ExampleModel> {
-            ExampleHibernateQueryBuilder(Session currentSession) {
+        private static class ExampleQueryBuilder extends QueryBuilder<ExampleModel> {
+            ExampleQueryBuilder(Session currentSession) {
                 super(currentSession, ExampleModel.class);
             }
 
-            public ExampleHibernateQueryBuilder whereUniqueColumn1Is(String value) {
+            public ExampleQueryBuilder whereUniqueColumn1Is(String value) {
                 where(columnEq(ExampleModel_.uniqueColumn1, value));
                 return this;
             }
 
-            public ExampleHibernateQueryBuilder whereColumn1Is(String value) {
+            public ExampleQueryBuilder whereColumn1Is(String value) {
                 where(columnEq(ExampleModel_.column1, value));
                 return this;
             }
 
-            public ExampleHibernateQueryBuilder whereColumn1In(Collection<String> values) {
+            public ExampleQueryBuilder whereColumn1In(Collection<String> values) {
                 where(columnIn(ExampleModel_.column1, values));
                 return this;
             }
 
-            public ExampleHibernateQueryBuilder whereColumn2Is(String value) {
+            public ExampleQueryBuilder whereColumn2Is(String value) {
                 where(columnEq(ExampleModel_.column2, value));
                 return this;
             }

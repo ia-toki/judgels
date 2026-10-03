@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
 import judgels.persistence.TestClock;
-import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.WithHibernateSession;
 import judgels.persistence.model.SessionModel;
 import judgels.user.BaseUserIntegrationTests;
 import judgels.user.UserIntegrationTestComponent;

@@ -1,14 +1,77 @@
 package judgels.persistence.dao;
 
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import judgels.persistence.DaoData;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.api.Page;
 import judgels.persistence.model.UserRatingModel;
+import judgels.persistence.model.UserRatingModel_;
+import org.hibernate.query.Query;
 
-public interface UserRatingDao extends UnmodifiableDao<UserRatingModel> {
-    List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Collection<String> userJids);
-    Page<UserRatingModel> selectTopPagedByTime(Instant time, int pageNumber, int pageSize);
-    List<UserRatingModel> selectAllByUserJid(String userJid);
+public class UserRatingDao extends UnmodifiableDao<UserRatingModel> {
+    @Inject
+    public UserRatingDao(DaoData data) {
+        super(data);
+    }
+
+    public List<UserRatingModel> selectAllByTimeAndUserJids(Instant time, Collection<String> userJids) {
+        if (userJids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // selects the row for each `userJid` with the latest `time` before the given time
+
+        Query<UserRatingModel> query = currentSession().createQuery(
+                "SELECT t1 FROM jophiel_user_rating t1 "
+                        + "LEFT OUTER JOIN jophiel_user_rating t2 "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
+                        + "WHERE t1.time < :time AND t1.userJid IN :userJids AND t2.userJid IS NULL",
+                UserRatingModel.class);
+
+        query.setParameter("time", time);
+        query.setParameterList("userJids", userJids);
+
+        return query.getResultList();
+    }
+
+    public Page<UserRatingModel> selectTopPagedByTime(Instant time, int pageNumber, int pageSize) {
+        Query<Long> countQuery = currentSession().createQuery(
+                "SELECT COUNT(*) FROM jophiel_user_rating t1 "
+                        + "LEFT OUTER JOIN jophiel_user_rating t2 "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
+                        + "WHERE t1.time < :time AND t2.userJid IS NULL ",
+                Long.class);
+
+        countQuery.setParameter("time", time);
+        int count = (int) (long) countQuery.getSingleResult();
+
+        Query<UserRatingModel> dataQuery = currentSession().createQuery(
+                "SELECT t1 FROM jophiel_user_rating t1 "
+                        + "LEFT OUTER JOIN jophiel_user_rating t2 "
+                        + "ON (t1.userJid = t2.userJid AND t1.time < t2.time AND t2.time < :time) "
+                        + "WHERE t1.time < :time AND t2.userJid IS NULL "
+                        + "ORDER BY t1.publicRating DESC",
+                UserRatingModel.class);
+
+        dataQuery.setParameter("time", time);
+        dataQuery.setFirstResult(pageSize * (pageNumber - 1));
+        dataQuery.setMaxResults(pageSize);
+
+        List<UserRatingModel> page = dataQuery.getResultList();
+
+        return new Page.Builder<UserRatingModel>()
+                .page(page)
+                .totalCount(count)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .build();
+    }
+
+    public List<UserRatingModel> selectAllByUserJid(String userJid) {
+        return select().where(columnEq(UserRatingModel_.userJid, userJid)).all();
+    }
 }

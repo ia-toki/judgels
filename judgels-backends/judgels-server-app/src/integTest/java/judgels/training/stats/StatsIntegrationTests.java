@@ -45,7 +45,7 @@ import judgels.grading.api.SandboxExecutionStatus;
 import judgels.grading.api.TestCaseResult;
 import judgels.grading.api.TestGroupResult;
 import judgels.grading.api.Verdict;
-import judgels.persistence.hibernate.WithHibernateSession;
+import judgels.persistence.WithHibernateSession;
 import judgels.persistence.model.ArchiveModel;
 import judgels.persistence.model.ChapterModel;
 import judgels.persistence.model.ChapterProblemModel;

@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import static org.hibernate.cfg.AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;

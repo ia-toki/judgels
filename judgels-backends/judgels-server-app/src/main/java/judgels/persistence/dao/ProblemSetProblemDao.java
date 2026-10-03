@@ -1,21 +1,121 @@
 package judgels.persistence.dao;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import jakarta.inject.Inject;
+import jakarta.persistence.Tuple;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import judgels.persistence.Dao;
+import judgels.persistence.DaoData;
 import judgels.persistence.QueryBuilder;
 import judgels.persistence.api.Page;
 import judgels.persistence.model.ProblemSetProblemModel;
+import judgels.persistence.model.ProblemSetProblemModel_;
+import org.hibernate.query.Query;
 
-public interface ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
-    QueryBuilder<ProblemSetProblemModel> selectByProblemSetJid(String problemSetJid);
-    QueryBuilder<ProblemSetProblemModel> selectByProblemSetJids(Collection<String> problemSetJids);
+public class ProblemSetProblemDao extends Dao<ProblemSetProblemModel> {
+    @Inject
+    public ProblemSetProblemDao(DaoData data) {
+        super(data);
+    }
 
-    List<ProblemSetProblemModel> selectAllByProblemJid(String problemJid);
-    List<ProblemSetProblemModel> selectAllByProblemJids(Collection<String> problemJids);
-    Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(String problemSetJid, String problemJid);
-    Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias);
-    Page<ProblemSetProblemModel> selectPagedByDifficulty(Set<String> allowedProblemJids, int pageNumber, int pageSize);
+    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJid(String problemSetJid) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid));
+    }
+
+    public QueryBuilder<ProblemSetProblemModel> selectByProblemSetJids(Collection<String> problemSetJids) {
+        return select().where(columnIn(ProblemSetProblemModel_.problemSetJid, problemSetJids));
+    }
+
+    public List<ProblemSetProblemModel> selectAllByProblemJid(String problemJid) {
+        return select().where(columnEq(ProblemSetProblemModel_.problemJid, problemJid)).all();
+    }
+
+    public List<ProblemSetProblemModel> selectAllByProblemJids(Collection<String> problemJids) {
+        return select().where(columnIn(ProblemSetProblemModel_.problemJid, problemJids)).all();
+    }
+
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemJid(String problemSetJid, String problemJid) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid))
+                .where(columnEq(ProblemSetProblemModel_.problemJid, problemJid))
+                .unique();
+    }
+
+    public Optional<ProblemSetProblemModel> selectByProblemSetJidAndProblemAlias(String problemSetJid, String problemAlias) {
+        return select()
+                .where(columnEq(ProblemSetProblemModel_.problemSetJid, problemSetJid))
+                .where(columnEq(ProblemSetProblemModel_.alias, problemAlias))
+                .unique();
+    }
+
+    public Page<ProblemSetProblemModel> selectPagedByDifficulty(
+            Set<String> allowedProblemJids,
+            int pageNumber,
+            int pageSize) {
+
+        long count = 0;
+        List<Tuple> data = ImmutableList.of();
+
+        String countQ = ""
+                + "SELECT COUNT(*) FROM jerahmeel_problem_set_problem a "
+                + "WHERE type='PROGRAMMING' "
+                + "AND %s ";
+
+        String dataQ = ""
+                + "SELECT a.problemSetJid, a.problemJid, a.alias, a.type, SUM(s.score), COUNT(s.userJid) "
+                + "FROM jerahmeel_problem_set_problem a "
+                + "LEFT JOIN jerahmeel_stats_user_problem s "
+                + "ON a.problemJid=s.problemJid "
+                + "WHERE type='PROGRAMMING' "
+                + "AND %s "
+                + "GROUP BY a.problemSetJid, a.problemJid "
+                + "ORDER BY SUM(s.score) %s, COUNT(s.userJid) %s";
+
+        String where = "1=1";
+        if (allowedProblemJids != null) {
+            where = "a.problemJid IN :problemJids";
+        }
+
+        String orderDir = "DESC";
+
+        countQ = String.format(countQ, where);
+        dataQ = String.format(dataQ, where, orderDir, orderDir);
+
+        if (allowedProblemJids == null || !allowedProblemJids.isEmpty()) {
+            Query<Long> countQuery = currentSession().createQuery(countQ, Long.class);
+            Query<Tuple> dataQuery = currentSession().createQuery(dataQ, Tuple.class);
+
+            if (allowedProblemJids != null && !allowedProblemJids.isEmpty()) {
+                countQuery.setParameterList("problemJids", allowedProblemJids);
+                dataQuery.setParameterList("problemJids", allowedProblemJids);
+            }
+
+            dataQuery.setFirstResult(pageSize * (pageNumber - 1));
+            dataQuery.setMaxResults(pageSize);
+
+            count = countQuery.getSingleResult();
+            data = dataQuery.getResultList();
+        }
+
+        List<ProblemSetProblemModel> page = Lists.transform(data, t -> {
+            ProblemSetProblemModel m = new ProblemSetProblemModel();
+            m.problemSetJid = t.get(0, String.class);
+            m.problemJid = t.get(1, String.class);
+            m.alias = t.get(2, String.class);
+            m.type = t.get(3, String.class);
+            return m;
+        });
+
+        return new Page.Builder<ProblemSetProblemModel>()
+                .page(page)
+                .totalCount((int) count)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .build();
+    }
 }

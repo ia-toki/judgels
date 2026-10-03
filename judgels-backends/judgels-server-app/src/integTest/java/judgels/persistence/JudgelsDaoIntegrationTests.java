@@ -1,4 +1,4 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,19 +8,14 @@ import jakarta.persistence.Entity;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
-import judgels.persistence.ActorProvider;
-import judgels.persistence.JidPrefix;
-import judgels.persistence.JudgelsModel;
-import judgels.persistence.TestActorProvider;
-import judgels.persistence.TestClock;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {JudgelsHibernateDaoIntegrationTests.ExampleModel.class})
-class JudgelsHibernateDaoIntegrationTests {
+@WithHibernateSession(models = {JudgelsDaoIntegrationTests.ExampleModel.class})
+class JudgelsDaoIntegrationTests {
     @Test
     void crud_flow(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         assertThat(dao.selectById(1)).isEmpty();
 
@@ -75,7 +70,7 @@ class JudgelsHibernateDaoIntegrationTests {
 
     @Test
     void select_multiple_jids(SessionFactory sessionFactory) {
-        ExampleHibernateDao dao = new ExampleHibernateDao(sessionFactory, new TestClock(), new TestActorProvider());
+        ExampleDao dao = new ExampleDao(sessionFactory, new TestClock(), new TestActorProvider());
 
         ExampleModel model1 = new ExampleModel();
         model1.column = "value4";
@@ -113,9 +108,9 @@ class JudgelsHibernateDaoIntegrationTests {
         String column;
     }
 
-    private static class ExampleHibernateDao extends JudgelsHibernateDao<ExampleModel> {
-        ExampleHibernateDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
-            super(new HibernateDaoData(sessionFactory, clock, actorProvider));
+    private static class ExampleDao extends JudgelsDao<ExampleModel> {
+        ExampleDao(SessionFactory sessionFactory, Clock clock, ActorProvider actorProvider) {
+            super(new DaoData(sessionFactory, clock, actorProvider));
         }
     }
 }

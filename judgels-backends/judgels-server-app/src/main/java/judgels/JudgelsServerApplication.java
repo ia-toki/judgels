@@ -19,7 +19,7 @@ import judgels.mailer.MailerModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
-import judgels.persistence.hibernate.JudgelsHibernateModule;
+import judgels.persistence.JudgelsHibernateModule;
 import judgels.recaptcha.RecaptchaModule;
 import judgels.service.JudgelsSchedulerModule;
 import judgels.service.jersey.JudgelsJerseyFeature;

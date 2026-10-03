@@ -1,10 +1,9 @@
-package judgels.persistence.hibernate;
+package judgels.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import judgels.persistence.Model;
 
 @Entity
 @Table(indexes = {@Index(columnList = "uniqueColumn1,uniqueColumn2", unique = true)})
