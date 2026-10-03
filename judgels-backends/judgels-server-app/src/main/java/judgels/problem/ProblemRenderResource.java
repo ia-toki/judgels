@@ -1,6 +1,6 @@
 package judgels.problem;
 
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -10,9 +10,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
+import judgels.core.ServiceUtils;
 import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.statement.ProblemStatementStore;
-import judgels.service.ServiceUtils;
 
 @Path("/api/v2/problems/{problemJid}")
 public class ProblemRenderResource {

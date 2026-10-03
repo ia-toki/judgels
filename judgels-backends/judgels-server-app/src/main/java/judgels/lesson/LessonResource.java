@@ -15,9 +15,9 @@ import jakarta.ws.rs.QueryParam;
 import java.util.Optional;
 import judgels.api.lesson.Lesson;
 import judgels.api.lesson.LessonsResponse;
+import judgels.core.api.actor.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 
 @Path("/api/v4/lessons")

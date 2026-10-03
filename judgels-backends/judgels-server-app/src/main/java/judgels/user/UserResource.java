@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import com.opencsv.CSVWriterBuilder;
@@ -34,9 +34,9 @@ import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.UsersResponse;
 import judgels.api.user.UsersUpsertResponse;
+import judgels.core.api.actor.AuthHeader;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.session.SessionStore;
 

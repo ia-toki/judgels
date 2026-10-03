@@ -2,7 +2,7 @@ package judgels.contest.rating;
 
 import dagger.Module;
 import dagger.Provides;
-import judgels.app.JudgelsApp;
+import judgels.core.JudgelsApp;
 
 @Module
 public class ContestRatingModule {

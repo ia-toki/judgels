@@ -1,7 +1,7 @@
 package judgels.api.session;
 
 import jakarta.ws.rs.core.Response.Status;
-import judgels.service.api.JudgelsServiceException;
+import judgels.core.api.JudgelsServiceException;
 
 public class SessionErrors {
     private SessionErrors() {}

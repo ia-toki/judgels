@@ -3,7 +3,7 @@ package judgels.api.session;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
-import judgels.service.api.JudgelsServiceException;
+import judgels.core.api.JudgelsServiceException;
 
 public class SessionWithRegistrationErrors {
     private SessionWithRegistrationErrors() {}

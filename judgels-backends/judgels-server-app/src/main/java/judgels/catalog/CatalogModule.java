@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
+import judgels.core.JudgelsBaseDataDir;
 import judgels.fs.FileSystem;
 import judgels.fs.local.LocalFileSystem;
 import judgels.git.Git;
@@ -12,7 +13,6 @@ import judgels.lesson.LessonFs;
 import judgels.lesson.LessonGit;
 import judgels.problem.ProblemFs;
 import judgels.problem.ProblemGit;
-import judgels.service.JudgelsBaseDataDir;
 
 @Module
 public class CatalogModule {

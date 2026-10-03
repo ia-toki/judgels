@@ -1,7 +1,7 @@
 package judgels.michael.problem.render;
 
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
@@ -14,8 +14,8 @@ import jakarta.ws.rs.core.Response;
 import java.util.Optional;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
+import judgels.core.ServiceUtils;
 import judgels.michael.problem.BaseProblemResource;
-import judgels.service.ServiceUtils;
 
 public abstract class ProblemStatementRenderResources extends BaseProblemResource {
     @GET

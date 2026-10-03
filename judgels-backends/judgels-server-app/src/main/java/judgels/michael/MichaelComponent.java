@@ -5,6 +5,8 @@ import jakarta.inject.Singleton;
 import judgels.JudgelsServerModule;
 import judgels.auth.AuthModule;
 import judgels.catalog.CatalogModule;
+import judgels.core.JudgelsModule;
+import judgels.core.JudgelsSchedulerModule;
 import judgels.grading.GradingModule;
 import judgels.messaging.rabbitmq.RabbitMQModule;
 import judgels.michael.index.IndexResource;
@@ -28,8 +30,6 @@ import judgels.michael.problem.statement.ProblemStatementResource;
 import judgels.michael.problem.version.ProblemVersionResource;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
-import judgels.service.JudgelsModule;
-import judgels.service.JudgelsSchedulerModule;
 import judgels.submission.SubmissionModule;
 
 @Component(modules = {

@@ -3,7 +3,7 @@ package judgels.api.training.archive;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
-import judgels.service.api.JudgelsServiceException;
+import judgels.core.api.JudgelsServiceException;
 
 public class ArchiveErrors {
     private ArchiveErrors() {}

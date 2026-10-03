@@ -2,8 +2,8 @@ package judgels.michael.problem.programming.submission;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static java.util.stream.Collectors.toMap;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;

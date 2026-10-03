@@ -2,8 +2,8 @@ package judgels.training.submission.bundle;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -38,10 +38,10 @@ import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.submission.TrainingSubmissionConfig;
 import judgels.api.training.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.training.submission.bundle.TrainingSubmissionSummaryResponse;
+import judgels.core.api.actor.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.submission.bundle.ItemSubmissionConsumer;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;

@@ -3,14 +3,14 @@ package judgels;
 import dagger.Component;
 import jakarta.inject.Singleton;
 import judgels.contest.submission.programming.ContestGradingResponsePoller;
-import judgels.service.JudgelsScheduler;
+import judgels.core.JudgelsScheduler;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
 @Component(modules = {
         judgels.JudgelsServerModule.class,
-        judgels.service.JudgelsModule.class,
-        judgels.service.JudgelsSchedulerModule.class,
+        judgels.core.JudgelsModule.class,
+        judgels.core.JudgelsSchedulerModule.class,
         judgels.persistence.JudgelsPersistenceModule.class,
         judgels.persistence.JudgelsHibernateModule.class,
 

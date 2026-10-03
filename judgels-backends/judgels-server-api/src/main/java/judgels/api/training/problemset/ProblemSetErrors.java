@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.service.api.JudgelsServiceException;
+import judgels.core.api.JudgelsServiceException;
 
 public class ProblemSetErrors {
     private ProblemSetErrors() {}

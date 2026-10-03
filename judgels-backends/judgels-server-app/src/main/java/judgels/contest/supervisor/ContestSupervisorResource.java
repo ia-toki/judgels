@@ -3,8 +3,8 @@ package judgels.contest.supervisor;
 import static com.google.common.base.Preconditions.checkArgument;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static judgels.service.ServiceUtils.checkAllowed;
-import static judgels.service.ServiceUtils.checkFound;
+import static judgels.core.ServiceUtils.checkAllowed;
+import static judgels.core.ServiceUtils.checkFound;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -32,9 +32,9 @@ import judgels.api.profile.Profile;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
+import judgels.core.api.actor.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.service.api.actor.AuthHeader;
 import judgels.session.ActorChecker;
 import judgels.user.UserStore;
 

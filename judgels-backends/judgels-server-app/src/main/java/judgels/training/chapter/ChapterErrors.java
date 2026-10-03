@@ -4,7 +4,7 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
 import judgels.api.problem.ProblemType;
-import judgels.service.api.JudgelsServiceException;
+import judgels.core.api.JudgelsServiceException;
 
 public class ChapterErrors {
     private ChapterErrors() {}
