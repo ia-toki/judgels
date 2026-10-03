@@ -2,17 +2,11 @@ apply from: '../../gradle/java.gradle'
 
 dependencies {
     api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    api "com.google.dagger:dagger:$daggerVersion"
-    api "jakarta.inject:jakarta.inject-api:$jakartaInjectApiVersion"
 
-    implementation "com.amazonaws:aws-java-sdk-s3:$awsJavaSdkS3Version"
-    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "commons-io:commons-io:$apacheCommonsIoVersion"
 
-    compileOnly "com.google.dagger:dagger-compiler:$daggerVersion"
     compileOnly "org.immutables:value-annotations:$immutablesVersion"
 
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "org.immutables:value:$immutablesVersion"
 }
