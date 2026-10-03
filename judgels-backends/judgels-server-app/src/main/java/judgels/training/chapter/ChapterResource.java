@@ -19,7 +19,7 @@ import judgels.api.training.chapter.Chapter;
 import judgels.api.training.chapter.ChapterCreateData;
 import judgels.api.training.chapter.ChapterUpdateData;
 import judgels.api.training.chapter.ChaptersResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 

@@ -28,7 +28,7 @@ import judgels.api.contest.file.ContestFilesResponse;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.core.JudgelsResponseBuilders;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.file.FileFs;
 import judgels.fs.FileSystem;
 import judgels.session.ActorChecker;

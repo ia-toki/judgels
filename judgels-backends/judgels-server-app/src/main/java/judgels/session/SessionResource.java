@@ -21,7 +21,7 @@ import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.setting.SessionSettings;
 import judgels.api.user.User;
 import judgels.auth.google.GoogleAuth;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.setting.SettingStore;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;

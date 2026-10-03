@@ -1,6 +1,6 @@
 package judgels.session;
 
-import static judgels.core.actor.Actors.GUEST;
+import static judgels.core.Actors.GUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
@@ -9,8 +9,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.Optional;
 import judgels.api.session.Session;
-import judgels.core.actor.PerRequestActorProvider;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.PerRequestActorProvider;
+import judgels.core.api.AuthHeader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

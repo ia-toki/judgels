@@ -37,7 +37,7 @@ import judgels.api.training.problemset.ProblemSet;
 import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.submission.TrainingSubmissionConfig;
 import judgels.api.training.submission.programming.TrainingSubmissionsResponse;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.grading.api.GradingOptions;
 import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;

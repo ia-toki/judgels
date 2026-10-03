@@ -1,4 +1,4 @@
-package judgels.core.jersey;
+package judgels.core;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

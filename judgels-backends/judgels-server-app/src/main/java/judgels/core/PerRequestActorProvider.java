@@ -1,4 +1,4 @@
-package judgels.core.actor;
+package judgels.core;
 
 import java.util.Optional;
 

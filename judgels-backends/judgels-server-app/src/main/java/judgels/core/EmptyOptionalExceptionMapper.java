@@ -1,4 +1,4 @@
-package judgels.core.jersey;
+package judgels.core;
 
 import io.dropwizard.jersey.optional.EmptyOptionalException;
 import jakarta.ws.rs.core.Response;

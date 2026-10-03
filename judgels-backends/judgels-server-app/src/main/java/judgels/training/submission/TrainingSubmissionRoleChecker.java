@@ -2,7 +2,7 @@ package judgels.training.submission;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.core.actor.Actors;
+import judgels.core.Actors;
 import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
 import judgels.persistence.dao.StatsUserProblemDao;

@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Optional;
 import judgels.api.user.User;
 import judgels.core.JudgelsResponseBuilders;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.fs.FileSystem;
 import judgels.session.ActorChecker;
 import judgels.user.RandomCodeGenerator;

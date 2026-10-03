@@ -34,7 +34,7 @@ import judgels.api.training.chapter.problem.ChapterProblemData;
 import judgels.api.training.chapter.problem.ChapterProblemWorksheet;
 import judgels.api.training.chapter.problem.ChapterProblemsResponse;
 import judgels.api.training.stats.ProblemProgress;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.grading.api.SubmissionSource;
 import judgels.grading.api.Verdict;
 import judgels.problem.ProblemService;

@@ -45,7 +45,7 @@ import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemProgress;
 import judgels.api.training.stats.ProblemTopStats;
 import judgels.contest.ContestStore;
-import judgels.core.api.actor.AuthHeader;
+import judgels.core.api.AuthHeader;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.role.TrainingAdminRoleChecker;
