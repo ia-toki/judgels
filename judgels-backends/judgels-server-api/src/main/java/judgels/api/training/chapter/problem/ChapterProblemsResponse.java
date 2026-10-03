@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
 import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemProgress;
+import judgels.api.training.stats.ProblemProgress;
 import org.immutables.value.Value;
 
 @Value.Immutable

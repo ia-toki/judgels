@@ -2,10 +2,9 @@ package judgels.api.training.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
-import judgels.api.problem.ProblemDifficulty;
 import judgels.api.problem.ProblemInfo;
 import judgels.api.problem.ProblemMetadata;
-import judgels.api.problem.ProblemProgress;
+import judgels.api.training.stats.ProblemProgress;
 import judgels.persistence.api.Page;
 import org.immutables.value.Value;
 

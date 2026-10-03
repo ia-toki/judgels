@@ -1,4 +1,4 @@
-package judgels.api.problem;
+package judgels.api.training.stats;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
