@@ -2,7 +2,7 @@ package judgels.api.training.problemset;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
-import judgels.api.problem.ProblemProgress;
+import judgels.api.training.stats.ProblemProgress;
 import org.immutables.value.Value;
 
 @Value.Immutable
