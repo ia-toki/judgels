@@ -5,8 +5,8 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.role.SuperadminRoleStore;
 import judgels.user.UserStore;
+import judgels.user.role.SuperadminRoleStore;
 
 @Module
 public class SuperadminModule {

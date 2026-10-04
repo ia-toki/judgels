@@ -3,7 +3,6 @@ package judgels.michael.lesson;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
-import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.lesson.LessonRoleChecker;
 import judgels.lesson.LessonStore;
@@ -11,6 +10,7 @@ import judgels.lesson.statement.LessonStatementStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.profile.ProfileStore;
+import judgels.user.Actor;
 import judgels.user.UserStore;
 
 public class BaseLessonResource extends BaseResource {

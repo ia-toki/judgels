@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemEditorial;
 import judgels.catalog.StatementLanguageStatus;
@@ -34,6 +33,7 @@ import judgels.michael.resource.EditStatementView;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.resource.ListStatementLanguagesView;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.Actor;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

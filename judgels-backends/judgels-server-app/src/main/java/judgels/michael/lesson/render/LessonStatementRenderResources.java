@@ -12,10 +12,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.michael.lesson.BaseLessonResource;
+import judgels.user.Actor;
 
 public abstract class LessonStatementRenderResources extends BaseLessonResource {
     @GET

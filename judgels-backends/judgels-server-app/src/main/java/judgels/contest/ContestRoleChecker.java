@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import judgels.api.contest.Contest;
 import judgels.api.contest.role.ContestRole;
 import judgels.persistence.dao.ContestRoleDao;
-import judgels.role.ContestAdminRoleChecker;
+import judgels.user.role.ContestAdminRoleChecker;
 
 public class ContestRoleChecker {
     private final ContestAdminRoleChecker roleChecker;

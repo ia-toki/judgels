@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.fs.FileInfo;
@@ -32,6 +31,7 @@ import judgels.michael.problem.programming.grading.config.GradingConfigAdapterRe
 import judgels.michael.problem.programming.grading.config.GradingConfigForm;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.Actor;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

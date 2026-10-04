@@ -20,7 +20,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.BundleAnswer;
@@ -30,6 +29,7 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
 import judgels.submission.bundle.BundleSubmissionClient;
 import judgels.submission.bundle.BundleSubmissionStore;
+import judgels.user.Actor;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {

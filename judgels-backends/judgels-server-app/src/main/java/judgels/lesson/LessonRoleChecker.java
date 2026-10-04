@@ -2,12 +2,12 @@ package judgels.lesson;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.catalog.Partner;
 import judgels.api.catalog.PartnerPermission;
 import judgels.api.lesson.Lesson;
 import judgels.lesson.partner.LessonPartnerStore;
-import judgels.role.TrainingAdminRoleChecker;
+import judgels.user.Actor;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 public class LessonRoleChecker {
     private final TrainingAdminRoleChecker roleChecker;

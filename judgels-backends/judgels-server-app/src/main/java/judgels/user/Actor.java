@@ -1,4 +1,4 @@
-package judgels.api.actor;
+package judgels.user;
 
 import judgels.api.user.role.UserRole;
 import org.immutables.value.Value;

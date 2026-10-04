@@ -1,7 +1,7 @@
 package judgels.user;
 
 import jakarta.inject.Inject;
-import judgels.api.role.UserAdminRole;
+import judgels.api.user.role.UserAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.user.role.UserRoleStore;
 

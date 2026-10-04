@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.bundle.BundleItem;
 import judgels.api.problem.bundle.ItemConfig;
@@ -30,6 +29,7 @@ import judgels.michael.problem.bundle.item.config.ItemConfigAdapterRegistry;
 import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
 import judgels.problem.bundle.item.ItemEngineRegistry;
+import judgels.user.Actor;
 
 @Path("/problems/bundle/{problemId}/items")
 public class BundleProblemItemResource extends BaseBundleProblemResource {

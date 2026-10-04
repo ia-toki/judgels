@@ -19,13 +19,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.api.profile.Profile;
 import judgels.lesson.LessonCreator;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
+import judgels.user.Actor;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {

@@ -17,7 +17,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.api.profile.Profile;
 import judgels.core.git.GitCommit;
@@ -28,6 +27,7 @@ import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.Actor;
 
 @Path("/lessons/{lessonId}/versions")
 public class LessonVersionResource extends BaseLessonResource {

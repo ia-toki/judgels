@@ -17,7 +17,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.profile.Profile;
 import judgels.core.git.GitCommit;
@@ -29,6 +28,7 @@ import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
 import judgels.problem.tag.ProblemTagStore;
 import judgels.problem.version.ProblemVersionStore;
+import judgels.user.Actor;
 
 @Path("/problems/{problemId}/versions")
 public class  ProblemVersionResource extends BaseProblemResource {

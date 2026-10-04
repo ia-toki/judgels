@@ -37,7 +37,7 @@ import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.programming.ProgrammingProblemStore;
 import judgels.problem.statement.ProblemStatementStore;
 import judgels.problem.tag.ProblemTagStore;
-import judgels.role.ProblemAdminRoleChecker;
+import judgels.user.role.ProblemAdminRoleChecker;
 
 public class ProblemService {
     @Inject protected ProblemAdminRoleChecker roleChecker;

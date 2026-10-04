@@ -3,7 +3,6 @@ package judgels.michael.problem;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemType;
 import judgels.michael.BaseResource;
@@ -13,6 +12,7 @@ import judgels.problem.ProblemStore;
 import judgels.problem.editorial.ProblemEditorialStore;
 import judgels.problem.statement.ProblemStatementStore;
 import judgels.profile.ProfileStore;
+import judgels.user.Actor;
 import judgels.user.UserStore;
 
 public abstract class BaseProblemResource extends BaseResource {

@@ -4,8 +4,8 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
-import judgels.role.SuperadminRoleStore;
 import judgels.user.UserStore;
+import judgels.user.role.SuperadminRoleStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
