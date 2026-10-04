@@ -1,7 +1,7 @@
 package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 
 public interface GradingConfigAdapter {

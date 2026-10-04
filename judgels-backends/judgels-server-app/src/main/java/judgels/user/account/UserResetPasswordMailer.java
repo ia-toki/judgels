@@ -1,8 +1,8 @@
 package judgels.user.account;
 
 import judgels.api.user.User;
-import judgels.mailer.EmailTemplate;
-import judgels.mailer.Mailer;
+import judgels.core.mailer.EmailTemplate;
+import judgels.core.mailer.Mailer;
 
 public class UserResetPasswordMailer {
     private final Mailer mailer;

@@ -1,8 +1,8 @@
 package judgels.user.registration;
 
 import judgels.api.user.User;
-import judgels.mailer.EmailTemplate;
-import judgels.mailer.Mailer;
+import judgels.core.mailer.EmailTemplate;
+import judgels.core.mailer.Mailer;
 
 public class UserRegistrationEmailMailer {
     private final Mailer mailer;

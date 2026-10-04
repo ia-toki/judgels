@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;
 import java.util.Optional;
+import judgels.core.messaging.rabbitmq.RabbitMQConfiguration;
 import judgels.grading.JudgelsGraderGradingConfiguration;
 import judgels.isolate.IsolateConfiguration;
-import judgels.messaging.rabbitmq.RabbitMQConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

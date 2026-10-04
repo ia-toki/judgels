@@ -4,7 +4,7 @@ apply from: '../gradle/integTest.gradle'
 apply plugin: 'application'
 
 dependencies {
-    implementation project(':judgels-commons:judgels-service-core')
+    implementation project(':judgels-commons:judgels-core')
     implementation project(':judgels-grader-api')
     implementation project(':judgels-grader-engines')
 

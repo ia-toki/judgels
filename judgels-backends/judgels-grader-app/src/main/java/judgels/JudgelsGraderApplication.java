@@ -2,10 +2,10 @@ package judgels;
 
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Environment;
+import judgels.core.messaging.rabbitmq.RabbitMQModule;
 import judgels.grading.GradingModule;
 import judgels.grading.cache.CacheModule;
 import judgels.isolate.IsolateModule;
-import judgels.messaging.rabbitmq.RabbitMQModule;
 
 public class JudgelsGraderApplication extends Application<JudgelsGraderApplicationConfiguration> {
     public static void main(String[] args) throws Exception {

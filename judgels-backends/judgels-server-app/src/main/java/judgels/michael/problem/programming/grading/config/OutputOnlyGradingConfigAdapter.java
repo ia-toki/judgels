@@ -2,7 +2,7 @@ package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
 import java.util.Optional;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.TestGroup;
 import judgels.grading.engines.outputonly.OutputOnlyGradingConfig;

@@ -1,7 +1,7 @@
 package judgels.michael.problem.programming.grading.config;
 
 import java.time.Instant;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 
 public abstract class BaseGradingConfigAdapterTests {
     protected FileInfo createFile(String name) {

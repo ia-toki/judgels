@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
 import java.util.List;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.grading.api.TestCase;
 import judgels.grading.api.TestGroup;
 import judgels.grading.engines.batch.BatchGradingConfig;

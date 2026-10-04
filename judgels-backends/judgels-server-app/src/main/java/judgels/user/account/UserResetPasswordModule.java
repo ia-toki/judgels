@@ -3,7 +3,7 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.mailer.Mailer;
+import judgels.core.mailer.Mailer;
 import judgels.user.UserStore;
 
 @Module

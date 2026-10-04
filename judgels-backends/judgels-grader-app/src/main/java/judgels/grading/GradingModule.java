@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import judgels.core.JudgelsBaseDataDir;
-import judgels.messaging.MessageListener;
+import judgels.core.messaging.MessageListener;
 
 @Module
 public class GradingModule {

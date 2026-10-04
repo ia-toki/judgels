@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import judgels.fs.FileInfo;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileInfo;
+import judgels.core.fs.FileSystem;
 
 @Module
 public class UserAvatarIntegrationTestModule {

@@ -20,7 +20,7 @@ import java.util.Map;
 import judgels.api.actor.Actor;
 import judgels.api.lesson.Lesson;
 import judgels.api.profile.Profile;
-import judgels.git.GitCommit;
+import judgels.core.git.GitCommit;
 import judgels.lesson.version.LessonVersionStore;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.CommitVersionForm;

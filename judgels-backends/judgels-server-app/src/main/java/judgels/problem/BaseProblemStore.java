@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileSystem;
 
 public abstract class BaseProblemStore {
     protected final ObjectMapper mapper;

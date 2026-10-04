@@ -11,7 +11,7 @@ import java.util.Map;
 import judgels.api.submission.bundle.BundleAnswer;
 import judgels.api.submission.bundle.BundleGradingResult;
 import judgels.api.submission.bundle.BundleSubmission;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileSystem;
 import judgels.persistence.dao.BundleGradingDao;
 import judgels.persistence.dao.BundleSubmissionDao;
 import judgels.persistence.model.BundleGradingModel;

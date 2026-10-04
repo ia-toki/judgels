@@ -11,7 +11,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableTrainingConfiguration.class)
 public interface TrainingConfiguration {
     @JsonProperty("aws")
-    Optional<judgels.fs.aws.AwsConfiguration> getAwsConfig();
+    Optional<judgels.core.fs.aws.AwsConfiguration> getAwsConfig();
 
     @JsonProperty("submission")
     Optional<SubmissionConfiguration> getSubmissionConfig();
