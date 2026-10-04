@@ -3,7 +3,7 @@ package judgels.michael.lesson.statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.lesson.LessonStatement;
+import judgels.api.catalog.lesson.LessonStatement;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;

@@ -1,8 +1,8 @@
 package judgels.training.chapter.problem;
 
 import static java.util.stream.Collectors.toMap;
-import static judgels.api.problem.ProblemType.BUNDLE;
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.BUNDLE;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.api.training.chapter.problem.ChapterProblem;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ChapterProblemDao;

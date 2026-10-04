@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;

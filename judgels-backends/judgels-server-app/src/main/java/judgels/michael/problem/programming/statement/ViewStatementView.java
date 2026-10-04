@@ -3,7 +3,7 @@ package judgels.michael.problem.programming.statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.problem.ProblemStatement;
+import judgels.api.catalog.problem.ProblemStatement;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.OutputOnlyOverrides;

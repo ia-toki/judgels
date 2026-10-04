@@ -2,7 +2,7 @@ package judgels.submission.programming;
 
 import jakarta.inject.Inject;
 import java.util.Map;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.grading.api.SubmissionSource;
 

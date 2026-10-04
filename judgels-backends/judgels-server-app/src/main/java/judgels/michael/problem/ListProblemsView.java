@@ -2,7 +2,7 @@ package judgels.michael.problem;
 
 import java.util.Map;
 import java.util.Set;
-import judgels.api.problem.Problem;
+import judgels.api.catalog.problem.Problem;
 import judgels.api.profile.Profile;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;

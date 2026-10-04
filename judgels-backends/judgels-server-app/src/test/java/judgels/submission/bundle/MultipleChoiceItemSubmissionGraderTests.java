@@ -2,10 +2,10 @@ package judgels.submission.bundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import judgels.api.problem.bundle.Item;
-import judgels.api.problem.bundle.ItemType;
-import judgels.api.problem.bundle.MultipleChoiceItemConfig;
-import judgels.api.problem.bundle.StatementItemConfig;
+import judgels.api.catalog.problem.bundle.Item;
+import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.Verdict;
 import org.junit.jupiter.api.BeforeEach;

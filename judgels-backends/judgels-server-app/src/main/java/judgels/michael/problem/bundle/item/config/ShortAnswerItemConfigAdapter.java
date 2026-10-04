@@ -1,8 +1,8 @@
 package judgels.michael.problem.bundle.item.config;
 
 import java.util.Optional;
-import judgels.api.problem.bundle.ItemConfig;
-import judgels.api.problem.bundle.ShortAnswerItemConfig;
+import judgels.api.catalog.problem.bundle.ItemConfig;
+import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 
 public class ShortAnswerItemConfigAdapter implements ItemConfigAdapter {
     @Override

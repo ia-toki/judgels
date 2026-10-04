@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.problem.Problem;
-import judgels.api.problem.bundle.BundleItem;
-import judgels.api.problem.bundle.ItemConfig;
-import judgels.api.problem.bundle.ItemType;
+import judgels.api.catalog.problem.Problem;
+import judgels.api.catalog.problem.bundle.BundleItem;
+import judgels.api.catalog.problem.bundle.ItemConfig;
+import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.catalog.problem.bundle.item.ItemEngineRegistry;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapter;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapterRegistry;
 import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.bundle.item.ItemEngineRegistry;
 import judgels.user.Actor;
 
 @Path("/problems/bundle/{problemId}/items")

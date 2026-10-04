@@ -58,10 +58,10 @@ public interface JudgelsServerComponent {
     judgels.user.registration.web.UserRegistrationWebResource userRegistrationWebResource();
     judgels.profile.ProfileResource profileResource();
 
-    judgels.problem.ProblemResource problemResource();
-    judgels.problem.ProblemRenderResource problemRenderResource();
-    judgels.lesson.LessonResource lessonResource();
-    judgels.lesson.LessonRenderResource lessonRenderResource();
+    judgels.catalog.problem.ProblemResource problemResource();
+    judgels.catalog.problem.ProblemRenderResource problemRenderResource();
+    judgels.catalog.lesson.LessonResource lessonResource();
+    judgels.catalog.lesson.LessonRenderResource lessonRenderResource();
 
     judgels.contest.ContestResource contestResource();
     judgels.contest.web.ContestWebResource contestWebResource();

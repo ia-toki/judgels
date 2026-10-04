@@ -17,8 +17,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-import judgels.api.problem.Problem;
+import judgels.api.catalog.problem.Problem;
 import judgels.api.profile.Profile;
+import judgels.catalog.problem.tag.ProblemTagStore;
+import judgels.catalog.problem.version.ProblemVersionStore;
 import judgels.core.git.GitCommit;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.CommitVersionForm;
@@ -26,8 +28,6 @@ import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.tag.ProblemTagStore;
-import judgels.problem.version.ProblemVersionStore;
 import judgels.user.Actor;
 
 @Path("/problems/{problemId}/versions")

@@ -2,8 +2,8 @@ package judgels.michael.problem.bundle.item.config;
 
 import java.util.ArrayList;
 import java.util.List;
-import judgels.api.problem.bundle.ItemConfig;
-import judgels.api.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.ItemConfig;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
 
 public class MultipleChoiceItemConfigAdapter implements ItemConfigAdapter {
     @Override

@@ -1,9 +1,9 @@
 package judgels.michael.problem;
 
 import java.util.List;
+import judgels.catalog.problem.tag.ProblemTags;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
-import judgels.problem.tag.ProblemTags;
 
 public class EditProblemView extends TemplateView {
     public EditProblemView(HtmlTemplate template, EditProblemForm form) {

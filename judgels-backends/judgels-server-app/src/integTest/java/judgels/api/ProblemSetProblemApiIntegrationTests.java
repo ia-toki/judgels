@@ -1,6 +1,6 @@
 package judgels.api;
 
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;

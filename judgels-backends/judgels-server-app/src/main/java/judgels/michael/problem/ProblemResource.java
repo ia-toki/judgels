@@ -25,14 +25,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.problem.Problem;
-import judgels.api.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.Problem;
+import judgels.api.catalog.problem.ProblemSetterRole;
 import judgels.api.profile.Profile;
+import judgels.catalog.problem.ProblemCreator;
+import judgels.catalog.problem.tag.ProblemTagStore;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
-import judgels.problem.ProblemCreator;
-import judgels.problem.tag.ProblemTagStore;
 import judgels.user.Actor;
 
 @Path("/problems")

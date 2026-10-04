@@ -2,7 +2,7 @@ package judgels.training.stats;
 
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

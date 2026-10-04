@@ -1,12 +1,12 @@
 package judgels.api;
 
-import static judgels.api.problem.ProblemType.BUNDLE;
+import static judgels.api.catalog.problem.ProblemType.BUNDLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.ws.rs.core.Form;
 import java.util.List;
 import java.util.Map;
-import judgels.api.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
 import judgels.api.submission.bundle.Verdict;

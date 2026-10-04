@@ -3,7 +3,7 @@ package judgels.api.contest.problem;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
-import judgels.api.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemInfo;
 import org.immutables.value.Value;
 
 @Value.Immutable

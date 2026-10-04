@@ -4,15 +4,15 @@ import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.nio.file.Path;
+import judgels.catalog.lesson.LessonFs;
+import judgels.catalog.lesson.LessonGit;
+import judgels.catalog.problem.ProblemFs;
+import judgels.catalog.problem.ProblemGit;
 import judgels.core.JudgelsBaseDataDir;
 import judgels.core.fs.FileSystem;
 import judgels.core.fs.local.LocalFileSystem;
 import judgels.core.git.Git;
 import judgels.core.git.LocalGit;
-import judgels.lesson.LessonFs;
-import judgels.lesson.LessonGit;
-import judgels.problem.ProblemFs;
-import judgels.problem.ProblemGit;
 
 @Module
 public class CatalogModule {

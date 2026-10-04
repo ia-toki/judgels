@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.core.api.JudgelsApiException;
 
 public class ContestErrors {

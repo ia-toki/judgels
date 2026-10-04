@@ -3,7 +3,7 @@ package judgels.api.training.chapter.lesson;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
-import judgels.api.lesson.LessonInfo;
+import judgels.api.catalog.lesson.LessonInfo;
 import org.immutables.value.Value;
 
 @Value.Immutable

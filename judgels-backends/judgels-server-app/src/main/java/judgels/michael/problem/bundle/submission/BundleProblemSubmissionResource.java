@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.problem.Problem;
+import judgels.api.catalog.problem.Problem;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.BundleAnswer;
 import judgels.api.submission.bundle.BundleSubmission;

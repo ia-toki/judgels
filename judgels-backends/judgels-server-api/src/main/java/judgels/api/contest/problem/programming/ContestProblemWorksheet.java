@@ -2,8 +2,8 @@ package judgels.api.contest.problem.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Set;
+import judgels.api.catalog.problem.programming.ProblemWorksheet;
 import judgels.api.contest.problem.ContestProblem;
-import judgels.api.problem.programming.ProblemWorksheet;
 import org.immutables.value.Value;
 
 @Value.Immutable

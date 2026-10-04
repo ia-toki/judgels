@@ -3,7 +3,7 @@ package judgels.michael.problem.editorial;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.problem.ProblemEditorial;
+import judgels.api.catalog.problem.ProblemEditorial;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
