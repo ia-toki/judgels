@@ -1,10 +1,9 @@
-package judgels.role;
+package judgels.user.role;
 
 import jakarta.inject.Inject;
-import judgels.api.actor.Actor;
-import judgels.api.role.TrainingAdminRole;
+import judgels.api.user.role.TrainingAdminRole;
 import judgels.api.user.role.UserRole;
-import judgels.user.role.UserRoleStore;
+import judgels.user.Actor;
 
 public class TrainingAdminRoleChecker {
     private final UserRoleStore userRoleStore;

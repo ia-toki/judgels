@@ -5,14 +5,13 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.role.UserAdminRole;
+import judgels.api.user.role.UserAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserWithRole;
 import judgels.persistence.UnmodifiableModel_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.UserRoleDao;
 import judgels.persistence.model.UserRoleModel;
-import judgels.role.SuperadminRoleStore;
 
 public class UserRoleStore {
     private final UserRoleDao userRoleDao;

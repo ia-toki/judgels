@@ -1,10 +1,9 @@
-package judgels.role;
+package judgels.user.role;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import judgels.api.role.ContestAdminRole;
+import judgels.api.user.role.ContestAdminRole;
 import judgels.api.user.role.UserRole;
-import judgels.user.role.UserRoleStore;
 
 @Singleton
 public class ContestAdminRoleChecker {

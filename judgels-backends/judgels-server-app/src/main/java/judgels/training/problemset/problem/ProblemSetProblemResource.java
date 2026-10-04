@@ -48,11 +48,11 @@ import judgels.contest.ContestStore;
 import judgels.core.api.AuthHeader;
 import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 import judgels.training.problemset.ProblemSetStore;
 import judgels.training.stats.ProblemDifficultyStore;
 import judgels.training.stats.StatsStore;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/problemsets/{problemSetJid}/problems")
 public class ProblemSetProblemResource {

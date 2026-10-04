@@ -23,7 +23,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.profile.Profile;
@@ -41,6 +40,7 @@ import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.user.Actor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/problems/programming/{problemId}/submissions")

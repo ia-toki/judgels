@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.catalog.Partner;
 import judgels.api.lesson.Lesson;
 import judgels.api.profile.Profile;
@@ -29,6 +28,7 @@ import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.Actor;
 
 @Path("/lessons/{lessonId}/partners")
 public class LessonPartnerResource extends BaseLessonResource {

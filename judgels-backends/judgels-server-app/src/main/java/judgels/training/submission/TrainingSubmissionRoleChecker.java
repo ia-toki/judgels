@@ -7,7 +7,7 @@ import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
 import judgels.persistence.dao.StatsUserProblemDao;
 import judgels.persistence.model.StatsUserProblemModel;
-import judgels.role.TrainingAdminRoleChecker;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 public class TrainingSubmissionRoleChecker {
     private final TrainingAdminRoleChecker roleChecker;

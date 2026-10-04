@@ -5,10 +5,10 @@ import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
-import judgels.api.actor.Actor;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
 import judgels.setting.SettingStore;
+import judgels.user.Actor;
 import judgels.user.UserRoleChecker;
 
 public abstract class BaseResource {

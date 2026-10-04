@@ -12,10 +12,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.util.Optional;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.michael.problem.BaseProblemResource;
+import judgels.user.Actor;
 
 public abstract class ProblemEditorialRenderResources extends BaseProblemResource {
     @GET

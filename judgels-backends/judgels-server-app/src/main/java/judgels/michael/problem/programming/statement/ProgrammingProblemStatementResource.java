@@ -12,7 +12,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import java.util.Set;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemStatement;
 import judgels.grading.api.GradingConfig;
@@ -20,6 +19,7 @@ import judgels.grading.api.LanguageRestriction;
 import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.problem.programming.grading.LanguageRestrictionAdapter;
 import judgels.michael.template.HtmlTemplate;
+import judgels.user.Actor;
 
 @Path("/problems/programming/{problemId}/statements")
 public class ProgrammingProblemStatementResource extends BaseProgrammingProblemResource {

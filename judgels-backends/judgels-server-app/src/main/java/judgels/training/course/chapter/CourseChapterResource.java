@@ -34,13 +34,13 @@ import judgels.api.training.course.chapter.CourseChapterUserProgressesData;
 import judgels.api.training.course.chapter.CourseChapterUserProgressesResponse;
 import judgels.api.training.course.chapter.CourseChaptersResponse;
 import judgels.core.api.AuthHeader;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.lesson.ChapterLessonStore;
 import judgels.training.course.CourseStore;
 import judgels.training.stats.StatsStore;
 import judgels.user.UserStore;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/courses/{courseJid}/chapters")
 public class CourseChapterResource {

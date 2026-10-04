@@ -40,12 +40,12 @@ import judgels.api.training.stats.ProblemProgress;
 import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.problemset.problem.ProblemSetProblemStore;
 import judgels.training.stats.StatsStore;
 import judgels.user.UserStore;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/problemsets")
 public class ProblemSetResource {

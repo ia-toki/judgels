@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.api.problem.ProblemSetterRole;
 import judgels.api.profile.Profile;
@@ -34,6 +33,7 @@ import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
 import judgels.problem.ProblemCreator;
 import judgels.problem.tag.ProblemTagStore;
+import judgels.user.Actor;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {

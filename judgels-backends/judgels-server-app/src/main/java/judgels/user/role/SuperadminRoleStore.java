@@ -1,4 +1,4 @@
-package judgels.role;
+package judgels.user.role;
 
 import jakarta.inject.Inject;
 

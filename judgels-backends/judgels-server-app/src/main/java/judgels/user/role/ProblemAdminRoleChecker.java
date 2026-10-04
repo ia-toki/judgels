@@ -1,10 +1,9 @@
-package judgels.role;
+package judgels.user.role;
 
 import jakarta.inject.Inject;
-import judgels.api.actor.Actor;
-import judgels.api.role.ProblemAdminRole;
+import judgels.api.user.role.ProblemAdminRole;
 import judgels.api.user.role.UserRole;
-import judgels.user.role.UserRoleStore;
+import judgels.user.Actor;
 
 public class ProblemAdminRoleChecker {
     private final UserRoleStore userRoleStore;

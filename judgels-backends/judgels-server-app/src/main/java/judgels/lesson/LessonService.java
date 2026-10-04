@@ -15,7 +15,7 @@ import judgels.api.lesson.LessonInfo;
 import judgels.api.lesson.LessonStatement;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.lesson.statement.LessonStatementStore;
-import judgels.role.ProblemAdminRoleChecker;
+import judgels.user.role.ProblemAdminRoleChecker;
 
 public class LessonService {
     @Inject protected ProblemAdminRoleChecker roleChecker;

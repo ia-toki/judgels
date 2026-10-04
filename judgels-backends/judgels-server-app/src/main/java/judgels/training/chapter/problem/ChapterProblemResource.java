@@ -38,7 +38,6 @@ import judgels.core.api.AuthHeader;
 import judgels.grading.api.SubmissionSource;
 import judgels.grading.api.Verdict;
 import judgels.problem.ProblemService;
-import judgels.role.TrainingAdminRoleChecker;
 import judgels.session.ActorChecker;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
@@ -48,6 +47,7 @@ import judgels.training.problemset.problem.ProblemSetProblemStore;
 import judgels.training.stats.StatsStore;
 import judgels.training.submission.programming.TrainingSubmissionSourceBuilder;
 import judgels.training.submission.programming.TrainingSubmissionStore;
+import judgels.user.role.TrainingAdminRoleChecker;
 
 @Path("/api/v2/chapters/{chapterJid}/problems")
 public class ChapterProblemResource {
