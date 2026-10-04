@@ -18,7 +18,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
-import judgels.api.problem.Problem;
+import judgels.api.catalog.problem.Problem;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;

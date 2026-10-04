@@ -1,8 +1,8 @@
 package judgels.submission.bundle;
 
 import java.util.Optional;
-import judgels.api.problem.bundle.Item;
-import judgels.api.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.Item;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.Verdict;
 import org.slf4j.Logger;

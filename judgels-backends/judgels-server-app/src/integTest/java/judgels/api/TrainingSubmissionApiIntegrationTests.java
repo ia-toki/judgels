@@ -1,7 +1,7 @@
 package judgels.api;
 
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import feign.form.FormData;

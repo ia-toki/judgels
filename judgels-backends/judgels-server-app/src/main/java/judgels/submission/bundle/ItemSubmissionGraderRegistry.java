@@ -1,7 +1,7 @@
 package judgels.submission.bundle;
 
 import jakarta.inject.Inject;
-import judgels.api.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.submission.bundle.Verdict;
 
 public class ItemSubmissionGraderRegistry {

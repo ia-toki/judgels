@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Map;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.api.training.chapter.Chapter;
 import judgels.api.training.chapter.ChapterCreateData;
 import judgels.api.training.chapter.lesson.ChapterLessonData;

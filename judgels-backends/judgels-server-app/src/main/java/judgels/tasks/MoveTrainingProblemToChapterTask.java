@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.persistence.dao.ChapterDao;
 import judgels.persistence.dao.ChapterProblemDao;
 import judgels.persistence.dao.ProblemDao;

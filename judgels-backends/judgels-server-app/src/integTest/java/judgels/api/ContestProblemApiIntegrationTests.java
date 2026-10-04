@@ -11,6 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import judgels.api.catalog.problem.ProblemStatement;
+import judgels.api.catalog.problem.bundle.EssayItemConfig;
+import judgels.api.catalog.problem.bundle.Item;
+import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
+import judgels.api.catalog.problem.bundle.StatementItemConfig;
+import judgels.api.catalog.problem.programming.ProblemLimits;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemWorksheet;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestErrors;
 import judgels.api.contest.problem.ContestProblem;
@@ -18,16 +28,6 @@ import judgels.api.contest.problem.ContestProblemData;
 import judgels.api.contest.problem.ContestProblemStatus;
 import judgels.api.contest.problem.programming.ContestProblemWorksheet;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.api.problem.ProblemStatement;
-import judgels.api.problem.bundle.EssayItemConfig;
-import judgels.api.problem.bundle.Item;
-import judgels.api.problem.bundle.ItemType;
-import judgels.api.problem.bundle.MultipleChoiceItemConfig;
-import judgels.api.problem.bundle.ShortAnswerItemConfig;
-import judgels.api.problem.bundle.StatementItemConfig;
-import judgels.api.problem.programming.ProblemLimits;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
-import judgels.api.problem.programming.ProblemWorksheet;
 import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -250,7 +250,7 @@ class ContestProblemApiIntegrationTests extends BaseContestApiIntegrationTests {
                                 .status(OPEN)
                                 .build())
                         .totalSubmissions(0)
-                        .worksheet(new judgels.api.problem.bundle.ProblemWorksheet.Builder()
+                        .worksheet(new judgels.api.catalog.problem.bundle.ProblemWorksheet.Builder()
                                 .statement(new ProblemStatement.Builder()
                                         .title("Problem 3")
                                         .text("Statement 3. <img src=\"" + getLocalUrl() + "/api/v2/problems/" + problem3.getJid() + "/render/image.png\"/>")

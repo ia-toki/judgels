@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
 import judgels.grading.api.GradingResult;

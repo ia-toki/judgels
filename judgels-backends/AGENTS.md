@@ -4,7 +4,7 @@ Server packages, DTO packages (`judgels.api.…`), Feign clients and client API 
 
 | Layer | Packages | API paths |
 |---|---|---|
-| Catalog | `judgels.problem.*`, `judgels.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
+| Catalog | `judgels.catalog.problem.*`, `judgels.catalog.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
 | Host | `judgels.contest.*`, `judgels.training.*` | `/api/v2/contests/...`; training at `/api/v2/{curriculums,courses,chapters,archives,problemsets}/...` and `/api/v4/training/...` |
 | Submission | `judgels.submission.*` | none |
 | Grading | `judgels.grading.*` | none |
@@ -12,12 +12,6 @@ Server packages, DTO packages (`judgels.api.…`), Feign clients and client API 
 Place new code by this layout, not by its neighbours: some packages still break it and will be moved to fit.
 
 Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core imports nothing else under `judgels`.
-
-A class that imports a layer package belongs to that layer, not to core: the isolate wiring sits in `judgels.grading.sandboxes.isolate`.
-
-Name a package after what its code does, not who uses, manages or shows it. Two questions place any class:
-1. Would it still exist if training were deleted? If not, it goes under `judgels.training`.
-2. Is it about a problem, lesson or submission itself, or about hosting one? The thing itself goes under `judgels.problem`, `judgels.lesson` or `judgels.submission`; hosting it is host code, which wraps it in host-specific classes, such as `ContestProblem`, `ChapterLesson` or `TrainingSubmissionResource`.
 
 Submission code is written once and reused by every host, and by the catalog for test submissions. Each of them gives it its own tables and passes the container as an opaque `containerJid`, which only it interprets.
 
@@ -27,7 +21,9 @@ Prefix a training class or DTO with `Training` only when its name would otherwis
 
 The archangel names are deprecated: Jophiel (users), Sandalphon (catalog), Uriel (contest), Jerahmeel (training), Gabriel (grader) and Raphael (client). They survive mostly as table name prefixes, such as `uriel_contest` and `jophiel_user`. Name new code by the layers, and keep a table's name when renaming its persistence model.
 
-API paths follow the layers under `/api/v4` only; `/api/v2` holds the older paths, which stay as they are. A new endpoint joins its family's existing version (more course endpoints go under `/api/v2/courses`), and a new family goes under `/api/v4`.
+An API path names a resource, not its layer: `judgels.catalog.problem` serves `/api/v4/problems` and `judgels.training.course` serves `/api/v2/courses`. Prefix a path with `training/` only when the endpoint is training-wide, spanning containers instead of belonging to one chapter, problem set, course or archive, e.g. `/api/v4/training/problems`, `/api/v4/training/submissions/programming`, `/api/v4/training/stats/users`.
+
+This naming holds under `/api/v4` only; `/api/v2` holds the older paths, which stay as they are. A new endpoint joins its family's existing version (more course endpoints go under `/api/v2/courses`), and a new family goes under `/api/v4`.
 
 # Tests
 

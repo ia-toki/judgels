@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
-import judgels.problem.ProblemService;
+import judgels.catalog.problem.ProblemService;
 import judgels.submission.bundle.ItemSubmissionGraderRegistry;
 import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.submission.bundle.ItemSubmissionRegrader;

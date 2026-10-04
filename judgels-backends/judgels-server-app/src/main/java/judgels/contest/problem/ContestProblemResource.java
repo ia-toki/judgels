@@ -26,22 +26,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.api.catalog.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemType;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestErrors;
 import judgels.api.contest.problem.ContestProblem;
 import judgels.api.contest.problem.ContestProblemConfig;
 import judgels.api.contest.problem.ContestProblemData;
 import judgels.api.contest.problem.ContestProblemsResponse;
-import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemType;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.catalog.problem.ProblemService;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.submission.programming.ContestSubmissionStore;
 import judgels.core.api.AuthHeader;
 import judgels.grading.api.LanguageRestriction;
-import judgels.problem.ProblemService;
 import judgels.session.ActorChecker;
 import judgels.submission.programming.SubmissionStore;
 
@@ -176,7 +176,7 @@ public class ContestProblemResource {
         Optional<String> reasonNotAllowedToSubmit =
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
-        judgels.api.problem.programming.ProblemWorksheet worksheet =
+        judgels.api.catalog.problem.programming.ProblemWorksheet worksheet =
                 problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language);
 
         LanguageRestriction contestGradingLanguageRestriction =
@@ -186,7 +186,7 @@ public class ContestProblemResource {
         LanguageRestriction combinedGradingLanguageRestriction =
                 LanguageRestriction.combine(contestGradingLanguageRestriction, problemGradingLanguageRestriction);
 
-        judgels.api.problem.programming.ProblemWorksheet finalWorksheet = new judgels.api.problem.programming.ProblemWorksheet.Builder()
+        judgels.api.catalog.problem.programming.ProblemWorksheet finalWorksheet = new judgels.api.catalog.problem.programming.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .submissionConfig(new ProblemSubmissionConfig.Builder()
                         .from(worksheet.getSubmissionConfig())
@@ -235,11 +235,11 @@ public class ContestProblemResource {
         Optional<String> reasonNotAllowedToSubmit =
                 roleChecker.canSubmit(actorJid, contest, problem, totalSubmissions);
 
-        judgels.api.problem.bundle.ProblemWorksheet worksheet =
+        judgels.api.catalog.problem.bundle.ProblemWorksheet worksheet =
                 problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language);
 
-        judgels.api.problem.bundle.ProblemWorksheet
-                finalWorksheet = new judgels.api.problem.bundle.ProblemWorksheet.Builder()
+        judgels.api.catalog.problem.bundle.ProblemWorksheet
+                finalWorksheet = new judgels.api.catalog.problem.bundle.ProblemWorksheet.Builder()
                 .from(worksheet)
                 .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                 .build();

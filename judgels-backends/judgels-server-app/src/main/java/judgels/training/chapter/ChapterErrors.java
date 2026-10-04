@@ -3,7 +3,7 @@ package judgels.training.chapter;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.core.api.JudgelsApiException;
 
 public class ChapterErrors {

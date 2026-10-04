@@ -6,7 +6,7 @@ import static judgels.submission.programming.SubmissionUtils.checkGradingLanguag
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Synchronization;
 import java.io.IOException;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
 import judgels.core.messaging.MessageClient;

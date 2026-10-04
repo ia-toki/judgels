@@ -19,15 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.catalog.Partner;
-import judgels.api.problem.Problem;
+import judgels.api.catalog.problem.Problem;
 import judgels.api.profile.Profile;
+import judgels.catalog.problem.partner.ProblemPartnerStore;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditPartnersForm;
 import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.problem.partner.ProblemPartnerStore;
 import judgels.user.Actor;
 
 @Path("/problems/{problemId}/partners")

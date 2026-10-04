@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import judgels.api.catalog.problem.ProblemEditorialInfo;
+import judgels.api.catalog.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemMetadata;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.api.contest.ContestInfo;
-import judgels.api.problem.ProblemEditorialInfo;
-import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemMetadata;
-import judgels.api.problem.ProblemType;
 import judgels.api.profile.Profile;
 import judgels.api.training.problemset.ProblemSetErrors;
 import judgels.api.training.problemset.problem.ProblemEditorialResponse;
@@ -44,9 +44,9 @@ import judgels.api.training.problemset.problem.ProblemSetProblemsResponse;
 import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemProgress;
 import judgels.api.training.stats.ProblemTopStats;
+import judgels.catalog.problem.ProblemService;
 import judgels.contest.ContestStore;
 import judgels.core.api.AuthHeader;
-import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 import judgels.training.problemset.ProblemSetStore;
@@ -141,7 +141,7 @@ public class ProblemSetProblemResource {
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(new judgels.api.problem.programming.ProblemWorksheet.Builder()
+                    .worksheet(new judgels.api.catalog.problem.programming.ProblemWorksheet.Builder()
                             .from(problemService.getProgrammingProblemWorksheet(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())
@@ -151,7 +151,7 @@ public class ProblemSetProblemResource {
                     .defaultLanguage(problemInfo.getDefaultLanguage())
                     .languages(problemInfo.getTitlesByLanguage().keySet())
                     .problem(problem)
-                    .worksheet(new judgels.api.problem.bundle.ProblemWorksheet.Builder()
+                    .worksheet(new judgels.api.catalog.problem.bundle.ProblemWorksheet.Builder()
                             .from(problemService.getBundleProblemWorksheetWithoutAnswerKey(req, uriInfo, problemJid, language))
                             .reasonNotAllowedToSubmit(reasonNotAllowedToSubmit)
                             .build())

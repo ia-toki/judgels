@@ -2,7 +2,7 @@ package judgels.api.submission.bundle;
 
 import java.util.List;
 import java.util.Map;
-import judgels.api.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.profile.Profile;
 
 public interface SubmissionSummaryResponse {

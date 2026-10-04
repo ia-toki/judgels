@@ -1,6 +1,6 @@
 package judgels.api;
 
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 import static judgels.api.training.problemset.ProblemSetErrors.ARCHIVE_SLUG_NOT_FOUND;
 import static judgels.api.training.problemset.ProblemSetErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;

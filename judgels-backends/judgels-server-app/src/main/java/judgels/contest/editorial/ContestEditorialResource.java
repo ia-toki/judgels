@@ -21,19 +21,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import judgels.api.catalog.problem.ProblemEditorialInfo;
+import judgels.api.catalog.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemMetadata;
 import judgels.api.contest.Contest;
 import judgels.api.contest.editorial.ContestEditorialResponse;
 import judgels.api.contest.module.EditorialModuleConfig;
 import judgels.api.contest.problem.ContestProblem;
-import judgels.api.problem.ProblemEditorialInfo;
-import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemMetadata;
 import judgels.api.profile.Profile;
+import judgels.catalog.problem.ProblemService;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.problem.ContestProblemStore;
-import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 
 @Path("/api/v2/contests/{contestJid}/editorial")

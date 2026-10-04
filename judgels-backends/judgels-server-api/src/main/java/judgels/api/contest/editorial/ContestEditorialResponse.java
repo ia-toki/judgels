@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import judgels.api.catalog.problem.ProblemEditorialInfo;
+import judgels.api.catalog.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemMetadata;
 import judgels.api.contest.problem.ContestProblem;
-import judgels.api.problem.ProblemEditorialInfo;
-import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemMetadata;
 import judgels.api.profile.Profile;
 import org.immutables.value.Value;
 

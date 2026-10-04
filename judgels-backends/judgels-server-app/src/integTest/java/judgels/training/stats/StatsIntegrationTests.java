@@ -1,7 +1,7 @@
 package judgels.training.stats;
 
-import static judgels.api.problem.ProblemType.BUNDLE;
-import static judgels.api.problem.ProblemType.PROGRAMMING;
+import static judgels.api.catalog.problem.ProblemType.BUNDLE;
+import static judgels.api.catalog.problem.ProblemType.PROGRAMMING;
 import static judgels.grading.api.Verdict.ACCEPTED;
 import static judgels.grading.api.Verdict.OK;
 import static judgels.grading.api.Verdict.PENDING;

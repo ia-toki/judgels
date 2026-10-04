@@ -1,10 +1,10 @@
 package judgels.api;
 
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.api.catalog.lesson.Lesson;
+import judgels.api.catalog.problem.Problem;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestCreateData;
-import judgels.api.lesson.Lesson;
-import judgels.api.problem.Problem;
 import judgels.api.user.User;
 import judgels.contest.ContestClient;
 import judgels.training.archive.ArchiveClient;

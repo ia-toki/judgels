@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Sets;
 import jakarta.ws.rs.ForbiddenException;
 import java.util.Set;
-import judgels.api.problem.programming.ProblemSubmissionConfig;
+import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.grading.api.LanguageRestriction;
 import judgels.grading.api.OutputOnlyOverrides;
 import judgels.grading.api.SubmissionSource;

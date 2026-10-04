@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import judgels.api.training.problem.ProblemTagCategory;
 import judgels.api.training.problem.ProblemTagOption;
 import judgels.api.training.problem.ProblemTagsResponse;
-import judgels.problem.tag.ProblemTagStore;
+import judgels.catalog.problem.tag.ProblemTagStore;
 
 @Path("/api/v4/training/problems/tags")
 public class TrainingProblemTagResource {

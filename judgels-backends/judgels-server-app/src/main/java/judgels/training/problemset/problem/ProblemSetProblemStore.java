@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.dao.ProblemContestDao;

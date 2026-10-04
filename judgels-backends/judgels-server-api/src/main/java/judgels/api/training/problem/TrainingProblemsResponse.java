@@ -2,8 +2,8 @@ package judgels.api.training.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
-import judgels.api.problem.ProblemInfo;
-import judgels.api.problem.ProblemMetadata;
+import judgels.api.catalog.problem.ProblemInfo;
+import judgels.api.catalog.problem.ProblemMetadata;
 import judgels.api.training.stats.ProblemDifficulty;
 import judgels.api.training.stats.ProblemProgress;
 import judgels.persistence.api.Page;

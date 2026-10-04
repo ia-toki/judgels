@@ -1,7 +1,7 @@
 package judgels.api.training.chapter.problem;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.api.problem.ProblemType;
+import judgels.api.catalog.problem.ProblemType;
 import org.immutables.value.Value;
 
 @Value.Immutable

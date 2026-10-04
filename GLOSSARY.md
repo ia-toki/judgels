@@ -11,7 +11,7 @@ The problems and lessons that exist independently of any contest or training, re
 _Avoid_: Resource, Sandalphon
 
 **Host**:
-The part of Judgels that hosts catalog problems and lessons for users: contest or training. Each host puts them into its containers and owns whatever organizes them.
+The part of Judgels that hosts catalog problems and lessons for users: contest, which hosts problems, or training, which hosts both. Each host puts them into its containers and owns whatever organizes them.
 
 **Submission**:
 A user's answer to a problem, or to one item of a bundle problem, made in a container. It is graded when it is made and again on each regrade; its latest grading gives its current verdict.
@@ -31,7 +31,7 @@ A problem solved by submitting source code, graded against its test data.
 A problem made of items (multiple-choice, short-answer or essay questions, plus statement-only items), each answered on its own.
 
 **Lesson**:
-A piece of reading material with its statements.
+A piece of reading material with its statements. It is a catalog entry like a problem, though only training hosts lessons, which is why the training admin manages them.
 
 **Test submission**:
 A submission an author makes against their own problem while writing it, outside any host.

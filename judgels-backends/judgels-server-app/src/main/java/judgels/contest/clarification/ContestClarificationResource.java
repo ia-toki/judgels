@@ -32,12 +32,12 @@ import judgels.api.contest.clarification.ContestClarificationConfig;
 import judgels.api.contest.clarification.ContestClarificationData;
 import judgels.api.contest.clarification.ContestClarificationsResponse;
 import judgels.api.profile.Profile;
+import judgels.catalog.problem.ProblemService;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
 import judgels.contest.problem.ContestProblemStore;
 import judgels.core.api.AuthHeader;
 import judgels.persistence.api.Page;
-import judgels.problem.ProblemService;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 

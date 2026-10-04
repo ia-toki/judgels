@@ -3,9 +3,9 @@ package judgels.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.problem.Problem;
-import judgels.problem.ProblemClient;
-import judgels.problem.ProblemClient.GetProblemsParams;
+import judgels.api.catalog.problem.Problem;
+import judgels.catalog.problem.ProblemClient;
+import judgels.catalog.problem.ProblemClient.GetProblemsParams;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
