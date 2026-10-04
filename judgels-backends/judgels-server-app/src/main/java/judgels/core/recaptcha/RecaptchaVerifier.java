@@ -1,4 +1,4 @@
-package judgels.recaptcha;
+package judgels.core.recaptcha;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 

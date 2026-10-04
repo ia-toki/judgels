@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 import judgels.grading.aggregators.SubtaskAggregator;
 import judgels.grading.api.AggregationResult;
 import judgels.grading.api.Aggregator;

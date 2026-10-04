@@ -1,8 +1,8 @@
-package judgels.auth;
+package judgels.core.auth;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
-import judgels.auth.google.GoogleAuthConfiguration;
+import judgels.core.auth.google.GoogleAuthConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

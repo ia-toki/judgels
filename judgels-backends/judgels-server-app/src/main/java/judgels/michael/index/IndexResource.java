@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Optional;
 import judgels.api.session.Session;
 import judgels.api.user.User;
-import judgels.auth.google.GoogleAuth;
+import judgels.core.auth.google.GoogleAuth;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.session.SessionStore;

@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 import judgels.core.messaging.MessageClient;
 import judgels.core.messaging.api.Message;
 import judgels.grading.api.GradingConfig;

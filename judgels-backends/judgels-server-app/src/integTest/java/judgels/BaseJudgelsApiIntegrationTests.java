@@ -41,7 +41,7 @@ import judgels.core.BaseJudgelsAppIntegrationTests;
 import judgels.core.JudgelsAppConfiguration;
 import judgels.core.feign.FeignClients;
 import judgels.core.mailer.MailerConfiguration;
-import judgels.core.messaging.rabbitmq.RabbitMQConfiguration;
+import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.session.SessionClient;
 import judgels.training.TrainingConfiguration;

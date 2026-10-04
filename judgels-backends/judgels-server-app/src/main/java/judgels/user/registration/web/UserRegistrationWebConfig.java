@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
 import judgels.JudgelsServerConfiguration;
-import judgels.recaptcha.web.RecaptchaWebConfig;
+import judgels.core.recaptcha.web.RecaptchaWebConfig;
 import org.immutables.value.Value;
 
 @Value.Immutable

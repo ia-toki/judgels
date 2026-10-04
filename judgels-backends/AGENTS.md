@@ -11,6 +11,10 @@ Server packages, DTO packages (`judgels.api.…`), Feign clients and client API 
 
 Place new code by this layout, not by its neighbours: some packages still break it and will be moved to fit.
 
+Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core imports nothing else under `judgels`.
+
+A class that imports a layer package belongs to that layer, not to core: the isolate wiring sits in `judgels.grading.sandboxes.isolate`.
+
 Name a package after what its code does, not who uses, manages or shows it. Two questions place any class:
 1. Would it still exist if training were deleted? If not, it goes under `judgels.training`.
 2. Is it about a problem, lesson or submission itself, or about hosting one? The thing itself goes under `judgels.problem`, `judgels.lesson` or `judgels.submission`; hosting it is host code, which wraps it in host-specific classes, such as `ContestProblem`, `ChapterLesson` or `TrainingSubmissionResource`.

@@ -1,10 +1,10 @@
-package judgels.auth;
+package judgels.core.auth;
 
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.auth.google.GoogleAuth;
+import judgels.core.auth.google.GoogleAuth;
 
 @Module
 public class AuthModule {

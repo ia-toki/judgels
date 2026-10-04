@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.GradingEngine;
 import judgels.grading.api.GradingException;

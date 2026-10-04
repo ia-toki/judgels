@@ -9,8 +9,8 @@ import judgels.api.user.UserData;
 import judgels.api.user.account.GoogleUserRegistrationData;
 import judgels.api.user.account.UserRegistrationData;
 import judgels.api.user.info.UserInfo;
-import judgels.auth.google.GoogleAuth;
-import judgels.recaptcha.RecaptchaVerifier;
+import judgels.core.auth.google.GoogleAuth;
+import judgels.core.recaptcha.RecaptchaVerifier;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;
 
