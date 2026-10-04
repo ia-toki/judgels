@@ -1,4 +1,4 @@
-package judgels.file;
+package judgels.contest.file;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -7,4 +7,4 @@ import java.lang.annotation.Retention;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface FileFs {}
+public @interface ContestFileFs {}
