@@ -1,4 +1,4 @@
-package judgels.file;
+package judgels.contest.file;
 
 import dagger.Module;
 import dagger.Provides;
@@ -10,20 +10,20 @@ import judgels.core.fs.FileSystem;
 import judgels.core.fs.local.LocalFileSystem;
 
 @Module
-public class FileModule {
+public class ContestFileModule {
     private final Optional<FileSystem> fs;
 
-    public FileModule() {
+    public ContestFileModule() {
         this.fs = Optional.empty();
     }
 
-    public FileModule(FileSystem fs) {
+    public ContestFileModule(FileSystem fs) {
         this.fs = Optional.of(fs);
     }
 
     @Provides
     @Singleton
-    @FileFs
+    @ContestFileFs
     FileSystem fileFs(@JudgelsBaseDataDir Path baseDataDir) {
         return fs.orElse(new LocalFileSystem(baseDataDir.resolve("files")));
     }

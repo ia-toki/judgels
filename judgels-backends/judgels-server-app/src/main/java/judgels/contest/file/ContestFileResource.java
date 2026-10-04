@@ -30,7 +30,6 @@ import judgels.contest.log.ContestLogger;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.api.AuthHeader;
 import judgels.core.fs.FileSystem;
-import judgels.file.FileFs;
 import judgels.session.ActorChecker;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -41,7 +40,7 @@ public class ContestFileResource {
     @Inject protected ContestFileRoleChecker fileRoleChecker;
     @Inject protected ContestStore contestStore;
     @Inject protected ContestLogger contestLogger;
-    @Inject @FileFs protected FileSystem fileFs;
+    @Inject @ContestFileFs protected FileSystem fileFs;
 
     @Inject public ContestFileResource() {}
 

@@ -21,11 +21,11 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
         judgels.core.messaging.rabbitmq.RabbitMQModule.class,
         judgels.grading.GradingModule.class,
-        judgels.file.FileModule.class,
 
         judgels.catalog.CatalogModule.class,
         judgels.submission.SubmissionModule.class,
 
+        judgels.contest.file.ContestFileModule.class,
         judgels.contest.submission.programming.ContestSubmissionModule.class,
         judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
         judgels.contest.log.ContestLogModule.class,
