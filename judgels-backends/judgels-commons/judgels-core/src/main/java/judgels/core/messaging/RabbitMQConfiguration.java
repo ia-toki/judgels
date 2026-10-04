@@ -1,4 +1,4 @@
-package judgels.core.messaging.rabbitmq;
+package judgels.core.messaging;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

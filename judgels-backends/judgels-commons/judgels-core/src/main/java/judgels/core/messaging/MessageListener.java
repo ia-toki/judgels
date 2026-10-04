@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import judgels.core.messaging.api.Message;
-import judgels.core.messaging.rabbitmq.RabbitMQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

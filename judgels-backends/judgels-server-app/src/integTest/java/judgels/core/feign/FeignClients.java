@@ -5,7 +5,7 @@ import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 
 public class FeignClients {
     private FeignClients() {}

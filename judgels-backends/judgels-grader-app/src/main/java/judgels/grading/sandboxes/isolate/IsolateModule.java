@@ -1,9 +1,8 @@
-package judgels.isolate;
+package judgels.grading.sandboxes.isolate;
 
 import dagger.Module;
 import dagger.Provides;
 import java.util.Optional;
-import judgels.grading.sandboxes.isolate.IsolateSandboxFactory;
 
 @Module
 public class IsolateModule {

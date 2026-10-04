@@ -1,4 +1,4 @@
-package judgels.core.messaging.rabbitmq;
+package judgels.core.messaging;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;

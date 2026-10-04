@@ -19,7 +19,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.session.SessionModule.class,
         judgels.setting.SettingModule.class,
 
-        judgels.core.messaging.rabbitmq.RabbitMQModule.class,
+        judgels.core.messaging.RabbitMQModule.class,
         judgels.grading.GradingModule.class,
 
         judgels.catalog.CatalogModule.class,
@@ -36,9 +36,9 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
         judgels.training.curriculum.CurriculumModule.class,
 
-        judgels.auth.AuthModule.class,
+        judgels.core.auth.AuthModule.class,
         judgels.core.mailer.MailerModule.class,
-        judgels.recaptcha.RecaptchaModule.class,
+        judgels.core.recaptcha.RecaptchaModule.class,
         judgels.user.registration.UserRegistrationModule.class,
         judgels.user.account.UserResetPasswordModule.class,
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import java.io.IOException;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 import judgels.core.api.JudgelsApiError;
 import judgels.core.api.JudgelsApiException;
 

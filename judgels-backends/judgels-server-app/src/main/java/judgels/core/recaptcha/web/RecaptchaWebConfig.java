@@ -1,7 +1,7 @@
-package judgels.recaptcha.web;
+package judgels.core.recaptcha.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.recaptcha.RecaptchaConfiguration;
+import judgels.core.recaptcha.RecaptchaConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

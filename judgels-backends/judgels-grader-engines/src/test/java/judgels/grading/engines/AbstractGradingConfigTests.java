@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
-import judgels.JudgelsObjectMappers;
+import judgels.core.JudgelsObjectMappers;
 import judgels.grading.api.GradingConfig;
 
 public abstract class AbstractGradingConfigTests {

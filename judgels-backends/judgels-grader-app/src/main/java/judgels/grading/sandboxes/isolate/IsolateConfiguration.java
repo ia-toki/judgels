@@ -1,4 +1,4 @@
-package judgels.isolate;
+package judgels.grading.sandboxes.isolate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.nio.file.Path;

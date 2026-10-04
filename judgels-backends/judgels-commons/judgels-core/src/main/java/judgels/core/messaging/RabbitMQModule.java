@@ -1,12 +1,10 @@
-package judgels.core.messaging.rabbitmq;
+package judgels.core.messaging;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.core.messaging.MessageClient;
-import judgels.core.messaging.MessageListener;
 
 @Module
 public class RabbitMQModule {

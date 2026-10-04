@@ -1,4 +1,4 @@
-package judgels.recaptcha;
+package judgels.core.recaptcha;
 
 import dagger.Module;
 import dagger.Provides;

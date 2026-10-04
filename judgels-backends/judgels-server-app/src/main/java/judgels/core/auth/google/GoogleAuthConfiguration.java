@@ -1,4 +1,4 @@
-package judgels.auth.google;
+package judgels.core.auth.google;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

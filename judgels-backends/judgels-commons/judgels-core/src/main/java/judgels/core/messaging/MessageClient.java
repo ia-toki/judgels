@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import judgels.core.messaging.api.Message;
-import judgels.core.messaging.rabbitmq.RabbitMQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
