@@ -5,7 +5,7 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.auth.google.GoogleAuth;
-import judgels.mailer.Mailer;
+import judgels.core.mailer.Mailer;
 import judgels.recaptcha.RecaptchaVerifier;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;

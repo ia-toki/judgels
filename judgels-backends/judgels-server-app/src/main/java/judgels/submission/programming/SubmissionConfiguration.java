@@ -1,7 +1,7 @@
 package judgels.submission.programming;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import judgels.fs.FsConfiguration;
+import judgels.core.fs.FsConfiguration;
 import org.immutables.value.Value;
 
 @Value.Immutable

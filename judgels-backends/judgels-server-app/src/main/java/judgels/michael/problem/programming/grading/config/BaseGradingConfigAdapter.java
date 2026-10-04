@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.Subtask;
 import judgels.grading.api.TestCase;

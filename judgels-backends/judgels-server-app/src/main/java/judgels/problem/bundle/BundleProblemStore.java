@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import judgels.api.problem.bundle.BundleItemsConfig;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileSystem;
 import judgels.problem.ProblemFs;
 
 public final class BundleProblemStore extends BaseBundleProblemStore {

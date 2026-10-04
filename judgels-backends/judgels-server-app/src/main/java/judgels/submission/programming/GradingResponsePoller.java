@@ -2,7 +2,7 @@ package judgels.submission.programming;
 
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.ThreadPoolExecutor;
-import judgels.messaging.MessageListener;
+import judgels.core.messaging.MessageListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

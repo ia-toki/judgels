@@ -27,7 +27,7 @@ import judgels.api.problem.ProblemStatement;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.core.JudgelsResponseBuilders;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.EditStatementForm;
 import judgels.michael.resource.EditStatementView;

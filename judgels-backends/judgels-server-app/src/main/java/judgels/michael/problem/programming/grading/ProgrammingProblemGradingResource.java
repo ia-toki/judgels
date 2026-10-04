@@ -21,7 +21,7 @@ import java.util.List;
 import judgels.api.actor.Actor;
 import judgels.api.problem.Problem;
 import judgels.core.JudgelsResponseBuilders;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.LanguageRestriction;
 import judgels.grading.engines.GradingEngineRegistry;

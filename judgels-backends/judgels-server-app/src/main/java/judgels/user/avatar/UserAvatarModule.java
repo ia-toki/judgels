@@ -6,8 +6,8 @@ import jakarta.inject.Singleton;
 import java.nio.file.Path;
 import java.util.Optional;
 import judgels.core.JudgelsBaseDataDir;
-import judgels.fs.FileSystem;
-import judgels.fs.local.LocalFileSystem;
+import judgels.core.fs.FileSystem;
+import judgels.core.fs.local.LocalFileSystem;
 
 @Module
 public class UserAvatarModule {

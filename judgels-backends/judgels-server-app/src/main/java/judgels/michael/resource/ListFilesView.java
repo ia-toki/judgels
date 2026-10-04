@@ -1,7 +1,7 @@
 package judgels.michael.resource;
 
 import java.util.List;
-import judgels.fs.FileInfo;
+import judgels.core.fs.FileInfo;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

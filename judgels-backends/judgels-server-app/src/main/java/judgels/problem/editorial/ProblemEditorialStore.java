@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.problem.ProblemEditorial;
 import judgels.catalog.StatementLanguageStatus;
-import judgels.fs.FileInfo;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileInfo;
+import judgels.core.fs.FileSystem;
 import judgels.problem.BaseProblemStore;
 import judgels.problem.ProblemFs;
 

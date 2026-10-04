@@ -9,11 +9,11 @@ import java.io.IOException;
 import judgels.api.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
+import judgels.core.messaging.MessageClient;
 import judgels.grading.api.GradingOptions;
 import judgels.grading.api.GradingRequest;
 import judgels.grading.api.LanguageRestriction;
 import judgels.grading.api.SubmissionSource;
-import judgels.messaging.MessageClient;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 

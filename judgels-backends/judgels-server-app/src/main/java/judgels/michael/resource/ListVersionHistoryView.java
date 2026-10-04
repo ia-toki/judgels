@@ -3,7 +3,7 @@ package judgels.michael.resource;
 import java.util.List;
 import java.util.Map;
 import judgels.api.profile.Profile;
-import judgels.git.GitCommit;
+import judgels.core.git.GitCommit;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.TemplateView;
 

@@ -12,7 +12,7 @@ import judgels.api.problem.bundle.BundleItem;
 import judgels.api.problem.bundle.BundleItemsConfig;
 import judgels.api.problem.bundle.ItemConfig;
 import judgels.api.problem.bundle.ItemType;
-import judgels.fs.FileSystem;
+import judgels.core.fs.FileSystem;
 import judgels.persistence.JidGenerator;
 import judgels.problem.ProblemFs;
 import judgels.problem.bundle.BaseBundleProblemStore;
