@@ -33,7 +33,7 @@ import judgels.catalog.problem.tag.ProblemTagStore;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
 import judgels.persistence.api.Page;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/problems")
 public class ProblemResource extends BaseProblemResource {

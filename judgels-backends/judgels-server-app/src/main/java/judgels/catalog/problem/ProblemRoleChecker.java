@@ -6,7 +6,7 @@ import judgels.api.catalog.Partner;
 import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.Problem;
 import judgels.catalog.problem.partner.ProblemPartnerStore;
-import judgels.user.Actor;
+import judgels.session.Actor;
 import judgels.user.role.ProblemAdminRoleChecker;
 
 public class ProblemRoleChecker {

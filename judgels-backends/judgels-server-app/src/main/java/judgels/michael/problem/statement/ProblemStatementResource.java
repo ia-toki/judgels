@@ -33,7 +33,7 @@ import judgels.michael.resource.EditStatementView;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.resource.ListStatementLanguagesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

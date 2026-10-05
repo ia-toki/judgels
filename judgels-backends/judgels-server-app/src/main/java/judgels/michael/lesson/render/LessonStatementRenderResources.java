@@ -15,7 +15,7 @@ import java.util.Optional;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.michael.lesson.BaseLessonResource;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 public abstract class LessonStatementRenderResources extends BaseLessonResource {
     @GET

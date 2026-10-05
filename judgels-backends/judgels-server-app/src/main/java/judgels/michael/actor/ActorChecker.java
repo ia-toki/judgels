@@ -11,8 +11,8 @@ import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.role.UserRole;
 import judgels.core.PerRequestActorProvider;
+import judgels.session.Actor;
 import judgels.session.SessionStore;
-import judgels.user.Actor;
 import judgels.user.UserStore;
 import judgels.user.role.UserRoleStore;
 

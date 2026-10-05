@@ -1,6 +1,6 @@
 package judgels.session;
 
-import static judgels.core.Actors.GUEST;
+import static judgels.session.Actors.GUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;

@@ -29,7 +29,7 @@ import judgels.michael.problem.bundle.item.config.ItemConfigAdapter;
 import judgels.michael.problem.bundle.item.config.ItemConfigAdapterRegistry;
 import judgels.michael.problem.bundle.item.config.ItemConfigForm;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/problems/bundle/{problemId}/items")
 public class BundleProblemItemResource extends BaseBundleProblemResource {

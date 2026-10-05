@@ -36,11 +36,11 @@ import judgels.grading.languages.GradingLanguageRegistry;
 import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
+import judgels.session.Actor;
 import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
-import judgels.user.Actor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/problems/programming/{problemId}/submissions")

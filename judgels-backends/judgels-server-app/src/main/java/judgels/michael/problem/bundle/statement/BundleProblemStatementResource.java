@@ -20,7 +20,7 @@ import judgels.api.catalog.problem.bundle.BundleItem;
 import judgels.api.catalog.problem.bundle.ItemConfig;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/problems/bundle/{problemId}/statements")
 public class BundleProblemStatementResource extends BaseBundleProblemResource {

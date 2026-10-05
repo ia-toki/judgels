@@ -31,7 +31,7 @@ import judgels.michael.problem.programming.grading.config.GradingConfigAdapterRe
 import judgels.michael.problem.programming.grading.config.GradingConfigForm;
 import judgels.michael.resource.ListFilesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

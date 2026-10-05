@@ -3,7 +3,7 @@ package judgels.user.role;
 import jakarta.inject.Inject;
 import judgels.api.user.role.TrainingAdminRole;
 import judgels.api.user.role.UserRole;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 public class TrainingAdminRoleChecker {
     private final UserRoleStore userRoleStore;

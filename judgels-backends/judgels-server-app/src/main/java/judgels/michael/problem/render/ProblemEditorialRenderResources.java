@@ -15,7 +15,7 @@ import java.util.Optional;
 import judgels.api.catalog.problem.Problem;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.michael.problem.BaseProblemResource;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 public abstract class ProblemEditorialRenderResources extends BaseProblemResource {
     @GET

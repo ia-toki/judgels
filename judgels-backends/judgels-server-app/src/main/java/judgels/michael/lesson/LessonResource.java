@@ -25,7 +25,7 @@ import judgels.catalog.lesson.LessonCreator;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchLessonsWidget;
 import judgels.persistence.api.Page;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/lessons")
 public class LessonResource extends BaseLessonResource {
