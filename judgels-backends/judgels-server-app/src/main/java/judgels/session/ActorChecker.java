@@ -1,6 +1,6 @@
 package judgels.session;
 
-import static judgels.core.Actors.GUEST;
+import static judgels.session.Actors.GUEST;
 
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;

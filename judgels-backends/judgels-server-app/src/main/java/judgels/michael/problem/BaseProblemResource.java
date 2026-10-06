@@ -12,7 +12,7 @@ import judgels.catalog.problem.statement.ProblemStatementStore;
 import judgels.michael.BaseResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.profile.ProfileStore;
-import judgels.user.Actor;
+import judgels.session.Actor;
 import judgels.user.UserStore;
 
 public abstract class BaseProblemResource extends BaseResource {

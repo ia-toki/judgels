@@ -1,4 +1,4 @@
-package judgels.core;
+package judgels.session;
 
 public class Actors {
     public static final String GUEST = "guest";

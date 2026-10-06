@@ -28,7 +28,7 @@ import judgels.michael.resource.EditPartnersView;
 import judgels.michael.resource.ListPartnersView;
 import judgels.michael.resource.PartnerUtils;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/problems/{problemId}/partners")
 public class ProblemPartnerResource extends BaseProblemResource {

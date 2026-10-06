@@ -2,11 +2,11 @@ package judgels.training.submission;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.core.Actors;
 import judgels.grading.api.Verdict;
 import judgels.grading.api.Verdicts;
 import judgels.persistence.dao.StatsUserProblemDao;
 import judgels.persistence.model.StatsUserProblemModel;
+import judgels.session.Actors;
 import judgels.user.role.TrainingAdminRoleChecker;
 
 public class TrainingSubmissionRoleChecker {

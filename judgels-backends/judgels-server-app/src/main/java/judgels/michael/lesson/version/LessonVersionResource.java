@@ -27,7 +27,7 @@ import judgels.michael.resource.ListVersionHistoryView;
 import judgels.michael.resource.RebaseVersionLocalChangesView;
 import judgels.michael.resource.ViewVersionLocalChangesView;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/lessons/{lessonId}/versions")
 public class LessonVersionResource extends BaseLessonResource {

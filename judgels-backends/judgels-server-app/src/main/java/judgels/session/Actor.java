@@ -1,4 +1,4 @@
-package judgels.user;
+package judgels.session;
 
 import judgels.api.user.role.UserRole;
 import org.immutables.value.Value;

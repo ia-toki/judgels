@@ -19,7 +19,7 @@ import judgels.grading.api.LanguageRestriction;
 import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.problem.programming.grading.LanguageRestrictionAdapter;
 import judgels.michael.template.HtmlTemplate;
-import judgels.user.Actor;
+import judgels.session.Actor;
 
 @Path("/problems/programming/{problemId}/statements")
 public class ProgrammingProblemStatementResource extends BaseProgrammingProblemResource {

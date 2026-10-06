@@ -19,6 +19,10 @@ A user's answer to a problem, or to one item of a bundle problem, made in a cont
 **Grading**:
 Checking an answer against its problem to produce a verdict.
 
+**System**:
+The site itself, apart from anything it hosts: its users, their sessions and its settings. It is what the system admin manages.
+_Avoid_: Jophiel
+
 ### Catalog
 
 **Problem**:
@@ -87,6 +91,23 @@ The separate app that takes grading requests for programming problems and return
 
 **Grading engine**:
 How a programming problem is graded: batch, functional, interactive or output-only.
+
+### System
+
+**User**:
+A person with an account on the site, who signs in and holds roles and a rating.
+
+**Profile**:
+The public face of a user, shown wherever their username appears: username, country and rating.
+
+**Session**:
+A user's login, from signing in until they log out or it expires.
+
+**Actor**:
+The user making the current request, with the roles they hold; a guest when the request is anonymous.
+
+**Setting**:
+A site-wide option the system admin sets, such as the site's name and slogan or how many sessions a user may hold at once.
 
 ### Roles
 

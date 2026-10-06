@@ -7,8 +7,8 @@ import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import judgels.michael.actor.ActorChecker;
 import judgels.michael.template.HtmlTemplate;
+import judgels.session.Actor;
 import judgels.setting.SettingStore;
-import judgels.user.Actor;
 import judgels.user.UserRoleChecker;
 
 public abstract class BaseResource {

@@ -8,8 +8,8 @@ import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestTimer;
 import judgels.contest.module.ContestModuleStore;
 import judgels.contest.supervisor.ContestSupervisorStore;
-import judgels.core.Actors;
 import judgels.persistence.dao.ContestRoleDao;
+import judgels.session.Actors;
 
 public class ContestSubmissionRoleChecker {
     private final ContestRoleChecker contestRoleChecker;

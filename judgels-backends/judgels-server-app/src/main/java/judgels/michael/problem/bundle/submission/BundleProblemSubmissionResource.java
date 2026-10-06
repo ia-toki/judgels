@@ -27,9 +27,9 @@ import judgels.api.submission.bundle.BundleSubmission;
 import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
+import judgels.session.Actor;
 import judgels.submission.bundle.BundleSubmissionClient;
 import judgels.submission.bundle.BundleSubmissionStore;
-import judgels.user.Actor;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {

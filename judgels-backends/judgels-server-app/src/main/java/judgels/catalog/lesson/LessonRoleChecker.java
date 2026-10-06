@@ -6,7 +6,7 @@ import judgels.api.catalog.Partner;
 import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.catalog.lesson.partner.LessonPartnerStore;
-import judgels.user.Actor;
+import judgels.session.Actor;
 import judgels.user.role.TrainingAdminRoleChecker;
 
 public class LessonRoleChecker {
