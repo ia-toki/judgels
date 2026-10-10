@@ -5,7 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingConfigQueryOptions,
   updateProblemGradingEngineMutationOptions,
@@ -14,7 +14,11 @@ import {
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemGradingEnginePage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { config },

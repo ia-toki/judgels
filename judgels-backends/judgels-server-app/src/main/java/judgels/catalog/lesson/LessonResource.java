@@ -113,6 +113,21 @@ public class LessonResource {
                 .build();
     }
 
+    @GET
+    @Path("/slug/{lessonSlug}")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public Lesson getLessonBySlug(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("lessonSlug") String lessonSlug) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Lesson lesson = checkFound(lessonStore.getLessonBySlug(lessonSlug));
+        checkAllowed(roleChecker.canView(actorJid, lesson));
+
+        return lesson;
+    }
+
     @POST
     @Path("/{lessonJid}")
     @Consumes(APPLICATION_JSON)

@@ -70,7 +70,7 @@ describe('LessonsPage', () => {
     await renderComponent();
 
     const link = await screen.findByRole('link', { name: 'lesson-1' });
-    expect(link).toHaveAttribute('href', '/admin/lessons/JIDLESS1');
+    expect(link).toHaveAttribute('href', '/admin/lessons/lesson-1');
   });
 
   test('passes the search term to the query', async () => {

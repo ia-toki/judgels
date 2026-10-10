@@ -12,6 +12,7 @@ describe('ProblemLayout', () => {
   });
 
   const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING', canEdit = true }) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -26,7 +27,10 @@ describe('ProblemLayout', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/problems/JIDPROG1/general']} path="/admin/problems/$problemJid/general">
+          <TestRouter
+            initialEntries={['/admin/problems/problem-1/general']}
+            path="/admin/problems/$problemSlug/general"
+          >
             <ProblemLayout />
           </TestRouter>
         </QueryClientProviderWrapper>
@@ -44,13 +48,13 @@ describe('ProblemLayout', () => {
         screen.getByRole('link', { name }).getAttribute('href')
       )
     ).toEqual([
-      '/admin/problems/JIDPROG1/general',
-      '/admin/problems/JIDPROG1/statements',
-      '/admin/problems/JIDPROG1/languages',
-      '/admin/problems/JIDPROG1/media',
-      '/admin/problems/JIDPROG1/editorial',
-      '/admin/problems/JIDPROG1/grading',
-      '/admin/problems/JIDPROG1/versions',
+      '/admin/problems/problem-1/general',
+      '/admin/problems/problem-1/statements',
+      '/admin/problems/problem-1/languages',
+      '/admin/problems/problem-1/media',
+      '/admin/problems/problem-1/editorial',
+      '/admin/problems/problem-1/grading',
+      '/admin/problems/problem-1/versions',
     ]);
     expect(screen.queryByRole('link', { name: 'Items' })).not.toBeInTheDocument();
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
@@ -59,7 +63,7 @@ describe('ProblemLayout', () => {
   test('shows the items tab of a bundle problem instead of the grading tab', async () => {
     await renderComponent({ hasLocalChanges: false, type: 'BUNDLE' });
 
-    expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/JIDPROG1/items');
+    expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/problem-1/items');
     expect(screen.queryByRole('link', { name: 'Grading' })).not.toBeInTheDocument();
   });
 
@@ -73,7 +77,7 @@ describe('ProblemLayout', () => {
     expect(screen.getByText(/uncommitted changes/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /commit your changes/i })).toHaveAttribute(
       'href',
-      '/admin/problems/JIDPROG1/versions'
+      '/admin/problems/problem-1/versions'
     );
   });
 });

@@ -29,6 +29,10 @@ public interface ProblemClient {
     @Headers("Authorization: Bearer {token}")
     ProblemResponse getProblem(@Param("token") String token, @Param("problemJid") String problemJid);
 
+    @RequestLine("GET /api/v4/problems/slug/{problemSlug}")
+    @Headers("Authorization: Bearer {token}")
+    Problem getProblemBySlug(@Param("token") String token, @Param("problemSlug") String problemSlug);
+
     @RequestLine("POST /api/v4/problems/{problemJid}")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     Problem updateProblem(

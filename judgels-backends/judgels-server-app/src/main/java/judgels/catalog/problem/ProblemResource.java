@@ -141,6 +141,21 @@ public class ProblemResource {
                 .build();
     }
 
+    @GET
+    @Path("/slug/{problemSlug}")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public Problem getProblemBySlug(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemSlug") String problemSlug) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Problem problem = checkFound(problemStore.getProblemBySlug(problemSlug));
+        checkAllowed(roleChecker.canView(actorJid, problem));
+
+        return problem;
+    }
+
     @POST
     @Path("/{problemJid}")
     @Consumes(APPLICATION_JSON)

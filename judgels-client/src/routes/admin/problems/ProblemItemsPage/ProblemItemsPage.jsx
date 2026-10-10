@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   createProblemItemMutationOptions,
   deleteProblemItemMutationOptions,
@@ -48,7 +48,11 @@ function describeItem(item) {
 }
 
 export default function ProblemItemsPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
   const navigate = useNavigate();
 
   const {
@@ -77,7 +81,7 @@ export default function ProblemItemsPage() {
     createItemMutation.mutate(typeToAdd, {
       onSuccess: item => {
         toastActions.showSuccessToast('Item added.');
-        navigate({ to: `/admin/problems/${problemJid}/items/${item.jid}` });
+        navigate({ to: `/admin/problems/${problemSlug}/items/${item.jid}` });
       },
     });
   };
@@ -178,7 +182,7 @@ export default function ProblemItemsPage() {
             <tr key={item.jid}>
               <td>{item.number}</td>
               <td>
-                <Link to={`/admin/problems/${problemJid}/items/${item.jid}`}>{itemTypeNamesMap[item.type]}</Link>
+                <Link to={`/admin/problems/${problemSlug}/items/${item.jid}`}>{itemTypeNamesMap[item.type]}</Link>
               </td>
               <td>{item.meta}</td>
               <td>{formatPoints(item)}</td>

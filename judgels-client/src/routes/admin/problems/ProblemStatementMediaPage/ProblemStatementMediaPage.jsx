@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { problemStatementAPI } from '../../../../modules/api/problemStatement';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   deleteProblemStatementMediaFileMutationOptions,
   deleteProblemStatementMediaFilesMutationOptions,
@@ -14,7 +14,11 @@ import { getToken } from '../../../../modules/session';
 import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function ProblemStatementMediaPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { config },

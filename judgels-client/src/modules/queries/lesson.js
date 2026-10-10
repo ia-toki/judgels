@@ -20,6 +20,12 @@ export const lessonQueryOptions = lessonJid =>
     queryFn: () => lessonAPI.getLesson(getToken(), lessonJid),
   });
 
+export const lessonBySlugQueryOptions = lessonSlug =>
+  queryOptions({
+    queryKey: ['lesson-by-slug', lessonSlug],
+    queryFn: () => lessonAPI.getLessonBySlug(getToken(), lessonSlug),
+  });
+
 export const createLessonMutationOptions = {
   mutationFn: async data => {
     try {
@@ -36,7 +42,7 @@ export const createLessonMutationOptions = {
   },
 };
 
-export const updateLessonMutationOptions = lessonJid => ({
+export const updateLessonMutationOptions = (lessonJid, lessonSlug) => ({
   mutationFn: async data => {
     try {
       return await lessonAPI.updateLesson(getToken(), lessonJid, data);
@@ -50,5 +56,6 @@ export const updateLessonMutationOptions = lessonJid => ({
   onSuccess: () => {
     queryClient.invalidateQueries(lessonsQueryOptions());
     queryClient.invalidateQueries(lessonQueryOptions(lessonJid));
+    queryClient.invalidateQueries(lessonBySlugQueryOptions(lessonSlug));
   },
 });

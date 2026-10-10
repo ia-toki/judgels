@@ -5,10 +5,14 @@ import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { ProblemType } from '../../../../modules/api/problem';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 
 export default function ProblemLayout() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { data: problem, hasLocalChanges, config },
@@ -57,10 +61,10 @@ export default function ProblemLayout() {
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING} title="You have uncommitted changes">
           Contests and problemsets keep using the last committed version of this problem until you{' '}
-          <Link to={`/admin/problems/${problemJid}/versions`}>commit your changes</Link>.
+          <Link to={`/admin/problems/${problemSlug}/versions`}>commit your changes</Link>.
         </Callout>
       )}
-      <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemJid}`}>
+      <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}`}>
         <Outlet />
       </ContentWithTopbar>
     </ContentCard>

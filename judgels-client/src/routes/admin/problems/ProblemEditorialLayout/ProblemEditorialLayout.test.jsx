@@ -14,6 +14,7 @@ describe('ProblemEditorialLayout', () => {
   });
 
   const renderComponent = async ({ hasEditorial, canEdit = true }) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -30,8 +31,8 @@ describe('ProblemEditorialLayout', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDPROG1/editorial/content']}
-            path="/admin/problems/$problemJid/editorial/content"
+            initialEntries={['/admin/problems/problem-1/editorial/content']}
+            path="/admin/problems/$problemSlug/editorial/content"
           >
             <ProblemEditorialLayout />
           </TestRouter>
@@ -48,9 +49,9 @@ describe('ProblemEditorialLayout', () => {
     expect(
       ['Content', 'Languages', 'Media'].map(name => screen.getByRole('link', { name }).getAttribute('href'))
     ).toEqual([
-      '/admin/problems/JIDPROG1/editorial/content',
-      '/admin/problems/JIDPROG1/editorial/languages',
-      '/admin/problems/JIDPROG1/editorial/media',
+      '/admin/problems/problem-1/editorial/content',
+      '/admin/problems/problem-1/editorial/languages',
+      '/admin/problems/problem-1/editorial/media',
     ]);
     expect(screen.queryByRole('button', { name: /create editorial/i })).not.toBeInTheDocument();
   });

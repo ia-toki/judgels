@@ -50,6 +50,10 @@ export const problemAPI = {
     return get(baseProblemURL(problemJid), token);
   },
 
+  getProblemBySlug: (token, problemSlug) => {
+    return get(`${baseProblemsURL}/slug/${problemSlug}`, token);
+  },
+
   updateProblem: (token, problemJid, data) => {
     return post(baseProblemURL(problemJid), token, data);
   },

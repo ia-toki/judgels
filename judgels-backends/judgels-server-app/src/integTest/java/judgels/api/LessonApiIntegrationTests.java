@@ -68,6 +68,8 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(lessonA.getAdditionalNote()).isEqualTo("This is new lesson A");
 
         assertThat(lessonClient.getLesson(adminToken, lessonA.getJid()).getData()).isEqualTo(lessonA);
+        assertThat(lessonClient.getLessonBySlug(adminToken, "lesson-a-new")).isEqualTo(lessonA);
+        assertNotFound(() -> lessonClient.getLessonBySlug(adminToken, "lesson-a"));
 
         String lessonAJid = lessonA.getJid();
 
@@ -101,11 +103,14 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .build()));
 
         assertForbidden(() -> lessonClient.getLesson(userToken, lessonAJid));
+        assertForbidden(() -> lessonClient.getLessonBySlug(userToken, "lesson-a-new"));
         assertForbidden(() -> lessonClient.updateLesson(userToken, lessonAJid, updateData));
 
         lessonResponse = lessonClient.getLesson(userToken, lessonB.getJid());
         assertThat(lessonResponse.getData().getSlug()).isEqualTo("lesson-b");
         assertThat(lessonResponse.getConfig().getCanEdit()).isTrue();
+
+        assertThat(lessonClient.getLessonBySlug(userToken, "lesson-b").getJid()).isEqualTo(lessonB.getJid());
 
         response = lessonClient.getLessons(userToken, new GetLessonsParams());
         assertThat(response.getData().getPage())

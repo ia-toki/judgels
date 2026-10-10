@@ -9,7 +9,7 @@ import { LessonStatementCard } from '../../../../components/LessonStatementCard/
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementQueryOptions,
@@ -20,7 +20,11 @@ import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function LessonStatementPage() {
-  const { lessonJid } = useParams({ strict: false });
+  const { lessonSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: lessonJid },
+  } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
     data: { config },

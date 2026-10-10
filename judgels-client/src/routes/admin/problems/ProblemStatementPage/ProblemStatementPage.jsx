@@ -12,7 +12,7 @@ import { ProblemType } from '../../../../modules/api/problem';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import { problemItemsQueryOptions } from '../../../../modules/queries/problemItem';
 import {
   problemStatementLanguagesQueryOptions,
@@ -24,7 +24,11 @@ import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemStatementPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { data: problem, config },

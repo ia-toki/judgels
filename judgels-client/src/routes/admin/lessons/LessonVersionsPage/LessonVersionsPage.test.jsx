@@ -14,6 +14,7 @@ describe('LessonVersionsPage', () => {
   });
 
   const renderComponent = async ({ hasLocalChanges = true } = {}) => {
+    nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
     nockApi()
       .get('/v4/lessons/JIDLESS1')
       .reply(200, {
@@ -44,7 +45,7 @@ describe('LessonVersionsPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/lessons/JIDLESS1/versions']} path="/admin/lessons/$lessonJid/versions">
+          <TestRouter initialEntries={['/admin/lessons/lesson-1/versions']} path="/admin/lessons/$lessonSlug/versions">
             <LessonVersionsPage />
           </TestRouter>
         </QueryClientProviderWrapper>
