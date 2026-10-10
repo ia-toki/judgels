@@ -30,7 +30,7 @@ root.render(
       dehydrateOptions: {
         shouldDehydrateQuery: query => {
           if (query.state.status !== 'success') return false;
-          return !query.queryKey.some(k => k === 'submissions');
+          return query.meta?.persist !== false;
         },
       },
     }}

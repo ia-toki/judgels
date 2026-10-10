@@ -8,6 +8,7 @@ export const contestItemSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getItemSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
 };
@@ -16,6 +17,7 @@ export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, p
   const { language } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', username, ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getItemSubmissionSummary(getToken(), contestJid, username, language),
   });
 };
@@ -23,6 +25,7 @@ export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, p
 export const contestLatestItemSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', problemAlias],
+    meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getLatestItemSubmissions(getToken(), contestJid, problemAlias),
   });
 };

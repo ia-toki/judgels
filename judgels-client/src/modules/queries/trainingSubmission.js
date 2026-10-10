@@ -9,6 +9,7 @@ export const trainingSubmissionsQueryOptions = params => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['submissions', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
@@ -18,6 +19,7 @@ export const trainingSubmissionWithSourceByIdQueryOptions = (submissionId, param
   const { language } = params || {};
   return queryOptions({
     queryKey: ['submissions', submissionId, 'source', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () => trainingSubmissionAPI.getSubmissionWithSourceById(getToken(), submissionId, language),
   });
 };
@@ -41,6 +43,7 @@ export const chapterSubmissionsQueryOptions = (chapterJid, params) => {
   const { problemAlias, username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'programming', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(
         getToken(),
@@ -90,6 +93,7 @@ export const problemSetSubmissionsQueryOptions = (problemJid, params) => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, problemJid, undefined, beforeId, afterId),
   });
@@ -131,6 +135,7 @@ export const profileSubmissionsQueryOptions = (username, params) => {
   const { beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['profile', username, 'submissions', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
