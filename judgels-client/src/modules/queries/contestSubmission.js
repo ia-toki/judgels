@@ -6,7 +6,7 @@ import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLangua
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const contestProgrammingSubmissionsQueryOptions = (contestJid, params) => {
+export const contestSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', ...(params ? [params] : [])],
@@ -39,7 +39,7 @@ export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId
   });
 };
 
-export const createProgrammingSubmissionMutationOptions = (contestJid, problemJid) => ({
+export const createContestSubmissionMutationOptions = (contestJid, problemJid) => ({
   mutationFn: async data => {
     let sources = {};
     Object.keys(data.sourceTexts ?? []).forEach(key => {
@@ -57,17 +57,17 @@ export const createProgrammingSubmissionMutationOptions = (contestJid, problemJi
   },
 });
 
-export const regradeProgrammingSubmissionMutationOptions = contestJid => ({
+export const regradeContestSubmissionMutationOptions = contestJid => ({
   mutationFn: submissionJid => contestSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestSubmissionsQueryOptions(contestJid));
   },
 });
 
-export const regradeProgrammingSubmissionsMutationOptions = contestJid => ({
+export const regradeContestSubmissionsMutationOptions = contestJid => ({
   mutationFn: ({ username, problemAlias } = {}) =>
     contestSubmissionAPI.regradeSubmissions(getToken(), contestJid, username, problemAlias),
   onSuccess: () => {
-    queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestSubmissionsQueryOptions(contestJid));
   },
 });

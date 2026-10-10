@@ -4,13 +4,13 @@ import { trainingItemSubmissionAPI } from '../api/trainingItemSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const chapterBundleLatestSubmissionsQueryOptions = (chapterJid, problemAlias) =>
+export const chapterLatestItemSubmissionsQueryOptions = (chapterJid, problemAlias) =>
   queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'latest', problemAlias],
     queryFn: () => trainingItemSubmissionAPI.getLatestSubmissions(getToken(), chapterJid, problemAlias),
   });
 
-export const chapterBundleSubmissionSummaryQueryOptions = (chapterJid, params) => {
+export const chapterItemSubmissionSummaryQueryOptions = (chapterJid, params) => {
   const { problemAlias, language } = params || {};
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', ...(params ? [params] : [])],
@@ -26,7 +26,7 @@ export const chapterBundleSubmissionSummaryQueryOptions = (chapterJid, params) =
   });
 };
 
-export const createChapterBundleItemSubmissionMutationOptions = (chapterJid, problemAlias) => ({
+export const createChapterItemSubmissionMutationOptions = (chapterJid, problemAlias) => ({
   mutationFn: async ({ problemJid, itemJid, answer }) => {
     await trainingItemSubmissionAPI.createItemSubmission(getToken(), {
       containerJid: chapterJid,
@@ -36,6 +36,6 @@ export const createChapterBundleItemSubmissionMutationOptions = (chapterJid, pro
     });
   },
   onSuccess: () => {
-    queryClient.invalidateQueries(chapterBundleLatestSubmissionsQueryOptions(chapterJid, problemAlias));
+    queryClient.invalidateQueries(chapterLatestItemSubmissionsQueryOptions(chapterJid, problemAlias));
   },
 });

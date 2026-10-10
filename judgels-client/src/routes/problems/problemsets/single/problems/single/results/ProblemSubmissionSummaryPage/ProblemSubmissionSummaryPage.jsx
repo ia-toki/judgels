@@ -11,8 +11,8 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import {
-  problemSetBundleSubmissionSummaryQueryOptions,
-  regradeProblemSetBundleSubmissionsMutationOptions,
+  problemSetItemSubmissionSummaryQueryOptions,
+  regradeProblemSetItemSubmissionsMutationOptions,
 } from '../../../../../../../../modules/queries/problemSetItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
@@ -29,7 +29,7 @@ export default function ProblemSubmissionSummaryPage() {
   const { statementLanguage: language } = useWebPrefs();
 
   const { data: response } = useQuery({
-    ...problemSetBundleSubmissionSummaryQueryOptions(problemSet.jid, {
+    ...problemSetItemSubmissionSummaryQueryOptions(problemSet.jid, {
       problemJid: problem.problemJid,
       username,
       language,
@@ -37,7 +37,7 @@ export default function ProblemSubmissionSummaryPage() {
     enabled: !!userJid,
   });
 
-  const regradeSubmissionsMutation = useMutation(regradeProblemSetBundleSubmissionsMutationOptions(problemSet.jid));
+  const regradeSubmissionsMutation = useMutation(regradeProblemSetItemSubmissionsMutationOptions(problemSet.jid));
 
   const problemSummaries = !userJid
     ? []

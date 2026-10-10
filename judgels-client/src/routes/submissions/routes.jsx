@@ -1,7 +1,10 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
-import { submissionWithSourceQueryOptions, submissionsQueryOptions } from '../../modules/queries/trainingSubmission';
+import {
+  trainingSubmissionWithSourceQueryOptions,
+  trainingSubmissionsQueryOptions,
+} from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
@@ -20,7 +23,7 @@ export const createSubmissionsRoutes = appRoute => {
     path: '/',
     component: lazyRouteComponent(retryImport(() => import('./SubmissionsPage/SubmissionsPage'))),
     loader: ({ search = {} }) => {
-      queryClient.prefetchQuery(submissionsQueryOptions({ beforeId: search.before, afterId: search.after }));
+      queryClient.prefetchQuery(trainingSubmissionsQueryOptions({ beforeId: search.before, afterId: search.after }));
     },
   });
 
@@ -30,7 +33,9 @@ export const createSubmissionsRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./SubmissionsPage/SubmissionsPage'))),
     loader: ({ search = {} }) => {
       const username = getUser()?.username;
-      queryClient.prefetchQuery(submissionsQueryOptions({ username, beforeId: search.before, afterId: search.after }));
+      queryClient.prefetchQuery(
+        trainingSubmissionsQueryOptions({ username, beforeId: search.before, afterId: search.after })
+      );
     },
   });
 
@@ -40,7 +45,7 @@ export const createSubmissionsRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./single/SubmissionPage/SubmissionPage'))),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
     },
   });
 

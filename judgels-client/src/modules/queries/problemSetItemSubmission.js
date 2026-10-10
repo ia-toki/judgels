@@ -4,7 +4,7 @@ import { trainingItemSubmissionAPI } from '../api/trainingItemSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const problemSetBundleSubmissionsQueryOptions = (problemSetJid, params) => {
+export const problemSetItemSubmissionsQueryOptions = (problemSetJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', ...(params ? [params] : [])],
@@ -12,7 +12,7 @@ export const problemSetBundleSubmissionsQueryOptions = (problemSetJid, params) =
   });
 };
 
-export const problemSetBundleSubmissionSummaryQueryOptions = (problemSetJid, params) => {
+export const problemSetItemSubmissionSummaryQueryOptions = (problemSetJid, params) => {
   const { problemJid, username, language } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
@@ -21,13 +21,13 @@ export const problemSetBundleSubmissionSummaryQueryOptions = (problemSetJid, par
   });
 };
 
-export const problemSetBundleLatestSubmissionsQueryOptions = (problemSetJid, problemAlias) =>
+export const problemSetLatestItemSubmissionsQueryOptions = (problemSetJid, problemAlias) =>
   queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'latest', problemAlias],
     queryFn: () => trainingItemSubmissionAPI.getLatestSubmissions(getToken(), problemSetJid, problemAlias),
   });
 
-export const createProblemSetBundleItemSubmissionMutationOptions = (problemSetJid, problemAlias) => ({
+export const createProblemSetItemSubmissionMutationOptions = (problemSetJid, problemAlias) => ({
   mutationFn: async ({ problemJid, itemJid, answer }) => {
     await trainingItemSubmissionAPI.createItemSubmission(getToken(), {
       containerJid: problemSetJid,
@@ -37,23 +37,23 @@ export const createProblemSetBundleItemSubmissionMutationOptions = (problemSetJi
     });
   },
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetBundleLatestSubmissionsQueryOptions(problemSetJid, problemAlias));
+    queryClient.invalidateQueries(problemSetLatestItemSubmissionsQueryOptions(problemSetJid, problemAlias));
   },
 });
 
-export const regradeProblemSetBundleSubmissionMutationOptions = problemSetJid => ({
+export const regradeProblemSetItemSubmissionMutationOptions = problemSetJid => ({
   mutationFn: submissionJid => trainingItemSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetBundleSubmissionsQueryOptions(problemSetJid));
-    queryClient.invalidateQueries(problemSetBundleSubmissionSummaryQueryOptions(problemSetJid));
+    queryClient.invalidateQueries(problemSetItemSubmissionsQueryOptions(problemSetJid));
+    queryClient.invalidateQueries(problemSetItemSubmissionSummaryQueryOptions(problemSetJid));
   },
 });
 
-export const regradeProblemSetBundleSubmissionsMutationOptions = problemSetJid => ({
+export const regradeProblemSetItemSubmissionsMutationOptions = problemSetJid => ({
   mutationFn: ({ userJid, problemJid } = {}) =>
     trainingItemSubmissionAPI.regradeSubmissions(getToken(), problemSetJid, userJid, problemJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetBundleSubmissionsQueryOptions(problemSetJid));
-    queryClient.invalidateQueries(problemSetBundleSubmissionSummaryQueryOptions(problemSetJid));
+    queryClient.invalidateQueries(problemSetItemSubmissionsQueryOptions(problemSetJid));
+    queryClient.invalidateQueries(problemSetItemSubmissionSummaryQueryOptions(problemSetJid));
   },
 });

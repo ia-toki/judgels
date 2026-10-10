@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { problemTagsQueryOptions } from '../../../../modules/queries/trainingProblem';
+import { trainingProblemTagsQueryOptions } from '../../../../modules/queries/trainingProblemTag';
 
 import './ProblemTagFilter.scss';
 
@@ -25,7 +25,7 @@ export default function ProblemTagFilter() {
 
   const [selectedTags, setSelectedTags] = useState(tags);
 
-  const { data: response } = useQuery(problemTagsQueryOptions());
+  const { data: response } = useQuery(trainingProblemTagsQueryOptions());
 
   const allTags = useMemo(() => {
     if (!response) {

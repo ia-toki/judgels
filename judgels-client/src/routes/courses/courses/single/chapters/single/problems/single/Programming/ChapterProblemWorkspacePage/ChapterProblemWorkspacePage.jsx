@@ -8,7 +8,7 @@ import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
 import { trainingSubmissionAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
-import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmission';
+import { createChapterSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -33,7 +33,7 @@ export default function ChapterProblemWorkspacePage() {
   }, [shouldResetEditor]);
 
   const createSubmissionMutation = useMutation(
-    createChapterProgrammingSubmissionMutationOptions(chapter.jid, worksheet?.problem?.problemJid)
+    createChapterSubmissionMutationOptions(chapter.jid, worksheet?.problem?.problemJid)
   );
 
   const createSubmission = async data => {

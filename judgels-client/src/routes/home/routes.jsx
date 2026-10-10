@@ -8,7 +8,7 @@ import {
   profileSubmissionsQueryOptions,
   userJidByUsernameQueryOptions,
 } from '../../modules/queries/profile';
-import { userStatsQueryOptions } from '../../modules/queries/trainingUserStats';
+import { trainingUserStatsQueryOptions } from '../../modules/queries/trainingUserStats';
 import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
@@ -42,7 +42,7 @@ export const createHomeRoutes = appRoute => {
       queryClient.prefetchQuery(avatarUrlQueryOptions(userJid));
       queryClient.prefetchQuery(basicProfileQueryOptions(userJid));
       if (isTLX()) {
-        queryClient.prefetchQuery(userStatsQueryOptions(username));
+        queryClient.prefetchQuery(trainingUserStatsQueryOptions(username));
       }
     },
   });

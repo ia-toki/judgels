@@ -4,7 +4,7 @@ import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const submissionsQueryOptions = params => {
+export const trainingSubmissionsQueryOptions = params => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['submissions', ...(params ? [params] : [])],
@@ -13,7 +13,7 @@ export const submissionsQueryOptions = params => {
   });
 };
 
-export const submissionWithSourceQueryOptions = (submissionId, params) => {
+export const trainingSubmissionWithSourceQueryOptions = (submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
     queryKey: ['submissions', submissionId, 'source', ...(params ? [params] : [])],
@@ -21,17 +21,17 @@ export const submissionWithSourceQueryOptions = (submissionId, params) => {
   });
 };
 
-export const regradeSubmissionMutationOptions = {
+export const regradeTrainingSubmissionMutationOptions = {
   mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(submissionsQueryOptions());
+    queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
 };
 
-export const regradeSubmissionsMutationOptions = {
+export const regradeTrainingSubmissionsMutationOptions = {
   mutationFn: ({ username } = {}) =>
     trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
   onSuccess: () => {
-    queryClient.invalidateQueries(submissionsQueryOptions());
+    queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
 };

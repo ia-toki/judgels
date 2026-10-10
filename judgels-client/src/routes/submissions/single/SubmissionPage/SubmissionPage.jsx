@@ -6,7 +6,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/submission';
-import { submissionWithSourceQueryOptions } from '../../../../modules/queries/trainingSubmission';
+import { trainingSubmissionWithSourceQueryOptions } from '../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../utils/title';
 
@@ -14,7 +14,9 @@ export default function SubmissionPage() {
   const { submissionId } = useParams({ strict: false });
   const { statementLanguage } = useWebPrefs();
 
-  const { data: response } = useQuery(submissionWithSourceQueryOptions(+submissionId, { language: statementLanguage }));
+  const { data: response } = useQuery(
+    trainingSubmissionWithSourceQueryOptions(+submissionId, { language: statementLanguage })
+  );
 
   useEffect(() => {
     if (response) {

@@ -2,17 +2,17 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/problem';
-import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterItemSubmission';
+import { chapterLatestItemSubmissionsQueryOptions } from '../../modules/queries/chapterItemSubmission';
 import { chapterLessonStatementQueryOptions, chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
-import { chapterProgrammingSubmissionsQueryOptions } from '../../modules/queries/chapterSubmission';
+import { chapterSubmissionsQueryOptions } from '../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
   coursesQueryOptions,
 } from '../../modules/queries/course';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
+import { trainingSubmissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
@@ -121,7 +121,7 @@ export const createCoursesRoutes = appRoute => {
         .fetchQuery(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language }))
         .then(worksheet => {
           if (worksheet?.problem?.type === ProblemType.Bundle) {
-            queryClient.prefetchQuery(chapterBundleLatestSubmissionsQueryOptions(chapter.jid, problemAlias));
+            queryClient.prefetchQuery(chapterLatestItemSubmissionsQueryOptions(chapter.jid, problemAlias));
           }
         });
     },
@@ -155,7 +155,7 @@ export const createCoursesRoutes = appRoute => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
       const username = getUser()?.username;
-      queryClient.prefetchQuery(chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias, username }));
+      queryClient.prefetchQuery(chapterSubmissionsQueryOptions(chapter.jid, { problemAlias, username }));
     },
   });
 
@@ -173,7 +173,7 @@ export const createCoursesRoutes = appRoute => {
     loader: async ({ params: { courseSlug, chapterAlias, problemAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       const chapter = await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
-      queryClient.prefetchQuery(chapterProgrammingSubmissionsQueryOptions(chapter.jid, { problemAlias }));
+      queryClient.prefetchQuery(chapterSubmissionsQueryOptions(chapter.jid, { problemAlias }));
     },
   });
 
@@ -190,7 +190,7 @@ export const createCoursesRoutes = appRoute => {
     ),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
     },
   });
 

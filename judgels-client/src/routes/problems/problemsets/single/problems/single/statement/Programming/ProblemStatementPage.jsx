@@ -10,7 +10,7 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { createProblemSetProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmission';
+import { createProblemSetSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmission';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import { toastActions } from '../../../../../../../../modules/toast/toastActions';
@@ -23,7 +23,7 @@ export default function ProblemStatementPage({ worksheet }) {
   const { gradingLanguage, setGradingLanguage } = useWebPrefs();
 
   const createSubmissionMutation = useMutation(
-    createProblemSetProgrammingSubmissionMutationOptions(problemSet.jid, worksheet.problem.problemJid)
+    createProblemSetSubmissionMutationOptions(problemSet.jid, worksheet.problem.problemJid)
   );
 
   const renderStatementLanguageWidget = () => {

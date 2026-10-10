@@ -4,7 +4,7 @@ import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const chapterProgrammingSubmissionsQueryOptions = (chapterJid, params) => {
+export const chapterSubmissionsQueryOptions = (chapterJid, params) => {
   const { problemAlias, username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'programming', ...(params ? [params] : [])],
@@ -21,7 +21,7 @@ export const chapterProgrammingSubmissionsQueryOptions = (chapterJid, params) =>
   });
 };
 
-export const createChapterProgrammingSubmissionMutationOptions = (chapterJid, problemJid) => ({
+export const createChapterSubmissionMutationOptions = (chapterJid, problemJid) => ({
   mutationFn: async data => {
     let sourceFiles = {};
     Object.keys(data.sourceFiles).forEach(key => {
@@ -38,17 +38,17 @@ export const createChapterProgrammingSubmissionMutationOptions = (chapterJid, pr
   },
 });
 
-export const regradeChapterProgrammingSubmissionMutationOptions = chapterJid => ({
+export const regradeChapterSubmissionMutationOptions = chapterJid => ({
   mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(chapterProgrammingSubmissionsQueryOptions(chapterJid));
+    queryClient.invalidateQueries(chapterSubmissionsQueryOptions(chapterJid));
   },
 });
 
-export const regradeChapterProgrammingSubmissionsMutationOptions = chapterJid => ({
+export const regradeChapterSubmissionsMutationOptions = chapterJid => ({
   mutationFn: ({ problemAlias } = {}) =>
     trainingSubmissionAPI.regradeSubmissions(getToken(), chapterJid, undefined, undefined, problemAlias),
   onSuccess: () => {
-    queryClient.invalidateQueries(chapterProgrammingSubmissionsQueryOptions(chapterJid));
+    queryClient.invalidateQueries(chapterSubmissionsQueryOptions(chapterJid));
   },
 });

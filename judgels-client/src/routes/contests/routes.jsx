@@ -14,9 +14,9 @@ import { contestContestantsQueryOptions } from '../../modules/queries/contestCon
 import { contestEditorialQueryOptions } from '../../modules/queries/contestEditorial';
 import { contestFilesQueryOptions } from '../../modules/queries/contestFile';
 import {
-  contestBundleLatestSubmissionsQueryOptions,
-  contestBundleSubmissionSummaryQueryOptions,
-  contestBundleSubmissionsQueryOptions,
+  contestItemSubmissionSummaryQueryOptions,
+  contestItemSubmissionsQueryOptions,
+  contestLatestItemSubmissionsQueryOptions,
 } from '../../modules/queries/contestItemSubmission';
 import { contestLogsQueryOptions } from '../../modules/queries/contestLog';
 import { contestManagersQueryOptions } from '../../modules/queries/contestManager';
@@ -27,8 +27,8 @@ import {
 } from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
 import {
-  contestProgrammingSubmissionsQueryOptions,
   contestSubmissionWithSourceQueryOptions,
+  contestSubmissionsQueryOptions,
 } from '../../modules/queries/contestSubmission';
 import { contestSupervisorsQueryOptions } from '../../modules/queries/contestSupervisor';
 import { contestWebConfigQueryOptions } from '../../modules/queries/contestWeb';
@@ -115,9 +115,7 @@ export const createContestsRoutes = appRoute => {
           .fetchQuery(contestBundleProblemWorksheetQueryOptions(contest.jid, problemAlias, { language }))
           .then(worksheet => {
             if (worksheet?.problem?.alias) {
-              queryClient.prefetchQuery(
-                contestBundleLatestSubmissionsQueryOptions(contest.jid, worksheet.problem.alias)
-              );
+              queryClient.prefetchQuery(contestLatestItemSubmissionsQueryOptions(contest.jid, worksheet.problem.alias));
             }
           });
       } else {
@@ -198,10 +196,10 @@ export const createContestsRoutes = appRoute => {
         const webConfig = await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
         if (webConfig.role === ContestRole.Contestant) {
           const language = getWebPrefs().statementLanguage;
-          queryClient.prefetchQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, undefined, { language }));
+          queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, undefined, { language }));
         } else {
           queryClient.prefetchQuery(
-            contestBundleSubmissionsQueryOptions(contest.jid, {
+            contestItemSubmissionsQueryOptions(contest.jid, {
               username: search.username,
               problemAlias: search.problemAlias,
               page: search.page,
@@ -210,7 +208,7 @@ export const createContestsRoutes = appRoute => {
         }
       } else {
         queryClient.prefetchQuery(
-          contestProgrammingSubmissionsQueryOptions(contest.jid, {
+          contestSubmissionsQueryOptions(contest.jid, {
             username: search.username,
             problemAlias: search.problemAlias,
             page: search.page,
@@ -246,7 +244,7 @@ export const createContestsRoutes = appRoute => {
     loader: async ({ params: { contestSlug, username } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, username, { language }));
+      queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, username, { language }));
     },
   });
 

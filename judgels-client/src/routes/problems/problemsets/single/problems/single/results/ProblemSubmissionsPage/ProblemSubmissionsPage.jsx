@@ -16,9 +16,9 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import {
-  problemSetBundleSubmissionsQueryOptions,
-  regradeProblemSetBundleSubmissionMutationOptions,
-  regradeProblemSetBundleSubmissionsMutationOptions,
+  problemSetItemSubmissionsQueryOptions,
+  regradeProblemSetItemSubmissionMutationOptions,
+  regradeProblemSetItemSubmissionsMutationOptions,
 } from '../../../../../../../../modules/queries/problemSetItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
@@ -40,11 +40,11 @@ export default function ProblemSubmissionsPage() {
   const page = location.search.page;
 
   const { data: response } = useQuery(
-    problemSetBundleSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias, page })
+    problemSetItemSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias, page })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeProblemSetBundleSubmissionMutationOptions(problemSet.jid));
-  const regradeSubmissionsMutation = useMutation(regradeProblemSetBundleSubmissionsMutationOptions(problemSet.jid));
+  const regradeSubmissionMutation = useMutation(regradeProblemSetItemSubmissionMutationOptions(problemSet.jid));
+  const regradeSubmissionsMutation = useMutation(regradeProblemSetItemSubmissionsMutationOptions(problemSet.jid));
 
   const onRegrade = submissionJid => {
     regradeSubmissionMutation.mutate(submissionJid, {

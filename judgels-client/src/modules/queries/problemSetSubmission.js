@@ -5,7 +5,7 @@ import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const problemSetProgrammingSubmissionsQueryOptions = (problemJid, params) => {
+export const problemSetSubmissionsQueryOptions = (problemJid, params) => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
     queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
@@ -14,7 +14,7 @@ export const problemSetProgrammingSubmissionsQueryOptions = (problemJid, params)
   });
 };
 
-export const createProblemSetProgrammingSubmissionMutationOptions = (problemSetJid, problemJid) => ({
+export const createProblemSetSubmissionMutationOptions = (problemSetJid, problemJid) => ({
   mutationFn: async data => {
     let sources = {};
     Object.keys(data.sourceTexts ?? []).forEach(key => {
@@ -32,16 +32,16 @@ export const createProblemSetProgrammingSubmissionMutationOptions = (problemSetJ
   },
 });
 
-export const regradeProblemSetProgrammingSubmissionMutationOptions = problemJid => ({
+export const regradeProblemSetSubmissionMutationOptions = problemJid => ({
   mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
+    queryClient.invalidateQueries(problemSetSubmissionsQueryOptions(problemJid));
   },
 });
 
-export const regradeProblemSetProgrammingSubmissionsMutationOptions = problemJid => ({
+export const regradeProblemSetSubmissionsMutationOptions = problemJid => ({
   mutationFn: () => trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
+    queryClient.invalidateQueries(problemSetSubmissionsQueryOptions(problemJid));
   },
 });

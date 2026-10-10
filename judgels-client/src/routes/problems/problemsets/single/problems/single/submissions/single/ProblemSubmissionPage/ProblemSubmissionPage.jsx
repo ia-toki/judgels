@@ -10,7 +10,7 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../../modules/queries/problemSet';
-import { submissionWithSourceQueryOptions } from '../../../../../../../../../modules/queries/trainingSubmission';
+import { trainingSubmissionWithSourceQueryOptions } from '../../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 
@@ -22,7 +22,9 @@ export default function ProblemSubmissionPage() {
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
   const { statementLanguage } = useWebPrefs();
 
-  const { data: response } = useQuery(submissionWithSourceQueryOptions(+submissionId, { language: statementLanguage }));
+  const { data: response } = useQuery(
+    trainingSubmissionWithSourceQueryOptions(+submissionId, { language: statementLanguage })
+  );
 
   useEffect(() => {
     if (response) {

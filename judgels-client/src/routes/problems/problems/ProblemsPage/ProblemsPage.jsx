@@ -8,7 +8,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { ProblemType, getProblemName } from '../../../../modules/api/problem';
-import { problemsQueryOptions } from '../../../../modules/queries/trainingProblem';
+import { trainingProblemsQueryOptions } from '../../../../modules/queries/trainingProblem';
 
 const PAGE_SIZE = 20;
 
@@ -26,7 +26,7 @@ export default function ProblemsPage() {
   const tags = parseTags(location.search.tags);
   const page = location.search.page;
 
-  const { data: response } = useQuery(problemsQueryOptions({ tags, page }));
+  const { data: response } = useQuery(trainingProblemsQueryOptions({ tags, page }));
 
   const renderProblems = () => {
     if (!response || !response.data) {

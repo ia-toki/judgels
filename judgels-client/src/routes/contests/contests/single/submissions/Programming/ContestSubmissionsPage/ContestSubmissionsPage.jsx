@@ -9,9 +9,9 @@ import { RegradeAllButton } from '../../../../../../../components/RegradeAllButt
 import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
-  contestProgrammingSubmissionsQueryOptions,
-  regradeProgrammingSubmissionMutationOptions,
-  regradeProgrammingSubmissionsMutationOptions,
+  contestSubmissionsQueryOptions,
+  regradeContestSubmissionMutationOptions,
+  regradeContestSubmissionsMutationOptions,
 } from '../../../../../../../modules/queries/contestSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
@@ -31,11 +31,11 @@ function ContestSubmissionsPage() {
   const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(
-    contestProgrammingSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
+    contestSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeProgrammingSubmissionMutationOptions(contest.jid));
-  const regradeSubmissionsMutation = useMutation(regradeProgrammingSubmissionsMutationOptions(contest.jid));
+  const regradeSubmissionMutation = useMutation(regradeContestSubmissionMutationOptions(contest.jid));
+  const regradeSubmissionsMutation = useMutation(regradeContestSubmissionsMutationOptions(contest.jid));
 
   const renderActions = () => {
     return (
