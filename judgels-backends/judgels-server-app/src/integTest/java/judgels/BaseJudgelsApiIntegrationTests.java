@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemCreateData;
+import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.ProblemType;
 import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.session.Credentials;
@@ -39,6 +40,7 @@ import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
 import judgels.client.ProblemClient;
+import judgels.client.ProblemStatementClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
@@ -285,17 +287,13 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
     }
 
     protected static void updateProblemStatement(String token, Problem problem, String title, String text) {
+        createClient(ProblemStatementClient.class).updateStatement(token, problem.getJid(), "en-US", new ProblemStatement.Builder()
+                .title(title)
+                .text(text)
+                .build());
+
+        // The update is committed through michael until versions have an API.
         Form form = new Form();
-        form.param("title", title);
-        form.param("text", text);
-
-        webTarget
-                .path("/problems/" + problem.getId() + "/statements/edit")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
-
-        form = new Form();
         form.param("title", "Update title");
         form.param("description", "");
 

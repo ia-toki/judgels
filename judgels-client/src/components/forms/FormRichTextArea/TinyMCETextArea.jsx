@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 
 let isTinyMCEScriptAdded = false;
 
-function TinyMCETextArea({ onChange, id }) {
+// Statements written in another editor hold markup that TinyMCE strips by default.
+const permissiveOptions = {
+  valid_elements: '*[*]',
+  extended_valid_elements: 'iframe[*],embed[*]',
+};
+
+function TinyMCETextArea({ onChange, id, permissive }) {
   const [isLoaded, setIsLoaded] = useState(!!window.tinymce);
 
   useEffect(() => {
@@ -57,6 +63,7 @@ function TinyMCETextArea({ onChange, id }) {
       relative_urls: false,
       convert_urls: false,
       remove_script_host: false,
+      ...(permissive ? permissiveOptions : {}),
       setup: editor => {
         editor.on('change', () => {
           onChange(editor.getContent());

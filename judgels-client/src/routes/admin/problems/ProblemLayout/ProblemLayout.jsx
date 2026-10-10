@@ -18,6 +18,18 @@ export default function ProblemLayout() {
       path: 'general',
       title: 'General',
     },
+    {
+      path: 'statements',
+      title: 'Statements',
+    },
+    {
+      path: 'languages',
+      title: 'Languages',
+    },
+    {
+      path: 'media',
+      title: 'Media',
+    },
   ];
 
   return (

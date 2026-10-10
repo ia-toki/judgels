@@ -39,7 +39,16 @@ describe('ProblemLayout', () => {
   test('renders the tabs', async () => {
     await renderComponent({ hasLocalChanges: false });
 
-    expect(screen.getByRole('link', { name: 'General' })).toHaveAttribute('href', '/admin/problems/JIDPROG1/general');
+    expect(
+      ['General', 'Statements', 'Languages', 'Media'].map(name =>
+        screen.getByRole('link', { name }).getAttribute('href')
+      )
+    ).toEqual([
+      '/admin/problems/JIDPROG1/general',
+      '/admin/problems/JIDPROG1/statements',
+      '/admin/problems/JIDPROG1/languages',
+      '/admin/problems/JIDPROG1/media',
+    ]);
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
   });
 
