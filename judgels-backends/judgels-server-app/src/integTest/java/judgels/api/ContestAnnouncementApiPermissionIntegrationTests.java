@@ -7,7 +7,7 @@ import judgels.api.contest.Contest;
 import judgels.api.contest.announcement.ContestAnnouncement;
 import judgels.api.contest.announcement.ContestAnnouncementData;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestAnnouncementClient;
+import judgels.client.ContestAnnouncementClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

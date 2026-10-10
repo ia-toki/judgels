@@ -14,7 +14,7 @@ import judgels.api.training.archive.ArchiveCreateData;
 import judgels.api.training.problemset.ProblemSet;
 import judgels.api.training.problemset.ProblemSetCreateData;
 import judgels.api.training.problemset.problem.ProblemSetProblemData;
-import judgels.training.submission.TrainingItemSubmissionClient;
+import judgels.client.TrainingItemSubmissionClient;
 import org.junit.jupiter.api.Test;
 
 class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrationTests {

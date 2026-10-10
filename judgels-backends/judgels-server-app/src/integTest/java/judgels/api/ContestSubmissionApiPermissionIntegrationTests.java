@@ -13,7 +13,7 @@ import judgels.api.contest.module.ContestModulesConfig;
 import judgels.api.contest.module.VirtualModuleConfig;
 import judgels.api.contest.problem.ContestProblemData;
 import judgels.api.contest.problem.ContestProblemStatus;
-import judgels.contest.ContestSubmissionClient;
+import judgels.client.ContestSubmissionClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

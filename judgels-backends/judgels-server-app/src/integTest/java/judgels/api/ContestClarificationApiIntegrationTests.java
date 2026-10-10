@@ -16,7 +16,7 @@ import judgels.api.contest.clarification.ContestClarificationAnswerData;
 import judgels.api.contest.clarification.ContestClarificationData;
 import judgels.api.contest.clarification.ContestClarificationStatus;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestClarificationClient;
+import judgels.client.ContestClarificationClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

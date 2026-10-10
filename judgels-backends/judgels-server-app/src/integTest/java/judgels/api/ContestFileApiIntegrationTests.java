@@ -12,7 +12,7 @@ import judgels.api.contest.Contest;
 import judgels.api.contest.file.ContestFile;
 import judgels.api.contest.file.ContestFileConfig;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestFileClient;
+import judgels.client.ContestFileClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

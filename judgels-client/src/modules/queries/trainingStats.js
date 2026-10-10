@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { trainingStatsAPI } from '../api/trainingStats';
+import { trainingStatsAPI } from '../api/trainingUserStats';
 
 export const userStatsQueryOptions = username =>
   queryOptions({

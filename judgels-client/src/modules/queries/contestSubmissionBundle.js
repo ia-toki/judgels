@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestSubmissionBundleAPI } from '../api/contestSubmissionBundle';
+import { contestSubmissionBundleAPI } from '../api/contestItemSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 

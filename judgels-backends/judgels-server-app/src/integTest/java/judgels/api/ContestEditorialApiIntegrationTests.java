@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import judgels.api.contest.Contest;
 import judgels.api.contest.module.ContestModulesConfig;
 import judgels.api.contest.module.EditorialModuleConfig;
-import judgels.contest.ContestEditorialClient;
+import judgels.client.ContestEditorialClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

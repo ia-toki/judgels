@@ -6,15 +6,15 @@ import judgels.api.catalog.problem.Problem;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestCreateData;
 import judgels.api.user.User;
-import judgels.contest.ContestClient;
-import judgels.training.archive.ArchiveClient;
-import judgels.training.chapter.ChapterClient;
-import judgels.training.chapter.ChapterLessonClient;
-import judgels.training.chapter.ChapterProblemClient;
-import judgels.training.course.CourseChapterClient;
-import judgels.training.course.CourseClient;
-import judgels.training.problemset.ProblemSetClient;
-import judgels.training.problemset.ProblemSetProblemClient;
+import judgels.client.ArchiveClient;
+import judgels.client.ChapterClient;
+import judgels.client.ChapterLessonClient;
+import judgels.client.ChapterProblemClient;
+import judgels.client.ContestClient;
+import judgels.client.CourseChapterClient;
+import judgels.client.CourseClient;
+import judgels.client.ProblemSetClient;
+import judgels.client.ProblemSetProblemClient;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class BaseTrainingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

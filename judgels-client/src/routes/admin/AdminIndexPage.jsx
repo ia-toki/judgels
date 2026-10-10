@@ -4,8 +4,8 @@ import { Navigate } from '@tanstack/react-router';
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
 import { ProblemAdminRole } from '../../modules/api/problemAdminRole';
+import { SystemAdminRole } from '../../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
-import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
 export default function AdminIndexPage() {
@@ -13,7 +13,7 @@ export default function AdminIndexPage() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  if (role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin) {
+  if (role.account === SystemAdminRole.Admin || role.account === SystemAdminRole.Superadmin) {
     return <Navigate to="/admin/users" />;
   }
   if (role.problem === ProblemAdminRole.Admin) {

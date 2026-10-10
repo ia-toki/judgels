@@ -7,7 +7,7 @@ import judgels.api.setting.AppSettings;
 import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
-import judgels.setting.SettingClient;
+import judgels.client.SettingClient;
 import org.junit.jupiter.api.Test;
 
 class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

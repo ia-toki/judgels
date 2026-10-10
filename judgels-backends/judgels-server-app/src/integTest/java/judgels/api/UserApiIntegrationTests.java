@@ -14,10 +14,10 @@ import judgels.api.user.UserData;
 import judgels.api.user.UsersResponse;
 import judgels.api.user.UsersUpsertResponse;
 import judgels.api.user.info.UserInfo;
-import judgels.session.SessionClient;
-import judgels.user.UserClient;
-import judgels.user.UserInfoClient;
-import judgels.user.UserSearchClient;
+import judgels.client.SessionClient;
+import judgels.client.UserClient;
+import judgels.client.UserInfoClient;
+import judgels.client.UserSearchClient;
 import org.junit.jupiter.api.Test;
 
 class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

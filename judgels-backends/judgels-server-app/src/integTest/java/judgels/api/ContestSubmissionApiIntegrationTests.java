@@ -16,7 +16,7 @@ import judgels.api.contest.submission.programming.ContestUserProblemSubmissionsR
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionWithSourceResponse;
-import judgels.contest.ContestSubmissionClient;
+import judgels.client.ContestSubmissionClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

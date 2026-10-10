@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.User;
-import judgels.user.UserSearchClient;
+import judgels.client.UserSearchClient;
 import org.junit.jupiter.api.Test;
 
 class UserSearchApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

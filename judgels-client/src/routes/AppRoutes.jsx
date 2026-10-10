@@ -3,8 +3,8 @@ import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineCha
 import { isTLX } from '../conf';
 import { ContestAdminRole } from '../modules/api/contestAdminRole';
 import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { SystemAdminRole } from '../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../modules/api/trainingAdminRole';
-import { UserAdminRole } from '../modules/api/userAdminRole';
 
 const appRoutes = [
   {
@@ -15,8 +15,8 @@ const appRoutes = [
       path: '/admin',
     },
     visible: role =>
-      role.account === UserAdminRole.Superadmin ||
-      role.account === UserAdminRole.Admin ||
+      role.account === SystemAdminRole.Superadmin ||
+      role.account === SystemAdminRole.Admin ||
       role.contest === ContestAdminRole.Admin ||
       role.problem === ProblemAdminRole.Admin ||
       (isTLX() && role.training === TrainingAdminRole.Admin),

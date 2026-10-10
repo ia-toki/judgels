@@ -1,5 +1,5 @@
 import { profileAPI } from '../../../../modules/api/profile';
-import { trainingStatsAPI } from '../../../../modules/api/trainingStats';
+import { trainingStatsAPI } from '../../../../modules/api/trainingUserStats';
 
 export async function getTopRatedProfiles(page, pageSize) {
   return await profileAPI.getTopRatedProfiles(page, pageSize);

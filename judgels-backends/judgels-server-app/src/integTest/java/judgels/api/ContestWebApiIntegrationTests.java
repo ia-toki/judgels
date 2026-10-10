@@ -27,8 +27,8 @@ import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.contest.web.ContestState;
 import judgels.api.contest.web.ContestTab;
 import judgels.api.contest.web.ContestWebConfig;
-import judgels.contest.ContestClarificationClient;
-import judgels.contest.ContestWebClient;
+import judgels.client.ContestClarificationClient;
+import judgels.client.ContestWebClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

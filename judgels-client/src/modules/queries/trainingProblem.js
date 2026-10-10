@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { trainingProblemAPI } from '../api/trainingProblem';
+import { trainingProblemTagAPI } from '../api/trainingProblemTag';
 import { getToken } from '../session';
 
 export const problemsQueryOptions = params => {
@@ -14,5 +15,5 @@ export const problemsQueryOptions = params => {
 export const problemTagsQueryOptions = () =>
   queryOptions({
     queryKey: ['training-problem-tags'],
-    queryFn: () => trainingProblemAPI.getProblemTags(),
+    queryFn: () => trainingProblemTagAPI.getProblemTags(),
   });

@@ -12,9 +12,9 @@ import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.user.UserData;
 import judgels.api.user.account.PasswordResetData;
 import judgels.api.user.account.UserRegistrationData;
-import judgels.session.SessionClient;
-import judgels.user.UserAccountClient;
-import judgels.user.UserClient;
+import judgels.client.SessionClient;
+import judgels.client.UserAccountClient;
+import judgels.client.UserClient;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 

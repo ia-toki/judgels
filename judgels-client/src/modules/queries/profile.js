@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { contestHistoryAPI } from '../api/contestHistory';
 import { NotFoundError } from '../api/error';
 import { profileAPI } from '../api/profile';
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmissionProgramming';
+import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
 import { userSearchAPI } from '../api/userSearch';
 import { getToken } from '../session';
 

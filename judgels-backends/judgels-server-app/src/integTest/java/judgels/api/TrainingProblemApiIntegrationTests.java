@@ -10,7 +10,7 @@ import judgels.api.training.problem.ProblemSetProblemInfo;
 import judgels.api.training.problemset.ProblemSet;
 import judgels.api.training.problemset.ProblemSetCreateData;
 import judgels.api.training.problemset.problem.ProblemSetProblemData;
-import judgels.training.problem.TrainingProblemClient;
+import judgels.client.TrainingProblemClient;
 import org.junit.jupiter.api.Test;
 
 class TrainingProblemApiIntegrationTests extends BaseTrainingApiIntegrationTests {

@@ -1,6 +1,6 @@
 # Code layout
 
-Server packages, DTO packages (`judgels.api.…`), Feign clients and client API modules (`judgels-client/src/modules/api`) all follow the layers defined in `GLOSSARY.md` at the repo root. Michael (`judgels.michael`) is exempt because it is being replaced.
+Server packages and DTO packages (`judgels.api.…`) follow the layers defined in `GLOSSARY.md` at the repo root. Michael (`judgels.michael`) is exempt because it is being replaced.
 
 | Layer | Packages | API paths |
 |---|---|---|
@@ -10,11 +10,13 @@ Server packages, DTO packages (`judgels.api.…`), Feign clients and client API 
 | Grading | `judgels.grading.*` | none |
 | System | `judgels.user.*`, `judgels.profile.*`, `judgels.session.*`, `judgels.setting.*` | `/api/v2/{users,user-*,session,profiles,settings}/...` |
 
-Three kinds of code are grouped by kind, across every layer:
+Some kinds of code are grouped by kind, across every layer:
 
 - DAOs and persistence models go in `judgels.persistence.dao` and `judgels.persistence.model`.
 - Admin tasks go in `judgels.tasks`.
 - API integration tests go in `judgels.api` under `src/integTest`.
+- Feign clients go in `judgels.client` under `src/integTest`, one per resource: `ContestProblemResource` is called through `ContestProblemClient` and tested by `ContestProblemApiIntegrationTests`.
+- Client API modules go in `judgels-client/src/modules/api`, each named after its Feign client: `ContestProblemClient` matches `contestProblem.js`.
 
 Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core is technical and has no domain meaning; what an admin sees and manages about the site belongs to the system layer. The server's own wiring (application, component, configuration) sits directly in `judgels` and may import any layer.
 

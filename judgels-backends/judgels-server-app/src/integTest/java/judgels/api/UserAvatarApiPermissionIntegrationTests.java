@@ -5,7 +5,7 @@ import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import feign.form.FormData;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.User;
-import judgels.user.UserAvatarClient;
+import judgels.client.UserAvatarClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 

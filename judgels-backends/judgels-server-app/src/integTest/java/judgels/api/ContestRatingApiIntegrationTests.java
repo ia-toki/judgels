@@ -6,7 +6,7 @@ import static org.hibernate.cfg.AvailableSettings.DRIVER;
 import static org.hibernate.cfg.AvailableSettings.GENERATE_STATISTICS;
 import static org.hibernate.cfg.AvailableSettings.URL;
 
-import judgels.contest.ContestRatingClient;
+import judgels.client.ContestRatingClient;
 import org.h2.Driver;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

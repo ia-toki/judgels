@@ -7,7 +7,7 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
-import { trainingSubmissionProgrammingAPI } from '../../../../../../../../../../modules/api/trainingSubmissionProgramming';
+import { trainingSubmissionProgrammingAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
 import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
 import {
   courseBySlugQueryOptions,

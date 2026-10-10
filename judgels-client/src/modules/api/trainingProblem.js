@@ -10,8 +10,4 @@ export const trainingProblemAPI = {
     const params = stringify({ tags, page });
     return get(`${baseProblemsURL}?${params}`, token);
   },
-
-  getProblemTags: () => {
-    return get(`${baseProblemsURL}/tags`);
-  },
 };

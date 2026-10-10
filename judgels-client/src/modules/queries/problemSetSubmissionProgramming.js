@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLanguage';
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmissionProgramming';
+import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
