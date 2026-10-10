@@ -12,7 +12,7 @@ export const userQueryOptions = userJid =>
 
 export const userByUsernameQueryOptions = username =>
   queryOptions({
-    queryKey: ['user', 'username', username],
+    queryKey: ['user-by-username', username],
     queryFn: () => userAPI.getUserByUsername(getToken(), username),
   });
 

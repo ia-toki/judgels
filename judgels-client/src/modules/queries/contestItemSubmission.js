@@ -24,7 +24,7 @@ export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, p
 
 export const contestLatestItemSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', problemAlias],
+    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'latest', problemAlias],
     meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getLatestItemSubmissions(getToken(), contestJid, problemAlias),
   });

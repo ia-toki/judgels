@@ -34,7 +34,7 @@ export const setContestProblemsMutationOptions = contestJid => ({
 export const contestProgrammingProblemWorksheetQueryOptions = (contestJid, problemAlias, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'problems', problemAlias, 'worksheet', ...[params ? [params] : []]],
+    queryKey: ['contest', contestJid, 'problem', problemAlias, 'programming', 'worksheet', ...(params ? [params] : [])],
     queryFn: () => contestProblemAPI.getProgrammingProblemWorksheet(getToken(), contestJid, problemAlias, language),
   });
 };
@@ -42,7 +42,7 @@ export const contestProgrammingProblemWorksheetQueryOptions = (contestJid, probl
 export const contestBundleProblemWorksheetQueryOptions = (contestJid, problemAlias, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'problems', problemAlias, 'worksheet', ...[params ? [params] : []]],
+    queryKey: ['contest', contestJid, 'problem', problemAlias, 'bundle', 'worksheet', ...(params ? [params] : [])],
     queryFn: () => contestProblemAPI.getBundleProblemWorksheet(getToken(), contestJid, problemAlias, language),
   });
 };

@@ -5,10 +5,12 @@ import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
+const submissionsQueryKey = filter => ['training', 'submissions', 'programming', ...(filter ? [filter] : [])];
+
 export const trainingSubmissionsQueryOptions = params => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
-    queryKey: ['submissions', ...(params ? [params] : [])],
+    queryKey: submissionsQueryKey(params),
     meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
@@ -18,7 +20,7 @@ export const trainingSubmissionsQueryOptions = params => {
 export const trainingSubmissionWithSourceByIdQueryOptions = (submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['submissions', submissionId, 'source', ...(params ? [params] : [])],
+    queryKey: ['training', 'submissions', 'programming', submissionId, 'source', ...(params ? [params] : [])],
     meta: { persist: false },
     queryFn: () => trainingSubmissionAPI.getSubmissionWithSourceById(getToken(), submissionId, language),
   });
@@ -42,7 +44,7 @@ export const regradeTrainingSubmissionsMutationOptions = {
 export const chapterSubmissionsQueryOptions = (chapterJid, params) => {
   const { problemAlias, username, beforeId, afterId } = params || {};
   return queryOptions({
-    queryKey: ['chapter', chapterJid, 'submissions', 'programming', ...(params ? [params] : [])],
+    queryKey: submissionsQueryKey({ containerJid: chapterJid, ...params }),
     meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(
@@ -74,25 +76,18 @@ export const createChapterSubmissionMutationOptions = (chapterJid, problemJid) =
   },
 });
 
-export const regradeChapterSubmissionMutationOptions = chapterJid => ({
-  mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
-  onSuccess: () => {
-    queryClient.invalidateQueries(chapterSubmissionsQueryOptions(chapterJid));
-  },
-});
-
 export const regradeChapterSubmissionsMutationOptions = chapterJid => ({
   mutationFn: ({ problemAlias } = {}) =>
     trainingSubmissionAPI.regradeSubmissions(getToken(), chapterJid, undefined, undefined, problemAlias),
   onSuccess: () => {
-    queryClient.invalidateQueries(chapterSubmissionsQueryOptions(chapterJid));
+    queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
 });
 
 export const problemSetSubmissionsQueryOptions = (problemJid, params) => {
   const { username, beforeId, afterId } = params || {};
   return queryOptions({
-    queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
+    queryKey: submissionsQueryKey({ problemJid, ...params }),
     meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, problemJid, undefined, beforeId, afterId),
@@ -117,24 +112,17 @@ export const createProblemSetSubmissionMutationOptions = (problemSetJid, problem
   },
 });
 
-export const regradeProblemSetSubmissionMutationOptions = problemJid => ({
-  mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
-  onSuccess: () => {
-    queryClient.invalidateQueries(problemSetSubmissionsQueryOptions(problemJid));
-  },
-});
-
 export const regradeProblemSetSubmissionsMutationOptions = problemJid => ({
   mutationFn: () => trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(problemSetSubmissionsQueryOptions(problemJid));
+    queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
 });
 
 export const profileSubmissionsQueryOptions = (username, params) => {
   const { beforeId, afterId } = params || {};
   return queryOptions({
-    queryKey: ['profile', username, 'submissions', ...(params ? [params] : [])],
+    queryKey: submissionsQueryKey({ username, ...params }),
     meta: { persist: false },
     queryFn: () =>
       trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),

@@ -7,14 +7,14 @@ import { useState } from 'react';
 import { getCountryName } from '../../../../assets/data/countries';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { userInfoGender } from '../../../../modules/api/userInfo';
-import { adminUserInfoQueryOptions, updateAdminUserInfoMutationOptions } from '../../../../modules/queries/userInfo';
+import { updateUserInfoMutationOptions, userInfoQueryOptions } from '../../../../modules/queries/userInfo';
 import UserInfoEditForm from '../UserInfoEditForm/UserInfoEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function UserInfoSection({ user }) {
-  const { data: userInfo } = useSuspenseQuery(adminUserInfoQueryOptions(user.jid));
-  const updateUserInfoMutation = useMutation(updateAdminUserInfoMutationOptions(user.jid));
+  const { data: userInfo } = useSuspenseQuery(userInfoQueryOptions(user.jid));
+  const updateUserInfoMutation = useMutation(updateUserInfoMutationOptions(user.jid));
 
   const [isEditing, setIsEditingInfo] = useState(false);
 

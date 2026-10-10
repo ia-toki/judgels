@@ -62,7 +62,7 @@ export const updateProblemSetMutationOptions = problemSetJid => ({
 
 export const searchProblemSetQueryOptions = contestJid =>
   queryOptions({
-    queryKey: ['contest', contestJid, 'problem-set'],
+    queryKey: ['problem-set-by-contest-jid', contestJid],
     queryFn: async () => {
       if (!isTLX()) {
         return null;

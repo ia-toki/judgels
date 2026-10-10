@@ -10,8 +10,8 @@ import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/qu
 import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
 import {
   problemSetSubmissionsQueryOptions,
-  regradeProblemSetSubmissionMutationOptions,
   regradeProblemSetSubmissionsMutationOptions,
+  regradeTrainingSubmissionMutationOptions,
 } from '../../../../../../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
@@ -37,7 +37,7 @@ export default function ProblemSubmissionsPage() {
     problemSetSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, beforeId, afterId })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeProblemSetSubmissionMutationOptions(problem.problemJid));
+  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions);
   const regradeSubmissionsMutation = useMutation(regradeProblemSetSubmissionsMutationOptions(problem.problemJid));
 
   const onRegrade = submissionJid => {

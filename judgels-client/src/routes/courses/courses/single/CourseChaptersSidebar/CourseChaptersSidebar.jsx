@@ -1,7 +1,7 @@
 import { Popover, Position } from '@blueprintjs/core';
 import { Menu } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useParams } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -15,7 +15,6 @@ import './CourseChaptersSidebar.scss';
 export default function CourseChaptersSidebar() {
   const { courseSlug } = useParams({ strict: false });
   const location = useLocation();
-  const queryClient = useQueryClient();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const {
     data: { data: courseChapters, chaptersMap, chapterProgressesMap },
@@ -69,11 +68,6 @@ export default function CourseChaptersSidebar() {
         })}
         to={`/courses/${course.slug}/chapters/${courseChapter.alias}`}
         onClick={() => {
-          queryClient.setQueryData(['course-chapter', course.jid, courseChapter.alias], {
-            jid: courseChapter.chapterJid,
-            name: chaptersMap[courseChapter.chapterJid].name,
-          });
-
           if (isResponsivePopoverOpen) {
             onResponsiveItemClick();
           }
