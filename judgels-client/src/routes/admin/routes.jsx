@@ -10,6 +10,12 @@ import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
 import { problemQueryOptions } from '../../modules/queries/problem';
+import {
+  problemGradingConfigQueryOptions,
+  problemGradingHelperFilesQueryOptions,
+  problemGradingLanguageRestrictionQueryOptions,
+  problemGradingTestDataFilesQueryOptions,
+} from '../../modules/queries/problemGrading';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import {
@@ -213,6 +219,81 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemGradingRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'grading',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemGradingLayout/ProblemGradingLayout'))),
+  });
+
+  const adminProblemGradingIndexRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: '/',
+    beforeLoad: ({ params }) => {
+      throw redirect({ to: '/admin/problems/$problemJid/grading/engine', params, replace: true });
+    },
+  });
+
+  const adminProblemGradingEngineRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: 'engine',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemGradingEnginePage/ProblemGradingEnginePage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemGradingConfigQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemGradingConfigRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: 'config',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemGradingConfigPage/ProblemGradingConfigPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await Promise.all([
+        queryClient.ensureQueryData(problemGradingConfigQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problemJid)),
+      ]);
+    },
+  });
+
+  const adminProblemGradingTestDataRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: 'test-data',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemGradingTestDataPage/ProblemGradingTestDataPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemGradingHelpersRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: 'helpers',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemGradingHelpersPage/ProblemGradingHelpersPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemGradingLanguageRestrictionRoute = createRoute({
+    getParentRoute: () => adminProblemGradingRoute,
+    path: 'languages',
+    component: lazyRouteComponent(
+      retryImport(
+        () => import('./problems/ProblemGradingLanguageRestrictionPage/ProblemGradingLanguageRestrictionPage')
+      )
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemGradingLanguageRestrictionQueryOptions(problemJid));
+    },
+  });
+
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
@@ -249,6 +330,14 @@ export const createAdminRoutes = appRoute => {
       adminProblemStatementRoute,
       adminProblemStatementLanguagesRoute,
       adminProblemStatementMediaRoute,
+      adminProblemGradingRoute.addChildren([
+        adminProblemGradingIndexRoute,
+        adminProblemGradingEngineRoute,
+        adminProblemGradingConfigRoute,
+        adminProblemGradingTestDataRoute,
+        adminProblemGradingHelpersRoute,
+        adminProblemGradingLanguageRestrictionRoute,
+      ]),
     ]),
     adminLessonsRoute,
     adminSettingsRoute,

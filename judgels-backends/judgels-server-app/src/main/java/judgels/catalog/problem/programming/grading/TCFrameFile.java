@@ -1,11 +1,11 @@
-package judgels.michael.problem.programming.grading.config;
+package judgels.catalog.problem.programming.grading;
 
-public class TCFrameFile implements Comparable<TCFrameFile> {
-    public String filename;
-    public int tgNo;
-    public int tcNo;
+class TCFrameFile implements Comparable<TCFrameFile> {
+    final String filename;
+    final int tgNo;
+    final int tcNo;
 
-    public TCFrameFile(String filename, int tgNo, int tcNo) {
+    TCFrameFile(String filename, int tgNo, int tcNo) {
         this.filename = filename;
         this.tgNo = tgNo;
         this.tcNo = tcNo;

@@ -4,7 +4,6 @@ import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 
-import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -21,13 +20,13 @@ import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.catalog.problem.ProblemFile;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.statement.ProblemStatementLanguagesResponse;
 import judgels.api.catalog.problem.statement.ProblemStatementMediaFilesResponse;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.catalog.problem.ProblemAccessChecker;
+import judgels.catalog.problem.ProblemFiles;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.api.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -171,12 +170,7 @@ public class ProblemStatementResource {
         String actorJid = accessChecker.checkCanView(authHeader, problemJid);
 
         return new ProblemStatementMediaFilesResponse.Builder()
-                .data(Lists.transform(statementStore.getStatementMediaFiles(actorJid, problemJid),
-                        f -> new ProblemFile.Builder()
-                                .name(f.getName())
-                                .size(f.getSize())
-                                .lastModifiedTime(f.getLastModifiedTime())
-                                .build()))
+                .data(ProblemFiles.fromFileInfos(statementStore.getStatementMediaFiles(actorJid, problemJid)))
                 .build();
     }
 
@@ -195,7 +189,7 @@ public class ProblemStatementResource {
         if (fileStream == null) {
             throw new BadRequestException();
         }
-        checkFilename(fileDetails.getFileName());
+        ProblemFiles.checkFilename(fileDetails.getFileName());
 
         statementStore.uploadStatementMediaFile(actorJid, problemJid, fileStream, fileDetails.getFileName());
     }
@@ -227,7 +221,7 @@ public class ProblemStatementResource {
             @PathParam("filename") String filename) {
 
         String actorJid = accessChecker.checkCanView(authHeader, problemJid);
-        checkFilename(filename);
+        ProblemFiles.checkFilename(filename);
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, problemJid, filename);
         return JudgelsResponseBuilders.buildDownloadResponse(mediaUrl);
@@ -242,7 +236,7 @@ public class ProblemStatementResource {
             @PathParam("filename") String filename) {
 
         String actorJid = accessChecker.checkCanEdit(authHeader, problemJid);
-        checkFilename(filename);
+        ProblemFiles.checkFilename(filename);
 
         statementStore.deleteStatementMediaFile(actorJid, problemJid, filename);
     }
@@ -268,17 +262,6 @@ public class ProblemStatementResource {
 
     private void checkLanguageEnabled(String actorJid, String problemJid, String language) {
         if (language == null || !statementStore.getStatementEnabledLanguages(actorJid, problemJid).contains(language)) {
-            throw new BadRequestException();
-        }
-    }
-
-    // A media file sits directly in the media directory, so its name must not lead anywhere else.
-    private static void checkFilename(String filename) {
-        if (filename == null
-                || filename.isEmpty()
-                || filename.startsWith(".")
-                || filename.contains("/")
-                || filename.contains("\\")) {
             throw new BadRequestException();
         }
     }

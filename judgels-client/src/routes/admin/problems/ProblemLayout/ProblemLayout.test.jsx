@@ -11,11 +11,11 @@ describe('ProblemLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasLocalChanges }) => {
+  const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING' }) => {
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
-        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type: 'PROGRAMMING', authorJid: 'JIDUSER1' },
+        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' },
         setterJidsMap: {},
         topicTags: [],
         hasLocalChanges,
@@ -40,7 +40,7 @@ describe('ProblemLayout', () => {
     await renderComponent({ hasLocalChanges: false });
 
     expect(
-      ['General', 'Statements', 'Languages', 'Media'].map(name =>
+      ['General', 'Statements', 'Languages', 'Media', 'Grading'].map(name =>
         screen.getByRole('link', { name }).getAttribute('href')
       )
     ).toEqual([
@@ -48,8 +48,16 @@ describe('ProblemLayout', () => {
       '/admin/problems/JIDPROG1/statements',
       '/admin/problems/JIDPROG1/languages',
       '/admin/problems/JIDPROG1/media',
+      '/admin/problems/JIDPROG1/grading',
     ]);
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
+  });
+
+  test('hides the grading tab of a bundle problem', async () => {
+    await renderComponent({ hasLocalChanges: false, type: 'BUNDLE' });
+
+    expect(screen.getByRole('link', { name: 'Media' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Grading' })).not.toBeInTheDocument();
   });
 
   test('warns about uncommitted changes', async () => {
