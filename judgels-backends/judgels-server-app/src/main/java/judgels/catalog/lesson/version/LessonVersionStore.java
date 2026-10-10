@@ -65,7 +65,7 @@ public class LessonVersionStore extends BaseLessonStore {
 
     public boolean pushUserClone(String userJid, String lessonJid) {
         Path origin = getOriginDirPath(lessonJid);
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
+        Path root = getCloneDirPath(userJid, lessonJid);
 
         if (lessonGit.push(root)) {
             lessonGit.resetHard(origin);
@@ -79,13 +79,13 @@ public class LessonVersionStore extends BaseLessonStore {
     }
 
     public boolean fetchUserClone(String userJid, String lessonJid) {
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
+        Path root = getCloneDirPath(userJid, lessonJid);
 
         return lessonGit.fetch(root);
     }
 
     public void discardUserClone(String userJid, String lessonJid) {
-        Path root = getRootDirPath(lessonFs, userJid, lessonJid);
+        Path root = getCloneDirPath(userJid, lessonJid);
 
         lessonFs.removeFile(root);
     }

@@ -5,6 +5,8 @@ import { get, post } from './http';
 
 export const LessonErrors = {
   SlugAlreadyExists: 'LessonSlugAlreadyExists',
+  VersionLocalChangesOutdated: 'LessonVersionLocalChangesOutdated',
+  VersionLocalChangesConflict: 'LessonVersionLocalChangesConflict',
 };
 
 export function getLessonName(lesson, language) {

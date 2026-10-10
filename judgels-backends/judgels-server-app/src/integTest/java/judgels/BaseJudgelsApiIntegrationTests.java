@@ -39,6 +39,7 @@ import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
 import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
+import judgels.api.catalog.problem.version.ProblemVersionCommitData;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
@@ -49,6 +50,7 @@ import judgels.client.ProblemClient;
 import judgels.client.ProblemEditorialClient;
 import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
+import judgels.client.ProblemVersionClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
@@ -300,16 +302,17 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .text(text)
                 .build());
 
-        // The update is committed through michael until versions have an API.
-        Form form = new Form();
-        form.param("title", "Update title");
-        form.param("description", "");
+        commitProblem(token, problem, "Update title");
+    }
 
-        webTarget
-                .path("/problems/" + problem.getId() + "/versions/local")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+    protected static void commitProblem(String token, Problem problem, String title) {
+        createClient(ProblemVersionClient.class).commitVersionLocalChanges(
+                token,
+                problem.getJid(),
+                new ProblemVersionCommitData.Builder()
+                        .title(title)
+                        .description("")
+                        .build());
     }
 
     protected static String createBundleProblemItem(
@@ -330,16 +333,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .config(config)
                 .build());
 
-        // The item is committed through michael until versions have an API.
-        Form form = new Form();
-        form.param("title", "Add item");
-        form.param("description", "");
-
-        webTarget
-                .path("/problems/" + problem.getId() + "/versions/local")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+        commitProblem(token, problem, "Add item");
 
         return itemJid;
     }
@@ -349,16 +343,7 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .initialLanguage("en-US")
                 .build());
 
-        // The editorial is committed through michael until versions have an API.
-        Form form = new Form();
-        form.param("title", "Add editorial");
-        form.param("description", "");
-
-        webTarget
-                .path("/problems/" + problem.getId() + "/versions/local")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
+        commitProblem(token, problem, "Add editorial");
     }
 
     protected static Lesson createLesson(String token, String slug) {

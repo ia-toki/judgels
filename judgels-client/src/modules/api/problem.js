@@ -23,6 +23,8 @@ export const ProblemSetterRole = {
 export const ProblemErrors = {
   SlugAlreadyExists: 'ProblemSlugAlreadyExists',
   SetterUsernamesNotFound: 'ProblemSetterUsernamesNotFound',
+  VersionLocalChangesOutdated: 'ProblemVersionLocalChangesOutdated',
+  VersionLocalChangesConflict: 'ProblemVersionLocalChangesConflict',
 };
 
 export function getProblemName(problem, language) {
