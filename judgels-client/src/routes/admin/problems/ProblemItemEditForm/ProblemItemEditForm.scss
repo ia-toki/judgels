@@ -1,0 +1,22 @@
+.problem-item-edit-form {
+  &__choices {
+    width: 100%;
+
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  &__choice-alias {
+    width: 100px;
+  }
+
+  &__choice-action {
+    width: 1px;
+    white-space: nowrap;
+  }
+
+  &__choice-correct {
+    margin-bottom: 0;
+  }
+}

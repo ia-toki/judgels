@@ -16,6 +16,7 @@ import {
   problemGradingLanguageRestrictionQueryOptions,
   problemGradingTestDataFilesQueryOptions,
 } from '../../modules/queries/problemGrading';
+import { problemItemsQueryOptions } from '../../modules/queries/problemItem';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import {
@@ -219,6 +220,24 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemItemsRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'items',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemItemsPage/ProblemItemsPage'))),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemItemsQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemItemRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'items/$itemJid',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemItemPage/ProblemItemPage'))),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    },
+  });
+
   const adminProblemGradingRoute = createRoute({
     getParentRoute: () => adminProblemRoute,
     path: 'grading',
@@ -330,6 +349,8 @@ export const createAdminRoutes = appRoute => {
       adminProblemStatementRoute,
       adminProblemStatementLanguagesRoute,
       adminProblemStatementMediaRoute,
+      adminProblemItemsRoute,
+      adminProblemItemRoute,
       adminProblemGradingRoute.addChildren([
         adminProblemGradingIndexRoute,
         adminProblemGradingEngineRoute,

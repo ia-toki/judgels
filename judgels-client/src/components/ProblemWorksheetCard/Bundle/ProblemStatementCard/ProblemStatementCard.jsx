@@ -26,7 +26,7 @@ export function ProblemStatementCard({
   };
 
   const renderStatement = item => {
-    return <ItemStatementCard key={item.meta} {...item} />;
+    return <ItemStatementCard key={item.jid} {...item} />;
   };
 
   const renderShortAnswer = item => {
@@ -35,7 +35,7 @@ export function ProblemStatementCard({
     return (
       <ItemShortAnswerCard
         onSubmit={generateOnAnswer(item.jid)}
-        key={item.meta}
+        key={item.jid}
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}
@@ -50,7 +50,7 @@ export function ProblemStatementCard({
     return (
       <ItemEssayCard
         onSubmit={generateOnAnswer(item.jid)}
-        key={item.meta}
+        key={item.jid}
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}
@@ -65,7 +65,7 @@ export function ProblemStatementCard({
     return (
       <ItemMultipleChoiceCard
         onChoiceChange={generateOnAnswer(item.jid)}
-        key={item.meta}
+        key={item.jid}
         {...item}
         itemNumber={item.number}
         initialAnswer={initialAnswer}

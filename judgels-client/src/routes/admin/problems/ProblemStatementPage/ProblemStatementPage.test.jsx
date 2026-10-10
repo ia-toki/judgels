@@ -13,11 +13,11 @@ describe('ProblemStatementPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async ({ canEdit = true, type = 'PROGRAMMING' } = {}) => {
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
-        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type: 'PROGRAMMING', authorJid: 'JIDUSER1' },
+        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' },
         setterJidsMap: {},
         topicTags: [],
         hasLocalChanges: false,
@@ -58,6 +58,44 @@ describe('ProblemStatementPage', () => {
     ]);
     expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
     expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/);
+  });
+
+  test('previews a bundle problem with its items', async () => {
+    nockApi()
+      .get('/v4/problems/JIDPROG1/items')
+      .query({ language: 'id-ID' })
+      .reply(200, {
+        data: [
+          { jid: 'JIDITEM1', type: 'STATEMENT', meta: '', config: { statement: '<p>Bacalah.</p>' } },
+          {
+            jid: 'JIDITEM2',
+            type: 'MULTIPLE_CHOICE',
+            number: 1,
+            meta: '',
+            config: {
+              statement: '<p>Berapa apel?</p>',
+              score: 4,
+              penalty: -1,
+              choices: [
+                { alias: 'a', content: 'satu <img src="render/satu.png">', isCorrect: true },
+                { alias: 'b', content: 'dua', isCorrect: false },
+              ],
+            },
+          },
+        ],
+      });
+
+    await renderComponent({ type: 'BUNDLE' });
+
+    expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
+    expect(screen.getByText('Bacalah.')).toBeInTheDocument();
+    expect(screen.getByText('Berapa apel?')).toBeInTheDocument();
+    expect(screen.getByText('dua')).toBeInTheDocument();
+    expect([...document.querySelectorAll('img')].map(img => img.getAttribute('src'))).toEqual([
+      expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/),
+      expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/satu\.png$/),
+    ]);
+    screen.getAllByRole('radio').forEach(radio => expect(radio).toBeDisabled());
   });
 
   test('switches the language', async () => {

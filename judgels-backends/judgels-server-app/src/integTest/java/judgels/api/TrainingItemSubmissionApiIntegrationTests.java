@@ -3,10 +3,11 @@ package judgels.api;
 import static judgels.api.catalog.problem.ProblemType.BUNDLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Form;
 import java.util.List;
 import java.util.Map;
 import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
 import judgels.api.submission.bundle.Verdict;
@@ -24,26 +25,30 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
     void end_to_end_flow() {
         updateProblemStatement(adminToken, problem3, "Problem 3", "text");
 
-        Form form = new Form();
-        form.param("meta", "1");
-        form.param("statement", "<p>QUESTION 1</p>");
-        form.param("score", "4");
-        form.param("penalty", "-1");
-        form.param("choiceAliases", "a");
-        form.param("choiceContents", "answer a");
-        form.param("choiceIsCorrects", "0");
-        form.param("choiceAliases", "b");
-        form.param("choiceContents", "answer b");
-        String item1Jid = createBundleProblemItem(adminToken, problem3, ItemType.MULTIPLE_CHOICE, form);
+        String item1Jid = createBundleProblemItem(adminToken, problem3, ItemType.MULTIPLE_CHOICE, "1", new MultipleChoiceItemConfig.Builder()
+                .statement("<p>QUESTION 1</p>")
+                .score(4)
+                .penalty(-1)
+                .addChoices(
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("a")
+                                .content("answer a")
+                                .isCorrect(true)
+                                .build(),
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("b")
+                                .content("answer b")
+                                .isCorrect(false)
+                                .build())
+                .build());
 
-        form = new Form();
-        form.param("meta", "2");
-        form.param("statement", "<p>QUESTION 2</p>");
-        form.param("score", "4");
-        form.param("penalty", "-1");
-        form.param("inputValidationRegex", "\\d+");
-        form.param("gradingRegex", "123");
-        String item2Jid = createBundleProblemItem(adminToken, problem3, ItemType.SHORT_ANSWER, form);
+        String item2Jid = createBundleProblemItem(adminToken, problem3, ItemType.SHORT_ANSWER, "2", new ShortAnswerItemConfig.Builder()
+                .statement("<p>QUESTION 2</p>")
+                .score(4)
+                .penalty(-1)
+                .inputValidationRegex("\\d+")
+                .gradingRegex("123")
+                .build());
 
         archiveClient.createArchive(adminToken, new ArchiveCreateData.Builder()
                 .slug("archive")

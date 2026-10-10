@@ -32,6 +32,11 @@ export default function ProblemLayout() {
       title: 'Media',
     },
     {
+      path: 'items',
+      title: 'Items',
+      disabled: problem.type !== ProblemType.Bundle,
+    },
+    {
       path: 'grading',
       title: 'Grading',
       disabled: problem.type !== ProblemType.Programming,

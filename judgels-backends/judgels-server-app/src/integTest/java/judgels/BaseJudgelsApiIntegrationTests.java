@@ -33,13 +33,17 @@ import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemCreateData;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.ProblemType;
+import judgels.api.catalog.problem.bundle.ItemConfig;
 import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
+import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
 import judgels.client.ProblemClient;
+import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
@@ -304,31 +308,26 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
     }
 
-    protected static String createBundleProblemItem(String token, Problem problem, ItemType type, Form config) {
+    protected static String createBundleProblemItem(
+            String token,
+            Problem problem,
+            ItemType type,
+            String meta,
+            ItemConfig config) {
+
+        ProblemItemClient itemClient = createClient(ProblemItemClient.class);
+
+        String itemJid = itemClient
+                .createItem(token, problem.getJid(), new ProblemItemCreateData.Builder().type(type).build())
+                .getJid();
+        itemClient.updateItem(token, problem.getJid(), itemJid, "en-US", new ProblemItemUpdateData.Builder()
+                .type(type)
+                .meta(meta)
+                .config(config)
+                .build());
+
+        // The item is committed through michael until versions have an API.
         Form form = new Form();
-        form.param("type", type.name());
-
-        Response response = webTarget
-                .path("/problems/bundle/" + problem.getId() + "/items")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
-
-        String redirect = response.getLocation().toString();
-        Pattern pattern = Pattern.compile("(JIDITEM[a-zA-Z0-9]+)");
-        Matcher matcher = pattern.matcher(redirect);
-        matcher.find();
-
-        String itemJid = matcher.group(1);
-
-        webTarget
-                .path("/problems/bundle/" + problem.getId() + "/items/" + itemJid)
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(config, APPLICATION_FORM_URLENCODED));
-
-        form = new Form();
         form.param("title", "Add item");
         form.param("description", "");
 
