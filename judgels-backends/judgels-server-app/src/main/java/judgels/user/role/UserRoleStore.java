@@ -5,7 +5,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import judgels.api.user.role.UserAdminRole;
+import judgels.api.user.role.SystemAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserWithRole;
 import judgels.persistence.UnmodifiableModel_;
@@ -76,7 +76,7 @@ public class UserRoleStore {
         UserRole.Builder role = new UserRole.Builder();
 
         if (superadminRoleStore.isSuperadmin(userJid)) {
-            role.account(UserAdminRole.SUPERADMIN.name());
+            role.account(SystemAdminRole.SUPERADMIN.name());
             role.problem("ADMIN");
             role.contest("ADMIN");
             role.training("ADMIN");

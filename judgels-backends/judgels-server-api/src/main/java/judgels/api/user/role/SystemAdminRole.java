@@ -1,6 +1,6 @@
 package judgels.api.user.role;
 
-public enum UserAdminRole {
+public enum SystemAdminRole {
     SUPERADMIN,
     ADMIN,
 }

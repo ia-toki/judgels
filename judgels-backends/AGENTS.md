@@ -16,13 +16,13 @@ Three kinds of code are grouped by kind, across every layer:
 - Admin tasks go in `judgels.tasks`.
 - API integration tests go in `judgels.api` under `src/integTest`.
 
-Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core is technical and has no domain meaning; what an admin sees and manages about the site belongs to the system layer.
+Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core is technical and has no domain meaning; what an admin sees and manages about the site belongs to the system layer. The server's own wiring (application, component, configuration) sits directly in `judgels` and may import any layer.
 
 Within system, `judgels.user.*` holds what a user has: account, info, avatar, rating, roles. A login is something a user does, so sessions and the actor go beside it in `judgels.session`.
 
 Imports point one way: host → submission → catalog → system → core. Grading stands beside system: the layers above both may import it, and it imports only core. The two hosts stay independent of each other, and core imports nothing else under `judgels`. `judgels.persistence` may be imported from anywhere.
 
-Two existing imports go against that direction, and they are the only ones allowed: `BundleProblemGrader` in the catalog uses the `judgels.api.submission.bundle` DTOs, and `ProblemSetProblemResource` in training reads `ContestStore`.
+Two dependencies go against that direction, and they are the only ones allowed: the catalog's bundle grading uses the submission bundle DTOs, and training's problem set problems read the contest they came from.
 
 Submission code is written once and reused by every host, and by the catalog for test submissions. Each of them gives it its own tables and passes the container as an opaque `containerJid`, which only it interprets.
 
