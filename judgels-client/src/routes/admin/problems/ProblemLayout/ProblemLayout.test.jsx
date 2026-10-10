@@ -50,13 +50,14 @@ describe('ProblemLayout', () => {
       '/admin/problems/JIDPROG1/media',
       '/admin/problems/JIDPROG1/grading',
     ]);
+    expect(screen.queryByRole('link', { name: 'Items' })).not.toBeInTheDocument();
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
   });
 
-  test('hides the grading tab of a bundle problem', async () => {
+  test('shows the items tab of a bundle problem instead of the grading tab', async () => {
     await renderComponent({ hasLocalChanges: false, type: 'BUNDLE' });
 
-    expect(screen.getByRole('link', { name: 'Media' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/JIDPROG1/items');
     expect(screen.queryByRole('link', { name: 'Grading' })).not.toBeInTheDocument();
   });
 

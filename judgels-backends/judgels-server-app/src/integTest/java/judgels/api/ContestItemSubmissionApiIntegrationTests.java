@@ -2,11 +2,14 @@ package judgels.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.ws.rs.core.Form;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import judgels.api.catalog.problem.bundle.EssayItemConfig;
 import judgels.api.catalog.problem.bundle.ItemType;
+import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
+import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
+import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.contest.Contest;
 import judgels.api.contest.submission.bundle.ContestItemSubmissionsResponse;
 import judgels.api.contest.submission.bundle.ContestSubmissionSummaryResponse;
@@ -38,49 +41,56 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
     void submit_get_submissions() {
         updateProblemStatement(managerToken, problem3, "Problem 3", "text");
 
-        Form form = new Form();
-        form.param("meta", "1-2");
-        form.param("statement", "<p>STATEMENT 1-2</p>");
-        String item1Jid = createBundleProblemItem(managerToken, problem3, ItemType.STATEMENT, form);
+        String item1Jid = createBundleProblemItem(managerToken, problem3, ItemType.STATEMENT, "1-2", new StatementItemConfig.Builder()
+                .statement("<p>STATEMENT 1-2</p>")
+                .build());
 
-        form = new Form();
-        form.param("meta", "1");
-        form.param("statement", "<p>QUESTION 1</p>");
-        form.param("score", "1");
-        form.param("penalty", "0");
-        form.param("choiceAliases", "a");
-        form.param("choiceContents", "answer a");
-        form.param("choiceAliases", "b");
-        form.param("choiceContents", "answer b");
-        form.param("choiceIsCorrects", "1");
-        String item2Jid = createBundleProblemItem(managerToken, problem3, ItemType.MULTIPLE_CHOICE, form);
+        String item2Jid = createBundleProblemItem(managerToken, problem3, ItemType.MULTIPLE_CHOICE, "1", new MultipleChoiceItemConfig.Builder()
+                .statement("<p>QUESTION 1</p>")
+                .score(1)
+                .penalty(0)
+                .addChoices(
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("a")
+                                .content("answer a")
+                                .isCorrect(false)
+                                .build(),
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("b")
+                                .content("answer b")
+                                .isCorrect(true)
+                                .build())
+                .build());
 
-        form = new Form();
-        form.param("meta", "2");
-        form.param("statement", "<p>QUESTION 2</p>");
-        form.param("score", "4");
-        form.param("penalty", "-1");
-        form.param("choiceAliases", "a");
-        form.param("choiceContents", "answer a");
-        form.param("choiceIsCorrects", "0");
-        form.param("choiceAliases", "b");
-        form.param("choiceContents", "answer b");
-        String item3Jid = createBundleProblemItem(managerToken, problem3, ItemType.MULTIPLE_CHOICE, form);
+        String item3Jid = createBundleProblemItem(managerToken, problem3, ItemType.MULTIPLE_CHOICE, "2", new MultipleChoiceItemConfig.Builder()
+                .statement("<p>QUESTION 2</p>")
+                .score(4)
+                .penalty(-1)
+                .addChoices(
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("a")
+                                .content("answer a")
+                                .isCorrect(true)
+                                .build(),
+                        new MultipleChoiceItemConfig.Choice.Builder()
+                                .alias("b")
+                                .content("answer b")
+                                .isCorrect(false)
+                                .build())
+                .build());
 
-        form = new Form();
-        form.param("meta", "3");
-        form.param("statement", "<p>QUESTION 3</p>");
-        form.param("score", "4");
-        form.param("penalty", "-1");
-        form.param("inputValidationRegex", "\\d+");
-        form.param("gradingRegex", "123");
-        String item4Jid = createBundleProblemItem(managerToken, problem3, ItemType.SHORT_ANSWER, form);
+        String item4Jid = createBundleProblemItem(managerToken, problem3, ItemType.SHORT_ANSWER, "3", new ShortAnswerItemConfig.Builder()
+                .statement("<p>QUESTION 3</p>")
+                .score(4)
+                .penalty(-1)
+                .inputValidationRegex("\\d+")
+                .gradingRegex("123")
+                .build());
 
-        form = new Form();
-        form.param("meta", "4");
-        form.param("statement", "<p>QUESTION 4</p>");
-        form.param("score", "12");
-        String item5Jid = createBundleProblemItem(managerToken, problem3, ItemType.ESSAY, form);
+        String item5Jid = createBundleProblemItem(managerToken, problem3, ItemType.ESSAY, "4", new EssayItemConfig.Builder()
+                .statement("<p>QUESTION 4</p>")
+                .score(12)
+                .build());
 
         submissionClient.createItemSubmission(contestantToken, new ItemSubmissionData.Builder()
                 .containerJid(contest.getJid())

@@ -1,6 +1,6 @@
 package judgels.api;
 
-import jakarta.ws.rs.core.Form;
+import judgels.api.catalog.problem.bundle.EssayItemConfig;
 import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.contest.Contest;
 import judgels.api.submission.bundle.ItemSubmissionData;
@@ -26,11 +26,10 @@ class ContestItemSubmissionApiPermissionIntegrationTests extends BaseContestApiI
 
         updateProblemStatement(managerToken, problem3, "Problem 3", "text");
 
-        Form form = new Form();
-        form.param("meta", "1");
-        form.param("statement", "<p>QUESTION 1</p>");
-        form.param("score", "10");
-        itemJid = createBundleProblemItem(managerToken, problem3, ItemType.ESSAY, form);
+        itemJid = createBundleProblemItem(managerToken, problem3, ItemType.ESSAY, "1", new EssayItemConfig.Builder()
+                .statement("<p>QUESTION 1</p>")
+                .score(10)
+                .build());
     }
 
     @Test

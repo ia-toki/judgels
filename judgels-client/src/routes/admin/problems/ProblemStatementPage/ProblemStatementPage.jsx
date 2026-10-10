@@ -5,14 +5,15 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { ProblemStatementCard as BundleProblemStatementCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemStatementCard/ProblemStatementCard';
 import { ProblemWorksheetCard } from '../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import RichStatementText from '../../../../components/RichStatementText/RichStatementText';
 import { ProblemType } from '../../../../modules/api/problem';
+import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemItemsQueryOptions } from '../../../../modules/queries/problemItem';
 import {
   problemStatementLanguagesQueryOptions,
   problemStatementQueryOptions,
@@ -37,6 +38,13 @@ export default function ProblemStatementPage() {
   const language = enabledLanguages.includes(selectedLanguage) ? selectedLanguage : defaultLanguage;
 
   const { data: statement } = useQuery(problemStatementQueryOptions(problemJid, { language }));
+
+  // A bundle problem is previewed together with its items.
+  const isBundle = problem.type === ProblemType.Bundle;
+  const { data: itemsResponse } = useQuery({
+    ...problemItemsQueryOptions(problemJid, { language }),
+    enabled: isBundle,
+  });
 
   const updateStatementMutation = useMutation(updateProblemStatementMutationOptions(problemJid, language));
 
@@ -87,24 +95,26 @@ export default function ProblemStatementPage() {
   const renderPreview = () => {
     const text = formatStatementMediaUrls(statement.text, problemJid);
 
-    if (problem.type === ProblemType.Programming) {
+    if (isBundle) {
       return (
-        <ProblemWorksheetCard
-          worksheet={{ statement: { title: statement.title, text }, limits: {} }}
-          showLimits={false}
+        <BundleProblemStatementCard
+          statement={{ title: statement.title, text }}
+          items={itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid))}
+          latestSubmissions={{}}
+          disabled
         />
       );
     }
     return (
-      <ContentCard>
-        <h2>{statement.title}</h2>
-        <RichStatementText>{text}</RichStatementText>
-      </ContentCard>
+      <ProblemWorksheetCard
+        worksheet={{ statement: { title: statement.title, text }, limits: {} }}
+        showLimits={false}
+      />
     );
   };
 
   const renderContent = () => {
-    if (!statement) {
+    if (!statement || (isBundle && !itemsResponse)) {
       return <LoadingState />;
     }
     if (isEditing) {
