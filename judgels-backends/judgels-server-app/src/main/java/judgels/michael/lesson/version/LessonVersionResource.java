@@ -18,8 +18,11 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import judgels.api.catalog.lesson.Lesson;
+import judgels.api.catalog.lesson.LessonErrors;
 import judgels.api.profile.Profile;
+import judgels.catalog.lesson.version.LessonVersionService;
 import judgels.catalog.lesson.version.LessonVersionStore;
+import judgels.core.api.JudgelsApiException;
 import judgels.core.git.GitCommit;
 import judgels.michael.lesson.BaseLessonResource;
 import judgels.michael.resource.CommitVersionForm;
@@ -31,7 +34,11 @@ import judgels.session.Actor;
 
 @Path("/lessons/{lessonId}/versions")
 public class LessonVersionResource extends BaseLessonResource {
+    private static final String LOCAL_CHANGES_CONFLICT_ERROR =
+            "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
+
     @Inject protected LessonVersionStore versionStore;
+    @Inject protected LessonVersionService versionService;
 
     @Inject public LessonVersionResource() {}
 
@@ -68,21 +75,14 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        String localChangesError = null;
-        if (versionStore.fetchUserClone(actor.getUserJid(), lesson.getJid())) {
-            localChangesError = "There have been newer changes in the master copy. Please rebase your local changes.";
-        } else if (!versionStore.commitThenMergeUserClone(actor.getUserJid(), lesson.getJid(), form.title, form.description)) {
-            localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!versionStore.pushUserClone(actor.getUserJid(), lesson.getJid())) {
-            localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        }
-
-        if (localChangesError != null) {
-            form.localChangesError = localChangesError;
+        try {
+            versionService.commitLocalChanges(actor.getUserJid(), lesson.getJid(), form.title, form.description);
+        } catch (JudgelsApiException e) {
+            form.localChangesError = e.getMessage().equals(LessonErrors.VERSION_LOCAL_CHANGES_OUTDATED)
+                    ? "There have been newer changes in the master copy. Please rebase your local changes."
+                    : LOCAL_CHANGES_CONFLICT_ERROR;
             return ok(renderViewVersionLocalChanges(actor, lesson, form));
         }
-
-        versionStore.discardUserClone(actor.getUserJid(), lesson.getJid());
 
         return redirect("/lessons/" + lessonId + "/versions/local");
     }
@@ -119,7 +119,7 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        versionStore.restore(lesson.getJid(), versionHash);
+        versionService.restoreVersion(actor.getUserJid(), lesson.getJid(), versionHash);
 
         return redirect("/lessons/" + lessonId + "/versions/history");
     }
@@ -132,13 +132,12 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        versionStore.fetchUserClone(actor.getUserJid(), lesson.getJid());
-        if (!versionStore.updateUserClone(actor.getUserJid(), lesson.getJid())) {
-            String localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-
+        try {
+            versionService.rebaseLocalChanges(actor.getUserJid(), lesson.getJid());
+        } catch (JudgelsApiException e) {
             HtmlTemplate template = newLessonVersionTemplate(actor, lesson);
             template.setActiveSecondaryTab("local");
-            return ok(new RebaseVersionLocalChangesView(template, localChangesError));
+            return ok(new RebaseVersionLocalChangesView(template, LOCAL_CHANGES_CONFLICT_ERROR));
         }
 
         return redirect("/lessons/" + lessonId + "/versions/local");
@@ -152,7 +151,7 @@ public class LessonVersionResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.canEdit(actor, lesson));
 
-        versionStore.discardUserClone(actor.getUserJid(), lesson.getJid());
+        versionService.discardLocalChanges(actor.getUserJid(), lesson.getJid());
 
         return redirect("/lessons/" + lessonId + "/versions/local");
     }

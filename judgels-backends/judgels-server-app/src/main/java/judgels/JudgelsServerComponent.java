@@ -65,9 +65,11 @@ public interface JudgelsServerComponent {
     judgels.catalog.problem.programming.grading.ProblemGradingResource problemGradingResource();
     judgels.catalog.problem.statement.ProblemStatementResource problemStatementResource();
     judgels.catalog.problem.tag.ProblemTagResource problemTagResource();
+    judgels.catalog.problem.version.ProblemVersionResource problemVersionResource();
     judgels.catalog.lesson.LessonResource lessonResource();
     judgels.catalog.lesson.LessonRenderResource lessonRenderResource();
     judgels.catalog.lesson.statement.LessonStatementResource lessonStatementResource();
+    judgels.catalog.lesson.version.LessonVersionResource lessonVersionResource();
 
     judgels.contest.ContestResource contestResource();
     judgels.contest.web.ContestWebResource contestWebResource();

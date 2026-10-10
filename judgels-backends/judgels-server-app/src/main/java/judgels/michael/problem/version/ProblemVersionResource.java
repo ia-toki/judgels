@@ -18,9 +18,11 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 import judgels.api.catalog.problem.Problem;
+import judgels.api.catalog.problem.ProblemErrors;
 import judgels.api.profile.Profile;
-import judgels.catalog.problem.tag.ProblemTagStore;
+import judgels.catalog.problem.version.ProblemVersionService;
 import judgels.catalog.problem.version.ProblemVersionStore;
+import judgels.core.api.JudgelsApiException;
 import judgels.core.git.GitCommit;
 import judgels.michael.problem.BaseProblemResource;
 import judgels.michael.resource.CommitVersionForm;
@@ -31,9 +33,12 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.session.Actor;
 
 @Path("/problems/{problemId}/versions")
-public class  ProblemVersionResource extends BaseProblemResource {
+public class ProblemVersionResource extends BaseProblemResource {
+    private static final String LOCAL_CHANGES_CONFLICT_ERROR =
+            "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
+
     @Inject protected ProblemVersionStore versionStore;
-    @Inject protected ProblemTagStore tagStore;
+    @Inject protected ProblemVersionService versionService;
 
     @Inject public ProblemVersionResource() {}
 
@@ -70,22 +75,14 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        String localChangesError = null;
-        if (versionStore.fetchUserClone(actor.getUserJid(), problem.getJid())) {
-            localChangesError = "There have been newer changes in the master copy. Please rebase your local changes.";
-        } else if (!versionStore.commitThenMergeUserClone(actor.getUserJid(), problem.getJid(), form.title, form.description)) {
-            localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        } else if (!versionStore.pushUserClone(actor.getUserJid(), problem.getJid())) {
-            localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-        }
-
-        if (localChangesError != null) {
-            form.localChangesError = localChangesError;
+        try {
+            versionService.commitLocalChanges(actor.getUserJid(), problem.getJid(), form.title, form.description);
+        } catch (JudgelsApiException e) {
+            form.localChangesError = e.getMessage().equals(ProblemErrors.VERSION_LOCAL_CHANGES_OUTDATED)
+                    ? "There have been newer changes in the master copy. Please rebase your local changes."
+                    : LOCAL_CHANGES_CONFLICT_ERROR;
             return ok(renderViewVersionLocalChanges(actor, problem, form));
         }
-
-        versionStore.discardUserClone(actor.getUserJid(), problem.getJid());
-        tagStore.refreshDerivedTags(problem.getJid());
 
         return redirect("/problems/" + problemId + "/versions/local");
     }
@@ -122,7 +119,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        versionStore.restore(problem.getJid(), versionHash);
+        versionService.restoreVersion(actor.getUserJid(), problem.getJid(), versionHash);
 
         return redirect("/problems/" + problemId + "/versions/history");
     }
@@ -135,13 +132,12 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        versionStore.fetchUserClone(actor.getUserJid(), problem.getJid());
-        if (!versionStore.updateUserClone(actor.getUserJid(), problem.getJid())) {
-            String localChangesError = "Your local changes conflict with the master copy. Please remember, discard, and then reapply your local changes.";
-
+        try {
+            versionService.rebaseLocalChanges(actor.getUserJid(), problem.getJid());
+        } catch (JudgelsApiException e) {
             HtmlTemplate template = newProblemVersionTemplate(actor, problem);
             template.setActiveSecondaryTab("local");
-            return ok(new RebaseVersionLocalChangesView(template, localChangesError));
+            return ok(new RebaseVersionLocalChangesView(template, LOCAL_CHANGES_CONFLICT_ERROR));
         }
 
         return redirect("/problems/" + problemId + "/versions/local");
@@ -155,7 +151,7 @@ public class  ProblemVersionResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.canEdit(actor, problem));
 
-        versionStore.discardUserClone(actor.getUserJid(), problem.getJid());
+        versionService.discardLocalChanges(actor.getUserJid(), problem.getJid());
 
         return redirect("/problems/" + problemId + "/versions/local");
     }

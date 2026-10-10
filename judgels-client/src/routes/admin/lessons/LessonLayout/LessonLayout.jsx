@@ -1,6 +1,6 @@
 import { Callout, Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Outlet, useParams } from '@tanstack/react-router';
+import { Link, Outlet, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
@@ -10,7 +10,7 @@ export default function LessonLayout() {
   const { lessonJid } = useParams({ strict: false });
 
   const {
-    data: { data: lesson, hasLocalChanges },
+    data: { data: lesson, hasLocalChanges, config },
   } = useSuspenseQuery(lessonQueryOptions(lessonJid));
 
   const topbarItems = [
@@ -30,13 +30,19 @@ export default function LessonLayout() {
       path: 'media',
       title: 'Media',
     },
+    {
+      path: 'versions',
+      title: 'Versions',
+      disabled: !config.canEdit,
+    },
   ];
 
   return (
     <ContentCard title={`Lessons › ${lesson.slug}`}>
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING} title="You have uncommitted changes">
-          Chapters keep using the last committed version of this lesson until you commit your changes.
+          Chapters keep using the last committed version of this lesson until you{' '}
+          <Link to={`/admin/lessons/${lessonJid}/versions`}>commit your changes</Link>.
         </Callout>
       )}
       <ContentWithTopbar items={topbarItems} basePath={`/admin/lessons/${lessonJid}`}>

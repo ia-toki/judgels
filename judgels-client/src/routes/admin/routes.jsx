@@ -14,6 +14,7 @@ import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementMediaFilesQueryOptions,
 } from '../../modules/queries/lessonStatement';
+import { lessonVersionsQueryOptions } from '../../modules/queries/lessonVersion';
 import { problemQueryOptions } from '../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
@@ -32,6 +33,7 @@ import {
   problemStatementLanguagesQueryOptions,
   problemStatementMediaFilesQueryOptions,
 } from '../../modules/queries/problemStatement';
+import { problemVersionsQueryOptions } from '../../modules/queries/problemVersion';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
@@ -377,6 +379,15 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemVersionsRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'versions',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemVersionsPage/ProblemVersionsPage'))),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemVersionsQueryOptions(problemJid));
+    },
+  });
+
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
@@ -437,6 +448,15 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminLessonVersionsRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: 'versions',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonVersionsPage/LessonVersionsPage'))),
+    loader: async ({ params: { lessonJid } }) => {
+      await queryClient.ensureQueryData(lessonVersionsQueryOptions(lessonJid));
+    },
+  });
+
   const adminSettingsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'settings',
@@ -483,6 +503,7 @@ export const createAdminRoutes = appRoute => {
         adminProblemGradingHelpersRoute,
         adminProblemGradingLanguageRestrictionRoute,
       ]),
+      adminProblemVersionsRoute,
     ]),
     adminLessonsRoute,
     adminLessonRoute.addChildren([
@@ -491,6 +512,7 @@ export const createAdminRoutes = appRoute => {
       adminLessonStatementRoute,
       adminLessonStatementLanguagesRoute,
       adminLessonStatementMediaRoute,
+      adminLessonVersionsRoute,
     ]),
     adminSettingsRoute,
   ]);

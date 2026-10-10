@@ -11,13 +11,13 @@ describe('LessonLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasLocalChanges }) => {
+  const renderComponent = async ({ hasLocalChanges, canEdit = true }) => {
     nockApi()
       .get('/v4/lessons/JIDLESS1')
       .reply(200, {
         data: { id: 1, jid: 'JIDLESS1', slug: 'lesson-1', authorJid: 'JIDUSER1' },
         hasLocalChanges,
-        config: { canEdit: true },
+        config: { canEdit },
         profilesMap: {},
       });
 
@@ -38,7 +38,7 @@ describe('LessonLayout', () => {
     await renderComponent({ hasLocalChanges: false });
 
     expect(
-      ['General', 'Statements', 'Languages', 'Media'].map(name =>
+      ['General', 'Statements', 'Languages', 'Media', 'Versions'].map(name =>
         screen.getByRole('link', { name }).getAttribute('href')
       )
     ).toEqual([
@@ -46,12 +46,22 @@ describe('LessonLayout', () => {
       '/admin/lessons/JIDLESS1/statements',
       '/admin/lessons/JIDLESS1/languages',
       '/admin/lessons/JIDLESS1/media',
+      '/admin/lessons/JIDLESS1/versions',
     ]);
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
+  });
+
+  test('hides the versions tab when the lesson cannot be edited', async () => {
+    await renderComponent({ hasLocalChanges: false, canEdit: false });
+    expect(screen.queryByRole('link', { name: 'Versions' })).not.toBeInTheDocument();
   });
 
   test('warns about uncommitted changes', async () => {
     await renderComponent({ hasLocalChanges: true });
     expect(screen.getByText(/uncommitted changes/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /commit your changes/i })).toHaveAttribute(
+      'href',
+      '/admin/lessons/JIDLESS1/versions'
+    );
   });
 });
