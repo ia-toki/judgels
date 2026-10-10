@@ -7,6 +7,7 @@ import { getToken } from '../session';
 export const chapterLatestItemSubmissionsQueryOptions = (chapterJid, problemAlias) =>
   queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'latest', problemAlias],
+    meta: { persist: false },
     queryFn: () => trainingItemSubmissionAPI.getLatestItemSubmissions(getToken(), chapterJid, problemAlias),
   });
 
@@ -14,6 +15,7 @@ export const chapterItemSubmissionSummaryQueryOptions = (chapterJid, params) => 
   const { problemAlias, language } = params || {};
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'bundle', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissionSummary(
         getToken(),
@@ -44,6 +46,7 @@ export const problemSetItemSubmissionsQueryOptions = (problemSetJid, params) => 
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissions(getToken(), problemSetJid, username, problemAlias, page),
   });
@@ -53,6 +56,7 @@ export const problemSetItemSubmissionSummaryQueryOptions = (problemSetJid, param
   const { problemJid, username, language } = params || {};
   return queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
+    meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissionSummary(getToken(), problemSetJid, problemJid, username, language),
   });
@@ -61,6 +65,7 @@ export const problemSetItemSubmissionSummaryQueryOptions = (problemSetJid, param
 export const problemSetLatestItemSubmissionsQueryOptions = (problemSetJid, problemAlias) =>
   queryOptions({
     queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'latest', problemAlias],
+    meta: { persist: false },
     queryFn: () => trainingItemSubmissionAPI.getLatestItemSubmissions(getToken(), problemSetJid, problemAlias),
   });
 
