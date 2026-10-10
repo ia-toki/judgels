@@ -3,23 +3,24 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/problem';
 import { archivesQueryOptions } from '../../modules/queries/archive';
+import { problemSetBySlugQueryOptions, problemSetsQueryOptions } from '../../modules/queries/problemSet';
 import {
-  problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
   problemSetProblemReportQueryOptions,
   problemSetProblemWorksheetQueryOptions,
   problemSetProblemsQueryOptions,
-  problemSetsQueryOptions,
-} from '../../modules/queries/problemSet';
+} from '../../modules/queries/problemSetProblem';
 import {
   problemSetItemSubmissionSummaryQueryOptions,
   problemSetItemSubmissionsQueryOptions,
   problemSetLatestItemSubmissionsQueryOptions,
-} from '../../modules/queries/problemSetItemSubmission';
-import { problemSetSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmission';
+} from '../../modules/queries/trainingItemSubmission';
 import { trainingProblemsQueryOptions } from '../../modules/queries/trainingProblem';
 import { trainingProblemTagsQueryOptions } from '../../modules/queries/trainingProblemTag';
-import { trainingSubmissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
+import {
+  problemSetSubmissionsQueryOptions,
+  trainingSubmissionWithSourceByIdQueryOptions,
+} from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
@@ -171,7 +172,7 @@ export const createProblemsRoutes = appRoute => {
     ),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language }));
     },
   });
 

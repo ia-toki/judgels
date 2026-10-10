@@ -7,7 +7,7 @@ import { getCountryName } from '../../../../../../assets/data/countries';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
-import { approvedContestantsQueryOptions } from '../../../../../../modules/queries/contestContestant';
+import { contestApprovedContestantsQueryOptions } from '../../../../../../modules/queries/contestContestant';
 
 import './ContestRegistrantsDialog.scss';
 
@@ -15,7 +15,7 @@ export default function ContestRegistrantsDialog({ onClose }) {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const { data: response } = useQuery(approvedContestantsQueryOptions(contest.jid));
+  const { data: response } = useQuery(contestApprovedContestantsQueryOptions(contest.jid));
 
   const contestantsCount = response ? ` (${response.data.length})` : '';
 

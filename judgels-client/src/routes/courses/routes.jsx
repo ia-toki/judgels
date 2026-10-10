@@ -2,17 +2,15 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/problem';
-import { chapterLatestItemSubmissionsQueryOptions } from '../../modules/queries/chapterItemSubmission';
 import { chapterLessonStatementQueryOptions, chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
-import { chapterSubmissionsQueryOptions } from '../../modules/queries/chapterSubmission';
+import { courseBySlugQueryOptions, coursesQueryOptions } from '../../modules/queries/course';
+import { courseChapterQueryOptions, courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
+import { chapterLatestItemSubmissionsQueryOptions } from '../../modules/queries/trainingItemSubmission';
 import {
-  courseBySlugQueryOptions,
-  courseChapterQueryOptions,
-  courseChaptersQueryOptions,
-  coursesQueryOptions,
-} from '../../modules/queries/course';
-import { trainingSubmissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
+  chapterSubmissionsQueryOptions,
+  trainingSubmissionWithSourceByIdQueryOptions,
+} from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
@@ -190,7 +188,7 @@ export const createCoursesRoutes = appRoute => {
     ),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language }));
     },
   });
 

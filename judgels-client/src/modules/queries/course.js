@@ -1,7 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { CourseErrors, courseAPI } from '../api/course';
-import { courseChapterAPI } from '../api/courseChapter';
 import { BadRequestError } from '../api/error';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
@@ -17,18 +16,6 @@ export const courseBySlugQueryOptions = courseSlug =>
   queryOptions({
     queryKey: ['course-by-slug', courseSlug],
     queryFn: () => courseAPI.getCourseBySlug(getToken(), courseSlug),
-  });
-
-export const courseChaptersQueryOptions = courseJid =>
-  queryOptions({
-    queryKey: ['course', courseJid, 'chapters'],
-    queryFn: () => courseChapterAPI.getChapters(getToken(), courseJid),
-  });
-
-export const courseChapterQueryOptions = (courseJid, chapterAlias) =>
-  queryOptions({
-    queryKey: ['course', courseJid, 'chapter', chapterAlias],
-    queryFn: () => courseChapterAPI.getChapter(getToken(), courseJid, chapterAlias),
   });
 
 export const createCourseMutationOptions = {
@@ -61,12 +48,5 @@ export const updateCourseMutationOptions = courseJid => ({
   onSuccess: () => {
     queryClient.invalidateQueries(coursesQueryOptions());
     queryClient.invalidateQueries({ queryKey: ['course-by-slug'] });
-  },
-});
-
-export const setCourseChaptersMutationOptions = courseJid => ({
-  mutationFn: data => courseChapterAPI.setChapters(getToken(), courseJid, data),
-  onSuccess: () => {
-    queryClient.invalidateQueries(courseChaptersQueryOptions(courseJid));
   },
 });

@@ -16,7 +16,7 @@ export const contestSubmissionAPI = {
     return get(`${baseURL}/user-problem?${params}`, token);
   },
 
-  getSubmissionWithSource: (token, submissionId, language) => {
+  getSubmissionWithSourceById: (token, submissionId, language) => {
     const params = stringify({ language });
     return get(`${baseURL}/id/${submissionId}?${params}`, token);
   },

@@ -6,7 +6,7 @@ import { get, post } from './http';
 export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v4/training/submissions/bundle`;
 
 export const trainingItemSubmissionAPI = {
-  getSubmissions: (token, containerJid, username, problemAlias, page) => {
+  getItemSubmissions: (token, containerJid, username, problemAlias, page) => {
     const params = stringify({ containerJid, username, problemAlias, page });
     return get(`${baseSubmissionsURL}?${params}`, token);
   },
@@ -15,21 +15,21 @@ export const trainingItemSubmissionAPI = {
     return post(`${baseSubmissionsURL}/`, token, data);
   },
 
-  getSubmissionSummary: (token, containerJid, problemJid, username, problemAlias, language) => {
+  getItemSubmissionSummary: (token, containerJid, problemJid, username, problemAlias, language) => {
     const params = stringify({ containerJid, problemJid, username, problemAlias, language });
     return get(`${baseSubmissionsURL}/summary?${params}`, token);
   },
 
-  getLatestSubmissions: (token, containerJid, problemAlias, username) => {
+  getLatestItemSubmissions: (token, containerJid, problemAlias, username) => {
     const params = stringify({ containerJid, username, problemAlias });
     return get(`${baseSubmissionsURL}/answers?${params}`, token);
   },
 
-  regradeSubmission: (token, submissionJid) => {
+  regradeItemSubmission: (token, submissionJid) => {
     return post(`${baseSubmissionsURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token, containerJid, userJid, problemJid) => {
+  regradeItemSubmissions: (token, containerJid, userJid, problemJid) => {
     const params = stringify({ containerJid, userJid, problemJid });
     return post(`${baseSubmissionsURL}/regrade?${params}`, token);
   },

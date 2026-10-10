@@ -4,14 +4,14 @@ import classNames from 'classnames';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { getRatingClass } from '../../../../modules/api/userRating';
-import { updateRatingsMutationOptions } from '../../../../modules/queries/userRating';
+import { updateUserRatingsMutationOptions } from '../../../../modules/queries/userRating';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 import './ContestRatingChangesDialog.scss';
 
 export function ContestRatingChangesDialog({ contest, ratingChanges, onClose }) {
-  const updateRatingsMutation = useMutation(updateRatingsMutationOptions);
+  const updateRatingsMutation = useMutation(updateUserRatingsMutationOptions);
 
   const handleApply = () => {
     updateRatingsMutation.mutate(

@@ -7,11 +7,11 @@ import { getToken } from '../session';
 export const userRolesQueryOptions = () =>
   queryOptions({
     queryKey: ['userRoles'],
-    queryFn: () => userRoleAPI.getUserRoles(getToken()),
+    queryFn: () => userRoleAPI.getRoles(getToken()),
   });
 
 export const setUserRolesMutationOptions = () => ({
-  mutationFn: usernameToRoleMap => userRoleAPI.setUserRoles(getToken(), usernameToRoleMap),
+  mutationFn: usernameToRoleMap => userRoleAPI.setRoles(getToken(), usernameToRoleMap),
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ['userRoles'] });
   },

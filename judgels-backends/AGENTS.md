@@ -16,7 +16,6 @@ Some kinds of code are grouped by kind, across every layer:
 - Admin tasks go in `judgels.tasks`.
 - API integration tests go in `judgels.api` under `src/integTest`.
 - Feign clients go in `judgels.client` under `src/integTest`, one per resource: `ContestProblemResource` is called through `ContestProblemClient` and tested by `ContestProblemApiIntegrationTests`.
-- Client API modules go in `judgels-client/src/modules/api`, each named after its Feign client: `ContestProblemClient` matches `contestProblem.js`.
 
 Code that belongs to no layer goes in `judgels.core.*`: the app chassis and the capabilities any layer may use, e.g. `core.fs`, `core.git`, `core.messaging`, `core.mailer`, `core.auth`. Core is technical and has no domain meaning; what an admin sees and manages about the site belongs to the system layer. The server's own wiring (application, component, configuration) sits directly in `judgels` and may import any layer.
 

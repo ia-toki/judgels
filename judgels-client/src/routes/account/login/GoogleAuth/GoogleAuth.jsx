@@ -5,8 +5,8 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { APP_CONFIG } from '../../../../conf';
-import { googleLogInMutationOptions, googleRegisterMutationOptions } from '../../../../modules/queries/googleAuth';
-import { afterLogin } from '../../../../modules/queries/session';
+import { afterLogin, logInWithGoogleMutationOptions } from '../../../../modules/queries/session';
+import { registerGoogleUserMutationOptions } from '../../../../modules/queries/userAccount';
 import GoogleAuthRegisterForm from './GoogleAuthRegisterForm';
 
 import './GoogleAuth.scss';
@@ -20,8 +20,8 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
     isRegisterDialogOpen: false,
   });
 
-  const googleLogInMutation = useMutation(googleLogInMutationOptions);
-  const googleRegisterMutation = useMutation(googleRegisterMutationOptions);
+  const googleLogInMutation = useMutation(logInWithGoogleMutationOptions);
+  const googleRegisterMutation = useMutation(registerGoogleUserMutationOptions);
 
   if (!APP_CONFIG.googleAuth) {
     return null;

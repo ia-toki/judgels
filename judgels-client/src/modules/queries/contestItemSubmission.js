@@ -8,7 +8,7 @@ export const contestItemSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', ...(params ? [params] : [])],
-    queryFn: () => contestItemSubmissionAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
+    queryFn: () => contestItemSubmissionAPI.getItemSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
 };
 
@@ -16,14 +16,14 @@ export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, p
   const { language } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', username, ...(params ? [params] : [])],
-    queryFn: () => contestItemSubmissionAPI.getSubmissionSummary(getToken(), contestJid, username, language),
+    queryFn: () => contestItemSubmissionAPI.getItemSubmissionSummary(getToken(), contestJid, username, language),
   });
 };
 
 export const contestLatestItemSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', 'bundle', problemAlias],
-    queryFn: () => contestItemSubmissionAPI.getLatestSubmissions(getToken(), contestJid, problemAlias),
+    queryFn: () => contestItemSubmissionAPI.getLatestItemSubmissions(getToken(), contestJid, problemAlias),
   });
 };
 
@@ -43,7 +43,7 @@ export const createContestItemSubmissionMutationOptions = (contestJid, problemAl
 
 export const regradeContestItemSubmissionsMutationOptions = contestJid => ({
   mutationFn: ({ username, problemAlias } = {}) =>
-    contestItemSubmissionAPI.regradeSubmissions(getToken(), contestJid, username, undefined, problemAlias),
+    contestItemSubmissionAPI.regradeItemSubmissions(getToken(), contestJid, username, undefined, problemAlias),
   onSuccess: () => {
     queryClient.invalidateQueries(contestItemSubmissionsQueryOptions(contestJid));
     queryClient.invalidateQueries(contestItemSubmissionSummaryQueryOptions(contestJid));

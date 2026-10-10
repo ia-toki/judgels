@@ -1,9 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { isTLX } from '../../conf';
 import { ContestErrors, contestAPI } from '../api/contest';
-import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
-import { problemSetAPI } from '../api/problemSet';
+import { BadRequestError } from '../api/error';
 import { SubmissionError } from '../form/submissionError';
 import { contestContestantsQueryOptions } from '../queries/contestContestant';
 import { contestWebConfigQueryOptions } from '../queries/contestWeb';
@@ -86,21 +84,3 @@ export const resetVirtualContestMutationOptions = contestJid => ({
     queryClient.invalidateQueries(contestContestantsQueryOptions(contestJid));
   },
 });
-
-export const searchProblemSetQueryOptions = contestJid =>
-  queryOptions({
-    queryKey: ['contest', contestJid, 'problem-set'],
-    queryFn: async () => {
-      if (!isTLX()) {
-        return null;
-      }
-      try {
-        return await problemSetAPI.searchProblemSet(contestJid);
-      } catch (error) {
-        if (error instanceof NotFoundError || error instanceof RemoteError) {
-          return null;
-        }
-        throw error;
-      }
-    },
-  });

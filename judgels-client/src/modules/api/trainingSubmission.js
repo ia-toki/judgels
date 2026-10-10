@@ -15,7 +15,7 @@ export const trainingSubmissionAPI = {
     return get(`${baseSubmissionsURL}?${params}`, token);
   },
 
-  getSubmissionWithSource: (token, submissionId, language) => {
+  getSubmissionWithSourceById: (token, submissionId, language) => {
     const params = stringify({ language });
     return get(`${baseSubmissionsURL}/id/${submissionId}?${params}`, token);
   },

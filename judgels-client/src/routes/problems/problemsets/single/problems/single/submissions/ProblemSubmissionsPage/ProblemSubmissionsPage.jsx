@@ -6,15 +6,13 @@ import CursorPagination from '../../../../../../../../components/CursorPaginatio
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { RegradeAllButton } from '../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import SubmissionUserFilter from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../../../modules/queries/problemSet';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
 import {
   problemSetSubmissionsQueryOptions,
   regradeProblemSetSubmissionMutationOptions,
   regradeProblemSetSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmission';
+} from '../../../../../../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';

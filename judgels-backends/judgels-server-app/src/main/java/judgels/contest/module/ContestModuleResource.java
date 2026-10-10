@@ -92,7 +92,7 @@ public class ContestModuleResource {
     @Path("/config")
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestModulesConfig getConfig(
+    public ContestModulesConfig getModulesConfig(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid) {
 
@@ -114,7 +114,7 @@ public class ContestModuleResource {
     @Path("/config")
     @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void upsertConfig(
+    public void upsertModulesConfig(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             ContestModulesConfig config) {

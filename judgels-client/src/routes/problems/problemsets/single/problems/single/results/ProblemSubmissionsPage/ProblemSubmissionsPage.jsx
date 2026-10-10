@@ -11,15 +11,13 @@ import Pagination from '../../../../../../../../components/Pagination/Pagination
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
 import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../../../modules/queries/problemSet';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
 import {
   problemSetItemSubmissionsQueryOptions,
   regradeProblemSetItemSubmissionMutationOptions,
   regradeProblemSetItemSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetItemSubmission';
+} from '../../../../../../../../modules/queries/trainingItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 

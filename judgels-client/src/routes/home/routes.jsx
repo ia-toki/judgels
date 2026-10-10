@@ -2,14 +2,12 @@ import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
 import { retryImport } from '../../lazy';
-import {
-  basicProfileQueryOptions,
-  profileContestHistoryQueryOptions,
-  profileSubmissionsQueryOptions,
-  userJidByUsernameQueryOptions,
-} from '../../modules/queries/profile';
+import { contestPublicHistoryQueryOptions } from '../../modules/queries/contestHistory';
+import { basicProfileQueryOptions } from '../../modules/queries/profile';
+import { profileSubmissionsQueryOptions } from '../../modules/queries/trainingSubmission';
 import { trainingUserStatsQueryOptions } from '../../modules/queries/trainingUserStats';
-import { avatarUrlQueryOptions } from '../../modules/queries/userAvatar';
+import { userAvatarUrlQueryOptions } from '../../modules/queries/userAvatar';
+import { userJidByUsernameQueryOptions } from '../../modules/queries/userSearch';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 import HomePage from './HomePage/HomePage';
@@ -39,7 +37,7 @@ export const createHomeRoutes = appRoute => {
     ),
     loader: async ({ params: { username } }) => {
       const userJid = await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
-      queryClient.prefetchQuery(avatarUrlQueryOptions(userJid));
+      queryClient.prefetchQuery(userAvatarUrlQueryOptions(userJid));
       queryClient.prefetchQuery(basicProfileQueryOptions(userJid));
       if (isTLX()) {
         queryClient.prefetchQuery(trainingUserStatsQueryOptions(username));
@@ -54,7 +52,7 @@ export const createHomeRoutes = appRoute => {
       retryImport(() => import('./profiles/single/contestHistory/ContestHistoryPage/ContestHistoryPage'))
     ),
     loader: ({ params: { username } }) => {
-      queryClient.prefetchQuery(profileContestHistoryQueryOptions(username));
+      queryClient.prefetchQuery(contestPublicHistoryQueryOptions(username));
     },
   });
 

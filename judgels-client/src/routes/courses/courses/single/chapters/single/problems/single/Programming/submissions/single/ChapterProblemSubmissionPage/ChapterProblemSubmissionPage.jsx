@@ -8,7 +8,7 @@ import { ContentCard } from '../../../../../../../../../../../../components/Cont
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { courseBySlugQueryOptions } from '../../../../../../../../../../../../modules/queries/course';
-import { trainingSubmissionWithSourceQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmission';
+import { trainingSubmissionWithSourceByIdQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 
@@ -18,7 +18,7 @@ export default function ChapterProblemSubmissionPage() {
   const { statementLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(
-    trainingSubmissionWithSourceQueryOptions(+submissionId, { language: statementLanguage })
+    trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language: statementLanguage })
   );
 
   useEffect(() => {

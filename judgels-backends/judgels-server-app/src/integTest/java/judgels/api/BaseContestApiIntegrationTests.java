@@ -190,7 +190,7 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
 
     protected Contest enableModule(Contest contest, ContestModuleType type, ContestModulesConfig config) {
         moduleClient.enableModule(adminToken, contest.getJid(), type);
-        moduleClient.upsertConfig(adminToken, contest.getJid(), config);
+        moduleClient.upsertModulesConfig(adminToken, contest.getJid(), config);
         return contest;
     }
 

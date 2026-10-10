@@ -82,7 +82,7 @@ public class ContestItemSubmissionResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestItemSubmissionsResponse getSubmissions(
+    public ContestItemSubmissionsResponse getItemSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
@@ -205,7 +205,7 @@ public class ContestItemSubmissionResource {
     @Path("/answers")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Map<String, ItemSubmission> getLatestSubmissions(
+    public Map<String, ItemSubmission> getLatestItemSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
@@ -234,7 +234,7 @@ public class ContestItemSubmissionResource {
     @Path("/summary")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ContestSubmissionSummaryResponse getSubmissionSummary(
+    public ContestSubmissionSummaryResponse getItemSubmissionSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") String contestJid,
             @QueryParam("username") Optional<String> username,
@@ -308,7 +308,7 @@ public class ContestItemSubmissionResource {
     @POST
     @Path("/{submissionJid}/regrade")
     @UnitOfWork
-    public void regradeSubmission(
+    public void regradeItemSubmission(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionJid") String submissionJid) {
 
@@ -323,7 +323,7 @@ public class ContestItemSubmissionResource {
     @POST
     @Path("/regrade")
     @UnitOfWork
-    public void regradeSubmissions(
+    public void regradeItemSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("contestJid") Optional<String> contestJid,
             @QueryParam("username") Optional<String> username,

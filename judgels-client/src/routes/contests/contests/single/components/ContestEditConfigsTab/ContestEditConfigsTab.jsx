@@ -9,8 +9,8 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { allLanguagesAllowed } from '../../../../../../modules/api/gradingLanguage';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
-  contestModuleConfigQueryOptions,
-  upsertContestModuleConfigMutationOptions,
+  contestModulesConfigQueryOptions,
+  upsertContestModulesConfigMutationOptions,
 } from '../../../../../../modules/queries/contestModule';
 import { formatDuration, parseDuration } from '../../../../../../utils/duration';
 import ContestEditConfigsForm from '../ContestEditConfigsForm/ContestEditConfigsForm';
@@ -22,9 +22,9 @@ export default function ContestEditConfigsTab() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
-  const { data: config } = useQuery(contestModuleConfigQueryOptions(contest.jid));
+  const { data: config } = useQuery(contestModulesConfigQueryOptions(contest.jid));
 
-  const upsertConfigMutation = useMutation(upsertContestModuleConfigMutationOptions(contest.jid));
+  const upsertConfigMutation = useMutation(upsertContestModulesConfigMutationOptions(contest.jid));
 
   const [isEditing, setIsEditing] = useState(false);
 

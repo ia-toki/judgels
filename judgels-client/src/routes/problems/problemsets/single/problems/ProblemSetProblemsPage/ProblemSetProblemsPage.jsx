@@ -9,10 +9,8 @@ import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetPr
 import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { consolidateLanguages } from '../../../../../../modules/api/language';
 import { getProblemName } from '../../../../../../modules/api/problem';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemsQueryOptions,
-} from '../../../../../../modules/queries/problemSet';
+import { problemSetBySlugQueryOptions } from '../../../../../../modules/queries/problemSet';
+import { problemSetProblemsQueryOptions } from '../../../../../../modules/queries/problemSetProblem';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
 export default function ProblemSetProblemsPage() {

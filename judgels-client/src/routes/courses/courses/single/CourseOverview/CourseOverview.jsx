@@ -5,7 +5,8 @@ import { useParams } from '@tanstack/react-router';
 
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
-import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { courseChaptersQueryOptions } from '../../../../../modules/queries/courseChapter';
 
 import './CourseOverview.scss';
 

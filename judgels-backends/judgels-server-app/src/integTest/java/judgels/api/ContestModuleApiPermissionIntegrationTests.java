@@ -51,7 +51,7 @@ class ContestModuleApiPermissionIntegrationTests extends BaseContestApiIntegrati
         return callAll(
                 () -> moduleClient.enableModule(token, contest.getJid(), VIRTUAL),
                 () -> moduleClient.disableModule(token, contest.getJid(), VIRTUAL),
-                () -> moduleClient.upsertConfig(token, contest.getJid(), new ContestModulesConfig.Builder().build()));
+                () -> moduleClient.upsertModulesConfig(token, contest.getJid(), new ContestModulesConfig.Builder().build()));
     }
 
     private ThrowingCallable getModules(String token) {
@@ -59,6 +59,6 @@ class ContestModuleApiPermissionIntegrationTests extends BaseContestApiIntegrati
     }
 
     private ThrowingCallable getConfig(String token) {
-        return () -> moduleClient.getConfig(token, contest.getJid());
+        return () -> moduleClient.getModulesConfig(token, contest.getJid());
     }
 }

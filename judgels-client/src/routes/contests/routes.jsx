@@ -27,7 +27,7 @@ import {
 } from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
 import {
-  contestSubmissionWithSourceQueryOptions,
+  contestSubmissionWithSourceByIdQueryOptions,
   contestSubmissionsQueryOptions,
 } from '../../modules/queries/contestSubmission';
 import { contestSupervisorsQueryOptions } from '../../modules/queries/contestSupervisor';
@@ -229,7 +229,7 @@ export const createContestsRoutes = appRoute => {
     loader: async ({ params: { contestSlug, submissionId } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(contestSubmissionWithSourceQueryOptions(contest.jid, +submissionId, { language }));
+      queryClient.prefetchQuery(contestSubmissionWithSourceByIdQueryOptions(contest.jid, +submissionId, { language }));
     },
   });
 

@@ -6,11 +6,9 @@ import StatementLanguageWidget from '../../../../../../../../components/Language
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gradingLanguage.js';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../../../modules/queries/problemSet';
-import { createProblemSetSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmission';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
+import { createProblemSetSubmissionMutationOptions } from '../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import { toastActions } from '../../../../../../../../modules/toast/toastActions';

@@ -3,13 +3,13 @@ import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { requestResetPasswordMutationOptions } from '../../../../modules/queries/userAccount';
+import { requestToResetPasswordMutationOptions } from '../../../../modules/queries/userAccount';
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
 
-  const resetPasswordMutation = useMutation(requestResetPasswordMutationOptions);
+  const resetPasswordMutation = useMutation(requestToResetPasswordMutationOptions);
 
   const onForgetPassword = data => {
     resetPasswordMutation.mutate(data.email);

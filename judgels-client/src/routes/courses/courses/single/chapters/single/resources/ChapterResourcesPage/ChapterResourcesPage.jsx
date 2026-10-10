@@ -8,7 +8,8 @@ import { getLessonName } from '../../../../../../../../modules/api/lesson';
 import { getProblemName } from '../../../../../../../../modules/api/problem';
 import { chapterLessonsQueryOptions } from '../../../../../../../../modules/queries/chapterLesson';
 import { chapterProblemsQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
-import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../modules/queries/courseChapter';
 import { ChapterLessonCard } from '../ChapterLessonCard/ChapterLessonCard';
 import { ChapterProblemCard } from '../ChapterProblemCard/ChapterProblemCard';
 

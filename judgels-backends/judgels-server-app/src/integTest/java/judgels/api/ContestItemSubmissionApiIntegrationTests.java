@@ -95,25 +95,25 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         ContestSubmissionSummaryResponse summaryResult;
         ContestItemSubmissionsResponse submissionsResponse;
 
-        var params = new ContestItemSubmissionClient.GetSubmissionsParams();
+        var params = new ContestItemSubmissionClient.GetItemSubmissionsParams();
         params.problemAlias = "invalid-alias";
-        submissionsResponse = submissionClient.getSubmissions(supervisorToken, contest.getJid(), params);
+        submissionsResponse = submissionClient.getItemSubmissions(supervisorToken, contest.getJid(), params);
 
         assertThat(submissionsResponse.getConfig().getCanSupervise()).isTrue();
         assertThat(submissionsResponse.getConfig().getCanManage()).isFalse();
         assertThat(submissionsResponse.getData().getPage()).hasSize(0);
 
-        params = new ContestItemSubmissionClient.GetSubmissionsParams();
+        params = new ContestItemSubmissionClient.GetItemSubmissionsParams();
         params.username = "invalid-username";
-        submissionsResponse = submissionClient.getSubmissions(supervisorToken, contest.getJid(), params);
+        submissionsResponse = submissionClient.getItemSubmissions(supervisorToken, contest.getJid(), params);
 
         assertThat(submissionsResponse.getConfig().getCanSupervise()).isTrue();
         assertThat(submissionsResponse.getConfig().getCanManage()).isFalse();
         assertThat(submissionsResponse.getData().getPage()).hasSize(0);
 
-        params = new ContestItemSubmissionClient.GetSubmissionsParams();
+        params = new ContestItemSubmissionClient.GetItemSubmissionsParams();
         params.problemAlias = PROBLEM_3_ALIAS;
-        submissionsResponse = submissionClient.getSubmissions(contestantToken, contest.getJid(), params);
+        submissionsResponse = submissionClient.getItemSubmissions(contestantToken, contest.getJid(), params);
 
         assertThat(submissionsResponse.getProblemAliasesMap()).hasSize(1);
         assertThat(submissionsResponse.getProblemAliasesMap()).containsKey(problem3.getJid());
@@ -145,9 +145,9 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-        var params2 = new ContestItemSubmissionClient.GetLatestSubmissionsParams();
+        var params2 = new ContestItemSubmissionClient.GetLatestItemSubmissionsParams();
         params2.username = ADMIN; // Contestant should not be able to see other users' answers
-        answersMap = submissionClient.getLatestSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, params2);
+        answersMap = submissionClient.getLatestItemSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, params2);
 
         assertThat(answersMap).hasSize(1);
         assertThat(answersMap).containsKey(item3Jid);
@@ -161,17 +161,17 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
 
-        params2 = new ContestItemSubmissionClient.GetLatestSubmissionsParams();
+        params2 = new ContestItemSubmissionClient.GetLatestItemSubmissionsParams();
         params2.username = CONTESTANT;
-        answersMap = submissionClient.getLatestSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, params2);
+        answersMap = submissionClient.getLatestItemSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, params2);
 
         assertThat(answersMap).hasSize(1);
         assertThat(answersMap).containsKey(item3Jid);
 
-        var params3 = new ContestItemSubmissionClient.GetSubmissionSummaryParams();
+        var params3 = new ContestItemSubmissionClient.GetItemSubmissionSummaryParams();
         params3.username = ADMIN; // Contestant should not be able to see other users' answers
 
-        summaryResult = submissionClient.getSubmissionSummary(contestantToken, contest.getJid(), params3);
+        summaryResult = submissionClient.getItemSubmissionSummary(contestantToken, contest.getJid(), params3);
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
@@ -219,9 +219,9 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
                 )
         );
 
-        params3 = new ContestItemSubmissionClient.GetSubmissionSummaryParams();
+        params3 = new ContestItemSubmissionClient.GetItemSubmissionSummaryParams();
         params3.username = CONTESTANT;
-        summaryResult = submissionClient.getSubmissionSummary(managerToken, contest.getJid(), params3);
+        summaryResult = submissionClient.getItemSubmissionSummary(managerToken, contest.getJid(), params3);
 
         assertThat(summaryResult.getProfile().getUsername()).isEqualTo("contestant");
 
@@ -260,7 +260,7 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
                 .build()
         );
 
-        answersMap = submissionClient.getLatestSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, null);
+        answersMap = submissionClient.getLatestItemSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, null);
         assertThat(answersMap).hasSize(2);
         assertThat(answersMap).containsKey(item3Jid);
         assertThat(answersMap).containsKey(item2Jid);
@@ -281,9 +281,9 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-        params3 = new ContestItemSubmissionClient.GetSubmissionSummaryParams();
+        params3 = new ContestItemSubmissionClient.GetItemSubmissionSummaryParams();
         params3.username = CONTESTANT;
-        summaryResult = submissionClient.getSubmissionSummary(managerToken, contest.getJid(), params3);
+        summaryResult = submissionClient.getItemSubmissionSummary(managerToken, contest.getJid(), params3);
 
         assertThat(summaryResult.getSubmissionsByItemJid()).hasSize(2);
         assertThat(summaryResult.getSubmissionsByItemJid()).containsKey(item2Jid);
@@ -319,9 +319,9 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
                 .build()
         );
 
-        params3 = new ContestItemSubmissionClient.GetSubmissionSummaryParams();
+        params3 = new ContestItemSubmissionClient.GetItemSubmissionSummaryParams();
         params3.username = CONTESTANT;
-        summaryResult = submissionClient.getSubmissionSummary(managerToken, contest.getJid(), params3);
+        summaryResult = submissionClient.getItemSubmissionSummary(managerToken, contest.getJid(), params3);
 
         assertThat(summaryResult.getItemTypesMap()).hasSize(4);
         assertThat(summaryResult.getItemTypesMap()).containsKey(item2Jid);

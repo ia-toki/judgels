@@ -2,14 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Card } from '../../../../../components/Card/Card';
-import { requestResetPasswordMutationOptions } from '../../../../../modules/queries/userAccount';
+import { requestToResetPasswordMutationOptions } from '../../../../../modules/queries/userAccount';
 import { getUser } from '../../../../../modules/session';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
 export default function ResetPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
 
-  const resetPasswordMutation = useMutation(requestResetPasswordMutationOptions);
+  const resetPasswordMutation = useMutation(requestToResetPasswordMutationOptions);
 
   const resetPassword = () => {
     const email = getUser().email;

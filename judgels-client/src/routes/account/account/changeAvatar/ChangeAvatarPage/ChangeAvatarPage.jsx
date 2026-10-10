@@ -4,10 +4,10 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import {
-  avatarExistsQueryOptions,
-  avatarUrlQueryOptions,
-  deleteAvatarMutationOptions,
-  updateAvatarMutationOptions,
+  deleteUserAvatarMutationOptions,
+  updateUserAvatarMutationOptions,
+  userAvatarExistsQueryOptions,
+  userAvatarUrlQueryOptions,
 } from '../../../../../modules/queries/userAvatar';
 import { useSession } from '../../../../../modules/session';
 import ChangeAvatarForm from './ChangeAvatarForm';
@@ -20,11 +20,11 @@ export default function ChangeAvatarPage() {
   const { user } = useSession();
   const userJid = user.jid;
 
-  const { data: avatarExists } = useQuery(avatarExistsQueryOptions(userJid));
-  const { data: avatarUrl } = useQuery(avatarUrlQueryOptions(userJid));
+  const { data: avatarExists } = useQuery(userAvatarExistsQueryOptions(userJid));
+  const { data: avatarUrl } = useQuery(userAvatarUrlQueryOptions(userJid));
 
-  const deleteAvatarMutation = useMutation(deleteAvatarMutationOptions(userJid));
-  const updateAvatarMutation = useMutation(updateAvatarMutationOptions(userJid));
+  const deleteAvatarMutation = useMutation(deleteUserAvatarMutationOptions(userJid));
+  const updateAvatarMutation = useMutation(updateUserAvatarMutationOptions(userJid));
 
   const deleteAvatar = () => {
     deleteAvatarMutation.mutate(undefined, {

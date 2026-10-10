@@ -9,11 +9,11 @@ import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
 import { chapterProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/chapterProblem';
+import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
 import {
-  courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
-} from '../../../../../../../../modules/queries/course';
+} from '../../../../../../../../modules/queries/courseChapter';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';

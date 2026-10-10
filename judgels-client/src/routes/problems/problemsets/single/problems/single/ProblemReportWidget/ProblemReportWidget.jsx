@@ -11,11 +11,11 @@ import ProblemTopicTags from '../../../../../../../components/ProblemTopicTags/P
 import { ProgressBar } from '../../../../../../../components/ProgressBar/ProgressBar';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { VerdictProgressTag } from '../../../../../../../components/VerdictProgressTag/VerdictProgressTag';
+import { problemSetBySlugQueryOptions } from '../../../../../../../modules/queries/problemSet';
 import {
-  problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
   problemSetProblemReportQueryOptions,
-} from '../../../../../../../modules/queries/problemSet';
+} from '../../../../../../../modules/queries/problemSetProblem';
 import ProblemEditorialDialog from '../ProblemEditorialDialog/ProblemEditorialDialog';
 
 import './ProblemReportWidget.scss';

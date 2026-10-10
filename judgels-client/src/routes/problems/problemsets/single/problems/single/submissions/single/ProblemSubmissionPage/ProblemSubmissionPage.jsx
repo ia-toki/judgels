@@ -6,11 +6,9 @@ import { ContentCard } from '../../../../../../../../../components/ContentCard/C
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { NotFoundError } from '../../../../../../../../../modules/api/error';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../../../../modules/queries/problemSet';
-import { trainingSubmissionWithSourceQueryOptions } from '../../../../../../../../../modules/queries/trainingSubmission';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../../modules/queries/problemSetProblem';
+import { trainingSubmissionWithSourceByIdQueryOptions } from '../../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 
@@ -23,7 +21,7 @@ export default function ProblemSubmissionPage() {
   const { statementLanguage } = useWebPrefs();
 
   const { data: response } = useQuery(
-    trainingSubmissionWithSourceQueryOptions(+submissionId, { language: statementLanguage })
+    trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language: statementLanguage })
   );
 
   useEffect(() => {

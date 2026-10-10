@@ -11,8 +11,8 @@ public interface ContestWebClient {
     @Headers("Authorization: Bearer {token}")
     ContestWebConfig getWebConfig(@Param("token") String token, @Param("contestJid") String contestJid);
 
-    @RequestLine("GET /api/v2/contest-web/{contestJid}/config")
+    @RequestLine("GET /api/v2/contest-web/{contestJid}/with-config")
     @Headers("Authorization: Bearer {token}")
-    ContestWithWebConfig getContestWithWebConfig(@Param("token") String token, @Param("contestJid") String contestJid);
+    ContestWithWebConfig getContestByJidWithWebConfig(@Param("token") String token, @Param("contestJid") String contestJid);
 
 }
