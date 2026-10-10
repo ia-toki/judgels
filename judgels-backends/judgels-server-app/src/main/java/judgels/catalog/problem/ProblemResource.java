@@ -36,6 +36,7 @@ import judgels.api.catalog.problem.ProblemSetterRole;
 import judgels.api.catalog.problem.ProblemUpdateData;
 import judgels.api.catalog.problem.ProblemsResponse;
 import judgels.catalog.WorldLanguageRegistry;
+import judgels.catalog.problem.editorial.ProblemEditorialStore;
 import judgels.catalog.problem.tag.ProblemTagStore;
 import judgels.core.api.AuthHeader;
 import judgels.grading.engines.GradingEngineRegistry;
@@ -54,6 +55,7 @@ public class ProblemResource {
     @Inject protected ProblemCreator problemCreator;
     @Inject protected ProblemUpdater problemUpdater;
     @Inject protected ProblemTagStore tagStore;
+    @Inject protected ProblemEditorialStore editorialStore;
     @Inject protected ProfileStore profileStore;
     @Inject protected UserStore userStore;
 
@@ -130,6 +132,7 @@ public class ProblemResource {
                 .setterJidsMap(setterJidsMap)
                 .topicTags(tagStore.findTopicTags(problemJid))
                 .hasLocalChanges(problemStore.userCloneExists(actorJid, problemJid))
+                .hasEditorial(editorialStore.hasEditorial(actorJid, problemJid))
                 .config(new ProblemConfig.Builder()
                         .canEdit(roleChecker.canEdit(actorJid, problem))
                         .canManage(roleChecker.isAuthorOrAbove(actorJid, problem))

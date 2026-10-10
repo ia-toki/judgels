@@ -11,6 +11,10 @@ import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter'
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
 import { problemQueryOptions } from '../../modules/queries/problem';
 import {
+  problemEditorialLanguagesQueryOptions,
+  problemEditorialMediaFilesQueryOptions,
+} from '../../modules/queries/problemEditorial';
+import {
   problemGradingConfigQueryOptions,
   problemGradingHelperFilesQueryOptions,
   problemGradingLanguageRestrictionQueryOptions,
@@ -220,6 +224,61 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  // A problem without an editorial has nothing to load: its layout offers to create one instead.
+  const ensureProblemEditorialQueryData = async (problemJid, editorialQueryOptions) => {
+    const { hasEditorial } = await queryClient.ensureQueryData(problemQueryOptions(problemJid));
+    if (hasEditorial) {
+      await queryClient.ensureQueryData(editorialQueryOptions(problemJid));
+    }
+  };
+
+  const adminProblemEditorialLayoutRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'editorial',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemEditorialLayout/ProblemEditorialLayout'))
+    ),
+  });
+
+  const adminProblemEditorialIndexRoute = createRoute({
+    getParentRoute: () => adminProblemEditorialLayoutRoute,
+    path: '/',
+    beforeLoad: ({ params }) => {
+      throw redirect({ to: '/admin/problems/$problemJid/editorial/content', params, replace: true });
+    },
+  });
+
+  const adminProblemEditorialRoute = createRoute({
+    getParentRoute: () => adminProblemEditorialLayoutRoute,
+    path: 'content',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemEditorialPage/ProblemEditorialPage'))),
+    loader: async ({ params: { problemJid } }) => {
+      await ensureProblemEditorialQueryData(problemJid, problemEditorialLanguagesQueryOptions);
+    },
+  });
+
+  const adminProblemEditorialLanguagesRoute = createRoute({
+    getParentRoute: () => adminProblemEditorialLayoutRoute,
+    path: 'languages',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemEditorialLanguagesPage/ProblemEditorialLanguagesPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await ensureProblemEditorialQueryData(problemJid, problemEditorialLanguagesQueryOptions);
+    },
+  });
+
+  const adminProblemEditorialMediaRoute = createRoute({
+    getParentRoute: () => adminProblemEditorialLayoutRoute,
+    path: 'media',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemEditorialMediaPage/ProblemEditorialMediaPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await ensureProblemEditorialQueryData(problemJid, problemEditorialMediaFilesQueryOptions);
+    },
+  });
+
   const adminProblemItemsRoute = createRoute({
     getParentRoute: () => adminProblemRoute,
     path: 'items',
@@ -349,6 +408,12 @@ export const createAdminRoutes = appRoute => {
       adminProblemStatementRoute,
       adminProblemStatementLanguagesRoute,
       adminProblemStatementMediaRoute,
+      adminProblemEditorialLayoutRoute.addChildren([
+        adminProblemEditorialIndexRoute,
+        adminProblemEditorialRoute,
+        adminProblemEditorialLanguagesRoute,
+        adminProblemEditorialMediaRoute,
+      ]),
       adminProblemItemsRoute,
       adminProblemItemRoute,
       adminProblemGradingRoute.addChildren([
