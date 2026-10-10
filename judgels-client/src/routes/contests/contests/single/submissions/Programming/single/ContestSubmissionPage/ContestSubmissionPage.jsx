@@ -4,9 +4,9 @@ import { useParams } from '@tanstack/react-router';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
-import { contestSubmissionProgrammingAPI } from '../../../../../../../../modules/api/contestSubmissionProgramming';
+import { contestSubmissionAPI } from '../../../../../../../../modules/api/contestSubmission';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
+import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmission';
 import { getToken } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
@@ -45,7 +45,7 @@ export default function ContestSubmissionPage() {
   };
 
   const downloadSubmission = () => {
-    contestSubmissionProgrammingAPI.downloadSubmission(getToken(), response.data.submission.jid);
+    contestSubmissionAPI.downloadSubmission(getToken(), response.data.submission.jid);
   };
 
   return <ContentCard title={`Submission #${submissionId}`}>{renderSubmission()}</ContentCard>;

@@ -7,8 +7,8 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
-import { trainingSubmissionProgrammingAPI } from '../../../../../../../../../../modules/api/trainingSubmissionProgramming';
-import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
+import { trainingSubmissionAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
+import { createChapterSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -33,7 +33,7 @@ export default function ChapterProblemWorkspacePage() {
   }, [shouldResetEditor]);
 
   const createSubmissionMutation = useMutation(
-    createChapterProgrammingSubmissionMutationOptions(chapter.jid, worksheet?.problem?.problemJid)
+    createChapterSubmissionMutationOptions(chapter.jid, worksheet?.problem?.problemJid)
   );
 
   const createSubmission = async data => {
@@ -62,7 +62,7 @@ export default function ChapterProblemWorkspacePage() {
     };
   };
 
-  const getSubmission = submissionJid => trainingSubmissionProgrammingAPI.getSubmission(getToken(), submissionJid);
+  const getSubmission = submissionJid => trainingSubmissionAPI.getSubmission(getToken(), submissionJid);
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {

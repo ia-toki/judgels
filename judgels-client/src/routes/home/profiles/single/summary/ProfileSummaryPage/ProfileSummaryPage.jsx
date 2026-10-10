@@ -5,7 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
 import { basicProfileQueryOptions, userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
-import { userStatsQueryOptions } from '../../../../../../modules/queries/trainingStats';
+import { trainingUserStatsQueryOptions } from '../../../../../../modules/queries/trainingUserStats';
 import { avatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
@@ -19,7 +19,7 @@ export default function ProfileSummaryPage() {
   const { data: avatarUrl } = useQuery(avatarUrlQueryOptions(userJid));
   const { data: basicProfile } = useQuery(basicProfileQueryOptions(userJid));
   const { data: userStats } = useQuery({
-    ...userStatsQueryOptions(username),
+    ...trainingUserStatsQueryOptions(username),
     enabled: isTLX(),
   });
 

@@ -8,10 +8,10 @@ import CursorPagination from '../../../../../../../../../../../components/Cursor
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
 import {
-  chapterProgrammingSubmissionsQueryOptions,
-  regradeChapterProgrammingSubmissionMutationOptions,
-  regradeChapterProgrammingSubmissionsMutationOptions,
-} from '../../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
+  chapterSubmissionsQueryOptions,
+  regradeChapterSubmissionMutationOptions,
+  regradeChapterSubmissionsMutationOptions,
+} from '../../../../../../../../../../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -41,7 +41,7 @@ export default function ChapterProblemSubmissionsPage() {
   const usernameFilter = isShowAll ? undefined : username;
 
   const { data: response } = useQuery(
-    chapterProgrammingSubmissionsQueryOptions(chapter.jid, {
+    chapterSubmissionsQueryOptions(chapter.jid, {
       problemAlias,
       username: usernameFilter,
       beforeId,
@@ -49,8 +49,8 @@ export default function ChapterProblemSubmissionsPage() {
     })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeChapterProgrammingSubmissionMutationOptions(chapter.jid));
-  const regradeSubmissionsMutation = useMutation(regradeChapterProgrammingSubmissionsMutationOptions(chapter.jid));
+  const regradeSubmissionMutation = useMutation(regradeChapterSubmissionMutationOptions(chapter.jid));
+  const regradeSubmissionsMutation = useMutation(regradeChapterSubmissionsMutationOptions(chapter.jid));
 
   const onChangeFilterShowAll = ({ target }) => {
     if (target.checked) {

@@ -7,7 +7,7 @@ import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.training.problem.ProblemTagCategory;
 import judgels.api.training.problem.ProblemTagOption;
 import judgels.api.training.problem.ProblemTagsResponse;
-import judgels.training.problem.TrainingProblemTagClient;
+import judgels.client.TrainingProblemTagClient;
 import org.junit.jupiter.api.Test;
 
 class TrainingProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

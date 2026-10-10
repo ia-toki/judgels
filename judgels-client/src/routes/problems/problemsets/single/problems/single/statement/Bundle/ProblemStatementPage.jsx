@@ -7,9 +7,9 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 import {
-  createProblemSetBundleItemSubmissionMutationOptions,
-  problemSetBundleLatestSubmissionsQueryOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
+  createProblemSetItemSubmissionMutationOptions,
+  problemSetLatestItemSubmissionsQueryOptions,
+} from '../../../../../../../../modules/queries/problemSetItemSubmission';
 
 export default function ProblemStatementPage(props) {
   const { problemSetSlug } = useParams({ strict: false });
@@ -17,11 +17,11 @@ export default function ProblemStatementPage(props) {
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
 
   const { data: latestSubmissions } = useQuery(
-    problemSetBundleLatestSubmissionsQueryOptions(problemSet.jid, props.worksheet.problem.alias)
+    problemSetLatestItemSubmissionsQueryOptions(problemSet.jid, props.worksheet.problem.alias)
   );
 
   const createItemSubmissionMutation = useMutation(
-    createProblemSetBundleItemSubmissionMutationOptions(problemSet.jid, props.worksheet.problem.alias)
+    createProblemSetItemSubmissionMutationOptions(problemSet.jid, props.worksheet.problem.alias)
   );
 
   const createSubmission = (itemJid, answer) => {

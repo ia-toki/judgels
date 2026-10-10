@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import feign.form.FormData;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.User;
-import judgels.user.UserAvatarClient;
+import judgels.client.UserAvatarClient;
 import org.junit.jupiter.api.Test;
 
 class UserAvatarApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

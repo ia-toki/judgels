@@ -8,7 +8,7 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
-import { chapterBundleSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/chapterSubmissionBundle';
+import { chapterItemSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/chapterItemSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -27,7 +27,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
   const { statementLanguage: language } = useWebPrefs();
 
   const { data: summaryResponse } = useQuery({
-    ...chapterBundleSubmissionSummaryQueryOptions(chapter.jid, { problemAlias, language }),
+    ...chapterItemSubmissionSummaryQueryOptions(chapter.jid, { problemAlias, language }),
     enabled: !!userJid,
   });
 

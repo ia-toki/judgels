@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.User;
 import judgels.api.user.info.UserInfo;
-import judgels.user.UserInfoClient;
+import judgels.client.UserInfoClient;
 import org.junit.jupiter.api.Test;
 
 class UserInfoApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

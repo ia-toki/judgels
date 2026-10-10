@@ -8,7 +8,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
 import { contestProgrammingProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
-import { createProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
+import { createContestSubmissionMutationOptions } from '../../../../../../../../modules/queries/contestSubmission';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -27,7 +27,7 @@ export default function ContestProblemPage() {
   );
 
   const createSubmissionMutation = useMutation(
-    createProgrammingSubmissionMutationOptions(contest.jid, response?.problem?.problemJid)
+    createContestSubmissionMutationOptions(contest.jid, response?.problem?.problemJid)
   );
 
   useEffect(() => {

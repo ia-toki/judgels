@@ -14,8 +14,8 @@ import judgels.api.contest.Contest;
 import judgels.api.contest.clarification.ContestClarification;
 import judgels.api.contest.clarification.ContestClarificationData;
 import judgels.api.contest.log.ContestLog;
-import judgels.contest.ContestClarificationClient;
-import judgels.contest.ContestLogClient;
+import judgels.client.ContestClarificationClient;
+import judgels.client.ContestLogClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

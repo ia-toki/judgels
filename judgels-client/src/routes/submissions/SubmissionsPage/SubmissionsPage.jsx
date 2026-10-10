@@ -5,9 +5,9 @@ import CursorPagination from '../../../components/CursorPagination/CursorPaginat
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import {
-  regradeSubmissionMutationOptions,
-  submissionsQueryOptions,
-} from '../../../modules/queries/trainingSubmissionProgramming';
+  regradeTrainingSubmissionMutationOptions,
+  trainingSubmissionsQueryOptions,
+} from '../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../modules/session';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
@@ -24,9 +24,9 @@ export default function SubmissionsPage() {
   const isUserFilterMine = (location.pathname + '/').includes('/mine/');
   const usernameFilter = isUserFilterMine ? username : undefined;
 
-  const { data: response } = useQuery(submissionsQueryOptions({ username: usernameFilter, beforeId, afterId }));
+  const { data: response } = useQuery(trainingSubmissionsQueryOptions({ username: usernameFilter, beforeId, afterId }));
 
-  const regradeMutation = useMutation(regradeSubmissionMutationOptions);
+  const regradeMutation = useMutation(regradeTrainingSubmissionMutationOptions);
 
   const onRegrade = submissionJid => {
     regradeMutation.mutate(submissionJid, {

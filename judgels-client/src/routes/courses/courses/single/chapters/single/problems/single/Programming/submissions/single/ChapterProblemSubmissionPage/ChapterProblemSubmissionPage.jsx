@@ -8,7 +8,7 @@ import { ContentCard } from '../../../../../../../../../../../../components/Cont
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { courseBySlugQueryOptions } from '../../../../../../../../../../../../modules/queries/course';
-import { submissionWithSourceQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmissionProgramming';
+import { trainingSubmissionWithSourceQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 
@@ -17,7 +17,9 @@ export default function ChapterProblemSubmissionPage() {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { statementLanguage } = useWebPrefs();
 
-  const { data: response } = useQuery(submissionWithSourceQueryOptions(+submissionId, { language: statementLanguage }));
+  const { data: response } = useQuery(
+    trainingSubmissionWithSourceQueryOptions(+submissionId, { language: statementLanguage })
+  );
 
   useEffect(() => {
     if (response) {

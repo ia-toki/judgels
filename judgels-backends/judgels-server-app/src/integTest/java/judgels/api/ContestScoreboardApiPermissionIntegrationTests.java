@@ -5,7 +5,7 @@ import static judgels.api.contest.module.ContestModuleType.REGISTRATION;
 import judgels.api.contest.Contest;
 import judgels.api.contest.ContestStyle;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestScoreboardClient;
+import judgels.client.ContestScoreboardClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

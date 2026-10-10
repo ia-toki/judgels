@@ -7,11 +7,11 @@ import StatementLanguageWidget from '../../../../../../../../components/Language
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { contestBundleProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
 import {
-  contestBundleLatestSubmissionsQueryOptions,
-  createBundleItemSubmissionMutationOptions,
-} from '../../../../../../../../modules/queries/contestSubmissionBundle';
+  contestLatestItemSubmissionsQueryOptions,
+  createContestItemSubmissionMutationOptions,
+} from '../../../../../../../../modules/queries/contestItemSubmission';
+import { contestBundleProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
@@ -25,11 +25,11 @@ export default function ContestProblemPage() {
   );
 
   const { data: latestSubmissions } = useQuery({
-    ...contestBundleLatestSubmissionsQueryOptions(contest.jid, response?.problem?.alias),
+    ...contestLatestItemSubmissionsQueryOptions(contest.jid, response?.problem?.alias),
     enabled: !!response,
   });
 
-  const createSubmissionMutation = useMutation(createBundleItemSubmissionMutationOptions(contest.jid, problemAlias));
+  const createSubmissionMutation = useMutation(createContestItemSubmissionMutationOptions(contest.jid, problemAlias));
 
   useEffect(() => {
     if (response) {

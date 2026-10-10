@@ -8,7 +8,7 @@ import judgels.api.user.User;
 import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingEvent;
 import judgels.api.user.rating.UserRatingUpdateData;
-import judgels.user.UserRatingClient;
+import judgels.client.UserRatingClient;
 import org.junit.jupiter.api.Test;
 
 public class UserRatingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

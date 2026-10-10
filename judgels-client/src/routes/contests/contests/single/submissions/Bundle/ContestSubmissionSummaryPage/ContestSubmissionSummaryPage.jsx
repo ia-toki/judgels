@@ -6,9 +6,9 @@ import { SubmissionDetails } from '../../../../../../../components/SubmissionDet
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
-  contestBundleSubmissionSummaryQueryOptions,
-  regradeBundleSubmissionsMutationOptions,
-} from '../../../../../../../modules/queries/contestSubmissionBundle';
+  contestItemSubmissionSummaryQueryOptions,
+  regradeContestItemSubmissionsMutationOptions,
+} from '../../../../../../../modules/queries/contestItemSubmission';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
@@ -18,9 +18,9 @@ export default function ContestSubmissionSummaryPage() {
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { statementLanguage: language } = useWebPrefs();
 
-  const { data: response } = useQuery(contestBundleSubmissionSummaryQueryOptions(contest.jid, username, { language }));
+  const { data: response } = useQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, username, { language }));
 
-  const regradeSubmissionsMutation = useMutation(regradeBundleSubmissionsMutationOptions(contest.jid));
+  const regradeSubmissionsMutation = useMutation(regradeContestItemSubmissionsMutationOptions(contest.jid));
 
   if (!response) {
     return null;

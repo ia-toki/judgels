@@ -20,8 +20,8 @@ import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWi
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
 import { ProblemAdminRole } from '../../modules/api/problemAdminRole';
+import { SystemAdminRole } from '../../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
-import { UserAdminRole } from '../../modules/api/userAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
 export default function AdminLayout() {
@@ -29,7 +29,7 @@ export default function AdminLayout() {
     data: { role },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  const isAccountAdmin = role.account === UserAdminRole.Admin || role.account === UserAdminRole.Superadmin;
+  const isAccountAdmin = role.account === SystemAdminRole.Admin || role.account === SystemAdminRole.Superadmin;
   const isContestAdmin = role.contest === ContestAdminRole.Admin;
   const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
   const isProblemAdmin = role.problem === ProblemAdminRole.Admin;

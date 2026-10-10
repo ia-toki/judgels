@@ -1,7 +1,7 @@
 import { ContestAdminRole } from '../modules/api/contestAdminRole';
 import { ProblemAdminRole } from '../modules/api/problemAdminRole';
+import { SystemAdminRole } from '../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../modules/api/trainingAdminRole';
-import { UserAdminRole } from '../modules/api/userAdminRole';
 import { getVisibleAppRoutes } from './AppRoutes';
 
 describe('AppRoutes', () => {
@@ -12,7 +12,7 @@ describe('AppRoutes', () => {
   };
 
   test('Jophiel admin', () => {
-    testAppRoutes({ account: UserAdminRole.Admin }, [
+    testAppRoutes({ account: SystemAdminRole.Admin }, [
       'admin',
       'contests',
       'courses',
@@ -23,7 +23,7 @@ describe('AppRoutes', () => {
   });
 
   test('Jophiel superadmin', () => {
-    testAppRoutes({ account: UserAdminRole.Superadmin }, [
+    testAppRoutes({ account: SystemAdminRole.Superadmin }, [
       'admin',
       'contests',
       'courses',

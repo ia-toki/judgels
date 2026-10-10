@@ -6,7 +6,7 @@ import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { topUserStatsQueryOptions } from '../../../../modules/queries/trainingStats';
+import { topTrainingUserStatsQueryOptions } from '../../../../modules/queries/trainingUserStats';
 
 import './ScoresPage.scss';
 
@@ -16,7 +16,7 @@ export default function ScoresPage() {
   const location = useLocation();
   const page = location.search.page;
 
-  const { data: response } = useQuery(topUserStatsQueryOptions({ page, pageSize: PAGE_SIZE }));
+  const { data: response } = useQuery(topTrainingUserStatsQueryOptions({ page, pageSize: PAGE_SIZE }));
 
   const renderScores = () => {
     if (!response) {

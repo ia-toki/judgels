@@ -14,7 +14,7 @@ import judgels.api.contest.clarification.ContestClarificationData;
 import judgels.api.contest.module.ClarificationTimeLimitModuleConfig;
 import judgels.api.contest.module.ContestModulesConfig;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestClarificationClient;
+import judgels.client.ContestClarificationClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

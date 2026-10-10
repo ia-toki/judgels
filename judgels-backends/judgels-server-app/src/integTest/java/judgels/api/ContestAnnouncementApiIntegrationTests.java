@@ -13,7 +13,7 @@ import judgels.api.contest.announcement.ContestAnnouncement;
 import judgels.api.contest.announcement.ContestAnnouncementData;
 import judgels.api.contest.announcement.ContestAnnouncementStatus;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestAnnouncementClient;
+import judgels.client.ContestAnnouncementClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

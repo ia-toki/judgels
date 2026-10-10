@@ -4,12 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
-import { topUserStatsQueryOptions } from '../../../../../modules/queries/trainingStats';
+import { topTrainingUserStatsQueryOptions } from '../../../../../modules/queries/trainingUserStats';
 
 import './TopScorersWidget.scss';
 
 export default function TopScorersWidget() {
-  const { data: response } = useQuery(topUserStatsQueryOptions({ page: 1, pageSize: 5 }));
+  const { data: response } = useQuery(topTrainingUserStatsQueryOptions({ page: 1, pageSize: 5 }));
 
   if (!response) {
     return <LoadingState />;

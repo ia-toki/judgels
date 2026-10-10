@@ -14,9 +14,9 @@ import { SubmissionFilterWidget } from '../../../../../../../components/Submissi
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
-  contestBundleSubmissionsQueryOptions,
-  regradeBundleSubmissionsMutationOptions,
-} from '../../../../../../../modules/queries/contestSubmissionBundle';
+  contestItemSubmissionsQueryOptions,
+  regradeContestItemSubmissionsMutationOptions,
+} from '../../../../../../../modules/queries/contestItemSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
@@ -36,10 +36,10 @@ function ContestSubmissionsPage() {
   const page = location.search.page;
 
   const { data: response, isLoading } = useQuery(
-    contestBundleSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
+    contestItemSubmissionsQueryOptions(contest.jid, { username, problemAlias, page })
   );
 
-  const regradeSubmissionsMutation = useMutation(regradeBundleSubmissionsMutationOptions(contest.jid));
+  const regradeSubmissionsMutation = useMutation(regradeContestItemSubmissionsMutationOptions(contest.jid));
 
   const renderSubmissions = () => {
     if (!response) {

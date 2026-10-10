@@ -3,7 +3,7 @@ package judgels.api;
 import java.util.Map;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.role.UserRole;
-import judgels.user.UserRoleClient;
+import judgels.client.UserRoleClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 

@@ -6,8 +6,8 @@ import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
-import judgels.session.SessionClient;
-import judgels.user.UserClient;
+import judgels.client.SessionClient;
+import judgels.client.UserClient;
 import org.junit.jupiter.api.Test;
 
 public class SessionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

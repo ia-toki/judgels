@@ -10,9 +10,9 @@ import judgels.api.profile.Profile;
 import judgels.api.user.User;
 import judgels.api.user.rating.UserRating;
 import judgels.api.user.rating.UserRatingUpdateData;
-import judgels.profile.ProfileClient;
-import judgels.user.UserClient;
-import judgels.user.UserRatingClient;
+import judgels.client.ProfileClient;
+import judgels.client.UserClient;
+import judgels.client.UserRatingClient;
 import org.junit.jupiter.api.Test;
 
 public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {

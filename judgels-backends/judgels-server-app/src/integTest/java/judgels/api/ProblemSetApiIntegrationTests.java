@@ -13,7 +13,7 @@ import judgels.api.training.problemset.ProblemSet;
 import judgels.api.training.problemset.ProblemSetCreateData;
 import judgels.api.training.problemset.ProblemSetUpdateData;
 import judgels.api.training.problemset.problem.ProblemSetProblemData;
-import judgels.training.problemset.ProblemSetClient;
+import judgels.client.ProblemSetClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

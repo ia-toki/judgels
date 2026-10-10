@@ -7,9 +7,9 @@ import { LoadingState } from '../../../../../../../../../../components/LoadingSt
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { VerdictCode } from '../../../../../../../../../../modules/api/gradingVerdict';
 import {
-  chapterBundleLatestSubmissionsQueryOptions,
-  createChapterBundleItemSubmissionMutationOptions,
-} from '../../../../../../../../../../modules/queries/chapterSubmissionBundle';
+  chapterLatestItemSubmissionsQueryOptions,
+  createChapterItemSubmissionMutationOptions,
+} from '../../../../../../../../../../modules/queries/chapterItemSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
@@ -37,11 +37,11 @@ export default function ChapterProblemStatementPage(props) {
   }
 
   const { data: latestSubmissions } = useQuery(
-    chapterBundleLatestSubmissionsQueryOptions(chapter.jid, props.worksheet.problem.alias)
+    chapterLatestItemSubmissionsQueryOptions(chapter.jid, props.worksheet.problem.alias)
   );
 
   const createItemSubmissionMutation = useMutation(
-    createChapterBundleItemSubmissionMutationOptions(chapter.jid, props.worksheet.problem.alias)
+    createChapterItemSubmissionMutationOptions(chapter.jid, props.worksheet.problem.alias)
   );
 
   const createSubmission = (itemJid, answer) => {

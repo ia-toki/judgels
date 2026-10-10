@@ -19,7 +19,7 @@ import judgels.api.contest.problem.ContestProblemData;
 import judgels.api.contest.scoreboard.ContestScoreboardConfig;
 import judgels.api.contest.scoreboard.ContestScoreboardType;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
-import judgels.contest.ContestScoreboardClient;
+import judgels.client.ContestScoreboardClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

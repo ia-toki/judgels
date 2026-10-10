@@ -11,10 +11,10 @@ import {
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
 import {
-  problemSetProgrammingSubmissionsQueryOptions,
-  regradeProblemSetProgrammingSubmissionMutationOptions,
-  regradeProblemSetProgrammingSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionProgramming';
+  problemSetSubmissionsQueryOptions,
+  regradeProblemSetSubmissionMutationOptions,
+  regradeProblemSetSubmissionsMutationOptions,
+} from '../../../../../../../../modules/queries/problemSetSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';
@@ -36,15 +36,11 @@ export default function ProblemSubmissionsPage() {
   const usernameFilter = isUserFilterMine ? username : undefined;
 
   const { data: response } = useQuery(
-    problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, beforeId, afterId })
+    problemSetSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, beforeId, afterId })
   );
 
-  const regradeSubmissionMutation = useMutation(
-    regradeProblemSetProgrammingSubmissionMutationOptions(problem.problemJid)
-  );
-  const regradeSubmissionsMutation = useMutation(
-    regradeProblemSetProgrammingSubmissionsMutationOptions(problem.problemJid)
-  );
+  const regradeSubmissionMutation = useMutation(regradeProblemSetSubmissionMutationOptions(problem.problemJid));
+  const regradeSubmissionsMutation = useMutation(regradeProblemSetSubmissionsMutationOptions(problem.problemJid));
 
   const onRegrade = submissionJid => {
     regradeSubmissionMutation.mutate(submissionJid, {

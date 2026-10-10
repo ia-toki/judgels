@@ -12,13 +12,14 @@ import {
   problemSetsQueryOptions,
 } from '../../modules/queries/problemSet';
 import {
-  problemSetBundleLatestSubmissionsQueryOptions,
-  problemSetBundleSubmissionSummaryQueryOptions,
-  problemSetBundleSubmissionsQueryOptions,
-} from '../../modules/queries/problemSetSubmissionBundle';
-import { problemSetProgrammingSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmissionProgramming';
-import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/trainingProblem';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmissionProgramming';
+  problemSetItemSubmissionSummaryQueryOptions,
+  problemSetItemSubmissionsQueryOptions,
+  problemSetLatestItemSubmissionsQueryOptions,
+} from '../../modules/queries/problemSetItemSubmission';
+import { problemSetSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmission';
+import { trainingProblemsQueryOptions } from '../../modules/queries/trainingProblem';
+import { trainingProblemTagsQueryOptions } from '../../modules/queries/trainingProblemTag';
+import { trainingSubmissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';
@@ -43,8 +44,8 @@ export const createProblemsRoutes = appRoute => {
     path: '/',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
     loader: ({ search = {} }) => {
-      queryClient.prefetchQuery(problemsQueryOptions({ tags: search.tags, page: search.page }));
-      queryClient.prefetchQuery(problemTagsQueryOptions());
+      queryClient.prefetchQuery(trainingProblemsQueryOptions({ tags: search.tags, page: search.page }));
+      queryClient.prefetchQuery(trainingProblemTagsQueryOptions());
     },
   });
 
@@ -109,7 +110,7 @@ export const createProblemsRoutes = appRoute => {
         .then(worksheet => {
           if (worksheet?.problem?.type === ProblemType.Bundle) {
             queryClient.prefetchQuery(
-              problemSetBundleLatestSubmissionsQueryOptions(problemSet.jid, worksheet.problem.alias)
+              problemSetLatestItemSubmissionsQueryOptions(problemSet.jid, worksheet.problem.alias)
             );
           }
         });
@@ -135,7 +136,7 @@ export const createProblemsRoutes = appRoute => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
       queryClient.prefetchQuery(
-        problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, {
+        problemSetSubmissionsQueryOptions(problem.problemJid, {
           beforeId: search.before,
           afterId: search.after,
         })
@@ -155,7 +156,7 @@ export const createProblemsRoutes = appRoute => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
       const username = getUser()?.username;
-      queryClient.prefetchQuery(problemSetProgrammingSubmissionsQueryOptions(problem.problemJid, { username }));
+      queryClient.prefetchQuery(problemSetSubmissionsQueryOptions(problem.problemJid, { username }));
     },
   });
 
@@ -170,7 +171,7 @@ export const createProblemsRoutes = appRoute => {
     ),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(submissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
     },
   });
 
@@ -198,7 +199,7 @@ export const createProblemsRoutes = appRoute => {
       const language = getWebPrefs().statementLanguage;
       queryClient.prefetchQuery(problemSetProblemReportQueryOptions(problemSet.jid, problemAlias));
       queryClient.prefetchQuery(
-        problemSetBundleSubmissionSummaryQueryOptions(problemSet.jid, { problemJid: problem.problemJid, language })
+        problemSetItemSubmissionSummaryQueryOptions(problemSet.jid, { problemJid: problem.problemJid, language })
       );
     },
   });
@@ -214,9 +215,7 @@ export const createProblemsRoutes = appRoute => {
     loader: async ({ params: { problemSetSlug, problemAlias } }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
       const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
-      queryClient.prefetchQuery(
-        problemSetBundleSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias })
-      );
+      queryClient.prefetchQuery(problemSetItemSubmissionsQueryOptions(problemSet.jid, { problemAlias: problem.alias }));
     },
   });
 
@@ -236,7 +235,7 @@ export const createProblemsRoutes = appRoute => {
       const problem = await queryClient.ensureQueryData(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
       const language = getWebPrefs().statementLanguage;
       queryClient.prefetchQuery(
-        problemSetBundleSubmissionSummaryQueryOptions(problemSet.jid, {
+        problemSetItemSubmissionSummaryQueryOptions(problemSet.jid, {
           problemJid: problem.problemJid,
           username,
           language,
