@@ -55,7 +55,7 @@ function LatexExamplesTable({ examples }) {
   );
 }
 
-export function ProblemStatementManual() {
+export function StatementManual() {
   const [openManual, setOpenManual] = useState(undefined);
 
   const closeManual = () => setOpenManual(undefined);

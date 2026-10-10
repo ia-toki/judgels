@@ -8,7 +8,7 @@ import FormAceEditor from '../../../../components/forms/FormAceEditor/FormAceEdi
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../components/forms/validations';
-import { ProblemStatementManual } from '../ProblemStatementManual/ProblemStatementManual';
+import { StatementManual } from '../StatementManual/StatementManual';
 
 const titleField = {
   name: 'title',
@@ -23,7 +23,7 @@ const textField = {
   permissive: true,
 };
 
-export default function ProblemStatementEditForm({ onSubmit, initialValues, onCancel }) {
+export default function StatementEditForm({ onSubmit, initialValues, onCancel }) {
   const [isSourceMode, setIsSourceMode] = useState(false);
 
   return (
@@ -39,7 +39,7 @@ export default function ProblemStatementEditForm({ onSubmit, initialValues, onCa
                 onChange={e => setIsSourceMode(e.target.checked)}
                 style={{ marginBottom: 0 }}
               />
-              <ProblemStatementManual />
+              <StatementManual />
             </Flex>
             {isSourceMode ? (
               <Field component={FormAceEditor} name={textField.name} />

@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemEditorial;
-import judgels.api.catalog.problem.ProblemFile;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
 import judgels.client.ProblemClient;
@@ -124,7 +124,7 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
                 zip(Map.of("graph.png", "GRAPH", "tree.png", "TREE"))));
 
         assertThat(editorialClient.getEditorialMediaFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("figure.png", "graph.png", "tree.png");
 
         try (var response = editorialClient.downloadEditorialMediaFile(adminToken, problemJid, "figure.png")) {
@@ -136,7 +136,7 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
 
         editorialClient.deleteEditorialMediaFile(adminToken, problemJid, "graph.png");
         assertThat(editorialClient.getEditorialMediaFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("figure.png", "tree.png");
 
         editorialClient.deleteEditorialMediaFiles(adminToken, problemJid);

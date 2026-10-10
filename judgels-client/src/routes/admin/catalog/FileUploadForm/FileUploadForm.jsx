@@ -11,7 +11,7 @@ const fileField = {
   validate: Required,
 };
 
-export default function ProblemFileUploadForm({ onSubmit }) {
+export default function FileUploadForm({ onSubmit }) {
   const submit = async (data, form) => {
     await onSubmit(data);
     form.restart();

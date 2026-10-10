@@ -6,7 +6,7 @@ import { Field, Form } from 'react-final-form';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import FormAceEditor from '../../../../components/forms/FormAceEditor/FormAceEditor';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
-import { ProblemStatementManual } from '../ProblemStatementManual/ProblemStatementManual';
+import { StatementManual } from '../../catalog/StatementManual/StatementManual';
 
 const textField = {
   name: 'text',
@@ -30,7 +30,7 @@ export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCa
                 onChange={e => setIsSourceMode(e.target.checked)}
                 style={{ marginBottom: 0 }}
               />
-              <ProblemStatementManual />
+              <StatementManual />
             </Flex>
             {isSourceMode ? (
               <Field component={FormAceEditor} name={textField.name} />

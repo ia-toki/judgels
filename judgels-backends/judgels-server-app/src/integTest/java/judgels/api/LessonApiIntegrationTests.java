@@ -1,9 +1,13 @@
 package judgels.api;
 
+import static judgels.api.catalog.lesson.LessonErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.catalog.lesson.Lesson;
+import judgels.api.catalog.lesson.LessonCreateData;
+import judgels.api.catalog.lesson.LessonResponse;
+import judgels.api.catalog.lesson.LessonUpdateData;
 import judgels.client.LessonClient;
 import judgels.client.LessonClient.GetLessonsParams;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,11 +22,61 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     }
 
     @Test
-    void get_lessons() {
-        Lesson lessonA = createLesson(adminToken, "lesson-a");
-        Lesson lessonB = createLesson(userToken, "lesson-b");
-
+    void end_to_end_flow() {
         // as admin
+
+        Lesson lessonA = lessonClient.createLesson(adminToken, new LessonCreateData.Builder()
+                .slug("lesson-a")
+                .additionalNote("This is lesson A")
+                .initialLanguage("en-US")
+                .build());
+
+        assertThat(lessonA.getSlug()).isEqualTo("lesson-a");
+        assertThat(lessonA.getAdditionalNote()).isEqualTo("This is lesson A");
+        assertThat(lessonA.getAuthorJid()).isEqualTo(admin.getJid());
+
+        Lesson lessonB = createLessonViaMichael(userToken, "lesson-b");
+
+        assertBadRequest(() -> lessonClient
+                .createLesson(adminToken, new LessonCreateData.Builder()
+                        .slug("lesson-a")
+                        .additionalNote("")
+                        .initialLanguage("en-US")
+                        .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
+
+        assertBadRequest(() -> lessonClient
+                .createLesson(adminToken, new LessonCreateData.Builder()
+                        .slug("lesson-c")
+                        .additionalNote("")
+                        .initialLanguage("bogus")
+                        .build()));
+
+        LessonResponse lessonResponse = lessonClient.getLesson(adminToken, lessonA.getJid());
+        assertThat(lessonResponse.getData()).isEqualTo(lessonA);
+        assertThat(lessonResponse.getHasLocalChanges()).isFalse();
+        assertThat(lessonResponse.getConfig().getCanEdit()).isTrue();
+        assertThat(lessonResponse.getProfilesMap()).containsOnlyKeys(admin.getJid());
+
+        LessonUpdateData updateData = new LessonUpdateData.Builder()
+                .slug("lesson-a-new")
+                .additionalNote("This is new lesson A")
+                .build();
+
+        lessonA = lessonClient.updateLesson(adminToken, lessonA.getJid(), updateData);
+        assertThat(lessonA.getSlug()).isEqualTo("lesson-a-new");
+        assertThat(lessonA.getAdditionalNote()).isEqualTo("This is new lesson A");
+
+        assertThat(lessonClient.getLesson(adminToken, lessonA.getJid()).getData()).isEqualTo(lessonA);
+
+        String lessonAJid = lessonA.getJid();
+
+        assertBadRequest(() -> lessonClient
+                .updateLesson(adminToken, lessonAJid, new LessonUpdateData.Builder()
+                        .from(updateData)
+                        .slug("lesson-b")
+                        .build()))
+                .hasMessageContaining(SLUG_ALREADY_EXISTS);
 
         var response = lessonClient.getLessons(adminToken, new GetLessonsParams());
         assertThat(response.getData().getPage())
@@ -38,6 +92,20 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .containsExactly(lessonA.getJid());
 
         // as user
+
+        assertForbidden(() -> lessonClient
+                .createLesson(userToken, new LessonCreateData.Builder()
+                        .slug("lesson-c")
+                        .additionalNote("")
+                        .initialLanguage("en-US")
+                        .build()));
+
+        assertForbidden(() -> lessonClient.getLesson(userToken, lessonAJid));
+        assertForbidden(() -> lessonClient.updateLesson(userToken, lessonAJid, updateData));
+
+        lessonResponse = lessonClient.getLesson(userToken, lessonB.getJid());
+        assertThat(lessonResponse.getData().getSlug()).isEqualTo("lesson-b");
+        assertThat(lessonResponse.getConfig().getCanEdit()).isTrue();
 
         response = lessonClient.getLessons(userToken, new GetLessonsParams());
         assertThat(response.getData().getPage())

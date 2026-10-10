@@ -23,10 +23,10 @@ import java.util.Optional;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.statement.ProblemStatementLanguagesResponse;
 import judgels.api.catalog.problem.statement.ProblemStatementMediaFilesResponse;
+import judgels.catalog.CatalogFiles;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.catalog.problem.ProblemAccessChecker;
-import judgels.catalog.problem.ProblemFiles;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.api.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -170,7 +170,7 @@ public class ProblemStatementResource {
         String actorJid = accessChecker.checkCanView(authHeader, problemJid);
 
         return new ProblemStatementMediaFilesResponse.Builder()
-                .data(ProblemFiles.fromFileInfos(statementStore.getStatementMediaFiles(actorJid, problemJid)))
+                .data(CatalogFiles.fromFileInfos(statementStore.getStatementMediaFiles(actorJid, problemJid)))
                 .build();
     }
 
@@ -189,7 +189,7 @@ public class ProblemStatementResource {
         if (fileStream == null) {
             throw new BadRequestException();
         }
-        ProblemFiles.checkFilename(fileDetails.getFileName());
+        CatalogFiles.checkFilename(fileDetails.getFileName());
 
         statementStore.uploadStatementMediaFile(actorJid, problemJid, fileStream, fileDetails.getFileName());
     }
@@ -221,7 +221,7 @@ public class ProblemStatementResource {
             @PathParam("filename") String filename) {
 
         String actorJid = accessChecker.checkCanView(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         String mediaUrl = statementStore.getStatementMediaFileURL(actorJid, problemJid, filename);
         return JudgelsResponseBuilders.buildDownloadResponse(mediaUrl);
@@ -236,7 +236,7 @@ public class ProblemStatementResource {
             @PathParam("filename") String filename) {
 
         String actorJid = accessChecker.checkCanEdit(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         statementStore.deleteStatementMediaFile(actorJid, problemJid, filename);
     }
