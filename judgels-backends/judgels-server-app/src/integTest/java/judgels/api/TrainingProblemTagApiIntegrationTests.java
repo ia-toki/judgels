@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.training.problem.ProblemTagCategory;
-import judgels.api.training.problem.ProblemTagOption;
-import judgels.api.training.problem.ProblemTagsResponse;
+import judgels.api.catalog.problem.tag.ProblemTagCategory;
+import judgels.api.catalog.problem.tag.ProblemTagOption;
+import judgels.api.training.problem.TrainingProblemTagsResponse;
 import judgels.client.TrainingProblemTagClient;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ class TrainingProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTes
 
     @Test
     void get_problem_tags() {
-        ProblemTagsResponse response = problemTagClient.getProblemTags();
+        TrainingProblemTagsResponse response = problemTagClient.getProblemTags();
 
         List<ProblemTagCategory> data = response.getData();
         assertThat(data).extracting(ProblemTagCategory::getTitle)

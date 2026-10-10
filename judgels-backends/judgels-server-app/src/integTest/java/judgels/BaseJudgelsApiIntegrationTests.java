@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.problem.Problem;
+import judgels.api.catalog.problem.ProblemCreateData;
 import judgels.api.catalog.problem.ProblemType;
 import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.session.Credentials;
@@ -37,6 +38,7 @@ import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
+import judgels.client.ProblemClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
@@ -226,6 +228,17 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
     }
 
     protected static Problem createProblem(String token, String slug, String gradingEngine) {
+        return createClient(ProblemClient.class).createProblem(token, new ProblemCreateData.Builder()
+                .slug(slug)
+                .gradingEngine(gradingEngine)
+                .additionalNote("")
+                .initialLanguage("en-US")
+                .build());
+    }
+
+    // Only a problem admin can create a problem through the API.
+    // This goes through michael instead, for tests whose author must not be one.
+    protected static Problem createProblemViaMichael(String token, String slug, String gradingEngine) {
         Form form = new Form();
         form.param("slug", slug);
         form.param("gradingEngine", gradingEngine);

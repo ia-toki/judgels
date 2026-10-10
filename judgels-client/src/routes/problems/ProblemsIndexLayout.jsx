@@ -3,8 +3,11 @@ import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
-import ProblemTagFilter from './problems/ProblemTagFilter/ProblemTagFilter';
+import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
+import { trainingProblemTagsQueryOptions } from '../../modules/queries/trainingProblemTag';
 import ProblemSetArchiveFilter from './problemsets/ProblemSetArchiveFilter/ProblemSetArchiveFilter';
+
+const TrainingProblemTagFilter = () => <ProblemTagFilter queryOptions={trainingProblemTagsQueryOptions()} />;
 
 export default function ProblemsIndexLayout() {
   const sidebarItems = [
@@ -12,7 +15,7 @@ export default function ProblemsIndexLayout() {
       path: '',
       titleIcon: <Manual />,
       title: 'Browse problems',
-      widgetComponent: ProblemTagFilter,
+      widgetComponent: TrainingProblemTagFilter,
     },
     {
       path: 'problemsets',

@@ -130,9 +130,9 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
 
         webTarget = createWebTarget();
 
-        problem1 = createProblem(managerToken, PROBLEM_1_SLUG);
-        problem2 = createProblem(managerToken, PROBLEM_2_SLUG);
-        problem3 = createBundleProblem(managerToken, PROBLEM_3_SLUG);
+        problem1 = createProblemViaMichael(managerToken, PROBLEM_1_SLUG, "Batch");
+        problem2 = createProblemViaMichael(managerToken, PROBLEM_2_SLUG, "Batch");
+        problem3 = createProblemViaMichael(managerToken, PROBLEM_3_SLUG, "Bundle");
     }
 
     @AfterEach

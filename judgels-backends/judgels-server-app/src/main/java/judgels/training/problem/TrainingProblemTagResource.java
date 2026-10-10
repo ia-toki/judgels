@@ -9,9 +9,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Map;
 import java.util.stream.Collectors;
-import judgels.api.training.problem.ProblemTagCategory;
-import judgels.api.training.problem.ProblemTagOption;
-import judgels.api.training.problem.ProblemTagsResponse;
+import judgels.api.catalog.problem.tag.ProblemTagCategory;
+import judgels.api.catalog.problem.tag.ProblemTagOption;
+import judgels.api.training.problem.TrainingProblemTagsResponse;
 import judgels.catalog.problem.tag.ProblemTagStore;
 
 @Path("/api/v4/training/problems/tags")
@@ -23,7 +23,7 @@ public class TrainingProblemTagResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemTagsResponse getProblemTags() {
+    public TrainingProblemTagsResponse getProblemTags() {
         Map<String, Integer> tagCounts = tagStore.getPublicTagCounts();
 
         ProblemTagCategory topicCategory = new ProblemTagCategory.Builder()
@@ -35,7 +35,7 @@ public class TrainingProblemTagResource {
                         .collect(Collectors.toList()))
                 .build();
 
-        return new ProblemTagsResponse.Builder()
+        return new TrainingProblemTagsResponse.Builder()
                 .addData(new ProblemTagCategory.Builder()
                         .title("Statement")
                         .addOptions(createOption("has English statement", "statement-en", tagCounts))

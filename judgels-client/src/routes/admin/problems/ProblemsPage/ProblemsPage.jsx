@@ -1,26 +1,56 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
+import ProblemTagFilter from '../../../../components/ProblemTagFilter/ProblemTagFilter';
+import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { ProblemType } from '../../../../modules/api/problem';
+import { problemTypeNamesMap } from '../../../../modules/api/problem';
+import { ProblemAdminRole } from '../../../../modules/api/problemAdminRole';
 import { problemsQueryOptions } from '../../../../modules/queries/problem';
+import { problemTagsQueryOptions } from '../../../../modules/queries/problemTag';
+import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
+import { ProblemCreateDialog } from '../ProblemCreateDialog/ProblemCreateDialog';
+
+import './ProblemsPage.scss';
 
 const PAGE_SIZE = 20;
 
-const problemTypeNames = {
-  [ProblemType.Programming]: 'Programming',
-  [ProblemType.Bundle]: 'Bundle',
+const parseTags = queryTags => {
+  if (!queryTags) {
+    return undefined;
+  }
+  return typeof queryTags === 'string' ? [queryTags] : queryTags;
 };
 
 export default function ProblemsPage() {
   const location = useLocation();
+  const term = location.search.term;
+  const tags = parseTags(location.search.tags);
   const page = location.search.page;
 
-  const { data: response } = useQuery(problemsQueryOptions({ page }));
+  const { data: webConfig } = useQuery(userWebConfigQueryOptions());
+  const { data: response, isFetching } = useQuery(problemsQueryOptions({ term, tags, page }));
+
+  const canCreate = webConfig?.role.problem === ProblemAdminRole.Admin;
+
+  const searchBoxUpdateQueries = (term, queries) => {
+    return { ...queries, page: undefined, term };
+  };
+
+  const renderAction = () => {
+    return (
+      <Flex justifyContent="space-between" alignItems="center" gap={2}>
+        <ActionButtons>{canCreate && <ProblemCreateDialog />}</ActionButtons>
+        <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={term || ''} isLoading={isFetching} />
+      </Flex>
+    );
+  };
 
   const renderProblems = () => {
     if (!response) {
@@ -39,8 +69,10 @@ export default function ProblemsPage() {
     const rows = problems.page.map(problem => (
       <tr key={problem.jid}>
         <td style={{ width: '60px' }}>{problem.id}</td>
-        <td>{problem.slug}</td>
-        <td style={{ width: '120px' }}>{problemTypeNames[problem.type]}</td>
+        <td>
+          <Link to={`/admin/problems/${problem.jid}`}>{problem.slug}</Link>
+        </td>
+        <td style={{ width: '120px' }}>{problemTypeNamesMap[problem.type]}</td>
         <td style={{ width: '200px' }}>
           <UserRef profile={profilesMap[problem.authorJid]} />
         </td>
@@ -63,9 +95,15 @@ export default function ProblemsPage() {
   };
 
   return (
-    <ContentCard title="Problems">
-      {renderProblems()}
-      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
-    </ContentCard>
+    <Flex className="admin-problems-page" alignItems="flex-start" gap={2}>
+      <ContentCard className="admin-problems-page__problems" title="Problems">
+        {renderAction()}
+        {renderProblems()}
+        {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      </ContentCard>
+      <div className="admin-problems-page__filter">
+        <ProblemTagFilter queryOptions={problemTagsQueryOptions()} />
+      </div>
+    </Flex>
   );
 }
