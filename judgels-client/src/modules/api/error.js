@@ -2,6 +2,7 @@ export class BadRequestError extends Error {
   constructor(response) {
     super(response?.message);
     this.name = 'BadRequestError';
+    this.args = response?.args || {};
   }
 }
 

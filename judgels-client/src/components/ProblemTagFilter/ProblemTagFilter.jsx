@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
-import { trainingProblemTagsQueryOptions } from '../../../../modules/queries/trainingProblemTag';
+import { ContentCard } from '../ContentCard/ContentCard';
 
 import './ProblemTagFilter.scss';
 
@@ -17,7 +16,7 @@ const parseTags = queryTags => {
   return tags;
 };
 
-export default function ProblemTagFilter() {
+export default function ProblemTagFilter({ queryOptions }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -25,7 +24,7 @@ export default function ProblemTagFilter() {
 
   const [selectedTags, setSelectedTags] = useState(tags);
 
-  const { data: response } = useQuery(trainingProblemTagsQueryOptions());
+  const { data: response } = useQuery(queryOptions);
 
   const allTags = useMemo(() => {
     if (!response) {

@@ -4,6 +4,7 @@ import static judgels.core.JudgelsRequestChecks.checkAllowed;
 import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.views.common.View;
@@ -29,6 +30,7 @@ import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemSetterRole;
 import judgels.api.profile.Profile;
 import judgels.catalog.problem.ProblemCreator;
+import judgels.catalog.problem.ProblemUpdater;
 import judgels.catalog.problem.tag.ProblemTagStore;
 import judgels.michael.template.HtmlTemplate;
 import judgels.michael.template.SearchProblemsWidget;
@@ -40,6 +42,7 @@ public class ProblemResource extends BaseProblemResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected ProblemCreator problemCreator;
+    @Inject protected ProblemUpdater problemUpdater;
     @Inject protected ProblemTagStore tagStore;
 
     @Inject public ProblemResource() {}
@@ -192,8 +195,6 @@ public class ProblemResource extends BaseProblemResource {
             return ok(renderEditProblem(actor, problem, form));
         }
 
-        problemStore.updateProblem(problem.getJid(), form.slug, form.additionalNote);
-
         Set<String> usernames = new HashSet<>();
         usernames.addAll(Arrays.asList(form.writerUsernames.split(",")));
         usernames.addAll(Arrays.asList(form.developerUsernames.split(",")));
@@ -201,13 +202,16 @@ public class ProblemResource extends BaseProblemResource {
         usernames.addAll(Arrays.asList(form.editorialistUsernames.split(",")));
         Map<String, String> jidsMap = userStore.translateUsernamesToJids(usernames);
 
-        Map<ProblemSetterRole, List<String>> setters = problemStore.getProblemSetters(problem.getJid());
-        updateProblemSetters(problem.getJid(), ProblemSetterRole.WRITER, form.writerUsernames, setters, jidsMap);
-        updateProblemSetters(problem.getJid(), ProblemSetterRole.DEVELOPER, form.developerUsernames, setters, jidsMap);
-        updateProblemSetters(problem.getJid(), ProblemSetterRole.TESTER, form.testerUsernames, setters, jidsMap);
-        updateProblemSetters(problem.getJid(), ProblemSetterRole.EDITORIALIST, form.editorialistUsernames, setters, jidsMap);
-
-        tagStore.updateTopicTags(problem.getJid(), form.tags);
+        problemUpdater.updateProblem(
+                problem.getJid(),
+                form.slug,
+                form.additionalNote,
+                ImmutableMap.of(
+                        ProblemSetterRole.WRITER, usernamesToUserJids(form.writerUsernames, jidsMap),
+                        ProblemSetterRole.DEVELOPER, usernamesToUserJids(form.developerUsernames, jidsMap),
+                        ProblemSetterRole.TESTER, usernamesToUserJids(form.testerUsernames, jidsMap),
+                        ProblemSetterRole.EDITORIALIST, usernamesToUserJids(form.editorialistUsernames, jidsMap)),
+                form.tags);
 
         return redirect("/problems/" + problemId);
     }
@@ -232,19 +236,6 @@ public class ProblemResource extends BaseProblemResource {
                 .filter(jidsMap::containsKey)
                 .map(jidsMap::get)
                 .collect(Collectors.toList());
-    }
-
-    private void updateProblemSetters(
-            String problemJid,
-            ProblemSetterRole role,
-            String usernames,
-            Map<ProblemSetterRole, List<String>> setters,
-            Map<String, String> jidsMap) {
-
-        List<String> userJids = usernamesToUserJids(usernames, jidsMap);
-        if (!userJids.equals(setters.getOrDefault(role, ImmutableList.of()))) {
-            problemStore.updateProblemSetters(problemJid, role, userJids);
-        }
     }
 
     private HtmlTemplate newProblemGeneralTemplate(Actor actor, Problem problem) {

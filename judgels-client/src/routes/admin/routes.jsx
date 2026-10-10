@@ -1,4 +1,4 @@
-import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import { archiveBySlugQueryOptions } from '../../modules/queries/archive';
@@ -9,6 +9,7 @@ import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProble
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
+import { problemQueryOptions } from '../../modules/queries/problem';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
@@ -154,6 +155,29 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
   });
 
+  const adminProblemRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'problems/$problemJid',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemLayout/ProblemLayout'))),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemIndexRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: '/',
+    beforeLoad: ({ params }) => {
+      throw redirect({ to: '/admin/problems/$problemJid/general', params, replace: true });
+    },
+  });
+
+  const adminProblemGeneralRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'general',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemGeneralPage/ProblemGeneralPage'))),
+  });
+
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
@@ -184,6 +208,7 @@ export const createAdminRoutes = appRoute => {
     adminProblemSetsRoute,
     adminProblemSetRoute,
     adminProblemsRoute,
+    adminProblemRoute.addChildren([adminProblemIndexRoute, adminProblemGeneralRoute]),
     adminLessonsRoute,
     adminSettingsRoute,
   ]);
