@@ -12,7 +12,7 @@ import { ItemStatementCard } from '../../../../components/ProblemWorksheetCard/B
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import { problemItemQueryOptions, updateProblemItemMutationOptions } from '../../../../modules/queries/problemItem';
 import { problemStatementLanguagesQueryOptions } from '../../../../modules/queries/problemStatement';
 import ProblemItemEditForm from '../ProblemItemEditForm/ProblemItemEditForm';
@@ -29,7 +29,11 @@ const itemCardsMap = {
 };
 
 export default function ProblemItemPage() {
-  const { problemJid, itemJid } = useParams({ strict: false });
+  const { problemSlug, itemJid } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { config },
@@ -93,7 +97,7 @@ export default function ProblemItemPage() {
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <span>
-            <Link to={`/admin/problems/${problemJid}/items`}>Items</Link> › {renderTitle()}
+            <Link to={`/admin/problems/${problemSlug}/items`}>Items</Link> › {renderTitle()}
           </span>
           {renderLanguageSelect()}
         </h4>

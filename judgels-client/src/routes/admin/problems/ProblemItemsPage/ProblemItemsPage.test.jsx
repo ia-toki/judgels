@@ -43,6 +43,7 @@ describe('ProblemItemsPage', () => {
   const nockItems = data => nockApi().get('/v4/problems/JIDBUND1/items').reply(200, { data });
 
   const renderComponent = async ({ canEdit = true, data = items } = {}) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDBUND1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDBUND1')
       .reply(200, {
@@ -58,7 +59,7 @@ describe('ProblemItemsPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/problems/JIDBUND1/items']} path="/admin/problems/$problemJid/items">
+          <TestRouter initialEntries={['/admin/problems/problem-1/items']} path="/admin/problems/$problemSlug/items">
             <ProblemItemsPage />
           </TestRouter>
         </QueryClientProviderWrapper>
@@ -90,7 +91,7 @@ describe('ProblemItemsPage', () => {
     ]);
     expect(screen.getByRole('link', { name: 'Multiple Choice' })).toHaveAttribute(
       'href',
-      '/admin/problems/JIDBUND1/items/JIDITEM2'
+      '/admin/problems/problem-1/items/JIDITEM2'
     );
   });
 

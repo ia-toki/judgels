@@ -14,6 +14,7 @@ describe('LessonStatementPage', () => {
   });
 
   const renderComponent = async ({ canEdit = true } = {}) => {
+    nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
     nockApi()
       .get('/v4/lessons/JIDLESS1')
       .reply(200, {
@@ -34,8 +35,8 @@ describe('LessonStatementPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/lessons/JIDLESS1/statements']}
-            path="/admin/lessons/$lessonJid/statements"
+            initialEntries={['/admin/lessons/lesson-1/statements']}
+            path="/admin/lessons/$lessonSlug/statements"
           >
             <LessonStatementPage />
           </TestRouter>

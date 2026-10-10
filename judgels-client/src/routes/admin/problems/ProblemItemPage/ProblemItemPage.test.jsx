@@ -48,6 +48,7 @@ describe('ProblemItemPage', () => {
   };
 
   const renderComponent = async ({ canEdit = true, item }) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDBUND1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDBUND1')
       .reply(200, {
@@ -67,8 +68,8 @@ describe('ProblemItemPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDBUND1/items/JIDITEM1']}
-            path="/admin/problems/$problemJid/items/$itemJid"
+            initialEntries={['/admin/problems/problem-1/items/JIDITEM1']}
+            path="/admin/problems/$problemSlug/items/$itemJid"
           >
             <ProblemItemPage />
           </TestRouter>
@@ -91,7 +92,7 @@ describe('ProblemItemPage', () => {
     await renderComponent({ item: multipleChoiceItem });
 
     expect(screen.getByRole('heading', { name: /multiple choice item \(no\. 2\)/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/JIDBUND1/items');
+    expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/problem-1/items');
     expect(screen.getByRole('combobox', { name: 'Language' })).toHaveValue('id-ID');
 
     expect(await screen.findByRole('textbox', { name: 'Internal note' })).toHaveValue('addition');

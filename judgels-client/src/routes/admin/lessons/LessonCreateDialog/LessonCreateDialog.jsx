@@ -37,7 +37,7 @@ export function LessonCreateDialog() {
       {
         onSuccess: lesson => {
           setIsDialogOpen(false);
-          navigate({ to: `/admin/lessons/${lesson.jid}` });
+          navigate({ to: `/admin/lessons/${lesson.slug}` });
           toastActions.showSuccessToast('Lesson created.');
         },
       }

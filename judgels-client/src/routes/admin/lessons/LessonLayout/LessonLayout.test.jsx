@@ -12,6 +12,7 @@ describe('LessonLayout', () => {
   });
 
   const renderComponent = async ({ hasLocalChanges, canEdit = true }) => {
+    nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
     nockApi()
       .get('/v4/lessons/JIDLESS1')
       .reply(200, {
@@ -24,7 +25,7 @@ describe('LessonLayout', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/lessons/JIDLESS1/general']} path="/admin/lessons/$lessonJid/general">
+          <TestRouter initialEntries={['/admin/lessons/lesson-1/general']} path="/admin/lessons/$lessonSlug/general">
             <LessonLayout />
           </TestRouter>
         </QueryClientProviderWrapper>
@@ -42,11 +43,11 @@ describe('LessonLayout', () => {
         screen.getByRole('link', { name }).getAttribute('href')
       )
     ).toEqual([
-      '/admin/lessons/JIDLESS1/general',
-      '/admin/lessons/JIDLESS1/statements',
-      '/admin/lessons/JIDLESS1/languages',
-      '/admin/lessons/JIDLESS1/media',
-      '/admin/lessons/JIDLESS1/versions',
+      '/admin/lessons/lesson-1/general',
+      '/admin/lessons/lesson-1/statements',
+      '/admin/lessons/lesson-1/languages',
+      '/admin/lessons/lesson-1/media',
+      '/admin/lessons/lesson-1/versions',
     ]);
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
   });
@@ -61,7 +62,7 @@ describe('LessonLayout', () => {
     expect(screen.getByText(/uncommitted changes/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /commit your changes/i })).toHaveAttribute(
       'href',
-      '/admin/lessons/JIDLESS1/versions'
+      '/admin/lessons/lesson-1/versions'
     );
   });
 });

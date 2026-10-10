@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import { createProblemEditorialMutationOptions } from '../../../../modules/queries/problemEditorial';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -20,7 +20,11 @@ const topbarItems = [
 ];
 
 export default function ProblemEditorialLayout() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { hasEditorial, config },
@@ -73,7 +77,7 @@ export default function ProblemEditorialLayout() {
   }
 
   return (
-    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemJid}/editorial`}>
+    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/editorial`}>
       <Outlet />
     </ContentWithTopbar>
   );

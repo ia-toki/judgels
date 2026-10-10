@@ -70,7 +70,7 @@ export default function ProblemsPage() {
       <tr key={problem.jid}>
         <td style={{ width: '60px' }}>{problem.id}</td>
         <td>
-          <Link to={`/admin/problems/${problem.jid}`}>{problem.slug}</Link>
+          <Link to={`/admin/problems/${problem.slug}`}>{problem.slug}</Link>
         </td>
         <td style={{ width: '120px' }}>{problemTypeNamesMap[problem.type]}</td>
         <td style={{ width: '200px' }}>

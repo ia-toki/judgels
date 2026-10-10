@@ -14,6 +14,7 @@ describe('ProblemVersionsPage', () => {
   });
 
   const renderComponent = async ({ hasLocalChanges = true } = {}) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -47,8 +48,8 @@ describe('ProblemVersionsPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDPROG1/versions']}
-            path="/admin/problems/$problemJid/versions"
+            initialEntries={['/admin/problems/problem-1/versions']}
+            path="/admin/problems/$problemSlug/versions"
           >
             <ProblemVersionsPage />
           </TestRouter>

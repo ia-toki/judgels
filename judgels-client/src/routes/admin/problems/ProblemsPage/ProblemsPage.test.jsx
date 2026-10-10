@@ -85,7 +85,7 @@ describe('ProblemsPage', () => {
     await renderComponent();
 
     const link = await screen.findByRole('link', { name: 'problem-1' });
-    expect(link).toHaveAttribute('href', '/admin/problems/JIDPROG1');
+    expect(link).toHaveAttribute('href', '/admin/problems/problem-1');
   });
 
   test('passes the search term and tags to the query', async () => {

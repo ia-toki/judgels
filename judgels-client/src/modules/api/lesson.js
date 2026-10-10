@@ -32,6 +32,10 @@ export const lessonAPI = {
     return get(baseLessonURL(lessonJid), token);
   },
 
+  getLessonBySlug: (token, lessonSlug) => {
+    return get(`${baseLessonsURL}/slug/${lessonSlug}`, token);
+  },
+
   updateLesson: (token, lessonJid, data) => {
     return post(baseLessonURL(lessonJid), token, data);
   },
