@@ -12,7 +12,7 @@ import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
-import { adminUserInfoQueryOptions } from '../../modules/queries/userInfo';
+import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -42,7 +42,7 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./users/UserPage/UserPage'))),
     loader: async ({ params: { username } }) => {
       const user = await queryClient.ensureQueryData(userByUsernameQueryOptions(username));
-      await queryClient.ensureQueryData(adminUserInfoQueryOptions(user.jid));
+      await queryClient.ensureQueryData(userInfoQueryOptions(user.jid));
     },
   });
 

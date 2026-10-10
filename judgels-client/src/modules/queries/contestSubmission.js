@@ -9,7 +9,7 @@ import { getToken } from '../session';
 export const contestSubmissionsQueryOptions = (contestJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', ...(params ? [params] : [])],
+    queryKey: ['contest', contestJid, 'submissions', 'programming', ...(params ? [params] : [])],
     meta: { persist: false },
     queryFn: () => contestSubmissionAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
@@ -17,7 +17,7 @@ export const contestSubmissionsQueryOptions = (contestJid, params) => {
 
 export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, problemJid) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', userJid, problemJid],
+    queryKey: ['contest', contestJid, 'submissions', 'programming', 'user-problem', userJid, problemJid],
     meta: { persist: false },
     queryFn: () => contestSubmissionAPI.getUserProblemSubmissions(getToken(), contestJid, userJid, problemJid),
   });
@@ -26,7 +26,15 @@ export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, p
 export const contestSubmissionWithSourceByIdQueryOptions = (contestJid, submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', submissionId, 'source', ...[params ? [params] : []]],
+    queryKey: [
+      'contest',
+      contestJid,
+      'submissions',
+      'programming',
+      submissionId,
+      'source',
+      ...(params ? [params] : []),
+    ],
     meta: { persist: false },
     queryFn: async () => {
       const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSourceById(

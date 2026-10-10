@@ -4,6 +4,6 @@ import { contestHistoryAPI } from '../api/contestHistory';
 
 export const contestPublicHistoryQueryOptions = username =>
   queryOptions({
-    queryKey: ['contest-history', username],
+    queryKey: ['contest-history', 'public', username],
     queryFn: () => contestHistoryAPI.getPublicHistory(username),
   });

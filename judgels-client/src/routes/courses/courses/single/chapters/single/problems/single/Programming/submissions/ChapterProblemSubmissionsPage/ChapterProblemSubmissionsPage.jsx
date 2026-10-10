@@ -11,8 +11,8 @@ import { courseBySlugQueryOptions } from '../../../../../../../../../../../modul
 import { courseChapterQueryOptions } from '../../../../../../../../../../../modules/queries/courseChapter';
 import {
   chapterSubmissionsQueryOptions,
-  regradeChapterSubmissionMutationOptions,
   regradeChapterSubmissionsMutationOptions,
+  regradeTrainingSubmissionMutationOptions,
 } from '../../../../../../../../../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
@@ -47,7 +47,7 @@ export default function ChapterProblemSubmissionsPage() {
     })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeChapterSubmissionMutationOptions(chapter.jid));
+  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions);
   const regradeSubmissionsMutation = useMutation(regradeChapterSubmissionsMutationOptions(chapter.jid));
 
   const onChangeFilterShowAll = ({ target }) => {

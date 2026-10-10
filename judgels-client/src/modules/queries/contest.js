@@ -11,7 +11,7 @@ import { getToken } from '../session';
 export const contestsQueryOptions = params => {
   const { name, page } = params || {};
   return queryOptions({
-    queryKey: ['contests', ...[params ? [params] : []]],
+    queryKey: ['contests', ...(params ? [params] : [])],
     queryFn: () => contestAPI.getContests(getToken(), name, page),
   });
 };

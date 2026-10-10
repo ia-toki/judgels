@@ -14,7 +14,7 @@ export const chapterLatestItemSubmissionsQueryOptions = (chapterJid, problemAlia
 export const chapterItemSubmissionSummaryQueryOptions = (chapterJid, params) => {
   const { problemAlias, language } = params || {};
   return queryOptions({
-    queryKey: ['chapter', chapterJid, 'submissions', 'bundle', ...(params ? [params] : [])],
+    queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
     meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissionSummary(

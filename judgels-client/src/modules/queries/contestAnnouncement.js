@@ -7,7 +7,7 @@ import { getToken } from '../session';
 export const contestAnnouncementsQueryOptions = (contestJid, params) => {
   const { page } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'announcements', ...[params ? [params] : []]],
+    queryKey: ['contest', contestJid, 'announcements', ...(params ? [params] : [])],
     queryFn: () => contestAnnouncementAPI.getAnnouncements(getToken(), contestJid, page),
   });
 };
