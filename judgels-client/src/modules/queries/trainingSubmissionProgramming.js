@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
+import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -9,15 +9,7 @@ export const submissionsQueryOptions = params => {
   return queryOptions({
     queryKey: ['submissions', ...(params ? [params] : [])],
     queryFn: () =>
-      trainingSubmissionProgrammingAPI.getSubmissions(
-        getToken(),
-        undefined,
-        username,
-        undefined,
-        undefined,
-        beforeId,
-        afterId
-      ),
+      trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
 };
 
@@ -25,12 +17,12 @@ export const submissionWithSourceQueryOptions = (submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
     queryKey: ['submissions', submissionId, 'source', ...(params ? [params] : [])],
-    queryFn: () => trainingSubmissionProgrammingAPI.getSubmissionWithSource(getToken(), submissionId, language),
+    queryFn: () => trainingSubmissionAPI.getSubmissionWithSource(getToken(), submissionId, language),
   });
 };
 
 export const regradeSubmissionMutationOptions = {
-  mutationFn: submissionJid => trainingSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(submissionsQueryOptions());
   },
@@ -38,7 +30,7 @@ export const regradeSubmissionMutationOptions = {
 
 export const regradeSubmissionsMutationOptions = {
   mutationFn: ({ username } = {}) =>
-    trainingSubmissionProgrammingAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
+    trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
   onSuccess: () => {
     queryClient.invalidateQueries(submissionsQueryOptions());
   },

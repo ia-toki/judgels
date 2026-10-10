@@ -5,7 +5,7 @@ import { get } from './http';
 
 export const baseStatsURL = `${APP_CONFIG.apiUrl}/v4/training/stats`;
 
-export const trainingStatsAPI = {
+export const trainingUserStatsAPI = {
   getUserStats: username => {
     const params = stringify({ username });
     return get(`${baseStatsURL}/users/?${params}`);

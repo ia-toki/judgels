@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLanguage';
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
+import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -10,15 +10,7 @@ export const problemSetProgrammingSubmissionsQueryOptions = (problemJid, params)
   return queryOptions({
     queryKey: ['problem-set', 'submissions', 'programming', problemJid, ...(params ? [params] : [])],
     queryFn: () =>
-      trainingSubmissionProgrammingAPI.getSubmissions(
-        getToken(),
-        undefined,
-        username,
-        problemJid,
-        undefined,
-        beforeId,
-        afterId
-      ),
+      trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, problemJid, undefined, beforeId, afterId),
   });
 };
 
@@ -36,25 +28,19 @@ export const createProblemSetProgrammingSubmissionMutationOptions = (problemSetJ
       sources['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
-    await trainingSubmissionProgrammingAPI.createSubmission(
-      getToken(),
-      problemSetJid,
-      problemJid,
-      data.gradingLanguage,
-      sources
-    );
+    await trainingSubmissionAPI.createSubmission(getToken(), problemSetJid, problemJid, data.gradingLanguage, sources);
   },
 });
 
 export const regradeProblemSetProgrammingSubmissionMutationOptions = problemJid => ({
-  mutationFn: submissionJid => trainingSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
   },
 });
 
 export const regradeProblemSetProgrammingSubmissionsMutationOptions = problemJid => ({
-  mutationFn: () => trainingSubmissionProgrammingAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
+  mutationFn: () => trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, undefined, problemJid),
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetProgrammingSubmissionsQueryOptions(problemJid));
   },

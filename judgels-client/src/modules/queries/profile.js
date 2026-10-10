@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { contestHistoryAPI } from '../api/contestHistory';
 import { NotFoundError } from '../api/error';
 import { profileAPI } from '../api/profile';
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
+import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { userSearchAPI } from '../api/userSearch';
 import { getToken } from '../session';
 
@@ -38,15 +38,7 @@ export const profileSubmissionsQueryOptions = (username, params) => {
   return queryOptions({
     queryKey: ['profile', username, 'submissions', ...(params ? [params] : [])],
     queryFn: () =>
-      trainingSubmissionProgrammingAPI.getSubmissions(
-        getToken(),
-        undefined,
-        username,
-        undefined,
-        undefined,
-        beforeId,
-        afterId
-      ),
+      trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
   });
 };
 

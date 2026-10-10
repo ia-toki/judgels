@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { trainingSubmissionProgrammingAPI } from '../api/trainingSubmission';
+import { trainingSubmissionAPI } from '../api/trainingSubmission';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
@@ -9,7 +9,7 @@ export const chapterProgrammingSubmissionsQueryOptions = (chapterJid, params) =>
   return queryOptions({
     queryKey: ['chapter', chapterJid, 'submissions', 'programming', ...(params ? [params] : [])],
     queryFn: () =>
-      trainingSubmissionProgrammingAPI.getSubmissions(
+      trainingSubmissionAPI.getSubmissions(
         getToken(),
         chapterJid,
         username,
@@ -28,7 +28,7 @@ export const createChapterProgrammingSubmissionMutationOptions = (chapterJid, pr
       sourceFiles['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
-    return await trainingSubmissionProgrammingAPI.createSubmission(
+    return await trainingSubmissionAPI.createSubmission(
       getToken(),
       chapterJid,
       problemJid,
@@ -39,7 +39,7 @@ export const createChapterProgrammingSubmissionMutationOptions = (chapterJid, pr
 });
 
 export const regradeChapterProgrammingSubmissionMutationOptions = chapterJid => ({
-  mutationFn: submissionJid => trainingSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(chapterProgrammingSubmissionsQueryOptions(chapterJid));
   },
@@ -47,7 +47,7 @@ export const regradeChapterProgrammingSubmissionMutationOptions = chapterJid => 
 
 export const regradeChapterProgrammingSubmissionsMutationOptions = chapterJid => ({
   mutationFn: ({ problemAlias } = {}) =>
-    trainingSubmissionProgrammingAPI.regradeSubmissions(getToken(), chapterJid, undefined, undefined, problemAlias),
+    trainingSubmissionAPI.regradeSubmissions(getToken(), chapterJid, undefined, undefined, problemAlias),
   onSuccess: () => {
     queryClient.invalidateQueries(chapterProgrammingSubmissionsQueryOptions(chapterJid));
   },

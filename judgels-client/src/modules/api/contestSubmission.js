@@ -5,7 +5,7 @@ import { download, get, post, postMultipart } from './http';
 
 const baseURL = `${baseContestsURL}/submissions/programming`;
 
-export const contestSubmissionProgrammingAPI = {
+export const contestSubmissionAPI = {
   getSubmissions: (token, contestJid, username, problemAlias, page) => {
     const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);

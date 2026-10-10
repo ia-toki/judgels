@@ -7,7 +7,7 @@ import { ProblemSubmissionEditor } from '../../../../../../../../../../component
 import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
-import { trainingSubmissionProgrammingAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
+import { trainingSubmissionAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
 import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
 import {
   courseBySlugQueryOptions,
@@ -62,7 +62,7 @@ export default function ChapterProblemWorkspacePage() {
     };
   };
 
-  const getSubmission = submissionJid => trainingSubmissionProgrammingAPI.getSubmission(getToken(), submissionJid);
+  const getSubmission = submissionJid => trainingSubmissionAPI.getSubmission(getToken(), submissionJid);
 
   const resetEditor = () => {
     if (window.confirm('Are you sure to reset your code to the initial state?')) {

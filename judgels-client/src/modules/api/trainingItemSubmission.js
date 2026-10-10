@@ -5,7 +5,7 @@ import { get, post } from './http';
 
 export const baseSubmissionsURL = `${APP_CONFIG.apiUrl}/v4/training/submissions/bundle`;
 
-export const trainingSubmissionBundleAPI = {
+export const trainingItemSubmissionAPI = {
   getSubmissions: (token, containerJid, username, problemAlias, page) => {
     const params = stringify({ containerJid, username, problemAlias, page });
     return get(`${baseSubmissionsURL}?${params}`, token);

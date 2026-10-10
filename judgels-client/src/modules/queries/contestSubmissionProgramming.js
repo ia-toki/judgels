@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestSubmissionProgrammingAPI } from '../api/contestSubmission';
+import { contestSubmissionAPI } from '../api/contestSubmission';
 import { NotFoundError } from '../api/error';
 import { getGradingLanguageEditorSubmissionFilename } from '../api/gradingLanguage';
 import { queryClient } from '../queryClient';
@@ -10,15 +10,14 @@ export const contestProgrammingSubmissionsQueryOptions = (contestJid, params) =>
   const { username, problemAlias, page } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', ...(params ? [params] : [])],
-    queryFn: () => contestSubmissionProgrammingAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
+    queryFn: () => contestSubmissionAPI.getSubmissions(getToken(), contestJid, username, problemAlias, page),
   });
 };
 
 export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, problemJid) => {
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', userJid, problemJid],
-    queryFn: () =>
-      contestSubmissionProgrammingAPI.getUserProblemSubmissions(getToken(), contestJid, userJid, problemJid),
+    queryFn: () => contestSubmissionAPI.getUserProblemSubmissions(getToken(), contestJid, userJid, problemJid),
   });
 };
 
@@ -27,7 +26,7 @@ export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', submissionId, 'source', ...[params ? [params] : []]],
     queryFn: async () => {
-      const submissionWithSource = await contestSubmissionProgrammingAPI.getSubmissionWithSource(
+      const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(
         getToken(),
         submissionId,
         language
@@ -54,18 +53,12 @@ export const createProgrammingSubmissionMutationOptions = (contestJid, problemJi
       sources['sourceFiles.' + key] = data.sourceFiles[key];
     });
 
-    await contestSubmissionProgrammingAPI.createSubmission(
-      getToken(),
-      contestJid,
-      problemJid,
-      data.gradingLanguage,
-      sources
-    );
+    await contestSubmissionAPI.createSubmission(getToken(), contestJid, problemJid, data.gradingLanguage, sources);
   },
 });
 
 export const regradeProgrammingSubmissionMutationOptions = contestJid => ({
-  mutationFn: submissionJid => contestSubmissionProgrammingAPI.regradeSubmission(getToken(), submissionJid),
+  mutationFn: submissionJid => contestSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
   },
@@ -73,7 +66,7 @@ export const regradeProgrammingSubmissionMutationOptions = contestJid => ({
 
 export const regradeProgrammingSubmissionsMutationOptions = contestJid => ({
   mutationFn: ({ username, problemAlias } = {}) =>
-    contestSubmissionProgrammingAPI.regradeSubmissions(getToken(), contestJid, username, problemAlias),
+    contestSubmissionAPI.regradeSubmissions(getToken(), contestJid, username, problemAlias),
   onSuccess: () => {
     queryClient.invalidateQueries(contestProgrammingSubmissionsQueryOptions(contestJid));
   },

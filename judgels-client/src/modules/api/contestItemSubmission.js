@@ -5,7 +5,7 @@ import { get, post } from './http';
 
 const baseURL = `${baseContestsURL}/submissions/bundle`;
 
-export const contestSubmissionBundleAPI = {
+export const contestItemSubmissionAPI = {
   getSubmissions: (token, contestJid, username, problemAlias, page) => {
     const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);
