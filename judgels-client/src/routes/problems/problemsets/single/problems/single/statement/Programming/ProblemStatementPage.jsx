@@ -10,7 +10,7 @@ import {
   problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
 } from '../../../../../../../../modules/queries/problemSet';
-import { createProblemSetProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmissionProgramming';
+import { createProblemSetProgrammingSubmissionMutationOptions } from '../../../../../../../../modules/queries/problemSetSubmission';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 
 import { toastActions } from '../../../../../../../../modules/toast/toastActions';

@@ -6,7 +6,7 @@ import { LoadingState } from '../../../../../../../../components/LoadingState/Lo
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { contestSubmissionAPI } from '../../../../../../../../modules/api/contestSubmission';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmissionProgramming';
+import { contestSubmissionWithSourceQueryOptions } from '../../../../../../../../modules/queries/contestSubmission';
 import { getToken } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';

@@ -6,7 +6,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/submission';
-import { submissionWithSourceQueryOptions } from '../../../../modules/queries/trainingSubmissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../utils/title';
 

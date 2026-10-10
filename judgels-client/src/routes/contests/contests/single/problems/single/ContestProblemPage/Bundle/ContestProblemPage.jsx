@@ -7,11 +7,11 @@ import StatementLanguageWidget from '../../../../../../../../components/Language
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { contestBySlugQueryOptions } from '../../../../../../../../modules/queries/contest';
-import { contestBundleProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
 import {
   contestBundleLatestSubmissionsQueryOptions,
   createBundleItemSubmissionMutationOptions,
-} from '../../../../../../../../modules/queries/contestSubmissionBundle';
+} from '../../../../../../../../modules/queries/contestItemSubmission';
+import { contestBundleProblemWorksheetQueryOptions } from '../../../../../../../../modules/queries/contestProblem';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 

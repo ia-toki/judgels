@@ -19,7 +19,7 @@ import {
   problemSetBundleSubmissionsQueryOptions,
   regradeProblemSetBundleSubmissionMutationOptions,
   regradeProblemSetBundleSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
+} from '../../../../../../../../modules/queries/problemSetItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 

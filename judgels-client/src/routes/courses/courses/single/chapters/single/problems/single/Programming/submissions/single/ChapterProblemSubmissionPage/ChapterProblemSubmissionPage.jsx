@@ -8,7 +8,7 @@ import { ContentCard } from '../../../../../../../../../../../../components/Cont
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { courseBySlugQueryOptions } from '../../../../../../../../../../../../modules/queries/course';
-import { submissionWithSourceQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../../../../../../../../../../../modules/queries/trainingSubmission';
 import { useWebPrefs } from '../../../../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../../../../utils/title';
 

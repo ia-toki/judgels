@@ -9,7 +9,7 @@ import { VerdictCode } from '../../../../../../../../../../modules/api/gradingVe
 import {
   chapterBundleLatestSubmissionsQueryOptions,
   createChapterBundleItemSubmissionMutationOptions,
-} from '../../../../../../../../../../modules/queries/chapterSubmissionBundle';
+} from '../../../../../../../../../../modules/queries/chapterItemSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,

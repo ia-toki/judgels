@@ -14,7 +14,7 @@ import {
   problemSetProgrammingSubmissionsQueryOptions,
   regradeProblemSetProgrammingSubmissionMutationOptions,
   regradeProblemSetProgrammingSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionProgramming';
+} from '../../../../../../../../modules/queries/problemSetSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 import { ProblemSubmissionsTable } from '../ProblemSubmissionsTable/ProblemSubmissionsTable';

@@ -12,7 +12,7 @@ import {
   contestProgrammingSubmissionsQueryOptions,
   regradeProgrammingSubmissionMutationOptions,
   regradeProgrammingSubmissionsMutationOptions,
-} from '../../../../../../../modules/queries/contestSubmissionProgramming';
+} from '../../../../../../../modules/queries/contestSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 

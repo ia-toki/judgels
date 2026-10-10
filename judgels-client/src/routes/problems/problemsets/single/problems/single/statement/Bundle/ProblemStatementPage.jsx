@@ -9,7 +9,7 @@ import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/qu
 import {
   createProblemSetBundleItemSubmissionMutationOptions,
   problemSetBundleLatestSubmissionsQueryOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
+} from '../../../../../../../../modules/queries/problemSetItemSubmission';
 
 export default function ProblemStatementPage(props) {
   const { problemSetSlug } = useParams({ strict: false });

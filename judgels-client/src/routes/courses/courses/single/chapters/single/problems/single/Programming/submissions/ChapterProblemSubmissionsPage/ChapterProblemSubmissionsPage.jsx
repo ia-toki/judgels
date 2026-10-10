@@ -11,7 +11,7 @@ import {
   chapterProgrammingSubmissionsQueryOptions,
   regradeChapterProgrammingSubmissionMutationOptions,
   regradeChapterProgrammingSubmissionsMutationOptions,
-} from '../../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
+} from '../../../../../../../../../../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,

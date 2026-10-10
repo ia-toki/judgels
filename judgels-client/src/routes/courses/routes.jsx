@@ -2,17 +2,17 @@ import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router'
 
 import { retryImport } from '../../lazy';
 import { ProblemType } from '../../modules/api/problem';
+import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterItemSubmission';
 import { chapterLessonStatementQueryOptions, chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemWorksheetQueryOptions, chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
-import { chapterBundleLatestSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionBundle';
-import { chapterProgrammingSubmissionsQueryOptions } from '../../modules/queries/chapterSubmissionProgramming';
+import { chapterProgrammingSubmissionsQueryOptions } from '../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
   coursesQueryOptions,
 } from '../../modules/queries/course';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';

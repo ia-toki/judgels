@@ -16,7 +16,7 @@ import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/
 import {
   contestBundleSubmissionsQueryOptions,
   regradeBundleSubmissionsMutationOptions,
-} from '../../../../../../../modules/queries/contestSubmissionBundle';
+} from '../../../../../../../modules/queries/contestItemSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';

@@ -13,6 +13,11 @@ import { contestClarificationsQueryOptions } from '../../modules/queries/contest
 import { contestContestantsQueryOptions } from '../../modules/queries/contestContestant';
 import { contestEditorialQueryOptions } from '../../modules/queries/contestEditorial';
 import { contestFilesQueryOptions } from '../../modules/queries/contestFile';
+import {
+  contestBundleLatestSubmissionsQueryOptions,
+  contestBundleSubmissionSummaryQueryOptions,
+  contestBundleSubmissionsQueryOptions,
+} from '../../modules/queries/contestItemSubmission';
 import { contestLogsQueryOptions } from '../../modules/queries/contestLog';
 import { contestManagersQueryOptions } from '../../modules/queries/contestManager';
 import {
@@ -22,14 +27,9 @@ import {
 } from '../../modules/queries/contestProblem';
 import { contestScoreboardQueryOptions } from '../../modules/queries/contestScoreboard';
 import {
-  contestBundleLatestSubmissionsQueryOptions,
-  contestBundleSubmissionSummaryQueryOptions,
-  contestBundleSubmissionsQueryOptions,
-} from '../../modules/queries/contestSubmissionBundle';
-import {
   contestProgrammingSubmissionsQueryOptions,
   contestSubmissionWithSourceQueryOptions,
-} from '../../modules/queries/contestSubmissionProgramming';
+} from '../../modules/queries/contestSubmission';
 import { contestSupervisorsQueryOptions } from '../../modules/queries/contestSupervisor';
 import { contestWebConfigQueryOptions } from '../../modules/queries/contestWeb';
 import { queryClient } from '../../modules/queryClient';

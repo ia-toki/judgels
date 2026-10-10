@@ -4,10 +4,7 @@ import { useLocation } from '@tanstack/react-router';
 import CursorPagination from '../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
-import {
-  regradeSubmissionMutationOptions,
-  submissionsQueryOptions,
-} from '../../../modules/queries/trainingSubmissionProgramming';
+import { regradeSubmissionMutationOptions, submissionsQueryOptions } from '../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../modules/session';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 

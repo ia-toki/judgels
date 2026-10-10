@@ -8,7 +8,7 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
-import { chapterBundleSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/chapterSubmissionBundle';
+import { chapterBundleSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/chapterItemSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,

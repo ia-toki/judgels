@@ -15,10 +15,10 @@ import {
   problemSetBundleLatestSubmissionsQueryOptions,
   problemSetBundleSubmissionSummaryQueryOptions,
   problemSetBundleSubmissionsQueryOptions,
-} from '../../modules/queries/problemSetSubmissionBundle';
-import { problemSetProgrammingSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmissionProgramming';
+} from '../../modules/queries/problemSetItemSubmission';
+import { problemSetProgrammingSubmissionsQueryOptions } from '../../modules/queries/problemSetSubmission';
 import { problemTagsQueryOptions, problemsQueryOptions } from '../../modules/queries/trainingProblem';
-import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmissionProgramming';
+import { submissionWithSourceQueryOptions } from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
 import { getUser } from '../../modules/session';
 import { getWebPrefs } from '../../modules/webPrefs';

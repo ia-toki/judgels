@@ -8,7 +8,7 @@ import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/
 import {
   contestBundleSubmissionSummaryQueryOptions,
   regradeBundleSubmissionsMutationOptions,
-} from '../../../../../../../modules/queries/contestSubmissionBundle';
+} from '../../../../../../../modules/queries/contestItemSubmission';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';

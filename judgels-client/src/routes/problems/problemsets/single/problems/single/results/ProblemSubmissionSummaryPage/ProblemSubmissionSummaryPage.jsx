@@ -13,7 +13,7 @@ import {
 import {
   problemSetBundleSubmissionSummaryQueryOptions,
   regradeProblemSetBundleSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetSubmissionBundle';
+} from '../../../../../../../../modules/queries/problemSetItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 

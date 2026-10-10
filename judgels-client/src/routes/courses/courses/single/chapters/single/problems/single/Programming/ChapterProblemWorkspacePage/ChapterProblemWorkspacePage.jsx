@@ -8,7 +8,7 @@ import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
 import { trainingSubmissionAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
-import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmissionProgramming';
+import { createChapterProgrammingSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmission';
 import {
   courseBySlugQueryOptions,
   courseChapterQueryOptions,

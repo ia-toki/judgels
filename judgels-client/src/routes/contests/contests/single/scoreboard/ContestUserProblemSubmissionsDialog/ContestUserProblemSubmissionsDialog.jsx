@@ -11,7 +11,7 @@ import { contestBySlugQueryOptions } from '../../../../../../modules/queries/con
 import {
   contestSubmissionWithSourceQueryOptions,
   contestUserProblemSubmissionsQueryOptions,
-} from '../../../../../../modules/queries/contestSubmissionProgramming';
+} from '../../../../../../modules/queries/contestSubmission';
 import { queryClient } from '../../../../../../modules/queryClient';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
 
