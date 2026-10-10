@@ -19,7 +19,7 @@ import {
   problemStatementQueryOptions,
   updateProblemStatementMutationOptions,
 } from '../../../../modules/queries/problemStatement';
-import ProblemStatementEditForm from '../ProblemStatementEditForm/ProblemStatementEditForm';
+import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -119,11 +119,7 @@ export default function ProblemStatementPage() {
     }
     if (isEditing) {
       return (
-        <ProblemStatementEditForm
-          initialValues={statement}
-          onSubmit={updateStatement}
-          onCancel={() => setIsEditing(false)}
-        />
+        <StatementEditForm initialValues={statement} onSubmit={updateStatement} onCancel={() => setIsEditing(false)} />
       );
     }
     return renderPreview();

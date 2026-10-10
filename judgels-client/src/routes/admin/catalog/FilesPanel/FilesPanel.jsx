@@ -6,14 +6,14 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
-import ProblemFileUploadForm from '../ProblemFileUploadForm/ProblemFileUploadForm';
+import FileUploadForm from '../FileUploadForm/FileUploadForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 const ALL_FILES = Symbol('all files');
 
-// One directory of a problem's files: its listing, with upload, download and delete.
-export default function ProblemFilesPanel({
+// One directory of a problem's or a lesson's files: its listing, with upload, download and delete.
+export default function FilesPanel({
   title,
   description,
   noun,
@@ -134,7 +134,7 @@ export default function ProblemFilesPanel({
           <small>{description}</small>
         </p>
       )}
-      {canEdit && <ProblemFileUploadForm onSubmit={uploadFile} />}
+      {canEdit && <FileUploadForm onSubmit={uploadFile} />}
       {renderFiles()}
       <Alert
         isOpen={deleteTarget !== undefined}

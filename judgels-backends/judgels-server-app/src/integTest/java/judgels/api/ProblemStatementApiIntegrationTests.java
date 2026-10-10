@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
-import judgels.api.catalog.problem.ProblemFile;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.statement.ProblemStatementLanguagesResponse;
 import judgels.client.ProblemClient;
@@ -111,7 +111,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
                 zip(Map.of("sample.in", "1 2", "sample.out", "3"))));
 
         assertThat(statementClient.getStatementMediaFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("figure.png", "sample.in", "sample.out");
 
         try (var response = statementClient.downloadStatementMediaFile(adminToken, problemJid, "figure.png")) {
@@ -123,7 +123,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
 
         statementClient.deleteStatementMediaFile(adminToken, problemJid, "sample.in");
         assertThat(statementClient.getStatementMediaFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("figure.png", "sample.out");
 
         statementClient.deleteStatementMediaFiles(adminToken, problemJid);

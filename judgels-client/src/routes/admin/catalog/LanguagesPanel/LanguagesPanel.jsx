@@ -7,8 +7,8 @@ import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-// The languages a problem's statement or editorial is written in: their listing, with add, enable, disable and make default.
-export default function ProblemLanguagesPanel({
+// The languages a statement or an editorial is written in: their listing, with add, enable, disable and make default.
+export default function LanguagesPanel({
   enabledLanguages,
   disabledLanguages,
   defaultLanguage,

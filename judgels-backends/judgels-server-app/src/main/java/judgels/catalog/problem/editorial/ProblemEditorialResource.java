@@ -25,10 +25,10 @@ import judgels.api.catalog.problem.ProblemEditorial;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
 import judgels.api.catalog.problem.editorial.ProblemEditorialMediaFilesResponse;
+import judgels.catalog.CatalogFiles;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.catalog.problem.ProblemAccessChecker;
-import judgels.catalog.problem.ProblemFiles;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.api.AuthHeader;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -191,7 +191,7 @@ public class ProblemEditorialResource {
         String actorJid = checkCanView(authHeader, problemJid);
 
         return new ProblemEditorialMediaFilesResponse.Builder()
-                .data(ProblemFiles.fromFileInfos(editorialStore.getEditorialMediaFiles(actorJid, problemJid)))
+                .data(CatalogFiles.fromFileInfos(editorialStore.getEditorialMediaFiles(actorJid, problemJid)))
                 .build();
     }
 
@@ -210,7 +210,7 @@ public class ProblemEditorialResource {
         if (fileStream == null) {
             throw new BadRequestException();
         }
-        ProblemFiles.checkFilename(fileDetails.getFileName());
+        CatalogFiles.checkFilename(fileDetails.getFileName());
 
         editorialStore.uploadEditorialMediaFile(actorJid, problemJid, fileStream, fileDetails.getFileName());
     }
@@ -242,7 +242,7 @@ public class ProblemEditorialResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanView(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         String mediaUrl = editorialStore.getEditorialMediaFileURL(actorJid, problemJid, filename);
         return JudgelsResponseBuilders.buildDownloadResponse(mediaUrl);
@@ -257,7 +257,7 @@ public class ProblemEditorialResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanEdit(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         editorialStore.deleteEditorialMediaFile(actorJid, problemJid, filename);
     }

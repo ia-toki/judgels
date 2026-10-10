@@ -9,7 +9,7 @@ import {
   makeProblemStatementLanguageDefaultMutationOptions,
   problemStatementLanguagesQueryOptions,
 } from '../../../../modules/queries/problemStatement';
-import ProblemLanguagesPanel from '../ProblemLanguagesPanel/ProblemLanguagesPanel';
+import LanguagesPanel from '../../catalog/LanguagesPanel/LanguagesPanel';
 
 export default function ProblemStatementLanguagesPage() {
   const { problemJid } = useParams({ strict: false });
@@ -28,7 +28,7 @@ export default function ProblemStatementLanguagesPage() {
   const makeLanguageDefaultMutation = useMutation(makeProblemStatementLanguageDefaultMutationOptions(problemJid));
 
   return (
-    <ProblemLanguagesPanel
+    <LanguagesPanel
       enabledLanguages={enabledLanguages}
       disabledLanguages={disabledLanguages}
       defaultLanguage={defaultLanguage}

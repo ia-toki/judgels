@@ -11,7 +11,7 @@ import {
   uploadProblemEditorialMediaZipMutationOptions,
 } from '../../../../modules/queries/problemEditorial';
 import { getToken } from '../../../../modules/session';
-import ProblemFilesPanel from '../ProblemFilesPanel/ProblemFilesPanel';
+import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function ProblemEditorialMediaPage() {
   const { problemJid } = useParams({ strict: false });
@@ -30,7 +30,7 @@ export default function ProblemEditorialMediaPage() {
   const deleteFilesMutation = useMutation(deleteProblemEditorialMediaFilesMutationOptions(problemJid));
 
   return (
-    <ProblemFilesPanel
+    <FilesPanel
       title="Media"
       description={
         <>

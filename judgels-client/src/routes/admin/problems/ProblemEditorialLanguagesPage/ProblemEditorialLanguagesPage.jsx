@@ -9,7 +9,7 @@ import {
   makeProblemEditorialLanguageDefaultMutationOptions,
   problemEditorialLanguagesQueryOptions,
 } from '../../../../modules/queries/problemEditorial';
-import ProblemLanguagesPanel from '../ProblemLanguagesPanel/ProblemLanguagesPanel';
+import LanguagesPanel from '../../catalog/LanguagesPanel/LanguagesPanel';
 
 export default function ProblemEditorialLanguagesPage() {
   const { problemJid } = useParams({ strict: false });
@@ -28,7 +28,7 @@ export default function ProblemEditorialLanguagesPage() {
   const makeLanguageDefaultMutation = useMutation(makeProblemEditorialLanguageDefaultMutationOptions(problemJid));
 
   return (
-    <ProblemLanguagesPanel
+    <LanguagesPanel
       enabledLanguages={enabledLanguages}
       disabledLanguages={disabledLanguages}
       defaultLanguage={defaultLanguage}

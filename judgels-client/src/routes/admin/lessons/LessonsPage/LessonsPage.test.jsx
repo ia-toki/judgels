@@ -12,6 +12,9 @@ describe('LessonsPage', () => {
   });
 
   const renderComponent = async ({
+    role = { training: 'ADMIN' },
+    initialEntry = '/admin/lessons',
+    lessonsQuery = true,
     lessons = [
       { jid: 'JIDLESS1', id: 1, slug: 'lesson-1', authorJid: 'JIDUSER1' },
       { jid: 'JIDLESS2', id: 2, slug: 'lesson-2', authorJid: 'JIDUSER2' },
@@ -21,9 +24,11 @@ describe('LessonsPage', () => {
       JIDUSER2: { username: 'user2' },
     },
   } = {}) => {
+    nockApi().get('/v2/user-web/config').reply(200, { role });
+
     nockApi()
       .get('/v4/lessons')
-      .query(true)
+      .query(lessonsQuery)
       .reply(200, {
         data: { page: lessons, totalCount: lessons.length },
         profilesMap,
@@ -32,7 +37,7 @@ describe('LessonsPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/lessons']}>
+          <TestRouter initialEntries={[initialEntry]}>
             <LessonsPage />
           </TestRouter>
         </QueryClientProviderWrapper>
@@ -59,5 +64,34 @@ describe('LessonsPage', () => {
           .map(cell => cell.textContent)
       )
     ).toEqual([[], ['1', 'lesson-1', 'user1'], ['2', 'lesson-2', 'user2']]);
+  });
+
+  test('links each lesson to its page', async () => {
+    await renderComponent();
+
+    const link = await screen.findByRole('link', { name: 'lesson-1' });
+    expect(link).toHaveAttribute('href', '/admin/lessons/JIDLESS1');
+  });
+
+  test('passes the search term to the query', async () => {
+    await renderComponent({
+      initialEntry: '/admin/lessons?term=tree&page=2',
+      lessonsQuery: { term: 'tree', page: '2' },
+    });
+
+    expect(await screen.findByText('lesson-1')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toHaveValue('tree');
+  });
+
+  test('shows the create button to training admins only', async () => {
+    await renderComponent();
+    expect(await screen.findByRole('button', { name: /new lesson/i })).toBeInTheDocument();
+  });
+
+  test('hides the create button from other users', async () => {
+    await renderComponent({ role: {} });
+
+    expect(await screen.findByText('lesson-1')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /new lesson/i })).not.toBeInTheDocument();
   });
 });

@@ -11,7 +11,7 @@ import {
   uploadProblemGradingHelperZipMutationOptions,
 } from '../../../../modules/queries/problemGrading';
 import { getToken } from '../../../../modules/session';
-import ProblemFilesPanel from '../ProblemFilesPanel/ProblemFilesPanel';
+import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function ProblemGradingHelpersPage() {
   const { problemJid } = useParams({ strict: false });
@@ -30,7 +30,7 @@ export default function ProblemGradingHelpersPage() {
   const deleteFilesMutation = useMutation(deleteProblemGradingHelperFilesMutationOptions(problemJid));
 
   return (
-    <ProblemFilesPanel
+    <FilesPanel
       title="Helpers"
       description="The source files that the grading config uses as a custom scorer or a communicator."
       noun="helper"

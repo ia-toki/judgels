@@ -11,7 +11,7 @@ import {
   uploadProblemStatementMediaZipMutationOptions,
 } from '../../../../modules/queries/problemStatement';
 import { getToken } from '../../../../modules/session';
-import ProblemFilesPanel from '../ProblemFilesPanel/ProblemFilesPanel';
+import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function ProblemStatementMediaPage() {
   const { problemJid } = useParams({ strict: false });
@@ -30,7 +30,7 @@ export default function ProblemStatementMediaPage() {
   const deleteFilesMutation = useMutation(deleteProblemStatementMediaFilesMutationOptions(problemJid));
 
   return (
-    <ProblemFilesPanel
+    <FilesPanel
       title="Media"
       description={
         <>

@@ -27,8 +27,8 @@ import judgels.api.catalog.problem.ProblemType;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingConfig;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingEngineUpdateData;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingFilesResponse;
+import judgels.catalog.CatalogFiles;
 import judgels.catalog.problem.ProblemAccessChecker;
-import judgels.catalog.problem.ProblemFiles;
 import judgels.catalog.problem.ProblemStore;
 import judgels.catalog.problem.programming.ProgrammingProblemStore;
 import judgels.core.JudgelsResponseBuilders;
@@ -146,7 +146,7 @@ public class ProblemGradingResource {
         String actorJid = checkCanView(authHeader, problemJid);
 
         return new ProblemGradingFilesResponse.Builder()
-                .data(ProblemFiles.fromFileInfos(programmingProblemStore.getGradingTestDataFiles(actorJid, problemJid)))
+                .data(CatalogFiles.fromFileInfos(programmingProblemStore.getGradingTestDataFiles(actorJid, problemJid)))
                 .build();
     }
 
@@ -165,7 +165,7 @@ public class ProblemGradingResource {
         if (fileStream == null) {
             throw new BadRequestException();
         }
-        ProblemFiles.checkFilename(fileDetails.getFileName());
+        CatalogFiles.checkFilename(fileDetails.getFileName());
 
         programmingProblemStore.uploadGradingTestDataFile(actorJid, problemJid, fileStream, fileDetails.getFileName());
     }
@@ -197,7 +197,7 @@ public class ProblemGradingResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanView(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         String fileUrl = programmingProblemStore.getGradingTestDataFileURL(actorJid, problemJid, filename);
         return JudgelsResponseBuilders.buildDownloadResponse(fileUrl);
@@ -212,7 +212,7 @@ public class ProblemGradingResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanEdit(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         programmingProblemStore.deleteGradingTestDataFile(actorJid, problemJid, filename);
     }
@@ -240,7 +240,7 @@ public class ProblemGradingResource {
         String actorJid = checkCanView(authHeader, problemJid);
 
         return new ProblemGradingFilesResponse.Builder()
-                .data(ProblemFiles.fromFileInfos(programmingProblemStore.getGradingHelperFiles(actorJid, problemJid)))
+                .data(CatalogFiles.fromFileInfos(programmingProblemStore.getGradingHelperFiles(actorJid, problemJid)))
                 .build();
     }
 
@@ -259,7 +259,7 @@ public class ProblemGradingResource {
         if (fileStream == null) {
             throw new BadRequestException();
         }
-        ProblemFiles.checkFilename(fileDetails.getFileName());
+        CatalogFiles.checkFilename(fileDetails.getFileName());
 
         programmingProblemStore.uploadGradingHelperFile(actorJid, problemJid, fileStream, fileDetails.getFileName());
     }
@@ -291,7 +291,7 @@ public class ProblemGradingResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanView(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         String fileUrl = programmingProblemStore.getGradingHelperFileURL(actorJid, problemJid, filename);
         return JudgelsResponseBuilders.buildDownloadResponse(fileUrl);
@@ -306,7 +306,7 @@ public class ProblemGradingResource {
             @PathParam("filename") String filename) {
 
         String actorJid = checkCanEdit(authHeader, problemJid);
-        ProblemFiles.checkFilename(filename);
+        CatalogFiles.checkFilename(filename);
 
         programmingProblemStore.deleteGradingHelperFile(actorJid, problemJid, filename);
     }

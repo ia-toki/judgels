@@ -11,7 +11,7 @@ import {
   uploadProblemGradingTestDataZipMutationOptions,
 } from '../../../../modules/queries/problemGrading';
 import { getToken } from '../../../../modules/session';
-import ProblemFilesPanel from '../ProblemFilesPanel/ProblemFilesPanel';
+import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function ProblemGradingTestDataPage() {
   const { problemJid } = useParams({ strict: false });
@@ -30,7 +30,7 @@ export default function ProblemGradingTestDataPage() {
   const deleteFilesMutation = useMutation(deleteProblemGradingTestDataFilesMutationOptions(problemJid));
 
   return (
-    <ProblemFilesPanel
+    <FilesPanel
       title="Test data"
       description="The input and output files that the grading config assigns to test cases."
       noun="test data"

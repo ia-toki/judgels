@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import judgels.api.catalog.lesson.Lesson;
+import judgels.api.catalog.lesson.LessonCreateData;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemCreateData;
 import judgels.api.catalog.problem.ProblemStatement;
@@ -43,6 +44,7 @@ import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
+import judgels.client.LessonClient;
 import judgels.client.ProblemClient;
 import judgels.client.ProblemEditorialClient;
 import judgels.client.ProblemItemClient;
@@ -360,6 +362,16 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
     }
 
     protected static Lesson createLesson(String token, String slug) {
+        return createClient(LessonClient.class).createLesson(token, new LessonCreateData.Builder()
+                .slug(slug)
+                .additionalNote("")
+                .initialLanguage("en-US")
+                .build());
+    }
+
+    // Only a training admin can create a lesson through the API.
+    // This goes through michael instead, for tests whose author must not be one.
+    protected static Lesson createLessonViaMichael(String token, String slug) {
         Form form = new Form();
         form.param("slug", slug);
         form.param("additionalNote", "");

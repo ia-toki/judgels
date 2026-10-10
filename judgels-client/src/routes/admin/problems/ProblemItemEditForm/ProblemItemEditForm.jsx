@@ -12,7 +12,7 @@ import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTe
 import { getIntent } from '../../../../components/forms/meta';
 import { Required, composeValidators } from '../../../../components/forms/validations';
 import { ItemType } from '../../../../modules/api/problemBundle';
-import { ProblemStatementManual } from '../ProblemStatementManual/ProblemStatementManual';
+import { StatementManual } from '../../catalog/StatementManual/StatementManual';
 
 import './ProblemItemEditForm.scss';
 
@@ -201,7 +201,7 @@ export default function ProblemItemEditForm({ item, onSubmit }) {
                 onChange={e => setIsSourceMode(e.target.checked)}
                 style={{ marginBottom: 0 }}
               />
-              <ProblemStatementManual />
+              <StatementManual />
             </Flex>
             {isSourceMode ? (
               <Field component={FormAceEditor} name={statementField.name} />

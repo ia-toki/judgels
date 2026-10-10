@@ -14,8 +14,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import judgels.BaseJudgelsApiIntegrationTests;
+import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
-import judgels.api.catalog.problem.ProblemFile;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingConfig;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingEngineUpdateData;
 import judgels.client.ProblemClient;
@@ -122,7 +122,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 zip(Map.of("1.out", "OUTPUT", "2.in", "INPUT"))));
 
         assertThat(gradingClient.getGradingTestDataFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("1.in", "1.out", "2.in");
         assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
 
@@ -135,7 +135,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         gradingClient.deleteGradingTestDataFile(adminToken, problemJid, "2.in");
         assertThat(gradingClient.getGradingTestDataFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("1.in", "1.out");
 
         gradingClient.deleteGradingTestDataFiles(adminToken, problemJid);
@@ -164,7 +164,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 zip(Map.of("communicator.cpp", "COMMUNICATOR"))));
 
         assertThat(gradingClient.getGradingHelperFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("communicator.cpp", "scorer.cpp");
 
         try (var response = gradingClient.downloadGradingHelperFile(adminToken, problemJid, "scorer.cpp")) {
@@ -174,7 +174,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         gradingClient.deleteGradingHelperFile(adminToken, problemJid, "communicator.cpp");
         assertThat(gradingClient.getGradingHelperFiles(adminToken, problemJid).getData())
-                .extracting(ProblemFile::getName)
+                .extracting(CatalogFile::getName)
                 .containsExactly("scorer.cpp");
 
         gradingClient.deleteGradingHelperFiles(adminToken, problemJid);

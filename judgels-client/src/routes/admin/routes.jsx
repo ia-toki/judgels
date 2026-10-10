@@ -9,6 +9,11 @@ import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProble
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
+import { lessonQueryOptions } from '../../modules/queries/lesson';
+import {
+  lessonStatementLanguagesQueryOptions,
+  lessonStatementMediaFilesQueryOptions,
+} from '../../modules/queries/lessonStatement';
 import { problemQueryOptions } from '../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
@@ -378,6 +383,60 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonsPage/LessonsPage'))),
   });
 
+  const adminLessonRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'lessons/$lessonJid',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonLayout/LessonLayout'))),
+    loader: async ({ params: { lessonJid } }) => {
+      await queryClient.ensureQueryData(lessonQueryOptions(lessonJid));
+    },
+  });
+
+  const adminLessonIndexRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: '/',
+    beforeLoad: ({ params }) => {
+      throw redirect({ to: '/admin/lessons/$lessonJid/general', params, replace: true });
+    },
+  });
+
+  const adminLessonGeneralRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: 'general',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonGeneralPage/LessonGeneralPage'))),
+  });
+
+  const adminLessonStatementRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: 'statements',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonStatementPage/LessonStatementPage'))),
+    loader: async ({ params: { lessonJid } }) => {
+      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lessonJid));
+    },
+  });
+
+  const adminLessonStatementLanguagesRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: 'languages',
+    component: lazyRouteComponent(
+      retryImport(() => import('./lessons/LessonStatementLanguagesPage/LessonStatementLanguagesPage'))
+    ),
+    loader: async ({ params: { lessonJid } }) => {
+      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lessonJid));
+    },
+  });
+
+  const adminLessonStatementMediaRoute = createRoute({
+    getParentRoute: () => adminLessonRoute,
+    path: 'media',
+    component: lazyRouteComponent(
+      retryImport(() => import('./lessons/LessonStatementMediaPage/LessonStatementMediaPage'))
+    ),
+    loader: async ({ params: { lessonJid } }) => {
+      await queryClient.ensureQueryData(lessonStatementMediaFilesQueryOptions(lessonJid));
+    },
+  });
+
   const adminSettingsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'settings',
@@ -426,6 +485,13 @@ export const createAdminRoutes = appRoute => {
       ]),
     ]),
     adminLessonsRoute,
+    adminLessonRoute.addChildren([
+      adminLessonIndexRoute,
+      adminLessonGeneralRoute,
+      adminLessonStatementRoute,
+      adminLessonStatementLanguagesRoute,
+      adminLessonStatementMediaRoute,
+    ]),
     adminSettingsRoute,
   ]);
 };
