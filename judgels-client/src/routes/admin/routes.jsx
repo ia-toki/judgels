@@ -12,6 +12,10 @@ import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
 import { problemQueryOptions } from '../../modules/queries/problem';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
+import {
+  problemStatementLanguagesQueryOptions,
+  problemStatementMediaFilesQueryOptions,
+} from '../../modules/queries/problemStatement';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
@@ -178,6 +182,37 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemGeneralPage/ProblemGeneralPage'))),
   });
 
+  const adminProblemStatementRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'statements',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemStatementPage/ProblemStatementPage'))),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemStatementLanguagesRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'languages',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemStatementLanguagesPage/ProblemStatementLanguagesPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    },
+  });
+
+  const adminProblemStatementMediaRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'media',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemStatementMediaPage/ProblemStatementMediaPage'))
+    ),
+    loader: async ({ params: { problemJid } }) => {
+      await queryClient.ensureQueryData(problemStatementMediaFilesQueryOptions(problemJid));
+    },
+  });
+
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
@@ -208,7 +243,13 @@ export const createAdminRoutes = appRoute => {
     adminProblemSetsRoute,
     adminProblemSetRoute,
     adminProblemsRoute,
-    adminProblemRoute.addChildren([adminProblemIndexRoute, adminProblemGeneralRoute]),
+    adminProblemRoute.addChildren([
+      adminProblemIndexRoute,
+      adminProblemGeneralRoute,
+      adminProblemStatementRoute,
+      adminProblemStatementLanguagesRoute,
+      adminProblemStatementMediaRoute,
+    ]),
     adminLessonsRoute,
     adminSettingsRoute,
   ]);

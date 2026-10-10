@@ -6,7 +6,7 @@ import { FormTextArea } from '../../../../components/forms/FormTextArea/FormText
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { languageDisplayNamesMap, sortLanguagesByName } from '../../../../modules/api/language';
+import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 const gradingEngineOptionNamesMap = { ...gradingEngineNamesMap, Bundle: 'Bundle' };
@@ -40,8 +40,8 @@ export default function ProblemCreateForm({ onSubmit, renderFormComponents }) {
   const initialLanguageField = {
     name: 'initialLanguage',
     label: 'Initial language',
-    optionValues: sortLanguagesByName(Object.keys(languageDisplayNamesMap)),
-    optionNamesMap: languageDisplayNamesMap,
+    optionValues: Object.keys(worldLanguageNamesMap),
+    optionNamesMap: worldLanguageNamesMap,
   };
 
   const fields = (

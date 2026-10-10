@@ -74,7 +74,7 @@ export async function postMultipart(url, token, parts) {
   return request('POST', url, token, {}, body);
 }
 
-export async function download(url, token) {
+export async function download(url, token, filename) {
   const authHeader = token ? { Authorization: `Bearer ${token}` } : {};
   const init = {
     method: 'GET',
@@ -82,14 +82,13 @@ export async function download(url, token) {
   };
 
   const res = await fetch(url, init);
-  const filename = res.headers.get('Content-Disposition').match(/filename=(["']?)(.+)\1/i)[2];
 
   const blob = await res.blob();
   const objUrl = window.URL.createObjectURL(blob);
 
   let link = document.createElement('a');
   link.href = objUrl;
-  link.download = filename;
+  link.download = filename || res.headers.get('Content-Disposition').match(/filename=(["']?)(.+)\1/i)[2];
   link.click();
 
   setTimeout(() => {
