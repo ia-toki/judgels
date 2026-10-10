@@ -16,3 +16,11 @@ export function isInteractive(engine) {
 export function isOutputOnly(engine) {
   return engine.startsWith('OutputOnly');
 }
+
+export function isFunctional(engine) {
+  return engine.startsWith('Functional');
+}
+
+export function hasSubtasks(engine) {
+  return engine.endsWith('WithSubtasks');
+}

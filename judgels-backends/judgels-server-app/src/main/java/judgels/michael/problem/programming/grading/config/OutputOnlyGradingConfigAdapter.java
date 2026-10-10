@@ -2,7 +2,6 @@ package judgels.michael.problem.programming.grading.config;
 
 import java.util.List;
 import java.util.Optional;
-import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.TestGroup;
 import judgels.grading.engines.outputonly.OutputOnlyGradingConfig;
@@ -27,14 +26,6 @@ public class OutputOnlyGradingConfigAdapter extends BaseGradingConfigAdapter {
         return new OutputOnlyGradingConfig.Builder()
                 .testData(testDataPart)
                 .customScorer(customScorerPart)
-                .build();
-    }
-
-    @Override
-    public GradingConfig autoPopulateTestData(GradingConfig config, List<FileInfo> testDataFiles) {
-        return new OutputOnlyGradingConfig.Builder()
-                .from(config)
-                .testData(autoPopulateTestDataByFilename(testDataFiles))
                 .build();
     }
 }

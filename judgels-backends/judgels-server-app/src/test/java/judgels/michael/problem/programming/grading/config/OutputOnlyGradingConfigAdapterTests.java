@@ -5,15 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
-import java.util.List;
-import judgels.core.fs.FileInfo;
 import judgels.grading.api.TestCase;
 import judgels.grading.api.TestGroup;
 import judgels.grading.engines.outputonly.OutputOnlyGradingConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapterTests {
+public class OutputOnlyGradingConfigAdapterTests {
     private OutputOnlyGradingConfigAdapter adapter;
 
     @BeforeEach
@@ -58,30 +56,5 @@ public class OutputOnlyGradingConfigAdapterTests extends BaseGradingConfigAdapte
 
         assertThat(adapter.buildConfigFromForm(form)).isEqualTo(config);
         assertThat(adapter.buildConfigFromForm(adapter.buildFormFromConfig(config))).isEqualTo(config);
-    }
-
-    @Test
-    void test_auto_population() {
-        OutputOnlyGradingConfig config = new OutputOnlyGradingConfig.Builder().build();
-
-        List<FileInfo> testDataFiles = ImmutableList.of(
-                createFile("hello_sample_1.in"),
-                createFile("hello_sample_1.out"),
-                createFile("hello_1.in"),
-                createFile("hello_1.out"),
-                createFile("hello_2.in"),
-                createFile("hello_2.out"),
-                createFile("hello_bogus.txt"));
-
-        OutputOnlyGradingConfig populatedConfig = (OutputOnlyGradingConfig) adapter.autoPopulateTestData(config, testDataFiles);
-        assertThat(populatedConfig).isEqualTo(new OutputOnlyGradingConfig.Builder()
-                .from(config)
-                .testData(ImmutableList.of(
-                        TestGroup.of(0, ImmutableList.of(
-                                TestCase.of("hello_sample_1.in", "hello_sample_1.out", ImmutableSet.of(0)))),
-                        TestGroup.of(-1, ImmutableList.of(
-                                TestCase.of("hello_1.in", "hello_1.out", ImmutableSet.of(-1)),
-                                TestCase.of("hello_2.in", "hello_2.out", ImmutableSet.of(-1))))))
-                .build());
     }
 }

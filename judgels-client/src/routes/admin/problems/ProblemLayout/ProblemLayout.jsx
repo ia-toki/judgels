@@ -4,6 +4,7 @@ import { Outlet, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
+import { ProblemType } from '../../../../modules/api/problem';
 import { problemQueryOptions } from '../../../../modules/queries/problem';
 
 export default function ProblemLayout() {
@@ -29,6 +30,11 @@ export default function ProblemLayout() {
     {
       path: 'media',
       title: 'Media',
+    },
+    {
+      path: 'grading',
+      title: 'Grading',
+      disabled: problem.type !== ProblemType.Programming,
     },
   ];
 

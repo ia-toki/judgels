@@ -19,6 +19,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
 import judgels.api.catalog.problem.Problem;
+import judgels.catalog.problem.programming.grading.GradingConfigAutoPopulator;
+import judgels.catalog.problem.programming.grading.GradingConfigAutoPopulatorRegistry;
 import judgels.core.JudgelsResponseBuilders;
 import judgels.core.fs.FileInfo;
 import judgels.grading.api.GradingConfig;
@@ -145,8 +147,8 @@ public class ProgrammingProblemGradingResource extends BaseProgrammingProblemRes
 
         problemStore.createUserCloneIfNotExists(actor.getUserJid(), problem.getJid());
 
-        GradingConfigAdapter adapter = GradingConfigAdapterRegistry.getInstance().get(engine);
-        GradingConfig newConfig = adapter.autoPopulateTestData(config, testDataFiles);
+        GradingConfigAutoPopulator autoPopulator = GradingConfigAutoPopulatorRegistry.getInstance().get(engine);
+        GradingConfig newConfig = autoPopulator.autoPopulateTestData(config, testDataFiles);
 
         programmingProblemStore.updateGradingConfig(actor.getUserJid(), problem.getJid(), newConfig);
 

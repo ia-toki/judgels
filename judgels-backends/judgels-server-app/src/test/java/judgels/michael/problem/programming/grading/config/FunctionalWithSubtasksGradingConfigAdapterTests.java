@@ -5,16 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import judgels.core.fs.FileInfo;
 import judgels.grading.api.TestCase;
 import judgels.grading.api.TestGroup;
 import judgels.grading.engines.functional.FunctionalWithSubtasksGradingConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FunctionalWithSubtasksGradingConfigAdapterTests extends BaseGradingConfigAdapterTests {
+public class FunctionalWithSubtasksGradingConfigAdapterTests {
     private FunctionalWithSubtasksGradingConfigAdapter adapter;
 
     @BeforeEach
@@ -85,70 +82,5 @@ public class FunctionalWithSubtasksGradingConfigAdapterTests extends BaseGrading
 
         assertThat(adapter.buildConfigFromForm(form)).isEqualTo(config);
         assertThat(adapter.buildConfigFromForm(adapter.buildFormFromConfig(config))).isEqualTo(config);
-    }
-
-    @Test
-    void test_auto_population() {
-        FunctionalWithSubtasksGradingConfig config = new FunctionalWithSubtasksGradingConfig.Builder()
-                .timeLimit(2000)
-                .memoryLimit(65536)
-                .sourceFileFieldKeys(ImmutableList.of("encoder", "decoder"))
-                .subtaskPoints(ImmutableList.of(30, 70))
-                .build();
-
-        List<FileInfo> testDataFiles = ImmutableList.of(
-                createFile("hello_sample_1.in"),
-                createFile("hello_sample_1.out"),
-                createFile("hello_1_1.in"),
-                createFile("hello_1_1.out"),
-                createFile("hello_1_2.in"),
-                createFile("hello_1_2.out"),
-                createFile("hello_2_1.in"),
-                createFile("hello_2_1.out"),
-                createFile("hello_bogus.txt"));
-
-        FunctionalWithSubtasksGradingConfig populatedConfig = (FunctionalWithSubtasksGradingConfig) adapter.autoPopulateTestData(config, testDataFiles);
-        assertThat(populatedConfig).isEqualTo(new FunctionalWithSubtasksGradingConfig.Builder()
-                .from(config)
-                .testData(ImmutableList.of(
-                        TestGroup.of(0, ImmutableList.of(
-                                TestCase.of("hello_sample_1.in", "hello_sample_1.out", ImmutableSet.of(0)))),
-                        TestGroup.of(1, ImmutableList.of(
-                                TestCase.of("hello_1_1.in", "hello_1_1.out", ImmutableSet.of(1, 2)),
-                                TestCase.of("hello_1_2.in", "hello_1_2.out", ImmutableSet.of(1, 2)))),
-                        TestGroup.of(2, ImmutableList.of(
-                                TestCase.of("hello_2_1.in", "hello_2_1.out", ImmutableSet.of(2))))))
-                .build());
-    }
-
-    @Test
-    void test_auto_population_single_subtask() {
-        FunctionalWithSubtasksGradingConfig config = new FunctionalWithSubtasksGradingConfig.Builder()
-                .timeLimit(2000)
-                .memoryLimit(65536)
-                .sourceFileFieldKeys(List.of("encoder", "decoder"))
-                .subtaskPoints(List.of(30, 70))
-                .build();
-
-        List<FileInfo> testDataFiles = List.of(
-                createFile("hello_sample_1.in"),
-                createFile("hello_sample_1.out"),
-                createFile("hello_1.in"),
-                createFile("hello_1.out"),
-                createFile("hello_2.in"),
-                createFile("hello_2.out"),
-                createFile("hello_bogus.txt"));
-
-        FunctionalWithSubtasksGradingConfig populatedConfig = (FunctionalWithSubtasksGradingConfig) adapter.autoPopulateTestData(config, testDataFiles);
-        assertThat(populatedConfig).isEqualTo(new FunctionalWithSubtasksGradingConfig.Builder()
-                .from(config)
-                .testData(List.of(
-                        TestGroup.of(0, List.of(
-                                TestCase.of("hello_sample_1.in", "hello_sample_1.out", Set.of(0, 1)))),
-                        TestGroup.of(1, List.of(
-                                TestCase.of("hello_1.in", "hello_1.out", Set.of(1)),
-                                TestCase.of("hello_2.in", "hello_2.out", Set.of(1))))))
-                .subtaskPoints(List.of(100))
-                .build());
     }
 }
