@@ -4,10 +4,14 @@ import { Link, Outlet, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
-import { lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
 
 export default function LessonLayout() {
-  const { lessonJid } = useParams({ strict: false });
+  const { lessonSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: lessonJid },
+  } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
     data: { data: lesson, hasLocalChanges, config },
@@ -42,10 +46,10 @@ export default function LessonLayout() {
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING} title="You have uncommitted changes">
           Chapters keep using the last committed version of this lesson until you{' '}
-          <Link to={`/admin/lessons/${lessonJid}/versions`}>commit your changes</Link>.
+          <Link to={`/admin/lessons/${lessonSlug}/versions`}>commit your changes</Link>.
         </Callout>
       )}
-      <ContentWithTopbar items={topbarItems} basePath={`/admin/lessons/${lessonJid}`}>
+      <ContentWithTopbar items={topbarItems} basePath={`/admin/lessons/${lessonSlug}`}>
         <Outlet />
       </ContentWithTopbar>
     </ContentCard>

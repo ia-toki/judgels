@@ -95,6 +95,9 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(problemResponse.getTopicTags()).containsExactlyInAnyOrder("topic-graph", "topic-graph: shortest path");
         assertThat(problemResponse.getProfilesMap()).containsOnlyKeys(admin.getJid(), writer.getJid(), tester.getJid());
 
+        assertThat(problemClient.getProblemBySlug(adminToken, "problem-a-new")).isEqualTo(problemA);
+        assertNotFound(() -> problemClient.getProblemBySlug(adminToken, "problem-a"));
+
         String problemAJid = problemA.getJid();
 
         assertBadRequest(() -> problemClient
@@ -142,12 +145,15 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .build()));
 
         assertForbidden(() -> problemClient.getProblem(userToken, problemAJid));
+        assertForbidden(() -> problemClient.getProblemBySlug(userToken, "problem-a-new"));
         assertForbidden(() -> problemClient.updateProblem(userToken, problemAJid, updateData));
 
         problemResponse = problemClient.getProblem(userToken, problemB.getJid());
         assertThat(problemResponse.getData().getSlug()).isEqualTo("problem-b");
         assertThat(problemResponse.getConfig().getCanEdit()).isTrue();
         assertThat(problemResponse.getConfig().getCanManage()).isTrue();
+
+        assertThat(problemClient.getProblemBySlug(userToken, "problem-b").getJid()).isEqualTo(problemB.getJid());
 
         response = problemClient.getProblems(userToken, new GetProblemsParams());
         assertThat(response.getData().getPage())

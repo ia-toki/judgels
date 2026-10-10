@@ -37,7 +37,7 @@ export function ProblemCreateDialog() {
       {
         onSuccess: problem => {
           setIsDialogOpen(false);
-          navigate({ to: `/admin/problems/${problem.jid}` });
+          navigate({ to: `/admin/problems/${problem.slug}` });
           toastActions.showSuccessToast('Problem created.');
         },
       }

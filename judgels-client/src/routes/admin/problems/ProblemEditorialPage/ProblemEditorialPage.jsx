@@ -10,7 +10,7 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../components/ProblemEditorial/ProblemEditorial';
 import { formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
   problemEditorialQueryOptions,
@@ -21,7 +21,11 @@ import ProblemEditorialEditForm from '../ProblemEditorialEditForm/ProblemEditori
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemEditorialPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { data: problem, setterJidsMap, profilesMap, config },

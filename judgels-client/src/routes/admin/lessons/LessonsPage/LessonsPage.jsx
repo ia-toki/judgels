@@ -57,7 +57,7 @@ export default function LessonsPage() {
       <tr key={lesson.jid}>
         <td style={{ width: '60px' }}>{lesson.id}</td>
         <td>
-          <Link to={`/admin/lessons/${lesson.jid}`}>{lesson.slug}</Link>
+          <Link to={`/admin/lessons/${lesson.slug}`}>{lesson.slug}</Link>
         </td>
         <td style={{ width: '200px' }}>
           <UserRef profile={profilesMap[lesson.authorJid]} />

@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
@@ -10,7 +10,11 @@ import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { BadRequestError } from '../../../../modules/api/error';
 import { ProblemErrors, ProblemSetterRole, problemTypeNamesMap } from '../../../../modules/api/problem';
 import { SubmissionError } from '../../../../modules/form/submissionError';
-import { problemQueryOptions, updateProblemMutationOptions } from '../../../../modules/queries/problem';
+import {
+  problemBySlugQueryOptions,
+  problemQueryOptions,
+  updateProblemMutationOptions,
+} from '../../../../modules/queries/problem';
 import ProblemGeneralEditForm from '../ProblemGeneralEditForm/ProblemGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -30,13 +34,18 @@ function parseUsernames(usernames) {
 }
 
 export default function ProblemGeneralPage() {
-  const { problemJid } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { data: problem, setterJidsMap, topicTags, config, profilesMap },
   } = useSuspenseQuery(problemQueryOptions(problemJid));
 
-  const updateProblemMutation = useMutation(updateProblemMutationOptions(problemJid));
+  const updateProblemMutation = useMutation(updateProblemMutationOptions(problemJid, problemSlug));
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -94,6 +103,9 @@ export default function ProblemGeneralPage() {
       throw error;
     }
     setIsEditing(false);
+    if (data.slug !== problemSlug) {
+      navigate({ to: `/admin/problems/${data.slug}` });
+    }
   };
 
   const renderEditButton = () => {

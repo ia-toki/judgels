@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
 import {
   addLessonStatementLanguageMutationOptions,
   disableLessonStatementLanguageMutationOptions,
@@ -12,7 +12,11 @@ import {
 import LanguagesPanel from '../../catalog/LanguagesPanel/LanguagesPanel';
 
 export default function LessonStatementLanguagesPage() {
-  const { lessonJid } = useParams({ strict: false });
+  const { lessonSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: lessonJid },
+  } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
     data: { config },

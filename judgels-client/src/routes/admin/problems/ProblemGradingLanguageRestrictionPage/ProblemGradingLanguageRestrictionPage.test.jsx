@@ -13,7 +13,8 @@ describe('ProblemGradingLanguageRestrictionPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const nockProblem = canEdit =>
+  const nockProblem = canEdit => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -24,14 +25,15 @@ describe('ProblemGradingLanguageRestrictionPage', () => {
         config: { canEdit, canManage: canEdit },
         profilesMap: {},
       });
+  };
 
   const renderPage = async () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDPROG1/grading/languages']}
-            path="/admin/problems/$problemJid/grading/languages"
+            initialEntries={['/admin/problems/problem-1/grading/languages']}
+            path="/admin/problems/$problemSlug/grading/languages"
           >
             <ProblemGradingLanguageRestrictionPage />
           </TestRouter>

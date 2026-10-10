@@ -9,13 +9,13 @@ import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProble
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
-import { lessonQueryOptions } from '../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementMediaFilesQueryOptions,
 } from '../../modules/queries/lessonStatement';
 import { lessonVersionsQueryOptions } from '../../modules/queries/lessonVersion';
-import { problemQueryOptions } from '../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
   problemEditorialMediaFilesQueryOptions,
@@ -179,10 +179,11 @@ export const createAdminRoutes = appRoute => {
 
   const adminProblemRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'problems/$problemJid',
+    path: 'problems/$problemSlug',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemLayout/ProblemLayout'))),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemQueryOptions(problem.jid));
     },
   });
 
@@ -190,7 +191,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/problems/$problemJid/general', params, replace: true });
+      throw redirect({ to: '/admin/problems/$problemSlug/general', params, replace: true });
     },
   });
 
@@ -204,8 +205,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: 'statements',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemStatementPage/ProblemStatementPage'))),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problem.jid));
     },
   });
 
@@ -215,8 +217,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemStatementLanguagesPage/ProblemStatementLanguagesPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problem.jid));
     },
   });
 
@@ -226,8 +229,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemStatementMediaPage/ProblemStatementMediaPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemStatementMediaFilesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemStatementMediaFilesQueryOptions(problem.jid));
     },
   });
 
@@ -251,7 +255,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemEditorialLayoutRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/problems/$problemJid/editorial/content', params, replace: true });
+      throw redirect({ to: '/admin/problems/$problemSlug/editorial/content', params, replace: true });
     },
   });
 
@@ -259,8 +263,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemEditorialLayoutRoute,
     path: 'content',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemEditorialPage/ProblemEditorialPage'))),
-    loader: async ({ params: { problemJid } }) => {
-      await ensureProblemEditorialQueryData(problemJid, problemEditorialLanguagesQueryOptions);
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions);
     },
   });
 
@@ -270,8 +275,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemEditorialLanguagesPage/ProblemEditorialLanguagesPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await ensureProblemEditorialQueryData(problemJid, problemEditorialLanguagesQueryOptions);
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions);
     },
   });
 
@@ -281,8 +287,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemEditorialMediaPage/ProblemEditorialMediaPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await ensureProblemEditorialQueryData(problemJid, problemEditorialMediaFilesQueryOptions);
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await ensureProblemEditorialQueryData(problem.jid, problemEditorialMediaFilesQueryOptions);
     },
   });
 
@@ -290,8 +297,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: 'items',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemItemsPage/ProblemItemsPage'))),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemItemsQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemItemsQueryOptions(problem.jid));
     },
   });
 
@@ -299,8 +307,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: 'items/$itemJid',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemItemPage/ProblemItemPage'))),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemStatementLanguagesQueryOptions(problem.jid));
     },
   });
 
@@ -314,7 +323,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemGradingRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/problems/$problemJid/grading/engine', params, replace: true });
+      throw redirect({ to: '/admin/problems/$problemSlug/grading/engine', params, replace: true });
     },
   });
 
@@ -324,8 +333,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemGradingEnginePage/ProblemGradingEnginePage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemGradingConfigQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemGradingConfigQueryOptions(problem.jid));
     },
   });
 
@@ -335,11 +345,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemGradingConfigPage/ProblemGradingConfigPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
       await Promise.all([
-        queryClient.ensureQueryData(problemGradingConfigQueryOptions(problemJid)),
-        queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problemJid)),
-        queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemGradingConfigQueryOptions(problem.jid)),
+        queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problem.jid)),
+        queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problem.jid)),
       ]);
     },
   });
@@ -350,8 +361,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemGradingTestDataPage/ProblemGradingTestDataPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemGradingTestDataFilesQueryOptions(problem.jid));
     },
   });
 
@@ -361,8 +373,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./problems/ProblemGradingHelpersPage/ProblemGradingHelpersPage'))
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemGradingHelperFilesQueryOptions(problem.jid));
     },
   });
 
@@ -374,8 +387,9 @@ export const createAdminRoutes = appRoute => {
         () => import('./problems/ProblemGradingLanguageRestrictionPage/ProblemGradingLanguageRestrictionPage')
       )
     ),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemGradingLanguageRestrictionQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemGradingLanguageRestrictionQueryOptions(problem.jid));
     },
   });
 
@@ -383,8 +397,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: 'versions',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemVersionsPage/ProblemVersionsPage'))),
-    loader: async ({ params: { problemJid } }) => {
-      await queryClient.ensureQueryData(problemVersionsQueryOptions(problemJid));
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemVersionsQueryOptions(problem.jid));
     },
   });
 
@@ -396,10 +411,11 @@ export const createAdminRoutes = appRoute => {
 
   const adminLessonRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'lessons/$lessonJid',
+    path: 'lessons/$lessonSlug',
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonLayout/LessonLayout'))),
-    loader: async ({ params: { lessonJid } }) => {
-      await queryClient.ensureQueryData(lessonQueryOptions(lessonJid));
+    loader: async ({ params: { lessonSlug } }) => {
+      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await queryClient.ensureQueryData(lessonQueryOptions(lesson.jid));
     },
   });
 
@@ -407,7 +423,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminLessonRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/lessons/$lessonJid/general', params, replace: true });
+      throw redirect({ to: '/admin/lessons/$lessonSlug/general', params, replace: true });
     },
   });
 
@@ -421,8 +437,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminLessonRoute,
     path: 'statements',
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonStatementPage/LessonStatementPage'))),
-    loader: async ({ params: { lessonJid } }) => {
-      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lessonJid));
+    loader: async ({ params: { lessonSlug } }) => {
+      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lesson.jid));
     },
   });
 
@@ -432,8 +449,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./lessons/LessonStatementLanguagesPage/LessonStatementLanguagesPage'))
     ),
-    loader: async ({ params: { lessonJid } }) => {
-      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lessonJid));
+    loader: async ({ params: { lessonSlug } }) => {
+      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await queryClient.ensureQueryData(lessonStatementLanguagesQueryOptions(lesson.jid));
     },
   });
 
@@ -443,8 +461,9 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(
       retryImport(() => import('./lessons/LessonStatementMediaPage/LessonStatementMediaPage'))
     ),
-    loader: async ({ params: { lessonJid } }) => {
-      await queryClient.ensureQueryData(lessonStatementMediaFilesQueryOptions(lessonJid));
+    loader: async ({ params: { lessonSlug } }) => {
+      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await queryClient.ensureQueryData(lessonStatementMediaFilesQueryOptions(lesson.jid));
     },
   });
 
@@ -452,8 +471,9 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminLessonRoute,
     path: 'versions',
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonVersionsPage/LessonVersionsPage'))),
-    loader: async ({ params: { lessonJid } }) => {
-      await queryClient.ensureQueryData(lessonVersionsQueryOptions(lessonJid));
+    loader: async ({ params: { lessonSlug } }) => {
+      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await queryClient.ensureQueryData(lessonVersionsQueryOptions(lesson.jid));
     },
   });
 

@@ -11,10 +11,10 @@ const topbarItems = [
 ];
 
 export default function ProblemGradingLayout() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
 
   return (
-    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemJid}/grading`}>
+    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/grading`}>
       <Outlet />
     </ContentWithTopbar>
   );

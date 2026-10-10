@@ -20,6 +20,12 @@ export const problemQueryOptions = problemJid =>
     queryFn: () => problemAPI.getProblem(getToken(), problemJid),
   });
 
+export const problemBySlugQueryOptions = problemSlug =>
+  queryOptions({
+    queryKey: ['problem-by-slug', problemSlug],
+    queryFn: () => problemAPI.getProblemBySlug(getToken(), problemSlug),
+  });
+
 export const createProblemMutationOptions = {
   mutationFn: async data => {
     try {
@@ -36,7 +42,7 @@ export const createProblemMutationOptions = {
   },
 };
 
-export const updateProblemMutationOptions = problemJid => ({
+export const updateProblemMutationOptions = (problemJid, problemSlug) => ({
   mutationFn: async data => {
     try {
       return await problemAPI.updateProblem(getToken(), problemJid, data);
@@ -50,5 +56,6 @@ export const updateProblemMutationOptions = problemJid => ({
   onSuccess: () => {
     queryClient.invalidateQueries(problemsQueryOptions());
     queryClient.invalidateQueries(problemQueryOptions(problemJid));
+    queryClient.invalidateQueries(problemBySlugQueryOptions(problemSlug));
   },
 });

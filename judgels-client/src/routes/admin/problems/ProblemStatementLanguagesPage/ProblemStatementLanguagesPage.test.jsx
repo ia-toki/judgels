@@ -14,6 +14,7 @@ describe('ProblemStatementLanguagesPage', () => {
   });
 
   const renderComponent = async ({ canEdit = true } = {}) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -32,8 +33,8 @@ describe('ProblemStatementLanguagesPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDPROG1/languages']}
-            path="/admin/problems/$problemJid/languages"
+            initialEntries={['/admin/problems/problem-1/languages']}
+            path="/admin/problems/$problemSlug/languages"
           >
             <ProblemStatementLanguagesPage />
           </TestRouter>

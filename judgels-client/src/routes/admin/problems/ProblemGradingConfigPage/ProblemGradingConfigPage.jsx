@@ -3,7 +3,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   autoPopulateProblemGradingConfigMutationOptions,
   problemGradingConfigQueryOptions,
@@ -16,7 +16,11 @@ import ProblemGradingConfigEditForm from '../ProblemGradingConfigEditForm/Proble
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemGradingConfigPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { config: problemConfig },

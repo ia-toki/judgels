@@ -2,24 +2,33 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { lessonQueryOptions, updateLessonMutationOptions } from '../../../../modules/queries/lesson';
+import {
+  lessonBySlugQueryOptions,
+  lessonQueryOptions,
+  updateLessonMutationOptions,
+} from '../../../../modules/queries/lesson';
 import LessonGeneralEditForm from '../LessonGeneralEditForm/LessonGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function LessonGeneralPage() {
-  const { lessonJid } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const { lessonSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: lessonJid },
+  } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
     data: { data: lesson, config, profilesMap },
   } = useSuspenseQuery(lessonQueryOptions(lessonJid));
 
-  const updateLessonMutation = useMutation(updateLessonMutationOptions(lessonJid));
+  const updateLessonMutation = useMutation(updateLessonMutationOptions(lessonJid, lessonSlug));
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -40,6 +49,9 @@ export default function LessonGeneralPage() {
       }
     );
     setIsEditing(false);
+    if (data.slug !== lessonSlug) {
+      navigate({ to: `/admin/lessons/${data.slug}` });
+    }
   };
 
   const renderEditButton = () => {

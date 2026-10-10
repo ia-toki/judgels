@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { allLanguagesAllowed, getGradingLanguageName, gradingLanguages } from '../../../../modules/api/gradingLanguage';
-import { problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingLanguageRestrictionQueryOptions,
   updateProblemGradingLanguageRestrictionMutationOptions,
@@ -15,7 +15,11 @@ import {
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemGradingLanguageRestrictionPage() {
-  const { problemJid } = useParams({ strict: false });
+  const { problemSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: problemJid },
+  } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
     data: { config },

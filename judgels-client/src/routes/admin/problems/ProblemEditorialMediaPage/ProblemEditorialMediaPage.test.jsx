@@ -14,6 +14,7 @@ describe('ProblemEditorialMediaPage', () => {
   });
 
   const renderComponent = async ({ canEdit = true, files } = {}) => {
+    nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, {
@@ -37,8 +38,8 @@ describe('ProblemEditorialMediaPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter
-            initialEntries={['/admin/problems/JIDPROG1/editorial/media']}
-            path="/admin/problems/$problemJid/editorial/media"
+            initialEntries={['/admin/problems/problem-1/editorial/media']}
+            path="/admin/problems/$problemSlug/editorial/media"
           >
             <ProblemEditorialMediaPage />
           </TestRouter>

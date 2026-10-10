@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { lessonStatementAPI } from '../../../../modules/api/lessonStatement';
-import { lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
 import {
   deleteLessonStatementMediaFileMutationOptions,
   deleteLessonStatementMediaFilesMutationOptions,
@@ -14,7 +14,11 @@ import { getToken } from '../../../../modules/session';
 import FilesPanel from '../../catalog/FilesPanel/FilesPanel';
 
 export default function LessonStatementMediaPage() {
-  const { lessonJid } = useParams({ strict: false });
+  const { lessonSlug } = useParams({ strict: false });
+
+  const {
+    data: { jid: lessonJid },
+  } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
     data: { config },

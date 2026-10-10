@@ -27,6 +27,10 @@ public interface LessonClient {
     @Headers("Authorization: Bearer {token}")
     LessonResponse getLesson(@Param("token") String token, @Param("lessonJid") String lessonJid);
 
+    @RequestLine("GET /api/v4/lessons/slug/{lessonSlug}")
+    @Headers("Authorization: Bearer {token}")
+    Lesson getLessonBySlug(@Param("token") String token, @Param("lessonSlug") String lessonSlug);
+
     @RequestLine("POST /api/v4/lessons/{lessonJid}")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     Lesson updateLesson(
