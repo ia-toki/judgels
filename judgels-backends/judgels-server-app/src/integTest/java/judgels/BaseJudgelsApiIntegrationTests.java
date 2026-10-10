@@ -37,12 +37,14 @@ import judgels.api.catalog.problem.bundle.ItemConfig;
 import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
 import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
+import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
 import judgels.client.ProblemClient;
+import judgels.client.ProblemEditorialClient;
 import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
 import judgels.client.SessionClient;
@@ -341,16 +343,12 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
     }
 
     protected static void createProblemEditorial(String token, Problem problem) {
+        createClient(ProblemEditorialClient.class).createEditorial(token, problem.getJid(), new ProblemEditorialCreateData.Builder()
+                .initialLanguage("en-US")
+                .build());
+
+        // The editorial is committed through michael until versions have an API.
         Form form = new Form();
-        form.param("initialLanguage", "en-US");
-
-        webTarget
-                .path("/problems/" + problem.getId() + "/editorials")
-                .request()
-                .cookie(new Cookie("JUDGELS_TOKEN", token))
-                .post(Entity.entity(form, APPLICATION_FORM_URLENCODED));
-
-        form = new Form();
         form.param("title", "Add editorial");
         form.param("description", "");
 

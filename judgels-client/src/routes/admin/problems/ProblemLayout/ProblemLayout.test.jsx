@@ -40,7 +40,7 @@ describe('ProblemLayout', () => {
     await renderComponent({ hasLocalChanges: false });
 
     expect(
-      ['General', 'Statements', 'Languages', 'Media', 'Grading'].map(name =>
+      ['General', 'Statements', 'Languages', 'Media', 'Editorial', 'Grading'].map(name =>
         screen.getByRole('link', { name }).getAttribute('href')
       )
     ).toEqual([
@@ -48,6 +48,7 @@ describe('ProblemLayout', () => {
       '/admin/problems/JIDPROG1/statements',
       '/admin/problems/JIDPROG1/languages',
       '/admin/problems/JIDPROG1/media',
+      '/admin/problems/JIDPROG1/editorial',
       '/admin/problems/JIDPROG1/grading',
     ]);
     expect(screen.queryByRole('link', { name: 'Items' })).not.toBeInTheDocument();

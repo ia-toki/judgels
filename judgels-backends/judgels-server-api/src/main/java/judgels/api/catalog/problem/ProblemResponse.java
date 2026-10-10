@@ -14,6 +14,7 @@ public interface ProblemResponse {
     Map<ProblemSetterRole, List<String>> getSetterJidsMap();
     Set<String> getTopicTags();
     boolean getHasLocalChanges();
+    boolean getHasEditorial();
     ProblemConfig getConfig();
     Map<String, Profile> getProfilesMap();
 

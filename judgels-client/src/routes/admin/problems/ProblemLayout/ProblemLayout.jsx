@@ -32,6 +32,10 @@ export default function ProblemLayout() {
       title: 'Media',
     },
     {
+      path: 'editorial',
+      title: 'Editorial',
+    },
+    {
       path: 'items',
       title: 'Items',
       disabled: problem.type !== ProblemType.Bundle,

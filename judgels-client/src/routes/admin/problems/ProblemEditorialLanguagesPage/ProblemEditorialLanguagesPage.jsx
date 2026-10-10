@@ -3,15 +3,15 @@ import { useParams } from '@tanstack/react-router';
 
 import { problemQueryOptions } from '../../../../modules/queries/problem';
 import {
-  addProblemStatementLanguageMutationOptions,
-  disableProblemStatementLanguageMutationOptions,
-  enableProblemStatementLanguageMutationOptions,
-  makeProblemStatementLanguageDefaultMutationOptions,
-  problemStatementLanguagesQueryOptions,
-} from '../../../../modules/queries/problemStatement';
+  addProblemEditorialLanguageMutationOptions,
+  disableProblemEditorialLanguageMutationOptions,
+  enableProblemEditorialLanguageMutationOptions,
+  makeProblemEditorialLanguageDefaultMutationOptions,
+  problemEditorialLanguagesQueryOptions,
+} from '../../../../modules/queries/problemEditorial';
 import ProblemLanguagesPanel from '../ProblemLanguagesPanel/ProblemLanguagesPanel';
 
-export default function ProblemStatementLanguagesPage() {
+export default function ProblemEditorialLanguagesPage() {
   const { problemJid } = useParams({ strict: false });
 
   const {
@@ -20,12 +20,12 @@ export default function ProblemStatementLanguagesPage() {
 
   const {
     data: { enabledLanguages, disabledLanguages, defaultLanguage },
-  } = useSuspenseQuery(problemStatementLanguagesQueryOptions(problemJid));
+  } = useSuspenseQuery(problemEditorialLanguagesQueryOptions(problemJid));
 
-  const addLanguageMutation = useMutation(addProblemStatementLanguageMutationOptions(problemJid));
-  const enableLanguageMutation = useMutation(enableProblemStatementLanguageMutationOptions(problemJid));
-  const disableLanguageMutation = useMutation(disableProblemStatementLanguageMutationOptions(problemJid));
-  const makeLanguageDefaultMutation = useMutation(makeProblemStatementLanguageDefaultMutationOptions(problemJid));
+  const addLanguageMutation = useMutation(addProblemEditorialLanguageMutationOptions(problemJid));
+  const enableLanguageMutation = useMutation(enableProblemEditorialLanguageMutationOptions(problemJid));
+  const disableLanguageMutation = useMutation(disableProblemEditorialLanguageMutationOptions(problemJid));
+  const makeLanguageDefaultMutation = useMutation(makeProblemEditorialLanguageDefaultMutationOptions(problemJid));
 
   return (
     <ProblemLanguagesPanel
