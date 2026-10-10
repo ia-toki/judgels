@@ -5,11 +5,11 @@ import { useState } from 'react';
 
 import EditorialLanguageWidget from '../../../../../../../components/LanguageWidget/EditorialLanguageWidget';
 import { ProblemEditorial } from '../../../../../../../components/ProblemEditorial/ProblemEditorial';
+import { problemSetBySlugQueryOptions } from '../../../../../../../modules/queries/problemSet';
 import {
-  problemSetBySlugQueryOptions,
   problemSetProblemEditorialQueryOptions,
   problemSetProblemQueryOptions,
-} from '../../../../../../../modules/queries/problemSet';
+} from '../../../../../../../modules/queries/problemSetProblem';
 import { useWebPrefs } from '../../../../../../../modules/webPrefs';
 
 import './ProblemEditorialDialog.scss';

@@ -11,35 +11,35 @@ import judgels.api.training.submission.bundle.TrainingItemSubmissionsResponse;
 import judgels.api.training.submission.bundle.TrainingSubmissionSummaryResponse;
 
 public interface TrainingItemSubmissionClient {
-    class GetSubmissionsParams {
+    class GetItemSubmissionsParams {
         public String username;
         public String problemAlias;
     }
 
     @RequestLine("GET /api/v4/training/submissions/bundle?containerJid={containerJid}")
     @Headers("Authorization: Bearer {token}")
-    TrainingItemSubmissionsResponse getSubmissions(
+    TrainingItemSubmissionsResponse getItemSubmissions(
             @Param("token") String token,
             @Param("containerJid") String containerJid,
-            @QueryMap GetSubmissionsParams params);
+            @QueryMap GetItemSubmissionsParams params);
 
     @RequestLine("POST /api/v4/training/submissions/bundle")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     void createItemSubmission(@Param("token") String token, ItemSubmissionData data);
 
-    class GetLatestSubmissionsParams {
+    class GetLatestItemSubmissionsParams {
         public String username;
     }
 
     @RequestLine("GET /api/v4/training/submissions/bundle/answers?containerJid={containerJid}&problemAlias={problemAlias}")
     @Headers("Authorization: Bearer {token}")
-    Map<String, ItemSubmission> getLatestSubmissions(
+    Map<String, ItemSubmission> getLatestItemSubmissions(
             @Param("token") String token,
             @Param("containerJid") String containerJid,
             @Param("problemAlias") String problemAlias,
-            @QueryMap GetLatestSubmissionsParams params);
+            @QueryMap GetLatestItemSubmissionsParams params);
 
-    class GetSubmissionSummaryParams {
+    class GetItemSubmissionSummaryParams {
         public String problemJid;
         public String username;
         public String problemAlias;
@@ -47,16 +47,16 @@ public interface TrainingItemSubmissionClient {
 
     @RequestLine("GET /api/v4/training/submissions/bundle/summary?containerJid={containerJid}")
     @Headers("Authorization: Bearer {token}")
-    TrainingSubmissionSummaryResponse getSubmissionSummary(
+    TrainingSubmissionSummaryResponse getItemSubmissionSummary(
             @Param("token") String token,
             @Param("containerJid") String containerJid,
-            @QueryMap GetSubmissionSummaryParams params);
+            @QueryMap GetItemSubmissionSummaryParams params);
 
     @RequestLine("POST /api/v4/training/submissions/bundle/{submissionJid}/regrade")
     @Headers("Authorization: Bearer {token}")
-    void regradeSubmission(@Param("token") String token, @Param("submissionJid") String submissionJid);
+    void regradeItemSubmission(@Param("token") String token, @Param("submissionJid") String submissionJid);
 
-    class RegradeSubmissionsParams {
+    class RegradeItemSubmissionsParams {
         public String containerJid;
         public String userJid;
         public String problemJid;
@@ -64,5 +64,5 @@ public interface TrainingItemSubmissionClient {
 
     @RequestLine("POST /api/v4/training/submissions/bundle/regrade")
     @Headers("Authorization: Bearer {token}")
-    void regradeSubmissions(@Param("token") String token, @QueryMap RegradeSubmissionsParams params);
+    void regradeItemSubmissions(@Param("token") String token, @QueryMap RegradeItemSubmissionsParams params);
 }

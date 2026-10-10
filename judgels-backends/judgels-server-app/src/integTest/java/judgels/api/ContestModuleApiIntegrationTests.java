@@ -39,7 +39,7 @@ class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
     void upsert_get_config() {
         moduleClient.enableModule(managerToken, contest.getJid(), VIRTUAL);
 
-        ContestModulesConfig config = moduleClient.getConfig(managerToken, contest.getJid());
+        ContestModulesConfig config = moduleClient.getModulesConfig(managerToken, contest.getJid());
         assertThat(config.getVirtual()).isPresent();
 
         config = new ContestModulesConfig.Builder()
@@ -47,7 +47,7 @@ class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(3)).build())
                 .build();
 
-        moduleClient.upsertConfig(managerToken, contest.getJid(), config);
-        assertThat(moduleClient.getConfig(managerToken, contest.getJid())).isEqualTo(config);
+        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), config);
+        assertThat(moduleClient.getModulesConfig(managerToken, contest.getJid())).isEqualTo(config);
     }
 }

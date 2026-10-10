@@ -11,52 +11,52 @@ import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
 
 public interface ContestItemSubmissionClient {
-    class GetSubmissionsParams {
+    class GetItemSubmissionsParams {
         public String username;
         public String problemAlias;
     }
 
     @RequestLine("GET /api/v2/contests/submissions/bundle?contestJid={contestJid}")
     @Headers("Authorization: Bearer {token}")
-    ContestItemSubmissionsResponse getSubmissions(
+    ContestItemSubmissionsResponse getItemSubmissions(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
-            @QueryMap GetSubmissionsParams params);
+            @QueryMap GetItemSubmissionsParams params);
 
     @RequestLine("POST /api/v2/contests/submissions/bundle")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     void createItemSubmission(@Param("token") String token, ItemSubmissionData data);
 
-    class GetSubmissionSummaryParams {
+    class GetItemSubmissionSummaryParams {
         public String username;
     }
 
     @RequestLine("GET /api/v2/contests/submissions/bundle/summary?contestJid={contestJid}")
     @Headers("Authorization: Bearer {token}")
-    ContestSubmissionSummaryResponse getSubmissionSummary(
+    ContestSubmissionSummaryResponse getItemSubmissionSummary(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
-            @QueryMap GetSubmissionSummaryParams params);
+            @QueryMap GetItemSubmissionSummaryParams params);
 
-    class GetLatestSubmissionsParams {
+    class GetLatestItemSubmissionsParams {
         public String username;
     }
 
     @RequestLine("GET /api/v2/contests/submissions/bundle/answers?contestJid={contestJid}&problemAlias={problemAlias}")
     @Headers("Authorization: Bearer {token}")
-    Map<String, ItemSubmission> getLatestSubmissions(
+    Map<String, ItemSubmission> getLatestItemSubmissions(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
             @Param("problemAlias") String problemAlias,
-            @QueryMap GetLatestSubmissionsParams params);
+            @QueryMap GetLatestItemSubmissionsParams params);
 
     @RequestLine("POST /api/v2/contests/submissions/bundle/{submissionJid}/regrade")
     @Headers("Authorization: Bearer {token}")
-    void regradeSubmissions(
+    void regradeItemSubmission(
             @Param("token") String token,
             @Param("submissionJid") String submissionJid);
 
-    class RegradeSubmissionsParams {
+    class RegradeItemSubmissionsParams {
         public String contestJid;
         public String username;
         public String problemJid;
@@ -65,7 +65,7 @@ public interface ContestItemSubmissionClient {
 
     @RequestLine("POST /api/v2/contests/submissions/bundle/regrade")
     @Headers("Authorization: Bearer {token}")
-    void regradeSubmissions(
+    void regradeItemSubmissions(
             @Param("token") String token,
-            @QueryMap RegradeSubmissionsParams params);
+            @QueryMap RegradeItemSubmissionsParams params);
 }

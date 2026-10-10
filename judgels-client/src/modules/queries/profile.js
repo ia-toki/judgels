@@ -1,23 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { contestHistoryAPI } from '../api/contestHistory';
-import { NotFoundError } from '../api/error';
 import { profileAPI } from '../api/profile';
-import { trainingSubmissionAPI } from '../api/trainingSubmission';
-import { userSearchAPI } from '../api/userSearch';
-import { getToken } from '../session';
-
-export const userJidByUsernameQueryOptions = username =>
-  queryOptions({
-    queryKey: ['user-jid-by-username', username],
-    queryFn: async () => {
-      const userJidsByUsername = await userSearchAPI.translateUsernamesToJids([username]);
-      if (userJidsByUsername[username] === undefined) {
-        throw new NotFoundError();
-      }
-      return userJidsByUsername[username];
-    },
-  });
 
 export const basicProfileQueryOptions = userJid =>
   queryOptions({
@@ -32,18 +15,3 @@ export const topRatedProfilesQueryOptions = params => {
     queryFn: () => profileAPI.getTopRatedProfiles(page, pageSize),
   });
 };
-
-export const profileSubmissionsQueryOptions = (username, params) => {
-  const { beforeId, afterId } = params || {};
-  return queryOptions({
-    queryKey: ['profile', username, 'submissions', ...(params ? [params] : [])],
-    queryFn: () =>
-      trainingSubmissionAPI.getSubmissions(getToken(), undefined, username, undefined, undefined, beforeId, afterId),
-  });
-};
-
-export const profileContestHistoryQueryOptions = username =>
-  queryOptions({
-    queryKey: ['profile', username, 'contest-history'],
-    queryFn: () => contestHistoryAPI.getPublicHistory(username),
-  });

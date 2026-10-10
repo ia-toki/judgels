@@ -69,7 +69,7 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
 
         // get submissions
 
-        var response = submissionClient.getSubmissions(userAToken, problemSet.getJid(), null);
+        var response = submissionClient.getItemSubmissions(userAToken, problemSet.getJid(), null);
         assertThat(response.getData().getPage()).hasSize(1);
         assertThat(response.getProfilesMap()).containsOnlyKeys(userA.getJid());
         assertThat(response.getProblemAliasesMap()).isEqualTo(Map.of(problemSet.getJid() + "-" + problem3.getJid(), "C"));
@@ -83,33 +83,33 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
         assertThat(submission.getAnswer()).isEqualTo("a");
         assertThat(submission.getGrading().get().getVerdict()).isEqualTo(Verdict.ACCEPTED);
 
-        var params = new TrainingItemSubmissionClient.GetSubmissionsParams();
+        var params = new TrainingItemSubmissionClient.GetItemSubmissionsParams();
         params.username = USER_B;
-        assertThat(submissionClient.getSubmissions(adminToken, problemSet.getJid(), params).getData().getPage())
+        assertThat(submissionClient.getItemSubmissions(adminToken, problemSet.getJid(), params).getData().getPage())
                 .isEmpty();
-        assertThat(submissionClient.getSubmissions(adminToken, problemSet.getJid(), null).getConfig().getCanManage())
+        assertThat(submissionClient.getItemSubmissions(adminToken, problemSet.getJid(), null).getConfig().getCanManage())
                 .isTrue();
 
         // get latest submissions
 
         Map<String, ItemSubmission> answersMap =
-                submissionClient.getLatestSubmissions(userAToken, problemSet.getJid(), "C", null);
+                submissionClient.getLatestItemSubmissions(userAToken, problemSet.getJid(), "C", null);
         assertThat(answersMap).containsOnlyKeys(item1Jid);
         assertThat(answersMap.get(item1Jid).getAnswer()).isEqualTo("a");
         assertThat(answersMap.get(item1Jid).getGrading()).isEmpty();
 
-        var answersParams = new TrainingItemSubmissionClient.GetLatestSubmissionsParams();
+        var answersParams = new TrainingItemSubmissionClient.GetLatestItemSubmissionsParams();
         answersParams.username = USER_A;
-        assertThat(submissionClient.getLatestSubmissions(userBToken, problemSet.getJid(), "C", answersParams))
+        assertThat(submissionClient.getLatestItemSubmissions(userBToken, problemSet.getJid(), "C", answersParams))
                 .isEmpty();
-        assertThat(submissionClient.getLatestSubmissions(adminToken, problemSet.getJid(), "C", answersParams))
+        assertThat(submissionClient.getLatestItemSubmissions(adminToken, problemSet.getJid(), "C", answersParams))
                 .containsOnlyKeys(item1Jid);
 
         // get submission summary
 
-        var summaryParams = new TrainingItemSubmissionClient.GetSubmissionSummaryParams();
+        var summaryParams = new TrainingItemSubmissionClient.GetItemSubmissionSummaryParams();
         summaryParams.problemAlias = "C";
-        var summary = submissionClient.getSubmissionSummary(userAToken, problemSet.getJid(), summaryParams);
+        var summary = submissionClient.getItemSubmissionSummary(userAToken, problemSet.getJid(), summaryParams);
         assertThat(summary.getProfile().getUsername()).isEqualTo(USER_A);
         assertThat(summary.getConfig().getCanManage()).isFalse();
         assertThat(summary.getProblemAliasesMap()).isEqualTo(Map.of(problemSet.getJid() + "-" + problem3.getJid(), "C"));
@@ -120,20 +120,20 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
         assertThat(summary.getSubmissionsByItemJid()).containsOnlyKeys(item1Jid);
 
         summaryParams.username = USER_A;
-        summary = submissionClient.getSubmissionSummary(adminToken, problemSet.getJid(), summaryParams);
+        summary = submissionClient.getItemSubmissionSummary(adminToken, problemSet.getJid(), summaryParams);
         assertThat(summary.getProfile().getUsername()).isEqualTo(USER_A);
         assertThat(summary.getConfig().getCanManage()).isTrue();
 
         // regrade
 
-        var regradeParams = new TrainingItemSubmissionClient.RegradeSubmissionsParams();
+        var regradeParams = new TrainingItemSubmissionClient.RegradeItemSubmissionsParams();
         regradeParams.containerJid = problemSet.getJid();
 
-        assertForbidden(() -> submissionClient.regradeSubmission(userAToken, submission.getJid()));
-        assertForbidden(() -> submissionClient.regradeSubmissions(userAToken, regradeParams));
+        assertForbidden(() -> submissionClient.regradeItemSubmission(userAToken, submission.getJid()));
+        assertForbidden(() -> submissionClient.regradeItemSubmissions(userAToken, regradeParams));
 
-        assertPermitted(() -> submissionClient.regradeSubmission(adminToken, submission.getJid()));
-        assertPermitted(() -> submissionClient.regradeSubmissions(adminToken, regradeParams));
+        assertPermitted(() -> submissionClient.regradeItemSubmission(adminToken, submission.getJid()));
+        assertPermitted(() -> submissionClient.regradeItemSubmissions(adminToken, regradeParams));
 
         // clear answer
 
@@ -144,6 +144,6 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
                 .answer("")
                 .build());
 
-        assertThat(submissionClient.getLatestSubmissions(userAToken, problemSet.getJid(), "C", null)).isEmpty();
+        assertThat(submissionClient.getLatestItemSubmissions(userAToken, problemSet.getJid(), "C", null)).isEmpty();
     }
 }

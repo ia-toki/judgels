@@ -7,15 +7,13 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import CursorPagination from '../../../../../../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { RegradeAllButton } from '../../../../../../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../../../../modules/queries/courseChapter';
 import {
   chapterSubmissionsQueryOptions,
   regradeChapterSubmissionMutationOptions,
   regradeChapterSubmissionsMutationOptions,
-} from '../../../../../../../../../../../modules/queries/chapterSubmission';
-import {
-  courseBySlugQueryOptions,
-  courseChapterQueryOptions,
-} from '../../../../../../../../../../../modules/queries/course';
+} from '../../../../../../../../../../../modules/queries/trainingSubmission';
 import { useSession } from '../../../../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../../../../utils/confirmation';
 import { useChapterProblemContext } from '../../../ChapterProblemContext';

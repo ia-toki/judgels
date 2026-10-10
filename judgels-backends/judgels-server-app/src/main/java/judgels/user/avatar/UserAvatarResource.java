@@ -86,7 +86,7 @@ public class UserAvatarResource {
     @POST
     @Consumes(MULTIPART_FORM_DATA)
     @UnitOfWork
-    public void updateUserAvatar(
+    public void updateAvatar(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @HeaderParam(CONTENT_LENGTH) int contentLength,
             @PathParam("userJid") String userJid,

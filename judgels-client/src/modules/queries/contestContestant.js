@@ -33,32 +33,32 @@ export const myContestantStateQueryOptions = contestJid =>
     queryFn: () => contestContestantAPI.getMyContestantState(getToken(), contestJid),
   });
 
-export const approvedContestantsCountQueryOptions = contestJid =>
+export const contestApprovedContestantsCountQueryOptions = contestJid =>
   queryOptions({
     queryKey: ['contest', contestJid, 'contestants', 'approved', 'count'],
     queryFn: () => contestContestantAPI.getApprovedContestantsCount(getToken(), contestJid),
   });
 
-export const approvedContestantsQueryOptions = contestJid =>
+export const contestApprovedContestantsQueryOptions = contestJid =>
   queryOptions({
     queryKey: ['contest', contestJid, 'contestants', 'approved'],
     queryFn: () => contestContestantAPI.getApprovedContestants(getToken(), contestJid),
   });
 
-export const registerMyselfMutationOptions = contestJid => ({
+export const registerMyselfAsContestantMutationOptions = contestJid => ({
   mutationFn: () => contestContestantAPI.registerMyselfAsContestant(getToken(), contestJid),
   onSuccess: () => {
     queryClient.invalidateQueries(myContestantStateQueryOptions(contestJid));
-    queryClient.invalidateQueries(approvedContestantsCountQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestApprovedContestantsCountQueryOptions(contestJid));
     queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });
 
-export const unregisterMyselfMutationOptions = contestJid => ({
+export const unregisterMyselfAsContestantMutationOptions = contestJid => ({
   mutationFn: () => contestContestantAPI.unregisterMyselfAsContestant(getToken(), contestJid),
   onSuccess: () => {
     queryClient.invalidateQueries(myContestantStateQueryOptions(contestJid));
-    queryClient.invalidateQueries(approvedContestantsCountQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestApprovedContestantsCountQueryOptions(contestJid));
     queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });

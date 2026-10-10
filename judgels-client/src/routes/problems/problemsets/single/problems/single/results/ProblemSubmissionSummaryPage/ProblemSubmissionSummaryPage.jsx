@@ -6,14 +6,12 @@ import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSub
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../../../modules/queries/problemSet';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
 import {
   problemSetItemSubmissionSummaryQueryOptions,
   regradeProblemSetItemSubmissionsMutationOptions,
-} from '../../../../../../../../modules/queries/problemSetItemSubmission';
+} from '../../../../../../../../modules/queries/trainingItemSubmission';
 import { useSession } from '../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 

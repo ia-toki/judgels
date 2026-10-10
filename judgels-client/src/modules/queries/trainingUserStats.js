@@ -8,7 +8,7 @@ export const trainingUserStatsQueryOptions = username =>
     queryFn: () => trainingUserStatsAPI.getUserStats(username),
   });
 
-export const topTrainingUserStatsQueryOptions = params => {
+export const trainingTopUserStatsQueryOptions = params => {
   const { page, pageSize } = params || {};
   return queryOptions({
     queryKey: ['user-stats', 'top', ...(params ? [params] : [])],

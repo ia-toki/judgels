@@ -11,10 +11,10 @@ export const contestModulesQueryOptions = contestJid =>
     queryFn: () => contestModuleAPI.getModules(getToken(), contestJid),
   });
 
-export const contestModuleConfigQueryOptions = contestJid =>
+export const contestModulesConfigQueryOptions = contestJid =>
   queryOptions({
     queryKey: ['contest', contestJid, 'modules', 'config'],
-    queryFn: () => contestModuleAPI.getConfig(getToken(), contestJid),
+    queryFn: () => contestModuleAPI.getModulesConfig(getToken(), contestJid),
   });
 
 export const enableContestModuleMutationOptions = contestJid => ({
@@ -33,10 +33,10 @@ export const disableContestModuleMutationOptions = contestJid => ({
   },
 });
 
-export const upsertContestModuleConfigMutationOptions = contestJid => ({
-  mutationFn: config => contestModuleAPI.upsertConfig(getToken(), contestJid, config),
+export const upsertContestModulesConfigMutationOptions = contestJid => ({
+  mutationFn: config => contestModuleAPI.upsertModulesConfig(getToken(), contestJid, config),
   onSuccess: () => {
-    queryClient.invalidateQueries(contestModuleConfigQueryOptions(contestJid));
+    queryClient.invalidateQueries(contestModulesConfigQueryOptions(contestJid));
     queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));
   },
 });

@@ -4,7 +4,7 @@ import { useLocation, useParams } from '@tanstack/react-router';
 import { Card } from '../../../../../../components/Card/Card';
 import CursorPagination from '../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { profileSubmissionsQueryOptions } from '../../../../../../modules/queries/profile';
+import { profileSubmissionsQueryOptions } from '../../../../../../modules/queries/trainingSubmission';
 import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
 
 export default function SubmissionHistoryPage() {

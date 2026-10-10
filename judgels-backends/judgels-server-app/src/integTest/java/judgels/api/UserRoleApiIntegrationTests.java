@@ -19,18 +19,18 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         User budi = createUser("budi");
         User caca = createUser("caca");
 
-        assertThat(userRoleClient.getUserRoles(adminToken).getData()).containsOnly(
+        assertThat(userRoleClient.getRoles(adminToken).getData()).containsOnly(
                 new UserWithRole.Builder()
                         .userJid(admin.getJid())
                         .role(new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build())
                         .build());
 
-        userRoleClient.setUserRoles(adminToken, Map.of(
+        userRoleClient.setRoles(adminToken, Map.of(
                 "admin", new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build(),
                 "andi", new UserRole.Builder().contest("ADMIN").build(),
                 "budi", new UserRole.Builder().contest("ADMIN").training("ADMIN").build()));
 
-        assertThat(userRoleClient.getUserRoles(adminToken).getData()).containsOnly(
+        assertThat(userRoleClient.getRoles(adminToken).getData()).containsOnly(
                 new UserWithRole.Builder()
                         .userJid(admin.getJid())
                         .role(new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build())
@@ -44,12 +44,12 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
                         .role(new UserRole.Builder().contest("ADMIN").training("ADMIN").build())
                         .build());
 
-        userRoleClient.setUserRoles(adminToken, Map.of(
+        userRoleClient.setRoles(adminToken, Map.of(
                 "admin", new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build(),
                 "budi", new UserRole.Builder().problem("ADMIN").build(),
                 "caca", new UserRole.Builder().account("ADMIN").build()));
 
-        assertThat(userRoleClient.getUserRoles(adminToken).getData()).containsOnly(
+        assertThat(userRoleClient.getRoles(adminToken).getData()).containsOnly(
                 new UserWithRole.Builder()
                         .userJid(admin.getJid())
                         .role(new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build())

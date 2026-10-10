@@ -6,14 +6,14 @@ import { Card } from '../../../../../../components/Card/Card';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/userRating';
-import { profileContestHistoryQueryOptions } from '../../../../../../modules/queries/profile';
+import { contestPublicHistoryQueryOptions } from '../../../../../../modules/queries/contestHistory';
 
 import './ContestHistoryPage.scss';
 
 export default function ContestHistoryPage() {
   const { username } = useParams({ strict: false });
 
-  const { data: response } = useQuery(profileContestHistoryQueryOptions(username));
+  const { data: response } = useQuery(contestPublicHistoryQueryOptions(username));
 
   if (!response) {
     return <LoadingState />;

@@ -17,7 +17,7 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void get_web_config() {
-        UserWebConfig anonymousConfig = userWebClient.getPublicWebConfig();
+        UserWebConfig anonymousConfig = userWebClient.getWebConfig();
         assertThat(anonymousConfig.getAppName()).isEqualTo(AppSettings.DEFAULT_NAME);
         assertThat(anonymousConfig.getAppSlogan()).isEqualTo(AppSettings.DEFAULT_SLOGAN);
         assertThat(anonymousConfig.getHomeBanner()).isEqualTo(HomeSettings.DEFAULT_BANNER);
@@ -40,7 +40,7 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .build())
                 .build());
 
-        UserWebConfig updatedConfig = userWebClient.getPublicWebConfig();
+        UserWebConfig updatedConfig = userWebClient.getWebConfig();
         assertThat(updatedConfig.getAppName()).isEqualTo("Updated");
         assertThat(updatedConfig.getAppSlogan()).isEqualTo("Updated slogan");
         assertThat(updatedConfig.getAppAnnouncement()).contains("Hi");

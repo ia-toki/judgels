@@ -7,7 +7,8 @@ import classNames from 'classnames';
 import { useState } from 'react';
 
 import { ProgressTag } from '../../../../../components/ProgressTag/ProgressTag';
-import { courseBySlugQueryOptions, courseChaptersQueryOptions } from '../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
+import { courseChaptersQueryOptions } from '../../../../../modules/queries/courseChapter';
 
 import './CourseChaptersSidebar.scss';
 

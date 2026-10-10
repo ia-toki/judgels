@@ -28,11 +28,11 @@ public interface ContestModuleClient {
 
     @RequestLine("GET /api/v2/contests/{contestJid}/modules/config")
     @Headers("Authorization: Bearer {token}")
-    ContestModulesConfig getConfig(@Param("token") String token, @Param("contestJid") String contestJid);
+    ContestModulesConfig getModulesConfig(@Param("token") String token, @Param("contestJid") String contestJid);
 
     @RequestLine("PUT /api/v2/contests/{contestJid}/modules/config")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    void upsertConfig(
+    void upsertModulesConfig(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
             ContestModulesConfig data);

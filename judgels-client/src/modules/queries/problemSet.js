@@ -1,8 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { BadRequestError, ForbiddenError } from '../api/error';
+import { isTLX } from '../../conf';
+import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
 import { ProblemSetErrors, problemSetAPI } from '../api/problemSet';
-import { problemSetProblemAPI } from '../api/problemSetProblem';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
@@ -20,40 +20,6 @@ export const problemSetBySlugQueryOptions = problemSetSlug =>
     queryKey: ['problem-set-by-slug', problemSetSlug],
     queryFn: () => problemSetAPI.getProblemSetBySlug(problemSetSlug),
   });
-
-export const problemSetProblemQueryOptions = (problemSetJid, problemAlias) =>
-  queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'problem', problemAlias],
-    queryFn: () => problemSetProblemAPI.getProblem(getToken(), problemSetJid, problemAlias),
-  });
-
-export const problemSetProblemsQueryOptions = problemSetJid =>
-  queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'problems'],
-    queryFn: () => problemSetProblemAPI.getProblems(getToken(), problemSetJid),
-  });
-
-export const problemSetProblemWorksheetQueryOptions = (problemSetJid, problemAlias, params) => {
-  const { language } = params || {};
-  return queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'problem', problemAlias, 'worksheet', ...(params ? [params] : [])],
-    queryFn: () => problemSetProblemAPI.getProblemWorksheet(getToken(), problemSetJid, problemAlias, language),
-  });
-};
-
-export const problemSetProblemReportQueryOptions = (problemSetJid, problemAlias) =>
-  queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'problem', problemAlias, 'report'],
-    queryFn: () => problemSetProblemAPI.getProblemReport(getToken(), problemSetJid, problemAlias),
-  });
-
-export const problemSetProblemEditorialQueryOptions = (problemSetJid, problemAlias, params) => {
-  const { language } = params || {};
-  return queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'problem', problemAlias, 'editorial', ...(params ? [params] : [])],
-    queryFn: () => problemSetProblemAPI.getProblemEditorial(problemSetJid, problemAlias, language),
-  });
-};
 
 export const createProblemSetMutationOptions = {
   mutationFn: async data => {
@@ -94,19 +60,20 @@ export const updateProblemSetMutationOptions = problemSetJid => ({
   },
 });
 
-export const setProblemSetProblemsMutationOptions = problemSetJid => ({
-  mutationFn: async data => {
-    try {
-      await problemSetProblemAPI.setProblems(getToken(), problemSetJid, data);
-    } catch (error) {
-      if (error instanceof ForbiddenError && error.message === ProblemSetErrors.ContestSlugsNotAllowed) {
-        const unknownSlugs = error.args.contestSlugs;
-        throw new SubmissionError({ problems: 'Contests not found/allowed: ' + unknownSlugs });
+export const searchProblemSetQueryOptions = contestJid =>
+  queryOptions({
+    queryKey: ['contest', contestJid, 'problem-set'],
+    queryFn: async () => {
+      if (!isTLX()) {
+        return null;
       }
-      throw error;
-    }
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries(problemSetProblemsQueryOptions(problemSetJid));
-  },
-});
+      try {
+        return await problemSetAPI.searchProblemSet(contestJid);
+      } catch (error) {
+        if (error instanceof NotFoundError || error instanceof RemoteError) {
+          return null;
+        }
+        throw error;
+      }
+    },
+  });

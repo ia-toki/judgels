@@ -7,10 +7,8 @@ import { useEffect } from 'react';
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ProblemType } from '../../../../../../modules/api/problem';
-import {
-  problemSetBySlugQueryOptions,
-  problemSetProblemQueryOptions,
-} from '../../../../../../modules/queries/problemSet';
+import { problemSetBySlugQueryOptions } from '../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../modules/queries/problemSetProblem';
 import { createDocumentTitle } from '../../../../../../utils/title';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
 

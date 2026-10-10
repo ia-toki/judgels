@@ -18,7 +18,7 @@ public class UserRegistrationWebResource {
     @GET
     @Path("/config")
     @Produces(APPLICATION_JSON)
-    public UserRegistrationWebConfig getConfig() {
+    public UserRegistrationWebConfig getWebConfig() {
         return checkFound(config);
     }
 }

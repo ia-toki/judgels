@@ -4,9 +4,10 @@ import { useParams } from '@tanstack/react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { isTLX } from '../../../../../../conf';
-import { basicProfileQueryOptions, userJidByUsernameQueryOptions } from '../../../../../../modules/queries/profile';
+import { basicProfileQueryOptions } from '../../../../../../modules/queries/profile';
 import { trainingUserStatsQueryOptions } from '../../../../../../modules/queries/trainingUserStats';
-import { avatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
+import { userAvatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
+import { userJidByUsernameQueryOptions } from '../../../../../../modules/queries/userSearch';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
 
@@ -16,7 +17,7 @@ export default function ProfileSummaryPage() {
   const { username } = useParams({ strict: false });
   const { data: userJid } = useSuspenseQuery(userJidByUsernameQueryOptions(username));
 
-  const { data: avatarUrl } = useQuery(avatarUrlQueryOptions(userJid));
+  const { data: avatarUrl } = useQuery(userAvatarUrlQueryOptions(userJid));
   const { data: basicProfile } = useQuery(basicProfileQueryOptions(userJid));
   const { data: userStats } = useQuery({
     ...trainingUserStatsQueryOptions(username),

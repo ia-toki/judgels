@@ -3,10 +3,8 @@ import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import {
-  registerUserMutationOptions,
-  registrationWebConfigQueryOptions,
-} from '../../../../modules/queries/userAccount';
+import { registerUserMutationOptions } from '../../../../modules/queries/userAccount';
+import { userRegistrationWebConfigQueryOptions } from '../../../../modules/queries/userRegistrationWeb';
 import GoogleAuth from '../../login/GoogleAuth/GoogleAuth';
 import ResendActivation from '../../needActivation/ResendActivation/ResendActivation';
 import RegisterForm from '../RegisterForm/RegisterForm';
@@ -17,7 +15,7 @@ export default function RegisterPage() {
   const [registeredUser, setRegisteredUser] = useState(undefined);
   const [isInternalAuthEnabled, setIsInternalAuthEnabled] = useState(true);
 
-  const { data: config } = useQuery(registrationWebConfigQueryOptions());
+  const { data: config } = useQuery(userRegistrationWebConfigQueryOptions());
 
   const registerMutation = useMutation(registerUserMutationOptions);
 

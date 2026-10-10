@@ -16,3 +16,9 @@ export const setCourseChaptersMutationOptions = courseJid => ({
     queryClient.invalidateQueries(courseChaptersQueryOptions(courseJid));
   },
 });
+
+export const courseChapterQueryOptions = (courseJid, chapterAlias) =>
+  queryOptions({
+    queryKey: ['course', courseJid, 'chapter', chapterAlias],
+    queryFn: () => courseChapterAPI.getChapter(getToken(), courseJid, chapterAlias),
+  });

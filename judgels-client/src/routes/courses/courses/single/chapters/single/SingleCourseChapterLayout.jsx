@@ -2,7 +2,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { courseBySlugQueryOptions, courseChapterQueryOptions } from '../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../modules/queries/courseChapter';
 import { createDocumentTitle } from '../../../../../../utils/title';
 
 export default function SingleCourseChapterLayout() {

@@ -2,7 +2,7 @@ import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import {
-  trainingSubmissionWithSourceQueryOptions,
+  trainingSubmissionWithSourceByIdQueryOptions,
   trainingSubmissionsQueryOptions,
 } from '../../modules/queries/trainingSubmission';
 import { queryClient } from '../../modules/queryClient';
@@ -45,7 +45,7 @@ export const createSubmissionsRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./single/SubmissionPage/SubmissionPage'))),
     loader: ({ params: { submissionId } }) => {
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(trainingSubmissionWithSourceQueryOptions(+submissionId, { language }));
+      queryClient.prefetchQuery(trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language }));
     },
   });
 

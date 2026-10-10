@@ -2,15 +2,8 @@ import { queryOptions } from '@tanstack/react-query';
 
 import { BadRequestError, NotFoundError } from '../api/error';
 import { userAccountAPI } from '../api/userAccount';
-import { userRegistrationWebAPI } from '../api/userRegistration';
 import { userSearchAPI } from '../api/userSearch';
 import { SubmissionError } from '../form/submissionError';
-
-export const registrationWebConfigQueryOptions = () =>
-  queryOptions({
-    queryKey: ['registration-web-config'],
-    queryFn: () => userRegistrationWebAPI.getWebConfig(),
-  });
 
 export const registerUserMutationOptions = {
   mutationFn: async data => {
@@ -34,7 +27,7 @@ export const activateUserMutationOptions = {
   mutationFn: emailCode => userAccountAPI.activateUser(emailCode),
 };
 
-export const requestResetPasswordMutationOptions = {
+export const requestToResetPasswordMutationOptions = {
   mutationFn: async email => {
     try {
       await userAccountAPI.requestToResetPassword(email);
@@ -58,5 +51,16 @@ export const resetPasswordMutationOptions = {
         throw error;
       }
     }
+  },
+};
+
+export const registerGoogleUserMutationOptions = {
+  mutationFn: async data => {
+    const usernameExists = await userSearchAPI.usernameExists(data.username);
+    if (usernameExists) {
+      throw new SubmissionError({ username: 'Username already exists' });
+    }
+
+    await userAccountAPI.registerGoogleUser(data);
   },
 };

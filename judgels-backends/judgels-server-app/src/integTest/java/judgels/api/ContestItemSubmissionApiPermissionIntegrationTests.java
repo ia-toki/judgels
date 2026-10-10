@@ -62,8 +62,8 @@ class ContestItemSubmissionApiPermissionIntegrationTests extends BaseContestApiI
     }
 
     private ThrowingCallable getSubmissions(String token) {
-        return () -> submissionClient.getSubmissions(
-                token, contest.getJid(), new ContestItemSubmissionClient.GetSubmissionsParams());
+        return () -> submissionClient.getItemSubmissions(
+                token, contest.getJid(), new ContestItemSubmissionClient.GetItemSubmissionsParams());
     }
 
     private ThrowingCallable submit(String token) {
@@ -76,9 +76,9 @@ class ContestItemSubmissionApiPermissionIntegrationTests extends BaseContestApiI
     }
 
     private ThrowingCallable regrade(String token) {
-        var params = new ContestItemSubmissionClient.RegradeSubmissionsParams();
+        var params = new ContestItemSubmissionClient.RegradeItemSubmissionsParams();
         params.contestJid = contest.getJid();
         params.problemJid = problem3.getJid();
-        return () -> submissionClient.regradeSubmissions(token, params);
+        return () -> submissionClient.regradeItemSubmissions(token, params);
     }
 }

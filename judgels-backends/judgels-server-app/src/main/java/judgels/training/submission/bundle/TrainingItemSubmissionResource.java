@@ -75,7 +75,7 @@ public class TrainingItemSubmissionResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public TrainingItemSubmissionsResponse getSubmissions(
+    public TrainingItemSubmissionsResponse getItemSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
@@ -177,7 +177,7 @@ public class TrainingItemSubmissionResource {
     @Path("/answers")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public Map<String, ItemSubmission> getLatestSubmissions(
+    public Map<String, ItemSubmission> getLatestItemSubmissions(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @QueryParam("containerJid") String containerJid,
             @QueryParam("username") Optional<String> username,
@@ -209,7 +209,7 @@ public class TrainingItemSubmissionResource {
     @Path("/summary")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public TrainingSubmissionSummaryResponse getSubmissionSummary(
+    public TrainingSubmissionSummaryResponse getItemSubmissionSummary(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("containerJid") String containerJid,
             @QueryParam("problemJid") Optional<String> problemJid,
@@ -280,7 +280,7 @@ public class TrainingItemSubmissionResource {
     @POST
     @Path("/{submissionJid}/regrade")
     @UnitOfWork
-    public void regradeSubmission(
+    public void regradeItemSubmission(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("submissionJid") String submissionJid) {
 
@@ -294,7 +294,7 @@ public class TrainingItemSubmissionResource {
     @POST
     @Path("/regrade")
     @UnitOfWork
-    public void regradeSubmissions(
+    public void regradeItemSubmissions(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @QueryParam("containerJid") Optional<String> containerJid,
             @QueryParam("userJid") Optional<String> userJid,

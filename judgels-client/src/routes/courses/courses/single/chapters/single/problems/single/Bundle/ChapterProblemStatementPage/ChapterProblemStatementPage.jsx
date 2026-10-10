@@ -6,14 +6,12 @@ import StatementLanguageWidget from '../../../../../../../../../../components/La
 import { LoadingState } from '../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemWorksheetCard } from '../../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { VerdictCode } from '../../../../../../../../../../modules/api/gradingVerdict';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../../../modules/queries/courseChapter';
 import {
   chapterLatestItemSubmissionsQueryOptions,
   createChapterItemSubmissionMutationOptions,
-} from '../../../../../../../../../../modules/queries/chapterItemSubmission';
-import {
-  courseBySlugQueryOptions,
-  courseChapterQueryOptions,
-} from '../../../../../../../../../../modules/queries/course';
+} from '../../../../../../../../../../modules/queries/trainingItemSubmission';
 
 import './ChapterProblemStatementPage.scss';
 

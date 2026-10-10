@@ -21,12 +21,12 @@ export const contestUserProblemSubmissionsQueryOptions = (contestJid, userJid, p
   });
 };
 
-export const contestSubmissionWithSourceQueryOptions = (contestJid, submissionId, params) => {
+export const contestSubmissionWithSourceByIdQueryOptions = (contestJid, submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
     queryKey: ['contest', contestJid, 'submissions', submissionId, 'source', ...[params ? [params] : []]],
     queryFn: async () => {
-      const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSource(
+      const submissionWithSource = await contestSubmissionAPI.getSubmissionWithSourceById(
         getToken(),
         submissionId,
         language

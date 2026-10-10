@@ -10,10 +10,10 @@ import { FormattedDuration } from '../../../../../../components/FormattedDuratio
 import { ContestState } from '../../../../../../modules/api/contestWeb';
 import {
   contestBySlugQueryOptions,
-  searchProblemSetQueryOptions,
   startVirtualContestMutationOptions,
 } from '../../../../../../modules/queries/contest';
 import { contestWebConfigQueryOptions } from '../../../../../../modules/queries/contestWeb';
+import { searchProblemSetQueryOptions } from '../../../../../../modules/queries/problemSet';
 
 // TODO(fushar): unit tests
 export default function ContestStateWidget() {

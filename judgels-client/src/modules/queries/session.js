@@ -55,3 +55,19 @@ export const logOutMutationOptions = {
     queryClient.resetQueries();
   },
 };
+
+export const logInWithGoogleMutationOptions = {
+  mutationFn: async idToken => {
+    let session;
+    try {
+      session = await sessionAPI.logInWithGoogle(idToken);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        return null;
+      }
+      throw error;
+    }
+    await afterLogin(session);
+    return session;
+  },
+};

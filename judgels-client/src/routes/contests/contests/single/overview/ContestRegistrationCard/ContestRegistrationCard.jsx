@@ -9,10 +9,10 @@ import { LoadingState } from '../../../../../../components/LoadingState/LoadingS
 import { ContestContestantState } from '../../../../../../modules/api/contestContestant';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
-  approvedContestantsCountQueryOptions,
+  contestApprovedContestantsCountQueryOptions,
   myContestantStateQueryOptions,
-  registerMyselfMutationOptions,
-  unregisterMyselfMutationOptions,
+  registerMyselfAsContestantMutationOptions,
+  unregisterMyselfAsContestantMutationOptions,
 } from '../../../../../../modules/queries/contestContestant';
 import { useSession } from '../../../../../../modules/session';
 import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
@@ -32,12 +32,12 @@ export default function ContestRegistrationCard() {
   });
 
   const { data: contestantsCount } = useQuery({
-    ...approvedContestantsCountQueryOptions(contest.jid),
+    ...contestApprovedContestantsCountQueryOptions(contest.jid),
     enabled: isLoggedIn,
   });
 
-  const registerMutation = useMutation(registerMyselfMutationOptions(contest.jid));
-  const unregisterMutation = useMutation(unregisterMyselfMutationOptions(contest.jid));
+  const registerMutation = useMutation(registerMyselfAsContestantMutationOptions(contest.jid));
+  const unregisterMutation = useMutation(unregisterMyselfAsContestantMutationOptions(contest.jid));
 
   const [isRegistrantsDialogOpen, setIsRegistrantsDialogOpen] = useState(false);
 

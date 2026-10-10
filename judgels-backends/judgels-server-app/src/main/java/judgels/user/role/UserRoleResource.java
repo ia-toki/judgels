@@ -39,7 +39,7 @@ public class UserRoleResource {
     @GET
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public UserRolesResponse getUserRoles(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+    public UserRolesResponse getRoles(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
@@ -57,7 +57,7 @@ public class UserRoleResource {
     @PUT
     @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setUserRoles(
+    public void setRoles(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             Map<String, UserRole> usernameToRoleMap) {
 

@@ -9,7 +9,7 @@ import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTa
 import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
-  contestSubmissionWithSourceQueryOptions,
+  contestSubmissionWithSourceByIdQueryOptions,
   contestUserProblemSubmissionsQueryOptions,
 } from '../../../../../../modules/queries/contestSubmission';
 import { queryClient } from '../../../../../../modules/queryClient';
@@ -33,7 +33,7 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
     setSubmissionSourcesById(prev => ({ ...prev, [submissionId]: null }));
 
     const submissionWithSource = await queryClient.fetchQuery(
-      contestSubmissionWithSourceQueryOptions(contest.jid, submissionId, { language: statementLanguage })
+      contestSubmissionWithSourceByIdQueryOptions(contest.jid, submissionId, { language: statementLanguage })
     );
 
     setSubmissionSourcesById(prev => ({ ...prev, [submissionId]: submissionWithSource.data.source }));

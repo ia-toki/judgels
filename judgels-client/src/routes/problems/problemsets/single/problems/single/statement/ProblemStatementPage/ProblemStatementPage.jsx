@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 import {
-  problemSetBySlugQueryOptions,
   problemSetProblemQueryOptions,
   problemSetProblemWorksheetQueryOptions,
-} from '../../../../../../../../modules/queries/problemSet';
+} from '../../../../../../../../modules/queries/problemSetProblem';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
 import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';

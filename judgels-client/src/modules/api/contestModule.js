@@ -77,11 +77,11 @@ export const contestModuleAPI = {
     return delete_(`${baseURL(contestJid)}/${type}`, token);
   },
 
-  getConfig: (token, contestJid) => {
+  getModulesConfig: (token, contestJid) => {
     return get(`${baseURL(contestJid)}/config`, token);
   },
 
-  upsertConfig: (token, contestJid, config) => {
+  upsertModulesConfig: (token, contestJid, config) => {
     return put(`${baseURL(contestJid)}/config`, token, config);
   },
 };

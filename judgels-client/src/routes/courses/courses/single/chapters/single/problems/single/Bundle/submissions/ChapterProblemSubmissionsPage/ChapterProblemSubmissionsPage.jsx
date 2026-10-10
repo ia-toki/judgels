@@ -8,11 +8,9 @@ import { ContentCard } from '../../../../../../../../../../../components/Content
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
 import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
-import { chapterItemSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/chapterItemSubmission';
-import {
-  courseBySlugQueryOptions,
-  courseChapterQueryOptions,
-} from '../../../../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../../../../modules/queries/courseChapter';
+import { chapterItemSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/trainingItemSubmission';
 import { useSession } from '../../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../../modules/webPrefs';
 

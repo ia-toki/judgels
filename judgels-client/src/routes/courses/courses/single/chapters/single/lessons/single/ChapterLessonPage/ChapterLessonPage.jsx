@@ -8,11 +8,11 @@ import StatementLanguageWidget from '../../../../../../../../../components/Langu
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { chapterLessonStatementQueryOptions } from '../../../../../../../../../modules/queries/chapterLesson';
+import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
 import {
-  courseBySlugQueryOptions,
   courseChapterQueryOptions,
   courseChaptersQueryOptions,
-} from '../../../../../../../../../modules/queries/course';
+} from '../../../../../../../../../modules/queries/courseChapter';
 import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';

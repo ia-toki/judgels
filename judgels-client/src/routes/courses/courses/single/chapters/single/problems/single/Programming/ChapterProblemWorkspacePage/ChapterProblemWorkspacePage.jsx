@@ -8,11 +8,9 @@ import { sendGAEvent } from '../../../../../../../../../../ga';
 import { isOutputOnly } from '../../../../../../../../../../modules/api/gradingEngine.js';
 import { getGradingLanguageFamily } from '../../../../../../../../../../modules/api/gradingLanguage.js';
 import { trainingSubmissionAPI } from '../../../../../../../../../../modules/api/trainingSubmission';
-import { createChapterSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/chapterSubmission';
-import {
-  courseBySlugQueryOptions,
-  courseChapterQueryOptions,
-} from '../../../../../../../../../../modules/queries/course';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../../../modules/queries/courseChapter';
+import { createChapterSubmissionMutationOptions } from '../../../../../../../../../../modules/queries/trainingSubmission';
 import { getToken } from '../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../modules/webPrefs';
 import { useChapterProblemContext } from '../../ChapterProblemContext';

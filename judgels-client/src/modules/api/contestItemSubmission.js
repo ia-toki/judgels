@@ -6,7 +6,7 @@ import { get, post } from './http';
 const baseURL = `${baseContestsURL}/submissions/bundle`;
 
 export const contestItemSubmissionAPI = {
-  getSubmissions: (token, contestJid, username, problemAlias, page) => {
+  getItemSubmissions: (token, contestJid, username, problemAlias, page) => {
     const params = stringify({ contestJid, username, problemAlias, page });
     return get(`${baseURL}?${params}`, token);
   },
@@ -15,21 +15,21 @@ export const contestItemSubmissionAPI = {
     return post(baseURL, token, data);
   },
 
-  getSubmissionSummary: (token, contestJid, username, language) => {
+  getItemSubmissionSummary: (token, contestJid, username, language) => {
     const params = stringify({ contestJid, username, language });
     return get(`${baseURL}/summary?${params}`, token);
   },
 
-  getLatestSubmissions: (token, contestJid, problemAlias, username) => {
+  getLatestItemSubmissions: (token, contestJid, problemAlias, username) => {
     const params = stringify({ contestJid, username, problemAlias });
     return get(`${baseURL}/answers?${params}`, token);
   },
 
-  regradeSubmission: (token, submissionJid) => {
+  regradeItemSubmission: (token, submissionJid) => {
     return post(`${baseURL}/${submissionJid}/regrade`, token);
   },
 
-  regradeSubmissions: (token, contestJid, username, problemJid, problemAlias) => {
+  regradeItemSubmissions: (token, contestJid, username, problemJid, problemAlias) => {
     const params = stringify({ contestJid, username, problemJid, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);
   },
