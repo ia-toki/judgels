@@ -2,11 +2,11 @@ import { Button, HTMLSelect, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { ProblemStatementCard as BundleProblemStatementCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemStatementCard/ProblemStatementCard';
+import { ProblemWorksheetCard as BundleProblemWorksheetCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
 import { ProblemWorksheetCard } from '../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { ProblemType } from '../../../../modules/api/problem';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
@@ -17,18 +17,24 @@ import {
   problemPermissionsQueryOptions,
   problemQueryOptions,
 } from '../../../../modules/queries/problem';
+import { createProblemBundleSubmissionMutationOptions } from '../../../../modules/queries/problemBundleSubmission';
 import { problemItemsQueryOptions } from '../../../../modules/queries/problemItem';
 import {
   problemStatementLanguagesQueryOptions,
   problemStatementQueryOptions,
   updateProblemStatementMutationOptions,
 } from '../../../../modules/queries/problemStatement';
+import {
+  createProblemSubmissionMutationOptions,
+  problemSubmissionConfigQueryOptions,
+} from '../../../../modules/queries/problemSubmission';
 import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemStatementPage() {
   const { problemSlug } = useParams({ strict: false });
+  const navigate = useNavigate();
 
   const {
     data: { jid: problemJid },
@@ -37,7 +43,7 @@ export default function ProblemStatementPage() {
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
 
   const {
-    data: { canEdit },
+    data: { canEdit, reasonNotAllowedToSubmit },
   } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
@@ -56,7 +62,18 @@ export default function ProblemStatementPage() {
     enabled: isBundle,
   });
 
+  // Only an editor can make test submissions, so nobody else is shown the form.
+  const { data: submissionConfig } = useQuery({
+    ...problemSubmissionConfigQueryOptions(problemJid),
+    enabled: canEdit && !isBundle,
+  });
+
+  // A bundle problem is answered as a whole: the answers are kept here until they are submitted together.
+  const [answers, setAnswers] = useState({});
+
   const updateStatementMutation = useMutation(updateProblemStatementMutationOptions(problemJid, language));
+  const createSubmissionMutation = useMutation(createProblemSubmissionMutationOptions(problemJid));
+  const createBundleSubmissionMutation = useMutation(createProblemBundleSubmissionMutationOptions(problemJid));
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -68,6 +85,23 @@ export default function ProblemStatementPage() {
       }
     );
     setIsEditing(false);
+  };
+
+  const goToSubmissions = () => {
+    toastActions.showSuccessToast('Solution submitted.');
+    navigate({ to: `/admin/problems/${problemSlug}/submissions` });
+  };
+
+  const createSubmission = async data => {
+    await createSubmissionMutation.mutateAsync(data, { onSuccess: goToSubmissions });
+  };
+
+  const createBundleSubmission = () => {
+    createBundleSubmissionMutation.mutate({ answers, languageCode: language }, { onSuccess: goToSubmissions });
+  };
+
+  const answerItem = (itemJid, answer) => {
+    setAnswers(prevAnswers => ({ ...prevAnswers, [itemJid]: answer }));
   };
 
   const renderLanguageSelect = () => {
@@ -107,24 +141,38 @@ export default function ProblemStatementPage() {
 
     if (isBundle) {
       return (
-        <BundleProblemStatementCard
-          statement={{ title: statement.title, text }}
-          items={itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid))}
-          latestSubmissions={{}}
-          disabled
+        <BundleProblemWorksheetCard
+          worksheet={{
+            statement: { title: statement.title, text },
+            items: itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid)),
+            reasonNotAllowedToSubmit: canEdit ? reasonNotAllowedToSubmit : undefined,
+          }}
+          latestSubmissions={Object.fromEntries(
+            Object.entries(answers).map(([itemJid, answer]) => [itemJid, { answer }])
+          )}
+          onAnswerItem={answerItem}
+          onSubmit={canEdit ? createBundleSubmission : undefined}
+          isSubmitting={createBundleSubmissionMutation.isPending}
+          disabled={!canEdit}
         />
       );
     }
     return (
       <ProblemWorksheetCard
-        worksheet={{ statement: { title: statement.title, text }, limits: {} }}
+        worksheet={{
+          statement: { title: statement.title, text },
+          limits: {},
+          submissionConfig,
+          reasonNotAllowedToSubmit,
+        }}
         showLimits={false}
+        onSubmit={canEdit ? createSubmission : undefined}
       />
     );
   };
 
   const renderContent = () => {
-    if (!statement || (isBundle && !itemsResponse)) {
+    if (!statement || (isBundle && !itemsResponse) || (canEdit && !isBundle && !submissionConfig)) {
       return <LoadingState />;
     }
     if (isEditing) {

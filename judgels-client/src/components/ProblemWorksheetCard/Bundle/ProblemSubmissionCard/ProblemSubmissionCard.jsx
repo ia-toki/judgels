@@ -4,8 +4,8 @@ import { BanCircle } from '@blueprintjs/icons';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { ContentCard } from '../../../ContentCard/ContentCard';
 
-export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) {
-  const redirectToResultsUrl = () => {
+export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl, onSubmit, isSubmitting }) {
+  const submit = () => {
     const unconfirmedShortAnswers = document.querySelectorAll('input[type="text"]:not([readonly])');
     const unconfirmedEssays = document.querySelectorAll('textarea:not([readonly])');
     if (unconfirmedShortAnswers.length > 0 || unconfirmedEssays.length > 0) {
@@ -13,7 +13,11 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
       return;
     }
 
-    window.location.href = resultsUrl;
+    if (onSubmit) {
+      onSubmit();
+    } else {
+      window.location.href = resultsUrl;
+    }
   };
 
   const renderSubmissionForm = () => {
@@ -26,14 +30,14 @@ export function ProblemSubmissionCard({ reasonNotAllowedToSubmit, resultsUrl }) 
     }
     return (
       <ActionButtons>
-        <Button intent={Intent.PRIMARY} onClick={redirectToResultsUrl}>
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} onClick={submit}>
           Submit
         </Button>
       </ActionButtons>
     );
   };
 
-  if (!resultsUrl) {
+  if (!resultsUrl && !onSubmit) {
     return null;
   }
 

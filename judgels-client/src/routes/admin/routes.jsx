@@ -428,6 +428,20 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemSubmissionsRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'submissions',
+    component: lazyRouteComponent(
+      retryImport(() => import('./problems/ProblemSubmissionsPage/ProblemSubmissionsPage'))
+    ),
+  });
+
+  const adminProblemSubmissionRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'submissions/$submissionId',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemSubmissionPage/ProblemSubmissionPage'))),
+  });
+
   const adminProblemVersionsRoute = createRoute({
     getParentRoute: () => adminProblemRoute,
     path: 'versions',
@@ -577,6 +591,8 @@ export const createAdminRoutes = appRoute => {
         adminProblemGradingHelpersRoute,
         adminProblemGradingLanguageRestrictionRoute,
       ]),
+      adminProblemSubmissionsRoute,
+      adminProblemSubmissionRoute,
       adminProblemVersionsRoute,
       adminProblemPartnersRoute,
     ]),

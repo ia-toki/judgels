@@ -50,11 +50,17 @@ public class BundleSubmissionStore {
                 .build();
     }
 
-    public Optional<BundleSubmission> getSubmissionById(int submissionId) {
-        return submissionDao.selectById(submissionId).map(sm -> {
-            List<BundleGradingModel> gradingModels = gradingDao.selectAllBySubmissionJid(sm.jid);
-            return createSubmissionFromModels(sm, gradingModels);
-        });
+    public Optional<BundleSubmission> getSubmissionById(long submissionId) {
+        return submissionDao.selectById(submissionId).map(this::createSubmissionFromModel);
+    }
+
+    public Optional<BundleSubmission> getSubmissionByJid(String submissionJid) {
+        return submissionDao.selectByJid(submissionJid).map(this::createSubmissionFromModel);
+    }
+
+    private BundleSubmission createSubmissionFromModel(BundleSubmissionModel submissionModel) {
+        List<BundleGradingModel> gradingModels = gradingDao.selectAllBySubmissionJid(submissionModel.jid);
+        return createSubmissionFromModels(submissionModel, gradingModels);
     }
 
     private BundleSubmission createSubmissionFromModels(BundleSubmissionModel submissionModel, List<BundleGradingModel> gradingModels) {

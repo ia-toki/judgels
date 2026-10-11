@@ -55,6 +55,10 @@ export default function ProblemLayout() {
       disabled: problem.type !== ProblemType.Bundle,
     },
     {
+      path: 'submissions',
+      title: 'Submissions',
+    },
+    {
       path: 'partners',
       title: 'Partners',
       disabled: !canManage,
