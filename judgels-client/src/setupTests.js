@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
 import nock from 'nock';
 import { Blob as NodeBlob, File as NodeFile } from 'node:buffer';
 import { TextDecoder, TextEncoder } from 'node:util';
@@ -43,6 +44,7 @@ window.scrollTo = function () {
 };
 
 afterEach(() => {
+  cleanup();
   nock.cleanAll();
   clearSession();
 });

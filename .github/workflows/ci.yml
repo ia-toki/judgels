@@ -61,27 +61,21 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Get yarn cache directory path
-        if: steps.changed-files.outputs.yarn == '1'
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Use yarn cache
-        if: steps.changed-files.outputs.yarn == '1'
-        uses: actions/cache@v3
-        id: yarn-cache
+      - name: Use judgels-client node_modules cache
+        if: steps.changed-files.outputs.judgels-client == '1'
+        uses: actions/cache@v4
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: judgels-client/node_modules
+          key: ${{ runner.os }}-node20-client-modules-${{ hashFiles('judgels-client/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node20-client-modules-
 
       - name: Test judgels-client
         if: steps.changed-files.outputs.judgels-client == '1'
         run: |
           cd judgels-client
           export NODE_OPTIONS="--max-old-space-size=4096"
-          yarn install
+          yarn install --frozen-lockfile
           yarn ci
 
   build:

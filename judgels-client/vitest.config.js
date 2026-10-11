@@ -10,5 +10,6 @@ export default defineConfig({
     include: ['src/**/__tests__/**/*.{js,jsx}', 'src/**/*.{spec,test}.{js,jsx}'],
     css: true,
     mockReset: true,
+    isolate: false,
   },
 });
