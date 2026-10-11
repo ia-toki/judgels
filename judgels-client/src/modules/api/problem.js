@@ -23,6 +23,7 @@ export const ProblemSetterRole = {
 export const ProblemErrors = {
   SlugAlreadyExists: 'ProblemSlugAlreadyExists',
   SetterUsernamesNotFound: 'ProblemSetterUsernamesNotFound',
+  PartnerUsernamesNotFound: 'ProblemPartnerUsernamesNotFound',
   VersionLocalChangesOutdated: 'ProblemVersionLocalChangesOutdated',
   VersionLocalChangesConflict: 'ProblemVersionLocalChangesConflict',
 };

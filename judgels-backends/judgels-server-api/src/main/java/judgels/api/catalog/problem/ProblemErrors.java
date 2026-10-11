@@ -11,6 +11,7 @@ public class ProblemErrors {
 
     public static final String SLUG_ALREADY_EXISTS = "ProblemSlugAlreadyExists";
     public static final String SETTER_USERNAMES_NOT_FOUND = "ProblemSetterUsernamesNotFound";
+    public static final String PARTNER_USERNAMES_NOT_FOUND = "ProblemPartnerUsernamesNotFound";
     public static final String VERSION_LOCAL_CHANGES_OUTDATED = "ProblemVersionLocalChangesOutdated";
     public static final String VERSION_LOCAL_CHANGES_CONFLICT = "ProblemVersionLocalChangesConflict";
 
@@ -24,6 +25,12 @@ public class ProblemErrors {
         Map<String, Object> args = new HashMap<>();
         args.put("usernames", String.join(", ", usernames));
         return new JudgelsApiException(Status.BAD_REQUEST, SETTER_USERNAMES_NOT_FOUND, args);
+    }
+
+    public static JudgelsApiException partnerUsernamesNotFound(Collection<String> usernames) {
+        Map<String, Object> args = new HashMap<>();
+        args.put("usernames", String.join(", ", usernames));
+        return new JudgelsApiException(Status.BAD_REQUEST, PARTNER_USERNAMES_NOT_FOUND, args);
     }
 
     public static JudgelsApiException versionLocalChangesOutdated() {

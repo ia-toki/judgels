@@ -11,12 +11,12 @@ describe('ProblemLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING', canEdit = true }) => {
+  const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING', canEdit = true, canManage = true }) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit, canManage });
     nockApi().get('/v4/problems/JIDPROG1/versions/local/exists').reply(200, hasLocalChanges);
 
     await act(async () =>
@@ -39,16 +39,18 @@ describe('ProblemLayout', () => {
     await renderComponent({ hasLocalChanges: false });
 
     expect(
-      ['General', 'Statements', 'Languages', 'Media', 'Editorial', 'Grading', 'Versions'].map(name =>
-        screen.getByRole('link', { name }).getAttribute('href')
-      )
+      screen
+        .getAllByRole('link')
+        .map(link => link.getAttribute('href'))
+        .filter(href => href.startsWith('/admin/problems/problem-1/'))
     ).toEqual([
       '/admin/problems/problem-1/general',
       '/admin/problems/problem-1/statements',
       '/admin/problems/problem-1/languages',
       '/admin/problems/problem-1/media',
-      '/admin/problems/problem-1/editorial',
       '/admin/problems/problem-1/grading',
+      '/admin/problems/problem-1/partners',
+      '/admin/problems/problem-1/editorial',
       '/admin/problems/problem-1/versions',
     ]);
     expect(screen.queryByRole('link', { name: 'Items' })).not.toBeInTheDocument();
@@ -65,6 +67,11 @@ describe('ProblemLayout', () => {
   test('hides the versions tab when the problem cannot be edited', async () => {
     await renderComponent({ hasLocalChanges: false, canEdit: false });
     expect(screen.queryByRole('link', { name: 'Versions' })).not.toBeInTheDocument();
+  });
+
+  test('hides the partners tab when the problem cannot be managed', async () => {
+    await renderComponent({ hasLocalChanges: false, canManage: false });
+    expect(screen.queryByRole('link', { name: 'Partners' })).not.toBeInTheDocument();
   });
 
   test('warns about uncommitted changes', async () => {

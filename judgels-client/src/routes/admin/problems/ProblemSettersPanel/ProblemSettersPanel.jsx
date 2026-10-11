@@ -5,9 +5,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { BadRequestError } from '../../../../modules/api/error';
-import { ProblemErrors, ProblemSetterRole } from '../../../../modules/api/problem';
-import { SubmissionError } from '../../../../modules/form/submissionError';
+import { ProblemSetterRole } from '../../../../modules/api/problem';
 import {
   problemSettersQueryOptions,
   setProblemSettersMutationOptions,
@@ -17,10 +15,10 @@ import ProblemSettersEditForm from '../ProblemSettersEditForm/ProblemSettersEdit
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 const setterFields = [
-  { role: ProblemSetterRole.Writer, name: 'writerUsernames', title: 'Writers' },
-  { role: ProblemSetterRole.Developer, name: 'developerUsernames', title: 'Developers' },
-  { role: ProblemSetterRole.Tester, name: 'testerUsernames', title: 'Testers' },
-  { role: ProblemSetterRole.Editorialist, name: 'editorialistUsernames', title: 'Editorialists' },
+  { role: ProblemSetterRole.Writer, title: 'Writers' },
+  { role: ProblemSetterRole.Developer, title: 'Developers' },
+  { role: ProblemSetterRole.Tester, title: 'Testers' },
+  { role: ProblemSetterRole.Editorialist, title: 'Editorialists' },
 ];
 
 function parseUsernames(usernames) {
@@ -43,31 +41,14 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
 
   const getSetterUsernames = role => (setterJidsMap[role] || []).map(jid => profilesMap[jid]?.username).join(', ');
 
-  const rows = setterFields.map(({ role, name, title }) => ({ key: name, title, value: getSetterUsernames(role) }));
+  const rows = setterFields.map(({ role, title }) => ({ key: role, title, value: getSetterUsernames(role) }));
 
   const setSetters = async data => {
-    const setterUsernamesMap = Object.fromEntries(
-      setterFields.map(({ role, name }) => [role, parseUsernames(data[name])])
-    );
+    const setterUsernamesMap = Object.fromEntries(setterFields.map(({ role }) => [role, parseUsernames(data[role])]));
 
-    try {
-      await setSettersMutation.mutateAsync(setterUsernamesMap, {
-        onSuccess: () => toastActions.showSuccessToast('Setters updated.'),
-      });
-    } catch (error) {
-      if (error instanceof BadRequestError && error.message === ProblemErrors.SetterUsernamesNotFound) {
-        const usernamesNotFound = parseUsernames(error.args.usernames);
-        const errors = {};
-        setterFields.forEach(({ role, name }) => {
-          const usernames = setterUsernamesMap[role].filter(username => usernamesNotFound.includes(username));
-          if (usernames.length > 0) {
-            errors[name] = 'Users not found: ' + usernames.join(', ');
-          }
-        });
-        throw new SubmissionError(errors);
-      }
-      throw error;
-    }
+    await setSettersMutation.mutateAsync(setterUsernamesMap, {
+      onSuccess: () => toastActions.showSuccessToast('Setters updated.'),
+    });
     setIsEditing(false);
   };
 
@@ -84,7 +65,7 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
 
   const renderContent = () => {
     if (isEditing) {
-      const initialValues = Object.fromEntries(setterFields.map(({ role, name }) => [name, getSetterUsernames(role)]));
+      const initialValues = Object.fromEntries(setterFields.map(({ role }) => [role, getSetterUsernames(role)]));
       return (
         <ProblemSettersEditForm
           initialValues={initialValues}

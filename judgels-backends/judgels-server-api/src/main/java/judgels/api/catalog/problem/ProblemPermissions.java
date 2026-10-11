@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableProblemPermissions.class)
 public interface ProblemPermissions {
     boolean getCanEdit();
+    boolean getCanManage();
 
     class Builder extends ImmutableProblemPermissions.Builder {}
 }

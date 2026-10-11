@@ -122,6 +122,7 @@ public class ProblemResource {
 
         return new ProblemPermissions.Builder()
                 .canEdit(roleChecker.canEdit(actorJid, problem))
+                .canManage(roleChecker.isAuthorOrAbove(actorJid, problem))
                 .build();
     }
 

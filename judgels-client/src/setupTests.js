@@ -47,4 +47,5 @@ afterEach(() => {
   cleanup();
   nock.cleanAll();
   clearSession();
+  localStorage.clear();
 });
