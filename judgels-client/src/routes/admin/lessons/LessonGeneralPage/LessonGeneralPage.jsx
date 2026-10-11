@@ -9,9 +9,11 @@ import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import {
   lessonBySlugQueryOptions,
+  lessonPermissionsQueryOptions,
   lessonQueryOptions,
   updateLessonMutationOptions,
 } from '../../../../modules/queries/lesson';
+import { basicProfileQueryOptions } from '../../../../modules/queries/profile';
 import LessonGeneralEditForm from '../LessonGeneralEditForm/LessonGeneralEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -24,9 +26,13 @@ export default function LessonGeneralPage() {
     data: { jid: lessonJid },
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
+  const { data: lesson } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+
   const {
-    data: { data: lesson, config, profilesMap },
-  } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+    data: { canEdit },
+  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
+
+  const { data: authorProfile } = useSuspenseQuery(basicProfileQueryOptions(lesson.authorJid));
 
   const updateLessonMutation = useMutation(updateLessonMutationOptions(lessonJid, lessonSlug));
 
@@ -37,7 +43,7 @@ export default function LessonGeneralPage() {
   const rows = [
     { key: 'jid', title: 'JID', value: lesson.jid },
     { key: 'slug', title: 'Slug', value: lesson.slug },
-    { key: 'author', title: 'Author', value: <UserRef profile={profilesMap[lesson.authorJid]} /> },
+    { key: 'author', title: 'Author', value: <UserRef profile={authorProfile} /> },
     { key: 'additionalNote', title: 'Additional note', value: lesson.additionalNote },
   ];
 
@@ -56,7 +62,7 @@ export default function LessonGeneralPage() {
 
   const renderEditButton = () => {
     return (
-      config.canEdit &&
+      canEdit &&
       !isEditing && (
         <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit

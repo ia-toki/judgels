@@ -24,6 +24,12 @@ export const lessonVersionsQueryOptions = lessonJid =>
     queryFn: () => lessonVersionAPI.getVersions(getToken(), lessonJid),
   });
 
+export const lessonVersionLocalChangesExistQueryOptions = lessonJid =>
+  queryOptions({
+    queryKey: ['lesson', lessonJid, 'versions', 'local', 'exists'],
+    queryFn: () => lessonVersionAPI.versionLocalChangesExist(getToken(), lessonJid),
+  });
+
 export const restoreLessonVersionMutationOptions = lessonJid => ({
   mutationFn: versionHash => lessonVersionAPI.restoreVersion(getToken(), lessonJid, versionHash),
   onSuccess: invalidateLesson(lessonJid),

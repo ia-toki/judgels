@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { lessonStatementAPI } from '../../../../modules/api/lessonStatement';
-import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonPermissionsQueryOptions } from '../../../../modules/queries/lesson';
 import {
   deleteLessonStatementMediaFileMutationOptions,
   deleteLessonStatementMediaFilesMutationOptions,
@@ -21,8 +21,8 @@ export default function LessonStatementMediaPage() {
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+    data: { canEdit },
+  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
 
   const {
     data: { data: files },
@@ -44,7 +44,7 @@ export default function LessonStatementMediaPage() {
       }
       noun="media"
       files={files}
-      canEdit={config.canEdit}
+      canEdit={canEdit}
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => lessonStatementAPI.downloadStatementMediaFile(getToken(), lessonJid, filename)}

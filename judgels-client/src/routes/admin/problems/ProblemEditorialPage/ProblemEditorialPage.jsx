@@ -10,12 +10,17 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../components/ProblemEditorial/ProblemEditorial';
 import { formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import {
+  problemBySlugQueryOptions,
+  problemPermissionsQueryOptions,
+  problemQueryOptions,
+} from '../../../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
   problemEditorialQueryOptions,
   updateProblemEditorialMutationOptions,
 } from '../../../../modules/queries/problemEditorial';
+import { problemSettersQueryOptions } from '../../../../modules/queries/problemSetter';
 import ProblemEditorialEditForm from '../ProblemEditorialEditForm/ProblemEditorialEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -27,9 +32,15 @@ export default function ProblemEditorialPage() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
+  const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
+
   const {
-    data: { data: problem, setterJidsMap, profilesMap, config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
+
+  const {
+    data: { data: setterJidsMap, profilesMap },
+  } = useSuspenseQuery(problemSettersQueryOptions(problemJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -76,7 +87,7 @@ export default function ProblemEditorialPage() {
 
   const renderEditButton = () => {
     return (
-      config.canEdit &&
+      canEdit &&
       editorial &&
       !isEditing && (
         <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>

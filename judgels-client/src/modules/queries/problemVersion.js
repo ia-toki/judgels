@@ -24,6 +24,12 @@ export const problemVersionsQueryOptions = problemJid =>
     queryFn: () => problemVersionAPI.getVersions(getToken(), problemJid),
   });
 
+export const problemVersionLocalChangesExistQueryOptions = problemJid =>
+  queryOptions({
+    queryKey: ['problem', problemJid, 'versions', 'local', 'exists'],
+    queryFn: () => problemVersionAPI.versionLocalChangesExist(getToken(), problemJid),
+  });
+
 export const restoreProblemVersionMutationOptions = problemJid => ({
   mutationFn: versionHash => problemVersionAPI.restoreVersion(getToken(), problemJid, versionHash),
   onSuccess: invalidateProblem(problemJid),

@@ -5,7 +5,12 @@ import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { ProblemType } from '../../../../modules/api/problem';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import {
+  problemBySlugQueryOptions,
+  problemPermissionsQueryOptions,
+  problemQueryOptions,
+} from '../../../../modules/queries/problem';
+import { problemVersionLocalChangesExistQueryOptions } from '../../../../modules/queries/problemVersion';
 
 export default function ProblemLayout() {
   const { problemSlug } = useParams({ strict: false });
@@ -14,9 +19,13 @@ export default function ProblemLayout() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
+  const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
+
   const {
-    data: { data: problem, hasLocalChanges, config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
+
+  const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
 
   const topbarItems = [
     {
@@ -52,7 +61,7 @@ export default function ProblemLayout() {
     {
       path: 'versions',
       title: 'Versions',
-      disabled: !config.canEdit,
+      disabled: !canEdit,
     },
   ];
 

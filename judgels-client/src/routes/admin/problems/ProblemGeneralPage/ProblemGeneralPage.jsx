@@ -7,31 +7,19 @@ import { useState } from 'react';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
-import { BadRequestError } from '../../../../modules/api/error';
-import { ProblemErrors, ProblemSetterRole, problemTypeNamesMap } from '../../../../modules/api/problem';
-import { SubmissionError } from '../../../../modules/form/submissionError';
+import { problemTypeNamesMap } from '../../../../modules/api/problem';
 import {
   problemBySlugQueryOptions,
+  problemPermissionsQueryOptions,
   problemQueryOptions,
   updateProblemMutationOptions,
 } from '../../../../modules/queries/problem';
+import { basicProfileQueryOptions } from '../../../../modules/queries/profile';
 import ProblemGeneralEditForm from '../ProblemGeneralEditForm/ProblemGeneralEditForm';
+import ProblemSettersPanel from '../ProblemSettersPanel/ProblemSettersPanel';
+import ProblemTopicTagsPanel from '../ProblemTopicTagsPanel/ProblemTopicTagsPanel';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
-
-const setterFields = [
-  { role: ProblemSetterRole.Writer, name: 'writerUsernames', title: 'Writers' },
-  { role: ProblemSetterRole.Developer, name: 'developerUsernames', title: 'Developers' },
-  { role: ProblemSetterRole.Tester, name: 'testerUsernames', title: 'Testers' },
-  { role: ProblemSetterRole.Editorialist, name: 'editorialistUsernames', title: 'Editorialists' },
-];
-
-function parseUsernames(usernames) {
-  return (usernames || '')
-    .split(',')
-    .map(username => username.trim())
-    .filter(username => username);
-}
 
 export default function ProblemGeneralPage() {
   const navigate = useNavigate();
@@ -41,9 +29,13 @@ export default function ProblemGeneralPage() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
+  const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
+
   const {
-    data: { data: problem, setterJidsMap, topicTags, config, profilesMap },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
+
+  const { data: authorProfile } = useSuspenseQuery(basicProfileQueryOptions(problem.authorJid));
 
   const updateProblemMutation = useMutation(updateProblemMutationOptions(problemJid, problemSlug));
 
@@ -51,57 +43,21 @@ export default function ProblemGeneralPage() {
 
   const keyStyles = { width: '250px' };
 
-  const getSetterUsernames = role => (setterJidsMap[role] || []).map(jid => profilesMap[jid]?.username).join(', ');
-
   const rows = [
     { key: 'jid', title: 'JID', value: problem.jid },
     { key: 'slug', title: 'Slug', value: problem.slug },
     { key: 'type', title: 'Type', value: problemTypeNamesMap[problem.type] },
-    { key: 'author', title: 'Author', value: <UserRef profile={profilesMap[problem.authorJid]} /> },
+    { key: 'author', title: 'Author', value: <UserRef profile={authorProfile} /> },
     { key: 'additionalNote', title: 'Additional note', value: problem.additionalNote },
-    ...setterFields.map(({ role, name, title }) => ({ key: name, title, value: getSetterUsernames(role) })),
-    {
-      key: 'topicTags',
-      title: 'Tags',
-      value: topicTags
-        .slice()
-        .sort()
-        .map(tag => tag.substring('topic-'.length))
-        .join(', '),
-    },
   ];
 
   const updateProblem = async data => {
-    const setterUsernamesMap = Object.fromEntries(
-      setterFields.map(({ role, name }) => [role, parseUsernames(data[name])])
-    );
-
-    try {
-      await updateProblemMutation.mutateAsync(
-        {
-          slug: data.slug,
-          additionalNote: data.additionalNote || '',
-          setterUsernamesMap,
-          topicTags: data.topicTags || [],
-        },
-        {
-          onSuccess: () => toastActions.showSuccessToast('Problem updated.'),
-        }
-      );
-    } catch (error) {
-      if (error instanceof BadRequestError && error.message === ProblemErrors.SetterUsernamesNotFound) {
-        const usernamesNotFound = parseUsernames(error.args.usernames);
-        const errors = {};
-        setterFields.forEach(({ role, name }) => {
-          const usernames = setterUsernamesMap[role].filter(username => usernamesNotFound.includes(username));
-          if (usernames.length > 0) {
-            errors[name] = 'Users not found: ' + usernames.join(', ');
-          }
-        });
-        throw new SubmissionError(errors);
+    await updateProblemMutation.mutateAsync(
+      { slug: data.slug, additionalNote: data.additionalNote || '' },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Problem updated.'),
       }
-      throw error;
-    }
+    );
     setIsEditing(false);
     if (data.slug !== problemSlug) {
       navigate({ to: `/admin/problems/${data.slug}` });
@@ -110,7 +66,7 @@ export default function ProblemGeneralPage() {
 
   const renderEditButton = () => {
     return (
-      config.canEdit &&
+      canEdit &&
       !isEditing && (
         <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
@@ -124,13 +80,10 @@ export default function ProblemGeneralPage() {
       const initialValues = {
         slug: problem.slug,
         additionalNote: problem.additionalNote,
-        ...Object.fromEntries(setterFields.map(({ role, name }) => [name, getSetterUsernames(role)])),
-        topicTags,
       };
       return (
         <ProblemGeneralEditForm
           initialValues={initialValues}
-          setterFields={setterFields}
           onSubmit={updateProblem}
           onCancel={() => setIsEditing(false)}
         />
@@ -140,14 +93,18 @@ export default function ProblemGeneralPage() {
   };
 
   return (
-    <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>General</span>
-          {renderEditButton()}
-        </h4>
-      </Flex>
-      {renderContent()}
-    </div>
+    <Flex flexDirection="column" gap={4}>
+      <section aria-label="General">
+        <Flex asChild justifyContent="space-between" alignItems="baseline">
+          <h4>
+            <span>General</span>
+            {renderEditButton()}
+          </h4>
+        </Flex>
+        {renderContent()}
+      </section>
+      <ProblemSettersPanel problemJid={problemJid} canEdit={canEdit} />
+      <ProblemTopicTagsPanel problemJid={problemJid} canEdit={canEdit} />
+    </Flex>
   );
 }

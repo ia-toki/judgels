@@ -15,14 +15,14 @@ import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemEditorial;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
-import judgels.client.ProblemClient;
 import judgels.client.ProblemEditorialClient;
+import judgels.client.ProblemVersionClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final ProblemClient problemClient = createClient(ProblemClient.class);
     private final ProblemEditorialClient editorialClient = createClient(ProblemEditorialClient.class);
+    private final ProblemVersionClient versionClient = createClient(ProblemVersionClient.class);
 
     @BeforeAll
     static void setUpWebTarget() {
@@ -34,7 +34,7 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         Problem problem = createProblem(adminToken, "editorial-problem");
         String problemJid = problem.getJid();
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasEditorial()).isFalse();
+        assertThat(editorialClient.editorialExists(adminToken, problemJid)).isFalse();
         assertNotFound(() -> editorialClient.getEditorial(adminToken, problemJid, null));
         assertNotFound(() -> editorialClient.getEditorialLanguages(adminToken, problemJid));
         assertNotFound(() -> editorialClient.getEditorialMediaFiles(adminToken, problemJid));
@@ -45,8 +45,8 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
 
         editorialClient.createEditorial(adminToken, problemJid, createData("en-US"));
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasEditorial()).isTrue();
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(editorialClient.editorialExists(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
         assertThat(editorialClient.getEditorial(adminToken, problemJid, null)).isEqualTo(editorial(""));
 
         assertBadRequest(() -> editorialClient.createEditorial(adminToken, problemJid, createData("en-US")));

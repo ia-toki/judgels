@@ -1,10 +1,11 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions } from '../../../../modules/queries/lesson';
 import {
   commitLessonVersionLocalChangesMutationOptions,
   discardLessonVersionLocalChangesMutationOptions,
+  lessonVersionLocalChangesExistQueryOptions,
   lessonVersionsQueryOptions,
   rebaseLessonVersionLocalChangesMutationOptions,
   restoreLessonVersionMutationOptions,
@@ -18,9 +19,7 @@ export default function LessonVersionsPage() {
     data: { jid: lessonJid },
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
-  const {
-    data: { hasLocalChanges },
-  } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(lessonVersionLocalChangesExistQueryOptions(lessonJid));
 
   const {
     data: { data: versions, profilesMap },

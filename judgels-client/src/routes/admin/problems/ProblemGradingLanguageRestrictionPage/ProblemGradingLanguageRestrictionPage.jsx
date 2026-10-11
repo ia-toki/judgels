@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { allLanguagesAllowed, getGradingLanguageName, gradingLanguages } from '../../../../modules/api/gradingLanguage';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingLanguageRestrictionQueryOptions,
   updateProblemGradingLanguageRestrictionMutationOptions,
@@ -22,8 +22,8 @@ export default function ProblemGradingLanguageRestrictionPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: languageRestriction } = useSuspenseQuery(problemGradingLanguageRestrictionQueryOptions(problemJid));
 
@@ -60,7 +60,7 @@ export default function ProblemGradingLanguageRestrictionPage() {
         <Checkbox
           label="Allow all"
           checked={isAllowedAll}
-          disabled={!config.canEdit}
+          disabled={!canEdit}
           onChange={e => setIsAllowedAll(e.target.checked)}
         />
         {gradingLanguages.map(language => (
@@ -68,12 +68,12 @@ export default function ProblemGradingLanguageRestrictionPage() {
             key={language}
             label={getGradingLanguageName(language)}
             checked={isAllowedAll || allowedLanguages.includes(language)}
-            disabled={!config.canEdit || isAllowedAll}
+            disabled={!canEdit || isAllowedAll}
             onChange={() => toggleLanguage(language)}
           />
         ))}
       </div>
-      {config.canEdit && (
+      {canEdit && (
         <ActionButtons>
           <Button
             text="Save"

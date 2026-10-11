@@ -15,16 +15,7 @@ describe('ProblemVersionsPage', () => {
 
   const renderComponent = async ({ hasLocalChanges = true } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi()
-      .get('/v4/problems/JIDPROG1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type: 'PROGRAMMING', authorJid: 'JIDUSER1' },
-        setterJidsMap: {},
-        topicTags: [],
-        hasLocalChanges,
-        config: { canEdit: true, canManage: true },
-        profilesMap: {},
-      });
+    nockApi().get('/v4/problems/JIDPROG1/versions/local/exists').reply(200, hasLocalChanges);
     nockApi()
       .get('/v4/problems/JIDPROG1/versions')
       .reply(200, {

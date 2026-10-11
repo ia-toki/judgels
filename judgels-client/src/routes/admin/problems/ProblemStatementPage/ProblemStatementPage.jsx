@@ -12,7 +12,11 @@ import { ProblemType } from '../../../../modules/api/problem';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import {
+  problemBySlugQueryOptions,
+  problemPermissionsQueryOptions,
+  problemQueryOptions,
+} from '../../../../modules/queries/problem';
 import { problemItemsQueryOptions } from '../../../../modules/queries/problemItem';
 import {
   problemStatementLanguagesQueryOptions,
@@ -30,9 +34,11 @@ export default function ProblemStatementPage() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
+  const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
+
   const {
-    data: { data: problem, config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -86,7 +92,7 @@ export default function ProblemStatementPage() {
 
   const renderEditButton = () => {
     return (
-      config.canEdit &&
+      canEdit &&
       statement &&
       !isEditing && (
         <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>

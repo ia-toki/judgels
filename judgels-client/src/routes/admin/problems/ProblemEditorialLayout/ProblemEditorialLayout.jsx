@@ -6,8 +6,11 @@ import { useState } from 'react';
 
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
-import { createProblemEditorialMutationOptions } from '../../../../modules/queries/problemEditorial';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import {
+  createProblemEditorialMutationOptions,
+  problemEditorialExistsQueryOptions,
+} from '../../../../modules/queries/problemEditorial';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -27,8 +30,10 @@ export default function ProblemEditorialLayout() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { hasEditorial, config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
+
+  const { data: editorialExists } = useSuspenseQuery(problemEditorialExistsQueryOptions(problemJid));
 
   const createEditorialMutation = useMutation(createProblemEditorialMutationOptions(problemJid));
 
@@ -44,14 +49,14 @@ export default function ProblemEditorialLayout() {
   };
 
   // A problem has no editorial until one is created, and only then is there anything for the tabs to show.
-  if (!hasEditorial) {
+  if (!editorialExists) {
     return (
       <Flex flexDirection="column" gap={2}>
         <h4>Editorial</h4>
         <p>
           <small>This problem has no editorial.</small>
         </p>
-        {config.canEdit && (
+        {canEdit && (
           <Flex gap={2} alignItems="center">
             <HTMLSelect
               aria-label="Initial language"

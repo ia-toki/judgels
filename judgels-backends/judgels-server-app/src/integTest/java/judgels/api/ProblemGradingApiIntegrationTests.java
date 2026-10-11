@@ -18,8 +18,8 @@ import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingConfig;
 import judgels.api.catalog.problem.programming.grading.ProblemGradingEngineUpdateData;
-import judgels.client.ProblemClient;
 import judgels.client.ProblemGradingClient;
+import judgels.client.ProblemVersionClient;
 import judgels.grading.api.LanguageRestriction;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Test;
 class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private final ProblemClient problemClient = createClient(ProblemClient.class);
     private final ProblemGradingClient gradingClient = createClient(ProblemGradingClient.class);
+    private final ProblemVersionClient versionClient = createClient(ProblemVersionClient.class);
 
     @BeforeAll
     static void setUpWebTarget() {
@@ -42,7 +42,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         ProblemGradingConfig gradingConfig = gradingClient.getGradingConfig(adminToken, problemJid);
         assertThat(gradingConfig.getEngine()).isEqualTo("Batch");
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
 
         ObjectNode config = gradingConfig.getConfig().deepCopy();
         config.put("timeLimit", 3000);
@@ -53,7 +53,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         gradingClient.updateGradingConfig(adminToken, problemJid, newGradingConfig);
 
         assertThat(gradingClient.getGradingConfig(adminToken, problemJid)).isEqualTo(newGradingConfig);
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
 
         // a config for another engine, and a config the engine cannot parse
         assertBadRequest(() -> gradingClient.updateGradingConfig(adminToken, problemJid, new ProblemGradingConfig.Builder()
@@ -124,7 +124,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(gradingClient.getGradingTestDataFiles(adminToken, problemJid).getData())
                 .extracting(CatalogFile::getName)
                 .containsExactly("1.in", "1.out", "2.in");
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
 
         try (var response = gradingClient.downloadGradingTestDataFile(adminToken, problemJid, "1.in")) {
             assertThat(response.status()).isEqualTo(200);

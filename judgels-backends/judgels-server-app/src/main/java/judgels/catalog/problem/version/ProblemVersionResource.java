@@ -97,6 +97,21 @@ public class ProblemVersionResource {
         versionService.rebaseLocalChanges(actorJid, problemJid);
     }
 
+    @GET
+    @Path("/local/exists")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public boolean versionLocalChangesExist(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemJid") String problemJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Problem problem = checkFound(problemStore.getProblemByJid(problemJid));
+        checkAllowed(roleChecker.canView(actorJid, problem));
+
+        return problemStore.userCloneExists(actorJid, problemJid);
+    }
+
     @DELETE
     @Path("/local")
     @UnitOfWork

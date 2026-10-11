@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   createProblemItemMutationOptions,
   deleteProblemItemMutationOptions,
@@ -56,8 +56,8 @@ export default function ProblemItemsPage() {
   const navigate = useNavigate();
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: items },
@@ -97,7 +97,7 @@ export default function ProblemItemsPage() {
   };
 
   const renderAddForm = () => {
-    if (!config.canEdit) {
+    if (!canEdit) {
       return null;
     }
     return (
@@ -121,7 +121,7 @@ export default function ProblemItemsPage() {
   };
 
   const renderActions = (item, idx) => {
-    if (!config.canEdit) {
+    if (!canEdit) {
       return null;
     }
     return (

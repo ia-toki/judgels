@@ -14,14 +14,14 @@ import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.statement.ProblemStatementLanguagesResponse;
-import judgels.client.ProblemClient;
 import judgels.client.ProblemStatementClient;
+import judgels.client.ProblemVersionClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final ProblemClient problemClient = createClient(ProblemClient.class);
     private final ProblemStatementClient statementClient = createClient(ProblemStatementClient.class);
+    private final ProblemVersionClient versionClient = createClient(ProblemVersionClient.class);
 
     @BeforeAll
     static void setUpWebTarget() {
@@ -37,7 +37,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         assertThat(defaultStatement.getTitle()).isNotEmpty();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(defaultStatement);
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
 
         ProblemStatement statement = new ProblemStatement.Builder()
                 .title("Problem A")
@@ -46,7 +46,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement);
 
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(statement);
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
 
         assertBadRequest(() -> statementClient.getStatement(adminToken, problemJid, "id-ID"));
         assertBadRequest(() -> statementClient.updateStatement(adminToken, problemJid, "id-ID", statement));

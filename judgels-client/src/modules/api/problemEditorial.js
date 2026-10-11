@@ -18,6 +18,10 @@ export const problemEditorialAPI = {
     return get(`${baseURL(problemJid)}?${params}`, token);
   },
 
+  editorialExists: (token, problemJid) => {
+    return get(`${baseURL(problemJid)}/exists`, token);
+  },
+
   createEditorial: (token, problemJid, data) => {
     return post(baseURL(problemJid), token, data);
   },

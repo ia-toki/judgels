@@ -15,14 +15,7 @@ describe('LessonStatementLanguagesPage', () => {
 
   const renderComponent = async ({ canEdit = true } = {}) => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
-    nockApi()
-      .get('/v4/lessons/JIDLESS1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDLESS1', slug: 'lesson-1', authorJid: 'JIDUSER1' },
-        hasLocalChanges: false,
-        config: { canEdit },
-        profilesMap: {},
-      });
+    nockApi().get('/v4/lessons/JIDLESS1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/lessons/JIDLESS1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });

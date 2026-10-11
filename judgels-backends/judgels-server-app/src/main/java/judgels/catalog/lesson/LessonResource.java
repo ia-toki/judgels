@@ -19,12 +19,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.Optional;
-import java.util.Set;
 import judgels.api.catalog.lesson.Lesson;
-import judgels.api.catalog.lesson.LessonConfig;
 import judgels.api.catalog.lesson.LessonCreateData;
 import judgels.api.catalog.lesson.LessonErrors;
-import judgels.api.catalog.lesson.LessonResponse;
+import judgels.api.catalog.lesson.LessonPermissions;
 import judgels.api.catalog.lesson.LessonUpdateData;
 import judgels.api.catalog.lesson.LessonsResponse;
 import judgels.catalog.WorldLanguageRegistry;
@@ -95,7 +93,7 @@ public class LessonResource {
     @Path("/{lessonJid}")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public LessonResponse getLesson(
+    public Lesson getLesson(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("lessonJid") String lessonJid) {
 
@@ -103,13 +101,23 @@ public class LessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonByJid(lessonJid));
         checkAllowed(roleChecker.canView(actorJid, lesson));
 
-        return new LessonResponse.Builder()
-                .data(lesson)
-                .hasLocalChanges(lessonStore.userCloneExists(actorJid, lessonJid))
-                .config(new LessonConfig.Builder()
-                        .canEdit(roleChecker.canEdit(actorJid, lesson))
-                        .build())
-                .profilesMap(profileStore.getProfiles(Set.of(lesson.getAuthorJid())))
+        return lesson;
+    }
+
+    @GET
+    @Path("/{lessonJid}/permissions")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public LessonPermissions getLessonPermissions(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("lessonJid") String lessonJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Lesson lesson = checkFound(lessonStore.getLessonByJid(lessonJid));
+        checkAllowed(roleChecker.canView(actorJid, lesson));
+
+        return new LessonPermissions.Builder()
+                .canEdit(roleChecker.canEdit(actorJid, lesson))
                 .build();
     }
 

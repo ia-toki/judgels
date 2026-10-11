@@ -9,7 +9,7 @@ import { LessonStatementCard } from '../../../../components/LessonStatementCard/
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonPermissionsQueryOptions } from '../../../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementQueryOptions,
@@ -27,8 +27,8 @@ export default function LessonStatementPage() {
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+    data: { canEdit },
+  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -75,7 +75,7 @@ export default function LessonStatementPage() {
 
   const renderEditButton = () => {
     return (
-      config.canEdit &&
+      canEdit &&
       statement &&
       !isEditing && (
         <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>

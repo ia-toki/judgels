@@ -14,13 +14,13 @@ import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonStatement;
 import judgels.api.catalog.lesson.statement.LessonStatementLanguagesResponse;
-import judgels.client.LessonClient;
 import judgels.client.LessonStatementClient;
+import judgels.client.LessonVersionClient;
 import org.junit.jupiter.api.Test;
 
 class LessonStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final LessonClient lessonClient = createClient(LessonClient.class);
     private final LessonStatementClient statementClient = createClient(LessonStatementClient.class);
+    private final LessonVersionClient versionClient = createClient(LessonVersionClient.class);
 
     @Test
     void update_statement() {
@@ -31,7 +31,7 @@ class LessonStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         assertThat(defaultStatement.getTitle()).isNotEmpty();
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(defaultStatement);
 
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isFalse();
 
         LessonStatement statement = new LessonStatement.Builder()
                 .title("Lesson A")
@@ -40,7 +40,7 @@ class LessonStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         statementClient.updateStatement(adminToken, lessonJid, "en-US", statement);
 
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(statement);
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isTrue();
 
         assertBadRequest(() -> statementClient.getStatement(adminToken, lessonJid, "id-ID"));
         assertBadRequest(() -> statementClient.updateStatement(adminToken, lessonJid, "id-ID", statement));
