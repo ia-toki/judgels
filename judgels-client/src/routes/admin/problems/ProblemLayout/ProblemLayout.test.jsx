@@ -49,6 +49,7 @@ describe('ProblemLayout', () => {
       '/admin/problems/problem-1/languages',
       '/admin/problems/problem-1/media',
       '/admin/problems/problem-1/grading',
+      '/admin/problems/problem-1/submissions',
       '/admin/problems/problem-1/partners',
       '/admin/problems/problem-1/editorial',
       '/admin/problems/problem-1/versions',

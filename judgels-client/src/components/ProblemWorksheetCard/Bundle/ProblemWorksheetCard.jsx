@@ -12,6 +12,8 @@ export function ProblemWorksheetCard({
   latestSubmissions,
   onAnswerItem,
   resultsUrl,
+  onSubmit,
+  isSubmitting,
   disabled,
 }) {
   const { statement, items, reasonNotAllowedToSubmit } = worksheet;
@@ -26,7 +28,12 @@ export function ProblemWorksheetCard({
         latestSubmissions={latestSubmissions}
         disabled={disabled || !!reasonNotAllowedToSubmit}
       />
-      <ProblemSubmissionCard reasonNotAllowedToSubmit={reasonNotAllowedToSubmit} resultsUrl={resultsUrl} />
+      <ProblemSubmissionCard
+        reasonNotAllowedToSubmit={reasonNotAllowedToSubmit}
+        resultsUrl={resultsUrl}
+        onSubmit={onSubmit}
+        isSubmitting={isSubmitting}
+      />
     </Flex>
   );
 }

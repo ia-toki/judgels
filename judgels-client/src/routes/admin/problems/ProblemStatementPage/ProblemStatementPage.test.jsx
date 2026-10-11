@@ -13,12 +13,21 @@ describe('ProblemStatementPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true, type = 'PROGRAMMING' } = {}) => {
+  const renderComponent = async ({ canEdit = true, type = 'PROGRAMMING', reasonNotAllowedToSubmit } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit, reasonNotAllowedToSubmit });
+    if (canEdit && type === 'PROGRAMMING') {
+      nockApi()
+        .get('/v4/problems/JIDPROG1/submissions/programming/config')
+        .reply(200, {
+          sourceKeys: { source: 'Source code' },
+          gradingEngine: 'Batch',
+          gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11'] },
+        });
+    }
     nockApi()
       .get('/v4/problems/JIDPROG1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });
@@ -55,7 +64,7 @@ describe('ProblemStatementPage', () => {
     expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/);
   });
 
-  test('previews a bundle problem with its items', async () => {
+  const nockBundleItems = () => {
     nockApi()
       .get('/v4/problems/JIDPROG1/items')
       .query({ language: 'id-ID' })
@@ -79,8 +88,11 @@ describe('ProblemStatementPage', () => {
           },
         ],
       });
+  };
 
-    await renderComponent({ type: 'BUNDLE' });
+  test('previews a bundle problem with its items', async () => {
+    nockBundleItems();
+    await renderComponent({ type: 'BUNDLE', canEdit: false });
 
     expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
     expect(screen.getByText('Bacalah.')).toBeInTheDocument();
@@ -91,6 +103,60 @@ describe('ProblemStatementPage', () => {
       expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/satu\.png$/),
     ]);
     screen.getAllByRole('radio').forEach(radio => expect(radio).toBeDisabled());
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+  });
+
+  test('submits a solution', async () => {
+    await renderComponent();
+    const user = userEvent.setup();
+
+    const file = new File(['int main() {}'], 'solution.cpp', { type: 'text/plain' });
+    Object.defineProperty(file, 'size', { value: 1000 });
+    await user.upload(document.querySelector('input[name="sourceFiles.source"]'), file);
+
+    nockApi()
+      .post(
+        '/v4/problems/JIDPROG1/submissions/programming',
+        body =>
+          body.includes('name="gradingLanguage"\r\n\r\nCpp11\r\n') &&
+          body.includes('name="sourceFiles.source"') &&
+          body.includes('int main() {}')
+      )
+      .reply(200, { id: 10, jid: 'JIDSUBM1' });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('submits the answers of a bundle problem together', async () => {
+    nockBundleItems();
+    await renderComponent({ type: 'BUNDLE' });
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('radio', { name: /dua/ }));
+
+    nockApi()
+      .post('/v4/problems/JIDPROG1/submissions/bundle', { answers: { JIDITEM2: 'b' }, languageCode: 'id-ID' })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('tells why a solution cannot be submitted', async () => {
+    await renderComponent({ reasonNotAllowedToSubmit: 'Submission not allowed if there are local changes.' });
+
+    expect(screen.getByText('Submission not allowed if there are local changes.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
+  });
+
+  test('hides the submission form when the problem cannot be edited', async () => {
+    await renderComponent({ canEdit: false, reasonNotAllowedToSubmit: 'Submission not allowed.' });
+
+    expect(screen.queryByText('Submission not allowed.')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
   });
 
   test('switches the language', async () => {

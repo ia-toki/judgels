@@ -6,7 +6,7 @@ Server packages and DTO packages (`judgels.api.…`) follow the layers defined i
 |---|---|---|
 | Catalog | `judgels.catalog.problem.*`, `judgels.catalog.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
 | Host | `judgels.contest.*`, `judgels.training.*` | `/api/v2/contests/...`; training at `/api/v2/{curriculums,courses,chapters,archives,problemsets}/...` and `/api/v4/training/...` |
-| Submission | `judgels.submission.*` | none |
+| Submission | `judgels.submission.*` | test submissions at `/api/v4/problems/{problemJid}/submissions/{programming,bundle}/...` |
 | Grading | `judgels.grading.*` | none |
 | System | `judgels.user.*`, `judgels.profile.*`, `judgels.session.*`, `judgels.setting.*` | `/api/v2/{users,user-*,session,profiles,settings}/...` |
 
@@ -25,7 +25,7 @@ Imports point one way: host → submission → catalog → system → core. Grad
 
 Two dependencies go against that direction, and they are the only ones allowed: the catalog's bundle grading uses the submission bundle DTOs, and training's problem set problems read the contest they came from.
 
-Submission code is written once and reused by every host, and by the catalog for test submissions. Each of them gives it its own tables and passes the container as an opaque `containerJid`, which only it interprets.
+Submission code is written once and reused by every host, each of which gives it its own tables and passes the container as an opaque `containerJid`, which only it interprets. Test submissions have no host, so the submission layer serves them itself, with the problem as their container.
 
 Grading code sees only the problem and the answer, never the submission, user or container behind it.
 

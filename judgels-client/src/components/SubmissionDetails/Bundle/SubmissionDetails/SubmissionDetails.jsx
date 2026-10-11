@@ -16,6 +16,7 @@ export function SubmissionDetails({
   submissionsByItemJid,
   itemTypesMap,
   canViewGrading,
+  showVerdict = true,
   canManage,
   onRegrade,
 }) {
@@ -30,9 +31,11 @@ export function SubmissionDetails({
           </td>
           {canViewGrading && (
             <>
-              <td className="col-fit">
-                {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
-              </td>
+              {showVerdict && (
+                <td className="col-fit">
+                  {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+                </td>
+              )}
               <td className="col-fit">{submission.grading ? submission.grading.score : '-'}</td>
             </>
           )}
@@ -45,7 +48,7 @@ export function SubmissionDetails({
           <td>-</td>
           {canViewGrading && (
             <>
-              <td className="col-fit">-</td>
+              {showVerdict && <td className="col-fit">-</td>}
               <td className="col-fit">-</td>
             </>
           )}
@@ -90,7 +93,7 @@ export function SubmissionDetails({
             <th>Answer</th>
             {canViewGrading && (
               <>
-                <th className="col-fit">Verdict</th>
+                {showVerdict && <th className="col-fit">Verdict</th>}
                 <th className="col-fit">Score</th>
               </>
             )}
