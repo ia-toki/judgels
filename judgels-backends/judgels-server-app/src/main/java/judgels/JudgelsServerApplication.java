@@ -59,11 +59,18 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
     public void run(JudgelsServerApplicationConfiguration config, Environment env) throws Exception {
         JudgelsApp.initialize(config.getJudgelsConfig().getAppConfig());
 
-        runMichael(config, env);
-        runJudgelsServer(config, env);
+        // Shared so that, without RabbitMQ, both components exchange messages through the same fake one.
+        RabbitMQModule rabbitMQModule = new RabbitMQModule(config.getJudgelsConfig().getRabbitMQConfig());
+
+        runMichael(config, env, rabbitMQModule);
+        runJudgelsServer(config, env, rabbitMQModule);
     }
 
-    private void runMichael(JudgelsServerApplicationConfiguration config, Environment env) {
+    private void runMichael(
+            JudgelsServerApplicationConfiguration config,
+            Environment env,
+            RabbitMQModule rabbitMQModule) {
+
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
         MichaelComponent component = DaggerMichaelComponent.builder()
@@ -71,7 +78,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
-                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
+                .rabbitMQModule(rabbitMQModule)
                 .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .build();
 
@@ -104,7 +111,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.lessonVersionResource());
     }
 
-    private void runJudgelsServer(JudgelsServerApplicationConfiguration config, Environment env) {
+    private void runJudgelsServer(
+            JudgelsServerApplicationConfiguration config,
+            Environment env,
+            RabbitMQModule rabbitMQModule) {
+
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
         StatsConfiguration statsConfig = StatsConfiguration.DEFAULT;
@@ -127,7 +138,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsSchedulerModule(new JudgelsSchedulerModule(env))
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
-                .rabbitMQModule(new RabbitMQModule(judgelsConfig.getRabbitMQConfig()))
+                .rabbitMQModule(rabbitMQModule)
                 .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
                 .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
                 .sessionModule(new SessionModule())
@@ -182,8 +193,9 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.lessonStatementResource());
         env.jersey().register(component.lessonVersionResource());
 
-        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.problemGradingResponsePoller());
+        env.lifecycle().manage(component.problemGradingResponsePoller());
+        if (judgelsConfig.getGradingConfig().getFakeGraderEnabled()) {
+            env.lifecycle().manage(component.fakeGradingRequestPoller());
         }
 
         // Contests
@@ -218,9 +230,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.contestLogPoller(),
                 Duration.ofSeconds(3));
 
-        if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-            env.lifecycle().manage(component.contestGradingResponsePoller());
-        }
+        env.lifecycle().manage(component.contestGradingResponsePoller());
 
         env.admin().addTask(component.dumpContestTask());
 
@@ -245,9 +255,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.trainingProblemTagResource());
             env.jersey().register(component.trainingUserStatsResource());
 
-            if (judgelsConfig.getRabbitMQConfig().isPresent()) {
-                env.lifecycle().manage(component.trainingGradingResponsePoller());
-            }
+            env.lifecycle().manage(component.trainingGradingResponsePoller());
 
             env.admin().addTask(component.deleteTrainingProblemTask());
             env.admin().addTask(component.moveTrainingProblemToChapterTask());

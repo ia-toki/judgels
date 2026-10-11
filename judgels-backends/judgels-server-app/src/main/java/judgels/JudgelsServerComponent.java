@@ -115,6 +115,7 @@ public interface JudgelsServerComponent {
     GradingResponsePoller problemGradingResponsePoller();
     @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
     @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
+    judgels.grading.FakeGradingRequestPoller fakeGradingRequestPoller();
 
     judgels.tasks.DumpContestTask dumpContestTask();
     judgels.tasks.DeleteTrainingProblemTask deleteTrainingProblemTask();

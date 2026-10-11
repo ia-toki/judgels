@@ -6,8 +6,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import jakarta.inject.Inject;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -21,17 +21,23 @@ public class MessageListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListener.class);
 
     private final ObjectMapper objectMapper;
-    private final RabbitMQ rabbitMQ;
+    private final Optional<RabbitMQ> rabbitMQ;
+    private final FakeRabbitMQ fakeRabbitMQ;
     private Channel channel;
 
-    @Inject
-    public MessageListener(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
+    public MessageListener(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ, FakeRabbitMQ fakeRabbitMQ) {
         this.objectMapper = objectMapper;
         this.rabbitMQ = rabbitMQ;
+        this.fakeRabbitMQ = fakeRabbitMQ;
     }
 
     public void start(String queueName, ThreadPoolExecutor executorService, Consumer<Message> messageConsumer) throws IOException, TimeoutException {
-        Connection connection = rabbitMQ.getConnection();
+        if (rabbitMQ.isEmpty()) {
+            fakeRabbitMQ.listen(queueName, executorService, messageConsumer);
+            return;
+        }
+
+        Connection connection = rabbitMQ.get().getConnection();
 
         channel = connection.createChannel();
         channel.queueDeclare(queueName, true, false, false, null);

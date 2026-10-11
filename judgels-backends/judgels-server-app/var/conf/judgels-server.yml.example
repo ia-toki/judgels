@@ -57,6 +57,7 @@ judgels:
   grading:
     gradingRequestQueueName: judgels-grading-request
     gradingResponseQueueName: judgels-grading-response
+#    fake: true
 
   userResetPassword:
     enabled: false
