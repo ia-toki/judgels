@@ -82,7 +82,7 @@ export default function ProblemEditorialLayout() {
   }
 
   return (
-    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/editorial`}>
+    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/editorial`} secondary>
       <Outlet />
     </ContentWithTopbar>
   );

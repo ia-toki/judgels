@@ -14,7 +14,7 @@ export default function ProblemGradingLayout() {
   const { problemSlug } = useParams({ strict: false });
 
   return (
-    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/grading`}>
+    <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}/grading`} secondary>
       <Outlet />
     </ContentWithTopbar>
   );

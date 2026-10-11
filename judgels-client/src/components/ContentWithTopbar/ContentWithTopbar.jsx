@@ -16,7 +16,7 @@ function resolveUrl(parentPath, childPath) {
   return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
 }
 
-export default function ContentWithTopbar({ className, items, basePath, children }) {
+export default function ContentWithTopbar({ className, items, basePath, secondary, children }) {
   const location = useLocation();
 
   const renderTopbar = () => {
@@ -28,7 +28,14 @@ export default function ContentWithTopbar({ className, items, basePath, children
         title: item.title,
       }));
 
-    return <Topbar activeItemPath={getActiveItemPath()} items={topbarItems} onResolveItemUrl={onResolveItemUrl} />;
+    return (
+      <Topbar
+        activeItemPath={getActiveItemPath()}
+        items={topbarItems}
+        secondary={secondary}
+        onResolveItemUrl={onResolveItemUrl}
+      />
+    );
   };
 
   const onResolveItemUrl = itemPath => {
