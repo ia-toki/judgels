@@ -10,8 +10,15 @@ export const userRolesQueryOptions = () =>
     queryFn: () => userRoleAPI.getRoles(getToken()),
   });
 
-export const setUserRolesMutationOptions = () => ({
-  mutationFn: usernameToRoleMap => userRoleAPI.setRoles(getToken(), usernameToRoleMap),
+export const upsertUserRolesMutationOptions = () => ({
+  mutationFn: ({ usernames, role }) => userRoleAPI.upsertRoles(getToken(), usernames, role),
+  onSuccess: () => {
+    queryClient.invalidateQueries(userRolesQueryOptions());
+  },
+});
+
+export const setUserRoleMutationOptions = userJid => ({
+  mutationFn: role => userRoleAPI.setRole(getToken(), userJid, role),
   onSuccess: () => {
     queryClient.invalidateQueries(userRolesQueryOptions());
   },

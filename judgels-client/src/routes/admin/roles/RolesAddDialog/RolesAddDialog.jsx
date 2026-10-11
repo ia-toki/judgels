@@ -1,12 +1,15 @@
-import { Button, Classes, Dialog, FormGroup, Intent } from '@blueprintjs/core';
+import { Button, Callout, Classes, Dialog, FormGroup, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { Required } from '../../../../components/forms/validations';
-import { RoleSelect, emptyRoles, getRoleFields } from '../RoleSelect/RoleSelect';
+import { upsertUserRolesMutationOptions } from '../../../../modules/queries/userRole';
+import { RoleCheckboxes } from '../RoleCheckboxes/RoleCheckboxes';
+
+import * as toastActions from '../../../../modules/toast/toastActions';
 
 import './RolesAddDialog.scss';
 
@@ -14,25 +17,30 @@ const usernamesField = {
   name: 'usernames',
   label: 'Usernames',
   labelHelper: '(one username per line)',
-  rows: 8,
+  rows: 6,
   isCode: true,
   validate: Required,
   autoFocus: true,
 };
 
+const initialValues = { roles: {} };
+
 function parseUsernames(text) {
-  return text
+  const usernames = text
     .split('\n')
     .map(s => s.trim())
     .filter(s => s.length > 0);
+  return [...new Set(usernames)];
 }
 
-export function RolesAddDialog({ onAdd }) {
+export function RolesAddDialog({ superadminUsername }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState(undefined);
 
-  const roleFields = getRoleFields();
+  const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
 
   const openDialog = () => {
+    setError(undefined);
     setIsOpen(true);
   };
 
@@ -40,51 +48,72 @@ export function RolesAddDialog({ onAdd }) {
     setIsOpen(false);
   };
 
-  const handleAdd = values => {
-    const names = parseUsernames(values.usernames);
-    const roles = {};
-    for (const { key } of roleFields) {
-      roles[key] = values[key] || '';
+  const addUsers = async (values, form) => {
+    const usernames = parseUsernames(values.usernames);
+    if (usernames.includes(superadminUsername)) {
+      setError(`${superadminUsername} already holds every role.`);
+      return;
     }
-    onAdd(names.map(username => ({ username, ...roles })));
-    setIsOpen(false);
+
+    const role = Object.fromEntries(
+      Object.entries(values.roles)
+        .filter(([, checked]) => checked)
+        .map(([key]) => [key, 'ADMIN'])
+    );
+    const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({ usernames, role });
+
+    const added = usernames.filter(username => upsertedUserProfilesMap[username]);
+    const notFound = usernames.filter(username => !upsertedUserProfilesMap[username]);
+    if (added.length > 0) {
+      toastActions.showSuccessToast(`Roles granted to ${added.join(', ')}.`);
+    }
+    if (notFound.length === 0) {
+      setIsOpen(false);
+    } else {
+      // Leave only the usernames that still need fixing.
+      form.change('usernames', notFound.join('\n'));
+      setError(`User not found: ${notFound.join(', ')}.`);
+    }
   };
 
   return (
     <>
-      <Button icon={<Plus />} onClick={openDialog} disabled={isOpen}>
-        Add users
+      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={openDialog}>
+        Add admins
       </Button>
       <Dialog
         className="roles-add-dialog"
         isOpen={isOpen}
         onClose={closeDialog}
-        title="Add users"
+        title="Add admins"
         canOutsideClickClose={false}
       >
-        <Form onSubmit={handleAdd} initialValues={emptyRoles()}>
-          {({ handleSubmit }) => (
+        <Form onSubmit={addUsers} initialValues={initialValues}>
+          {({ handleSubmit, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <div className={Classes.DIALOG_BODY}>
+                {error && (
+                  <Callout className="roles-add-dialog__error" intent={Intent.DANGER}>
+                    {error}
+                  </Callout>
+                )}
                 <Field component={FormTextArea} {...usernamesField} />
-                <FormGroup label="Roles">
-                  <Flex gap={2}>
-                    {roleFields.map(({ key, label }) => (
-                      <FormGroup key={key} label={label}>
-                        <Field name={key}>
-                          {({ input }) => (
-                            <RoleSelect label={`new ${key} role`} value={input.value} onChange={input.onChange} />
-                          )}
-                        </Field>
-                      </FormGroup>
-                    ))}
-                  </Flex>
+                <FormGroup label="Roles to grant" helperText="Roles the users already hold are kept.">
+                  <Field name="roles">
+                    {({ input }) => <RoleCheckboxes value={input.value} onChange={input.onChange} />}
+                  </Field>
                 </FormGroup>
               </div>
               <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                  <Button text="Cancel" onClick={closeDialog} />
-                  <Button type="submit" text="Add" intent={Intent.PRIMARY} />
+                  <Button text="Cancel" disabled={submitting} onClick={closeDialog} />
+                  <Button
+                    type="submit"
+                    text="Add"
+                    intent={Intent.PRIMARY}
+                    loading={submitting}
+                    disabled={!Object.values(values.roles).some(checked => checked)}
+                  />
                 </div>
               </div>
             </form>

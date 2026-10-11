@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -165,12 +164,12 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
 
         admin = createUser("admin");
         adminToken = getToken(admin);
-        createClient(UserRoleClient.class).setRoles(superadminToken, Map.of("admin", new UserRole.Builder()
+        createClient(UserRoleClient.class).setRole(superadminToken, admin.getJid(), new UserRole.Builder()
                 .account("ADMIN")
                 .problem("ADMIN")
                 .contest("ADMIN")
                 .training("ADMIN")
-                .build()));
+                .build());
 
         user = createUser("user");
         userToken = getToken(user);
