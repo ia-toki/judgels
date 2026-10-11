@@ -50,6 +50,10 @@ export const problemAPI = {
     return get(baseProblemURL(problemJid), token);
   },
 
+  getProblemPermissions: (token, problemJid) => {
+    return get(`${baseProblemURL(problemJid)}/permissions`, token);
+  },
+
   getProblemBySlug: (token, problemSlug) => {
     return get(`${baseProblemsURL}/slug/${problemSlug}`, token);
   },

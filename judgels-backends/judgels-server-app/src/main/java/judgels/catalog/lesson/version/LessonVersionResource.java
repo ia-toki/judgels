@@ -97,6 +97,21 @@ public class LessonVersionResource {
         versionService.rebaseLocalChanges(actorJid, lessonJid);
     }
 
+    @GET
+    @Path("/local/exists")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public boolean versionLocalChangesExist(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("lessonJid") String lessonJid) {
+
+        String actorJid = actorChecker.check(authHeader);
+        Lesson lesson = checkFound(lessonStore.getLessonByJid(lessonJid));
+        checkAllowed(roleChecker.canView(actorJid, lesson));
+
+        return lessonStore.userCloneExists(actorJid, lessonJid);
+    }
+
     @DELETE
     @Path("/local")
     @UnitOfWork

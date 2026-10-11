@@ -1,10 +1,11 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   commitProblemVersionLocalChangesMutationOptions,
   discardProblemVersionLocalChangesMutationOptions,
+  problemVersionLocalChangesExistQueryOptions,
   problemVersionsQueryOptions,
   rebaseProblemVersionLocalChangesMutationOptions,
   restoreProblemVersionMutationOptions,
@@ -18,9 +19,7 @@ export default function ProblemVersionsPage() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
-  const {
-    data: { hasLocalChanges },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
 
   const {
     data: { data: versions, profilesMap },

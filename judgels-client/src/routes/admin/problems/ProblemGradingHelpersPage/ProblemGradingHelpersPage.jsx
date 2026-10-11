@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { problemGradingAPI } from '../../../../modules/api/problemGrading';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   deleteProblemGradingHelperFileMutationOptions,
   deleteProblemGradingHelperFilesMutationOptions,
@@ -21,8 +21,8 @@ export default function ProblemGradingHelpersPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: files },
@@ -39,7 +39,7 @@ export default function ProblemGradingHelpersPage() {
       description="The source files that the grading config uses as a custom scorer or a communicator."
       noun="helper"
       files={files}
-      canEdit={config.canEdit}
+      canEdit={canEdit}
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemGradingAPI.downloadGradingHelperFile(getToken(), problemJid, filename)}

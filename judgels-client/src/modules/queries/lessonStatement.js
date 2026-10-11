@@ -5,7 +5,7 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 import { lessonQueryOptions } from './lesson';
 
-// A write to a lesson's files starts its local changes, which the lesson itself reports,
+// A write to a lesson's files starts its local changes, which a query inside the lesson reports,
 // so each mutation invalidates the lesson and, with it, everything inside it.
 const invalidateLesson = lessonJid => () => {
   queryClient.invalidateQueries(lessonQueryOptions(lessonJid));

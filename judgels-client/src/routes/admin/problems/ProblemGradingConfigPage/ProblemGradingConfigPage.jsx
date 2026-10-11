@@ -3,7 +3,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   autoPopulateProblemGradingConfigMutationOptions,
   problemGradingConfigQueryOptions,
@@ -23,8 +23,8 @@ export default function ProblemGradingConfigPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config: problemConfig },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { engine, config },
@@ -71,7 +71,7 @@ export default function ProblemGradingConfigPage() {
         config={config}
         testDataFiles={testDataFiles}
         helperFiles={helperFiles}
-        canEdit={problemConfig.canEdit}
+        canEdit={canEdit}
         onSubmit={updateConfig}
         onAutoPopulate={autoPopulateConfig}
       />

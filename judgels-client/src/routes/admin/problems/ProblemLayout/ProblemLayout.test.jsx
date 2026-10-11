@@ -15,14 +15,9 @@ describe('ProblemLayout', () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' },
-        setterJidsMap: {},
-        topicTags: [],
-        hasLocalChanges,
-        config: { canEdit, canManage: true },
-        profilesMap: {},
-      });
+      .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
+    nockApi().get('/v4/problems/JIDPROG1/versions/local/exists').reply(200, hasLocalChanges);
 
     await act(async () =>
       render(

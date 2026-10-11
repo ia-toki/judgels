@@ -11,13 +11,11 @@ import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.version.ProblemVersionCommitData;
 import judgels.api.catalog.problem.version.ProblemVersionsResponse;
-import judgels.client.ProblemClient;
 import judgels.client.ProblemStatementClient;
 import judgels.client.ProblemVersionClient;
 import org.junit.jupiter.api.Test;
 
 class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final ProblemClient problemClient = createClient(ProblemClient.class);
     private final ProblemStatementClient statementClient = createClient(ProblemStatementClient.class);
     private final ProblemVersionClient versionClient = createClient(ProblemVersionClient.class);
 
@@ -36,14 +34,14 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertBadRequest(() -> versionClient.commitVersionLocalChanges(adminToken, problemJid, commitData("Empty")));
         assertBadRequest(() -> versionClient.rebaseVersionLocalChanges(adminToken, problemJid));
         assertPermitted(() -> versionClient.discardVersionLocalChanges(adminToken, problemJid));
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
 
         ProblemStatement committedStatement = statementClient.getStatement(adminToken, problemJid, "en-US");
 
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement("Discarded"));
         versionClient.discardVersionLocalChanges(adminToken, problemJid);
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(committedStatement);
 
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement("Committed"));
@@ -56,7 +54,7 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .description("Reworded the statement.")
                 .build());
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
         assertThat(statementClient.getStatement(superadminToken, problemJid, "en-US")).isEqualTo(statement("Committed"));
 
         List<CatalogVersion> versions = versionClient.getVersions(adminToken, problemJid).getData();
@@ -85,7 +83,7 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         versionClient.rebaseVersionLocalChanges(adminToken, problemJid);
 
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(statement("By superadmin"));
 
         versionClient.commitVersionLocalChanges(adminToken, problemJid, commitData("Add language"));

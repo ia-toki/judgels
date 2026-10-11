@@ -32,6 +32,10 @@ export const lessonAPI = {
     return get(baseLessonURL(lessonJid), token);
   },
 
+  getLessonPermissions: (token, lessonJid) => {
+    return get(`${baseLessonURL(lessonJid)}/permissions`, token);
+  },
+
   getLessonBySlug: (token, lessonSlug) => {
     return get(`${baseLessonsURL}/slug/${lessonSlug}`, token);
   },

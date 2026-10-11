@@ -11,13 +11,11 @@ import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonStatement;
 import judgels.api.catalog.lesson.version.LessonVersionCommitData;
 import judgels.api.catalog.lesson.version.LessonVersionsResponse;
-import judgels.client.LessonClient;
 import judgels.client.LessonStatementClient;
 import judgels.client.LessonVersionClient;
 import org.junit.jupiter.api.Test;
 
 class LessonVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final LessonClient lessonClient = createClient(LessonClient.class);
     private final LessonStatementClient statementClient = createClient(LessonStatementClient.class);
     private final LessonVersionClient versionClient = createClient(LessonVersionClient.class);
 
@@ -36,14 +34,14 @@ class LessonVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertBadRequest(() -> versionClient.commitVersionLocalChanges(adminToken, lessonJid, commitData("Empty")));
         assertBadRequest(() -> versionClient.rebaseVersionLocalChanges(adminToken, lessonJid));
         assertPermitted(() -> versionClient.discardVersionLocalChanges(adminToken, lessonJid));
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isFalse();
 
         LessonStatement committedStatement = statementClient.getStatement(adminToken, lessonJid, "en-US");
 
         statementClient.updateStatement(adminToken, lessonJid, "en-US", statement("Discarded"));
         versionClient.discardVersionLocalChanges(adminToken, lessonJid);
 
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isFalse();
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(committedStatement);
 
         statementClient.updateStatement(adminToken, lessonJid, "en-US", statement("Committed"));
@@ -56,7 +54,7 @@ class LessonVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .description("Reworded the statement.")
                 .build());
 
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isFalse();
         assertThat(statementClient.getStatement(superadminToken, lessonJid, "en-US")).isEqualTo(statement("Committed"));
 
         List<CatalogVersion> versions = versionClient.getVersions(adminToken, lessonJid).getData();
@@ -85,7 +83,7 @@ class LessonVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         versionClient.rebaseVersionLocalChanges(adminToken, lessonJid);
 
-        assertThat(lessonClient.getLesson(adminToken, lessonJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isTrue();
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(statement("By superadmin"));
 
         versionClient.commitVersionLocalChanges(adminToken, lessonJid, commitData("Add language"));

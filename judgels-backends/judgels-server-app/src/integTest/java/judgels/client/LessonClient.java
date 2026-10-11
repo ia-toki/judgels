@@ -6,7 +6,7 @@ import feign.QueryMap;
 import feign.RequestLine;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonCreateData;
-import judgels.api.catalog.lesson.LessonResponse;
+import judgels.api.catalog.lesson.LessonPermissions;
 import judgels.api.catalog.lesson.LessonUpdateData;
 import judgels.api.catalog.lesson.LessonsResponse;
 
@@ -25,7 +25,11 @@ public interface LessonClient {
 
     @RequestLine("GET /api/v4/lessons/{lessonJid}")
     @Headers("Authorization: Bearer {token}")
-    LessonResponse getLesson(@Param("token") String token, @Param("lessonJid") String lessonJid);
+    Lesson getLesson(@Param("token") String token, @Param("lessonJid") String lessonJid);
+
+    @RequestLine("GET /api/v4/lessons/{lessonJid}/permissions")
+    @Headers("Authorization: Bearer {token}")
+    LessonPermissions getLessonPermissions(@Param("token") String token, @Param("lessonJid") String lessonJid);
 
     @RequestLine("GET /api/v4/lessons/slug/{lessonSlug}")
     @Headers("Authorization: Bearer {token}")

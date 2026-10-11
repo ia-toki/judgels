@@ -5,7 +5,7 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 import { problemQueryOptions } from './problem';
 
-// A write to a problem's files starts its local changes, which the problem itself reports,
+// A write to a problem's files starts its local changes, which a query inside the problem reports,
 // so each mutation invalidates the problem and, with it, everything inside it.
 const invalidateProblem = problemJid => () => {
   queryClient.invalidateQueries(problemQueryOptions(problemJid));
@@ -18,6 +18,12 @@ export const problemEditorialQueryOptions = (problemJid, params) => {
     queryFn: () => problemEditorialAPI.getEditorial(getToken(), problemJid, language),
   });
 };
+
+export const problemEditorialExistsQueryOptions = problemJid =>
+  queryOptions({
+    queryKey: ['problem', problemJid, 'editorial', 'exists'],
+    queryFn: () => problemEditorialAPI.editorialExists(getToken(), problemJid),
+  });
 
 export const createProblemEditorialMutationOptions = problemJid => ({
   mutationFn: data => problemEditorialAPI.createEditorial(getToken(), problemJid, data),

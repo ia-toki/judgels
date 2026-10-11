@@ -1,6 +1,5 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
@@ -8,8 +7,6 @@ import { FormTableTextArea } from '../../../../components/forms/FormTableTextAre
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
-import { problemTagsQueryOptions } from '../../../../modules/queries/problemTag';
-import { ProblemTopicTagsInput } from '../ProblemTopicTagsInput/ProblemTopicTagsInput';
 
 const keyStyles = { width: '250px' };
 
@@ -26,22 +23,7 @@ const additionalNoteField = {
   label: 'Additional note',
 };
 
-const setterInputHelpers = {
-  developerUsernames: 'Comma-separated usernames. Fill only if different from writers.',
-};
-
-export default function ProblemGeneralEditForm({ onSubmit, initialValues, setterFields, onCancel }) {
-  const {
-    data: { topicTags },
-  } = useSuspenseQuery(problemTagsQueryOptions());
-
-  const topicTagsField = {
-    keyStyles,
-    name: 'topicTags',
-    label: 'Tags',
-    topicTags,
-  };
-
+export default function ProblemGeneralEditForm({ onSubmit, initialValues, onCancel }) {
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
@@ -51,17 +33,6 @@ export default function ProblemGeneralEditForm({ onSubmit, initialValues, setter
               <tbody>
                 <Field component={FormTableTextInput} {...slugField} />
                 <Field component={FormTableTextArea} {...additionalNoteField} />
-                {setterFields.map(({ name, title }) => (
-                  <Field
-                    key={name}
-                    component={FormTableTextInput}
-                    keyStyles={keyStyles}
-                    name={name}
-                    label={title}
-                    inputHelper={setterInputHelpers[name] || 'Comma-separated usernames.'}
-                  />
-                ))}
-                <Field component={ProblemTopicTagsInput} {...topicTagsField} />
               </tbody>
             </HTMLTable>
             <ActionButtons justifyContent="end">

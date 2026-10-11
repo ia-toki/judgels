@@ -44,16 +44,7 @@ describe('ProblemItemsPage', () => {
 
   const renderComponent = async ({ canEdit = true, data = items } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDBUND1', slug: 'problem-1' });
-    nockApi()
-      .get('/v4/problems/JIDBUND1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDBUND1', slug: 'problem-1', type: 'BUNDLE', authorJid: 'JIDUSER1' },
-        setterJidsMap: {},
-        topicTags: [],
-        hasLocalChanges: false,
-        config: { canEdit, canManage: canEdit },
-        profilesMap: {},
-      });
+    nockApi().get('/v4/problems/JIDBUND1/permissions').reply(200, { canEdit });
     nockItems(data);
 
     await act(async () =>

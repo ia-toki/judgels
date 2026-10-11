@@ -1,27 +1,23 @@
 package judgels.api;
 
-import static judgels.api.catalog.problem.ProblemErrors.SETTER_USERNAMES_NOT_FOUND;
 import static judgels.api.catalog.problem.ProblemErrors.SLUG_ALREADY_EXISTS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemCreateData;
-import judgels.api.catalog.problem.ProblemResponse;
-import judgels.api.catalog.problem.ProblemSetterRole;
 import judgels.api.catalog.problem.ProblemType;
 import judgels.api.catalog.problem.ProblemUpdateData;
-import judgels.api.user.User;
 import judgels.client.ProblemClient;
 import judgels.client.ProblemClient.GetProblemsParams;
+import judgels.client.ProblemTagClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final ProblemClient problemClient = createClient(ProblemClient.class);
+    private final ProblemTagClient problemTagClient = createClient(ProblemTagClient.class);
 
     @BeforeAll
     static void setUpWebTarget() {
@@ -30,9 +26,6 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void end_to_end_flow() {
-        User writer = createUser("writer");
-        User tester = createUser("tester");
-
         // as admin
 
         Problem problemA = problemClient.createProblem(adminToken, new ProblemCreateData.Builder()
@@ -66,35 +59,19 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .initialLanguage("en-US")
                         .build()));
 
-        ProblemResponse problemResponse = problemClient.getProblem(adminToken, problemA.getJid());
-        assertThat(problemResponse.getData()).isEqualTo(problemA);
-        assertThat(problemResponse.getSetterJidsMap()).isEmpty();
-        assertThat(problemResponse.getTopicTags()).isEmpty();
-        assertThat(problemResponse.getHasLocalChanges()).isFalse();
-        assertThat(problemResponse.getConfig().getCanEdit()).isTrue();
-        assertThat(problemResponse.getConfig().getCanManage()).isTrue();
-        assertThat(problemResponse.getProfilesMap()).containsOnlyKeys(admin.getJid());
+        assertThat(problemClient.getProblem(adminToken, problemA.getJid())).isEqualTo(problemA);
+        assertThat(problemClient.getProblemPermissions(adminToken, problemA.getJid()).getCanEdit()).isTrue();
 
         ProblemUpdateData updateData = new ProblemUpdateData.Builder()
                 .slug("problem-a-new")
                 .additionalNote("This is new problem A")
-                .putSetterUsernamesMap(ProblemSetterRole.WRITER, List.of(writer.getUsername()))
-                .putSetterUsernamesMap(ProblemSetterRole.TESTER, List.of(tester.getUsername(), writer.getUsername()))
-                .addTopicTags("topic-graph", "topic-graph: shortest path")
                 .build();
 
         problemA = problemClient.updateProblem(adminToken, problemA.getJid(), updateData);
         assertThat(problemA.getSlug()).isEqualTo("problem-a-new");
         assertThat(problemA.getAdditionalNote()).isEqualTo("This is new problem A");
 
-        problemResponse = problemClient.getProblem(adminToken, problemA.getJid());
-        assertThat(problemResponse.getData()).isEqualTo(problemA);
-        assertThat(problemResponse.getSetterJidsMap()).isEqualTo(Map.of(
-                ProblemSetterRole.WRITER, List.of(writer.getJid()),
-                ProblemSetterRole.TESTER, List.of(tester.getJid(), writer.getJid())));
-        assertThat(problemResponse.getTopicTags()).containsExactlyInAnyOrder("topic-graph", "topic-graph: shortest path");
-        assertThat(problemResponse.getProfilesMap()).containsOnlyKeys(admin.getJid(), writer.getJid(), tester.getJid());
-
+        assertThat(problemClient.getProblem(adminToken, problemA.getJid())).isEqualTo(problemA);
         assertThat(problemClient.getProblemBySlug(adminToken, "problem-a-new")).isEqualTo(problemA);
         assertNotFound(() -> problemClient.getProblemBySlug(adminToken, "problem-a"));
 
@@ -106,13 +83,6 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .slug("problem-b")
                         .build()))
                 .hasMessageContaining(SLUG_ALREADY_EXISTS);
-
-        assertBadRequest(() -> problemClient
-                .updateProblem(adminToken, problemAJid, new ProblemUpdateData.Builder()
-                        .from(updateData)
-                        .putSetterUsernamesMap(ProblemSetterRole.EDITORIALIST, List.of("nonexistent"))
-                        .build()))
-                .hasMessageContaining(SETTER_USERNAMES_NOT_FOUND);
 
         var response = problemClient.getProblems(adminToken, new GetProblemsParams());
         assertThat(response.getData().getPage())
@@ -126,6 +96,8 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(response.getData().getPage())
                 .extracting(Problem::getJid)
                 .containsExactly(problemA.getJid());
+
+        problemTagClient.setTopicTags(adminToken, problemAJid, Set.of("topic-graph"));
 
         params = new GetProblemsParams();
         params.tags = Set.of("topic-graph");
@@ -145,13 +117,12 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .build()));
 
         assertForbidden(() -> problemClient.getProblem(userToken, problemAJid));
+        assertForbidden(() -> problemClient.getProblemPermissions(userToken, problemAJid));
         assertForbidden(() -> problemClient.getProblemBySlug(userToken, "problem-a-new"));
         assertForbidden(() -> problemClient.updateProblem(userToken, problemAJid, updateData));
 
-        problemResponse = problemClient.getProblem(userToken, problemB.getJid());
-        assertThat(problemResponse.getData().getSlug()).isEqualTo("problem-b");
-        assertThat(problemResponse.getConfig().getCanEdit()).isTrue();
-        assertThat(problemResponse.getConfig().getCanManage()).isTrue();
+        assertThat(problemClient.getProblem(userToken, problemB.getJid()).getSlug()).isEqualTo("problem-b");
+        assertThat(problemClient.getProblemPermissions(userToken, problemB.getJid()).getCanEdit()).isTrue();
 
         assertThat(problemClient.getProblemBySlug(userToken, "problem-b").getJid()).isEqualTo(problemB.getJid());
 

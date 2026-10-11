@@ -14,15 +14,15 @@ import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
 import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
-import judgels.client.ProblemClient;
 import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
+import judgels.client.ProblemVersionClient;
 import org.junit.jupiter.api.Test;
 
 class ProblemItemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private final ProblemClient problemClient = createClient(ProblemClient.class);
     private final ProblemItemClient itemClient = createClient(ProblemItemClient.class);
     private final ProblemStatementClient statementClient = createClient(ProblemStatementClient.class);
+    private final ProblemVersionClient versionClient = createClient(ProblemVersionClient.class);
 
     @Test
     void create_update_items() {
@@ -30,7 +30,7 @@ class ProblemItemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         String problemJid = problem.getJid();
 
         assertThat(itemClient.getItems(adminToken, problemJid, null).getData()).isEmpty();
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isFalse();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
 
         Item statement = itemClient.createItem(adminToken, problemJid, type(ItemType.STATEMENT));
         Item multipleChoice = itemClient.createItem(adminToken, problemJid, type(ItemType.MULTIPLE_CHOICE));
@@ -50,7 +50,7 @@ class ProblemItemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         assertThat(itemClient.getItems(adminToken, problemJid, null).getData())
                 .containsExactly(statement, multipleChoice, shortAnswer, essay);
-        assertThat(problemClient.getProblem(adminToken, problemJid).getHasLocalChanges()).isTrue();
+        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
 
         MultipleChoiceItemConfig multipleChoiceConfig = new MultipleChoiceItemConfig.Builder()
                 .statement("<p>What is 1 + 1?</p>")

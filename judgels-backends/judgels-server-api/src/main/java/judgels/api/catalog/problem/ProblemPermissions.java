@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableProblemConfig.class)
-public interface ProblemConfig {
+@JsonDeserialize(as = ImmutableProblemPermissions.class)
+public interface ProblemPermissions {
     boolean getCanEdit();
-    boolean getCanManage();
 
-    class Builder extends ImmutableProblemConfig.Builder {}
+    class Builder extends ImmutableProblemPermissions.Builder {}
 }

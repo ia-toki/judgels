@@ -17,14 +17,8 @@ describe('ProblemStatementPage', () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' },
-        setterJidsMap: {},
-        topicTags: [],
-        hasLocalChanges: false,
-        config: { canEdit, canManage: canEdit },
-        profilesMap: {},
-      });
+      .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/problems/JIDPROG1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });

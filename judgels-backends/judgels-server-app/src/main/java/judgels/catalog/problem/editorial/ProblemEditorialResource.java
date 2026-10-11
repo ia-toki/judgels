@@ -57,6 +57,19 @@ public class ProblemEditorialResource {
         return editorialStore.getEditorial(actorJid, problemJid, editorialLanguage);
     }
 
+    @GET
+    @Path("/exists")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public boolean editorialExists(
+            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @PathParam("problemJid") String problemJid) {
+
+        String actorJid = accessChecker.checkCanView(authHeader, problemJid);
+
+        return editorialStore.hasEditorial(actorJid, problemJid);
+    }
+
     @POST
     @Consumes(APPLICATION_JSON)
     @UnitOfWork

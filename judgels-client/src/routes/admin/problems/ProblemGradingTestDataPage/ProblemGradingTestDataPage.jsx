@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { problemGradingAPI } from '../../../../modules/api/problemGrading';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   deleteProblemGradingTestDataFileMutationOptions,
   deleteProblemGradingTestDataFilesMutationOptions,
@@ -21,8 +21,8 @@ export default function ProblemGradingTestDataPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: files },
@@ -39,7 +39,7 @@ export default function ProblemGradingTestDataPage() {
       description="The input and output files that the grading config assigns to test cases."
       noun="test data"
       files={files}
-      canEdit={config.canEdit}
+      canEdit={canEdit}
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemGradingAPI.downloadGradingTestDataFile(getToken(), problemJid, filename)}

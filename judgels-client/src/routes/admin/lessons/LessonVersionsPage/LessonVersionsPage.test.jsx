@@ -15,14 +15,7 @@ describe('LessonVersionsPage', () => {
 
   const renderComponent = async ({ hasLocalChanges = true } = {}) => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
-    nockApi()
-      .get('/v4/lessons/JIDLESS1')
-      .reply(200, {
-        data: { id: 1, jid: 'JIDLESS1', slug: 'lesson-1', authorJid: 'JIDUSER1' },
-        hasLocalChanges,
-        config: { canEdit: true },
-        profilesMap: {},
-      });
+    nockApi().get('/v4/lessons/JIDLESS1/versions/local/exists').reply(200, hasLocalChanges);
     nockApi()
       .get('/v4/lessons/JIDLESS1/versions')
       .reply(200, {

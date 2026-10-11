@@ -5,7 +5,7 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingConfigQueryOptions,
   updateProblemGradingEngineMutationOptions,
@@ -21,8 +21,8 @@ export default function ProblemGradingEnginePage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { engine },
@@ -50,7 +50,7 @@ export default function ProblemGradingEnginePage() {
         <HTMLSelect
           aria-label="Grading engine"
           value={selectedEngine}
-          disabled={!config.canEdit}
+          disabled={!canEdit}
           onChange={e => setSelectedEngine(e.target.value)}
         >
           {Object.keys(gradingEngineNamesMap).map(e => (
@@ -59,7 +59,7 @@ export default function ProblemGradingEnginePage() {
             </option>
           ))}
         </HTMLSelect>
-        {config.canEdit && (
+        {canEdit && (
           <Button
             text="Save"
             intent={Intent.PRIMARY}
@@ -68,7 +68,7 @@ export default function ProblemGradingEnginePage() {
           />
         )}
       </Flex>
-      {config.canEdit && (
+      {canEdit && (
         <p>
           <small>Changing the grading engine resets the grading config.</small>
         </p>

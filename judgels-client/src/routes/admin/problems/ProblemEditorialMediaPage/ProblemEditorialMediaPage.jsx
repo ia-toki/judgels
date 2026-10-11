@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { problemEditorialAPI } from '../../../../modules/api/problemEditorial';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   deleteProblemEditorialMediaFileMutationOptions,
   deleteProblemEditorialMediaFilesMutationOptions,
@@ -21,8 +21,8 @@ export default function ProblemEditorialMediaPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: files },
@@ -44,7 +44,7 @@ export default function ProblemEditorialMediaPage() {
       }
       noun="media"
       files={files}
-      canEdit={config.canEdit}
+      canEdit={canEdit}
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemEditorialAPI.downloadEditorialMediaFile(getToken(), problemJid, filename)}

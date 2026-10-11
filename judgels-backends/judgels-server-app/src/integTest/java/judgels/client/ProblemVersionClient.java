@@ -29,6 +29,10 @@ public interface ProblemVersionClient {
     @Headers("Authorization: Bearer {token}")
     void rebaseVersionLocalChanges(@Param("token") String token, @Param("problemJid") String problemJid);
 
+    @RequestLine("GET /api/v4/problems/{problemJid}/versions/local/exists")
+    @Headers("Authorization: Bearer {token}")
+    boolean versionLocalChangesExist(@Param("token") String token, @Param("problemJid") String problemJid);
+
     @RequestLine("DELETE /api/v4/problems/{problemJid}/versions/local")
     @Headers("Authorization: Bearer {token}")
     void discardVersionLocalChanges(@Param("token") String token, @Param("problemJid") String problemJid);

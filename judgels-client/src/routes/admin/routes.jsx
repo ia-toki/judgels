@@ -9,14 +9,26 @@ import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProble
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
-import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../modules/queries/lesson';
+import {
+  lessonBySlugQueryOptions,
+  lessonPermissionsQueryOptions,
+  lessonQueryOptions,
+} from '../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementMediaFilesQueryOptions,
 } from '../../modules/queries/lessonStatement';
-import { lessonVersionsQueryOptions } from '../../modules/queries/lessonVersion';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../modules/queries/problem';
 import {
+  lessonVersionLocalChangesExistQueryOptions,
+  lessonVersionsQueryOptions,
+} from '../../modules/queries/lessonVersion';
+import {
+  problemBySlugQueryOptions,
+  problemPermissionsQueryOptions,
+  problemQueryOptions,
+} from '../../modules/queries/problem';
+import {
+  problemEditorialExistsQueryOptions,
   problemEditorialLanguagesQueryOptions,
   problemEditorialMediaFilesQueryOptions,
 } from '../../modules/queries/problemEditorial';
@@ -29,11 +41,17 @@ import {
 import { problemItemsQueryOptions } from '../../modules/queries/problemItem';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
+import { problemSettersQueryOptions } from '../../modules/queries/problemSetter';
 import {
   problemStatementLanguagesQueryOptions,
   problemStatementMediaFilesQueryOptions,
 } from '../../modules/queries/problemStatement';
-import { problemVersionsQueryOptions } from '../../modules/queries/problemVersion';
+import { problemTopicTagsQueryOptions } from '../../modules/queries/problemTag';
+import {
+  problemVersionLocalChangesExistQueryOptions,
+  problemVersionsQueryOptions,
+} from '../../modules/queries/problemVersion';
+import { basicProfileQueryOptions } from '../../modules/queries/profile';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { queryClient } from '../../modules/queryClient';
@@ -182,8 +200,12 @@ export const createAdminRoutes = appRoute => {
     path: 'problems/$problemSlug',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemLayout/ProblemLayout'))),
     loader: async ({ params: { problemSlug } }) => {
-      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
-      await queryClient.ensureQueryData(problemQueryOptions(problem.jid));
+      const { jid: problemJid } = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await Promise.all([
+        queryClient.ensureQueryData(problemQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemPermissionsQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemVersionLocalChangesExistQueryOptions(problemJid)),
+      ]);
     },
   });
 
@@ -199,6 +221,15 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: 'general',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemGeneralPage/ProblemGeneralPage'))),
+    loader: async ({ params: { problemSlug } }) => {
+      const { jid: problemJid } = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      const problem = await queryClient.ensureQueryData(problemQueryOptions(problemJid));
+      await Promise.all([
+        queryClient.ensureQueryData(basicProfileQueryOptions(problem.authorJid)),
+        queryClient.ensureQueryData(problemSettersQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemTopicTagsQueryOptions(problemJid)),
+      ]);
+    },
   });
 
   const adminProblemStatementRoute = createRoute({
@@ -237,8 +268,8 @@ export const createAdminRoutes = appRoute => {
 
   // A problem without an editorial has nothing to load: its layout offers to create one instead.
   const ensureProblemEditorialQueryData = async (problemJid, editorialQueryOptions) => {
-    const { hasEditorial } = await queryClient.ensureQueryData(problemQueryOptions(problemJid));
-    if (hasEditorial) {
+    const editorialExists = await queryClient.ensureQueryData(problemEditorialExistsQueryOptions(problemJid));
+    if (editorialExists) {
       await queryClient.ensureQueryData(editorialQueryOptions(problemJid));
     }
   };
@@ -265,7 +296,10 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemEditorialPage/ProblemEditorialPage'))),
     loader: async ({ params: { problemSlug } }) => {
       const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
-      await ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions);
+      await Promise.all([
+        ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions),
+        queryClient.ensureQueryData(problemSettersQueryOptions(problem.jid)),
+      ]);
     },
   });
 
@@ -414,8 +448,12 @@ export const createAdminRoutes = appRoute => {
     path: 'lessons/$lessonSlug',
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonLayout/LessonLayout'))),
     loader: async ({ params: { lessonSlug } }) => {
-      const lesson = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
-      await queryClient.ensureQueryData(lessonQueryOptions(lesson.jid));
+      const { jid: lessonJid } = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      await Promise.all([
+        queryClient.ensureQueryData(lessonQueryOptions(lessonJid)),
+        queryClient.ensureQueryData(lessonPermissionsQueryOptions(lessonJid)),
+        queryClient.ensureQueryData(lessonVersionLocalChangesExistQueryOptions(lessonJid)),
+      ]);
     },
   });
 
@@ -431,6 +469,11 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminLessonRoute,
     path: 'general',
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonGeneralPage/LessonGeneralPage'))),
+    loader: async ({ params: { lessonSlug } }) => {
+      const { jid: lessonJid } = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
+      const lesson = await queryClient.ensureQueryData(lessonQueryOptions(lessonJid));
+      await queryClient.ensureQueryData(basicProfileQueryOptions(lesson.authorJid));
+    },
   });
 
   const adminLessonStatementRoute = createRoute({

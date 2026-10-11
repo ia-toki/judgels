@@ -25,7 +25,11 @@ public class ProblemUpdater {
             Set<String> topicTags) {
 
         problemStore.updateProblem(problemJid, slug, additionalNote);
+        updateSetters(problemJid, setterJidsMap);
+        tagStore.updateTopicTags(problemJid, topicTags);
+    }
 
+    public void updateSetters(String problemJid, Map<ProblemSetterRole, List<String>> setterJidsMap) {
         Map<ProblemSetterRole, List<String>> curSetterJidsMap = problemStore.getProblemSetters(problemJid);
         for (ProblemSetterRole role : ProblemSetterRole.values()) {
             List<String> setterJids = setterJidsMap.getOrDefault(role, List.of());
@@ -33,7 +37,5 @@ public class ProblemUpdater {
                 problemStore.updateProblemSetters(problemJid, role, setterJids);
             }
         }
-
-        tagStore.updateTopicTags(problemJid, topicTags);
     }
 }

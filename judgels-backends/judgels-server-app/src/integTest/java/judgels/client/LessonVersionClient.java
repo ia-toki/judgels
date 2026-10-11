@@ -29,6 +29,10 @@ public interface LessonVersionClient {
     @Headers("Authorization: Bearer {token}")
     void rebaseVersionLocalChanges(@Param("token") String token, @Param("lessonJid") String lessonJid);
 
+    @RequestLine("GET /api/v4/lessons/{lessonJid}/versions/local/exists")
+    @Headers("Authorization: Bearer {token}")
+    boolean versionLocalChangesExist(@Param("token") String token, @Param("lessonJid") String lessonJid);
+
     @RequestLine("DELETE /api/v4/lessons/{lessonJid}/versions/local")
     @Headers("Authorization: Bearer {token}")
     void discardVersionLocalChanges(@Param("token") String token, @Param("lessonJid") String lessonJid);

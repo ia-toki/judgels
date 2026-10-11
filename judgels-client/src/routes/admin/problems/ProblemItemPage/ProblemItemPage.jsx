@@ -12,7 +12,7 @@ import { ItemStatementCard } from '../../../../components/ProblemWorksheetCard/B
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import { problemItemQueryOptions, updateProblemItemMutationOptions } from '../../../../modules/queries/problemItem';
 import { problemStatementLanguagesQueryOptions } from '../../../../modules/queries/problemStatement';
 import ProblemItemEditForm from '../ProblemItemEditForm/ProblemItemEditForm';
@@ -36,8 +36,8 @@ export default function ProblemItemPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { config },
-  } = useSuspenseQuery(problemQueryOptions(problemJid));
+    data: { canEdit },
+  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -83,7 +83,7 @@ export default function ProblemItemPage() {
     if (!item) {
       return <LoadingState />;
     }
-    if (config.canEdit) {
+    if (canEdit) {
       // The form holds its own edits, so it starts over whenever the language or the saved item changes.
       return <ProblemItemEditForm key={JSON.stringify([language, item])} item={item} onSubmit={updateItem} />;
     }

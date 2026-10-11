@@ -7,7 +7,7 @@ import feign.RequestLine;
 import java.util.Set;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemCreateData;
-import judgels.api.catalog.problem.ProblemResponse;
+import judgels.api.catalog.problem.ProblemPermissions;
 import judgels.api.catalog.problem.ProblemUpdateData;
 import judgels.api.catalog.problem.ProblemsResponse;
 
@@ -27,7 +27,11 @@ public interface ProblemClient {
 
     @RequestLine("GET /api/v4/problems/{problemJid}")
     @Headers("Authorization: Bearer {token}")
-    ProblemResponse getProblem(@Param("token") String token, @Param("problemJid") String problemJid);
+    Problem getProblem(@Param("token") String token, @Param("problemJid") String problemJid);
+
+    @RequestLine("GET /api/v4/problems/{problemJid}/permissions")
+    @Headers("Authorization: Bearer {token}")
+    ProblemPermissions getProblemPermissions(@Param("token") String token, @Param("problemJid") String problemJid);
 
     @RequestLine("GET /api/v4/problems/slug/{problemSlug}")
     @Headers("Authorization: Bearer {token}")

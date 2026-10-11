@@ -20,6 +20,12 @@ export const problemQueryOptions = problemJid =>
     queryFn: () => problemAPI.getProblem(getToken(), problemJid),
   });
 
+export const problemPermissionsQueryOptions = problemJid =>
+  queryOptions({
+    queryKey: ['problem', problemJid, 'permissions'],
+    queryFn: () => problemAPI.getProblemPermissions(getToken(), problemJid),
+  });
+
 export const problemBySlugQueryOptions = problemSlug =>
   queryOptions({
     queryKey: ['problem-by-slug', problemSlug],

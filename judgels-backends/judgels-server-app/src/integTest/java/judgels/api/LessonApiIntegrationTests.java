@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonCreateData;
-import judgels.api.catalog.lesson.LessonResponse;
 import judgels.api.catalog.lesson.LessonUpdateData;
 import judgels.client.LessonClient;
 import judgels.client.LessonClient.GetLessonsParams;
@@ -52,11 +51,8 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .initialLanguage("bogus")
                         .build()));
 
-        LessonResponse lessonResponse = lessonClient.getLesson(adminToken, lessonA.getJid());
-        assertThat(lessonResponse.getData()).isEqualTo(lessonA);
-        assertThat(lessonResponse.getHasLocalChanges()).isFalse();
-        assertThat(lessonResponse.getConfig().getCanEdit()).isTrue();
-        assertThat(lessonResponse.getProfilesMap()).containsOnlyKeys(admin.getJid());
+        assertThat(lessonClient.getLesson(adminToken, lessonA.getJid())).isEqualTo(lessonA);
+        assertThat(lessonClient.getLessonPermissions(adminToken, lessonA.getJid()).getCanEdit()).isTrue();
 
         LessonUpdateData updateData = new LessonUpdateData.Builder()
                 .slug("lesson-a-new")
@@ -67,7 +63,7 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(lessonA.getSlug()).isEqualTo("lesson-a-new");
         assertThat(lessonA.getAdditionalNote()).isEqualTo("This is new lesson A");
 
-        assertThat(lessonClient.getLesson(adminToken, lessonA.getJid()).getData()).isEqualTo(lessonA);
+        assertThat(lessonClient.getLesson(adminToken, lessonA.getJid())).isEqualTo(lessonA);
         assertThat(lessonClient.getLessonBySlug(adminToken, "lesson-a-new")).isEqualTo(lessonA);
         assertNotFound(() -> lessonClient.getLessonBySlug(adminToken, "lesson-a"));
 
@@ -103,12 +99,12 @@ class LessonApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .build()));
 
         assertForbidden(() -> lessonClient.getLesson(userToken, lessonAJid));
+        assertForbidden(() -> lessonClient.getLessonPermissions(userToken, lessonAJid));
         assertForbidden(() -> lessonClient.getLessonBySlug(userToken, "lesson-a-new"));
         assertForbidden(() -> lessonClient.updateLesson(userToken, lessonAJid, updateData));
 
-        lessonResponse = lessonClient.getLesson(userToken, lessonB.getJid());
-        assertThat(lessonResponse.getData().getSlug()).isEqualTo("lesson-b");
-        assertThat(lessonResponse.getConfig().getCanEdit()).isTrue();
+        assertThat(lessonClient.getLesson(userToken, lessonB.getJid()).getSlug()).isEqualTo("lesson-b");
+        assertThat(lessonClient.getLessonPermissions(userToken, lessonB.getJid()).getCanEdit()).isTrue();
 
         assertThat(lessonClient.getLessonBySlug(userToken, "lesson-b").getJid()).isEqualTo(lessonB.getJid());
 

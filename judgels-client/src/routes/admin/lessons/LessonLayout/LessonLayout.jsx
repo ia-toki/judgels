@@ -4,7 +4,12 @@ import { Link, Outlet, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
-import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
+import {
+  lessonBySlugQueryOptions,
+  lessonPermissionsQueryOptions,
+  lessonQueryOptions,
+} from '../../../../modules/queries/lesson';
+import { lessonVersionLocalChangesExistQueryOptions } from '../../../../modules/queries/lessonVersion';
 
 export default function LessonLayout() {
   const { lessonSlug } = useParams({ strict: false });
@@ -13,9 +18,13 @@ export default function LessonLayout() {
     data: { jid: lessonJid },
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
+  const { data: lesson } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+
   const {
-    data: { data: lesson, hasLocalChanges, config },
-  } = useSuspenseQuery(lessonQueryOptions(lessonJid));
+    data: { canEdit },
+  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
+
+  const { data: hasLocalChanges } = useSuspenseQuery(lessonVersionLocalChangesExistQueryOptions(lessonJid));
 
   const topbarItems = [
     {
@@ -37,7 +46,7 @@ export default function LessonLayout() {
     {
       path: 'versions',
       title: 'Versions',
-      disabled: !config.canEdit,
+      disabled: !canEdit,
     },
   ];
 
