@@ -39,6 +39,7 @@ import {
   problemGradingTestDataFilesQueryOptions,
 } from '../../modules/queries/problemGrading';
 import { problemItemsQueryOptions } from '../../modules/queries/problemItem';
+import { problemPartnersQueryOptions } from '../../modules/queries/problemPartner';
 import { problemSetBySlugQueryOptions } from '../../modules/queries/problemSet';
 import { problemSetProblemsQueryOptions } from '../../modules/queries/problemSetProblem';
 import { problemSettersQueryOptions } from '../../modules/queries/problemSetter';
@@ -437,6 +438,16 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
+  const adminProblemPartnersRoute = createRoute({
+    getParentRoute: () => adminProblemRoute,
+    path: 'partners',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemPartnersPage/ProblemPartnersPage'))),
+    loader: async ({ params: { problemSlug } }) => {
+      const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
+      await queryClient.ensureQueryData(problemPartnersQueryOptions(problem.jid));
+    },
+  });
+
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
@@ -567,6 +578,7 @@ export const createAdminRoutes = appRoute => {
         adminProblemGradingLanguageRestrictionRoute,
       ]),
       adminProblemVersionsRoute,
+      adminProblemPartnersRoute,
     ]),
     adminLessonsRoute,
     adminLessonRoute.addChildren([

@@ -61,6 +61,7 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         assertThat(problemClient.getProblem(adminToken, problemA.getJid())).isEqualTo(problemA);
         assertThat(problemClient.getProblemPermissions(adminToken, problemA.getJid()).getCanEdit()).isTrue();
+        assertThat(problemClient.getProblemPermissions(adminToken, problemA.getJid()).getCanManage()).isTrue();
 
         ProblemUpdateData updateData = new ProblemUpdateData.Builder()
                 .slug("problem-a-new")
@@ -123,6 +124,7 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         assertThat(problemClient.getProblem(userToken, problemB.getJid()).getSlug()).isEqualTo("problem-b");
         assertThat(problemClient.getProblemPermissions(userToken, problemB.getJid()).getCanEdit()).isTrue();
+        assertThat(problemClient.getProblemPermissions(userToken, problemB.getJid()).getCanManage()).isTrue();
 
         assertThat(problemClient.getProblemBySlug(userToken, "problem-b").getJid()).isEqualTo(problemB.getJid());
 

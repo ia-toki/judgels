@@ -22,7 +22,7 @@ export default function ProblemLayout() {
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
 
   const {
-    data: { canEdit },
+    data: { canEdit, canManage },
   } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
@@ -45,8 +45,9 @@ export default function ProblemLayout() {
       title: 'Media',
     },
     {
-      path: 'editorial',
-      title: 'Editorial',
+      path: 'grading',
+      title: 'Grading',
+      disabled: problem.type !== ProblemType.Programming,
     },
     {
       path: 'items',
@@ -54,9 +55,13 @@ export default function ProblemLayout() {
       disabled: problem.type !== ProblemType.Bundle,
     },
     {
-      path: 'grading',
-      title: 'Grading',
-      disabled: problem.type !== ProblemType.Programming,
+      path: 'partners',
+      title: 'Partners',
+      disabled: !canManage,
+    },
+    {
+      path: 'editorial',
+      title: 'Editorial',
     },
     {
       path: 'versions',

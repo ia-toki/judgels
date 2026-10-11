@@ -4,12 +4,13 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { ProblemSetterRole } from '../../../../modules/api/problem';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 const keyStyles = { width: '250px' };
 
 const setterInputHelpers = {
-  developerUsernames: 'Comma-separated usernames. Fill only if different from writers.',
+  [ProblemSetterRole.Developer]: 'Comma-separated usernames. Fill only if different from writers.',
 };
 
 export default function ProblemSettersEditForm({ onSubmit, initialValues, setterFields, onCancel }) {
@@ -20,14 +21,14 @@ export default function ProblemSettersEditForm({ onSubmit, initialValues, setter
           <form onSubmit={handleSubmit}>
             <HTMLTable striped>
               <tbody>
-                {setterFields.map(({ name, title }) => (
+                {setterFields.map(({ role, title }) => (
                   <Field
-                    key={name}
+                    key={role}
                     component={FormTableTextInput}
                     keyStyles={keyStyles}
-                    name={name}
+                    name={role}
                     label={title}
-                    inputHelper={setterInputHelpers[name] || 'Comma-separated usernames.'}
+                    inputHelper={setterInputHelpers[role] || 'Comma-separated usernames.'}
                   />
                 ))}
               </tbody>
