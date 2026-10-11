@@ -10,6 +10,7 @@ import java.util.Optional;
 public class RabbitMQModule {
     private final RabbitMQConfiguration config;
     private final boolean enabled;
+    private final FakeRabbitMQ fakeRabbitMQ = new FakeRabbitMQ();
 
     public RabbitMQModule(RabbitMQConfiguration config) {
         this.config = config;
@@ -30,11 +31,11 @@ public class RabbitMQModule {
     @Provides
     @Singleton
     MessageClient messageClient(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
-        return new MessageClient(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty());
+        return new MessageClient(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty(), fakeRabbitMQ);
     }
 
     @Provides
     MessageListener messageListener(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
-        return new MessageListener(objectMapper, rabbitMQ);
+        return new MessageListener(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty(), fakeRabbitMQ);
     }
 }

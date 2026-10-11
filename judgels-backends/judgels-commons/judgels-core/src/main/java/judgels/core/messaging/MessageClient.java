@@ -16,23 +16,25 @@ public class MessageClient {
 
     private final ObjectMapper objectMapper;
     private final Optional<RabbitMQ> rabbitMQ;
+    private final FakeRabbitMQ fakeRabbitMQ;
 
-    public MessageClient(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ) {
+    public MessageClient(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ, FakeRabbitMQ fakeRabbitMQ) {
         this.objectMapper = objectMapper;
         this.rabbitMQ = rabbitMQ;
+        this.fakeRabbitMQ = fakeRabbitMQ;
     }
 
     public void sendMessage(String sourceQueueName, String targetQueueName, String type, String content) {
-        if (rabbitMQ.isEmpty()) {
-            LOGGER.info("RabbitMQ is not configured; skipping sending message");
-            return;
-        }
-
         Message message = new Message.Builder()
                 .sourceQueueName(sourceQueueName)
                 .type(type)
                 .content(content)
                 .build();
+
+        if (rabbitMQ.isEmpty()) {
+            fakeRabbitMQ.send(targetQueueName, message);
+            return;
+        }
 
         String queueMessage;
         try {
