@@ -1,161 +1,117 @@
-import { Button, HTMLTable, Intent } from '@blueprintjs/core';
-import { Edit, Trash } from '@blueprintjs/icons';
+import { Alert, Button, HTMLTable, Intent, Tag } from '@blueprintjs/core';
+import { Edit, Tick, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
-import { setUserRolesMutationOptions } from '../../../../modules/queries/userRole';
-import { RoleSelect, getRoleFields, roleNames } from '../RoleSelect/RoleSelect';
+import { UserRef } from '../../../../components/UserRef/UserRef';
+import { setUserRoleMutationOptions } from '../../../../modules/queries/userRole';
+import { useSession } from '../../../../modules/session';
+import { getRoleFields } from '../RoleCheckboxes/RoleCheckboxes';
+import { RoleEditDialog } from '../RoleEditDialog/RoleEditDialog';
 import { RolesAddDialog } from '../RolesAddDialog/RolesAddDialog';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-import './RolesSection.scss';
-
-function buildRows(roles) {
+function buildUsers(roles, actorJid) {
   const { data, profilesMap } = roles;
-  return data.map(entry => {
-    const profile = profilesMap[entry.userJid];
-    const { role } = entry;
-    return {
-      username: profile ? profile.username : entry.userJid,
-      account: role.account === 'ADMIN' ? 'ADMIN' : '',
-      problem: role.problem || '',
-      contest: role.contest || '',
-      training: role.training || '',
-    };
-  });
-}
-
-function buildRoleMap(rows) {
-  const map = {};
-  for (const row of rows) {
-    const role = {};
-    for (const { key } of getRoleFields()) {
-      if (row[key]) {
-        role[key] = row[key];
-      }
-    }
-    map[row.username] = role;
-  }
-  return map;
+  const users = data.map(({ userJid, role }) => ({
+    userJid,
+    role,
+    profile: profilesMap[userJid],
+    username: profilesMap[userJid]?.username ?? userJid,
+    isSuperadmin: role.account === 'SUPERADMIN',
+    isSelf: userJid === actorJid,
+  }));
+  return users.sort((a, b) => b.isSuperadmin - a.isSuperadmin || a.username.localeCompare(b.username));
 }
 
 export function RolesSection({ roles }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [rows, setRows] = useState(() => buildRows(roles));
+  const { user: actor } = useSession();
 
-  const setRolesMutation = useMutation(setUserRolesMutationOptions());
+  const [userToEdit, setUserToEdit] = useState(undefined);
+  const [userToRemove, setUserToRemove] = useState(undefined);
+
+  const removeRoleMutation = useMutation(setUserRoleMutationOptions(userToRemove?.userJid));
 
   const roleFields = getRoleFields();
+  const users = buildUsers(roles, actor?.jid);
 
-  const updateRow = (index, patch) => {
-    setRows(prev => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  const removeUser = async () => {
+    await removeRoleMutation.mutateAsync({});
+    toastActions.showSuccessToast(`All roles removed from ${userToRemove.username}.`);
+    setUserToRemove(undefined);
   };
 
-  const removeRow = index => {
-    setRows(prev => prev.filter((_, i) => i !== index));
+  const renderActions = user => {
+    if (user.isSuperadmin) {
+      return <Tag minimal>Built-in</Tag>;
+    }
+    return (
+      <ActionButtons>
+        <Button small minimal icon={<Edit />} onClick={() => setUserToEdit(user)}>
+          Edit
+        </Button>
+        <Button
+          small
+          minimal
+          intent={Intent.DANGER}
+          icon={<Trash />}
+          disabled={user.isSelf}
+          title={user.isSelf ? 'You cannot remove your own roles.' : undefined}
+          aria-label={`Remove ${user.username}`}
+          onClick={() => setUserToRemove(user)}
+        >
+          Remove
+        </Button>
+      </ActionButtons>
+    );
   };
 
-  const addUsers = users => {
-    setRows(prev => {
-      const next = [...prev];
-      for (const user of users) {
-        const index = next.findIndex(row => row.username === user.username);
-        if (index >= 0) {
-          next[index] = user;
-        } else {
-          next.push(user);
-        }
-      }
-      return next;
-    });
-  };
-
-  const startEditing = () => {
-    setIsEditing(true);
-  };
-
-  const cancelEditing = () => {
-    setRows(buildRows(roles));
-    setIsEditing(false);
-  };
-
-  const handleSave = async () => {
-    await setRolesMutation.mutateAsync(buildRoleMap(rows));
-    toastActions.showSuccessToast('Roles updated.');
-    setIsEditing(false);
-  };
-
-  const renderRow = (row, index) => (
-    <tr key={row.username}>
-      <td>{row.username}</td>
-      {roleFields.map(({ key }) =>
-        isEditing ? (
-          <td key={key}>
-            <RoleSelect
-              label={`${key} role for ${row.username}`}
-              value={row[key]}
-              onChange={value => updateRow(index, { [key]: value })}
-            />
-          </td>
-        ) : (
-          <td key={key}>{roleNames[row[key]] || '-'}</td>
-        )
-      )}
-      {isEditing && (
-        <td className="col-fit">
-          <Trash
-            className="action"
-            intent={Intent.DANGER}
-            title={`remove ${row.username}`}
-            onClick={() => removeRow(index)}
-          />
-        </td>
-      )}
+  const renderRow = user => (
+    <tr key={user.userJid}>
+      <td>{user.profile ? <UserRef profile={user.profile} /> : user.username}</td>
+      {roleFields.map(({ key, label }) => (
+        <td key={key}>{user.role[key] && <Tick title={`${label} admin`} />}</td>
+      ))}
+      <td className="col-fit">{renderActions(user)}</td>
     </tr>
   );
 
   return (
     <Flex flexDirection="column" gap={2}>
-      {!isEditing && (
-        <ActionButtons>
-          <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={startEditing}>
-            Edit roles
-          </Button>
-        </ActionButtons>
-      )}
+      <ActionButtons>
+        <RolesAddDialog superadminUsername={users.find(user => user.isSuperadmin)?.username} />
+      </ActionButtons>
 
-      <HTMLTable striped className="table-list roles-table">
+      <HTMLTable striped className="table-list">
         <thead>
           <tr>
             <th>User</th>
             {roleFields.map(({ key, label }) => (
               <th key={key}>{label}</th>
             ))}
-            {isEditing && <th />}
+            <th />
           </tr>
         </thead>
-        <tbody>{rows.map(renderRow)}</tbody>
+        <tbody>{users.map(renderRow)}</tbody>
       </HTMLTable>
 
-      {rows.length === 0 && (
-        <p>
-          <small>No roles yet.</small>
-        </p>
-      )}
+      {userToEdit && <RoleEditDialog user={userToEdit} onClose={() => setUserToEdit(undefined)} />}
 
-      {isEditing && (
-        <Flex justifyContent="space-between" alignItems="center" gap={1}>
-          <RolesAddDialog onAdd={addUsers} />
-
-          <ActionButtons>
-            <Button text="Cancel" disabled={setRolesMutation.isPending} onClick={cancelEditing} />
-            <Button text="Save" intent={Intent.PRIMARY} loading={setRolesMutation.isPending} onClick={handleSave} />
-          </ActionButtons>
-        </Flex>
-      )}
+      <Alert
+        isOpen={userToRemove !== undefined}
+        intent={Intent.DANGER}
+        icon={<Trash />}
+        confirmButtonText="Remove"
+        cancelButtonText="Cancel"
+        loading={removeRoleMutation.isPending}
+        onConfirm={removeUser}
+        onCancel={() => setUserToRemove(undefined)}
+      >
+        {userToRemove && `Remove all roles from ${userToRemove.username}?`}
+      </Alert>
     </Flex>
   );
 }

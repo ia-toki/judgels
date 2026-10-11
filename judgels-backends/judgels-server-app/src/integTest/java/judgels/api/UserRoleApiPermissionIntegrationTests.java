@@ -1,8 +1,8 @@
 package judgels.api;
 
-import java.util.Map;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.role.UserRole;
+import judgels.api.user.role.UserRolesUpsertData;
 import judgels.client.UserRoleClient;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
@@ -20,6 +20,10 @@ public class UserRoleApiPermissionIntegrationTests extends BaseJudgelsApiIntegra
     private ThrowingCallable getSetRoles(String token) {
         return callAll(
                 () -> userRoleClient.getRoles(token),
-                () -> userRoleClient.setRoles(token, Map.of("admin", new UserRole.Builder().account("ADMIN").build())));
+                () -> userRoleClient.upsertRoles(token, new UserRolesUpsertData.Builder()
+                        .addUsernames("user")
+                        .role(new UserRole.Builder().contest("ADMIN").build())
+                        .build()),
+                () -> userRoleClient.setRole(token, user.getJid(), new UserRole.Builder().build()));
     }
 }

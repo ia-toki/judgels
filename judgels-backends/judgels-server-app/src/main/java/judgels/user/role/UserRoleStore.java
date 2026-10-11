@@ -1,9 +1,8 @@
 package judgels.user.role;
 
-import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import judgels.api.user.role.SystemAdminRole;
 import judgels.api.user.role.UserRole;
@@ -24,43 +23,28 @@ public class UserRoleStore {
     }
 
     public List<UserWithRole> getRoles() {
-        List<UserRoleModel> models = userRoleDao.select().orderBy(UnmodifiableModel_.ID, OrderDir.ASC).all();
-        return Lists.transform(models, m -> new UserWithRole.Builder()
-                .userJid(m.userJid)
-                .role(fromModel(m))
-                .build());
-    }
+        List<UserWithRole> roles = new ArrayList<>();
+        superadminRoleStore.getSuperadminJid().ifPresent(userJid -> roles.add(new UserWithRole.Builder()
+                .userJid(userJid)
+                .role(getRole(userJid))
+                .build()));
 
-    public void setRoles(Map<String, UserRole> userRolesMap) {
-        for (UserRoleModel model : userRoleDao.select().all()) {
-            if (!userRolesMap.containsKey(model.userJid)) {
-                userRoleDao.delete(model);
-            } else {
-                UserRole role = userRolesMap.get(model.userJid);
-                if (role.getAccount().isEmpty()
-                        && role.getProblem().isEmpty()
-                        && role.getContest().isEmpty()
-                        && role.getTraining().isEmpty()) {
-                    userRoleDao.delete(model);
-                }
+        for (UserRoleModel m : userRoleDao.select().orderBy(UnmodifiableModel_.ID, OrderDir.ASC).all()) {
+            if (!superadminRoleStore.isSuperadmin(m.userJid)) {
+                roles.add(new UserWithRole.Builder()
+                        .userJid(m.userJid)
+                        .role(fromModel(m))
+                        .build());
             }
         }
-
-        for (var entry : userRolesMap.entrySet()) {
-            UserRole role = entry.getValue();
-            if (role.getAccount().isEmpty()
-                    && role.getProblem().isEmpty()
-                    && role.getContest().isEmpty()
-                    && role.getTraining().isEmpty()) {
-                continue;
-            }
-            upsertRole(entry.getKey(), entry.getValue());
-        }
+        return roles;
     }
 
-    public void upsertRole(String userJid, UserRole role) {
+    public void setRole(String userJid, UserRole role) {
         Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
-        if (maybeModel.isPresent()) {
+        if (isEmpty(role)) {
+            maybeModel.ifPresent(userRoleDao::delete);
+        } else if (maybeModel.isPresent()) {
             UserRoleModel model = maybeModel.get();
             toModel(role, model);
             userRoleDao.update(model);
@@ -70,6 +54,16 @@ public class UserRoleStore {
             toModel(role, model);
             userRoleDao.insert(model);
         }
+    }
+
+    public void upsertRole(String userJid, UserRole role) {
+        UserRole.Builder merged = new UserRole.Builder();
+        userRoleDao.selectByUserJid(userJid).ifPresent(model -> merged.from(fromModel(model)));
+        role.getAccount().ifPresent(merged::account);
+        role.getProblem().ifPresent(merged::problem);
+        role.getContest().ifPresent(merged::contest);
+        role.getTraining().ifPresent(merged::training);
+        setRole(userJid, merged.build());
     }
 
     public UserRole getRole(String userJid) {
@@ -88,6 +82,13 @@ public class UserRoleStore {
         }
 
         return role.build();
+    }
+
+    private static boolean isEmpty(UserRole role) {
+        return role.getAccount().isEmpty()
+                && role.getProblem().isEmpty()
+                && role.getContest().isEmpty()
+                && role.getTraining().isEmpty();
     }
 
     private UserRole fromModel(UserRoleModel model) {

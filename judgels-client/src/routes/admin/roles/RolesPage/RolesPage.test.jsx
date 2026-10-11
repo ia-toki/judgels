@@ -10,23 +10,28 @@ import RolesPage from './RolesPage';
 
 describe('RolesPage', () => {
   beforeEach(() => {
-    setSession('token', { jid: 'userJid' });
+    setSession('token', { jid: 'userJid1' });
   });
 
-  const renderComponent = async ({
-    roles = [
-      { userJid: 'userJid1', role: { account: 'ADMIN', problem: 'ADMIN', contest: 'ADMIN', training: 'ADMIN' } },
-      { userJid: 'userJid2', role: { problem: 'ADMIN' } },
-    ],
-    profilesMap = {
-      userJid1: { username: 'andi' },
-      userJid2: { username: 'budi' },
-    },
-  } = {}) => {
-    nockApi().get('/v2/user-roles').reply(200, {
-      data: roles,
-      profilesMap,
-    });
+  const renderComponent = async () => {
+    nockApi()
+      .get('/v2/user-roles')
+      .reply(200, {
+        data: [
+          {
+            userJid: 'superadminJid',
+            role: { account: 'SUPERADMIN', problem: 'ADMIN', contest: 'ADMIN', training: 'ADMIN' },
+          },
+          { userJid: 'userJid2', role: { account: null, problem: 'ADMIN', contest: null, training: null } },
+          { userJid: 'userJid1', role: { account: 'ADMIN', training: 'ADMIN' } },
+        ],
+        profilesMap: {
+          superadminJid: { username: 'superadmin' },
+          userJid1: { username: 'andi' },
+          userJid2: { username: 'budi' },
+        },
+      })
+      .persist();
 
     await act(async () =>
       render(
@@ -39,76 +44,82 @@ describe('RolesPage', () => {
     );
   };
 
-  test('renders placeholder when there are no roles', async () => {
-    await renderComponent({ roles: [], profilesMap: {} });
-    expect(await screen.findByText(/no roles/i)).toBeInTheDocument();
-  });
+  const rowOf = async username => (await screen.findByRole('link', { name: username })).closest('tr');
 
-  test('renders the roles table', async () => {
+  const renderRoles = row =>
+    within(row)
+      .queryAllByRole('cell')
+      .slice(1, -1)
+      .map(cell => within(cell).queryByRole('img')?.textContent ?? '');
+
+  test('renders the roles table, superadmin first and then by username', async () => {
     await renderComponent();
+    await rowOf('andi');
 
-    await waitFor(() => {
-      expect(screen.getAllByRole('row').length).toBeGreaterThan(1);
-    });
-    const rows = screen.getAllByRole('row');
-    expect(
-      rows.map(row =>
-        within(row)
-          .queryAllByRole('cell')
-          .map(cell => cell.textContent)
-      )
-    ).toEqual([[], ['andi', 'Admin', 'Admin', 'Admin', 'Admin'], ['budi', '-', 'Admin', '-', '-']]);
+    const rows = screen.getAllByRole('row').slice(1);
+    expect(rows.map(row => within(row).getByRole('link').textContent)).toEqual(['superadmin', 'andi', 'budi']);
+    expect(rows.map(renderRoles)).toEqual([
+      ['System admin', 'Problem admin', 'Contest admin', 'Training admin'],
+      ['System admin', '', '', 'Training admin'],
+      ['', 'Problem admin', '', ''],
+    ]);
   });
 
-  test('renders the edit button', async () => {
-    await renderComponent();
-    expect(await screen.findByRole('button', { name: /edit roles/i })).toBeInTheDocument();
-  });
-
-  const roleSelect = label => screen.getByRole('button', { name: label });
-
-  const selectRole = async (user, label, optionName) => {
-    await user.click(roleSelect(label));
-    await user.click(await screen.findByRole('menuitem', { name: optionName }));
-  };
-
-  test('form', async () => {
+  test('locks superadmin and the own system admin role', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
-    await user.click(await screen.findByRole('button', { name: /edit roles/i }));
+    const superadminRow = await rowOf('superadmin');
+    expect(within(superadminRow).queryByRole('button')).not.toBeInTheDocument();
 
-    expect(roleSelect('account role for andi')).toHaveTextContent('Admin');
-    expect(roleSelect('problem role for andi')).toHaveTextContent('Admin');
-    expect(roleSelect('contest role for andi')).toHaveTextContent('Admin');
-    expect(roleSelect('training role for andi')).toHaveTextContent('Admin');
-    expect(roleSelect('account role for budi')).toHaveTextContent('-');
-    expect(roleSelect('problem role for budi')).toHaveTextContent('Admin');
+    const ownRow = await rowOf('andi');
+    expect(within(ownRow).getByRole('button', { name: /remove/i })).toBeDisabled();
 
-    await user.click(screen.getByRole('img', { name: 'remove budi' }));
+    await user.click(within(ownRow).getByRole('button', { name: /edit/i }));
+    expect(screen.getByRole('checkbox', { name: /system admin/i })).toBeDisabled();
+  });
 
-    // Re-adding andi replaces all their roles; caca is added. Both get only the problem role.
-    await user.click(screen.getByRole('button', { name: /add users/i }));
-    await user.type(screen.getByLabelText(/usernames/i), 'andi\ncaca');
-    await selectRole(user, 'new problem role', 'Admin');
-    await user.click(screen.getByRole('button', { name: /^add$/i }));
+  test('edits the roles of a user', async () => {
+    await renderComponent();
+    const user = userEvent.setup();
 
-    expect(roleSelect('account role for andi')).toHaveTextContent('-');
-    expect(roleSelect('contest role for andi')).toHaveTextContent('-');
-    expect(roleSelect('training role for andi')).toHaveTextContent('-');
-    expect(roleSelect('problem role for andi')).toHaveTextContent('Admin');
+    await user.click(within(await rowOf('budi')).getByRole('button', { name: /edit/i }));
+    expect(screen.getByRole('checkbox', { name: /problem admin/i })).toBeChecked();
+    await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
 
-    await selectRole(user, 'contest role for caca', 'Admin');
-
-    nockApi()
-      .put('/v2/user-roles', {
-        andi: { problem: 'ADMIN' },
-        caca: { problem: 'ADMIN', contest: 'ADMIN' },
-      })
-      .reply(200);
-
+    const scope = nockApi().put('/v2/user-roles/userJid2', { problem: 'ADMIN', contest: 'ADMIN' }).reply(200);
     await user.click(screen.getByRole('button', { name: /save/i }));
+    await waitFor(() => expect(scope.isDone()).toBe(true));
+  });
 
-    await waitFor(() => expect(nock.isDone()).toBe(true));
+  test('removes a user', async () => {
+    await renderComponent();
+    const user = userEvent.setup();
+
+    await user.click(within(await rowOf('budi')).getByRole('button', { name: /remove/i }));
+    expect(screen.getByText('Remove all roles from budi?')).toBeInTheDocument();
+
+    const scope = nockApi().put('/v2/user-roles/userJid2', {}).reply(200);
+    await user.click(screen.getByRole('button', { name: /^remove$/i }));
+    await waitFor(() => expect(scope.isDone()).toBe(true));
+  });
+
+  test('adds users, keeping the ones not found', async () => {
+    await renderComponent();
+    const user = userEvent.setup();
+
+    await user.click(await screen.findByRole('button', { name: /add admins/i }));
+    await user.type(screen.getByLabelText(/usernames/i), 'caca\ndodi');
+    expect(screen.getByRole('button', { name: /^add$/i })).toBeDisabled();
+    await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
+
+    const scope = nockApi()
+      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], role: { contest: 'ADMIN' } })
+      .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
+    await user.click(screen.getByRole('button', { name: /^add$/i }));
+    await waitFor(() => expect(scope.isDone()).toBe(true));
+
+    expect(await screen.findByText('User not found: dodi.')).toBeInTheDocument();
+    expect(screen.getByLabelText(/usernames/i)).toHaveValue('dodi');
   });
 });
