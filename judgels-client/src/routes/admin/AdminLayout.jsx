@@ -19,7 +19,6 @@ import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithS
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
-import { ProblemAdminRole } from '../../modules/api/problemAdminRole';
 import { SystemAdminRole } from '../../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
@@ -32,7 +31,6 @@ export default function AdminLayout() {
   const isAccountAdmin = role.account === SystemAdminRole.Admin || role.account === SystemAdminRole.Superadmin;
   const isContestAdmin = role.contest === ContestAdminRole.Admin;
   const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
-  const isProblemAdmin = role.problem === ProblemAdminRole.Admin;
 
   const sidebarItems = [
     {
@@ -64,13 +62,14 @@ export default function AdminLayout() {
     },
     {
       title: 'Competition',
-      visible: isContestAdmin || isProblemAdmin,
+      visible: isContestAdmin || isAccountAdmin,
       children: [
         {
           path: 'problems',
           titleIcon: <Manual />,
           title: 'Problems',
-          visible: isProblemAdmin,
+          // Problem management is in beta: only system admins see it for now.
+          visible: isAccountAdmin,
         },
         {
           path: 'contests',
