@@ -1,10 +1,25 @@
-.bp6-control.dark-mode-widget__switch {
-  margin-right: 10px;
-  margin-bottom: 0;
+.bp6-button.dark-mode-widget__button {
+  background-color: transparent !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  .bp6-light & .bp6-icon {
+    color: white;
+  }
 }
 
 @media only screen and (max-width: 600px) {
-  .dark-mode-widget__switch {
+  .dark-mode-widget__button {
     display: none;
   }
 }

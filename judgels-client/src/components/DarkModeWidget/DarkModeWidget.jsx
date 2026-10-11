@@ -1,5 +1,5 @@
-import { Alignment, Navbar, Switch } from '@blueprintjs/core';
-import { Moon } from '@blueprintjs/icons';
+import { Alignment, Button, Navbar } from '@blueprintjs/core';
+import { Flash, Moon } from '@blueprintjs/icons';
 
 import { useWebPrefs } from '../../modules/webPrefs';
 
@@ -8,17 +8,16 @@ import './DarkModeWidget.scss';
 export default function DarkModeWidget() {
   const { isDarkMode, setIsDarkMode } = useWebPrefs();
 
-  const changeDarkMode = ({ target }) => {
-    setIsDarkMode(target.checked);
-  };
+  const label = isDarkMode ? 'Switch to light mode' : 'Switch to dark mode';
 
   const widget = (
-    <Switch
-      className="dark-mode-widget__switch"
-      alignIndicator={Alignment.RIGHT}
-      label={<Moon />}
-      checked={isDarkMode}
-      onChange={changeDarkMode}
+    <Button
+      className="dark-mode-widget__button"
+      variant="minimal"
+      icon={isDarkMode ? <Moon /> : <Flash />}
+      title={label}
+      aria-label={label}
+      onClick={() => setIsDarkMode(!isDarkMode)}
     />
   );
 
