@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  test-backends:
     runs-on: ubuntu-24.04
     services:
       rabbitmq:
@@ -55,6 +55,17 @@ jobs:
         if: steps.changed-files.outputs.judgels-server == '1'
         run: ./judgels-backends/gradlew -p judgels-backends/judgels-server-app check
 
+  test-client:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+
+      - id: changed-files
+        name: Check changed files
+        run: python3 ci/scripts/check-changed-files.py | bash
+
       - name: Set up node
         if: steps.changed-files.outputs.yarn == '1'
         uses: actions/setup-node@v3
@@ -79,7 +90,7 @@ jobs:
           yarn ci
 
   build:
-    needs: test
+    needs: [test-backends, test-client]
     if: github.ref == 'refs/heads/master' && github.repository_owner == 'ia-toki'
     runs-on: ubuntu-24.04
     env:
