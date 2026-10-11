@@ -4,3 +4,26 @@
   font-family: $accent-font;
   margin-bottom: 10px;
 }
+
+.topbar-secondary {
+  font-family: $accent-font;
+  margin-bottom: 20px;
+
+  *:focus {
+    outline: none;
+  }
+
+  .bp6-tab-list {
+    .bp6-light & {
+      box-shadow: inset 0 -1px 0 $border-color;
+    }
+
+    .bp6-dark & {
+      box-shadow: inset 0 -1px 0 $dark-border-color;
+    }
+  }
+
+  .bp6-tab a {
+    color: inherit !important;
+  }
+}
