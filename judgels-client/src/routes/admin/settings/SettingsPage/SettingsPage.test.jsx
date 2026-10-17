@@ -36,9 +36,9 @@ describe('SettingsPage', () => {
   test('details', async () => {
     await renderComponent();
 
-    await screen.findByText('App settings');
-    expect(screen.getByText('Home settings')).toBeInTheDocument();
-    expect(screen.getByText('Session settings')).toBeInTheDocument();
+    await screen.findByText('App');
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Session')).toBeInTheDocument();
 
     expect(screen.getByText('Judgels')).toBeInTheDocument();
     expect(screen.getByText('Programming Contest System')).toBeInTheDocument();

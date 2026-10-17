@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -17,9 +18,10 @@ export default function ProblemSetPage() {
 
   return (
     <ContentCard title={`Problemsets › ${problemSet.slug}`}>
-      <ProblemSetGeneralSection problemSet={problemSet} archiveSlug={archiveSlug} />
-      <hr />
-      <ProblemSetProblemsSection problemSet={problemSet} />
+      <Flex flexDirection="column" gap={8}>
+        <ProblemSetGeneralSection problemSet={problemSet} archiveSlug={archiveSlug} />
+        <ProblemSetProblemsSection problemSet={problemSet} />
+      </Flex>
     </ContentCard>
   );
 }

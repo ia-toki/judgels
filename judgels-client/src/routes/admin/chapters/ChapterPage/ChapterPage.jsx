@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -14,11 +15,11 @@ export default function ChapterPage() {
 
   return (
     <ContentCard title={`Chapters › ${chapter.name}`}>
-      <ChapterGeneralSection chapter={chapter} />
-      <hr />
-      <ChapterLessonsSection chapter={chapter} />
-      <hr />
-      <ChapterProblemsSection chapter={chapter} />
+      <Flex flexDirection="column" gap={8}>
+        <ChapterGeneralSection chapter={chapter} />
+        <ChapterLessonsSection chapter={chapter} />
+        <ChapterProblemsSection chapter={chapter} />
+      </Flex>
     </ContentCard>
   );
 }
