@@ -28,7 +28,7 @@ class ProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         // as admin
 
-        ProblemTagsResponse response = problemTagClient.getTags(adminToken);
+        ProblemTagsResponse response = problemTagClient.getAllTags(adminToken);
 
         List<ProblemTagCategory> data = response.getData();
         assertThat(data).extracting(ProblemTagCategory::getTitle)
@@ -46,18 +46,19 @@ class ProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .count(1)
                         .build());
 
-        assertThat(response.getTopicTags()).contains("topic-ad hoc", "topic-graph", "topic-graph: shortest path");
+        assertThat(problemTagClient.getAllTopicTags(adminToken))
+                .contains("topic-ad hoc", "topic-graph", "topic-graph: shortest path");
 
         // as user
 
         assertForbidden(() -> problemTagClient.getTopicTags(userToken, problemJid));
         assertForbidden(() -> problemTagClient.setTopicTags(userToken, problemJid, Set.of()));
 
-        response = problemTagClient.getTags(userToken);
+        response = problemTagClient.getAllTags(userToken);
 
         assertThat(response.getData()).extracting(ProblemTagCategory::getTitle)
                 .containsExactly("Visibility", "Statement", "Editorial");
         assertThat(response.getData().get(0).getOptions()).allMatch(option -> option.getCount() == 0);
-        assertThat(response.getTopicTags()).contains("topic-ad hoc");
+        assertThat(problemTagClient.getAllTopicTags(userToken)).contains("topic-ad hoc");
     }
 }

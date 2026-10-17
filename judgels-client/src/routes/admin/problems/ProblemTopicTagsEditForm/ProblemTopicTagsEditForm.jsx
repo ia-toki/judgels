@@ -5,15 +5,13 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
-import { problemTagsQueryOptions } from '../../../../modules/queries/problemTag';
+import { problemAllTopicTagsQueryOptions } from '../../../../modules/queries/problemTag';
 import { ProblemTopicTagsInput } from '../ProblemTopicTagsInput/ProblemTopicTagsInput';
 
 const keyStyles = { width: '250px' };
 
 export default function ProblemTopicTagsEditForm({ onSubmit, initialValues, onCancel }) {
-  const {
-    data: { topicTags },
-  } = useSuspenseQuery(problemTagsQueryOptions());
+  const { data: topicTags } = useSuspenseQuery(problemAllTopicTagsQueryOptions());
 
   const topicTagsField = {
     keyStyles,

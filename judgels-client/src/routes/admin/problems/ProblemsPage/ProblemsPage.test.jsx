@@ -46,7 +46,6 @@ describe('ProblemsPage', () => {
             ],
           },
         ],
-        topicTags: [],
       });
 
     await act(async () =>

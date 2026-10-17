@@ -13,7 +13,7 @@ import { UserRef } from '../../../../components/UserRef/UserRef';
 import { problemTypeNamesMap } from '../../../../modules/api/problem';
 import { ProblemAdminRole } from '../../../../modules/api/problemAdminRole';
 import { problemsQueryOptions } from '../../../../modules/queries/problem';
-import { problemTagsQueryOptions } from '../../../../modules/queries/problemTag';
+import { problemAllTagsQueryOptions } from '../../../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
 import { ProblemCreateDialog } from '../ProblemCreateDialog/ProblemCreateDialog';
 
@@ -102,7 +102,7 @@ export default function ProblemsPage() {
         {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
       </ContentCard>
       <div className="admin-problems-page__filter">
-        <ProblemTagFilter queryOptions={problemTagsQueryOptions()} />
+        <ProblemTagFilter queryOptions={problemAllTagsQueryOptions()} />
       </div>
     </Flex>
   );
