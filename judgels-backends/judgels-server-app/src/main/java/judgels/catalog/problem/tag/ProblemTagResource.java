@@ -40,7 +40,7 @@ public class ProblemTagResource {
     @Path("/tags")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemTagsResponse getTags(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+    public ProblemTagsResponse getAllTags(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
 
         Map<String, Integer> tagCounts = tagStore.getTagCounts(roleChecker.isAdmin(actorJid));
@@ -74,9 +74,17 @@ public class ProblemTagResource {
                     .build());
         }
 
-        return response
-                .topicTags(ProblemTags.TOPIC_TAGS)
-                .build();
+        return response.build();
+    }
+
+    @GET
+    @Path("/topic-tags")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public List<String> getAllTopicTags(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
+        actorChecker.check(authHeader);
+
+        return ProblemTags.TOPIC_TAGS;
     }
 
     @GET

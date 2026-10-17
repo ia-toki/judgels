@@ -49,13 +49,10 @@ describe('ProblemGeneralPage', () => {
     await screen.findByText('problem-1');
   };
 
-  const nockTags = () => {
+  const nockTopicTags = () => {
     nockApi()
-      .get('/v4/problems/tags')
-      .reply(200, {
-        data: [],
-        topicTags: ['topic-ad hoc', 'topic-graph', 'topic-graph: bipartite', 'topic-graph: shortest path'],
-      });
+      .get('/v4/problems/topic-tags')
+      .reply(200, ['topic-ad hoc', 'topic-graph', 'topic-graph: bipartite', 'topic-graph: shortest path']);
   };
 
   const getSection = name => screen.getByRole('region', { name });
@@ -154,7 +151,7 @@ describe('ProblemGeneralPage', () => {
 
   test('tags edit form', async () => {
     await renderComponent();
-    nockTags();
+    nockTopicTags();
 
     const user = userEvent.setup();
     const section = getSection('Tags');

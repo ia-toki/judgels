@@ -5,10 +5,16 @@ import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 import { problemsQueryOptions } from './problem';
 
-export const problemTagsQueryOptions = () =>
+export const problemAllTagsQueryOptions = () =>
   queryOptions({
     queryKey: ['problems', 'tags'],
-    queryFn: () => problemTagAPI.getTags(getToken()),
+    queryFn: () => problemTagAPI.getAllTags(getToken()),
+  });
+
+export const problemAllTopicTagsQueryOptions = () =>
+  queryOptions({
+    queryKey: ['problems', 'topic-tags'],
+    queryFn: () => problemTagAPI.getAllTopicTags(getToken()),
   });
 
 export const problemTopicTagsQueryOptions = problemJid =>

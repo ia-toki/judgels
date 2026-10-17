@@ -2,8 +2,12 @@ import { get, put } from './http';
 import { baseProblemURL, baseProblemsURL } from './problem';
 
 export const problemTagAPI = {
-  getTags: token => {
+  getAllTags: token => {
     return get(`${baseProblemsURL}/tags`, token);
+  },
+
+  getAllTopicTags: token => {
+    return get(`${baseProblemsURL}/topic-tags`, token);
   },
 
   getTopicTags: (token, problemJid) => {
