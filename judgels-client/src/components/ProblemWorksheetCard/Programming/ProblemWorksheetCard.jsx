@@ -42,7 +42,7 @@ export function ProblemWorksheetCard({
   };
 
   return (
-    <Flex className="programming-problem-worksheet" flexDirection="column" gap={2}>
+    <Flex className="programming-problem-worksheet" flexDirection="column" gap={2} width={100} marginX="auto">
       {renderStatement()}
       {renderSubmission()}
     </Flex>

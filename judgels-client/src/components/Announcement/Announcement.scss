@@ -5,9 +5,6 @@
 }
 
 .announcement__text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: white;
   font-size: 13px;
 
@@ -19,5 +16,4 @@
 
 .announcement__icon {
   flex-shrink: 0;
-  margin-right: 8px;
 }

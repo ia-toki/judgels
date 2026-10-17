@@ -95,7 +95,7 @@ export default function ProblemsPage() {
   };
 
   return (
-    <Flex className="admin-problems-page" alignItems="flex-start" gap={2}>
+    <Flex className="admin-problems-page" alignItems="start" gap={2}>
       <ContentCard className="admin-problems-page__problems" title="Problems">
         {renderAction()}
         {renderProblems()}

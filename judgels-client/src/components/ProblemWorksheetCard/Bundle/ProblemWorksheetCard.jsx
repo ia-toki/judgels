@@ -18,7 +18,7 @@ export function ProblemWorksheetCard({
 }) {
   const { statement, items, reasonNotAllowedToSubmit } = worksheet;
   return (
-    <Flex className="bundle-problem-worksheet" flexDirection="column" gap={2}>
+    <Flex className="bundle-problem-worksheet" flexDirection="column" gap={2} width={100} marginX="auto">
       <ProblemStatementCard
         alias={alias}
         statement={statement}

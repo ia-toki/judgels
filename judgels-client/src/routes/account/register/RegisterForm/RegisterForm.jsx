@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 import { Field, Form } from 'react-final-form';
 
@@ -73,12 +74,12 @@ export default function RegisterForm({ onSubmit, useRecaptcha, recaptchaSiteKey 
 
           <HorizontalDivider />
 
-          <div className="form-login__actions">
+          <Flex>
             <Button type="submit" text="Register" intent={Intent.PRIMARY} loading={submitting} />
-            <p className="form-login__actions-register">
+            <p className="form-register__actions-login">
               Have an account already? <Link to="/login">Log in now</Link>
             </p>
-          </div>
+          </Flex>
         </form>
       )}
     </Form>

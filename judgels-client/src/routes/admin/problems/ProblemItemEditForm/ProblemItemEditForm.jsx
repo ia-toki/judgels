@@ -196,10 +196,10 @@ export default function ProblemItemEditForm({ item, onSubmit }) {
             <Field component={FormTextInput} {...metaField} />
             <Flex justifyContent="space-between" alignItems="center">
               <Switch
+                style={{ marginBottom: 0 }}
                 label="Source mode"
                 checked={isSourceMode}
                 onChange={e => setIsSourceMode(e.target.checked)}
-                style={{ marginBottom: 0 }}
               />
               <StatementManual />
             </Flex>

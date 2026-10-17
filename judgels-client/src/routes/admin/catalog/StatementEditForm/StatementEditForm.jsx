@@ -34,10 +34,10 @@ export default function StatementEditForm({ onSubmit, initialValues, onCancel })
             <Field component={FormTextInput} {...titleField} />
             <Flex justifyContent="space-between" alignItems="center">
               <Switch
+                style={{ marginBottom: 0 }}
                 label="Source mode"
                 checked={isSourceMode}
                 onChange={e => setIsSourceMode(e.target.checked)}
-                style={{ marginBottom: 0 }}
               />
               <StatementManual />
             </Flex>

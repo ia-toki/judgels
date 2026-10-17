@@ -35,6 +35,7 @@ export default function ProblemEditorialDialog({ settersMap, profilesMap }) {
     return (
       <Button
         className="problem-editorial-dialog-button"
+        fill
         intent={Intent.WARNING}
         small
         onClick={toggleDialog}

@@ -1,5 +1,6 @@
 import { Button, HTMLTable } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { ContentCard } from '../../../ContentCard/ContentCard';
 import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
@@ -72,7 +73,7 @@ export function SubmissionDetails({
 
   return (
     <ContentCard className="bundle-submission-details">
-      <div className="card-header">
+      <Flex alignItems="baseline" justifyContent="space-between">
         {showTitle && (
           <h4>
             {alias ? `${alias} . ` : ''}
@@ -84,7 +85,7 @@ export function SubmissionDetails({
             Regrade
           </Button>
         )}
-      </div>
+      </Flex>
       <p>{canManage && renderTotalScore()}</p>
       <HTMLTable striped className="table-list-condensed submission-table">
         <thead>

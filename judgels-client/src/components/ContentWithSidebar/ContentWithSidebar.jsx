@@ -1,3 +1,4 @@
+import { Box } from '@blueprintjs/labs';
 import { useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
 
@@ -9,18 +10,19 @@ function ContentAndSidebar({ sidebarElement, contentElement, stickyWidget, small
   const responsive = window.matchMedia && window.matchMedia('(max-width: 750px)').matches;
   return (
     <div className="content-with-sidebar">
-      <div className="content-with-sidebar__sidebar">
+      <Box className="content-with-sidebar__sidebar" flexShrink={0} marginBottom={4}>
         {sidebarElement}
         {!responsive && stickyWidget}
-      </div>
-      <div
+      </Box>
+      <Box
+        flexGrow={1}
         className={classNames('content-with-sidebar__content', {
           'content-with-sidebar__content--small': smallContent,
         })}
       >
         {contentElement}
         {responsive && stickyWidget}
-      </div>
+      </Box>
     </div>
   );
 }

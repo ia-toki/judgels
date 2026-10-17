@@ -1,3 +1,4 @@
+import { Box } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -52,9 +53,9 @@ export default function ContestProblemPage() {
       return null;
     }
     return (
-      <div className="contest-programming-problem-page__widget">
+      <Box className="contest-programming-problem-page__widget" width={100} marginX="auto">
         <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
-      </div>
+      </Box>
     );
   };
 

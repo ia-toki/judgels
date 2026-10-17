@@ -1,4 +1,5 @@
 import { HTMLTable, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import {
@@ -7,8 +8,6 @@ import {
 } from '../../../../../../modules/api/contestSupervisor';
 import { ContestTab } from '../../../../../../modules/api/contestWeb';
 import { contestIcon } from '../../modules/contestIcon';
-
-import './ContestSupervisorsTable.scss';
 
 const managementPermissionTabsMap = {
   [SupervisorManagementPermission.All]: 'ninja',
@@ -46,12 +45,15 @@ export function ContestSupervisorsTable({ supervisors, profilesMap }) {
           <UserRef profile={profilesMap[supervisor.userJid]} />
         </td>
         <td>
-          {supervisor.managementPermissions &&
-            supervisor.managementPermissions.map(p => (
-              <Tag round className="permission-tag" key={p} icon={managementPermissionTabsMap[p]}>
-                {supervisorManagementPermissionShortNamesMap[p]}
-              </Tag>
-            ))}
+          {supervisor.managementPermissions && (
+            <Flex gap={1} flexWrap="wrap">
+              {supervisor.managementPermissions.map(p => (
+                <Tag round key={p} icon={managementPermissionTabsMap[p]}>
+                  {supervisorManagementPermissionShortNamesMap[p]}
+                </Tag>
+              ))}
+            </Flex>
+          )}
         </td>
       </tr>
     ));

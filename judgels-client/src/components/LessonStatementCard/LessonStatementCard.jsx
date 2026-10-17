@@ -1,3 +1,5 @@
+import { Box } from '@blueprintjs/labs';
+
 import { ContentCard } from '../ContentCard/ContentCard';
 import RichStatementText from '../RichStatementText/RichStatementText';
 
@@ -10,9 +12,9 @@ export function LessonStatementCard({ alias, statement }) {
         {alias && `${alias}. `}
         {statement.title}
       </h2>
-      <div className="lesson-statement__text">
+      <Box className="lesson-statement__text" marginTop={6}>
         <RichStatementText key={alias}>{statement.text}</RichStatementText>
-      </div>
+      </Box>
     </ContentCard>
   );
 }

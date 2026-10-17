@@ -1,5 +1,4 @@
 .bp6-card.card__title {
-  display: flex;
   height: 45px;
   line-height: 9px;
   border-bottom-left-radius: 0;
@@ -8,12 +7,6 @@
 }
 
 .card__title__action {
-  margin-left: 15px;
-  margin-top: -8px;
-}
-
-.card__title__action_right {
-  margin-left: auto;
   margin-top: -8px;
 }
 

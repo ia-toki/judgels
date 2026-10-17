@@ -1,5 +1,6 @@
 import { Popover, Position, Tab, Tabs } from '@blueprintjs/core';
 import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
+import { Box } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 import { PureComponent } from 'react';
 
@@ -33,9 +34,9 @@ export class Sidebar extends PureComponent {
     const tabs = items.flatMap(item => {
       if (item.children) {
         return [
-          <div key={item.title} className="card-sidebar__group">
+          <Box key={item.title} className="card-sidebar__group" paddingX={5} marginTop={4}>
             {item.title}
-          </div>,
+          </Box>,
           ...item.children.map(renderTab),
         ];
       }

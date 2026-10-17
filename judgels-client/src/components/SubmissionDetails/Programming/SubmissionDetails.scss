@@ -1,8 +1,4 @@
 .programming-submission-details {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
   pre {
     line-height: 18px;
   }
@@ -45,14 +41,6 @@
     line-height: 24px;
   }
 
-  .compilation-output {
-    margin-top: 10px;
-  }
-
-  .source-download {
-    margin-left: 10px;
-  }
-
   .pending-loader {
     margin-bottom: 15px;
   }
@@ -65,12 +53,6 @@
     display: inline-block;
     margin-left: 5px;
     margin-bottom: 0;
-  }
-
-  .details-results {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
   }
 
   .details-card {

@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { Outlet, useParams } from '@tanstack/react-router';
 
 import ContentWithTopbar from '../../../../../../../../../components/ContentWithTopbar/ContentWithTopbar';
@@ -27,11 +28,13 @@ export default function ChapterProblemLayout({ worksheet, renderNavigation, relo
   return (
     <div className="chapter-programming-problem-page">
       <ChapterProblemStatementPage worksheet={worksheet} />
-      <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath}>
-        <ChapterProblemContext.Provider value={{ worksheet, renderNavigation, reloadProblem }}>
-          <Outlet />
-        </ChapterProblemContext.Provider>
-      </ContentWithTopbar>
+      <Flex asChild flex={1} flexDirection="column">
+        <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath}>
+          <ChapterProblemContext.Provider value={{ worksheet, renderNavigation, reloadProblem }}>
+            <Outlet />
+          </ChapterProblemContext.Provider>
+        </ContentWithTopbar>
+      </Flex>
     </div>
   );
 }

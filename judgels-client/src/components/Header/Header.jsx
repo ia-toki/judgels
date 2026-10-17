@@ -1,4 +1,5 @@
 import { Icon, Navbar } from '@blueprintjs/core';
+import { Box, Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -35,21 +36,21 @@ export default function Header({ items, homeRoute }) {
 
   return (
     <Navbar className="header">
-      <div className="header__wrapper">
-        <div className="header__left">
+      <Flex>
+        <Flex className="header__left" flexShrink={0} gap={4} alignItems="center">
           <Link to="/">
             <img src={logo} alt="header" className="header__logo" />
           </Link>
-          <div className="header__text">
+          <Flex flexDirection="column">
             <div className="header__title">{getAppName()}</div>
             <div className="header__subtitle">{getAppSlogan()}</div>
-          </div>
-        </div>
+          </Flex>
+        </Flex>
 
-        <div className="header__center-wrapper">
-          <div className="header__center" ref={centerRef} onScroll={updateScrollState}>
+        <Box className="header__center-wrapper" flex={1}>
+          <Flex className="header__center" overflowX="auto" ref={centerRef} onScroll={updateScrollState}>
             <Menubar items={items} homeRoute={homeRoute} />
-          </div>
+          </Flex>
           {scrolledLeft && (
             <button
               className="header__chevron header__chevron--left"
@@ -66,13 +67,13 @@ export default function Header({ items, homeRoute }) {
               <Icon icon="chevron-right" />
             </button>
           )}
-        </div>
+        </Box>
 
-        <div className="header__right">
+        <Flex alignItems="center">
           <DarkModeWidget />
           <UserWidget items={items} homeRoute={homeRoute} />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
     </Navbar>
   );
 }

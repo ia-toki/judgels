@@ -1,5 +1,6 @@
 import { Button, Intent, ProgressBar, Tag } from '@blueprintjs/core';
 import { Clipboard, Cross } from '@blueprintjs/icons';
+import { Box, Flex } from '@blueprintjs/labs';
 
 import { getGradingLanguageSyntaxHighlighterValue } from '../../../../modules/api/gradingLanguage';
 import { VerdictCode } from '../../../../modules/api/gradingVerdict';
@@ -28,7 +29,7 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
       return null;
     }
 
-    return <Tag>{score}</Tag>;
+    return <Tag className="problem-submission-summary__score">{score}</Tag>;
   };
 
   const renderErrors = () => {
@@ -65,10 +66,10 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
     );
 
     return (
-      <div className="problem-submission-summary__evaluation-result" key={idx}>
+      <Flex flexDirection="column" gap={2} marginBottom={2} key={idx}>
         {input}
         {output}
-      </div>
+      </Flex>
     );
   };
 
@@ -84,10 +85,16 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
       if (testGroupResult.id === -1) {
         if (testGroupResult.testCaseResults.some(r => r.hasOwnProperty('revealedSolutionOutput'))) {
           return (
-            <div className="problem-submission-summary__evaluation">
-              <Button small intent={Intent.NONE} icon={<Cross />} onClick={onClose} />
+            <Box position="relative">
+              <Button
+                className="problem-submission-summary__close-button"
+                small
+                intent={Intent.NONE}
+                icon={<Cross />}
+                onClick={onClose}
+              />
               {testGroupResult.testCaseResults.map(renderTestCaseResult)}
-            </div>
+            </Box>
           );
         }
       }
@@ -106,7 +113,7 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
       return (
         <>
           <p>Grading submission, please wait...</p>
-          <ProgressBar className="pending-loader" />
+          <ProgressBar />
         </>
       );
     }
@@ -114,13 +121,13 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
     return (
       <>
         {renderEvaluationResults()}
-        <div className="problem-submission-summary__verdict">
+        <Flex gap={2}>
           <h5>Verdict</h5>
           {renderScore(latestGrading)}
-          <ButtonLink to={submissionUrl} className="details-button" small>
+          <ButtonLink to={submissionUrl} className="problem-submission-summary__details-button" small>
             Details
           </ButtonLink>
-        </div>
+        </Flex>
         <VerdictTag square verdictCode={verdictCode} />
         {renderErrors()}
       </>

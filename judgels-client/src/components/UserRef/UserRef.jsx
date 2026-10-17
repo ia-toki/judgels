@@ -1,3 +1,4 @@
+import { Box } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 import classNames from 'classnames';
 
@@ -11,7 +12,7 @@ export function UserRef({ profile, showFlag, useAnchor }) {
       return null;
     }
     if (!profile || !profile.country) {
-      return <div className="user-ref__flag-dummy" />;
+      return <Box className="user-ref__flag-dummy" display="inline-block" marginRight={2} />;
     }
     return (
       <img alt={profile.country} src={`/flags/flags-iso/shiny/24/${profile.country}.png`} className="user-ref__flag" />

@@ -24,3 +24,28 @@ Invalidate with the query options (`queryClient.invalidateQueries(contestProblem
 Bump `buster` in `src/index.jsx` whenever a key or the shape of its data changes; otherwise the old entries stay in `localStorage`.
 
 Submission queries set `meta: { persist: false }`, which keeps them out of `localStorage`. Add it to every new submission query.
+
+# Layout
+
+Compose layout with `Flex` and `Box` from `@blueprintjs/labs`, not custom CSS: `Flex` for a row or a stack of children, `Box` for a container `div` that needs spacing.
+
+- Space siblings with `gap` on their parent `Flex`, not a margin on each sibling.
+- Spacing props are steps of 4px: `gap={2}` is 8px. The steps are 0, 0.5, 1, 2, ... 10.
+- Pass `asChild` to `Flex` to lay out the children of an element that is not a `div`, e.g. a Blueprint `Card` or a `form`.
+- Set a property on an element either with a prop or in CSS, never both: the prop wins.
+
+To style a single element, do not wrap it in `<Box asChild>`. In order of preference:
+
+1. Let its parent space it, with `gap`.
+2. Use the component's own prop, e.g. `fill` on a `Button`.
+3. Give it a class in a stylesheet, with spacing in steps of 4px.
+
+These stay in a stylesheet as well:
+
+- A layout that changes at a breakpoint: the props have no responsive form.
+- A size in pixels: `width` and `height` props are 25, 50, 75, 100 (percent) or `auto`.
+- Spacing that a `calc()` height elsewhere accounts for, e.g. the title above a full-height page: a step of 4px would no longer add up.
+- An override of an element inside a Blueprint component, e.g. `.bp6-form-group`.
+- Everything that is not layout: color, typography, border.
+
+Delete a stylesheet, and its import, once it is empty.

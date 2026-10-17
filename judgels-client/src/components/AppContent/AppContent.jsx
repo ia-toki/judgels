@@ -1,3 +1,4 @@
+import { Box } from '@blueprintjs/labs';
 import { useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
 
@@ -7,13 +8,14 @@ export function AppContent({ children }) {
   const location = useLocation();
 
   return (
-    <div
+    <Box
+      paddingX={4}
       className={classNames('app-content', {
         'is-course-chapter-problem': isInCourseChapterProblemPath(location.pathname),
       })}
     >
       {children}
-    </div>
+    </Box>
   );
 }
 

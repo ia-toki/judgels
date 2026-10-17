@@ -1,4 +1,5 @@
 import { Book } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
 
@@ -10,10 +11,12 @@ export function ChapterLessonCard({ course, chapterAlias, lesson, lessonName }) 
       className="chapter-lesson-card"
       to={`/courses/${course.slug}/chapters/${chapterAlias}/lessons/${lesson.alias}`}
     >
-      <Book />
-      <h4 data-key="name">
-        {lesson.alias}. {lessonName}
-      </h4>
+      <Flex gap={2} alignItems="center">
+        <Book />
+        <h4 data-key="name">
+          {lesson.alias}. {lessonName}
+        </h4>
+      </Flex>
     </ContentCardLink>
   );
 }

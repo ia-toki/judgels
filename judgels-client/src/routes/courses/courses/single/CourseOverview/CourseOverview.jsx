@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { SendMessage } from '@blueprintjs/icons';
+import { Box } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -32,11 +33,11 @@ export default function CourseOverview() {
   };
 
   return (
-    <div className="course-overview">
+    <Box className="course-overview" flex={1}>
       <h2>{course.name}</h2>
       <HtmlText>{course.description}</HtmlText>
       <br />
       {renderStartButton()}
-    </div>
+    </Box>
   );
 }

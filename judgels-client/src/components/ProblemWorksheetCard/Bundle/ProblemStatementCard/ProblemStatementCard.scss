@@ -3,20 +3,6 @@
   margin-bottom: 15px;
 }
 
-.bundle-problem-statement__limits {
-  width: 200px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
-
-  td,
-  th {
-    border: 1px #dee0e1 solid;
-    border-top: 0;
-    vertical-align: middle;
-  }
-}
-
 .bundle-problem-statement__text {
   embed {
     width: 100%;
@@ -24,15 +10,6 @@
   }
 }
 
-.bundle-problem-statement-item__statement {
-  display: flex;
-  align-items: baseline;
-  .__item-num {
-    flex-grow: 0;
-    min-width: 20px;
-    margin-right: 5px;
-  }
-  .__item-statement {
-    flex-grow: 1;
-  }
+.bundle-problem-statement-item__num {
+  min-width: 20px;
 }

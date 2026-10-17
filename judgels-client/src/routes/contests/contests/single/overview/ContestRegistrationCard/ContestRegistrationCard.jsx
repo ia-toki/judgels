@@ -43,7 +43,7 @@ export default function ContestRegistrationCard() {
 
   if (!isLoggedIn) {
     return (
-      <Callout icon={<BanCircle />} className="contest-registration-card--error secondary-info">
+      <Callout icon={<BanCircle />} className="secondary-info">
         Please log in to register.
       </Callout>
     );

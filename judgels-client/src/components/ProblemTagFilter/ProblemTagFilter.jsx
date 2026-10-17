@@ -1,7 +1,7 @@
 import { Checkbox } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { ContentCard } from '../ContentCard/ContentCard';
@@ -47,18 +47,17 @@ export default function ProblemTagFilter({ queryOptions }) {
       <div key={title}>
         <h5>{title}</h5>
         {options.map(opt => (
-          <Checkbox
-            key={opt.value}
-            name={opt.value}
-            className={classNames('problem-tag-filter__option', {
-              'problem-tag-filter__option-child': isTagChild(opt.value),
-            })}
-            label={getTagName(opt) + ' (' + opt.count + ')'}
-            checked={isTagSelected(opt.value)}
-            indeterminate={isTagChildSelected(opt.value)}
-            disabled={isTagParentSelected(opt.value)}
-            onChange={changeTag}
-          />
+          <Box key={opt.value} asChild {...(isTagChild(opt.value) && { marginLeft: 6 })}>
+            <Checkbox
+              name={opt.value}
+              className="problem-tag-filter__option"
+              label={getTagName(opt) + ' (' + opt.count + ')'}
+              checked={isTagSelected(opt.value)}
+              indeterminate={isTagChildSelected(opt.value)}
+              disabled={isTagParentSelected(opt.value)}
+              onChange={changeTag}
+            />
+          </Box>
         ))}
       </div>
     );

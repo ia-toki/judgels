@@ -1,4 +1,5 @@
 import { ChevronRight, Home } from '@blueprintjs/icons';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
@@ -82,7 +83,7 @@ export default function ChapterProblemLayout() {
     const problemTitle = response && response.worksheet.statement.title;
 
     return (
-      <div className="chapter-problem-page__title">
+      <Flex className="chapter-problem-page__title" flexWrap="wrap">
         <h3>
           <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
             <Home />
@@ -101,7 +102,7 @@ export default function ChapterProblemLayout() {
 
         {renderProgress()}
         {renderNavigation()}
-      </div>
+      </Flex>
     );
   };
 
@@ -158,9 +159,9 @@ export default function ChapterProblemLayout() {
   };
 
   return (
-    <div className="chapter-problem-page">
+    <Box className="chapter-problem-page" flex={1} width={100} overflowX="auto">
       {renderHeader()}
       {renderContent()}
-    </div>
+    </Box>
   );
 }

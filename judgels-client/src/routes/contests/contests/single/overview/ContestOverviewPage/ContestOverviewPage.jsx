@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -6,8 +7,6 @@ import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { contestBySlugQueryOptions, contestDescriptionQueryOptions } from '../../../../../../modules/queries/contest';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
-
-import './ContestOverviewPage.scss';
 
 export default function ContestOverviewPage() {
   const { contestSlug } = useParams({ strict: false });
@@ -36,9 +35,9 @@ export default function ContestOverviewPage() {
   };
 
   return (
-    <>
+    <Flex flexDirection="column" gap={4}>
       {renderRegistration()}
       {renderDescription()}
-    </>
+    </Flex>
   );
 }
