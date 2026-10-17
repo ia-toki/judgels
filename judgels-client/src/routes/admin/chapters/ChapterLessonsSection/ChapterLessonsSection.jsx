@@ -19,9 +19,9 @@ export function ChapterLessonsSection({ chapter }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const updateLessons = data => {
+  const updateLessons = async data => {
     const lessons = deserializeLessons(data.lessons);
-    setLessonsMutation.mutate(lessons, {
+    await setLessonsMutation.mutateAsync(lessons, {
       onSuccess: () => toastActions.showSuccessToast('Chapter lessons updated.'),
     });
     setIsEditing(false);

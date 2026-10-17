@@ -87,9 +87,9 @@ export function SessionSection({ session }) {
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
-  const updateSettings = values => {
+  const updateSettings = async values => {
     const maxConcurrentSessionsPerUser = parseInt(values.maxConcurrentSessionsPerUser, 10);
-    updateSettingsMutation.mutate(
+    await updateSettingsMutation.mutateAsync(
       {
         session: {
           disableLogout: !!values.disableLogout,

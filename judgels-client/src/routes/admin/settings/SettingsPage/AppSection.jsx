@@ -73,8 +73,8 @@ export function AppSection({ app }) {
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
-  const updateSettings = values => {
-    updateSettingsMutation.mutate(
+  const updateSettings = async values => {
+    await updateSettingsMutation.mutateAsync(
       { app: { name: values.name, slogan: values.slogan, announcement: values.announcement || '' } },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
