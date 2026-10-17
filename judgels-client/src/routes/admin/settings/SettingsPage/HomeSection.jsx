@@ -59,8 +59,8 @@ export function HomeSection({ home = { banner: '' } }) {
     return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
-  const updateSettings = values => {
-    updateSettingsMutation.mutate(
+  const updateSettings = async values => {
+    await updateSettingsMutation.mutateAsync(
       { home: { banner: values.banner || '' } },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),

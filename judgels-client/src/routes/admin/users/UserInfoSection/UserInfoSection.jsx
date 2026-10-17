@@ -32,8 +32,8 @@ export function UserInfoSection({ user }) {
     { key: 'institutionCity', title: 'Institution city', value: userInfo.institutionCity },
   ];
 
-  const updateUserInfo = data => {
-    updateUserInfoMutation.mutate(data, {
+  const updateUserInfo = async data => {
+    await updateUserInfoMutation.mutateAsync(data, {
       onSuccess: () => toastActions.showSuccessToast('User info updated.'),
     });
     setIsEditingInfo(false);

@@ -20,9 +20,9 @@ export function ProblemSetProblemsSection({ problemSet }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const updateProblems = data => {
+  const updateProblems = async data => {
     const problems = deserializeProblems(data.problems);
-    setProblemsMutation.mutate(problems, {
+    await setProblemsMutation.mutateAsync(problems, {
       onSuccess: () => toastActions.showSuccessToast('Problemset problems updated.'),
     });
     setIsEditing(false);
