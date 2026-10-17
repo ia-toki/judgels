@@ -1,4 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -40,7 +41,7 @@ export default function ChapterLessonPage() {
 
   const renderHeader = () => {
     return (
-      <div className="chapter-lesson-page__title">
+      <Flex className="chapter-lesson-page__title" flexWrap="wrap" marginBottom={4}>
         <h3>
           <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
             {course.name}
@@ -58,7 +59,7 @@ export default function ChapterLessonPage() {
         </h3>
 
         {renderPrevAndNextResourcePaths()}
-      </div>
+      </Flex>
     );
   };
 
@@ -104,12 +105,12 @@ export default function ChapterLessonPage() {
   };
 
   return (
-    <div className="chapter-lesson-page">
+    <Box className="chapter-lesson-page" flex={1}>
       {renderHeader()}
       <ContentCard>
         {renderStatementLanguageWidget()}
         {renderStatement()}
       </ContentCard>
-    </div>
+    </Box>
   );
 }

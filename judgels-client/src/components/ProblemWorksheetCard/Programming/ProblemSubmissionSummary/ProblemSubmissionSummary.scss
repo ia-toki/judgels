@@ -1,36 +1,19 @@
 .problem-submission-summary {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
 
-  &__evaluation {
-    position: relative;
-
-    button {
-      position: absolute;
-      right: 0;
-    }
+  &__close-button {
+    position: absolute;
+    right: 0;
   }
 
-  &__evaluation-result {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    margin-bottom: 10px;
+  &__score {
+    height: 100%;
   }
 
-  &__verdict {
-    display: flex;
-    gap: 10px;
-
-    .bp6-tag {
-      height: 100%;
-    }
-
-    .details-button {
-      height: 100%;
-      margin-left: auto;
-    }
+  &__details-button {
+    height: 100%;
+    margin-left: auto;
   }
 
   .verdict-tag {

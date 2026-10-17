@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { ButtonLink } from '../../../../../../../../components/ButtonLink/ButtonLink';
 
@@ -22,7 +23,6 @@ export function ChapterNavigation({
     return (
       <ButtonLink
         small
-        className="chapter-problem-page__prev"
         to={`/courses/${courseSlug}/chapters/${chapterAlias}${previousResourcePath}`}
         onClick={scrollToTop}
       >
@@ -76,10 +76,10 @@ export function ChapterNavigation({
   };
 
   return (
-    <div>
+    <Flex gap={1}>
       {renderPreviousResource()}
       {renderNextResource()}
       {renderNextChapter()}
-    </div>
+    </Flex>
   );
 }

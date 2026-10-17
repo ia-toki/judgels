@@ -42,7 +42,7 @@ export function UserUpsertDialog() {
               onClick={() => setIsInstructionOpen(!isInstructionOpen)}
               rightIcon={isInstructionOpen ? 'chevron-up' : 'chevron-down'}
               text="Instructions"
-              style={{ marginBottom: '10px' }}
+              style={{ marginBottom: '8px' }}
             />
             <Collapse isOpen={isInstructionOpen}>
               <h5>Allowed CSV headers</h5>

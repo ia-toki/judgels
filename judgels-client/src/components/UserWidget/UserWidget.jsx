@@ -1,5 +1,6 @@
 import { Alignment, Menu, MenuDivider, MenuItem, Navbar, Popover, Position } from '@blueprintjs/core';
 import { ChevronDown, Menu as IconMenu } from '@blueprintjs/icons';
+import { Box } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 
@@ -85,17 +86,17 @@ export function UserWidget({ user, profile, items, homeRoute }) {
   const renderForGuest = () => {
     return (
       <Navbar.Group align={Alignment.RIGHT}>
-        <div className="widget-user__link">
+        <Box className="widget-user__link" marginRight={5}>
           <Link data-key="login" to="/login">
             Log in
           </Link>
-        </div>
+        </Box>
         {isTLX() && (
-          <div className="widget-user__link">
+          <Box className="widget-user__link" marginRight={5}>
             <Link data-key="register" to="/register">
               Register
             </Link>
-          </div>
+          </Box>
         )}
         {renderGuestResponsiveMenu()}
       </Navbar.Group>

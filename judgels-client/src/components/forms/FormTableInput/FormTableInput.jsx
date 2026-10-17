@@ -1,4 +1,5 @@
 import { FormGroup } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import classNames from 'classnames';
 
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
@@ -19,10 +20,10 @@ export function FormTableInput({
   return (
     <tr className="form-table-input">
       <td style={keyStyles} className={keyClassName}>
-        <div className="form-table-input__group-label">
+        <Box paddingTop={1}>
           <span className="form-table-input__label">{label}</span>
           {labelHelper && <span className="form-table-input__label-helper"> ({labelHelper})</span>}
-        </div>
+        </Box>
       </td>
       <td>
         <FormGroup

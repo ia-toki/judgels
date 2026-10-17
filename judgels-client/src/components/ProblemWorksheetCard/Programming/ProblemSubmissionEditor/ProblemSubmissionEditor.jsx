@@ -1,5 +1,6 @@
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import { BanCircle } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 import { Component } from 'react';
 import { Field, Form } from 'react-final-form';
@@ -150,12 +151,10 @@ export class ProblemSubmissionEditor extends Component {
 
           return (
             <form onSubmit={handleSubmit} className={classNames({ show: this.state.isResponsiveButtonClicked })}>
-              <div className="editor-header">
+              <Flex className="editor-header" width={100} gap={2} marginBottom={2} justifyContent="space-between">
                 <Field component={FormSelect2} {...gradingLanguageField} />
-                {canReset && (
-                  <Button className="reset-button" small text="Reset code" intent={Intent.NONE} onClick={onReset} />
-                )}
-              </div>
+                {canReset && <Button small text="Reset code" intent={Intent.NONE} onClick={onReset} />}
+              </Flex>
               {submissionHint && (
                 <p>
                   <small>{submissionHint}</small>
@@ -168,7 +167,7 @@ export class ProblemSubmissionEditor extends Component {
                 submissionUrl={this.state.submissionUrl}
                 onClose={this.closeSubmissionSummary}
               />
-              <div className="editor-buttons">
+              <Flex width={100} justifyContent="space-between">
                 <Button
                   type="submit"
                   text="Submit"
@@ -177,8 +176,8 @@ export class ProblemSubmissionEditor extends Component {
                   loading={submitting}
                   disabled={!dirty || this.currentTimeout}
                 />
-                <div className="editor-navigation">{renderNavigation({ hidePrev: true })}</div>
-              </div>
+                <div>{renderNavigation({ hidePrev: true })}</div>
+              </Flex>
             </form>
           );
         }}

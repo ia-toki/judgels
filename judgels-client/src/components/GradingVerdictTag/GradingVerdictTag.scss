@@ -1,12 +1,3 @@
-.grading-verdict-tag {
-  display: inline-flex;
-  gap: 10px;
-
-  .grading-verdict-tag__score {
-    margin-left: auto;
-  }
-
-  &--wide {
-    width: 100%;
-  }
+.grading-verdict-tag__score {
+  margin-left: auto;
 }

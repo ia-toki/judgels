@@ -1,4 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 
@@ -21,14 +22,14 @@ export function ContestSupervisorAddResultTable({ usernames, insertedSupervisorP
     ));
 
     return (
-      <>
+      <div>
         <h5>
           {title} ({usernames.length})
         </h5>
-        <HTMLTable striped className="table-list-condensed contest-supervisor-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed">
           <tbody>{rows}</tbody>
         </HTMLTable>
-      </>
+      </div>
     );
   };
 
@@ -50,19 +51,19 @@ export function ContestSupervisorAddResultTable({ usernames, insertedSupervisorP
     ));
 
     return (
-      <>
+      <div>
         <h5>Unknown users ({unknownUsernames.length})</h5>
-        <HTMLTable striped className="table-list-condensed contest-supervisor-dialog-result-table">
+        <HTMLTable striped className="table-list-condensed">
           <tbody>{rows}</tbody>
         </HTMLTable>
-      </>
+      </div>
     );
   };
 
   return (
-    <>
+    <Flex flexDirection="column" gap={6}>
       {renderSupervisorsTable('Added supervisors', insertedSupervisorProfilesMap)}
       {renderUnknownSupervisorsTable()}
-    </>
+    </Flex>
   );
 }

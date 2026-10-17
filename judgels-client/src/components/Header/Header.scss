@@ -30,27 +30,12 @@
   }
 }
 
-.header__wrapper {
-  display: flex;
-  margin: 0 auto;
-}
-
-.header__left {
-  display: flex;
-  flex-shrink: 0;
-  gap: 16px;
-  align-items: center;
-}
-
 .header__center-wrapper {
   position: relative;
-  flex: 1;
   min-width: 0;
 }
 
 .header__center {
-  display: flex;
-  overflow-x: auto;
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
@@ -96,19 +81,9 @@
   }
 }
 
-.header__right {
-  display: flex;
-  align-items: center;
-}
-
 .header__logo {
   margin-top: 3px;
   height: 40px;
-}
-
-.header__text {
-  display: flex;
-  flex-direction: column;
 }
 
 .header__title {

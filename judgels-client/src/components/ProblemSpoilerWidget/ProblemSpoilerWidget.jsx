@@ -18,7 +18,7 @@ export default function ProblemSpoilerWidget() {
   };
 
   return (
-    <Flex gap={1}>
+    <Flex gap={2}>
       <Switch
         className="problem-spoiler-switch"
         alignIndicator={Alignment.LEFT}

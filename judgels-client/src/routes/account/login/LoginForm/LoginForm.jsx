@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 import { Field, Form } from 'react-final-form';
 
@@ -37,14 +38,14 @@ export default function LoginForm({ onSubmit }) {
 
           <HorizontalDivider />
 
-          <div className="form-login__actions">
+          <Flex>
             <Button type="submit" text="Log in" intent={Intent.PRIMARY} loading={submitting} />
             {isTLX() && (
               <p className="form-login__actions-register">
                 Don't have account? <Link to="/register">Register now</Link>
               </p>
             )}
-          </div>
+          </Flex>
         </form>
       )}
     </Form>

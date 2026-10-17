@@ -1,18 +1,12 @@
-.problem-grading-config-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.problem-grading-config-edit-form__test-cases {
+  width: 100%;
+}
 
-  &__test-cases {
-    width: 100%;
-  }
+.problem-grading-config-edit-form__action {
+  width: 1px;
+  white-space: nowrap;
+}
 
-  &__action {
-    width: 1px;
-    white-space: nowrap;
-  }
-
-  &__subtask {
-    margin-bottom: 0;
-  }
+.problem-grading-config-edit-form__subtask {
+  margin-bottom: 0;
 }

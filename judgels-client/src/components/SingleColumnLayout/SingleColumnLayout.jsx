@@ -1,5 +1,11 @@
+import { Flex } from '@blueprintjs/labs';
+
 import './SingleColumnLayout.scss';
 
 export function SingleColumnLayout({ children }) {
-  return <div className="layout-single-col">{children}</div>;
+  return (
+    <Flex className="layout-single-col" flexDirection="column" margin="auto">
+      {children}
+    </Flex>
+  );
 }

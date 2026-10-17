@@ -1,9 +1,7 @@
 .item-short-answer-form {
-  display: flex;
-  gap: 1px;
-
   .text-input {
-    margin-left: 25px;
+    margin-left: 24px;
+
     &.readonly {
       background-color: rgba(206, 217, 224, 0.5);
     }

@@ -6,11 +6,7 @@
   text-align: center;
 }
 
-.lesson-statement__text {
-  margin-top: 25px;
-
-  embed {
-    width: 100%;
-    min-height: 800px;
-  }
+.lesson-statement__text embed {
+  width: 100%;
+  min-height: 800px;
 }

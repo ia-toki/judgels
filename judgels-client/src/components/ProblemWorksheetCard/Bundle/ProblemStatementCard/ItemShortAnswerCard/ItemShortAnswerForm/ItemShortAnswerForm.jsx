@@ -1,5 +1,6 @@
 import { Button, Callout, Classes, ControlGroup, Intent } from '@blueprintjs/core';
 import { BanCircle, Circle, Confirm, Remove } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 import { PureComponent } from 'react';
 
@@ -199,16 +200,18 @@ export default class ItemShortAnswerForm extends PureComponent {
 
   render() {
     return (
-      <form onSubmit={this.onSubmit} className="item-short-answer-form">
-        <ControlGroup fill className="answer-form">
-          {this.renderTextInput()}
-          {this.renderSubmitButton()}
-          {this.renderCancelButton()}
-          {this.renderClearAnswerButton()}
-        </ControlGroup>
-        {this.renderWrongFormatNotice()}
-        {this.renderHelpText()}
-      </form>
+      <Flex asChild gap={0.5}>
+        <form onSubmit={this.onSubmit} className="item-short-answer-form">
+          <ControlGroup fill className="answer-form">
+            {this.renderTextInput()}
+            {this.renderSubmitButton()}
+            {this.renderCancelButton()}
+            {this.renderClearAnswerButton()}
+          </ControlGroup>
+          {this.renderWrongFormatNotice()}
+          {this.renderHelpText()}
+        </form>
+      </Flex>
     );
   }
 }

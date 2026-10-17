@@ -1,5 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { Flex } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useLocation, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -47,12 +47,18 @@ export default function SingleContestLayout() {
       path: 'announcements',
       titleIcon: contestIcon[ContestTab.Announcements],
       title: (
-        <div className="tab-item-with-widget">
+        <Box
+          className="tab-item-with-widget"
+          display="inline-flex"
+          position="absolute"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <div>Announcements</div>
           <div>
             <ContestAnnouncementsWidget />
           </div>
-        </div>
+        </Box>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Announcements) === -1,
     },
@@ -66,14 +72,20 @@ export default function SingleContestLayout() {
       path: 'editorial',
       titleIcon: contestIcon[ContestTab.Editorial],
       title: (
-        <div className="tab-item-with-widget">
+        <Box
+          className="tab-item-with-widget"
+          display="inline-flex"
+          position="absolute"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <div>Editorial</div>
           <div>
             <Tag className="normal-weight" intent={Intent.WARNING}>
               NEW
             </Tag>
           </div>
-        </div>
+        </Box>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Editorial) === -1,
     },
@@ -105,12 +117,18 @@ export default function SingleContestLayout() {
       path: 'clarifications',
       titleIcon: contestIcon[ContestTab.Clarifications],
       title: (
-        <div className="tab-item-with-widget">
+        <Box
+          className="tab-item-with-widget"
+          display="inline-flex"
+          position="absolute"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <div>Clarifications</div>
           <div>
             <ContestClarificationsWidget />
           </div>
-        </div>
+        </Box>
       ),
       disabled: !visibleTabs || visibleTabs.indexOf(ContestTab.Clarifications) === -1,
     },
@@ -140,7 +158,7 @@ export default function SingleContestLayout() {
     items: sidebarItems,
     basePath: `/contests/${contestSlug}`,
     contentHeader: (
-      <div className="single-contest-routes__header">
+      <Box className="single-contest-routes__header" paddingBottom={2}>
         <Flex gap={2} justifyContent="space-between" alignItems="baseline">
           <h2>{contest.name}</h2>
           <ContestEditDialog
@@ -150,7 +168,7 @@ export default function SingleContestLayout() {
           />
         </Flex>
         <ContestStateWidget />
-      </div>
+      </Box>
     ),
   };
 

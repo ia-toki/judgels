@@ -1,4 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 
 import { Card } from '../../../../../components/Card/Card';
@@ -18,9 +19,9 @@ export default function TopRatingsWidget() {
   const renderTable = profiles => {
     if (profiles.length === 0) {
       return (
-        <div className="top-ratings-widget__empty">
+        <Box padding={5}>
           <small>No data yet.</small>
-        </div>
+        </Box>
       );
     }
 

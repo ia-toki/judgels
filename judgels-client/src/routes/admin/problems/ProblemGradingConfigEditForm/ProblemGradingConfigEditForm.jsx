@@ -363,33 +363,37 @@ export default function ProblemGradingConfigEditForm({
   );
 
   return (
-    <form className="problem-grading-config-edit-form" onSubmit={submit}>
-      {canEdit && (
-        <ActionButtons>
-          <Button
-            small
-            text={
-              fields.subtasks ? 'Auto-populate test data from TCFrame format' : 'Auto-populate test data from filenames'
-            }
-            loading={isAutoPopulating}
-            onClick={autoPopulate}
-          />
-        </ActionButtons>
-      )}
-      {fields.limits && renderTextInput('timeLimit', 'Time limit', 'milliseconds')}
-      {fields.limits && renderTextInput('memoryLimit', 'Memory limit', 'kilobytes')}
-      {fields.sourceFileFieldKeys && renderTextInput('sourceFileFieldKeys', 'Source file keys', 'comma-separated')}
-      {renderSampleTestCases()}
-      {renderTestGroups()}
-      {fields.subtasks && renderSubtaskPoints()}
-      {fields.customScorer && renderHelperSelect('customScorer', 'Custom scorer')}
-      {fields.communicator && renderHelperSelect('communicator', 'Communicator')}
-      {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
-      {canEdit && (
-        <ActionButtons justifyContent="end">
-          <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
-        </ActionButtons>
-      )}
-    </form>
+    <Flex asChild flexDirection="column" gap={2}>
+      <form onSubmit={submit}>
+        {canEdit && (
+          <ActionButtons>
+            <Button
+              small
+              text={
+                fields.subtasks
+                  ? 'Auto-populate test data from TCFrame format'
+                  : 'Auto-populate test data from filenames'
+              }
+              loading={isAutoPopulating}
+              onClick={autoPopulate}
+            />
+          </ActionButtons>
+        )}
+        {fields.limits && renderTextInput('timeLimit', 'Time limit', 'milliseconds')}
+        {fields.limits && renderTextInput('memoryLimit', 'Memory limit', 'kilobytes')}
+        {fields.sourceFileFieldKeys && renderTextInput('sourceFileFieldKeys', 'Source file keys', 'comma-separated')}
+        {renderSampleTestCases()}
+        {renderTestGroups()}
+        {fields.subtasks && renderSubtaskPoints()}
+        {fields.customScorer && renderHelperSelect('customScorer', 'Custom scorer')}
+        {fields.communicator && renderHelperSelect('communicator', 'Communicator')}
+        {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
+        {canEdit && (
+          <ActionButtons justifyContent="end">
+            <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
+          </ActionButtons>
+        )}
+      </form>
+    </Flex>
   );
 }

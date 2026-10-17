@@ -1,4 +1,5 @@
 import { Card } from '@blueprintjs/core';
+import { Box, Flex } from '@blueprintjs/labs';
 
 import RichStatementText from '../../../../RichStatementText/RichStatementText';
 import { AnswerState } from '../../itemStatement';
@@ -8,12 +9,12 @@ export function ItemShortAnswerCard(props) {
   const { className, config, meta, initialAnswer, onSubmit, itemNumber } = props;
   return (
     <Card className={className}>
-      <div className="bundle-problem-statement-item__statement">
-        <div className="__item-num">{itemNumber}.</div>
-        <div className="__item-statement">
+      <Flex alignItems="baseline" gap={1}>
+        <div className="bundle-problem-statement-item__num">{itemNumber}.</div>
+        <Box flexGrow={1}>
           <RichStatementText>{config.statement}</RichStatementText>
-        </div>
-      </div>
+        </Box>
+      </Flex>
       <ItemShortAnswerForm
         initialAnswer={initialAnswer}
         onSubmit={onSubmit}

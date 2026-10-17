@@ -1,4 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 
@@ -99,10 +100,10 @@ export default function ChapterResourcesPage() {
     }
 
     return (
-      <div className="chapter-resources-page__sections">
+      <Flex flexDirection="column" gap={8}>
         {chapterResources}
         {problemSetResources}
-      </div>
+      </Flex>
     );
   };
 
@@ -130,9 +131,9 @@ export default function ChapterResourcesPage() {
   };
 
   return (
-    <div className="chapter-resources-page">
+    <Box className="chapter-resources-page" flex={1}>
       {renderHeader()}
       {renderResources()}
-    </div>
+    </Box>
   );
 }

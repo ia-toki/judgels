@@ -5,12 +5,9 @@
 
 .content-with-sidebar__sidebar {
   width: 320px;
-  flex-shrink: 0;
-  margin-bottom: 15px;
 }
 
 .content-with-sidebar__content {
-  flex-grow: 1;
   max-width: 920px;
 }
 

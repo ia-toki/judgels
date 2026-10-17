@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -31,9 +32,9 @@ export default function ContestEditModulesTab() {
 
     return (
       <div className="contest-edit-dialog__content">
-        <>{renderEnabledModules(enabledModules)}</>
+        {renderEnabledModules(enabledModules)}
         <hr />
-        <>{renderDisabledModules(disabledModules)}</>
+        {renderDisabledModules(disabledModules)}
       </div>
     );
   };
@@ -47,18 +48,22 @@ export default function ContestEditModulesTab() {
       );
     }
 
-    return enabledModules.map(module => (
-      <ContestModuleCard
-        key={module}
-        type={module}
-        intent={Intent.PRIMARY}
-        buttonIntent={Intent.NONE}
-        buttonText={'Disable'}
-        buttonOnClick={type => disableModuleMutation.mutate(type)}
-        buttonIsLoading={disableModuleMutation.isPending}
-        buttonIsDisabled={false}
-      />
-    ));
+    return (
+      <Flex flexDirection="column" gap={1}>
+        {enabledModules.map(module => (
+          <ContestModuleCard
+            key={module}
+            type={module}
+            intent={Intent.PRIMARY}
+            buttonIntent={Intent.NONE}
+            buttonText={'Disable'}
+            buttonOnClick={type => disableModuleMutation.mutate(type)}
+            buttonIsLoading={disableModuleMutation.isPending}
+            buttonIsDisabled={false}
+          />
+        ))}
+      </Flex>
+    );
   };
 
   const renderDisabledModules = disabledModules => {
@@ -70,18 +75,22 @@ export default function ContestEditModulesTab() {
       );
     }
 
-    return disabledModules.map(module => (
-      <ContestModuleCard
-        key={module}
-        type={module}
-        intent={Intent.NONE}
-        buttonIntent={Intent.PRIMARY}
-        buttonText={'Enable'}
-        buttonOnClick={type => enableModuleMutation.mutate(type)}
-        buttonIsLoading={enableModuleMutation.isPending}
-        buttonIsDisabled={false}
-      />
-    ));
+    return (
+      <Flex flexDirection="column" gap={1}>
+        {disabledModules.map(module => (
+          <ContestModuleCard
+            key={module}
+            type={module}
+            intent={Intent.NONE}
+            buttonIntent={Intent.PRIMARY}
+            buttonText={'Enable'}
+            buttonOnClick={type => enableModuleMutation.mutate(type)}
+            buttonIsLoading={enableModuleMutation.isPending}
+            buttonIsDisabled={false}
+          />
+        ))}
+      </Flex>
+    );
   };
 
   return (

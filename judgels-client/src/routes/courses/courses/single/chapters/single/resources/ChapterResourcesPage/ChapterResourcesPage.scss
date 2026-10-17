@@ -1,14 +1,7 @@
 @use '../../../../../../../../styles/base' as *;
 
 .chapter-resources-page {
-  flex: 1 1;
   max-width: 865px;
-}
-
-.chapter-resources-page__sections {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
 }
 
 .chapter-resources-page__resources {
@@ -32,7 +25,7 @@
 }
 
 .chapter-resources-page__title {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   font-size: 22px !important;
   line-height: 24px !important;
 }

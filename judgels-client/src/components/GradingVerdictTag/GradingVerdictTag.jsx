@@ -1,5 +1,5 @@
 import { Tag } from '@blueprintjs/core';
-import classNames from 'classnames';
+import { Box } from '@blueprintjs/labs';
 
 import { VerdictCode } from '../../modules/api/gradingVerdict';
 import { VerdictTag } from '../VerdictTag/VerdictTag';
@@ -29,9 +29,9 @@ export function GradingVerdictTag({ grading, wide }) {
   };
 
   return (
-    <div className={classNames('grading-verdict-tag', { 'grading-verdict-tag--wide': wide })}>
+    <Box display="inline-flex" gap={2} {...(wide && { width: 100 })}>
       {verdict && <VerdictTag verdictCode={verdict.code} />}
       {renderScore()}
-    </div>
+    </Box>
   );
 }

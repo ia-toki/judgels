@@ -1,6 +1,6 @@
 import { Button, HTMLTable, ProgressBar } from '@blueprintjs/core';
 import { Download, Lock } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
 
 import { isInteractive, isOutputOnly } from '../../../modules/api/gradingEngine';
@@ -56,11 +56,11 @@ export function SubmissionDetails({
     }
 
     return (
-      <div className="details-results">
+      <Flex flexDirection="column" gap={1}>
         {renderSampleTestDataResults()}
         {renderSubtaskResults()}
         {renderTestDataResults()}
-      </div>
+      </Flex>
     );
   };
 
@@ -397,10 +397,10 @@ export function SubmissionDetails({
           details &&
           details.compilationOutputs &&
           details.compilationOutputs[key] !== undefined && (
-            <div className="compilation-output">
+            <Box marginTop={2}>
               <h5>Compilation Output</h5>
               <pre>{details.compilationOutputs[key]}</pre>
-            </div>
+            </Box>
           )}
       </ContentCard>
     ));
@@ -431,9 +431,9 @@ export function SubmissionDetails({
       return null;
     }
     return (
-      <Flex alignItems="center" gap={2}>
+      <Flex alignItems="center" gap={4}>
         <h4>Source Files</h4>
-        <Button small className="source-download" icon={<Download />} onClick={onDownload}>
+        <Button small icon={<Download />} onClick={onDownload}>
           Download
         </Button>
       </Flex>
@@ -441,11 +441,11 @@ export function SubmissionDetails({
   };
 
   return (
-    <div className="programming-submission-details">
+    <Flex className="programming-submission-details" flexDirection="column" gap={5}>
       {renderGeneralInfo()}
       {renderLoader()}
       {renderDetails()}
       {renderSourceFiles()}
-    </div>
+    </Flex>
   );
 }

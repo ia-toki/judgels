@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { Card } from '../../../../../components/Card/Card';
@@ -49,7 +50,7 @@ export default function ChangeAvatarPage() {
   }
 
   const currentAvatar = avatarExists && (
-    <div className="card-change-avatar__panel">
+    <Box className="card-change-avatar__panel" flexGrow={1} marginBottom={4}>
       <h4>Current avatar</h4>
       <img src={avatarUrl} alt="avatar" />
       <div>
@@ -57,14 +58,14 @@ export default function ChangeAvatarPage() {
           Remove avatar
         </Button>
       </div>
-    </div>
+    </Box>
   );
 
   const newAvatar = (
-    <div className="card-change-avatar__panel">
+    <Box className="card-change-avatar__panel" flexGrow={1} marginBottom={4}>
       <h4>Upload new avatar</h4>
       <ChangeAvatarForm onSubmit={uploadAvatar} />
-    </div>
+    </Box>
   );
 
   return (

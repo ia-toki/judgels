@@ -1,5 +1,5 @@
 import { Classes, Dialog } from '@blueprintjs/core';
-import { Flex } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -64,13 +64,13 @@ export default function ContestUserProblemSubmissionsDialog({ userJid, problemJi
             </h5>
           </summary>
 
-          <div className="details-content">
+          <Box marginTop={4}>
             <SubmissionDetails
               submission={submission}
               source={getSource(submission.id, idx)}
               onClickViewSource={() => loadSubmissionSource(submission.id)}
             />
-          </div>
+          </Box>
         </details>
       </ContentCard>
     ));

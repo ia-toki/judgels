@@ -3,13 +3,11 @@ import { HTMLTable } from '@blueprintjs/core';
 import { Card } from '../../../../components/Card/Card';
 import { getRatingClass } from '../../../../modules/api/userRating';
 
-import './RatingSystemPage.scss';
-
 export default function RatingSystemPage() {
   return (
     <Card title="Rating system">
       <h4>Rating table</h4>
-      <HTMLTable className="table-list rating-system-page">
+      <HTMLTable className="table-list">
         <thead>
           <tr>
             <th>Rating</th>

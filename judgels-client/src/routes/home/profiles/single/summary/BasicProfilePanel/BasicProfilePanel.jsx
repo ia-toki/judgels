@@ -1,4 +1,5 @@
 import { HTMLTable } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 
 import { getCountryName } from '../../../../../../assets/data/countries';
 import { Card } from '../../../../../../components/Card/Card';
@@ -9,13 +10,13 @@ import './BasicProfilePanel.scss';
 export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, country, rating } }) {
   const renderMain = () => {
     return (
-      <div className="basic-profile-card__main">
+      <Box className="basic-profile-card__main" padding={4}>
         <div className="basic-profile-card__avatar-wrapper">
           <img className="basic-profile-card__avatar" src={avatarUrl} alt="avatar" />
         </div>
         <p className={getRatingClass(rating)}>{username}</p>
         {renderCountry()}
-      </div>
+      </Box>
     );
   };
 

@@ -1,4 +1,5 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
@@ -36,7 +37,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>TROC style config</h4>
         <HTMLTable striped>
           <tbody>
@@ -75,7 +76,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>ICPC style config</h4>
         <HTMLTable striped>
           <tbody>
@@ -119,7 +120,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>IOI style config</h4>
         <HTMLTable striped>
           <tbody>
@@ -159,7 +160,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>GCJ style config</h4>
         <HTMLTable striped>
           <tbody>
@@ -185,7 +186,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Clarification time limit config</h4>
         <HTMLTable striped>
           <tbody>
@@ -210,7 +211,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Division config</h4>
         <HTMLTable striped>
           <tbody>
@@ -230,7 +231,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Editorial config</h4>
         <Field component={FormRichTextArea} {...editorialPrefaceField} />
       </div>
@@ -245,7 +246,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Scoreboard config</h4>
         <HTMLTable striped>
           <tbody>
@@ -272,7 +273,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Frozen scoreboard config</h4>
         <HTMLTable striped>
           <tbody>
@@ -293,7 +294,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Merged scoreboard config</h4>
         <HTMLTable striped>
           <tbody>
@@ -319,7 +320,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>External scoreboard config</h4>
         <HTMLTable striped>
           <tbody>
@@ -341,7 +342,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     };
 
     return (
-      <div className="contest-edit-configs-form__config">
+      <div>
         <h4>Virtual contest config</h4>
         <HTMLTable striped>
           <tbody>
@@ -356,18 +357,20 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, values, submitting }) => (
         <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
-          {config.trocStyle && renderTrocStyleForm(values)}
-          {config.icpcStyle && renderIcpcStyleForm(values)}
-          {config.ioiStyle && renderIoiStyleForm(values)}
-          {config.gcjStyle && renderGcjStyleForm(values)}
-          {config.clarificationTimeLimit && renderClarificationTimeLimitForm()}
-          {config.division && renderDivisionForm()}
-          {renderScoreboardForm()}
-          {config.frozenScoreboard && renderFrozenScoreboardForm()}
-          {config.mergedScoreboard && renderMergedScoreboardForm()}
-          {config.externalScoreboard && renderExternalScoreboardForm()}
-          {config.virtual && renderVirtualForm()}
-          {config.editorial && renderEditorialForm()}
+          <Flex flexDirection="column" gap={5}>
+            {config.trocStyle && renderTrocStyleForm(values)}
+            {config.icpcStyle && renderIcpcStyleForm(values)}
+            {config.ioiStyle && renderIoiStyleForm(values)}
+            {config.gcjStyle && renderGcjStyleForm(values)}
+            {config.clarificationTimeLimit && renderClarificationTimeLimitForm()}
+            {config.division && renderDivisionForm()}
+            {renderScoreboardForm()}
+            {config.frozenScoreboard && renderFrozenScoreboardForm()}
+            {config.mergedScoreboard && renderMergedScoreboardForm()}
+            {config.externalScoreboard && renderExternalScoreboardForm()}
+            {config.virtual && renderVirtualForm()}
+            {config.editorial && renderEditorialForm()}
+          </Flex>
 
           <hr />
           <ActionButtons justifyContent="end">

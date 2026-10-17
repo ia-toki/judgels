@@ -1,5 +1,6 @@
 import { Navbar } from '@blueprintjs/core';
 import { WarningSign } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import HTMLReactParser from 'html-react-parser';
 
@@ -16,10 +17,12 @@ export default function Announcement() {
   }
   return (
     <Navbar className="announcement">
-      <Navbar.Heading className="announcement__text">
-        <WarningSign className="announcement__icon" />
-        <div className="announcement__body">{HTMLReactParser(announcement)}</div>
-      </Navbar.Heading>
+      <Flex asChild alignItems="center" justifyContent="center" gap={2}>
+        <Navbar.Heading className="announcement__text">
+          <WarningSign className="announcement__icon" />
+          <div className="announcement__body">{HTMLReactParser(announcement)}</div>
+        </Navbar.Heading>
+      </Flex>
     </Navbar>
   );
 }

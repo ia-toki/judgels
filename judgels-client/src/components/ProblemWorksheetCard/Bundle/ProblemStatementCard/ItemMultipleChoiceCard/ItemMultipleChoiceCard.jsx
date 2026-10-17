@@ -1,4 +1,5 @@
 import { Card, Divider, Radio, RadioGroup, Tag } from '@blueprintjs/core';
+import { Box, Flex } from '@blueprintjs/labs';
 import { Component } from 'react';
 
 import { HtmlText } from '../../../../HtmlText/HtmlText';
@@ -36,12 +37,12 @@ export class ItemMultipleChoiceCard extends Component {
     const config = this.props.config;
     return (
       <Card className={this.props.className}>
-        <div className="bundle-problem-statement-item__statement">
-          <div className="__item-num">{this.props.itemNumber}.</div>
-          <div className="__item-statement">
+        <Flex alignItems="baseline" gap={1}>
+          <div className="bundle-problem-statement-item__num">{this.props.itemNumber}.</div>
+          <Box flexGrow={1}>
             <RichStatementText>{config.statement}</RichStatementText>
-          </div>
-        </div>
+          </Box>
+        </Flex>
         <Divider />
         <RadioGroup
           className="problem-multiple-choice-item-choices"

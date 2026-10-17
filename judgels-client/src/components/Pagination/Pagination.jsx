@@ -1,4 +1,5 @@
 import { Classes } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import classNames from 'classnames';
 import ReactPaginate from 'react-paginate';
@@ -42,7 +43,7 @@ export default function Pagination({ pageSize, totalCount }) {
   };
 
   return (
-    <div className={totalCount > 0 ? 'pagination' : 'pagination--hide'}>
+    <Box display={totalCount > 0 ? 'flex' : 'none'} justifyContent="space-between" alignItems="center">
       {totalCount > 0 && (
         <small>
           <p className="pagination__helper-text">
@@ -69,6 +70,6 @@ export default function Pagination({ pageSize, totalCount }) {
         onPageChange={handleChangePage}
         disableInitialCallback
       />
-    </div>
+    </Box>
   );
 }

@@ -1,4 +1,5 @@
 import { SmallCross, SmallTick } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
@@ -19,7 +20,7 @@ export function ContestEditConfigsTable({ config }) {
       { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>TROC style config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -37,7 +38,7 @@ export function ContestEditConfigsTable({ config }) {
       { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>ICPC style config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -64,7 +65,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>IOI style config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -82,7 +83,7 @@ export function ContestEditConfigsTable({ config }) {
       { key: 'wrongSubmissionPenalty', title: 'Wrong submission penalty', value: wrongSubmissionPenalty },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>GCJ style config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -103,7 +104,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Clarification time limit config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -125,7 +126,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Division config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -135,7 +136,7 @@ export function ContestEditConfigsTable({ config }) {
 
   const renderEditorialConfig = ({ preface }, profilesMap) => {
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Editorial config</h4>
         <label>Preface</label>
         <ContentCard>
@@ -155,7 +156,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Scoreboard config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -181,7 +182,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Freezable scoreboard config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -198,7 +199,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Merged scoreboard config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -220,7 +221,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>External scoreboard config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -237,7 +238,7 @@ export function ContestEditConfigsTable({ config }) {
       },
     ];
     return (
-      <div className="contest-edit-configs-table__config">
+      <div>
         <h4>Virtual contest config</h4>
         <FormTable rows={rows} keyClassName="contest-edit-configs-table__key" />
         <hr />
@@ -253,7 +254,7 @@ export function ContestEditConfigsTable({ config }) {
   };
 
   return (
-    <div className="contest-edit-dialog__content">
+    <Flex className="contest-edit-dialog__content" flexDirection="column" gap={1}>
       {config.trocStyle && renderTrocStyleConfig(config.trocStyle)}
       {config.icpcStyle && renderIcpcStyleConfig(config.icpcStyle)}
       {config.ioiStyle && renderIoiStyleConfig(config.ioiStyle)}
@@ -266,6 +267,6 @@ export function ContestEditConfigsTable({ config }) {
       {config.externalScoreboard && renderExternalScoreboardConfig(config.externalScoreboard)}
       {config.virtual && renderVirtualConfig(config.virtual)}
       {config.editorial && renderEditorialConfig(config.editorial, config.profilesMap)}
-    </div>
+    </Flex>
   );
 }

@@ -1,7 +1,6 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useLocation, useNavigate } from '@tanstack/react-router';
-
-import './CursorPagination.scss';
 
 export default function CursorPagination({ data, hasPreviousPage, hasNextPage }) {
   const location = useLocation();
@@ -26,11 +25,11 @@ export default function CursorPagination({ data, hasPreviousPage, hasNextPage })
   };
 
   return (
-    <div className="cursor-pagination">
+    <Flex justifyContent="end" marginY={2}>
       <ButtonGroup>
         <Button icon="chevron-left" text="Newer" disabled={!hasNextPage} onClick={clickNewer} />
         <Button rightIcon="chevron-right" text="Older" disabled={!hasPreviousPage} onClick={clickOlder} />
       </ButtonGroup>
-    </div>
+    </Flex>
   );
 }
