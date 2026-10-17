@@ -1,9 +1,9 @@
 import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { countriesData } from '../../../../assets/data/countries';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
-import { HorizontalInnerDivider } from '../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { FormTableSelect } from '../../../../components/forms/FormTableSelect/FormTableSelect';
 import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
@@ -67,46 +67,47 @@ export default function UserInfoEditForm({ onSubmit, initialValues, onCancel }) 
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
-          <HTMLTable striped>
-            <tbody>
-              <Field component={FormTableTextInput} {...nameField} />
-              <Field component={FormTableSelect} {...genderField}>
-                <option />
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-              </Field>
-              <Field component={FormTableSelect} {...countryField}>
-                <option />
-                {countryOptions}
-              </Field>
-              <Field component={FormTableTextArea} {...homeAddressField} />
-              <Field component={FormTableSelect} {...shirtSizeField}>
-                <option />
-                <option value="XXS">XXS</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-                <option value="XXXL">XXXL</option>
-              </Field>
-              <Field component={FormTableTextInput} {...institutionField} />
-              <Field component={FormTableSelect} {...institutionCountryField}>
-                <option />
-                {countryOptions}
-              </Field>
-              <Field component={FormTableTextInput} {...institutionProvinceField} />
-              <Field component={FormTableTextInput} {...institutionCityField} />
-            </tbody>
-          </HTMLTable>
-          <hr />
-          <ActionButtons justifyContent="end">
-            <Button text="Cancel" disabled={submitting} onClick={onCancel} />
-            <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
-          </ActionButtons>
-        </form>
+        <Flex asChild flexDirection="column" gap={2}>
+          <form onSubmit={handleSubmit}>
+            <HTMLTable striped>
+              <tbody>
+                <Field component={FormTableTextInput} {...nameField} />
+                <Field component={FormTableSelect} {...genderField}>
+                  <option />
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </Field>
+                <Field component={FormTableSelect} {...countryField}>
+                  <option />
+                  {countryOptions}
+                </Field>
+                <Field component={FormTableTextArea} {...homeAddressField} />
+                <Field component={FormTableSelect} {...shirtSizeField}>
+                  <option />
+                  <option value="XXS">XXS</option>
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                  <option value="XXXL">XXXL</option>
+                </Field>
+                <Field component={FormTableTextInput} {...institutionField} />
+                <Field component={FormTableSelect} {...institutionCountryField}>
+                  <option />
+                  {countryOptions}
+                </Field>
+                <Field component={FormTableTextInput} {...institutionProvinceField} />
+                <Field component={FormTableTextInput} {...institutionCityField} />
+              </tbody>
+            </HTMLTable>
+            <ActionButtons justifyContent="end">
+              <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
+            </ActionButtons>
+          </form>
+        </Flex>
       )}
     </Form>
   );

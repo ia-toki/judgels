@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
@@ -21,15 +21,12 @@ export function HomeSection({ home = { banner: '' } }) {
   const keyStyles = { width: '300px' };
 
   const renderEditButton = () => {
-    if (isEditing) {
-      return null;
-    }
     return (
-      <ActionButtons>
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
+      !isEditing && (
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
-      </ActionButtons>
+      )
     );
   };
 
@@ -41,15 +38,15 @@ export function HomeSection({ home = { banner: '' } }) {
       return (
         <Form onSubmit={updateSettings} initialValues={initialValues}>
           {({ handleSubmit, submitting }) => (
-            <form onSubmit={handleSubmit}>
-              <Field component={FormRichTextArea} rows={10} name="banner" label="Banner" />
-
-              <hr />
-              <ActionButtons justifyContent="end">
-                <Button text="Cancel" disabled={submitting} onClick={() => setIsEditing(false)} />
-                <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
-              </ActionButtons>
-            </form>
+            <Flex asChild flexDirection="column" gap={2}>
+              <form onSubmit={handleSubmit}>
+                <Field component={FormRichTextArea} rows={10} name="banner" label="Banner" />
+                <ActionButtons justifyContent="end">
+                  <Button text="Cancel" disabled={submitting} onClick={() => setIsEditing(false)} />
+                  <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />
+                </ActionButtons>
+              </form>
+            </Flex>
           )}
         </Form>
       );
@@ -70,9 +67,14 @@ export function HomeSection({ home = { banner: '' } }) {
   };
 
   return (
-    <ContentCard title="Home settings">
-      {renderEditButton()}
+    <div>
+      <Flex asChild justifyContent="space-between" alignItems="baseline">
+        <h4>
+          <span>Home</span>
+          {renderEditButton()}
+        </h4>
+      </Flex>
       {renderContent()}
-    </ContentCard>
+    </div>
   );
 }

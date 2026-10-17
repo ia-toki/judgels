@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -13,9 +14,10 @@ export default function CoursePage() {
 
   return (
     <ContentCard title={`Courses › ${course.slug}`}>
-      <CourseGeneralSection course={course} />
-      <hr />
-      <CourseChaptersSection course={course} />
+      <Flex flexDirection="column" gap={8}>
+        <CourseGeneralSection course={course} />
+        <CourseChaptersSection course={course} />
+      </Flex>
     </ContentCard>
   );
 }

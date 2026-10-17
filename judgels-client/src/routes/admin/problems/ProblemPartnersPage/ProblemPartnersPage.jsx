@@ -1,4 +1,4 @@
-import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
@@ -42,7 +42,7 @@ export default function ProblemPartnersPage() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )

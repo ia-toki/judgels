@@ -1,3 +1,4 @@
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
@@ -20,12 +21,13 @@ export default function UserPage() {
 
   return (
     <ContentCard title={`Users › ${user.username}`}>
-      <div>
-        <h4>General</h4>
-        <FormTable keyStyles={keyStyles} rows={generalRows} />
-      </div>
-      <hr />
-      <UserInfoSection user={user} />
+      <Flex flexDirection="column" gap={8}>
+        <div>
+          <h4>General</h4>
+          <FormTable keyStyles={keyStyles} rows={generalRows} />
+        </div>
+        <UserInfoSection user={user} />
+      </Flex>
     </ContentCard>
   );
 }

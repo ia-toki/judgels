@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { Card } from '../../../../components/Card/Card';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { contestsPendingRatingQueryOptions } from '../../../../modules/queries/contestRating';
 import { ContestRatingChangesDialog } from '../ContestRatingChangesDialog/ContestRatingChangesDialog';
@@ -50,13 +49,12 @@ export default function RatingsPage() {
   };
 
   return (
-    <Card title="Ratings">
-      <ContentCard>
+    <ContentCard title="Ratings">
+      <div>
         <h4>Contests pending rating changes</h4>
-        <hr />
         {renderContestsPendingRatingTable()}
-        {renderContestRatingChangesDialog()}
-      </ContentCard>
-    </Card>
+      </div>
+      {renderContestRatingChangesDialog()}
+    </ContentCard>
   );
 }
