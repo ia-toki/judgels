@@ -51,9 +51,10 @@ export default function ProblemPartnersPage() {
 
   const renderContent = () => {
     if (isEditing) {
+      const initialValues = { csv: toCsv(partners, profilesMap) };
       return (
         <ProblemPartnersEditForm
-          initialValues={{ csv: toCsv(partners, profilesMap) }}
+          initialValues={initialValues}
           validateCsv={csv => parseCsv(csv).error}
           onSubmit={setPartners}
           onCancel={() => setIsEditing(false)}
@@ -90,7 +91,7 @@ export default function ProblemPartnersPage() {
   };
 
   return (
-    <section aria-label="Partners">
+    <div>
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <span>Partners</span>
@@ -99,6 +100,6 @@ export default function ProblemPartnersPage() {
       </Flex>
       <p>Partners can view this problem and, when permitted, update it. Only its author and admins manage them.</p>
       {renderContent()}
-    </section>
+    </div>
   );
 }

@@ -20,6 +20,35 @@ export function SessionSection({ session }) {
 
   const keyStyles = { width: '300px' };
 
+  const rows = [
+    {
+      key: 'disableLogout',
+      title: 'Disable logout?',
+      value: session.disableLogout ? <SmallTick /> : <SmallCross />,
+    },
+    {
+      key: 'maxConcurrentSessionsPerUser',
+      title: 'Max concurrent sessions per user',
+      value: session.maxConcurrentSessionsPerUser,
+    },
+  ];
+
+  const updateSettings = async values => {
+    const maxConcurrentSessionsPerUser = parseInt(values.maxConcurrentSessionsPerUser, 10);
+    await updateSettingsMutation.mutateAsync(
+      {
+        session: {
+          disableLogout: !!values.disableLogout,
+          maxConcurrentSessionsPerUser: Number.isNaN(maxConcurrentSessionsPerUser) ? -1 : maxConcurrentSessionsPerUser,
+        },
+      },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
+      }
+    );
+    setIsEditing(false);
+  };
+
   const renderEditButton = () => {
     return (
       !isEditing && (
@@ -69,35 +98,7 @@ export function SessionSection({ session }) {
       );
     }
 
-    const rows = [
-      {
-        key: 'disableLogout',
-        title: 'Disable logout?',
-        value: session.disableLogout ? <SmallTick /> : <SmallCross />,
-      },
-      {
-        key: 'maxConcurrentSessionsPerUser',
-        title: 'Max concurrent sessions per user',
-        value: session.maxConcurrentSessionsPerUser,
-      },
-    ];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
-  };
-
-  const updateSettings = async values => {
-    const maxConcurrentSessionsPerUser = parseInt(values.maxConcurrentSessionsPerUser, 10);
-    await updateSettingsMutation.mutateAsync(
-      {
-        session: {
-          disableLogout: !!values.disableLogout,
-          maxConcurrentSessionsPerUser: Number.isNaN(maxConcurrentSessionsPerUser) ? -1 : maxConcurrentSessionsPerUser,
-        },
-      },
-      {
-        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
-      }
-    );
-    setIsEditing(false);
   };
 
   return (

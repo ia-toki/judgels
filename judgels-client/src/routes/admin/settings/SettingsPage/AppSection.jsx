@@ -21,6 +21,22 @@ export function AppSection({ app }) {
 
   const keyStyles = { width: '300px' };
 
+  const rows = [
+    { key: 'name', title: 'Name', value: app.name },
+    { key: 'slogan', title: 'Slogan', value: app.slogan },
+    { key: 'announcement', title: 'Announcement', value: <HtmlText>{app.announcement || ''}</HtmlText> },
+  ];
+
+  const updateSettings = async values => {
+    await updateSettingsMutation.mutateAsync(
+      { app: { name: values.name, slogan: values.slogan, announcement: values.announcement || '' } },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
+      }
+    );
+    setIsEditing(false);
+  };
+
   const renderEditButton = () => {
     return (
       !isEditing && (
@@ -61,22 +77,7 @@ export function AppSection({ app }) {
       );
     }
 
-    const rows = [
-      { key: 'name', title: 'Name', value: app.name },
-      { key: 'slogan', title: 'Slogan', value: app.slogan },
-      { key: 'announcement', title: 'Announcement', value: <HtmlText>{app.announcement || ''}</HtmlText> },
-    ];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
-  };
-
-  const updateSettings = async values => {
-    await updateSettingsMutation.mutateAsync(
-      { app: { name: values.name, slogan: values.slogan, announcement: values.announcement || '' } },
-      {
-        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
-      }
-    );
-    setIsEditing(false);
   };
 
   return (

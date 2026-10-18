@@ -54,9 +54,10 @@ export default function ProblemTopicTagsPanel({ problemJid, canEdit }) {
 
   const renderContent = () => {
     if (isEditing) {
+      const initialValues = { topicTags };
       return (
         <ProblemTopicTagsEditForm
-          initialValues={{ topicTags }}
+          initialValues={initialValues}
           onSubmit={setTopicTags}
           onCancel={() => setIsEditing(false)}
         />
@@ -66,7 +67,7 @@ export default function ProblemTopicTagsPanel({ problemJid, canEdit }) {
   };
 
   return (
-    <section aria-label="Tags">
+    <div>
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <span>Tags</span>
@@ -74,6 +75,6 @@ export default function ProblemTopicTagsPanel({ problemJid, canEdit }) {
         </h4>
       </Flex>
       {renderContent()}
-    </section>
+    </div>
   );
 }
