@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
@@ -68,7 +68,7 @@ export default function ProblemGeneralPage() {
     return (
       canEdit &&
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -93,7 +93,7 @@ export default function ProblemGeneralPage() {
   };
 
   return (
-    <Flex flexDirection="column" gap={4}>
+    <Flex flexDirection="column" gap={8}>
       <section aria-label="General">
         <Flex asChild justifyContent="space-between" alignItems="baseline">
           <h4>

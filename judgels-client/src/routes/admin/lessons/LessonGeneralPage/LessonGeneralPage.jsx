@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
@@ -64,7 +64,7 @@ export default function LessonGeneralPage() {
     return (
       canEdit &&
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
