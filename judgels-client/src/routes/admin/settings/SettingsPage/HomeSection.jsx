@@ -20,6 +20,18 @@ export function HomeSection({ home = { banner: '' } }) {
 
   const keyStyles = { width: '300px' };
 
+  const rows = [{ key: 'banner', title: 'Banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
+
+  const updateSettings = async values => {
+    await updateSettingsMutation.mutateAsync(
+      { home: { banner: values.banner || '' } },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
+      }
+    );
+    setIsEditing(false);
+  };
+
   const renderEditButton = () => {
     return (
       !isEditing && (
@@ -52,18 +64,7 @@ export function HomeSection({ home = { banner: '' } }) {
       );
     }
 
-    const rows = [{ key: 'banner', title: 'Banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
     return <FormTable keyStyles={keyStyles} rows={rows} />;
-  };
-
-  const updateSettings = async values => {
-    await updateSettingsMutation.mutateAsync(
-      { home: { banner: values.banner || '' } },
-      {
-        onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
-      }
-    );
-    setIsEditing(false);
   };
 
   return (

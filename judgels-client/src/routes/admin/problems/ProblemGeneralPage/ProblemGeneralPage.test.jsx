@@ -55,7 +55,7 @@ describe('ProblemGeneralPage', () => {
       .reply(200, ['topic-ad hoc', 'topic-graph', 'topic-graph: bipartite', 'topic-graph: shortest path']);
   };
 
-  const getSection = name => screen.getByRole('region', { name });
+  const getSection = name => screen.getByText(name, { selector: 'h4 > span' }).closest('h4').parentElement;
 
   const getRows = section =>
     within(section)

@@ -16,11 +16,11 @@ export function UserInfoSection({ user }) {
   const { data: userInfo } = useSuspenseQuery(userInfoQueryOptions(user.jid));
   const updateUserInfoMutation = useMutation(updateUserInfoMutationOptions(user.jid));
 
-  const [isEditing, setIsEditingInfo] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const keyStyles = { width: '250px' };
 
-  const infoRows = [
+  const rows = [
     { key: 'name', title: 'Name', value: userInfo.name },
     { key: 'gender', title: 'Gender', value: userInfo.gender && userInfoGender[userInfo.gender] },
     { key: 'country', title: 'Country', value: getCountryName(userInfo.country) },
@@ -36,13 +36,13 @@ export function UserInfoSection({ user }) {
     await updateUserInfoMutation.mutateAsync(data, {
       onSuccess: () => toastActions.showSuccessToast('User info updated.'),
     });
-    setIsEditingInfo(false);
+    setIsEditing(false);
   };
 
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditingInfo(true)}>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -66,11 +66,11 @@ export function UserInfoSection({ user }) {
         <UserInfoEditForm
           initialValues={initialValues}
           onSubmit={updateUserInfo}
-          onCancel={() => setIsEditingInfo(false)}
+          onCancel={() => setIsEditing(false)}
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={infoRows} />;
+    return <FormTable keyStyles={keyStyles} rows={rows} />;
   };
 
   return (

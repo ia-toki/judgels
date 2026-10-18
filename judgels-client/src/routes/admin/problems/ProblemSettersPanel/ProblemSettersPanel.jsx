@@ -79,7 +79,7 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
   };
 
   return (
-    <section aria-label="Setters">
+    <div>
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <span>Setters</span>
@@ -87,6 +87,6 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
         </h4>
       </Flex>
       {renderContent()}
-    </section>
+    </div>
   );
 }

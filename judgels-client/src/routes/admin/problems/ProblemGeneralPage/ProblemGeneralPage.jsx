@@ -94,7 +94,7 @@ export default function ProblemGeneralPage() {
 
   return (
     <Flex flexDirection="column" gap={8}>
-      <section aria-label="General">
+      <div>
         <Flex asChild justifyContent="space-between" alignItems="baseline">
           <h4>
             <span>General</span>
@@ -102,7 +102,7 @@ export default function ProblemGeneralPage() {
           </h4>
         </Flex>
         {renderContent()}
-      </section>
+      </div>
       <ProblemSettersPanel problemJid={problemJid} canEdit={canEdit} />
       <ProblemTopicTagsPanel problemJid={problemJid} canEdit={canEdit} />
     </Flex>
