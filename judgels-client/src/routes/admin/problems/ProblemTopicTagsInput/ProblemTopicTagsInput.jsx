@@ -1,5 +1,6 @@
 import { Checkbox } from '@blueprintjs/core';
-import classNames from 'classnames';
+import { Flex } from '@blueprintjs/labs';
+import { Fragment } from 'react';
 
 import { FormTableInput } from '../../../../components/forms/FormTableInput/FormTableInput';
 
@@ -39,26 +40,42 @@ export function ProblemTopicTagsInput(props) {
     input.onChange(newTags);
   };
 
+  const renderCheckbox = tag => {
+    const parent = getParent(tag);
+    const checked = selectedTags.includes(tag);
+    return (
+      <Checkbox
+        key={tag}
+        name={tag}
+        className="problem-topic-tags-input__option"
+        label={getTagName(tag)}
+        checked={checked}
+        indeterminate={checked && hasSelectedChild(tag)}
+        disabled={!!parent && selectedTags.includes(parent) && !hasSelectedChild(parent)}
+        onChange={changeTag}
+      />
+    );
+  };
+
   return (
     <FormTableInput {...props}>
-      {topicTags.map(tag => {
-        const parent = getParent(tag);
-        const checked = selectedTags.includes(tag);
-        return (
-          <Checkbox
-            key={tag}
-            name={tag}
-            className={classNames('problem-topic-tags-input__option', {
-              'problem-topic-tags-input__option-child': !!parent,
-            })}
-            label={getTagName(tag)}
-            checked={checked}
-            indeterminate={checked && hasSelectedChild(tag)}
-            disabled={!!parent && selectedTags.includes(parent) && !hasSelectedChild(parent)}
-            onChange={changeTag}
-          />
-        );
-      })}
+      <Flex flexDirection="column" gap={2} paddingTop={3}>
+        {topicTags
+          .filter(tag => !getParent(tag))
+          .map(tag => {
+            const childTags = topicTags.filter(t => getParent(t) === tag);
+            return (
+              <Fragment key={tag}>
+                {renderCheckbox(tag)}
+                {childTags.length > 0 && (
+                  <Flex flexDirection="column" gap={2} marginLeft={6}>
+                    {childTags.map(renderCheckbox)}
+                  </Flex>
+                )}
+              </Fragment>
+            );
+          })}
+      </Flex>
     </FormTableInput>
   );
 }

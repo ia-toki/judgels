@@ -9,13 +9,12 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../components/ProblemEditorial/ProblemEditorial';
 import { formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
-import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
   problemEditorialQueryOptions,
   updateProblemEditorialMutationOptions,
 } from '../../../../modules/queries/problemEditorial';
-import { problemSettersQueryOptions } from '../../../../modules/queries/problemSetter';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import ProblemEditorialEditForm from '../ProblemEditorialEditForm/ProblemEditorialEditForm';
 
@@ -27,12 +26,6 @@ export default function ProblemEditorialPage() {
   const {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
-
-  const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
-
-  const {
-    data: { data: setterJidsMap, profilesMap },
-  } = useSuspenseQuery(problemSettersQueryOptions(problemJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -94,25 +87,18 @@ export default function ProblemEditorialPage() {
     }
     return (
       <ContentCard>
-        <ProblemEditorial title={problem.slug} settersMap={setterJidsMap} profilesMap={profilesMap}>
-          {formatEditorialMediaUrls(editorial.text, problemJid)}
-        </ProblemEditorial>
+        <ProblemEditorial>{formatEditorialMediaUrls(editorial.text, problemJid)}</ProblemEditorial>
       </ContentCard>
     );
   };
 
   return (
-    <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>Content</span>
-          <Flex gap={2} alignItems="center">
-            {renderLanguageSelect()}
-            {renderEditButton()}
-          </Flex>
-        </h4>
+    <Flex flexDirection="column" gap={2}>
+      <Flex justifyContent="end" alignItems="center" gap={2}>
+        {renderLanguageSelect()}
+        {renderEditButton()}
       </Flex>
       {renderContent()}
-    </div>
+    </Flex>
   );
 }

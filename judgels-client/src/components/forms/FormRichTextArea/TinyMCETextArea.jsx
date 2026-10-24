@@ -8,7 +8,7 @@ const permissiveOptions = {
   extended_valid_elements: 'iframe[*],embed[*]',
 };
 
-function TinyMCETextArea({ onChange, id, permissive }) {
+function TinyMCETextArea({ onChange, id, permissive, height }) {
   const [isLoaded, setIsLoaded] = useState(!!window.tinymce);
 
   useEffect(() => {
@@ -63,6 +63,7 @@ function TinyMCETextArea({ onChange, id, permissive }) {
       relative_urls: false,
       convert_urls: false,
       remove_script_host: false,
+      ...(height ? { height } : {}),
       ...(permissive ? permissiveOptions : {}),
       setup: editor => {
         editor.on('change', () => {

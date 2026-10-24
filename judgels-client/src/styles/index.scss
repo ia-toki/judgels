@@ -296,7 +296,7 @@ blockquote {
     background-color: $dark-background-color;
   }
 
-  .bp6-dark &:not(.bp6-minimal):hover {
+  .bp6-dark &:not(.bp6-minimal):not(.bp6-active):hover {
     background-color: $dark-tertiary-background-color;
   }
 

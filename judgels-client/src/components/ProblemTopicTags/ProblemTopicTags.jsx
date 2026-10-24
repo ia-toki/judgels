@@ -13,6 +13,14 @@ function isParent(tag, tags) {
   return tags.some(t => t !== tag && t.startsWith(tag));
 }
 
+export function getDisplayedTopicTags(tags) {
+  return tags
+    .filter(tag => tag.startsWith('topic-'))
+    .filter(tag => !isParent(tag, tags))
+    .sort()
+    .map(formatTagName);
+}
+
 export default function ProblemTopicTags({ tags, alignLeft }) {
   const { showProblemTopicTags } = useWebPrefs();
 
@@ -22,22 +30,17 @@ export default function ProblemTopicTags({ tags, alignLeft }) {
 
   return (
     <div>
-      {tags
-        .filter(tag => tag.startsWith('topic-'))
-        .filter(tag => !isParent(tag, tags))
-        .sort()
-        .map(formatTagName)
-        .map(tag => (
-          <Tag
-            round
-            multiline
-            intent={Intent.PRIMARY}
-            key={tag}
-            className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
-          >
-            {tag}
-          </Tag>
-        ))}
+      {getDisplayedTopicTags(tags).map(tag => (
+        <Tag
+          round
+          multiline
+          intent={Intent.PRIMARY}
+          key={tag}
+          className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
+        >
+          {tag}
+        </Tag>
+      ))}
     </div>
   );
 }

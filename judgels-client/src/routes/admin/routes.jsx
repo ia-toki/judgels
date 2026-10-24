@@ -370,10 +370,7 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemEditorialPage/ProblemEditorialPage'))),
     loader: async ({ params: { problemSlug } }) => {
       const problem = await queryClient.ensureQueryData(problemBySlugQueryOptions(problemSlug));
-      await Promise.all([
-        ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions),
-        queryClient.ensureQueryData(problemSettersQueryOptions(problem.jid)),
-      ]);
+      await ensureProblemEditorialQueryData(problem.jid, problemEditorialLanguagesQueryOptions);
     },
   });
 

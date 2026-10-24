@@ -33,9 +33,9 @@ export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCa
               <StatementManual />
             </Flex>
             {isSourceMode ? (
-              <Field component={FormAceEditor} name={textField.name} />
+              <Field component={FormAceEditor} name={textField.name} mode="html" tall />
             ) : (
-              <Field component={FormRichTextArea} {...textField} />
+              <Field component={FormRichTextArea} {...textField} tall />
             )}
             <ActionButtons justifyContent="end">
               <Button text="Cancel" disabled={submitting} onClick={onCancel} />

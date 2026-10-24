@@ -81,7 +81,7 @@ describe('ProblemEditorialMediaPage', () => {
     const user = userEvent.setup();
 
     await selectFile(user, 'media.zip');
-    await user.click(screen.getByRole('checkbox', { name: /extract as zip/i }));
+    expect(screen.getByRole('checkbox', { name: /extract as zip/i })).toBeChecked();
 
     nockApi().post('/v4/problems/JIDPROG1/editorial/media/zip').reply(200);
 

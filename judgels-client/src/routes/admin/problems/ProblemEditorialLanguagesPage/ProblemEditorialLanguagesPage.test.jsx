@@ -51,7 +51,7 @@ describe('ProblemEditorialLanguagesPage', () => {
     ).toEqual([
       ['English (en-US)', 'Enabled', ['Disable', 'Make default']],
       ['French (fr-FR)', 'Disabled', ['Enable']],
-      ['Indonesian (id-ID)', 'Enabled (default)', []],
+      ['Indonesian (id-ID)', 'EnabledDefault', []],
     ]);
   });
 

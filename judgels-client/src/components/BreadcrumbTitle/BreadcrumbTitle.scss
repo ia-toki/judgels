@@ -1,4 +1,6 @@
+@use '../../styles/variables/colors' as *;
+
 .breadcrumb-title__separator {
-  margin: -5px 4px;
-  vertical-align: middle;
+  margin-block: -4px;
+  color: $dark-secondary-background-color;
 }

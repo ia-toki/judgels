@@ -1,15 +1,6 @@
-import { Button, Checkbox, Intent } from '@blueprintjs/core';
+import { Button, Checkbox, FileInput, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
-
-import { FormTableFileInput } from '../../../../components/forms/FormTableFileInput/FormTableFileInput';
-import { Required } from '../../../../components/forms/validations';
-
-const fileField = {
-  name: 'file',
-  placeholder: 'Upload new file...',
-  validate: Required,
-};
 
 export default function FileUploadForm({ onSubmit }) {
   const submit = async (data, form) => {
@@ -19,20 +10,35 @@ export default function FileUploadForm({ onSubmit }) {
 
   return (
     <Form onSubmit={submit}>
-      {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
-          <Flex gap={2} alignItems="center">
-            <table style={{ width: '245px' }}>
-              <tbody>
-                <Field component={FormTableFileInput} {...fileField} />
-              </tbody>
-            </table>
+      {({ handleSubmit, submitting, values, form }) => (
+        <Flex asChild flexDirection="column" gap={2}>
+          <form onSubmit={handleSubmit}>
+            <Flex gap={2} alignItems="center">
+              <Field name="file">
+                {({ input: { value, onChange } }) => {
+                  const changeFile = e => {
+                    const file = e.target.files.length ? e.target.files[0] : undefined;
+                    onChange(file);
+                    form.change('isZip', !!file && file.name.toLowerCase().endsWith('.zip'));
+                  };
+                  return (
+                    <FileInput inputProps={{ onChange: changeFile }} text={value ? value.name : 'Upload new file...'} />
+                  );
+                }}
+              </Field>
+              <Button
+                type="submit"
+                text="Upload"
+                intent={Intent.PRIMARY}
+                disabled={!values.file}
+                loading={submitting}
+              />
+            </Flex>
             <Field name="isZip" type="checkbox">
               {({ input }) => <Checkbox {...input} label="Extract as zip" style={{ marginBottom: 0 }} />}
             </Field>
-            <Button type="submit" text="Upload" intent={Intent.PRIMARY} loading={submitting} />
-          </Flex>
-        </form>
+          </form>
+        </Flex>
       )}
     </Form>
   );

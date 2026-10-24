@@ -1,5 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -61,15 +62,15 @@ export default function SingleProblemSetProblemLayout() {
       </Button>
     ),
     contentHeader: (
-      <h2 className="single-problemset-problem-routes__title">
-        <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
-          {problemSet.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="single-problemset-problem-routes__title--chevron" size={20} />
-        &nbsp;
-        {problem.alias}
-      </h2>
+      <Flex asChild alignItems="center" gap={1}>
+        <h2 className="single-problemset-problem-routes__title">
+          <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
+            {problemSet.name}
+          </Link>
+          <ChevronRight className="single-problemset-problem-routes__title--chevron" size={20} />
+          {problem.alias}
+        </h2>
+      </Flex>
     ),
     stickyWidget1: ProblemReportWidget,
   };

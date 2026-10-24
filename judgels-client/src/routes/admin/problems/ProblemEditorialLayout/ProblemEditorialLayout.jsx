@@ -18,7 +18,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 // A topbar item's path becomes its element id, so it must not be `text`:
 // that is the id of the editorial form's text area, which the rich text editor looks up by id.
 const topbarItems = [
-  { path: 'content', title: 'Content' },
+  { path: 'content', title: 'Editorial' },
   { path: 'languages', title: 'Languages' },
   { path: 'media', title: 'Media' },
 ];
@@ -50,9 +50,6 @@ export default function ProblemEditorialLayout() {
     return (
       <Flex flexDirection="column" gap={2}>
         <h4>Editorial</h4>
-        <p>
-          <small>This problem has no editorial.</small>
-        </p>
         <Flex gap={2} alignItems="center">
           <LanguageSelect
             languages={Object.keys(worldLanguageNamesMap)}

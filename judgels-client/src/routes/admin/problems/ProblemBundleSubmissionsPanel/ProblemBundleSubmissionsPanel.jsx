@@ -106,12 +106,12 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>Submissions</span>
+      <h4>Submissions</h4>
+      {response?.data.totalCount > 0 && (
+        <Flex>
           <RegradeAllButton onRegradeAll={regradeSubmissions} />
-        </h4>
-      </Flex>
+        </Flex>
+      )}
       {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </Flex>

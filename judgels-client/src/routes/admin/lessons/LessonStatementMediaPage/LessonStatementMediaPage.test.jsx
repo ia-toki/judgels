@@ -88,7 +88,7 @@ describe('LessonStatementMediaPage', () => {
     const user = userEvent.setup();
 
     await selectFile(user, 'media.zip');
-    await user.click(screen.getByRole('checkbox', { name: /extract as zip/i }));
+    expect(screen.getByRole('checkbox', { name: /extract as zip/i })).toBeChecked();
 
     nockApi().post('/v4/lessons/JIDLESS1/statement/media/zip').reply(200);
 
