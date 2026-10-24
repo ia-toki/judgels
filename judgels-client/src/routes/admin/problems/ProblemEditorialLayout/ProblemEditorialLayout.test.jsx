@@ -54,9 +54,8 @@ describe('ProblemEditorialLayout', () => {
     expect(screen.queryByRole('link', { name: 'Languages' })).not.toBeInTheDocument();
 
     const user = userEvent.setup();
-    expect(screen.getByRole('combobox', { name: /initial language/i })).toHaveTextContent('English (en-US)');
     await user.click(screen.getByRole('button', { name: 'English (en-US)' }));
-    await user.type(screen.getByRole('textbox', { name: 'Filter languages' }), 'indo');
+    await user.type(screen.getByRole('combobox', { name: 'Filter languages' }), 'indo');
     await user.click(screen.getByText('Indonesian (id-ID)'));
 
     nockApi().post('/v4/problems/JIDPROG1/editorial', { initialLanguage: 'id-ID' }).reply(200);

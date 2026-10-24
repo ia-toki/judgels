@@ -264,42 +264,20 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
-"@blueprintjs/colors@^5.1.11", "@blueprintjs/colors@^5.1.12":
-  version "5.1.12"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-5.1.12.tgz#32e0ac178d7aaf9fc42967d05746bbfa47783194"
-  integrity sha512-7GQWUQ82eLE1te++DC8fRO2B31bsSwia82NLamZfKgjHY9V4zxafMT1DK5gKlmmy0nCjpdcCc+df4aVZMHGLww==
+"@blueprintjs/colors@^5.1.16":
+  version "5.1.16"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-5.1.16.tgz#910f605caf97327e61dad13a9ba9384b6ac5e61a"
+  integrity sha512-P9uX0Aj2TP9+6aUcori1iPl4snxM/Vgq0LZbhUl1l5bHTgNxxwm/0+IoS/SlQg93HBRl8KTAM1evEqtPbwV10A==
   dependencies:
     tslib "~2.6.2"
 
-"@blueprintjs/colors@^5.1.15":
-  version "5.1.15"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/colors/-/colors-5.1.15.tgz#0bfde5ac78a14476753883f7963d4b691d32035e"
-  integrity sha512-hxv11fKWwU707NaVWKUpJPOOCeinRC7zNhF2sX6vLN0UmDqHapItARTLW5DvwKTyPoDQQXUpX9yFwDlTQPbQ9w==
+"@blueprintjs/core@6.21.0", "@blueprintjs/core@^6.21.0":
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-6.21.0.tgz#9e19c93c34a20a0831f57e67a09f6f858394d9bd"
+  integrity sha512-s4RrTRir+5cze76oHZp0jgodk1UR7RyzcbdDklIiDV1swgdTvOI4cZxcVJNhQBHdU9Sl0wCdKbXwo3J0nSEhvA==
   dependencies:
-    tslib "~2.6.2"
-
-"@blueprintjs/core@6.3.4":
-  version "6.3.4"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-6.3.4.tgz#611e58f0538002f95b733b6eca248c72feb0206f"
-  integrity sha512-z3YOtqBhMgvdT6twZK0jhB8VTtYa02QNP0LCwW3+J2jZaDjftgk72DoSdIvQtKU6l89AMS0WULClEBrnLRpMfA==
-  dependencies:
-    "@blueprintjs/colors" "^5.1.11"
-    "@blueprintjs/icons" "^6.3.1"
-    "@popperjs/core" "^2.11.8"
-    classnames "^2.3.1"
-    normalize.css "^8.0.1"
-    react-popper "^2.3.0"
-    react-transition-group "^4.4.5"
-    tslib "~2.6.2"
-    use-sync-external-store "^1.2.0"
-
-"@blueprintjs/core@^6.10.0":
-  version "6.10.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-6.10.0.tgz#e322fc8a442d456f7dde1a55fc0c456c372ed536"
-  integrity sha512-k6B8aeIwuH0ns2NAz4iWWcfv5/0v5Av9ePQXmNbs2VOdPSRn3X0l1mhyNBAjuuXHJV3OEENGE1HSbFi6f1NNJw==
-  dependencies:
-    "@blueprintjs/colors" "^5.1.15"
-    "@blueprintjs/icons" "^6.7.0"
+    "@blueprintjs/colors" "^5.1.16"
+    "@blueprintjs/icons" "^6.14.1"
     "@floating-ui/react" "^0.27.13"
     "@popperjs/core" "^2.11.8"
     classnames "^2.3.1"
@@ -307,31 +285,15 @@
     react-popper "^2.3.0"
     react-transition-group "^4.4.5"
     tslib "~2.6.2"
-    use-sync-external-store "^1.2.0"
 
-"@blueprintjs/core@^6.3.4", "@blueprintjs/core@^6.5.0":
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-6.5.0.tgz#ac4dba27cf761e3d701e7ea2c7709fd32d7b4f84"
-  integrity sha512-6GmER7/UdaRibKkmTc5yz7se9Rpc1cnauU2jfwg1UXYhqK/pgfpzKT+KB9UM+cda1qexcjkXYA/N46i+C8xFfA==
+"@blueprintjs/datetime@6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/datetime/-/datetime-6.3.0.tgz#404b9583fb9133ed8772c528324a05b7030a2dab"
+  integrity sha512-NBiXGYALAFo9wjMar5QIIEMm0uII2LVVg3LOG3guV+MjeHKPsnRajmYor3PQnXjVM1aEzxW9WmBSACDNnYQhPQ==
   dependencies:
-    "@blueprintjs/colors" "^5.1.12"
-    "@blueprintjs/icons" "^6.4.0"
-    "@popperjs/core" "^2.11.8"
-    classnames "^2.3.1"
-    normalize.css "^8.0.1"
-    react-popper "^2.3.0"
-    react-transition-group "^4.4.5"
-    tslib "~2.6.2"
-    use-sync-external-store "^1.2.0"
-
-"@blueprintjs/datetime@6.0.8":
-  version "6.0.8"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/datetime/-/datetime-6.0.8.tgz#38e95c57fdb5284faac82c6010c8debd5157b534"
-  integrity sha512-AlhPHsX6hnfeb8rpkDmdpI026/QxKwOITj/MsktTjC7l8plRbG4NQYNUWotRAeyWOc1qsz1UKm4QfvC2EOFf/A==
-  dependencies:
-    "@blueprintjs/core" "^6.3.4"
-    "@blueprintjs/icons" "^6.3.1"
-    "@blueprintjs/select" "^6.0.8"
+    "@blueprintjs/core" "^6.21.0"
+    "@blueprintjs/icons" "^6.14.1"
+    "@blueprintjs/select" "^6.4.0"
     classnames "^2.3.1"
     date-fns "^2.28.0"
     date-fns-tz "^2.0.0"
@@ -339,62 +301,33 @@
     react-innertext "^1.1.5"
     tslib "~2.6.2"
 
-"@blueprintjs/icons@6.3.1":
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-6.3.1.tgz#425e36f36fde291a0403c4bb79b17de1a358d3ef"
-  integrity sha512-jq7bsOu6WT7hMl/PtCuTUwV3OOjQoPehnaiRxpLaMktWLzi9ELFhL6diV6j1hc2qP/spA45AqUof61F6GHt7gg==
+"@blueprintjs/icons@6.14.1", "@blueprintjs/icons@^6.14.1":
+  version "6.14.1"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-6.14.1.tgz#fb8c40d5093ea46a15d659912c23424c751c6d9f"
+  integrity sha512-90HyoIIxaBTj+4whFUPU+lkdKLSx/R5GpSbbVug2xDZNSy6sptvAFSTmIVWvdFnFI8T1mlJPMniA/yP2s5GgZg==
   dependencies:
     change-case "^4.1.2"
     classnames "^2.3.1"
     tslib "~2.6.2"
 
-"@blueprintjs/icons@^6.3.1", "@blueprintjs/icons@^6.4.0":
+"@blueprintjs/labs@6.4.7":
+  version "6.4.7"
+  resolved "https://registry.yarnpkg.com/@blueprintjs/labs/-/labs-6.4.7.tgz#a0343900f658175b6dc8666da37b644f16982151"
+  integrity sha512-WIzQvkZf/9YSguAYvlLhy/w85zAeCU43Zpsg42k8NPnc1zRmGkMBKA8VKiWgDHLCn5ALm4FflxPvCWFt2drgZw==
+  dependencies:
+    "@blueprintjs/colors" "^5.1.16"
+    "@blueprintjs/core" "^6.21.0"
+    classnames "^2.3.1"
+    tslib "~2.6.2"
+
+"@blueprintjs/select@6.4.0", "@blueprintjs/select@^6.4.0":
   version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-6.4.0.tgz#91bad3589ab1480677e5aeff839f5593e4e58363"
-  integrity sha512-8THDnE4Cz6V0DGNX0tQys6IiIYyKKvmMBZHHiFviBsdkduUqle096UdD+1XROa2dcwmGYSjvMQ/wKqYowCJINQ==
+  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-6.4.0.tgz#6b1f17e7f0e63539b7ef702241217959c6e8b239"
+  integrity sha512-thGEmK+khwp16oYN5C8pXzRXD3u5Mu91NDC6nYkqtwvgOM9GiH+AqogeTufyUdxgp+LfRDtPZkEggcB7oV1wjg==
   dependencies:
-    change-case "^4.1.2"
-    classnames "^2.3.1"
-    tslib "~2.6.2"
-
-"@blueprintjs/icons@^6.7.0":
-  version "6.7.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/icons/-/icons-6.7.0.tgz#6594013295aad9fcd16d11e6a474d3b39ce7fcd9"
-  integrity sha512-wT8LjdXz5ogWYtWGsMpmLHbgg5Ml7rGcTg4QzHRL4NROaS2LEuNCNRQxmRNBdRdfpKcnGGwXNYqUNZYurB1r4Q==
-  dependencies:
-    change-case "^4.1.2"
-    classnames "^2.3.1"
-    tslib "~2.6.2"
-
-"@blueprintjs/labs@6.2.3":
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/labs/-/labs-6.2.3.tgz#812a75ae3f0448c7899c54ae5a96c3d40722042f"
-  integrity sha512-V0AkybIzce5iG9yYRxsX+Ull1mEOhD3LvBy+BW5TSnl1Iq9ZEWjagSI2r5qHkYs0yBNjETtF+t45ZQYp29OBMg==
-  dependencies:
-    "@blueprintjs/colors" "^5.1.15"
-    "@blueprintjs/core" "^6.10.0"
-    classnames "^2.3.1"
-    tslib "~2.6.2"
-
-"@blueprintjs/select@6.0.8":
-  version "6.0.8"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-6.0.8.tgz#c4227bdac4821fa35cd96f1e2e0f421212aa4106"
-  integrity sha512-R/bZUqm3cFeXCDJrLIen35ypgPdmFRQhW7tqc/UCI1AVRDTBUNybxClbzpgQ0mmtE3TjYi6Dyx9fpq2fkx9e3Q==
-  dependencies:
-    "@blueprintjs/colors" "^5.1.11"
-    "@blueprintjs/core" "^6.3.4"
-    "@blueprintjs/icons" "^6.3.1"
-    classnames "^2.3.1"
-    tslib "~2.6.2"
-
-"@blueprintjs/select@^6.0.8":
-  version "6.0.11"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/select/-/select-6.0.11.tgz#b9bb7518fd03e2b1378563baa4ce8b2af270e071"
-  integrity sha512-ng/IUTxbVdGAUKmgfFBA/6qIr58+F1yiarIBMJpDQGamSEM3MeyEq77yeRbatSdhy+Sqs8UohtnVibdfdxV26w==
-  dependencies:
-    "@blueprintjs/colors" "^5.1.12"
-    "@blueprintjs/core" "^6.5.0"
-    "@blueprintjs/icons" "^6.4.0"
+    "@blueprintjs/colors" "^5.1.16"
+    "@blueprintjs/core" "^6.21.0"
+    "@blueprintjs/icons" "^6.14.1"
     classnames "^2.3.1"
     tslib "~2.6.2"
 
@@ -3935,7 +3868,7 @@ upper-case@^2.0.2:
   dependencies:
     tslib "^2.0.3"
 
-use-sync-external-store@^1.2.0, use-sync-external-store@^1.6.0:
+use-sync-external-store@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.6.0.tgz#b174bfa65cb2b526732d9f2ac0a408027876f32d"
   integrity sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==
