@@ -1,3 +1,5 @@
+@use '../../styles/base' as *;
+
 .problem-difficulty {
   > span {
     margin-top: 10px;
@@ -6,6 +8,6 @@
 }
 
 .problem-difficulty--large {
-  font-weight: bold;
-  font-size: 16px;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-large;
 }

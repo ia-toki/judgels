@@ -19,6 +19,23 @@ body {
   }
 }
 
+.bp6-light {
+  &,
+  td,
+  th,
+  table.bp6-html-table td,
+  table.bp6-html-table th,
+  label,
+  label.bp6-label,
+  .bp6-control,
+  .bp6-input,
+  .bp6-heading,
+  .bp6-dialog,
+  .bp6-breadcrumb-current {
+    color: $text-color;
+  }
+}
+
 .bp6-dark {
   &,
   td,
@@ -26,10 +43,24 @@ body {
   table.bp6-html-table td,
   table.bp6-html-table th,
   label,
+  label.bp6-label,
   .bp6-control,
+  .bp6-input,
+  .bp6-heading,
   .bp6-dialog,
   .bp6-tag.bp6-intent-primary,
   .bp6-breadcrumb-current {
+    color: $dark-text-color;
+  }
+}
+
+// Low specificity, so that Blueprint's selected and hover colors still win.
+.bp6-tab:where(:not([aria-selected='true'])) {
+  .bp6-light & {
+    color: $text-color;
+  }
+
+  .bp6-dark & {
     color: $dark-text-color;
   }
 }
@@ -40,7 +71,7 @@ h3,
 h4,
 h5 {
   font-family: $accent-font !important;
-  font-weight: 500 !important;
+  font-weight: $font-weight-heading !important;
   margin: 0 0 10px;
 }
 
@@ -58,34 +89,34 @@ small {
 
 b,
 strong {
-  font-weight: 700;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
-    color: #eeeeee;
+    color: $dark-strong-text-color;
   }
 }
 
 h2 {
-  font-size: 30px !important;
+  font-size: $font-size-page-title !important;
 }
 
 h3 {
-  font-size: 18px !important;
+  font-size: $font-size-title !important;
 }
 
 h4 {
-  font-size: 16px !important;
+  font-size: $font-size-large !important;
   line-height: 20px !important;
 }
 
 h5 {
-  font-size: 14px !important;
+  font-size: $font-size !important;
 }
 
 @media only screen and (max-width: 750px) {
   h2 {
-    font-size: 20px !important;
-    line-height: 22px !important;
+    font-size: $font-size-page-title-compact !important;
+    line-height: 24px !important;
   }
 }
 
@@ -109,7 +140,7 @@ a {
 
   .bp6-dark &,
   .bp6-dark &:hover {
-    color: #48aff0;
+    color: $dark-link-color;
   }
 }
 
@@ -129,7 +160,7 @@ ul {
 code,
 pre,
 .ace_editor span {
-  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace !important;
+  font-family: $mono-font !important;
 }
 
 code,
@@ -139,18 +170,18 @@ pre {
   border-radius: 4px;
 
   .bp6-dark & {
-    background-color: #293742;
-    border-color: #202b33;
+    background-color: #2e3e4a;
+    border-color: #25323b;
   }
 }
 
 code {
-  font-size: 13px;
+  font-size: $font-size-code;
   padding: 3px;
 }
 
 pre {
-  font-size: 13px;
+  font-size: $font-size-code;
   padding: 9px !important;
   overflow: auto;
 
@@ -166,15 +197,15 @@ em {
 }
 
 label:not(.bp6-control) {
-  font-size: $font-size-small;
-  font-weight: bold;
+  font-size: $font-size-label;
+  font-weight: $font-weight-bold;
 }
 
 button {
   font-family: $primary-font;
 }
 
-input {
+input:not([type='checkbox']):not([type='radio']) {
   font-family: $primary-font;
   width: 100%;
   height: 35px !important;
@@ -187,6 +218,13 @@ select {
 
 table {
   width: 100%;
+}
+
+table.bp6-html-table {
+  td,
+  th {
+    vertical-align: middle;
+  }
 }
 
 td,
@@ -242,6 +280,10 @@ blockquote {
 }
 
 .bp6-button:not([class*='bp6-intent-']) {
+  .bp6-light & {
+    color: $text-color;
+  }
+
   .bp6-dark & {
     color: $dark-text-color;
     background-color: $dark-background-color;
@@ -256,7 +298,12 @@ blockquote {
   }
 
   .bp6-dark &.bp6-active {
-    background-color: #202b33;
+    color: $dark-text-color;
+    background-color: #25323b;
+  }
+
+  .bp6-dark &.bp6-outlined {
+    border-color: $pt-dark-divider-white-muted;
   }
 
   .bp6-dark &.bp6-disabled {
@@ -295,6 +342,10 @@ table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
 }
 
 .bp6-card {
+  .bp6-light & {
+    background-color: $card-background-color;
+  }
+
   .bp6-dark & {
     background-color: $dark-card-background-color;
     box-shadow:
@@ -313,6 +364,11 @@ table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
 }
 
 .bp6-dialog-header {
+  // Blueprint renders the dialog title as an h2.
+  .bp6-heading {
+    font-size: $font-size-large !important;
+  }
+
   .bp6-dark & {
     background-color: $dark-tertiary-background-color;
   }
@@ -323,7 +379,12 @@ table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
 }
 
 .bp6-menu {
+  .bp6-light & {
+    color: $text-color;
+  }
+
   .bp6-dark & {
+    color: $dark-text-color;
     background-color: $dark-background-color;
   }
 }

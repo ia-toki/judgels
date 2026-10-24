@@ -33,7 +33,7 @@
     &[aria-selected='true'] {
       left: -3px;
       border-radius: 0 !important;
-      font-weight: bold;
+      font-weight: $font-weight-bold;
 
       .bp6-light & {
         background-color: white !important;
@@ -61,7 +61,7 @@
 
     &:not([aria-disabled='true']):hover {
       .bp6-dark & {
-        color: #48aff0;
+        color: $dark-link-color;
       }
     }
   }

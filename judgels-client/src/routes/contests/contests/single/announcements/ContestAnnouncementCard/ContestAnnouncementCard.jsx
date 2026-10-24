@@ -42,14 +42,15 @@ export function ContestAnnouncementCard({
 
   return (
     <Callout role="article" className="contest-announcement-card" intent={intent} icon={null}>
-      <Flex justifyContent="space-between">
-        <h5>{announcement.title}</h5>
-        <p>
+      <Flex justifyContent="space-between" alignItems="center" gap={2}>
+        <h4>{announcement.title}</h4>
+        <Flex alignItems="center" gap={2}>
+          {isDraft && <Tag intent={intent}>Draft</Tag>}
           <small>
-            {isDraft ? <Tag intent={intent}>Draft</Tag> : null} published{' '}
-            <FormattedRelative value={announcement.updatedTime} /> {user} {renderEditDialog()}
+            published <FormattedRelative value={announcement.updatedTime} /> {user}
           </small>
-        </p>
+          {renderEditDialog()}
+        </Flex>
       </Flex>
       <hr />
       <FormattedContent context={{ contestJid: contest.jid }}>{announcement.content}</FormattedContent>

@@ -1,8 +1,10 @@
+@use '../../../styles/base' as *;
+
 .form-textarea {
   width: 100%;
 }
 
 .form-textarea--code {
-  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-  font-size: 12px;
+  font-family: $mono-font;
+  font-size: $font-size-small;
 }

@@ -1,5 +1,7 @@
+@use '../../../styles/base' as *;
+
 .form-table__title {
-  font-weight: 600;
+  font-weight: $font-weight-bold;
 }
 
 .form-table__value {
@@ -7,5 +9,10 @@
 }
 
 .form-table--small {
-  font-size: 12px;
+  font-size: $font-size-small;
+}
+
+// Tall rows keep their label at the top, as in the edit form.
+table.bp6-html-table td.form-table__title {
+  vertical-align: top;
 }

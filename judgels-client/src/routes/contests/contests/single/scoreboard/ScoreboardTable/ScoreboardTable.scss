@@ -5,21 +5,20 @@ table.scoreboard__content {
   th {
     text-align: center;
     border: 1px #dee0e1 solid;
-    vertical-align: middle;
 
     span.top {
       display: block;
-      font-weight: bold;
+      font-weight: $font-weight-bold;
     }
   }
 
   th {
     color: #3b73ba;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 
     span.bottom {
       display: block;
-      font-size: 12px;
+      font-size: $font-size-small;
     }
   }
 
@@ -51,6 +50,7 @@ table.scoreboard__content {
 
   td span.bottom {
     display: block;
+    // Off the scale: the columns are too narrow.
     font-size: 9px;
   }
 }

@@ -1,15 +1,17 @@
+@use './base' as *;
+
 .rating-unrated {
-  color: #252527 !important;
-  font-weight: 600;
+  color: $text-color !important;
+  font-weight: $font-weight-bold;
 
   .bp6-dark & {
-    color: #f5f8fa !important;
+    color: $dark-text-color !important;
   }
 }
 
 .rating-gray {
   color: #b7b7b7 !important;
-  font-weight: bold;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
     color: #738694 !important;
@@ -20,23 +22,23 @@
   &,
   .bp6-dark & {
     color: #70ad47 !important;
-    font-weight: bold;
+    font-weight: $font-weight-strong;
   }
 }
 
 .rating-blue {
   color: #3c78d8 !important;
-  font-weight: bold;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
     color: #39ace7 !important;
-    font-weight: bold;
+    font-weight: $font-weight-strong;
   }
 }
 
 .rating-purple {
   color: #7030a0 !important;
-  font-weight: bold;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
     color: #cc99cd !important;
@@ -47,13 +49,13 @@
   &,
   .bp-dark & {
     color: #f6b26b !important;
-    font-weight: bold;
+    font-weight: $font-weight-strong;
   }
 }
 
 .rating-red {
   color: #ff0000 !important;
-  font-weight: bold;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
     color: #ff4545 !important;
@@ -61,7 +63,7 @@
 }
 
 .rating-legend {
-  font-weight: bold;
+  font-weight: $font-weight-strong;
   background: linear-gradient(0deg, #bb0000 0%, #bb0000 50%, #000000 51%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

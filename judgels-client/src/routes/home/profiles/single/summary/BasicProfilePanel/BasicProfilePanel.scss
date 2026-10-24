@@ -1,3 +1,5 @@
+@use '../../../../../../styles/base' as *;
+
 .basic-profile-card {
   .card__content {
     padding: 0;
@@ -11,7 +13,7 @@
 .basic-profile-card__main {
   width: 220px;
   height: 180px;
-  font-size: 16px;
+  font-size: $font-size-large;
   text-align: center;
 }
 
@@ -51,7 +53,7 @@
 }
 
 .basic-profile-card__details-keys {
-  font-weight: 600;
+  font-weight: $font-weight-bold;
   width: 100px;
 }
 

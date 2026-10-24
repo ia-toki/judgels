@@ -32,10 +32,10 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
   return (
     <ContentCardLink to={`/courses/${slug}`} className="course-card">
       <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4 className="course-card__title">
+        <h3 className="course-card__title">
           {`${name}`}
           {renderProgress()}
-        </h4>
+        </h3>
       </Flex>
 
       <hr />

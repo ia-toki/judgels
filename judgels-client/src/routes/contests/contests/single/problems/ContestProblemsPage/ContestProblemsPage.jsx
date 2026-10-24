@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { ContentCardList } from '../../../../../../components/ContentCardList/ContentCardList';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
@@ -87,14 +88,14 @@ export default function ContestProblemsPage() {
   };
 
   const renderOpenProblems = (problems, totalSubmissionsMap) => {
-    return <div>{renderFilteredProblems(problems, totalSubmissionsMap)}</div>;
+    return <ContentCardList>{renderFilteredProblems(problems, totalSubmissionsMap)}</ContentCardList>;
   };
 
   const renderClosedProblems = (problems, totalSubmissionsMap) => {
     return (
       <div>
         {problems.length !== 0 && <hr />}
-        {renderFilteredProblems(problems, totalSubmissionsMap)}
+        <ContentCardList>{renderFilteredProblems(problems, totalSubmissionsMap)}</ContentCardList>
       </div>
     );
   };

@@ -1,3 +1,5 @@
+@use '../../../../styles/base' as *;
+
 .course-card {
   hr {
     margin-top: 0 !important;
@@ -5,6 +7,5 @@
 }
 
 .course-card__title {
-  font-size: 20px !important;
   line-height: 20px !important;
 }

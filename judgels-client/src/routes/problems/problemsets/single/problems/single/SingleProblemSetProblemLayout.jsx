@@ -61,7 +61,7 @@ export default function SingleProblemSetProblemLayout() {
       </Button>
     ),
     contentHeader: (
-      <h3 className="single-problemset-problem-routes__title">
+      <h2 className="single-problemset-problem-routes__title">
         <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
           {problemSet.name}
         </Link>
@@ -69,7 +69,7 @@ export default function SingleProblemSetProblemLayout() {
         <ChevronRight className="single-problemset-problem-routes__title--chevron" size={20} />
         &nbsp;
         {problem.alias}
-      </h3>
+      </h2>
     ),
     stickyWidget1: ProblemReportWidget,
   };

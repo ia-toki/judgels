@@ -1,3 +1,9 @@
+@use '../../styles/base' as *;
+
 .progress-bar.bp6-progress-bar {
   height: 4px !important;
+}
+
+.bp6-dark .progress-bar.bp6-progress-bar {
+  background-color: $dark-progress-track-color;
 }

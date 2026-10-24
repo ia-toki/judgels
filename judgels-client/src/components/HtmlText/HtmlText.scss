@@ -1,7 +1,7 @@
 @use '../../styles/base' as *;
 
 .html-text {
-  font-size: 15px;
+  font-size: $font-size-reading;
   line-height: 1.5 !important;
 
   h2,
@@ -34,7 +34,7 @@
 
     th {
       background-color: #eeeeee;
-      font-weight: bold;
+      font-weight: $font-weight-bold;
       color: $text-color;
     }
   }
@@ -45,7 +45,7 @@
 
   pre,
   pre span {
-    font-size: 14px !important;
+    font-size: $font-size !important;
   }
 
   .spoiler {
@@ -56,7 +56,7 @@
     border-radius: 5px;
     cursor: pointer;
     font-family: $accent-font;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 
     .bp6-dark & {
       background-color: $dark-secondary-background-color;
@@ -113,5 +113,5 @@
 }
 
 small .html-text {
-  font-size: 12px;
+  font-size: $font-size-small;
 }

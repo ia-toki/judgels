@@ -10,7 +10,7 @@
 }
 
 .form-table-input__label {
-  font-weight: 600;
+  font-weight: $font-weight-bold;
 }
 
 .form-table-input__label-helper {
@@ -28,4 +28,8 @@
 
 .form-table-input .bp6-form-helper-text {
   line-height: 20px;
+}
+
+table.bp6-html-table .form-table-input td {
+  vertical-align: top;
 }

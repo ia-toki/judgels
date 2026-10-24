@@ -81,9 +81,9 @@ export function ContestClarificationCard({
   return (
     <Callout role="article" className="contest-clarification-card" intent={questionIntent} icon={null}>
       <Flex justifyContent="space-between">
-        <h5>
+        <h4>
           {clarification.title} &nbsp; <Tag>{topic}</Tag>
-        </h5>
+        </h4>
         <p>
           <small>
             asked <FormattedRelative value={clarification.time} /> {asker}

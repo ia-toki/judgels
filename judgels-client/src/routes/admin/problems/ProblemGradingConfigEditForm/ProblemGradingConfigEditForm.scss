@@ -4,7 +4,7 @@
 .problem-grading-config-edit-form__subtask-points {
   &.bp6-html-table th {
     font-size: $font-size-small;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 
     .bp6-dark & {
       color: $dark-label-color;
@@ -29,13 +29,13 @@
   }
 }
 
-.problem-grading-config-edit-form__subtask-points.bp6-html-table td {
-  vertical-align: middle;
-}
-
 .problem-grading-config-edit-form__test-group-heading {
   padding-bottom: 8px;
   border-bottom: 1px solid $divider-color;
+
+  h5 {
+    margin-bottom: 0;
+  }
 
   .bp6-dark & {
     border-bottom-color: $dark-divider-color;

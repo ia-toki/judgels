@@ -1,23 +1,29 @@
 @forward '../../../node_modules/@blueprintjs/core/lib/scss/variables.scss';
 @use '../../../node_modules/@blueprintjs/core/lib/scss/variables.scss' as blueprint;
 
-$background-color: #f4f5f6;
+$background-color: #e6e8eb;
+$card-background-color: #f7f9fb;
+$card-hover-background-color: #e4eaf9;
 $primary-color: #3b73b9;
-$text-color: #252527;
+$text-color: #2f343c;
 $secondary-text-color: #5d5d66;
-$secondary-background-color: #eef2fb;
+$secondary-background-color: #d9e2f6;
 $tertiary-background-color: rgba(191, 204, 214, 0.4);
 $border-color: rgba($text-color, 0.15);
 $divider-color: blueprint.$pt-divider-black;
 
-$dark-background-color: #394b59;
+$dark-background-color: #3e5261;
 $dark-text-color: #c9d1d9;
+$dark-strong-text-color: #eeeeee;
+$dark-link-color: #48aff0;
 $dark-label-color: blueprint.$pt-dark-text-color;
 $dark-blue-main-background-color: #0c5174;
 $dark-blue-secondary-background-color: rgba(19, 124, 189, 0.25);
 $dark-secondary-text-color: #abb3bf;
-$dark-secondary-background-color: #5c7080;
+$dark-secondary-background-color: #617687;
 $dark-tertiary-background-color: rgba(92, 112, 128, 0.3);
-$dark-card-background-color: #30404d;
-$dark-border-color: #5c7080;
+$dark-card-background-color: #354755;
+$dark-card-hover-background-color: #455c6e;
+$dark-border-color: #617687;
 $dark-divider-color: blueprint.$pt-dark-divider-white;
+$dark-progress-track-color: rgba(255, 255, 255, 0.1);
