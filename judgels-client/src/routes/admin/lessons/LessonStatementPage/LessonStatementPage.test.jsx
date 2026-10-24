@@ -13,9 +13,8 @@ describe('LessonStatementPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async () => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
-    nockApi().get('/v4/lessons/JIDLESS1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/lessons/JIDLESS1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });
@@ -66,11 +65,6 @@ describe('LessonStatementPage', () => {
     await user.click(screen.getByText('English (en-US)'));
 
     expect(await screen.findByText('Introduction')).toBeInTheDocument();
-  });
-
-  test('hides the edit button when the lesson cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });
 
   test('edit form', async () => {

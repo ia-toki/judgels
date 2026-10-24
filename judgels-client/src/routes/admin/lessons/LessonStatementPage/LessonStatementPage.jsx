@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { LessonStatementCard } from '../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
-import { lessonBySlugQueryOptions, lessonPermissionsQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions } from '../../../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementQueryOptions,
@@ -27,10 +27,6 @@ export default function LessonStatementPage() {
   const {
     data: { jid: lessonJid },
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
 
   const {
     data: { enabledLanguages, defaultLanguage },
@@ -68,7 +64,6 @@ export default function LessonStatementPage() {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       statement &&
       !isEditing && (
         <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>

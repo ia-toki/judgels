@@ -9,7 +9,6 @@ import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import {
   lessonBySlugQueryOptions,
-  lessonPermissionsQueryOptions,
   lessonQueryOptions,
   updateLessonMutationOptions,
 } from '../../../../modules/queries/lesson';
@@ -27,10 +26,6 @@ export default function LessonGeneralPage() {
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const { data: lesson } = useSuspenseQuery(lessonQueryOptions(lessonJid));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
 
   const { data: authorProfile } = useSuspenseQuery(basicProfileQueryOptions(lesson.authorJid));
 
@@ -62,7 +57,6 @@ export default function LessonGeneralPage() {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       !isEditing && (
         <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit

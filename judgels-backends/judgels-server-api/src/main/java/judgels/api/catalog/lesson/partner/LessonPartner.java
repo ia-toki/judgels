@@ -6,10 +6,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableLessonPartner.class)
 public interface LessonPartner {
-    long getId();
-    String getLessonJid();
     String getUserJid();
-    LessonPartnerConfig getConfig();
 
     class Builder extends ImmutableLessonPartner.Builder {}
 }

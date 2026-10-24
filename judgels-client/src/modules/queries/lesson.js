@@ -20,12 +20,6 @@ export const lessonQueryOptions = lessonJid =>
     queryFn: () => lessonAPI.getLesson(getToken(), lessonJid),
   });
 
-export const lessonPermissionsQueryOptions = lessonJid =>
-  queryOptions({
-    queryKey: ['lesson', lessonJid, 'permissions'],
-    queryFn: () => lessonAPI.getLessonPermissions(getToken(), lessonJid),
-  });
-
 export const lessonBySlugQueryOptions = lessonSlug =>
   queryOptions({
     queryKey: ['lesson-by-slug', lessonSlug],
