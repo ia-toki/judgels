@@ -1,12 +1,13 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { chaptersQueryOptions } from '../../../../modules/queries/chapter';
-import { ChapterCreateDialog } from '../ChapterCreateDialog/ChapterCreateDialog';
 
 export default function ChaptersPage() {
   const { data: response } = useQuery(chaptersQueryOptions());
@@ -52,7 +53,10 @@ export default function ChaptersPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <ChapterCreateDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/chapters/-/new">
+          <Plus />
+          <span>New chapter</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

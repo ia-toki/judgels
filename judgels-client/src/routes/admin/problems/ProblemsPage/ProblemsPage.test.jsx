@@ -100,13 +100,13 @@ describe('ProblemsPage', () => {
 
   test('shows the create button to problem admins only', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new problem/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new problem/i })).toHaveAttribute('href', '/admin/problems/-/new');
   });
 
   test('hides the create button from other users', async () => {
     await renderComponent({ role: {} });
 
     expect(await screen.findByText('problem-1')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /new problem/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /new problem/i })).not.toBeInTheDocument();
   });
 });

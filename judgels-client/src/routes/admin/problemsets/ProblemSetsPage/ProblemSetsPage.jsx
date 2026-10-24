@@ -1,13 +1,14 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
-import { ProblemSetCreateDialog } from '../ProblemSetCreateDialog/ProblemSetCreateDialog';
 
 const PAGE_SIZE = 20;
 
@@ -60,7 +61,10 @@ export default function ProblemSetsPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <ProblemSetCreateDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/problemsets/-/new">
+          <Plus />
+          <span>New problemset</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

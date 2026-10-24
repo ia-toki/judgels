@@ -1,12 +1,13 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { coursesQueryOptions } from '../../../../modules/queries/course';
-import { CourseCreateDialog } from '../CourseCreateDialog/CourseCreateDialog';
 
 export default function CoursesPage() {
   const { data: response } = useQuery(coursesQueryOptions());
@@ -52,7 +53,10 @@ export default function CoursesPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <CourseCreateDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/courses/-/new">
+          <Plus />
+          <span>New course</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

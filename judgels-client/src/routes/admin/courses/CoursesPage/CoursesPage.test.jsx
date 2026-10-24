@@ -53,6 +53,6 @@ describe('CoursesPage', () => {
 
   test('renders the create button', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new course/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new course/i })).toHaveAttribute('href', '/admin/courses/-/new');
   });
 });

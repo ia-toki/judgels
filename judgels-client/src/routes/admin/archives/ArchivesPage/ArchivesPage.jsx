@@ -1,12 +1,13 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import { archivesQueryOptions } from '../../../../modules/queries/archive';
-import { ArchiveCreateDialog } from '../ArchiveCreateDialog/ArchiveCreateDialog';
 
 export default function ArchivesPage() {
   const { data: response } = useQuery(archivesQueryOptions());
@@ -54,7 +55,10 @@ export default function ArchivesPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <ArchiveCreateDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/archives/-/new">
+          <Plus />
+          <span>New archive</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

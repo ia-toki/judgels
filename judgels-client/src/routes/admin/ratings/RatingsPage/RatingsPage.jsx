@@ -1,14 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { contestsPendingRatingQueryOptions } from '../../../../modules/queries/contestRating';
-import { ContestRatingChangesDialog } from '../ContestRatingChangesDialog/ContestRatingChangesDialog';
 import { ContestsPendingRatingTable } from '../ContestsPendingRatingTable/ContestsPendingRatingTable';
 
 export default function RatingsPage() {
-  const [selectedContest, setSelectedContest] = useState(undefined);
-
   const { data: response } = useQuery(contestsPendingRatingQueryOptions());
 
   const renderContestsPendingRatingTable = () => {
@@ -25,27 +21,7 @@ export default function RatingsPage() {
       );
     }
 
-    return (
-      <ContestsPendingRatingTable
-        contests={contests}
-        onClickView={setSelectedContest}
-        isContestViewed={!!selectedContest}
-      />
-    );
-  };
-
-  const renderContestRatingChangesDialog = () => {
-    if (!response || !selectedContest) {
-      return null;
-    }
-
-    return (
-      <ContestRatingChangesDialog
-        contest={selectedContest}
-        ratingChanges={response.ratingChangesMap[selectedContest.jid]}
-        onClose={() => setSelectedContest(undefined)}
-      />
-    );
+    return <ContestsPendingRatingTable contests={contests} />;
   };
 
   return (
@@ -54,7 +30,6 @@ export default function RatingsPage() {
         <h4>Contests pending rating changes</h4>
         {renderContestsPendingRatingTable()}
       </div>
-      {renderContestRatingChangesDialog()}
     </ContentCard>
   );
 }

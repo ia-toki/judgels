@@ -53,6 +53,6 @@ describe('ArchivesPage', () => {
 
   test('renders the create button', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new archive/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new archive/i })).toHaveAttribute('href', '/admin/archives/-/new');
   });
 });
