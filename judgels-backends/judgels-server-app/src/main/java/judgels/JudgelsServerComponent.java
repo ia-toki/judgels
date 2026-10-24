@@ -110,6 +110,11 @@ public interface JudgelsServerComponent {
     judgels.training.submission.programming.TrainingSubmissionResource trainingSubmissionResource();
     judgels.training.problem.TrainingProblemTagResource trainingProblemTagResource();
     judgels.training.stats.TrainingUserStatsResource trainingUserStatsResource();
+    judgels.training.LegacyTrainingResources.ProblemResource legacyProblemResource();
+    judgels.training.LegacyTrainingResources.ProblemTagResource legacyProblemTagResource();
+    judgels.training.LegacyTrainingResources.UserStatsResource legacyUserStatsResource();
+    judgels.training.LegacyTrainingResources.SubmissionResource legacySubmissionResource();
+    judgels.training.LegacyTrainingResources.ItemSubmissionResource legacyItemSubmissionResource();
 
     judgels.setting.SettingResource settingResource();
     judgels.setting.SettingCreator settingCreator();
