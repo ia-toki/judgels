@@ -46,14 +46,14 @@ describe('ProblemGradingEnginePage', () => {
   test('shows the current engine', async () => {
     await renderComponent();
 
-    expect(screen.getByRole('combobox', { name: 'Grading engine' })).toHaveValue('Batch');
+    expect(screen.getByRole('combobox', { name: 'Grading engine' })).toHaveTextContent('Batch');
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
   });
 
   test('is read-only for a viewer', async () => {
     await renderComponent({ canEdit: false });
 
-    expect(screen.getByRole('combobox', { name: 'Grading engine' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Batch' })).toBeDisabled();
     expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
   });
 
@@ -61,7 +61,8 @@ describe('ProblemGradingEnginePage', () => {
     await renderComponent();
     const user = userEvent.setup();
 
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Grading engine' }), 'Interactive with Subtasks');
+    await user.click(screen.getByRole('button', { name: 'Batch' }));
+    await user.click(screen.getByText('Interactive with Subtasks'));
     await user.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText(/this resets the grading config/i)).toBeInTheDocument();
 

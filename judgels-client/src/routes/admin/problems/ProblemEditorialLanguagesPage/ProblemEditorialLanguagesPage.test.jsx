@@ -66,9 +66,11 @@ describe('ProblemEditorialLanguagesPage', () => {
     await renderComponent();
 
     const user = userEvent.setup();
-    const select = screen.getByRole('combobox', { name: /add language/i });
-    expect(within(select).queryByRole('option', { name: 'French (fr-FR)' })).not.toBeInTheDocument();
-    await user.selectOptions(select, 'ja-JP');
+    await user.click(screen.getByRole('button', { name: 'Add language...' }));
+    expect(screen.queryByRole('option', { name: 'French (fr-FR)' })).not.toBeInTheDocument();
+    await user.type(screen.getByRole('textbox', { name: 'Filter languages' }), 'japan');
+    expect(screen.getAllByRole('option').map(option => option.textContent)).toEqual(['Japanese (ja-JP)']);
+    await user.click(screen.getByText('Japanese (ja-JP)'));
 
     nockApi().post('/v4/problems/JIDPROG1/editorial/languages/ja-JP').reply(200);
 

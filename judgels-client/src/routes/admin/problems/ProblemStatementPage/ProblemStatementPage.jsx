@@ -1,4 +1,4 @@
-import { Button, HTMLSelect } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
@@ -11,7 +11,6 @@ import { ProblemWorksheetCard } from '../../../../components/ProblemWorksheetCar
 import { ProblemType } from '../../../../modules/api/problem';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
 import { formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
-import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import {
   problemBySlugQueryOptions,
   problemPermissionsQueryOptions,
@@ -28,6 +27,7 @@ import {
   createProblemSubmissionMutationOptions,
   problemSubmissionConfigQueryOptions,
 } from '../../../../modules/queries/problemSubmission';
+import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -106,21 +106,12 @@ export default function ProblemStatementPage() {
 
   const renderLanguageSelect = () => {
     return (
-      <HTMLSelect
-        aria-label="Language"
+      <LanguageSelect
+        languages={enabledLanguages}
         value={language}
         disabled={isEditing}
-        onChange={e => setSelectedLanguage(e.target.value)}
-      >
-        {enabledLanguages
-          .slice()
-          .sort()
-          .map(lang => (
-            <option key={lang} value={lang}>
-              {worldLanguageNamesMap[lang] || lang}
-            </option>
-          ))}
-      </HTMLSelect>
+        onChange={setSelectedLanguage}
+      />
     );
   };
 

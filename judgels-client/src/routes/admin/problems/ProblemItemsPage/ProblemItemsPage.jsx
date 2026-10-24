@@ -1,4 +1,4 @@
-import { Alert, Button, HTMLSelect, HTMLTable, Intent } from '@blueprintjs/core';
+import { Alert, Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { ArrowDown, ArrowUp, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
 import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
@@ -102,13 +103,13 @@ export default function ProblemItemsPage() {
     }
     return (
       <Flex gap={2} alignItems="center">
-        <HTMLSelect aria-label="Item type" value={typeToAdd} onChange={e => setTypeToAdd(e.target.value)}>
-          {Object.keys(itemTypeNamesMap).map(type => (
-            <option key={type} value={type}>
-              {itemTypeNamesMap[type]}
-            </option>
-          ))}
-        </HTMLSelect>
+        <OptionSelect
+          options={Object.keys(itemTypeNamesMap)}
+          value={typeToAdd}
+          getOptionName={type => itemTypeNamesMap[type]}
+          label="Item type"
+          onChange={setTypeToAdd}
+        />
         <Button
           text="Add"
           intent={Intent.PRIMARY}

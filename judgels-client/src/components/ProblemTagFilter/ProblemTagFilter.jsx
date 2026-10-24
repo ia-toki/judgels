@@ -6,8 +6,6 @@ import { useMemo, useState } from 'react';
 
 import { ContentCard } from '../ContentCard/ContentCard';
 
-import './ProblemTagFilter.scss';
-
 const parseTags = queryTags => {
   let tags = queryTags || [];
   if (typeof tags === 'string') {
@@ -50,7 +48,6 @@ export default function ProblemTagFilter({ queryOptions }) {
           <Box key={opt.value} asChild {...(isTagChild(opt.value) && { marginLeft: 6 })}>
             <Checkbox
               name={opt.value}
-              className="problem-tag-filter__option"
               label={getTagName(opt) + ' (' + opt.count + ')'}
               checked={isTagSelected(opt.value)}
               indeterminate={isTagChildSelected(opt.value)}

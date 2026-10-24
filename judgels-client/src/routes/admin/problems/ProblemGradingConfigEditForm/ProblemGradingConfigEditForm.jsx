@@ -1,19 +1,10 @@
-import {
-  Button,
-  Callout,
-  Card,
-  Checkbox,
-  FormGroup,
-  HTMLSelect,
-  HTMLTable,
-  InputGroup,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, Callout, Card, Checkbox, FormGroup, HTMLTable, InputGroup, Intent } from '@blueprintjs/core';
 import { Plus, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { getGradingConfigFields, toConfig, toFormValues, validate } from './gradingConfigForm';
 
 import './ProblemGradingConfigEditForm.scss';
@@ -22,33 +13,35 @@ function SubtaskAssignment({ label, subtaskCount, subtaskIds, disabled, onChange
   const toggle = id => onChange(subtaskIds.includes(id) ? subtaskIds.filter(i => i !== id) : [...subtaskIds, id]);
 
   return (
-    <Flex role="group" aria-label={label} gap={2} alignItems="center" flexWrap="wrap">
+    <Flex role="group" aria-label={label} flexDirection="column" gap={1}>
       <small>Assign to subtasks:</small>
-      {[...Array(subtaskCount).keys()].map(idx => (
-        <Checkbox
-          key={idx + 1}
-          inline
-          className="problem-grading-config-edit-form__subtask"
-          label={idx + 1}
-          checked={subtaskIds.includes(idx + 1)}
-          disabled={disabled}
-          onChange={() => toggle(idx + 1)}
-        />
-      ))}
+      <Flex gap={2} alignItems="center" flexWrap="wrap">
+        {[...Array(subtaskCount).keys()].map(idx => (
+          <Checkbox
+            key={idx + 1}
+            className="problem-grading-config-edit-form__subtask"
+            label={idx + 1}
+            checked={subtaskIds.includes(idx + 1)}
+            disabled={disabled}
+            onChange={() => toggle(idx + 1)}
+          />
+        ))}
+      </Flex>
     </Flex>
   );
 }
 
 function FileSelect({ label, filenames, value, onChange }) {
   return (
-    <HTMLSelect aria-label={label} value={value} onChange={e => onChange(e.target.value)}>
-      <option value="">{label}...</option>
-      {filenames.map(filename => (
-        <option key={filename} value={filename}>
-          {filename}
-        </option>
-      ))}
-    </HTMLSelect>
+    <OptionSelect
+      options={filenames}
+      value={value}
+      getOptionName={filename => filename}
+      label={label}
+      placeholder={`${label}...`}
+      noResultsText="No files found."
+      onChange={onChange}
+    />
   );
 }
 
@@ -109,7 +102,7 @@ function TestCases({ label, testCases, hasOutput, canEdit, filenames, onChange, 
             )}
           </tr>,
           renderSubtaskAssignment && (
-            <tr key={`${idx}-subtasks`}>
+            <tr key={`${idx}-subtasks`} className="problem-grading-config-edit-form__subtask-row">
               <td colSpan={columnCount}>
                 {renderSubtaskAssignment(testCase, subtaskIds =>
                   onChange(testCases.map((tc, i) => (i === idx ? { ...tc, subtaskIds } : tc)))
@@ -217,26 +210,24 @@ export default function ProblemGradingConfigEditForm({
     </FormGroup>
   );
 
-  const renderHelperSelect = (name, label) => (
-    <FormGroup label={label}>
-      <HTMLSelect
-        aria-label={label}
-        value={values[name]}
-        disabled={!canEdit}
-        onChange={e => setValue(name, e.target.value)}
-      >
-        <option value="">(none)</option>
-        {/* A helper the config names stays selectable even after its file is deleted. */}
-        {[...new Set([...helperFiles.map(file => file.name), values[name]])]
-          .filter(filename => filename)
-          .map(filename => (
-            <option key={filename} value={filename}>
-              {filename}
-            </option>
-          ))}
-      </HTMLSelect>
-    </FormGroup>
-  );
+  const renderHelperSelect = (name, label) => {
+    // A helper the config names stays selectable even after its file is deleted.
+    const filenames = [...new Set([...helperFiles.map(file => file.name), values[name]])].filter(filename => filename);
+
+    return (
+      <FormGroup label={label}>
+        <OptionSelect
+          options={['', ...filenames]}
+          value={values[name]}
+          getOptionName={filename => filename || '(none)'}
+          label={label}
+          placeholder="(none)"
+          disabled={!canEdit}
+          onChange={filename => setValue(name, filename)}
+        />
+      </FormGroup>
+    );
+  };
 
   const renderSampleTestCases = () => (
     <FormGroup label="Sample test data">
@@ -271,45 +262,53 @@ export default function ProblemGradingConfigEditForm({
         {values.testGroups.map((testGroup, idx) => {
           const label = fields.subtasks ? `Test group ${idx + 1}` : 'Test cases';
           return (
-            <Card key={idx}>
-              {fields.subtasks && (
-                <Flex justifyContent="space-between" alignItems="center">
-                  <strong>{label}</strong>
-                  {canEdit && (
-                    <Button
-                      small
-                      minimal
-                      intent={Intent.DANGER}
-                      icon={<Trash />}
-                      aria-label={`Remove test group ${idx + 1}`}
-                      onClick={() =>
-                        setValue(
-                          'testGroups',
-                          values.testGroups.filter((_, i) => i !== idx)
-                        )
-                      }
+            <Flex asChild key={idx} flexDirection="column" gap={4}>
+              <Card>
+                {fields.subtasks && (
+                  <Flex
+                    className="problem-grading-config-edit-form__test-group-heading"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <strong>{label}</strong>
+                    {canEdit && (
+                      <Button
+                        small
+                        minimal
+                        intent={Intent.DANGER}
+                        icon={<Trash />}
+                        aria-label={`Remove test group ${idx + 1}`}
+                        onClick={() =>
+                          setValue(
+                            'testGroups',
+                            values.testGroups.filter((_, i) => i !== idx)
+                          )
+                        }
+                      />
+                    )}
+                  </Flex>
+                )}
+                <Flex flexDirection="column" gap={2}>
+                  <TestCases
+                    label={label}
+                    testCases={testGroup.testCases}
+                    hasOutput={fields.output}
+                    canEdit={canEdit}
+                    filenames={testDataFilenames}
+                    onChange={testCases => setTestGroup(idx, { testCases })}
+                  />
+                  {fields.subtasks && (
+                    <SubtaskAssignment
+                      label={`Subtasks of test group ${idx + 1}`}
+                      subtaskCount={subtaskCount}
+                      subtaskIds={testGroup.subtaskIds}
+                      disabled={!canEdit}
+                      onChange={subtaskIds => setTestGroup(idx, { subtaskIds })}
                     />
                   )}
                 </Flex>
-              )}
-              <TestCases
-                label={label}
-                testCases={testGroup.testCases}
-                hasOutput={fields.output}
-                canEdit={canEdit}
-                filenames={testDataFilenames}
-                onChange={testCases => setTestGroup(idx, { testCases })}
-              />
-              {fields.subtasks && (
-                <SubtaskAssignment
-                  label={`Subtasks of test group ${idx + 1}`}
-                  subtaskCount={subtaskCount}
-                  subtaskIds={testGroup.subtaskIds}
-                  disabled={!canEdit}
-                  onChange={subtaskIds => setTestGroup(idx, { subtaskIds })}
-                />
-              )}
-            </Card>
+              </Card>
+            </Flex>
           );
         })}
         {fields.subtasks && canEdit && (
@@ -329,7 +328,7 @@ export default function ProblemGradingConfigEditForm({
   const renderSubtaskPoints = () => (
     <FormGroup label="Subtasks">
       <Card>
-        <HTMLTable compact aria-label="Subtasks">
+        <HTMLTable compact aria-label="Subtasks" className="problem-grading-config-edit-form__subtask-points">
           <thead>
             <tr>
               <th>No</th>
@@ -342,7 +341,6 @@ export default function ProblemGradingConfigEditForm({
                 <td>{idx + 1}</td>
                 <td>
                   <InputGroup
-                    small
                     aria-label={`Points of subtask ${idx + 1}`}
                     value={points}
                     disabled={!canEdit}
@@ -363,7 +361,7 @@ export default function ProblemGradingConfigEditForm({
   );
 
   return (
-    <Flex asChild flexDirection="column" gap={2}>
+    <Flex asChild flexDirection="column" gap={6}>
       <form onSubmit={submit}>
         {canEdit && (
           <ActionButtons>
@@ -379,20 +377,22 @@ export default function ProblemGradingConfigEditForm({
             />
           </ActionButtons>
         )}
-        {fields.limits && renderTextInput('timeLimit', 'Time limit', 'milliseconds')}
-        {fields.limits && renderTextInput('memoryLimit', 'Memory limit', 'kilobytes')}
-        {fields.sourceFileFieldKeys && renderTextInput('sourceFileFieldKeys', 'Source file keys', 'comma-separated')}
-        {renderSampleTestCases()}
-        {renderTestGroups()}
-        {fields.subtasks && renderSubtaskPoints()}
-        {fields.customScorer && renderHelperSelect('customScorer', 'Custom scorer')}
-        {fields.communicator && renderHelperSelect('communicator', 'Communicator')}
-        {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
-        {canEdit && (
-          <ActionButtons justifyContent="end">
-            <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
-          </ActionButtons>
-        )}
+        <Flex flexDirection="column" gap={2}>
+          {fields.limits && renderTextInput('timeLimit', 'Time limit', 'milliseconds')}
+          {fields.limits && renderTextInput('memoryLimit', 'Memory limit', 'kilobytes')}
+          {fields.sourceFileFieldKeys && renderTextInput('sourceFileFieldKeys', 'Source file keys', 'comma-separated')}
+          {renderSampleTestCases()}
+          {renderTestGroups()}
+          {fields.subtasks && renderSubtaskPoints()}
+          {fields.customScorer && renderHelperSelect('customScorer', 'Custom scorer')}
+          {fields.communicator && renderHelperSelect('communicator', 'Communicator')}
+          {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
+          {canEdit && (
+            <ActionButtons justifyContent="end">
+              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
+            </ActionButtons>
+          )}
+        </Flex>
       </form>
     </Flex>
   );

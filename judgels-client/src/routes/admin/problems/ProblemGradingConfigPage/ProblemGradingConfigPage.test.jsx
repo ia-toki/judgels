@@ -54,6 +54,11 @@ describe('ProblemGradingConfigPage', () => {
     customScorer: null,
   };
 
+  const pickOption = async (user, selectButton, name) => {
+    await user.click(selectButton);
+    await user.click(within(screen.getByRole('option', { name })).getByText(name));
+  };
+
   const renderComponent = async ({ canEdit = true, engine = 'Batch', config = batchConfig } = {}) => {
     nockProblem(canEdit);
     nockApi().get('/v4/problems/JIDPROG1/grading/config').reply(200, { engine, config });
@@ -88,7 +93,7 @@ describe('ProblemGradingConfigPage', () => {
     expect(screen.getByRole('textbox', { name: 'Memory limit' })).toHaveValue('65536');
     expect(getTestCases('Sample test cases')).toEqual([['sample_1.in', 'sample_1.out', '']]);
     expect(getTestCases('Test cases')).toEqual([['1.in', '1.out', '']]);
-    expect(screen.getByRole('combobox', { name: 'Custom scorer' })).toHaveValue('scorer.cpp');
+    expect(screen.getByRole('combobox', { name: 'Custom scorer' })).toHaveTextContent('scorer.cpp');
     expect(screen.queryByRole('table', { name: 'Subtasks' })).not.toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: 'Communicator' })).not.toBeInTheDocument();
   });
@@ -99,7 +104,7 @@ describe('ProblemGradingConfigPage', () => {
       config: { timeLimit: 2000, memoryLimit: 65536, testData: [], communicator: null },
     });
 
-    expect(screen.getByRole('combobox', { name: 'Communicator' })).toHaveValue('');
+    expect(screen.getByRole('combobox', { name: 'Communicator' })).toHaveTextContent('(none)');
     expect(screen.queryByRole('combobox', { name: 'Custom scorer' })).not.toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: 'Output' })).not.toBeInTheDocument();
   });
@@ -124,7 +129,8 @@ describe('ProblemGradingConfigPage', () => {
     await renderComponent({ canEdit: false });
 
     expect(screen.getByRole('textbox', { name: 'Time limit' })).toBeDisabled();
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('button').map(button => button.textContent)).toEqual(['scorer.cpp']);
+    expect(screen.getByRole('button', { name: 'scorer.cpp' })).toBeDisabled();
   });
 
   test('updates the config of a batch problem', async () => {
@@ -136,12 +142,12 @@ describe('ProblemGradingConfigPage', () => {
     await user.type(timeLimit, '3000');
 
     const testCases = within(screen.getByRole('table', { name: 'Test cases' }));
-    await user.selectOptions(testCases.getByRole('combobox', { name: 'Input' }), '2.in');
-    expect(testCases.getByRole('combobox', { name: 'Output' })).toHaveValue('2.out');
+    await pickOption(user, testCases.getByRole('button', { name: 'Input...' }), '2.in');
+    expect(testCases.getByRole('combobox', { name: 'Output' })).toHaveTextContent('2.out');
     await user.click(testCases.getByRole('button', { name: 'Add test case' }));
 
     await user.click(screen.getByRole('button', { name: 'Remove sample_1.in' }));
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Custom scorer' }), '(none)');
+    await pickOption(user, screen.getByRole('button', { name: 'scorer.cpp' }), '(none)');
 
     nockApi()
       .put('/v4/problems/JIDPROG1/grading/config', {
@@ -181,7 +187,7 @@ describe('ProblemGradingConfigPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'New test group' }));
     const testGroup = within(screen.getByRole('table', { name: 'Test group 2' }));
-    await user.selectOptions(testGroup.getByRole('combobox', { name: 'Input' }), '2.in');
+    await pickOption(user, testGroup.getByRole('button', { name: 'Input...' }), '2.in');
     await user.click(testGroup.getByRole('button', { name: 'Add test case' }));
     await user.click(
       within(screen.getByRole('group', { name: 'Subtasks of test group 2' })).getByRole('checkbox', { name: '3' })

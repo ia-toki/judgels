@@ -84,7 +84,7 @@ describe('ProblemItemPage', () => {
 
     expect(screen.getByRole('heading', { name: /multiple choice item \(no\. 2\)/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/problem-1/items');
-    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveValue('id-ID');
+    expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Indonesian (id-ID)');
 
     expect(await screen.findByRole('textbox', { name: 'Internal note' })).toHaveValue('addition');
     expect(screen.getByRole('textbox', { name: 'Statement' })).toHaveValue('What is 1 + 1?');
@@ -115,7 +115,12 @@ describe('ProblemItemPage', () => {
       .query({ language: 'en-US' })
       .reply(200, { ...essayItem, config: { statement: 'Explain it.', score: 10 } });
 
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Language' }), 'en-US');
+    await user.click(screen.getByRole('button', { name: 'Indonesian (id-ID)' }));
+    expect(screen.getAllByRole('option').map(option => option.textContent)).toEqual([
+      'English (en-US)',
+      'Indonesian (id-ID)',
+    ]);
+    await user.click(screen.getByText('English (en-US)'));
 
     await waitFor(() => expect(screen.getByRole('textbox', { name: 'Statement' })).toHaveValue('Explain it.'));
 
