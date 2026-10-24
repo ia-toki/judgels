@@ -1,110 +1,56 @@
 package judgels.catalog.problem.partner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import judgels.api.catalog.Partner;
-import judgels.api.catalog.PartnerPermission;
-import judgels.api.catalog.problem.partner.ProblemPartnerChildConfig;
-import judgels.api.catalog.problem.partner.ProblemPartnerConfig;
+import java.util.Set;
+import judgels.api.catalog.problem.partner.ProblemPartner;
 import judgels.persistence.dao.ProblemPartnerDao;
 import judgels.persistence.model.ProblemPartnerModel;
 
 public class ProblemPartnerStore {
     private final ProblemPartnerDao partnerDao;
-    private final ObjectMapper mapper;
 
     @Inject
-    public ProblemPartnerStore(ProblemPartnerDao partnerDao, ObjectMapper mapper) {
+    public ProblemPartnerStore(ProblemPartnerDao partnerDao) {
         this.partnerDao = partnerDao;
-        this.mapper = mapper;
     }
 
-    public Optional<Partner> getPartner(String problemJid, String userJid) {
-        return partnerDao.selectByProblemJidAndUserJid(problemJid, userJid).map(this::fromModel);
+    public boolean isPartner(String problemJid, String userJid) {
+        return partnerDao.selectByProblemJidAndUserJid(problemJid, userJid).isPresent();
     }
 
-    public List<Partner> getPartners(String problemJid) {
+    public List<ProblemPartner> getPartners(String problemJid) {
         return Lists.transform(partnerDao.selectAllByProblemJid(problemJid), this::fromModel);
     }
 
-    public void setPartners(String problemJid, List<Partner> partners) {
-        Map<String, Partner> partnersByUserJid = new HashMap<>();
-        for (Partner partner : partners) {
-            partnersByUserJid.put(partner.getUserJid(), partner);
-        }
+    public void setPartners(String problemJid, Collection<String> userJids) {
+        Set<String> newUserJids = new HashSet<>(userJids);
 
         for (ProblemPartnerModel model : partnerDao.selectAllByProblemJid(problemJid)) {
-            Partner existingPartner = partnersByUserJid.get(model.userJid);
-            if (existingPartner == null) {
+            if (!newUserJids.remove(model.userJid)) {
                 partnerDao.delete(model);
             }
         }
 
-        for (Partner partner : partners) {
-            upsertPartner(problemJid, partner);
-        }
-    }
-
-    private void upsertPartner(String problemJid, Partner partner) {
-        Optional<ProblemPartnerModel> maybeModel = partnerDao.selectByProblemJidAndUserJid(problemJid, partner.getUserJid());
-        if (maybeModel.isPresent()) {
-            ProblemPartnerModel model = maybeModel.get();
-
-            try {
-                ProblemPartnerConfig config = mapper.readValue(model.baseConfig, ProblemPartnerConfig.class);
-                model.baseConfig = mapper.writeValueAsString(new ProblemPartnerConfig.Builder()
-                        .from(config)
-                        .isAllowedToUpdateProblem(partner.getPermission() == PartnerPermission.UPDATE)
-                        .build());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            partnerDao.update(model);
-        } else {
+        for (String userJid : newUserJids) {
             ProblemPartnerModel model = new ProblemPartnerModel();
             model.problemJid = problemJid;
-            model.userJid = partner.getUserJid();
+            model.userJid = userJid;
 
-            boolean isUpdate = partner.getPermission() == PartnerPermission.UPDATE;
-            try {
-                model.baseConfig = mapper.writeValueAsString(new ProblemPartnerConfig.Builder()
-                        .isAllowedToUpdateProblem(isUpdate)
-                        .isAllowedToUpdateStatement(isUpdate)
-                        .isAllowedToUploadStatementResources(isUpdate)
-                        .isAllowedToManageStatementLanguages(isUpdate)
-                        .isAllowedToViewVersionHistory(isUpdate)
-                        .isAllowedToRestoreVersionHistory(isUpdate)
-                        .build());
-                model.childConfig = mapper.writeValueAsString(new ProblemPartnerChildConfig.Builder()
-                        .isAllowedToSubmit(isUpdate)
-                        .isAllowedToManageGrading(isUpdate)
-                        .isAllowedToManageItems(isUpdate)
-                        .build());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            // Every partner can edit the problem, so these per-partner configs are no longer read.
+            model.baseConfig = "{}";
+            model.childConfig = "{}";
 
             partnerDao.insert(model);
         }
     }
 
-    private Partner fromModel(ProblemPartnerModel model) {
-        ProblemPartnerConfig config;
-        try {
-            config = mapper.readValue(model.baseConfig, ProblemPartnerConfig.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new Partner.Builder()
+    private ProblemPartner fromModel(ProblemPartnerModel model) {
+        return new ProblemPartner.Builder()
                 .userJid(model.userJid)
-                .permission(config.getIsAllowedToUpdateProblem() ? PartnerPermission.UPDATE : PartnerPermission.VIEW)
                 .build();
     }
 }

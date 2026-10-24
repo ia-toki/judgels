@@ -13,13 +13,13 @@ describe('ProblemStatementPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true, type = 'PROGRAMMING', reasonNotAllowedToSubmit } = {}) => {
+  const renderComponent = async ({ type = 'PROGRAMMING', reasonNotAllowedToSubmit } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit, reasonNotAllowedToSubmit });
-    if (canEdit && type === 'PROGRAMMING') {
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { reasonNotAllowedToSubmit });
+    if (type === 'PROGRAMMING') {
       nockApi()
         .get('/v4/problems/JIDPROG1/submissions/programming/config')
         .reply(200, {
@@ -88,7 +88,7 @@ describe('ProblemStatementPage', () => {
 
   test('previews a bundle problem with its items', async () => {
     nockBundleItems();
-    await renderComponent({ type: 'BUNDLE', canEdit: false });
+    await renderComponent({ type: 'BUNDLE' });
 
     expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
     expect(screen.getByText('Bacalah.')).toBeInTheDocument();
@@ -98,8 +98,6 @@ describe('ProblemStatementPage', () => {
       expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/),
       expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/satu\.png$/),
     ]);
-    screen.getAllByRole('radio').forEach(radio => expect(radio).toBeDisabled());
-    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
   });
 
   test('submits a solution', async () => {
@@ -148,13 +146,6 @@ describe('ProblemStatementPage', () => {
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
   });
 
-  test('hides the submission form when the problem cannot be edited', async () => {
-    await renderComponent({ canEdit: false, reasonNotAllowedToSubmit: 'Submission not allowed.' });
-
-    expect(screen.queryByText('Submission not allowed.')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument();
-  });
-
   test('switches the language', async () => {
     await renderComponent();
 
@@ -172,11 +163,6 @@ describe('ProblemStatementPage', () => {
     await user.click(screen.getByText('English (en-US)'));
 
     expect(await screen.findByText('Boxes of Apples')).toBeInTheDocument();
-  });
-
-  test('hides the edit button when the problem cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });
 
   test('edit form', async () => {

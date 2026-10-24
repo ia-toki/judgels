@@ -18,10 +18,7 @@ describe('ProblemPartnersPage', () => {
     nockApi()
       .get('/v4/problems/JIDPROG1/partners')
       .reply(200, {
-        data: partners || [
-          { userJid: 'JIDUSER1', permission: 'UPDATE' },
-          { userJid: 'JIDUSER2', permission: 'VIEW' },
-        ],
+        data: partners || [{ userJid: 'JIDUSER1' }, { userJid: 'JIDUSER2' }],
         profilesMap: {
           JIDUSER1: { username: 'andi' },
           JIDUSER2: { username: 'budi' },
@@ -53,10 +50,7 @@ describe('ProblemPartnersPage', () => {
     await renderComponent();
 
     const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
-    expect(rows.map(row => [...row.querySelectorAll('td')].map(cell => cell.textContent))).toEqual([
-      ['andi', 'View and update'],
-      ['budi', 'View'],
-    ]);
+    expect(rows.map(row => row.textContent)).toEqual(['andi', 'budi']);
   });
 
   test('no partners', async () => {
@@ -70,17 +64,14 @@ describe('ProblemPartnersPage', () => {
     await renderComponent();
 
     const user = userEvent.setup();
-    const csv = await openEditForm(user);
-    expect(csv).toHaveValue('andi,UPDATE\nbudi,VIEW');
+    const usernames = await openEditForm(user);
+    expect(usernames).toHaveValue('andi\nbudi');
 
-    await user.clear(csv);
-    await user.type(csv, 'budi\n\ncaca, VIEW\n');
+    await user.clear(usernames);
+    await user.type(usernames, 'budi\n\n caca \nbudi\n');
 
     nockApi()
-      .put('/v4/problems/JIDPROG1/partners', [
-        { username: 'budi', permission: 'UPDATE' },
-        { username: 'caca', permission: 'VIEW' },
-      ])
+      .put('/v4/problems/JIDPROG1/partners', [{ username: 'budi' }, { username: 'caca' }])
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));
@@ -88,29 +79,26 @@ describe('ProblemPartnersPage', () => {
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 
-  test.each([
-    ['andi,EDIT', 'Invalid permission: EDIT'],
-    ['andi,VIEW,UPDATE', 'Invalid row: andi,VIEW,UPDATE'],
-    ['andi\nandi,VIEW', 'Duplicate user: andi'],
-  ])('rejects the invalid CSV %j', async (value, error) => {
+  test('rejects too many partners', async () => {
     await renderComponent();
 
     const user = userEvent.setup();
-    const csv = await openEditForm(user);
-    await user.clear(csv);
-    await user.type(csv, value);
+    const usernames = await openEditForm(user);
+    await user.clear(usernames);
+    await user.click(usernames);
+    await user.paste([...Array(101).keys()].map(i => `user${i}`).join('\n'));
 
     await user.click(screen.getByRole('button', { name: /save/i }));
 
-    expect(await screen.findByText(error)).toBeInTheDocument();
+    expect(await screen.findByText('At most 100 partners are allowed')).toBeInTheDocument();
   });
 
   test('shows which partners are not found', async () => {
     await renderComponent();
 
     const user = userEvent.setup();
-    const csv = await openEditForm(user);
-    await user.type(csv, '\nghost');
+    const usernames = await openEditForm(user);
+    await user.type(usernames, '\nghost');
 
     nockApi()
       .put('/v4/problems/JIDPROG1/partners')

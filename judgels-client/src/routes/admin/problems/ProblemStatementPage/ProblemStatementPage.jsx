@@ -43,7 +43,7 @@ export default function ProblemStatementPage() {
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
 
   const {
-    data: { canEdit, reasonNotAllowedToSubmit },
+    data: { reasonNotAllowedToSubmit },
   } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
@@ -62,10 +62,9 @@ export default function ProblemStatementPage() {
     enabled: isBundle,
   });
 
-  // Only an editor can make test submissions, so nobody else is shown the form.
   const { data: submissionConfig } = useQuery({
     ...problemSubmissionConfigQueryOptions(problemJid),
-    enabled: canEdit && !isBundle,
+    enabled: !isBundle,
   });
 
   // A bundle problem is answered as a whole: the answers are kept here until they are submitted together.
@@ -117,7 +116,6 @@ export default function ProblemStatementPage() {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       statement &&
       !isEditing && (
         <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
@@ -136,15 +134,14 @@ export default function ProblemStatementPage() {
           worksheet={{
             statement: { title: statement.title, text },
             items: itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid)),
-            reasonNotAllowedToSubmit: canEdit ? reasonNotAllowedToSubmit : undefined,
+            reasonNotAllowedToSubmit,
           }}
           latestSubmissions={Object.fromEntries(
             Object.entries(answers).map(([itemJid, answer]) => [itemJid, { answer }])
           )}
           onAnswerItem={answerItem}
-          onSubmit={canEdit ? createBundleSubmission : undefined}
+          onSubmit={createBundleSubmission}
           isSubmitting={createBundleSubmissionMutation.isPending}
-          disabled={!canEdit}
         />
       );
     }
@@ -157,13 +154,13 @@ export default function ProblemStatementPage() {
           reasonNotAllowedToSubmit,
         }}
         showLimits={false}
-        onSubmit={canEdit ? createSubmission : undefined}
+        onSubmit={createSubmission}
       />
     );
   };
 
   const renderContent = () => {
-    if (!statement || (isBundle && !itemsResponse) || (canEdit && !isBundle && !submissionConfig)) {
+    if (!statement || (isBundle && !itemsResponse) || (!isBundle && !submissionConfig)) {
       return <LoadingState />;
     }
     if (isEditing) {

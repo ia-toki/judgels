@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   createProblemEditorialMutationOptions,
   problemEditorialExistsQueryOptions,
@@ -29,10 +29,6 @@ export default function ProblemEditorialLayout() {
   const {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: editorialExists } = useSuspenseQuery(problemEditorialExistsQueryOptions(problemJid));
 
@@ -57,23 +53,21 @@ export default function ProblemEditorialLayout() {
         <p>
           <small>This problem has no editorial.</small>
         </p>
-        {canEdit && (
-          <Flex gap={2} alignItems="center">
-            <LanguageSelect
-              languages={Object.keys(worldLanguageNamesMap)}
-              value={initialLanguage}
-              label="Initial language"
-              filterable
-              onChange={setInitialLanguage}
-            />
-            <Button
-              text="Create editorial"
-              intent={Intent.PRIMARY}
-              loading={createEditorialMutation.isPending}
-              onClick={createEditorial}
-            />
-          </Flex>
-        )}
+        <Flex gap={2} alignItems="center">
+          <LanguageSelect
+            languages={Object.keys(worldLanguageNamesMap)}
+            value={initialLanguage}
+            label="Initial language"
+            filterable
+            onChange={setInitialLanguage}
+          />
+          <Button
+            text="Create editorial"
+            intent={Intent.PRIMARY}
+            loading={createEditorialMutation.isPending}
+            onClick={createEditorial}
+          />
+        </Flex>
       </Flex>
     );
   }

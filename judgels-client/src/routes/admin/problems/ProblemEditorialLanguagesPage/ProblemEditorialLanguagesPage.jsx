@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   addProblemEditorialLanguageMutationOptions,
   disableProblemEditorialLanguageMutationOptions,
@@ -19,10 +19,6 @@ export default function ProblemEditorialLanguagesPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
-
-  const {
     data: { enabledLanguages, disabledLanguages, defaultLanguage },
   } = useSuspenseQuery(problemEditorialLanguagesQueryOptions(problemJid));
 
@@ -36,7 +32,7 @@ export default function ProblemEditorialLanguagesPage() {
       enabledLanguages={enabledLanguages}
       disabledLanguages={disabledLanguages}
       defaultLanguage={defaultLanguage}
-      canEdit={canEdit}
+      canEdit
       onAddLanguage={addLanguageMutation.mutateAsync}
       onEnableLanguage={enableLanguageMutation.mutateAsync}
       onDisableLanguage={disableLanguageMutation.mutateAsync}

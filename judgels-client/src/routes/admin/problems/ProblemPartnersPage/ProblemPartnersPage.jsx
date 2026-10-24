@@ -6,16 +6,31 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { partnerPermissionNamesMap } from '../../../../modules/api/problemPartner';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemPartnersQueryOptions,
   setProblemPartnersMutationOptions,
 } from '../../../../modules/queries/problemPartner';
 import ProblemPartnersEditForm from '../ProblemPartnersEditForm/ProblemPartnersEditForm';
-import { parseCsv, toCsv } from './partnersCsv';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
+
+const MAX_PARTNERS = 100;
+
+function parseUsernames(text) {
+  const usernames = (text || '')
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+  return [...new Set(usernames)];
+}
+
+function validateUsernames(text) {
+  if (parseUsernames(text).length > MAX_PARTNERS) {
+    return `At most ${MAX_PARTNERS} partners are allowed`;
+  }
+  return undefined;
+}
 
 export default function ProblemPartnersPage() {
   const { problemSlug } = useParams({ strict: false });
@@ -33,9 +48,13 @@ export default function ProblemPartnersPage() {
   const [isEditing, setIsEditing] = useState(false);
 
   const setPartners = async data => {
-    await setPartnersMutation.mutateAsync(parseCsv(data.csv).partners, {
-      onSuccess: () => toastActions.showSuccessToast('Partners updated.'),
-    });
+    const usernames = parseUsernames(data.usernames);
+    await setPartnersMutation.mutateAsync(
+      usernames.map(username => ({ username })),
+      {
+        onSuccess: () => toastActions.showSuccessToast('Partners updated.'),
+      }
+    );
     setIsEditing(false);
   };
 
@@ -51,11 +70,13 @@ export default function ProblemPartnersPage() {
 
   const renderContent = () => {
     if (isEditing) {
-      const initialValues = { csv: toCsv(partners, profilesMap) };
+      const initialValues = {
+        usernames: partners.map(partner => profilesMap[partner.userJid]?.username).join('\n'),
+      };
       return (
         <ProblemPartnersEditForm
           initialValues={initialValues}
-          validateCsv={csv => parseCsv(csv).error}
+          validateUsernames={validateUsernames}
           onSubmit={setPartners}
           onCancel={() => setIsEditing(false)}
         />
@@ -73,7 +94,6 @@ export default function ProblemPartnersPage() {
         <thead>
           <tr>
             <th>User</th>
-            <th>Permission</th>
           </tr>
         </thead>
         <tbody>
@@ -82,7 +102,6 @@ export default function ProblemPartnersPage() {
               <td>
                 <UserRef profile={profilesMap[partner.userJid]} />
               </td>
-              <td>{partnerPermissionNamesMap[partner.permission]}</td>
             </tr>
           ))}
         </tbody>
@@ -98,7 +117,7 @@ export default function ProblemPartnersPage() {
           {renderEditButton()}
         </h4>
       </Flex>
-      <p>Partners can view this problem and, when permitted, update it. Only its author and admins manage them.</p>
+      <p>Partners can view and edit this problem. Only its author and admins manage them.</p>
       {renderContent()}
     </div>
   );

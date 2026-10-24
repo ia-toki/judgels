@@ -23,7 +23,7 @@ export default function ProblemLayout() {
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
 
   const {
-    data: { canEdit, canManage },
+    data: { canManage },
   } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
@@ -71,7 +71,6 @@ export default function ProblemLayout() {
     {
       path: 'versions',
       title: 'Versions',
-      disabled: !canEdit,
     },
   ];
 

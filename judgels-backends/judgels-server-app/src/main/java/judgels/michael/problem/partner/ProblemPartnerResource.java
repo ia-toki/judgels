@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.profile.Profile;
 import judgels.catalog.problem.partner.ProblemPartnerStore;
@@ -46,7 +47,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.isAuthorOrAbove(actor, problem));
 
-        List<Partner> partners = partnerStore.getPartners(problem.getJid());
+        List<Partner> partners = getPartners(problem);
 
         var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -64,7 +65,7 @@ public class ProblemPartnerResource extends BaseProblemResource {
         Problem problem = checkFound(problemStore.getProblemById(problemId));
         checkAllowed(roleChecker.isAuthorOrAbove(actor, problem));
 
-        List<Partner> partners = partnerStore.getPartners(problem.getJid());
+        List<Partner> partners = getPartners(problem);
 
         var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -93,9 +94,17 @@ public class ProblemPartnerResource extends BaseProblemResource {
             return ok(renderEditPartners(actor, problem, form));
         }
 
-        partnerStore.setPartners(problem.getJid(), partners.get());
+        partnerStore.setPartners(problem.getJid(), Lists.transform(partners.get(), Partner::getUserJid));
 
         return redirect("/problems/" + problemId + "/partners");
+    }
+
+    // Every partner can edit the problem, so the permission these pages still show and take no longer applies.
+    private List<Partner> getPartners(Problem problem) {
+        return Lists.transform(partnerStore.getPartners(problem.getJid()), partner -> new Partner.Builder()
+                .userJid(partner.getUserJid())
+                .permission(PartnerPermission.UPDATE)
+                .build());
     }
 
     private View renderEditPartners(Actor actor, Problem problem, EditPartnersForm form) {

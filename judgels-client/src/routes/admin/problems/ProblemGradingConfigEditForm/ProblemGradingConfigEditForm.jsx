@@ -10,7 +10,7 @@ import { getGradingConfigFields, toConfig, toFormValues, validate } from './grad
 
 import './ProblemGradingConfigEditForm.scss';
 
-function SubtaskAssignment({ label, subtaskCount, subtaskIds, disabled, onChange }) {
+function SubtaskAssignment({ label, subtaskCount, subtaskIds, onChange }) {
   const toggle = id => onChange(subtaskIds.includes(id) ? subtaskIds.filter(i => i !== id) : [...subtaskIds, id]);
 
   return (
@@ -23,7 +23,6 @@ function SubtaskAssignment({ label, subtaskCount, subtaskIds, disabled, onChange
             className="problem-grading-config-edit-form__subtask"
             label={idx + 1}
             checked={subtaskIds.includes(idx + 1)}
-            disabled={disabled}
             onChange={() => toggle(idx + 1)}
           />
         ))}
@@ -46,7 +45,7 @@ function FileSelect({ label, filenames, value, onChange }) {
   );
 }
 
-function TestCases({ label, testCases, hasOutput, canEdit, filenames, onChange, renderSubtaskAssignment }) {
+function TestCases({ label, testCases, hasOutput, filenames, onChange, renderSubtaskAssignment }) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
@@ -66,7 +65,7 @@ function TestCases({ label, testCases, hasOutput, canEdit, filenames, onChange, 
     setOutput('');
   };
 
-  const columnCount = 1 + (hasOutput ? 1 : 0) + (canEdit ? 1 : 0);
+  const columnCount = 2 + (hasOutput ? 1 : 0);
 
   return (
     <HTMLTable compact aria-label={label} className="problem-grading-config-edit-form__test-cases">
@@ -74,33 +73,24 @@ function TestCases({ label, testCases, hasOutput, canEdit, filenames, onChange, 
         <tr>
           <th>Input</th>
           {hasOutput && <th>Output</th>}
-          {canEdit && <th />}
+          <th />
         </tr>
       </thead>
       <tbody>
-        {testCases.length === 0 && !canEdit && (
-          <tr>
-            <td colSpan={columnCount}>
-              <small>No test cases.</small>
-            </td>
-          </tr>
-        )}
         {testCases.flatMap((testCase, idx) => [
           <tr key={idx}>
             <td>{testCase.input}</td>
             {hasOutput && <td>{testCase.output}</td>}
-            {canEdit && (
-              <td className="problem-grading-config-edit-form__action">
-                <Button
-                  small
-                  minimal
-                  intent={Intent.DANGER}
-                  icon={<Trash />}
-                  aria-label={`Remove ${testCase.input}`}
-                  onClick={() => onChange(testCases.filter((_, i) => i !== idx))}
-                />
-              </td>
-            )}
+            <td className="problem-grading-config-edit-form__action">
+              <Button
+                small
+                minimal
+                intent={Intent.DANGER}
+                icon={<Trash />}
+                aria-label={`Remove ${testCase.input}`}
+                onClick={() => onChange(testCases.filter((_, i) => i !== idx))}
+              />
+            </td>
           </tr>,
           renderSubtaskAssignment && (
             <tr key={`${idx}-subtasks`} className="problem-grading-config-edit-form__subtask-row">
@@ -112,27 +102,25 @@ function TestCases({ label, testCases, hasOutput, canEdit, filenames, onChange, 
             </tr>
           ),
         ])}
-        {canEdit && (
-          <tr>
+        <tr>
+          <td>
+            <FileSelect label="Input" filenames={filenames} value={input} onChange={selectInput} />
+          </td>
+          {hasOutput && (
             <td>
-              <FileSelect label="Input" filenames={filenames} value={input} onChange={selectInput} />
+              <FileSelect label="Output" filenames={filenames} value={output} onChange={setOutput} />
             </td>
-            {hasOutput && (
-              <td>
-                <FileSelect label="Output" filenames={filenames} value={output} onChange={setOutput} />
-              </td>
-            )}
-            <td className="problem-grading-config-edit-form__action">
-              <Button
-                small
-                icon={<Plus />}
-                aria-label="Add test case"
-                disabled={!input || (hasOutput && !output)}
-                onClick={addTestCase}
-              />
-            </td>
-          </tr>
-        )}
+          )}
+          <td className="problem-grading-config-edit-form__action">
+            <Button
+              small
+              icon={<Plus />}
+              aria-label="Add test case"
+              disabled={!input || (hasOutput && !output)}
+              onClick={addTestCase}
+            />
+          </td>
+        </tr>
       </tbody>
     </HTMLTable>
   );
@@ -143,7 +131,6 @@ export default function ProblemGradingConfigEditForm({
   config,
   testDataFiles,
   helperFiles,
-  canEdit,
   onSubmit,
   onAutoPopulate,
 }) {
@@ -202,12 +189,7 @@ export default function ProblemGradingConfigEditForm({
 
   const renderTextInput = (name, label, labelInfo) => (
     <FormGroup label={label} labelInfo={labelInfo && `(${labelInfo})`}>
-      <InputGroup
-        aria-label={label}
-        value={values[name]}
-        disabled={!canEdit}
-        onChange={e => setValue(name, e.target.value)}
-      />
+      <InputGroup aria-label={label} value={values[name]} onChange={e => setValue(name, e.target.value)} />
     </FormGroup>
   );
 
@@ -223,7 +205,6 @@ export default function ProblemGradingConfigEditForm({
           getOptionName={filename => filename || '(none)'}
           label={label}
           placeholder="(none)"
-          disabled={!canEdit}
           onChange={filename => setValue(name, filename)}
         />
       </FormGroup>
@@ -237,7 +218,6 @@ export default function ProblemGradingConfigEditForm({
           label="Sample test cases"
           testCases={values.sampleTestCases}
           hasOutput={fields.output}
-          canEdit={canEdit}
           filenames={testDataFilenames}
           onChange={testCases => setValue('sampleTestCases', testCases)}
           renderSubtaskAssignment={
@@ -247,7 +227,6 @@ export default function ProblemGradingConfigEditForm({
                 label={`Subtasks of ${testCase.input}`}
                 subtaskCount={subtaskCount}
                 subtaskIds={testCase.subtaskIds}
-                disabled={!canEdit}
                 onChange={onChange}
               />
             ))
@@ -267,21 +246,19 @@ export default function ProblemGradingConfigEditForm({
               {fields.subtasks && (
                 <Flex className="problem-grading-config-edit-form__test-group-heading" alignItems="center" gap={2}>
                   <h5>{label}</h5>
-                  {canEdit && (
-                    <Button
-                      small
-                      minimal
-                      intent={Intent.DANGER}
-                      icon={<Trash />}
-                      aria-label={`Remove test group ${idx + 1}`}
-                      onClick={() =>
-                        setValue(
-                          'testGroups',
-                          values.testGroups.filter((_, i) => i !== idx)
-                        )
-                      }
-                    />
-                  )}
+                  <Button
+                    small
+                    minimal
+                    intent={Intent.DANGER}
+                    icon={<Trash />}
+                    aria-label={`Remove test group ${idx + 1}`}
+                    onClick={() =>
+                      setValue(
+                        'testGroups',
+                        values.testGroups.filter((_, i) => i !== idx)
+                      )
+                    }
+                  />
                 </Flex>
               )}
               <Flex flexDirection="column" gap={2}>
@@ -289,7 +266,6 @@ export default function ProblemGradingConfigEditForm({
                   label={label}
                   testCases={testGroup.testCases}
                   hasOutput={fields.output}
-                  canEdit={canEdit}
                   filenames={testDataFilenames}
                   onChange={testCases => setTestGroup(idx, { testCases })}
                 />
@@ -298,7 +274,6 @@ export default function ProblemGradingConfigEditForm({
                     label={`Subtasks of test group ${idx + 1}`}
                     subtaskCount={subtaskCount}
                     subtaskIds={testGroup.subtaskIds}
-                    disabled={!canEdit}
                     onChange={subtaskIds => setTestGroup(idx, { subtaskIds })}
                   />
                 )}
@@ -306,7 +281,7 @@ export default function ProblemGradingConfigEditForm({
             </ContentCard>
           );
         })}
-        {fields.subtasks && canEdit && (
+        {fields.subtasks && (
           <ActionButtons>
             <Button
               small
@@ -338,7 +313,6 @@ export default function ProblemGradingConfigEditForm({
                   <InputGroup
                     aria-label={`Points of subtask ${idx + 1}`}
                     value={points}
-                    disabled={!canEdit}
                     onChange={e =>
                       setValue(
                         'subtaskPoints',
@@ -358,20 +332,16 @@ export default function ProblemGradingConfigEditForm({
   return (
     <Flex asChild flexDirection="column" gap={6}>
       <form onSubmit={submit}>
-        {canEdit && (
-          <ActionButtons>
-            <Button
-              small
-              text={
-                fields.subtasks
-                  ? 'Auto-populate test data from TCFrame format'
-                  : 'Auto-populate test data from filenames'
-              }
-              loading={isAutoPopulating}
-              onClick={autoPopulate}
-            />
-          </ActionButtons>
-        )}
+        <ActionButtons>
+          <Button
+            small
+            text={
+              fields.subtasks ? 'Auto-populate test data from TCFrame format' : 'Auto-populate test data from filenames'
+            }
+            loading={isAutoPopulating}
+            onClick={autoPopulate}
+          />
+        </ActionButtons>
         <Flex flexDirection="column" gap={2}>
           {fields.limits && renderTextInput('timeLimit', 'Time limit', 'milliseconds')}
           {fields.limits && renderTextInput('memoryLimit', 'Memory limit', 'kilobytes')}
@@ -382,11 +352,9 @@ export default function ProblemGradingConfigEditForm({
           {fields.customScorer && renderHelperSelect('customScorer', 'Custom scorer')}
           {fields.communicator && renderHelperSelect('communicator', 'Communicator')}
           {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
-          {canEdit && (
-            <ActionButtons justifyContent="end">
-              <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
-            </ActionButtons>
-          )}
+          <ActionButtons justifyContent="end">
+            <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={isSubmitting} />
+          </ActionButtons>
         </Flex>
       </form>
     </Flex>

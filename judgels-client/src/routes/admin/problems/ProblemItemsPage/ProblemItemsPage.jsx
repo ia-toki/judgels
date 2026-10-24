@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   createProblemItemMutationOptions,
   deleteProblemItemMutationOptions,
@@ -57,10 +57,6 @@ export default function ProblemItemsPage() {
   const navigate = useNavigate();
 
   const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
-
-  const {
     data: { data: items },
   } = useSuspenseQuery(problemItemsQueryOptions(problemJid));
 
@@ -98,9 +94,6 @@ export default function ProblemItemsPage() {
   };
 
   const renderAddForm = () => {
-    if (!canEdit) {
-      return null;
-    }
     return (
       <Flex gap={2} alignItems="center">
         <OptionSelect
@@ -122,9 +115,6 @@ export default function ProblemItemsPage() {
   };
 
   const renderActions = (item, idx) => {
-    if (!canEdit) {
-      return null;
-    }
     return (
       <ActionButtons justifyContent="end">
         <Button

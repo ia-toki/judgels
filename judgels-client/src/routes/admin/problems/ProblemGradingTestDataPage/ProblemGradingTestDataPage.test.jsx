@@ -13,9 +13,8 @@ describe('ProblemGradingTestDataPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const nockProblem = canEdit => {
+  const nockProblem = () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
   };
 
   const renderPage = async () => {
@@ -33,8 +32,8 @@ describe('ProblemGradingTestDataPage', () => {
     );
   };
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
-    nockProblem(canEdit);
+  const renderComponent = async () => {
+    nockProblem();
     nockApi()
       .get('/v4/problems/JIDPROG1/grading/test-data')
       .reply(200, {
@@ -62,15 +61,6 @@ describe('ProblemGradingTestDataPage', () => {
     expect(rows.map(row => [...row.querySelectorAll('td')].slice(0, 2).map(cell => cell.textContent))).toEqual([
       ['1.in', '2.05 kB'],
       ['1.out', '3 B'],
-    ]);
-  });
-
-  test('only lets a viewer download', async () => {
-    await renderComponent({ canEdit: false });
-
-    expect(screen.getAllByRole('button').map(button => button.getAttribute('aria-label'))).toEqual([
-      'Download 1.in',
-      'Download 1.out',
     ]);
   });
 

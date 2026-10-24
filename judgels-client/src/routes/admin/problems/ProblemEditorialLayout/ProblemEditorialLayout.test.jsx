@@ -13,9 +13,8 @@ describe('ProblemEditorialLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasEditorial, canEdit = true }) => {
+  const renderComponent = async ({ hasEditorial }) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
     nockApi().get('/v4/problems/JIDPROG1/editorial/exists').reply(200, hasEditorial);
 
     await act(async () =>
@@ -63,13 +62,5 @@ describe('ProblemEditorialLayout', () => {
     await user.click(screen.getByRole('button', { name: /create editorial/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
-  });
-
-  test('only tells a viewer that there is no editorial', async () => {
-    await renderComponent({ hasEditorial: false, canEdit: false });
-
-    expect(await screen.findByText(/no editorial/i)).toBeInTheDocument();
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 });

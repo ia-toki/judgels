@@ -10,7 +10,6 @@ import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { problemTypeNamesMap } from '../../../../modules/api/problem';
 import {
   problemBySlugQueryOptions,
-  problemPermissionsQueryOptions,
   problemQueryOptions,
   updateProblemMutationOptions,
 } from '../../../../modules/queries/problem';
@@ -30,10 +29,6 @@ export default function ProblemGeneralPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: authorProfile } = useSuspenseQuery(basicProfileQueryOptions(problem.authorJid));
 
@@ -66,7 +61,6 @@ export default function ProblemGeneralPage() {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       !isEditing && (
         <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
@@ -103,8 +97,8 @@ export default function ProblemGeneralPage() {
         </Flex>
         {renderContent()}
       </div>
-      <ProblemSettersPanel problemJid={problemJid} canEdit={canEdit} />
-      <ProblemTopicTagsPanel problemJid={problemJid} canEdit={canEdit} />
+      <ProblemSettersPanel problemJid={problemJid} />
+      <ProblemTopicTagsPanel problemJid={problemJid} />
     </Flex>
   );
 }

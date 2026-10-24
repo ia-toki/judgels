@@ -42,9 +42,8 @@ describe('ProblemItemsPage', () => {
 
   const nockItems = data => nockApi().get('/v4/problems/JIDBUND1/items').reply(200, { data });
 
-  const renderComponent = async ({ canEdit = true, data = items } = {}) => {
+  const renderComponent = async ({ data = items } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDBUND1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDBUND1/permissions').reply(200, { canEdit });
     nockItems(data);
 
     await act(async () =>
@@ -89,14 +88,6 @@ describe('ProblemItemsPage', () => {
   test('shows a placeholder when there are no items', async () => {
     await renderComponent({ data: [] });
     expect(screen.getByText('No items.')).toBeInTheDocument();
-  });
-
-  test('is read-only for a viewer', async () => {
-    await renderComponent({ canEdit: false });
-
-    expect(screen.getByRole('link', { name: 'Essay' })).toBeInTheDocument();
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 
   test('adds an item', async () => {

@@ -19,7 +19,7 @@ export const setProblemPartnersMutationOptions = problemJid => ({
       return await problemPartnerAPI.setPartners(getToken(), problemJid, data);
     } catch (error) {
       if (error instanceof BadRequestError && error.message === ProblemErrors.PartnerUsernamesNotFound) {
-        throw new SubmissionError({ csv: 'Users not found: ' + error.args.usernames });
+        throw new SubmissionError({ usernames: 'Users not found: ' + error.args.usernames });
       }
       throw error;
     }

@@ -2,8 +2,6 @@ package judgels.catalog.problem;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.api.catalog.Partner;
-import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.Problem;
 import judgels.catalog.problem.partner.ProblemPartnerStore;
 import judgels.session.Actor;
@@ -42,9 +40,9 @@ public class ProblemRoleChecker {
         return canView(actor.getUserJid(), problem);
     }
 
+    // Every partner can edit the problem, so whoever can view it can edit it too.
     public boolean canEdit(String actorJid, Problem problem) {
-        return isAuthorOrAbove(actorJid, problem)
-                || isPartnerWithUpdatePermission(actorJid, problem);
+        return canView(actorJid, problem);
     }
 
     public boolean canEdit(Actor actor, Problem problem) {
@@ -82,12 +80,6 @@ public class ProblemRoleChecker {
     }
 
     private boolean isPartner(String actorJid, Problem problem) {
-        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actorJid);
-        return partner.isPresent();
-    }
-
-    private boolean isPartnerWithUpdatePermission(String actorJid, Problem problem) {
-        Optional<Partner> partner = partnerStore.getPartner(problem.getJid(), actorJid);
-        return partner.isPresent() && partner.get().getPermission() == PartnerPermission.UPDATE;
+        return partnerStore.isPartner(problem.getJid(), actorJid);
     }
 }
