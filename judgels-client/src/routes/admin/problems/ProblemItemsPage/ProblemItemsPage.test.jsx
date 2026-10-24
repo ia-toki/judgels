@@ -103,7 +103,8 @@ describe('ProblemItemsPage', () => {
     await renderComponent();
     const user = userEvent.setup();
 
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Item type' }), 'ESSAY');
+    await user.click(screen.getByRole('button', { name: 'Statement' }));
+    await user.click(within(screen.getByRole('option', { name: 'Essay' })).getByText('Essay'));
 
     nockApi()
       .post('/v4/problems/JIDBUND1/items', { type: 'ESSAY' })

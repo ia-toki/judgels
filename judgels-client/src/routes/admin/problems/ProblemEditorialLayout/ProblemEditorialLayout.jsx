@@ -1,4 +1,4 @@
-import { Button, HTMLSelect, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet, useParams } from '@tanstack/react-router';
@@ -11,6 +11,7 @@ import {
   createProblemEditorialMutationOptions,
   problemEditorialExistsQueryOptions,
 } from '../../../../modules/queries/problemEditorial';
+import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -58,17 +59,13 @@ export default function ProblemEditorialLayout() {
         </p>
         {canEdit && (
           <Flex gap={2} alignItems="center">
-            <HTMLSelect
-              aria-label="Initial language"
+            <LanguageSelect
+              languages={Object.keys(worldLanguageNamesMap)}
               value={initialLanguage}
-              onChange={e => setInitialLanguage(e.target.value)}
-            >
-              {Object.keys(worldLanguageNamesMap).map(language => (
-                <option key={language} value={language}>
-                  {worldLanguageNamesMap[language]}
-                </option>
-              ))}
-            </HTMLSelect>
+              label="Initial language"
+              filterable
+              onChange={setInitialLanguage}
+            />
             <Button
               text="Create editorial"
               intent={Intent.PRIMARY}

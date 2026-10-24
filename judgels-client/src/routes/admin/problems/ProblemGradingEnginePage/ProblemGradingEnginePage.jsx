@@ -1,9 +1,10 @@
-import { Alert, Button, HTMLSelect, Intent } from '@blueprintjs/core';
+import { Alert, Button, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
 import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
@@ -47,18 +48,14 @@ export default function ProblemGradingEnginePage() {
     <Flex flexDirection="column" gap={2}>
       <h4>Engine</h4>
       <Flex gap={2} alignItems="center">
-        <HTMLSelect
-          aria-label="Grading engine"
+        <OptionSelect
+          options={Object.keys(gradingEngineNamesMap)}
           value={selectedEngine}
+          getOptionName={e => gradingEngineNamesMap[e]}
+          label="Grading engine"
           disabled={!canEdit}
-          onChange={e => setSelectedEngine(e.target.value)}
-        >
-          {Object.keys(gradingEngineNamesMap).map(e => (
-            <option key={e} value={e}>
-              {gradingEngineNamesMap[e]}
-            </option>
-          ))}
-        </HTMLSelect>
+          onChange={setSelectedEngine}
+        />
         {canEdit && (
           <Button
             text="Save"

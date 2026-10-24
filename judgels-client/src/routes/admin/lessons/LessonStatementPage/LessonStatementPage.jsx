@@ -1,4 +1,4 @@
-import { Button, HTMLSelect } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
@@ -8,13 +8,13 @@ import { useState } from 'react';
 import { LessonStatementCard } from '../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
-import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import { lessonBySlugQueryOptions, lessonPermissionsQueryOptions } from '../../../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementQueryOptions,
   updateLessonStatementMutationOptions,
 } from '../../../../modules/queries/lessonStatement';
+import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -55,21 +55,12 @@ export default function LessonStatementPage() {
 
   const renderLanguageSelect = () => {
     return (
-      <HTMLSelect
-        aria-label="Language"
+      <LanguageSelect
+        languages={enabledLanguages}
         value={language}
         disabled={isEditing}
-        onChange={e => setSelectedLanguage(e.target.value)}
-      >
-        {enabledLanguages
-          .slice()
-          .sort()
-          .map(lang => (
-            <option key={lang} value={lang}>
-              {worldLanguageNamesMap[lang] || lang}
-            </option>
-          ))}
-      </HTMLSelect>
+        onChange={setSelectedLanguage}
+      />
     );
   };
 

@@ -1,5 +1,45 @@
+@use '../../../../styles/base' as *;
+
+.problem-grading-config-edit-form__test-cases,
+.problem-grading-config-edit-form__subtask-points {
+  &.bp6-html-table th {
+    font-size: $font-size-small;
+    font-weight: bold;
+
+    .bp6-dark & {
+      color: $dark-label-color;
+    }
+  }
+}
+
 .problem-grading-config-edit-form__test-cases {
   width: 100%;
+
+  &.bp6-html-table .problem-grading-config-edit-form__subtask-row td {
+    padding-top: 0;
+    padding-bottom: 12px;
+  }
+
+  &.bp6-html-table tbody tr:not(.problem-grading-config-edit-form__subtask-row) td {
+    box-shadow: inset 0 1px 0 0 $divider-color;
+
+    .bp6-dark & {
+      box-shadow: inset 0 1px 0 0 $dark-divider-color;
+    }
+  }
+}
+
+.problem-grading-config-edit-form__subtask-points.bp6-html-table td {
+  vertical-align: middle;
+}
+
+.problem-grading-config-edit-form__test-group-heading {
+  padding-bottom: 8px;
+  border-bottom: 1px solid $divider-color;
+
+  .bp6-dark & {
+    border-bottom-color: $dark-divider-color;
+  }
 }
 
 .problem-grading-config-edit-form__action {
@@ -7,6 +47,6 @@
   white-space: nowrap;
 }
 
-.problem-grading-config-edit-form__subtask {
-  margin-bottom: 0;
+.problem-grading-config-edit-form__subtask.bp6-control {
+  margin: 0;
 }

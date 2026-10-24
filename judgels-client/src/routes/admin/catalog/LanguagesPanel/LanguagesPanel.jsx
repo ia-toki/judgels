@@ -1,9 +1,10 @@
-import { Button, HTMLSelect, HTMLTable, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
+import LanguageSelect from '../LanguageSelect/LanguageSelect';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -53,14 +54,14 @@ export default function LanguagesPanel({
     }
     return (
       <Flex gap={2} alignItems="center">
-        <HTMLSelect aria-label="Add language" value={languageToAdd} onChange={e => setLanguageToAdd(e.target.value)}>
-          <option value="">Add language...</option>
-          {addableLanguages.map(language => (
-            <option key={language} value={language}>
-              {worldLanguageNamesMap[language]}
-            </option>
-          ))}
-        </HTMLSelect>
+        <LanguageSelect
+          languages={addableLanguages}
+          value={languageToAdd}
+          label="Add language"
+          placeholder="Add language..."
+          filterable
+          onChange={setLanguageToAdd}
+        />
         <Button
           text="Add"
           intent={Intent.PRIMARY}

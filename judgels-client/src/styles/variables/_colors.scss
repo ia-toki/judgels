@@ -1,4 +1,5 @@
 @forward '../../../node_modules/@blueprintjs/core/lib/scss/variables.scss';
+@use '../../../node_modules/@blueprintjs/core/lib/scss/variables.scss' as blueprint;
 
 $background-color: #f4f5f6;
 $primary-color: #3b73b9;
@@ -7,9 +8,11 @@ $secondary-text-color: #5d5d66;
 $secondary-background-color: #eef2fb;
 $tertiary-background-color: rgba(191, 204, 214, 0.4);
 $border-color: rgba($text-color, 0.15);
+$divider-color: blueprint.$pt-divider-black;
 
 $dark-background-color: #394b59;
 $dark-text-color: #c9d1d9;
+$dark-label-color: blueprint.$pt-dark-text-color;
 $dark-blue-main-background-color: #0c5174;
 $dark-blue-secondary-background-color: rgba(19, 124, 189, 0.25);
 $dark-secondary-text-color: #abb3bf;
@@ -17,3 +20,4 @@ $dark-secondary-background-color: #5c7080;
 $dark-tertiary-background-color: rgba(92, 112, 128, 0.3);
 $dark-card-background-color: #30404d;
 $dark-border-color: #5c7080;
+$dark-divider-color: blueprint.$pt-dark-divider-white;

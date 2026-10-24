@@ -1,4 +1,3 @@
-import { HTMLSelect } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
@@ -11,10 +10,10 @@ import { ItemShortAnswerCard } from '../../../../components/ProblemWorksheetCard
 import { ItemStatementCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemStatementCard/ItemStatementCard/ItemStatementCard';
 import { ItemType, itemTypeNamesMap } from '../../../../modules/api/problemBundle';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
-import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import { problemItemQueryOptions, updateProblemItemMutationOptions } from '../../../../modules/queries/problemItem';
 import { problemStatementLanguagesQueryOptions } from '../../../../modules/queries/problemStatement';
+import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import ProblemItemEditForm from '../ProblemItemEditForm/ProblemItemEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -65,18 +64,7 @@ export default function ProblemItemPage() {
   };
 
   const renderLanguageSelect = () => {
-    return (
-      <HTMLSelect aria-label="Language" value={language} onChange={e => setSelectedLanguage(e.target.value)}>
-        {enabledLanguages
-          .slice()
-          .sort()
-          .map(lang => (
-            <option key={lang} value={lang}>
-              {worldLanguageNamesMap[lang] || lang}
-            </option>
-          ))}
-      </HTMLSelect>
-    );
+    return <LanguageSelect languages={enabledLanguages} value={language} onChange={setSelectedLanguage} />;
   };
 
   const renderContent = () => {

@@ -29,7 +29,7 @@ export default function ChapterProblemLayout({ worksheet, renderNavigation, relo
     <div className="chapter-programming-problem-page">
       <ChapterProblemStatementPage worksheet={worksheet} />
       <Flex asChild flex={1} flexDirection="column">
-        <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath}>
+        <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath} gap={2}>
           <ChapterProblemContext.Provider value={{ worksheet, renderNavigation, reloadProblem }}>
             <Outlet />
           </ChapterProblemContext.Provider>

@@ -55,11 +55,7 @@ describe('ProblemStatementPage', () => {
   test('previews the statement in the default language', async () => {
     await renderComponent();
 
-    expect(screen.getByRole('combobox', { name: /language/i })).toHaveValue('id-ID');
-    expect(screen.getAllByRole('option').map(option => option.textContent)).toEqual([
-      'English (en-US)',
-      'Indonesian (id-ID)',
-    ]);
+    expect(screen.getByRole('combobox', { name: /language/i })).toHaveTextContent('Indonesian (id-ID)');
     expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
     expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/);
   });
@@ -168,7 +164,12 @@ describe('ProblemStatementPage', () => {
       .reply(200, { title: 'Boxes of Apples', text: '<p>Count the apples.</p>' });
 
     const user = userEvent.setup();
-    await user.selectOptions(screen.getByRole('combobox', { name: /language/i }), 'en-US');
+    await user.click(screen.getByRole('button', { name: 'Indonesian (id-ID)' }));
+    expect(screen.getAllByRole('option').map(option => option.textContent)).toEqual([
+      'English (en-US)',
+      'Indonesian (id-ID)',
+    ]);
+    await user.click(screen.getByText('English (en-US)'));
 
     expect(await screen.findByText('Boxes of Apples')).toBeInTheDocument();
   });
