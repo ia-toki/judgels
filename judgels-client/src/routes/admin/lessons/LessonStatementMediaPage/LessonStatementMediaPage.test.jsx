@@ -13,9 +13,8 @@ describe('LessonStatementMediaPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true, files } = {}) => {
+  const renderComponent = async ({ files } = {}) => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
-    nockApi().get('/v4/lessons/JIDLESS1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/lessons/JIDLESS1/statement/media')
       .reply(200, {
@@ -59,15 +58,6 @@ describe('LessonStatementMediaPage', () => {
 
     expect(screen.getByText(/no files/i)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /delete all/i })).not.toBeInTheDocument();
-  });
-
-  test('only lets a viewer download', async () => {
-    await renderComponent({ canEdit: false });
-
-    expect(screen.getAllByRole('button').map(button => button.getAttribute('aria-label'))).toEqual([
-      'Download figure.png',
-      'Download sample.in',
-    ]);
   });
 
   test('uploads a file', async () => {

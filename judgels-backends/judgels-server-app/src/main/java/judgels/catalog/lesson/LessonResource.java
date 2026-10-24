@@ -22,7 +22,6 @@ import java.util.Optional;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonCreateData;
 import judgels.api.catalog.lesson.LessonErrors;
-import judgels.api.catalog.lesson.LessonPermissions;
 import judgels.api.catalog.lesson.LessonUpdateData;
 import judgels.api.catalog.lesson.LessonsResponse;
 import judgels.catalog.WorldLanguageRegistry;
@@ -102,23 +101,6 @@ public class LessonResource {
         checkAllowed(roleChecker.canView(actorJid, lesson));
 
         return lesson;
-    }
-
-    @GET
-    @Path("/{lessonJid}/permissions")
-    @Produces(APPLICATION_JSON)
-    @UnitOfWork(readOnly = true)
-    public LessonPermissions getLessonPermissions(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            @PathParam("lessonJid") String lessonJid) {
-
-        String actorJid = actorChecker.check(authHeader);
-        Lesson lesson = checkFound(lessonStore.getLessonByJid(lessonJid));
-        checkAllowed(roleChecker.canView(actorJid, lesson));
-
-        return new LessonPermissions.Builder()
-                .canEdit(roleChecker.canEdit(actorJid, lesson))
-                .build();
     }
 
     @GET

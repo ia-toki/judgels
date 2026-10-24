@@ -13,7 +13,6 @@ export default function LanguagesPanel({
   enabledLanguages,
   disabledLanguages,
   defaultLanguage,
-  canEdit,
   onAddLanguage,
   onEnableLanguage,
   onDisableLanguage,
@@ -49,9 +48,6 @@ export default function LanguagesPanel({
   };
 
   const renderAddForm = () => {
-    if (!canEdit) {
-      return null;
-    }
     return (
       <Flex gap={2} alignItems="center">
         <LanguageSelect
@@ -74,9 +70,6 @@ export default function LanguagesPanel({
   };
 
   const renderActions = language => {
-    if (!canEdit) {
-      return null;
-    }
     if (disabledLanguages.includes(language)) {
       return (
         <Button small text="Enable" disabled={isMutating} onClick={() => updateLanguage(onEnableLanguage, language)} />

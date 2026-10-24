@@ -5,11 +5,7 @@ import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
-import {
-  lessonBySlugQueryOptions,
-  lessonPermissionsQueryOptions,
-  lessonQueryOptions,
-} from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
 import { lessonVersionLocalChangesExistQueryOptions } from '../../../../modules/queries/lessonVersion';
 
 export default function LessonLayout() {
@@ -20,10 +16,6 @@ export default function LessonLayout() {
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const { data: lesson } = useSuspenseQuery(lessonQueryOptions(lessonJid));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
 
   const { data: hasLocalChanges } = useSuspenseQuery(lessonVersionLocalChangesExistQueryOptions(lessonJid));
 
@@ -47,7 +39,6 @@ export default function LessonLayout() {
     {
       path: 'versions',
       title: 'Versions',
-      disabled: !canEdit,
     },
   ];
 

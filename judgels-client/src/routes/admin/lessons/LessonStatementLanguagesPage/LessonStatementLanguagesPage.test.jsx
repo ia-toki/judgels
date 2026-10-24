@@ -13,9 +13,8 @@ describe('LessonStatementLanguagesPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async () => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
-    nockApi().get('/v4/lessons/JIDLESS1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/lessons/JIDLESS1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });
@@ -54,12 +53,6 @@ describe('LessonStatementLanguagesPage', () => {
       ['French (fr-FR)', 'Disabled', ['Enable']],
       ['Indonesian (id-ID)', 'EnabledDefault', []],
     ]);
-  });
-
-  test('hides the actions when the lesson cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 
   test('adds a language', async () => {

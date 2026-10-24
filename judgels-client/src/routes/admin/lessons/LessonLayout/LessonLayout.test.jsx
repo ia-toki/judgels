@@ -11,12 +11,11 @@ describe('LessonLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasLocalChanges, canEdit = true }) => {
+  const renderComponent = async ({ hasLocalChanges }) => {
     nockApi().get('/v4/lessons/slug/lesson-1').reply(200, { jid: 'JIDLESS1', slug: 'lesson-1' });
     nockApi()
       .get('/v4/lessons/JIDLESS1')
       .reply(200, { id: 1, jid: 'JIDLESS1', slug: 'lesson-1', authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/lessons/JIDLESS1/permissions').reply(200, { canEdit });
     nockApi().get('/v4/lessons/JIDLESS1/versions/local/exists').reply(200, hasLocalChanges);
 
     await act(async () =>
@@ -47,11 +46,6 @@ describe('LessonLayout', () => {
       '/admin/lessons/lesson-1/versions',
     ]);
     expect(screen.queryByText(/uncommitted changes/i)).not.toBeInTheDocument();
-  });
-
-  test('hides the versions tab when the lesson cannot be edited', async () => {
-    await renderComponent({ hasLocalChanges: false, canEdit: false });
-    expect(screen.queryByRole('link', { name: 'Versions' })).not.toBeInTheDocument();
   });
 
   test('warns about uncommitted changes', async () => {
