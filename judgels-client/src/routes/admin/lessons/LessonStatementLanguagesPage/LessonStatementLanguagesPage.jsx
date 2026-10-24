@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { lessonBySlugQueryOptions, lessonPermissionsQueryOptions } from '../../../../modules/queries/lesson';
+import { lessonBySlugQueryOptions } from '../../../../modules/queries/lesson';
 import {
   addLessonStatementLanguageMutationOptions,
   disableLessonStatementLanguageMutationOptions,
@@ -19,10 +19,6 @@ export default function LessonStatementLanguagesPage() {
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
   const {
-    data: { canEdit },
-  } = useSuspenseQuery(lessonPermissionsQueryOptions(lessonJid));
-
-  const {
     data: { enabledLanguages, disabledLanguages, defaultLanguage },
   } = useSuspenseQuery(lessonStatementLanguagesQueryOptions(lessonJid));
 
@@ -36,7 +32,6 @@ export default function LessonStatementLanguagesPage() {
       enabledLanguages={enabledLanguages}
       disabledLanguages={disabledLanguages}
       defaultLanguage={defaultLanguage}
-      canEdit={canEdit}
       onAddLanguage={addLanguageMutation.mutateAsync}
       onEnableLanguage={enableLanguageMutation.mutateAsync}
       onDisableLanguage={disableLanguageMutation.mutateAsync}

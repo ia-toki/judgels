@@ -17,7 +17,6 @@ export default function FilesPanel({
   title,
   noun,
   files,
-  canEdit,
   onUploadFile,
   onUploadZip,
   onDownloadFile,
@@ -73,7 +72,7 @@ export default function FilesPanel({
 
     return (
       <Flex flexDirection="column" gap={2}>
-        {canEdit && <Flex>{renderDeleteAllButton()}</Flex>}
+        <Flex>{renderDeleteAllButton()}</Flex>
         <HTMLTable striped className="table-list-condensed">
           <thead>
             <tr>
@@ -100,16 +99,14 @@ export default function FilesPanel({
                       aria-label={`Download ${file.name}`}
                       onClick={() => onDownloadFile(file.name)}
                     />
-                    {canEdit && (
-                      <Button
-                        small
-                        minimal
-                        intent={Intent.DANGER}
-                        icon={<Trash />}
-                        aria-label={`Delete ${file.name}`}
-                        onClick={() => setDeleteTarget(file.name)}
-                      />
-                    )}
+                    <Button
+                      small
+                      minimal
+                      intent={Intent.DANGER}
+                      icon={<Trash />}
+                      aria-label={`Delete ${file.name}`}
+                      onClick={() => setDeleteTarget(file.name)}
+                    />
                   </ActionButtons>
                 </td>
               </tr>
@@ -124,7 +121,7 @@ export default function FilesPanel({
     <Flex flexDirection="column" gap={2}>
       <h4>{title}</h4>
       <Flex flexDirection="column" gap={5}>
-        {canEdit && <FileUploadForm onSubmit={uploadFile} />}
+        <FileUploadForm onSubmit={uploadFile} />
         {renderFiles()}
       </Flex>
       <Alert

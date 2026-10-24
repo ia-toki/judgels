@@ -32,7 +32,6 @@ export default function ProblemStatementLanguagesPage() {
       enabledLanguages={enabledLanguages}
       disabledLanguages={disabledLanguages}
       defaultLanguage={defaultLanguage}
-      canEdit
       onAddLanguage={addLanguageMutation.mutateAsync}
       onEnableLanguage={enableLanguageMutation.mutateAsync}
       onDisableLanguage={disableLanguageMutation.mutateAsync}

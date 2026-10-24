@@ -34,7 +34,6 @@ export default function ProblemGradingHelpersPage() {
       title="Helpers"
       noun="helper"
       files={files}
-      canEdit
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemGradingAPI.downloadGradingHelperFile(getToken(), problemJid, filename)}

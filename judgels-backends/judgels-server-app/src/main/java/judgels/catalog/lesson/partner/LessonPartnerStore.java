@@ -1,106 +1,57 @@
 package judgels.catalog.lesson.partner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import judgels.api.catalog.Partner;
-import judgels.api.catalog.PartnerPermission;
-import judgels.api.catalog.lesson.partner.LessonPartnerConfig;
+import java.util.Set;
+import judgels.api.catalog.lesson.partner.LessonPartner;
 import judgels.persistence.dao.LessonPartnerDao;
 import judgels.persistence.model.LessonPartnerModel;
 
 @Singleton
 public class LessonPartnerStore {
     private final LessonPartnerDao partnerDao;
-    private final ObjectMapper mapper;
 
     @Inject
-    public LessonPartnerStore(LessonPartnerDao partnerDao, ObjectMapper mapper) {
+    public LessonPartnerStore(LessonPartnerDao partnerDao) {
         this.partnerDao = partnerDao;
-        this.mapper = mapper;
     }
 
-    public Optional<Partner> getPartner(String lessonJid, String userJid) {
-        return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).map(this::fromModel);
+    public boolean isPartner(String lessonJid, String userJid) {
+        return partnerDao.selectByLessonJidAndUserJid(lessonJid, userJid).isPresent();
     }
 
-    public List<Partner> getPartners(String lessonJid) {
+    public List<LessonPartner> getPartners(String lessonJid) {
         return Lists.transform(partnerDao.selectAllByLessonJid(lessonJid), this::fromModel);
     }
 
-    public void setPartners(String lessonJid, List<Partner> partners) {
-        Map<String, Partner> partnersByUserJid = new HashMap<>();
-        for (Partner partner : partners) {
-            partnersByUserJid.put(partner.getUserJid(), partner);
-        }
+    public void setPartners(String lessonJid, Collection<String> userJids) {
+        Set<String> newUserJids = new HashSet<>(userJids);
 
         for (LessonPartnerModel model : partnerDao.selectAllByLessonJid(lessonJid)) {
-            Partner existingPartner = partnersByUserJid.get(model.userJid);
-            if (existingPartner == null) {
+            if (!newUserJids.remove(model.userJid)) {
                 partnerDao.delete(model);
             }
         }
 
-        for (Partner partner : partners) {
-            upsertPartner(lessonJid, partner);
-        }
-    }
-
-    private void upsertPartner(String lessonJid, Partner partner) {
-        Optional<LessonPartnerModel> maybeModel = partnerDao.selectByLessonJidAndUserJid(lessonJid, partner.getUserJid());
-        if (maybeModel.isPresent()) {
-            LessonPartnerModel model = maybeModel.get();
-
-            try {
-                LessonPartnerConfig config = mapper.readValue(model.config, LessonPartnerConfig.class);
-                model.config = mapper.writeValueAsString(new LessonPartnerConfig.Builder()
-                        .from(config)
-                        .isAllowedToUpdateLesson(partner.getPermission() == PartnerPermission.UPDATE)
-                        .build());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            partnerDao.update(model);
-        } else {
+        for (String userJid : newUserJids) {
             LessonPartnerModel model = new LessonPartnerModel();
             model.lessonJid = lessonJid;
-            model.userJid = partner.getUserJid();
+            model.userJid = userJid;
 
-            boolean isUpdate = partner.getPermission() == PartnerPermission.UPDATE;
-            try {
-                model.config = mapper.writeValueAsString(new LessonPartnerConfig.Builder()
-                        .isAllowedToUpdateLesson(isUpdate)
-                        .isAllowedToUpdateStatement(isUpdate)
-                        .isAllowedToUploadStatementResources(isUpdate)
-                        .isAllowedToManageStatementLanguages(isUpdate)
-                        .isAllowedToViewVersionHistory(isUpdate)
-                        .isAllowedToRestoreVersionHistory(isUpdate)
-                        .build());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            // Every partner can edit the lesson, so this per-partner config is no longer read.
+            model.config = "{}";
 
             partnerDao.insert(model);
         }
     }
 
-    private Partner fromModel(LessonPartnerModel model) {
-        LessonPartnerConfig config;
-        try {
-            config = mapper.readValue(model.config, LessonPartnerConfig.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new Partner.Builder()
+    private LessonPartner fromModel(LessonPartnerModel model) {
+        return new LessonPartner.Builder()
                 .userJid(model.userJid)
-                .permission(config.getIsAllowedToUpdateLesson() ? PartnerPermission.UPDATE : PartnerPermission.VIEW)
                 .build();
     }
 }

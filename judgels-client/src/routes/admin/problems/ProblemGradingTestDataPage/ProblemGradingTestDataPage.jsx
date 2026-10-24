@@ -34,7 +34,6 @@ export default function ProblemGradingTestDataPage() {
       title="Test data"
       noun="test data"
       files={files}
-      canEdit
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemGradingAPI.downloadGradingTestDataFile(getToken(), problemJid, filename)}

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.catalog.Partner;
+import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.profile.Profile;
 import judgels.catalog.lesson.partner.LessonPartnerStore;
@@ -46,7 +47,7 @@ public class LessonPartnerResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.isAuthor(actor, lesson));
 
-        List<Partner> partners = partnerStore.getPartners(lesson.getJid());
+        List<Partner> partners = getPartners(lesson);
 
         var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -64,7 +65,7 @@ public class LessonPartnerResource extends BaseLessonResource {
         Lesson lesson = checkFound(lessonStore.getLessonById(lessonId));
         checkAllowed(roleChecker.isAuthor(actor, lesson));
 
-        List<Partner> partners = partnerStore.getPartners(lesson.getJid());
+        List<Partner> partners = getPartners(lesson);
 
         var userJids = Lists.transform(partners, Partner::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -93,9 +94,17 @@ public class LessonPartnerResource extends BaseLessonResource {
             return ok(renderEditPartners(actor, lesson, form));
         }
 
-        partnerStore.setPartners(lesson.getJid(), partners.get());
+        partnerStore.setPartners(lesson.getJid(), Lists.transform(partners.get(), Partner::getUserJid));
 
         return redirect("/lessons/" + lessonId + "/partners");
+    }
+
+    // Every partner can edit the lesson, so the permission these pages still show and take no longer applies.
+    private List<Partner> getPartners(Lesson lesson) {
+        return Lists.transform(partnerStore.getPartners(lesson.getJid()), partner -> new Partner.Builder()
+                .userJid(partner.getUserJid())
+                .permission(PartnerPermission.UPDATE)
+                .build());
     }
 
     private View renderEditPartners(Actor actor, Lesson lesson, EditPartnersForm form) {

@@ -34,7 +34,6 @@ export default function ProblemStatementMediaPage() {
       title="Media"
       noun="media"
       files={files}
-      canEdit
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemStatementAPI.downloadStatementMediaFile(getToken(), problemJid, filename)}

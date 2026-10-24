@@ -10,11 +10,7 @@ import { contestsPendingRatingQueryOptions } from '../../modules/queries/contest
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
-import {
-  lessonBySlugQueryOptions,
-  lessonPermissionsQueryOptions,
-  lessonQueryOptions,
-} from '../../modules/queries/lesson';
+import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
   lessonStatementMediaFilesQueryOptions,
@@ -552,7 +548,6 @@ export const createAdminRoutes = appRoute => {
       const { jid: lessonJid } = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
       await Promise.all([
         queryClient.ensureQueryData(lessonQueryOptions(lessonJid)),
-        queryClient.ensureQueryData(lessonPermissionsQueryOptions(lessonJid)),
         queryClient.ensureQueryData(lessonVersionLocalChangesExistQueryOptions(lessonJid)),
       ]);
     },

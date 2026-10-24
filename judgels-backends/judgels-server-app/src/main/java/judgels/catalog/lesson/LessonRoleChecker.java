@@ -1,9 +1,6 @@
 package judgels.catalog.lesson;
 
 import jakarta.inject.Inject;
-import java.util.Optional;
-import judgels.api.catalog.Partner;
-import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.catalog.lesson.partner.LessonPartnerStore;
 import judgels.session.Actor;
@@ -40,9 +37,9 @@ public class LessonRoleChecker {
         return canView(actor.getUserJid(), lesson);
     }
 
+    // Every partner can edit the lesson, so whoever can view it can edit it too.
     public boolean canEdit(String actorJid, Lesson lesson) {
-        return isAuthorOrAbove(actorJid, lesson)
-                || isPartnerWithUpdatePermission(actorJid, lesson);
+        return canView(actorJid, lesson);
     }
 
     public boolean canEdit(Actor actor, Lesson lesson) {
@@ -62,12 +59,6 @@ public class LessonRoleChecker {
     }
 
     private boolean isPartner(String actorJid, Lesson lesson) {
-        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actorJid);
-        return partner.isPresent();
-    }
-
-    private boolean isPartnerWithUpdatePermission(String actorJid, Lesson lesson) {
-        Optional<Partner> partner = partnerStore.getPartner(lesson.getJid(), actorJid);
-        return partner.isPresent() && partner.get().getPermission() == PartnerPermission.UPDATE;
+        return partnerStore.isPartner(lesson.getJid(), actorJid);
     }
 }
