@@ -13,12 +13,11 @@ describe('ProblemSubmissionPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ type = 'PROGRAMMING', canEdit = true } = {}) => {
+  const renderComponent = async ({ type = 'PROGRAMMING' } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
 
     if (type === 'PROGRAMMING') {
       nockApi()
@@ -119,10 +118,5 @@ describe('ProblemSubmissionPage', () => {
     await user.click(screen.getByRole('button', { name: /regrade/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
-  });
-
-  test('hides the regrade button when the bundle problem cannot be edited', async () => {
-    await renderComponent({ type: 'BUNDLE', canEdit: false });
-    expect(screen.queryByRole('button', { name: /regrade/i })).not.toBeInTheDocument();
   });
 });

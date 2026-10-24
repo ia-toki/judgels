@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingConfigQueryOptions,
   updateProblemGradingEngineMutationOptions,
@@ -20,10 +20,6 @@ export default function ProblemGradingEnginePage() {
   const {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { engine },
@@ -53,23 +49,18 @@ export default function ProblemGradingEnginePage() {
           value={selectedEngine}
           getOptionName={e => gradingEngineNamesMap[e]}
           label="Grading engine"
-          disabled={!canEdit}
           onChange={setSelectedEngine}
         />
-        {canEdit && (
-          <Button
-            text="Save"
-            intent={Intent.PRIMARY}
-            disabled={selectedEngine === engine}
-            onClick={() => setIsConfirming(true)}
-          />
-        )}
+        <Button
+          text="Save"
+          intent={Intent.PRIMARY}
+          disabled={selectedEngine === engine}
+          onClick={() => setIsConfirming(true)}
+        />
       </Flex>
-      {canEdit && (
-        <p>
-          <small>Changing the grading engine resets the grading config.</small>
-        </p>
-      )}
+      <p>
+        <small>Changing the grading engine resets the grading config.</small>
+      </p>
       <Alert
         isOpen={isConfirming}
         intent={Intent.DANGER}

@@ -13,9 +13,8 @@ describe('ProblemGradingLanguageRestrictionPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const nockProblem = canEdit => {
+  const nockProblem = () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
   };
 
   const renderPage = async () => {
@@ -33,8 +32,8 @@ describe('ProblemGradingLanguageRestrictionPage', () => {
     );
   };
 
-  const renderComponent = async ({ canEdit = true, allowedLanguageNames = [] } = {}) => {
-    nockProblem(canEdit);
+  const renderComponent = async ({ allowedLanguageNames = [] } = {}) => {
+    nockProblem();
     nockApi().get('/v4/problems/JIDPROG1/grading/language-restriction').reply(200, { allowedLanguageNames });
 
     await renderPage();
@@ -59,13 +58,6 @@ describe('ProblemGradingLanguageRestrictionPage', () => {
     await renderComponent({ allowedLanguageNames: ['Cpp17', 'Python3'] });
 
     expect(getCheckedLanguages()).toEqual(['C++17', 'Python 3']);
-  });
-
-  test('is read-only for a viewer', async () => {
-    await renderComponent({ canEdit: false, allowedLanguageNames: ['Cpp17'] });
-
-    screen.getAllByRole('checkbox').forEach(checkbox => expect(checkbox).toBeDisabled());
-    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
   });
 
   test('restricts the languages', async () => {

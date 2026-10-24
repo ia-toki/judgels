@@ -9,11 +9,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../components/ProblemEditorial/ProblemEditorial';
 import { formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
-import {
-  problemBySlugQueryOptions,
-  problemPermissionsQueryOptions,
-  problemQueryOptions,
-} from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions, problemQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
   problemEditorialQueryOptions,
@@ -33,10 +29,6 @@ export default function ProblemEditorialPage() {
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
   const { data: problem } = useSuspenseQuery(problemQueryOptions(problemJid));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: setterJidsMap, profilesMap },
@@ -78,7 +70,6 @@ export default function ProblemEditorialPage() {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       editorial &&
       !isEditing && (
         <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>

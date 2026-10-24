@@ -11,12 +11,12 @@ describe('ProblemLayout', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING', canEdit = true, canManage = true }) => {
+  const renderComponent = async ({ hasLocalChanges, type = 'PROGRAMMING', canManage = true }) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit, canManage });
+    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canManage });
     nockApi().get('/v4/problems/JIDPROG1/versions/local/exists').reply(200, hasLocalChanges);
 
     await act(async () =>
@@ -63,11 +63,6 @@ describe('ProblemLayout', () => {
 
     expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/problem-1/items');
     expect(screen.queryByRole('link', { name: 'Grading' })).not.toBeInTheDocument();
-  });
-
-  test('hides the versions tab when the problem cannot be edited', async () => {
-    await renderComponent({ hasLocalChanges: false, canEdit: false });
-    expect(screen.queryByRole('link', { name: 'Versions' })).not.toBeInTheDocument();
   });
 
   test('hides the partners tab when the problem cannot be managed', async () => {

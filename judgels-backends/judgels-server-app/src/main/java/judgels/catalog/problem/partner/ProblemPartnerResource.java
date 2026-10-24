@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import judgels.api.catalog.Partner;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemErrors;
+import judgels.api.catalog.problem.partner.ProblemPartner;
 import judgels.api.catalog.problem.partner.ProblemPartnerData;
 import judgels.api.catalog.problem.partner.ProblemPartnersResponse;
 import judgels.catalog.problem.ProblemRoleChecker;
@@ -58,11 +58,11 @@ public class ProblemPartnerResource {
         Problem problem = checkFound(problemStore.getProblemByJid(problemJid));
         checkAllowed(roleChecker.isAuthorOrAbove(actorJid, problem));
 
-        List<Partner> partners = partnerStore.getPartners(problemJid);
+        List<ProblemPartner> partners = partnerStore.getPartners(problemJid);
 
         return new ProblemPartnersResponse.Builder()
                 .data(partners)
-                .profilesMap(profileStore.getProfiles(Lists.transform(partners, Partner::getUserJid)))
+                .profilesMap(profileStore.getProfiles(Lists.transform(partners, ProblemPartner::getUserJid)))
                 .build();
     }
 
@@ -93,11 +93,6 @@ public class ProblemPartnerResource {
             throw ProblemErrors.partnerUsernamesNotFound(new TreeSet<>(usernamesNotFound));
         }
 
-        partnerStore.setPartners(problemJid, data.stream()
-                .map(partner -> new Partner.Builder()
-                        .userJid(usernameToJidMap.get(partner.getUsername()))
-                        .permission(partner.getPermission())
-                        .build())
-                .collect(Collectors.toList()));
+        partnerStore.setPartners(problemJid, usernameToJidMap.values());
     }
 }

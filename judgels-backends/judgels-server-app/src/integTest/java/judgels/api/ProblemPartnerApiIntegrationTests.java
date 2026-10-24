@@ -5,9 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.catalog.Partner;
-import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.ProblemPermissions;
+import judgels.api.catalog.problem.partner.ProblemPartner;
 import judgels.api.catalog.problem.partner.ProblemPartnerData;
 import judgels.api.catalog.problem.partner.ProblemPartnersResponse;
 import judgels.api.user.User;
@@ -21,10 +20,10 @@ class ProblemPartnerApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void set_partners() {
-        User editor = createUser("editor");
-        String editorToken = getToken(editor);
-        User viewer = createUser("viewer");
-        String viewerToken = getToken(viewer);
+        User andi = createUser("andi");
+        String andiToken = getToken(andi);
+        User budi = createUser("budi");
+        String budiToken = getToken(budi);
 
         String problemJid = createProblem(adminToken, "problem").getJid();
 
@@ -34,50 +33,41 @@ class ProblemPartnerApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(response.getData()).isEmpty();
         assertThat(response.getProfilesMap()).isEmpty();
 
-        List<ProblemPartnerData> data = List.of(
-                partnerData(editor.getUsername(), PartnerPermission.UPDATE),
-                partnerData(viewer.getUsername(), PartnerPermission.VIEW));
+        List<ProblemPartnerData> data = List.of(partnerData(andi.getUsername()), partnerData(budi.getUsername()));
 
         partnerClient.setPartners(adminToken, problemJid, data);
 
         response = partnerClient.getPartners(adminToken, problemJid);
-        assertThat(response.getData()).containsExactlyInAnyOrder(
-                partner(editor.getJid(), PartnerPermission.UPDATE),
-                partner(viewer.getJid(), PartnerPermission.VIEW));
-        assertThat(response.getProfilesMap()).containsOnlyKeys(editor.getJid(), viewer.getJid());
+        assertThat(response.getData()).containsExactlyInAnyOrder(partner(andi.getJid()), partner(budi.getJid()));
+        assertThat(response.getProfilesMap()).containsOnlyKeys(andi.getJid(), budi.getJid());
 
         assertBadRequest(() -> partnerClient.setPartners(adminToken, problemJid, List.of(
-                partnerData(editor.getUsername(), PartnerPermission.UPDATE),
-                partnerData("nonexistent", PartnerPermission.VIEW))))
+                partnerData(andi.getUsername()),
+                partnerData("nonexistent"))))
                 .hasMessageContaining(PARTNER_USERNAMES_NOT_FOUND);
 
         assertBadRequest(() -> partnerClient.setPartners(adminToken, problemJid, List.of(
-                partnerData(editor.getUsername(), PartnerPermission.UPDATE),
-                partnerData(editor.getUsername(), PartnerPermission.VIEW))));
+                partnerData(andi.getUsername()),
+                partnerData(andi.getUsername()))));
 
-        // as partners
+        // as partner
 
-        ProblemPermissions permissions = problemClient.getProblemPermissions(editorToken, problemJid);
-        assertThat(permissions.getCanEdit()).isTrue();
+        ProblemPermissions permissions = problemClient.getProblemPermissions(andiToken, problemJid);
         assertThat(permissions.getCanManage()).isFalse();
+        assertThat(permissions.getReasonNotAllowedToSubmit()).isEmpty();
 
-        permissions = problemClient.getProblemPermissions(viewerToken, problemJid);
-        assertThat(permissions.getCanEdit()).isFalse();
-        assertThat(permissions.getCanManage()).isFalse();
-
-        assertForbidden(() -> partnerClient.getPartners(editorToken, problemJid));
-        assertForbidden(() -> partnerClient.setPartners(editorToken, problemJid, data));
+        assertForbidden(() -> partnerClient.getPartners(andiToken, problemJid));
+        assertForbidden(() -> partnerClient.setPartners(andiToken, problemJid, data));
 
         // as admin
 
-        partnerClient.setPartners(adminToken, problemJid, List.of(
-                partnerData(viewer.getUsername(), PartnerPermission.UPDATE)));
+        partnerClient.setPartners(adminToken, problemJid, List.of(partnerData(budi.getUsername())));
 
         response = partnerClient.getPartners(adminToken, problemJid);
-        assertThat(response.getData()).containsExactly(partner(viewer.getJid(), PartnerPermission.UPDATE));
+        assertThat(response.getData()).containsExactly(partner(budi.getJid()));
 
-        assertForbidden(() -> problemClient.getProblem(editorToken, problemJid));
-        assertThat(problemClient.getProblemPermissions(viewerToken, problemJid).getCanEdit()).isTrue();
+        assertForbidden(() -> problemClient.getProblem(andiToken, problemJid));
+        assertPermitted(() -> problemClient.getProblem(budiToken, problemJid));
 
         // as user
 
@@ -85,11 +75,11 @@ class ProblemPartnerApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertForbidden(() -> partnerClient.setPartners(userToken, problemJid, data));
     }
 
-    private static ProblemPartnerData partnerData(String username, PartnerPermission permission) {
-        return new ProblemPartnerData.Builder().username(username).permission(permission).build();
+    private static ProblemPartnerData partnerData(String username) {
+        return new ProblemPartnerData.Builder().username(username).build();
     }
 
-    private static Partner partner(String userJid, PartnerPermission permission) {
-        return new Partner.Builder().userJid(userJid).permission(permission).build();
+    private static ProblemPartner partner(String userJid) {
+        return new ProblemPartner.Builder().userJid(userJid).build();
     }
 }

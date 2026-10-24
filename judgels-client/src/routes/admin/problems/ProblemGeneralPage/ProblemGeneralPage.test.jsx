@@ -13,7 +13,7 @@ describe('ProblemGeneralPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi().get('/v4/problems/JIDPROG1').reply(200, {
       id: 1,
@@ -23,7 +23,6 @@ describe('ProblemGeneralPage', () => {
       authorJid: 'JIDUSER1',
       additionalNote: 'A note',
     });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
     nockApi().get('/v2/profiles/JIDUSER1/basic').reply(200, { username: 'author' });
     nockApi()
       .get('/v4/problems/JIDPROG1/setters')
@@ -79,11 +78,6 @@ describe('ProblemGeneralPage', () => {
       ['Editorialists', ''],
     ]);
     expect(getRows(getSection('Tags'))).toEqual([['Tags', 'graph, graph: shortest path']]);
-  });
-
-  test('hides the edit buttons when the problem cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });
 
   test('general edit form', async () => {

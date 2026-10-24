@@ -13,9 +13,8 @@ describe('ProblemGradingConfigPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const nockProblem = canEdit => {
+  const nockProblem = () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
   };
 
   const renderPage = async () => {
@@ -59,8 +58,8 @@ describe('ProblemGradingConfigPage', () => {
     await user.click(within(screen.getByRole('option', { name })).getByText(name));
   };
 
-  const renderComponent = async ({ canEdit = true, engine = 'Batch', config = batchConfig } = {}) => {
-    nockProblem(canEdit);
+  const renderComponent = async ({ engine = 'Batch', config = batchConfig } = {}) => {
+    nockProblem();
     nockApi().get('/v4/problems/JIDPROG1/grading/config').reply(200, { engine, config });
     nockApi()
       .get('/v4/problems/JIDPROG1/grading/test-data')
@@ -123,14 +122,6 @@ describe('ProblemGradingConfigPage', () => {
     });
 
     expect(screen.getByRole('textbox', { name: 'Source file keys' })).toHaveValue('encoder,decoder');
-  });
-
-  test('is read-only for a viewer', async () => {
-    await renderComponent({ canEdit: false });
-
-    expect(screen.getByRole('textbox', { name: 'Time limit' })).toBeDisabled();
-    expect(screen.getAllByRole('button').map(button => button.textContent)).toEqual(['scorer.cpp']);
-    expect(screen.getByRole('button', { name: 'scorer.cpp' })).toBeDisabled();
   });
 
   test('updates the config of a batch problem', async () => {

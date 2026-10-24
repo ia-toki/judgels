@@ -2,7 +2,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { problemStatementAPI } from '../../../../modules/api/problemStatement';
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   deleteProblemStatementMediaFileMutationOptions,
   deleteProblemStatementMediaFilesMutationOptions,
@@ -19,10 +19,6 @@ export default function ProblemStatementMediaPage() {
   const {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const {
     data: { data: files },
@@ -44,7 +40,7 @@ export default function ProblemStatementMediaPage() {
       }
       noun="media"
       files={files}
-      canEdit={canEdit}
+      canEdit
       onUploadFile={uploadFileMutation.mutateAsync}
       onUploadZip={uploadZipMutation.mutateAsync}
       onDownloadFile={filename => problemStatementAPI.downloadStatementMediaFile(getToken(), problemJid, filename)}

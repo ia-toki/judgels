@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { allLanguagesAllowed, getGradingLanguageName, gradingLanguages } from '../../../../modules/api/gradingLanguage';
-import { problemBySlugQueryOptions, problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
+import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemGradingLanguageRestrictionQueryOptions,
   updateProblemGradingLanguageRestrictionMutationOptions,
@@ -20,10 +20,6 @@ export default function ProblemGradingLanguageRestrictionPage() {
   const {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
   const { data: languageRestriction } = useSuspenseQuery(problemGradingLanguageRestrictionQueryOptions(problemJid));
 
@@ -57,33 +53,26 @@ export default function ProblemGradingLanguageRestrictionPage() {
     <Flex flexDirection="column" gap={2}>
       <h4>Languages</h4>
       <div>
-        <Checkbox
-          label="Allow all"
-          checked={isAllowedAll}
-          disabled={!canEdit}
-          onChange={e => setIsAllowedAll(e.target.checked)}
-        />
+        <Checkbox label="Allow all" checked={isAllowedAll} onChange={e => setIsAllowedAll(e.target.checked)} />
         {gradingLanguages.map(language => (
           <Checkbox
             key={language}
             label={getGradingLanguageName(language)}
             checked={isAllowedAll || allowedLanguages.includes(language)}
-            disabled={!canEdit || isAllowedAll}
+            disabled={isAllowedAll}
             onChange={() => toggleLanguage(language)}
           />
         ))}
       </div>
-      {canEdit && (
-        <ActionButtons>
-          <Button
-            text="Save"
-            intent={Intent.PRIMARY}
-            disabled={!isAllowedAll && allowedLanguages.length === 0}
-            loading={updateLanguageRestrictionMutation.isPending}
-            onClick={updateLanguageRestriction}
-          />
-        </ActionButtons>
-      )}
+      <ActionButtons>
+        <Button
+          text="Save"
+          intent={Intent.PRIMARY}
+          disabled={!isAllowedAll && allowedLanguages.length === 0}
+          loading={updateLanguageRestrictionMutation.isPending}
+          onClick={updateLanguageRestriction}
+        />
+      </ActionButtons>
     </Flex>
   );
 }

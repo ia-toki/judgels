@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import feign.form.FormData;
 import java.util.List;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.ProblemStatement;
 import judgels.api.catalog.problem.partner.ProblemPartnerData;
 import judgels.api.submission.programming.ProblemSubmissionWithSourceResponse;
@@ -29,15 +28,14 @@ class ProblemSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrationTest
 
     @Test
     void submit_get_regrade_submissions() {
-        User viewer = createUser("submission-viewer");
-        String viewerToken = getToken(viewer);
+        User partner = createUser("submission-partner");
+        String partnerToken = getToken(partner);
 
         String problemJid = createProblem(adminToken, "submission-problem").getJid();
         String otherProblemJid = createProblem(adminToken, "submission-other-problem").getJid();
 
         partnerClient.setPartners(adminToken, problemJid, List.of(new ProblemPartnerData.Builder()
-                .username(viewer.getUsername())
-                .permission(PartnerPermission.VIEW)
+                .username(partner.getUsername())
                 .build()));
 
         assertThat(submissionClient.getSubmissionConfig(adminToken, problemJid).getSourceKeys())
@@ -57,14 +55,14 @@ class ProblemSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrationTest
 
         // get submissions
 
-        ProblemSubmissionsResponse response = submissionClient.getSubmissions(viewerToken, problemJid);
+        ProblemSubmissionsResponse response = submissionClient.getSubmissions(partnerToken, problemJid);
         assertThat(response.getData().getPage()).extracting(Submission::getJid).containsExactly(submission.getJid());
         assertThat(response.getProfilesMap()).containsOnlyKeys(admin.getJid());
 
         // get submission
 
         ProblemSubmissionWithSourceResponse sourceResponse =
-                submissionClient.getSubmissionWithSourceById(viewerToken, problemJid, submission.getId());
+                submissionClient.getSubmissionWithSourceById(partnerToken, problemJid, submission.getId());
         assertThat(sourceResponse.getData().getSubmission().getJid()).isEqualTo(submission.getJid());
         assertThat(sourceResponse.getData().getSource().get().getSubmissionFiles()).containsOnlyKeys("source");
         assertThat(sourceResponse.getProfile().getUsername()).isEqualTo(admin.getUsername());
@@ -79,13 +77,13 @@ class ProblemSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrationTest
         assertPermitted(() -> submissionClient.regradeSubmission(adminToken, problemJid, submission.getJid()));
         assertPermitted(() -> submissionClient.regradeSubmissions(adminToken, problemJid));
 
-        // as viewer
+        // as partner
 
-        assertThat(problemClient.getProblemPermissions(viewerToken, problemJid).getReasonNotAllowedToSubmit())
-                .isPresent();
-        assertForbidden(() -> submit(viewerToken, problemJid));
-        assertForbidden(() -> submissionClient.regradeSubmission(viewerToken, problemJid, submission.getJid()));
-        assertForbidden(() -> submissionClient.regradeSubmissions(viewerToken, problemJid));
+        assertThat(problemClient.getProblemPermissions(partnerToken, problemJid).getReasonNotAllowedToSubmit())
+                .isEmpty();
+        assertPermitted(() -> submit(partnerToken, problemJid));
+        assertPermitted(() -> submissionClient.regradeSubmission(partnerToken, problemJid, submission.getJid()));
+        assertPermitted(() -> submissionClient.regradeSubmissions(partnerToken, problemJid));
 
         // as user
 

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.catalog.PartnerPermission;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.bundle.EssayItemConfig;
 import judgels.api.catalog.problem.bundle.ItemType;
@@ -30,15 +29,14 @@ class ProblemBundleSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrati
 
     @Test
     void submit_get_regrade_submissions() {
-        User viewer = createUser("bundle-submission-viewer");
-        String viewerToken = getToken(viewer);
+        User partner = createUser("bundle-submission-partner");
+        String partnerToken = getToken(partner);
 
         Problem problem = createBundleProblem(adminToken, "bundle-submission-problem");
         String problemJid = problem.getJid();
 
         partnerClient.setPartners(adminToken, problemJid, List.of(new ProblemPartnerData.Builder()
-                .username(viewer.getUsername())
-                .permission(PartnerPermission.VIEW)
+                .username(partner.getUsername())
                 .build()));
 
         String choiceItemJid = createBundleProblemItem(adminToken, problem, ItemType.MULTIPLE_CHOICE, "1",
@@ -78,7 +76,7 @@ class ProblemBundleSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrati
 
         // get submissions
 
-        ProblemBundleSubmissionsResponse response = submissionClient.getBundleSubmissions(viewerToken, problemJid);
+        ProblemBundleSubmissionsResponse response = submissionClient.getBundleSubmissions(partnerToken, problemJid);
         List<BundleSubmission> submissions = response.getData().getPage();
         assertThat(submissions).hasSize(2);
         assertThat(submissions).extracting(BundleSubmission::getAuthorJid).containsOnly(admin.getJid());
@@ -90,7 +88,7 @@ class ProblemBundleSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrati
         // get submission
 
         ProblemBundleSubmissionWithAnswerResponse answerResponse =
-                submissionClient.getBundleSubmissionWithAnswerById(viewerToken, problemJid, submission.getId());
+                submissionClient.getBundleSubmissionWithAnswerById(partnerToken, problemJid, submission.getId());
         assertThat(answerResponse.getData().getJid()).isEqualTo(submission.getJid());
         // The essay was left empty, so it was not answered.
         assertThat(answerResponse.getAnswer().getAnswers()).isEqualTo(Map.of(choiceItemJid, "a"));
@@ -113,12 +111,12 @@ class ProblemBundleSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrati
                 .extracting(s -> s.getLatestGrading().getScore())
                 .containsExactly(4.0, -1.0);
 
-        // as viewer
+        // as partner
 
-        assertForbidden(() -> submissionClient
-                .createBundleSubmission(viewerToken, problemJid, answer(Map.of(choiceItemJid, "a"))));
-        assertForbidden(() -> submissionClient.regradeBundleSubmission(viewerToken, problemJid, submission.getJid()));
-        assertForbidden(() -> submissionClient.regradeBundleSubmissions(viewerToken, problemJid));
+        assertPermitted(() -> submissionClient
+                .createBundleSubmission(partnerToken, problemJid, answer(Map.of(choiceItemJid, "a"))));
+        assertPermitted(() -> submissionClient.regradeBundleSubmission(partnerToken, problemJid, submission.getJid()));
+        assertPermitted(() -> submissionClient.regradeBundleSubmissions(partnerToken, problemJid));
 
         // as user
 

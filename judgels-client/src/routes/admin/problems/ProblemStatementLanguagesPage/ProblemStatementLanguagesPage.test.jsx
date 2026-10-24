@@ -13,9 +13,8 @@ describe('ProblemStatementLanguagesPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/problems/JIDPROG1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: ['fr-FR'], defaultLanguage: 'id-ID' });
@@ -54,12 +53,6 @@ describe('ProblemStatementLanguagesPage', () => {
       ['French (fr-FR)', 'Disabled', ['Enable']],
       ['Indonesian (id-ID)', 'Enabled (default)', []],
     ]);
-  });
-
-  test('hides the actions when the problem cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 
   test('adds a language', async () => {

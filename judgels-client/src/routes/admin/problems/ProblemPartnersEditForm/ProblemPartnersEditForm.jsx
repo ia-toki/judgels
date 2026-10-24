@@ -6,32 +6,20 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-export default function ProblemPartnersEditForm({ onSubmit, initialValues, validateCsv, onCancel }) {
+export default function ProblemPartnersEditForm({ onSubmit, initialValues, validateUsernames, onCancel }) {
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
-            <div>
-              <p>
-                One partner per row, as <code>username[,permission]</code>, where <code>permission</code> is either:
-              </p>
-              <ul>
-                <li>
-                  <code>UPDATE</code> (the default): the user can view and update the problem
-                </li>
-                <li>
-                  <code>VIEW</code>: the user can only view the problem
-                </li>
-              </ul>
-            </div>
             <Field
               component={FormTextArea}
-              name="csv"
+              name="usernames"
               label="Partners"
+              labelHelper="(one username per line)"
               rows={10}
               isCode
-              validate={validateCsv}
+              validate={validateUsernames}
               autoFocus
             />
             <ActionButtons justifyContent="end">

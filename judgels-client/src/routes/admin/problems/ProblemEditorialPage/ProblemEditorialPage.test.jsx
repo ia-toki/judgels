@@ -13,12 +13,11 @@ describe('ProblemEditorialPage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
+  const renderComponent = async () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type: 'PROGRAMMING', authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/problems/JIDPROG1/setters')
       .reply(200, { data: { WRITER: ['JIDUSER2'] }, profilesMap: { JIDUSER2: { username: 'budi' } } });
@@ -73,11 +72,6 @@ describe('ProblemEditorialPage', () => {
     await user.click(screen.getByText('English (en-US)'));
 
     expect(await screen.findByText(/sort the apples/i)).toBeInTheDocument();
-  });
-
-  test('hides the edit button when the problem cannot be edited', async () => {
-    await renderComponent({ canEdit: false });
-    expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });
 
   test('edit form', async () => {

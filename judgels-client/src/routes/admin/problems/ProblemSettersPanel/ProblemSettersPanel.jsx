@@ -28,7 +28,7 @@ function parseUsernames(usernames) {
     .filter(username => username);
 }
 
-export default function ProblemSettersPanel({ problemJid, canEdit }) {
+export default function ProblemSettersPanel({ problemJid }) {
   const {
     data: { data: setterJidsMap, profilesMap },
   } = useSuspenseQuery(problemSettersQueryOptions(problemJid));
@@ -54,7 +54,6 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       !isEditing && (
         <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit

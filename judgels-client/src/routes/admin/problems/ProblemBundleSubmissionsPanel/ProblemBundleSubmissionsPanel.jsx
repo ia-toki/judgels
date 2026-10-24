@@ -1,7 +1,7 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
-import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
@@ -9,7 +9,6 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../components/RegradeAllButton/RegradeAllButton';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemBundleSubmissionsQueryOptions,
   regradeProblemBundleSubmissionMutationOptions,
@@ -26,10 +25,6 @@ const PAGE_SIZE = 20;
 export default function ProblemBundleSubmissionsPanel({ problem }) {
   const location = useLocation();
   const page = location.search.page;
-
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problem.jid));
 
   const { data: response } = useQuery(problemBundleSubmissionsQueryOptions(problem.jid, { page }));
 
@@ -80,17 +75,15 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
             <tr key={submission.jid}>
               <td className="col-fit">
                 {submission.id}
-                {canEdit && (
-                  <>
-                    &nbsp;&nbsp;&nbsp;
-                    <Refresh
-                      className="action"
-                      intent="primary"
-                      title={`Regrade submission ${submission.id}`}
-                      onClick={() => regradeSubmission(submission.jid)}
-                    />
-                  </>
-                )}
+                <>
+                  &nbsp;&nbsp;&nbsp;
+                  <Refresh
+                    className="action"
+                    intent="primary"
+                    title={`Regrade submission ${submission.id}`}
+                    onClick={() => regradeSubmission(submission.jid)}
+                  />
+                </>
               </td>
               <td>
                 <UserRef profile={profilesMap[submission.authorJid]} />
@@ -116,7 +109,7 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <span>Submissions</span>
-          {canEdit && <RegradeAllButton onRegradeAll={regradeSubmissions} />}
+          <RegradeAllButton onRegradeAll={regradeSubmissions} />
         </h4>
       </Flex>
       {renderSubmissions()}

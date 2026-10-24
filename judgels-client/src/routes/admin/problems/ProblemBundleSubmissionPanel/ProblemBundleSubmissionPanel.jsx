@@ -1,6 +1,6 @@
 import { ChevronLeft } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
-import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
@@ -8,7 +8,6 @@ import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { ItemType } from '../../../../modules/api/problemBundle';
-import { problemPermissionsQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemBundleSubmissionWithAnswerByIdQueryOptions,
   regradeProblemBundleSubmissionMutationOptions,
@@ -18,10 +17,6 @@ import { problemItemsQueryOptions } from '../../../../modules/queries/problemIte
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemBundleSubmissionPanel({ problem, submissionId }) {
-  const {
-    data: { canEdit },
-  } = useSuspenseQuery(problemPermissionsQueryOptions(problem.jid));
-
   const { data: response } = useQuery(problemBundleSubmissionWithAnswerByIdQueryOptions(problem.jid, submissionId));
   const { data: itemsResponse } = useQuery(problemItemsQueryOptions(problem.jid));
 
@@ -64,7 +59,7 @@ export default function ProblemBundleSubmissionPanel({ problem, submissionId }) 
           canViewGrading
           showVerdict={false}
           canManage
-          onRegrade={canEdit ? regradeSubmission : undefined}
+          onRegrade={regradeSubmission}
         />
       </>
     );

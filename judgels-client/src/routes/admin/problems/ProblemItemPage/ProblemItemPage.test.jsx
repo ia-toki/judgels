@@ -47,9 +47,8 @@ describe('ProblemItemPage', () => {
     config: { statement: 'Explain.', score: 10 },
   };
 
-  const renderComponent = async ({ canEdit = true, item }) => {
+  const renderComponent = async ({ item }) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDBUND1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDBUND1/permissions').reply(200, { canEdit });
     nockApi()
       .get('/v4/problems/JIDBUND1/statement/languages')
       .reply(200, { enabledLanguages: ['id-ID', 'en-US'], disabledLanguages: [], defaultLanguage: 'id-ID' });
@@ -94,16 +93,6 @@ describe('ProblemItemPage', () => {
     expect(screen.getByRole('textbox', { name: 'Content of choice 2' })).toHaveValue('two');
     expect(screen.getByRole('checkbox', { name: 'Choice 1 is correct' })).not.toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Choice 2 is correct' })).toBeChecked();
-  });
-
-  test('previews the item for a viewer', async () => {
-    await renderComponent({ canEdit: false, item: multipleChoiceItem });
-
-    expect(await screen.findByText('What is 1 + 1?')).toBeInTheDocument();
-    expect(screen.getByText('two')).toBeInTheDocument();
-    expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/problems\/JIDBUND1\/render\/one\.png$/);
-    screen.getAllByRole('radio').forEach(radio => expect(radio).toBeDisabled());
-    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
   });
 
   test('switches the language', async () => {

@@ -13,9 +13,8 @@ describe('ProblemGradingEnginePage', () => {
     setSession('token', { jid: 'userJid' });
   });
 
-  const nockProblem = canEdit => {
+  const nockProblem = () => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
   };
 
   const renderPage = async () => {
@@ -33,8 +32,8 @@ describe('ProblemGradingEnginePage', () => {
     );
   };
 
-  const renderComponent = async ({ canEdit = true } = {}) => {
-    nockProblem(canEdit);
+  const renderComponent = async () => {
+    nockProblem();
     nockApi()
       .get('/v4/problems/JIDPROG1/grading/config')
       .reply(200, { engine: 'Batch', config: { timeLimit: 2000, memoryLimit: 65536, testData: [] } });
@@ -48,13 +47,6 @@ describe('ProblemGradingEnginePage', () => {
 
     expect(screen.getByRole('combobox', { name: 'Grading engine' })).toHaveTextContent('Batch');
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
-  });
-
-  test('is read-only for a viewer', async () => {
-    await renderComponent({ canEdit: false });
-
-    expect(screen.getByRole('button', { name: 'Batch' })).toBeDisabled();
-    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument();
   });
 
   test('changes the engine after confirming', async () => {

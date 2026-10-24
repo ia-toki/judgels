@@ -14,12 +14,11 @@ describe('ProblemSubmissionsPage', () => {
     window.confirm = () => true;
   });
 
-  const renderComponent = async ({ type = 'PROGRAMMING', canEdit = true } = {}) => {
+  const renderComponent = async ({ type = 'PROGRAMMING' } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
-    nockApi().get('/v4/problems/JIDPROG1/permissions').reply(200, { canEdit });
 
     if (type === 'PROGRAMMING') {
       nockApi()
@@ -163,12 +162,5 @@ describe('ProblemSubmissionsPage', () => {
     await user.click(screen.getByRole('button', { name: /regrade all/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
-  });
-
-  test.each(['PROGRAMMING', 'BUNDLE'])('hides the regrade actions when the %s problem cannot be edited', async type => {
-    await renderComponent({ type, canEdit: false });
-
-    expect(screen.queryByRole('button', { name: /regrade all/i })).not.toBeInTheDocument();
-    expect(screen.queryByTitle('Regrade submission 10')).not.toBeInTheDocument();
   });
 });

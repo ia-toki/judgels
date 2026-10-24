@@ -13,7 +13,7 @@ import ProblemTopicTagsEditForm from '../ProblemTopicTagsEditForm/ProblemTopicTa
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export default function ProblemTopicTagsPanel({ problemJid, canEdit }) {
+export default function ProblemTopicTagsPanel({ problemJid }) {
   const { data: topicTags } = useSuspenseQuery(problemTopicTagsQueryOptions(problemJid));
 
   const setTopicTagsMutation = useMutation(setProblemTopicTagsMutationOptions(problemJid));
@@ -43,7 +43,6 @@ export default function ProblemTopicTagsPanel({ problemJid, canEdit }) {
 
   const renderEditButton = () => {
     return (
-      canEdit &&
       !isEditing && (
         <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
