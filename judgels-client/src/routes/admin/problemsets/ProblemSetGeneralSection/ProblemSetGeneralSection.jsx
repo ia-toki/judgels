@@ -74,7 +74,7 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
 
   return (
     <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
+      <Flex asChild gap={2} alignItems="center">
         <h4>
           <span>General</span>
           {renderEditButton()}

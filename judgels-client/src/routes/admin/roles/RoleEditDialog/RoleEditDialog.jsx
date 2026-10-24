@@ -27,9 +27,7 @@ export function RoleEditDialog({ user, onClose }) {
 
   const save = async () => {
     await setRoleMutation.mutateAsync(role);
-    toastActions.showSuccessToast(
-      isRemoving ? `All roles removed from ${user.username}.` : `Roles of ${user.username} updated.`
-    );
+    toastActions.showSuccessToast(isRemoving ? 'Roles removed.' : 'Roles updated.');
     onClose();
   };
 

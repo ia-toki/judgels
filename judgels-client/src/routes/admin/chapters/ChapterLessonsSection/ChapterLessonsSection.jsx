@@ -71,7 +71,7 @@ export function ChapterLessonsSection({ chapter }) {
 
   return (
     <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
+      <Flex asChild gap={2} alignItems="center">
         <h4>
           <span>Lessons</span>
           {renderEditButton()}

@@ -177,7 +177,11 @@ pre {
 
 code {
   font-size: $font-size-code;
-  padding: 3px;
+  padding: 0 3px;
+
+  .html-text :not(pre) > & {
+    padding: 3px;
+  }
 }
 
 pre {
@@ -286,14 +290,17 @@ blockquote {
 
   .bp6-dark & {
     color: $dark-text-color;
+  }
+
+  .bp6-dark &:not(.bp6-minimal) {
     background-color: $dark-background-color;
   }
 
-  .bp6-dark &:hover {
+  .bp6-dark &:not(.bp6-minimal):hover {
     background-color: $dark-tertiary-background-color;
   }
 
-  .bp6-dark &:active {
+  .bp6-dark &:not(.bp6-minimal):active {
     background-color: $dark-background-color;
   }
 
@@ -306,7 +313,7 @@ blockquote {
     border-color: $pt-dark-divider-white-muted;
   }
 
-  .bp6-dark &.bp6-disabled {
+  .bp6-dark &:not(.bp6-minimal).bp6-disabled {
     background-color: $dark-background-color;
   }
 }

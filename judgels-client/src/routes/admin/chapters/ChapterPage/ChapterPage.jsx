@@ -2,6 +2,7 @@ import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { chapterByJidQueryOptions } from '../../../../modules/queries/chapter';
 import { ChapterGeneralSection } from '../ChapterGeneralSection/ChapterGeneralSection';
@@ -14,7 +15,7 @@ export default function ChapterPage() {
   const { data: chapter } = useSuspenseQuery(chapterByJidQueryOptions(chapterJid));
 
   return (
-    <ContentCard title={`Chapters › ${chapter.name}`}>
+    <ContentCard title={<BreadcrumbTitle parent="Chapters" current={chapter.name} />}>
       <Flex flexDirection="column" gap={8}>
         <ChapterGeneralSection chapter={chapter} />
         <ChapterLessonsSection chapter={chapter} />

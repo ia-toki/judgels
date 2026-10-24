@@ -80,7 +80,7 @@ export default function ProblemSettersPanel({ problemJid, canEdit }) {
 
   return (
     <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
+      <Flex asChild gap={2} alignItems="center">
         <h4>
           <span>Setters</span>
           {renderEditButton()}
