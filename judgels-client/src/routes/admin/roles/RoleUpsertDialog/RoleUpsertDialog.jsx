@@ -1,5 +1,5 @@
 import { Button, Callout, Classes, Dialog, FormGroup, Intent } from '@blueprintjs/core';
-import { Plus } from '@blueprintjs/icons';
+import { Upload } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
@@ -11,7 +11,7 @@ import { RoleCheckboxes } from '../RoleCheckboxes/RoleCheckboxes';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-import './RolesAddDialog.scss';
+import './RoleUpsertDialog.scss';
 
 const usernamesField = {
   name: 'usernames',
@@ -33,7 +33,7 @@ function parseUsernames(text) {
   return [...new Set(usernames)];
 }
 
-export function RolesAddDialog({ superadminUsername }) {
+export function RoleUpsertDialog({ superadminUsername }) {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(undefined);
 
@@ -48,7 +48,7 @@ export function RolesAddDialog({ superadminUsername }) {
     setIsOpen(false);
   };
 
-  const addUsers = async (values, form) => {
+  const upsertUsers = async (values, form) => {
     const usernames = parseUsernames(values.usernames);
     if (usernames.includes(superadminUsername)) {
       setError(`${superadminUsername} already holds every role.`);
@@ -62,10 +62,9 @@ export function RolesAddDialog({ superadminUsername }) {
     );
     const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({ usernames, role });
 
-    const added = usernames.filter(username => upsertedUserProfilesMap[username]);
     const notFound = usernames.filter(username => !upsertedUserProfilesMap[username]);
-    if (added.length > 0) {
-      toastActions.showSuccessToast(`Roles granted to ${added.join(', ')}.`);
+    if (notFound.length < usernames.length) {
+      toastActions.showSuccessToast('Roles granted.');
     }
     if (notFound.length === 0) {
       setIsOpen(false);
@@ -78,27 +77,27 @@ export function RolesAddDialog({ superadminUsername }) {
 
   return (
     <>
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={openDialog}>
-        Add admins
+      <Button intent={Intent.PRIMARY} icon={<Upload />} onClick={openDialog}>
+        Upsert roles
       </Button>
       <Dialog
-        className="roles-add-dialog"
+        className="role-upsert-dialog"
         isOpen={isOpen}
         onClose={closeDialog}
-        title="Add admins"
+        title="Upsert roles"
         canOutsideClickClose={false}
       >
-        <Form onSubmit={addUsers} initialValues={initialValues}>
+        <Form onSubmit={upsertUsers} initialValues={initialValues}>
           {({ handleSubmit, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <div className={Classes.DIALOG_BODY}>
                 {error && (
-                  <Callout className="roles-add-dialog__error" intent={Intent.DANGER}>
+                  <Callout className="role-upsert-dialog__error" intent={Intent.DANGER}>
                     {error}
                   </Callout>
                 )}
                 <Field component={FormTextArea} {...usernamesField} />
-                <FormGroup label="Roles to grant" helperText="Roles the users already hold are kept.">
+                <FormGroup label="Roles">
                   <Field name="roles">
                     {({ input }) => <RoleCheckboxes value={input.value} onChange={input.onChange} />}
                   </Field>
@@ -109,7 +108,7 @@ export function RolesAddDialog({ superadminUsername }) {
                   <Button text="Cancel" disabled={submitting} onClick={closeDialog} />
                   <Button
                     type="submit"
-                    text="Add"
+                    text="Submit"
                     intent={Intent.PRIMARY}
                     loading={submitting}
                     disabled={!Object.values(values.roles).some(checked => checked)}

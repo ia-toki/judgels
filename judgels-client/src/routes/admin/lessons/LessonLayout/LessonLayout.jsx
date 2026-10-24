@@ -2,6 +2,7 @@ import { Callout, Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, Outlet, useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import {
@@ -51,7 +52,7 @@ export default function LessonLayout() {
   ];
 
   return (
-    <ContentCard title={`Lessons › ${lesson.slug}`}>
+    <ContentCard title={<BreadcrumbTitle parent="Lessons" current={lesson.slug} />}>
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING} title="You have uncommitted changes">
           Chapters keep using the last committed version of this lesson until you{' '}

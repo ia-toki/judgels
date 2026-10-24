@@ -50,27 +50,23 @@ describe('RolesPage', () => {
     within(row)
       .queryAllByRole('cell')
       .slice(1, -1)
-      .map(cell => within(cell).queryByRole('img')?.textContent ?? '');
+      .map(cell => cell.textContent);
 
-  test('renders the roles table, superadmin first and then by username', async () => {
+  test('renders the roles table by username, without superadmin', async () => {
     await renderComponent();
     await rowOf('andi');
 
     const rows = screen.getAllByRole('row').slice(1);
-    expect(rows.map(row => within(row).getByRole('link').textContent)).toEqual(['superadmin', 'andi', 'budi']);
+    expect(rows.map(row => within(row).getByRole('link').textContent)).toEqual(['andi', 'budi']);
     expect(rows.map(renderRoles)).toEqual([
-      ['System admin', 'Problem admin', 'Contest admin', 'Training admin'],
-      ['System admin', '', '', 'Training admin'],
-      ['', 'Problem admin', '', ''],
+      ['ADMIN', '', '', 'ADMIN'],
+      ['', 'ADMIN', '', ''],
     ]);
   });
 
-  test('locks superadmin and the own system admin role', async () => {
+  test('locks the own system admin role', async () => {
     await renderComponent();
     const user = userEvent.setup();
-
-    const superadminRow = await rowOf('superadmin');
-    expect(within(superadminRow).queryByRole('button')).not.toBeInTheDocument();
 
     const ownRow = await rowOf('andi');
     expect(within(ownRow).getByRole('button', { name: /remove/i })).toBeDisabled();
@@ -104,19 +100,19 @@ describe('RolesPage', () => {
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });
 
-  test('adds users, keeping the ones not found', async () => {
+  test('upserts admins, keeping the users not found', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
-    await user.click(await screen.findByRole('button', { name: /add admins/i }));
+    await user.click(await screen.findByRole('button', { name: /upsert roles/i }));
     await user.type(screen.getByLabelText(/usernames/i), 'caca\ndodi');
-    expect(screen.getByRole('button', { name: /^add$/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /^submit$/i })).toBeDisabled();
     await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
 
     const scope = nockApi()
       .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], role: { contest: 'ADMIN' } })
       .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
-    await user.click(screen.getByRole('button', { name: /^add$/i }));
+    await user.click(screen.getByRole('button', { name: /^submit$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
 
     expect(await screen.findByText('User not found: dodi.')).toBeInTheDocument();

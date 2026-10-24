@@ -2,6 +2,7 @@ import { Callout, Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, Outlet, useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { ProblemType } from '../../../../modules/api/problem';
@@ -75,7 +76,7 @@ export default function ProblemLayout() {
   ];
 
   return (
-    <ContentCard title={`Problems › ${problem.slug}`}>
+    <ContentCard title={<BreadcrumbTitle parent="Problems" current={problem.slug} />}>
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING} title="You have uncommitted changes">
           Contests and problemsets keep using the last committed version of this problem until you{' '}

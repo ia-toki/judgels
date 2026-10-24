@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { curriculumByJidQueryOptions } from '../../../../modules/queries/curriculum';
 import { CurriculumGeneralSection } from '../CurriculumGeneralSection/CurriculumGeneralSection';
@@ -11,7 +12,7 @@ export default function CurriculumPage() {
   const { data: curriculum } = useSuspenseQuery(curriculumByJidQueryOptions(curriculumJid));
 
   return (
-    <ContentCard title={`Curriculum › ${curriculum.name}`}>
+    <ContentCard title={<BreadcrumbTitle parent="Curriculum" current={curriculum.name} />}>
       <CurriculumGeneralSection curriculum={curriculum} />
     </ContentCard>
   );

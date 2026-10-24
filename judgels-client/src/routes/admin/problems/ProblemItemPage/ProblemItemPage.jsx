@@ -3,6 +3,7 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ItemEssayCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemStatementCard/ItemEssayCard/ItemEssayCard';
 import { ItemMultipleChoiceCard } from '../../../../components/ProblemWorksheetCard/Bundle/ProblemStatementCard/ItemMultipleChoiceCard/ItemMultipleChoiceCard';
@@ -84,9 +85,10 @@ export default function ProblemItemPage() {
     <div>
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
-          <span>
-            <Link to={`/admin/problems/${problemSlug}/items`}>Items</Link> › {renderTitle()}
-          </span>
+          <BreadcrumbTitle
+            parent={<Link to={`/admin/problems/${problemSlug}/items`}>Items</Link>}
+            current={renderTitle()}
+          />
           {renderLanguageSelect()}
         </h4>
       </Flex>
