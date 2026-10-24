@@ -34,6 +34,7 @@
   .bp6-tab {
     position: relative;
     padding-left: 20px !important;
+    border-radius: 0 !important;
     line-height: 50px;
     height: 50px;
 
@@ -48,7 +49,7 @@
     }
 
     &[aria-selected='true'] {
-      font-weight: bold;
+      font-weight: $font-weight-bold;
 
       .bp6-light & {
         color: $text-color;
@@ -78,8 +79,8 @@
 .card-sidebar__group {
   line-height: 30px;
   height: 30px;
-  font-weight: bold;
-  font-size: 12px;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-small;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 

@@ -3,10 +3,10 @@
 table.troc-scoreboard__content {
   td {
     span.top {
-      font-size: 12px;
+      font-size: $font-size-small;
     }
     span.total-points-cell {
-      font-size: 14px !important;
+      font-size: $font-size !important;
       line-height: 14px;
     }
     span.bottom {

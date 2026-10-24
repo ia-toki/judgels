@@ -1,3 +1,5 @@
+@use '../../styles/base' as *;
+
 .bp6-navbar.announcement {
   height: auto;
   padding: 8px 16px;
@@ -6,11 +8,11 @@
 
 .announcement__text {
   color: white;
-  font-size: 13px;
+  font-size: $font-size;
 
   p {
     margin: 0;
-    font-size: 13px;
+    font-size: $font-size;
   }
 }
 

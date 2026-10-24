@@ -14,21 +14,26 @@ import { getGradingLanguageName, gradingLanguages } from '../../../../../../modu
 import './ContestEditConfigsForm.scss';
 
 export default function ContestEditConfigsForm({ onSubmit, initialValues, config, onCancel }) {
-  const renderTrocStyleForm = ({ trocAllowAllLanguages }) => {
-    const allowedLanguageField = {
-      label: 'Allowed languages',
-      meta: {},
-    };
-    const allowAllLanguagesField = {
-      name: 'trocAllowAllLanguages',
-      label: '(all)',
-    };
-    const allowedLanguageFields = gradingLanguages.map(lang => ({
-      name: 'trocAllowedLanguages.' + lang,
-      label: getGradingLanguageName(lang),
-      small: true,
-    }));
+  const renderAllowedLanguagesInput = (style, allowAllLanguages) => (
+    <FormTableInput label="Allowed languages" meta={{}}>
+      <Field component={FormCheckbox} name={`${style}AllowAllLanguages`} label="(all)" />
+      {!allowAllLanguages && (
+        <Flex flexDirection="column" gap={2}>
+          {gradingLanguages.map(lang => (
+            <Field
+              key={lang}
+              component={FormCheckbox}
+              name={`${style}AllowedLanguages.${lang}`}
+              label={getGradingLanguageName(lang)}
+              small
+            />
+          ))}
+        </Flex>
+      )}
+    </FormTableInput>
+  );
 
+  const renderTrocStyleForm = ({ trocAllowAllLanguages }) => {
     const wrongSubmissionPenaltyField = {
       name: 'trocWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
@@ -41,11 +46,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
         <h4>TROC style config</h4>
         <HTMLTable striped>
           <tbody>
-            <FormTableInput {...allowedLanguageField}>
-              <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!trocAllowAllLanguages &&
-                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
-            </FormTableInput>
+            {renderAllowedLanguagesInput('troc', trocAllowAllLanguages)}
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
           </tbody>
         </HTMLTable>
@@ -54,20 +55,6 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
   };
 
   const renderIcpcStyleForm = ({ icpcAllowAllLanguages }) => {
-    const allowedLanguageField = {
-      label: 'Allowed languages',
-      meta: {},
-    };
-    const allowAllLanguagesField = {
-      name: 'icpcAllowAllLanguages',
-      label: '(all)',
-    };
-    const allowedLanguageFields = gradingLanguages.map(lang => ({
-      name: 'icpcAllowedLanguages.' + lang,
-      label: getGradingLanguageName(lang),
-      small: true,
-    }));
-
     const wrongSubmissionPenaltyField = {
       name: 'icpcWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
@@ -80,11 +67,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
         <h4>ICPC style config</h4>
         <HTMLTable striped>
           <tbody>
-            <FormTableInput {...allowedLanguageField}>
-              <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!icpcAllowAllLanguages &&
-                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
-            </FormTableInput>
+            {renderAllowedLanguagesInput('icpc', icpcAllowAllLanguages)}
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
           </tbody>
         </HTMLTable>
@@ -93,20 +76,6 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
   };
 
   const renderIoiStyleForm = ({ ioiAllowAllLanguages }) => {
-    const allowedLanguageField = {
-      label: 'Allowed languages',
-      meta: {},
-    };
-    const allowAllLanguagesField = {
-      name: 'ioiAllowAllLanguages',
-      label: '(all)',
-    };
-    const allowedLanguageFields = gradingLanguages.map(lang => ({
-      name: 'ioiAllowedLanguages.' + lang,
-      label: getGradingLanguageName(lang),
-      small: true,
-    }));
-
     const usingLastAffectingPenaltyField = {
       name: 'ioiUsingLastAffectingPenalty',
       label: 'Using last affecting penalty?',
@@ -124,11 +93,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
         <h4>IOI style config</h4>
         <HTMLTable striped>
           <tbody>
-            <FormTableInput {...allowedLanguageField}>
-              <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!ioiAllowAllLanguages &&
-                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
-            </FormTableInput>
+            {renderAllowedLanguagesInput('ioi', ioiAllowAllLanguages)}
             <Field component={FormTableCheckbox} {...usingLastAffectingPenaltyField} />
             <Field component={FormTableCheckbox} {...usingMaxScorePerSubtaskField} />
           </tbody>
@@ -138,20 +103,6 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
   };
 
   const renderGcjStyleForm = ({ gcjAllowAllLanguages }) => {
-    const allowedLanguageField = {
-      label: 'Allowed languages',
-      meta: {},
-    };
-    const allowAllLanguagesField = {
-      name: 'gcjAllowAllLanguages',
-      label: '(all)',
-    };
-    const allowedLanguageFields = gradingLanguages.map(lang => ({
-      name: 'gcjAllowedLanguages.' + lang,
-      label: getGradingLanguageName(lang),
-      small: true,
-    }));
-
     const wrongSubmissionPenaltyField = {
       name: 'gcjWrongSubmissionPenalty',
       label: 'Wrong submission penalty',
@@ -164,11 +115,7 @@ export default function ContestEditConfigsForm({ onSubmit, initialValues, config
         <h4>GCJ style config</h4>
         <HTMLTable striped>
           <tbody>
-            <FormTableInput {...allowedLanguageField}>
-              <Field component={FormCheckbox} {...allowAllLanguagesField} />
-              {!gcjAllowAllLanguages &&
-                allowedLanguageFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
-            </FormTableInput>
+            {renderAllowedLanguagesInput('gcj', gcjAllowAllLanguages)}
             <Field component={FormTableTextInput} {...wrongSubmissionPenaltyField} />
           </tbody>
         </HTMLTable>

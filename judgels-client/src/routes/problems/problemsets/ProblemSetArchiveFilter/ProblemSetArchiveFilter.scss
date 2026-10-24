@@ -1,7 +1,9 @@
+@use '../../../../styles/base' as *;
+
 .archive-filter__option--inactive {
   font-weight: normal;
 }
 
 .archive-filter__category {
-  font-weight: bold;
+  font-weight: $font-weight-bold;
 }

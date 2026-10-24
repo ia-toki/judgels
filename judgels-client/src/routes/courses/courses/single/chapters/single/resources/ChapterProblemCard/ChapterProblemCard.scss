@@ -1,3 +1,5 @@
+@use '../../../../../../../../styles/base' as *;
+
 .chapter-problem-card {
   h4 {
     margin-bottom: 0;
@@ -12,7 +14,7 @@
   }
 
   &__problem-set-problem-paths {
-    font-weight: 600;
+    font-weight: $font-weight-bold;
   }
 
   &--future {

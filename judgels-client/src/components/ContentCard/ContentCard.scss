@@ -2,10 +2,14 @@
 
 .content-card {
   overflow-x: auto;
+}
 
-  h3 {
-    line-height: 9px;
-  }
+.content-card--compact.bp6-card {
+  padding: 12px;
+}
+
+.content-card__title {
+  line-height: 9px;
 }
 
 .bp6-dark .content-card .content-card,

@@ -28,14 +28,14 @@
 }
 
 .home-banner__text h1 {
-  font-size: 32px;
+  font-size: $font-size-page-title;
   line-height: 32px;
 }
 
 .home-banner__text h2 {
   margin-top: 40px;
   font-family: $accent-font;
-  font-size: 18px !important;
+  font-size: $font-size-title !important;
   font-weight: normal !important;
   line-height: 24px !important;
   margin-bottom: 5px !important;

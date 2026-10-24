@@ -3,6 +3,7 @@ import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 
+import { ContentCardList } from '../../../../../../../../components/ContentCardList/ContentCardList';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { getLessonName } from '../../../../../../../../modules/api/lesson';
@@ -49,7 +50,7 @@ export default function ChapterResourcesPage() {
 
   const renderHeader = () => {
     return (
-      <h3 className="chapter-resources-page__title">
+      <h2 className="chapter-resources-page__title">
         <Link className="chapter-resources-page__title--link" to={`/courses/${course.slug}`}>
           {course.name}
         </Link>
@@ -57,7 +58,7 @@ export default function ChapterResourcesPage() {
         <ChevronRight className="chapter-resources-page__title--chevron" size={20} />
         &nbsp;
         {chapterAlias}. {chapter.name}
-      </h3>
+      </h2>
     );
   };
 
@@ -80,10 +81,10 @@ export default function ChapterResourcesPage() {
     let chapterResources = null;
     if (lessons.length > 0 || chapterProblems.length > 0) {
       chapterResources = (
-        <div className="chapter-resources-page__resources">
+        <ContentCardList>
           {lessons.map(renderLesson)}
           {chapterProblems.map(renderProblem)}
-        </div>
+        </ContentCardList>
       );
     }
 
@@ -92,9 +93,9 @@ export default function ChapterResourcesPage() {
       problemSetResources = (
         <div className="chapter-resources-page__problem-set-problems">
           <h4>Practice Problems</h4>
-          <div className="chapter-resources-page__resources">
+          <ContentCardList>
             {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
-          </div>
+          </ContentCardList>
         </div>
       );
     }

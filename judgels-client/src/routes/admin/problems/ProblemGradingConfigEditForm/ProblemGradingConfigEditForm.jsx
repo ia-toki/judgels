@@ -1,9 +1,10 @@
-import { Button, Callout, Card, Checkbox, FormGroup, HTMLTable, InputGroup, Intent } from '@blueprintjs/core';
+import { Button, Callout, Checkbox, FormGroup, HTMLTable, InputGroup, Intent } from '@blueprintjs/core';
 import { Plus, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
 import { getGradingConfigFields, toConfig, toFormValues, validate } from './gradingConfigForm';
 
@@ -231,7 +232,7 @@ export default function ProblemGradingConfigEditForm({
 
   const renderSampleTestCases = () => (
     <FormGroup label="Sample test data">
-      <Card>
+      <ContentCard compact>
         <TestCases
           label="Sample test cases"
           testCases={values.sampleTestCases}
@@ -252,7 +253,7 @@ export default function ProblemGradingConfigEditForm({
             ))
           }
         />
-      </Card>
+      </ContentCard>
     </FormGroup>
   );
 
@@ -262,53 +263,47 @@ export default function ProblemGradingConfigEditForm({
         {values.testGroups.map((testGroup, idx) => {
           const label = fields.subtasks ? `Test group ${idx + 1}` : 'Test cases';
           return (
-            <Flex asChild key={idx} flexDirection="column" gap={4}>
-              <Card>
-                {fields.subtasks && (
-                  <Flex
-                    className="problem-grading-config-edit-form__test-group-heading"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <strong>{label}</strong>
-                    {canEdit && (
-                      <Button
-                        small
-                        minimal
-                        intent={Intent.DANGER}
-                        icon={<Trash />}
-                        aria-label={`Remove test group ${idx + 1}`}
-                        onClick={() =>
-                          setValue(
-                            'testGroups',
-                            values.testGroups.filter((_, i) => i !== idx)
-                          )
-                        }
-                      />
-                    )}
-                  </Flex>
-                )}
-                <Flex flexDirection="column" gap={2}>
-                  <TestCases
-                    label={label}
-                    testCases={testGroup.testCases}
-                    hasOutput={fields.output}
-                    canEdit={canEdit}
-                    filenames={testDataFilenames}
-                    onChange={testCases => setTestGroup(idx, { testCases })}
-                  />
-                  {fields.subtasks && (
-                    <SubtaskAssignment
-                      label={`Subtasks of test group ${idx + 1}`}
-                      subtaskCount={subtaskCount}
-                      subtaskIds={testGroup.subtaskIds}
-                      disabled={!canEdit}
-                      onChange={subtaskIds => setTestGroup(idx, { subtaskIds })}
+            <ContentCard key={idx} compact>
+              {fields.subtasks && (
+                <Flex className="problem-grading-config-edit-form__test-group-heading" alignItems="center" gap={2}>
+                  <h5>{label}</h5>
+                  {canEdit && (
+                    <Button
+                      small
+                      minimal
+                      intent={Intent.DANGER}
+                      icon={<Trash />}
+                      aria-label={`Remove test group ${idx + 1}`}
+                      onClick={() =>
+                        setValue(
+                          'testGroups',
+                          values.testGroups.filter((_, i) => i !== idx)
+                        )
+                      }
                     />
                   )}
                 </Flex>
-              </Card>
-            </Flex>
+              )}
+              <Flex flexDirection="column" gap={2}>
+                <TestCases
+                  label={label}
+                  testCases={testGroup.testCases}
+                  hasOutput={fields.output}
+                  canEdit={canEdit}
+                  filenames={testDataFilenames}
+                  onChange={testCases => setTestGroup(idx, { testCases })}
+                />
+                {fields.subtasks && (
+                  <SubtaskAssignment
+                    label={`Subtasks of test group ${idx + 1}`}
+                    subtaskCount={subtaskCount}
+                    subtaskIds={testGroup.subtaskIds}
+                    disabled={!canEdit}
+                    onChange={subtaskIds => setTestGroup(idx, { subtaskIds })}
+                  />
+                )}
+              </Flex>
+            </ContentCard>
           );
         })}
         {fields.subtasks && canEdit && (
@@ -327,7 +322,7 @@ export default function ProblemGradingConfigEditForm({
 
   const renderSubtaskPoints = () => (
     <FormGroup label="Subtasks">
-      <Card>
+      <ContentCard compact>
         <HTMLTable compact aria-label="Subtasks" className="problem-grading-config-edit-form__subtask-points">
           <thead>
             <tr>
@@ -356,7 +351,7 @@ export default function ProblemGradingConfigEditForm({
             ))}
           </tbody>
         </HTMLTable>
-      </Card>
+      </ContentCard>
     </FormGroup>
   );
 

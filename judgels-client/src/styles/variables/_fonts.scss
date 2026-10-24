@@ -1,5 +1,17 @@
 $primary-font: 'Open Sans', sans-serif;
 $accent-font: 'Roboto', sans-serif;
-$font-size: 14px;
-$font-size-large: 16px;
-$font-size-small: 12px;
+$mono-font: Menlo, Monaco, Consolas, 'Courier New', monospace;
+
+$font-size-small: 12px; // Secondary text, tags.
+$font-size-label: 13px; // Form labels.
+$font-size-code: 13px; // Monospace, which reads larger than body text.
+$font-size: 14px; // Body text; h5.
+$font-size-reading: 15px; // Long-form text (HtmlText).
+$font-size-large: 16px; // Item and dialog titles; h4.
+$font-size-title: 18px; // Card titles; h3.
+$font-size-page-title-compact: 22px; // Page titles on mobile and course content pages.
+$font-size-page-title: 30px; // Page titles; h2.
+
+$font-weight-heading: 500; // h1-h5.
+$font-weight-bold: 600;
+$font-weight-strong: 700; // strong, b, rated usernames, the app title.

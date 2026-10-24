@@ -8,29 +8,20 @@
   border-radius: 2px;
 }
 
-// Render a contiguous run of cards as a single unified list: only round the
-// top of the first card and the bottom of the last card in the run. Cards
-// separated by other elements (e.g. an <hr>) start a new run.
-.content-card-link + .content-card-link {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.content-card-link:has(+ .content-card-link) {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
 .content-card-link:hover {
   cursor: pointer;
   text-decoration: none;
 
   .bp6-light & {
-    background-color: $secondary-background-color;
+    background-color: $card-hover-background-color;
   }
 
   .bp6-dark & {
-    background-color: $dark-secondary-background-color;
+    background-color: $dark-card-hover-background-color;
+
+    hr {
+      border-bottom-color: $dark-divider-color;
+    }
   }
 }
 

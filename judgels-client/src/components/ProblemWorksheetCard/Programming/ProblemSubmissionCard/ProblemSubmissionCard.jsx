@@ -43,7 +43,7 @@ export function ProblemSubmissionCard({
 
   return (
     <ContentCard>
-      <h4>Submit solution</h4>
+      <h3>Submit solution</h3>
       {renderSubmissionForm()}
     </ContentCard>
   );

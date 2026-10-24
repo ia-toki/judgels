@@ -87,12 +87,12 @@
 }
 
 .header__title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: $font-size-page-title-compact;
+  font-weight: $font-weight-strong;
 }
 
 .header__subtitle {
-  font-size: 11px;
+  font-size: $font-size-small;
 }
 
 @media only screen and (max-width: 960px) {

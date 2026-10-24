@@ -130,10 +130,12 @@ describe('ContestAnnouncementsPage', () => {
 
     expect(within(announcements[0]).getByRole('heading')).toHaveTextContent('Title 1');
     expect(within(announcements[0]).getByText('Content 1')).toBeInTheDocument();
-    expect(announcements[0].querySelector('small')).toHaveTextContent(/published 1 day ago by username1 Edit$/);
+    expect(announcements[0].querySelector('small')).toHaveTextContent(/published 1 day ago by username1$/);
+    expect(within(announcements[0]).getByRole('button', { name: 'Edit' })).toBeInTheDocument();
 
     expect(within(announcements[1]).getByRole('heading')).toHaveTextContent('Title 2');
     expect(within(announcements[1]).getByText('Content 2')).toBeInTheDocument();
-    expect(announcements[1].querySelector('small')).toHaveTextContent(/published 1 day ago by username2 Edit$/);
+    expect(announcements[1].querySelector('small')).toHaveTextContent(/published 1 day ago by username2$/);
+    expect(within(announcements[1]).getByRole('button', { name: 'Edit' })).toBeInTheDocument();
   });
 });

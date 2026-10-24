@@ -1,3 +1,5 @@
+@use '../../../../../../styles/base' as *;
+
 .contest-history-table {
   .col-row {
     width: 50px;
@@ -5,10 +7,10 @@
 
   .diff-positive {
     color: #29a634;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
   }
 
   .diff-negative {
-    font-weight: bold;
+    font-weight: $font-weight-bold;
   }
 }

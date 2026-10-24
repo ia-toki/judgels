@@ -138,10 +138,12 @@ export function ContestEditConfigsTable({ config }) {
     return (
       <div>
         <h4>Editorial config</h4>
-        <label>Preface</label>
-        <ContentCard>
-          <HtmlText profilesMap={profilesMap}>{preface || ''}</HtmlText>
-        </ContentCard>
+        <Flex flexDirection="column" gap={2}>
+          <label>Preface</label>
+          <ContentCard compact>
+            <HtmlText profilesMap={profilesMap}>{preface || ''}</HtmlText>
+          </ContentCard>
+        </Flex>
         <hr />
       </div>
     );

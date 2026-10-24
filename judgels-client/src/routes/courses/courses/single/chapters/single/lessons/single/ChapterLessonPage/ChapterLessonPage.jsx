@@ -42,7 +42,7 @@ export default function ChapterLessonPage() {
   const renderHeader = () => {
     return (
       <Flex className="chapter-lesson-page__title" flexWrap="wrap" marginBottom={4}>
-        <h3>
+        <h2>
           <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
             {course.name}
           </Link>
@@ -56,7 +56,7 @@ export default function ChapterLessonPage() {
           <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
           &nbsp;
           {lessonAlias}
-        </h3>
+        </h2>
 
         {renderPrevAndNextResourcePaths()}
       </Flex>

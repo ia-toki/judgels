@@ -84,7 +84,7 @@ export default function ChapterProblemLayout() {
 
     return (
       <Flex className="chapter-problem-page__title" flexWrap="wrap">
-        <h3>
+        <h2>
           <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
             <Home />
           </Link>
@@ -98,7 +98,7 @@ export default function ChapterProblemLayout() {
           <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
           &nbsp;
           {problemAlias}. {problemTitle}
-        </h3>
+        </h2>
 
         {renderProgress()}
         {renderNavigation()}

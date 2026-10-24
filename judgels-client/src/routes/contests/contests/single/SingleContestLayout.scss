@@ -6,15 +6,6 @@
   width: 240px;
 }
 
-@media only screen and (max-width: 750px) {
-  .single-contest-routes__header {
-    h2 {
-      font-size: 20px !important;
-      line-height: 22px !important;
-    }
-  }
-}
-
 @media only screen and (max-width: 1280px) {
   .tab-item-with-widget {
     width: 190px;

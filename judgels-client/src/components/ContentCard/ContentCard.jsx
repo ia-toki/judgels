@@ -4,11 +4,11 @@ import classNames from 'classnames';
 
 import './ContentCard.scss';
 
-export function ContentCard({ id, className, header, title, subtitle, action, children }) {
+export function ContentCard({ id, className, compact, header, title, subtitle, action, children }) {
   if (!header && !title) {
     return (
       <Flex asChild flexDirection="column" gap={2}>
-        <Card id={id} className={classNames(className, 'content-card')}>
+        <Card id={id} className={classNames(className, 'content-card', { 'content-card--compact': compact })}>
           {children}
         </Card>
       </Flex>
@@ -24,7 +24,7 @@ export function ContentCard({ id, className, header, title, subtitle, action, ch
       return (
         <>
           <Flex justifyContent="space-between" alignItems="baseline">
-            <h3>{title}</h3>
+            <h3 className="content-card__title">{title}</h3>
             <small>{subtitle}</small>
           </Flex>
           <hr />
@@ -35,7 +35,7 @@ export function ContentCard({ id, className, header, title, subtitle, action, ch
       return (
         <>
           <Flex gap={2} alignItems="baseline">
-            <h3>{title}</h3>
+            <h3 className="content-card__title">{title}</h3>
             {action}
           </Flex>
           <hr />
@@ -44,14 +44,14 @@ export function ContentCard({ id, className, header, title, subtitle, action, ch
     }
     return (
       <>
-        <h3>{title}</h3>
+        <h3 className="content-card__title">{title}</h3>
         <hr />
       </>
     );
   };
 
   return (
-    <Card id={id} className={classNames(className, 'content-card')}>
+    <Card id={id} className={classNames(className, 'content-card', { 'content-card--compact': compact })}>
       {renderHeader()}
       <Flex flexDirection="column" gap={2}>
         {children}
