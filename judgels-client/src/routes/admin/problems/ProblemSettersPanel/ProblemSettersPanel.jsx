@@ -2,8 +2,9 @@ import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
+import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { ProblemSetterRole } from '../../../../modules/api/problem';
 import {
@@ -39,9 +40,22 @@ export default function ProblemSettersPanel({ problemJid }) {
 
   const keyStyles = { width: '250px' };
 
-  const getSetterUsernames = role => (setterJidsMap[role] || []).map(jid => profilesMap[jid]?.username).join(', ');
+  const getSetterJids = role => setterJidsMap[role] || [];
 
-  const rows = setterFields.map(({ role, title }) => ({ key: role, title, value: getSetterUsernames(role) }));
+  const getSetterUsernames = role =>
+    getSetterJids(role)
+      .map(jid => profilesMap[jid]?.username)
+      .join(',');
+
+  const renderSetters = role =>
+    getSetterJids(role).map((jid, idx) => (
+      <Fragment key={jid}>
+        {idx > 0 && ' '}
+        <UserRef profile={profilesMap[jid]} />
+      </Fragment>
+    ));
+
+  const rows = setterFields.map(({ role, title }) => ({ key: role, title, value: renderSetters(role) }));
 
   const setSetters = async data => {
     const setterUsernamesMap = Object.fromEntries(setterFields.map(({ role }) => [role, parseUsernames(data[role])]));

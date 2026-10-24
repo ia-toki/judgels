@@ -32,7 +32,6 @@ export default function ProblemGradingTestDataPage() {
   return (
     <FilesPanel
       title="Test data"
-      description="The input and output files that the grading config assigns to test cases."
       noun="test data"
       files={files}
       canEdit

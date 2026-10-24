@@ -1,4 +1,4 @@
-import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable, Intent, Tag } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { useState } from 'react';
 
@@ -105,35 +105,45 @@ export default function LanguagesPanel({
 
   const renderStatus = language => {
     const status = disabledLanguages.includes(language) ? 'Disabled' : 'Enabled';
-    return language === defaultLanguage ? `${status} (default)` : status;
+    if (language !== defaultLanguage) {
+      return status;
+    }
+    return (
+      <Flex gap={2} alignItems="center">
+        {status}
+        <Tag minimal intent={Intent.PRIMARY}>
+          Default
+        </Tag>
+      </Flex>
+    );
   };
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>Languages</span>
-          {renderAddForm()}
-        </h4>
-      </Flex>
-      <HTMLTable striped className="table-list-condensed">
-        <thead>
-          <tr>
-            <th>Language</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {languages.map(language => (
-            <tr key={language}>
-              <td>{worldLanguageNamesMap[language] || language}</td>
-              <td>{renderStatus(language)}</td>
-              <td style={{ textAlign: 'right' }}>{renderActions(language)}</td>
+      <h4>Languages</h4>
+      <Flex flexDirection="column" gap={5}>
+        {renderAddForm()}
+        <HTMLTable striped className="table-list-condensed">
+          <thead>
+            <tr>
+              <th>Language</th>
+              <th>Status</th>
+              <th className="col-fit" />
             </tr>
-          ))}
-        </tbody>
-      </HTMLTable>
+          </thead>
+          <tbody>
+            {languages.map(language => (
+              <tr key={language}>
+                <td>{worldLanguageNamesMap[language] || language}</td>
+                <td>{renderStatus(language)}</td>
+                <td className="col-fit" style={{ textAlign: 'right' }}>
+                  {renderActions(language)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </HTMLTable>
+      </Flex>
     </Flex>
   );
 }

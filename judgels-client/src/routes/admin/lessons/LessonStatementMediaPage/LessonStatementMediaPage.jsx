@@ -36,12 +36,6 @@ export default function LessonStatementMediaPage() {
   return (
     <FilesPanel
       title="Media"
-      description={
-        <>
-          Refer to a media file in a statement as <code>render/&lt;filename&gt;</code>. Previews show a newly uploaded
-          file only after it is committed.
-        </>
-      }
       noun="media"
       files={files}
       canEdit={canEdit}

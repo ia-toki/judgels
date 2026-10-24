@@ -65,13 +65,17 @@ export function ProblemEditorial({ title, settersMap, profilesMap, children }) {
 
   return (
     <div className="problem-editorial">
-      <h4>{title}</h4>
-      <ul>
-        {renderWriters()}
-        {renderDevelopers()}
-        {renderEditorialists()}
-      </ul>
-      <hr />
+      {title && (
+        <>
+          <h4>{title}</h4>
+          <ul>
+            {renderWriters()}
+            {renderDevelopers()}
+            {renderEditorialists()}
+          </ul>
+          <hr />
+        </>
+      )}
       <RichStatementText key={title}>{children}</RichStatementText>
     </div>
   );

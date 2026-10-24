@@ -78,9 +78,23 @@ describe('ProblemStatementMediaPage', () => {
     const user = userEvent.setup();
 
     await selectFile(user, 'media.zip');
-    await user.click(screen.getByRole('checkbox', { name: /extract as zip/i }));
+    expect(screen.getByRole('checkbox', { name: /extract as zip/i })).toBeChecked();
 
     nockApi().post('/v4/problems/JIDPROG1/statement/media/zip').reply(200);
+
+    await user.click(screen.getByRole('button', { name: /upload/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('uploads a zip as a file when extraction is unticked', async () => {
+    await renderComponent();
+    const user = userEvent.setup();
+
+    await selectFile(user, 'media.zip');
+    await user.click(screen.getByRole('checkbox', { name: /extract as zip/i }));
+
+    nockApi().post('/v4/problems/JIDPROG1/statement/media').reply(200);
 
     await user.click(screen.getByRole('button', { name: /upload/i }));
 

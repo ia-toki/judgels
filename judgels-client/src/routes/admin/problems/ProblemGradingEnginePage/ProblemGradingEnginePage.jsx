@@ -59,7 +59,7 @@ export default function ProblemGradingEnginePage() {
         />
       </Flex>
       <p>
-        <small>Changing the grading engine resets the grading config.</small>
+        <small>Changing the grading engine will reset the grading config.</small>
       </p>
       <Alert
         isOpen={isConfirming}

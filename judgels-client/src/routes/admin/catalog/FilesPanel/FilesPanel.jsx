@@ -15,7 +15,6 @@ const ALL_FILES = Symbol('all files');
 // One directory of a problem's or a lesson's files: its listing, with upload, download and delete.
 export default function FilesPanel({
   title,
-  description,
   noun,
   files,
   canEdit,
@@ -57,12 +56,9 @@ export default function FilesPanel({
 
   const renderDeleteAllButton = () => {
     return (
-      canEdit &&
-      files.length > 0 && (
-        <Button small intent={Intent.DANGER} icon={<Trash />} onClick={() => setDeleteTarget(ALL_FILES)}>
-          Delete all
-        </Button>
-      )
+      <Button small intent={Intent.DANGER} icon={<Trash />} onClick={() => setDeleteTarget(ALL_FILES)}>
+        Delete all
+      </Button>
     );
   };
 
@@ -76,66 +72,61 @@ export default function FilesPanel({
     }
 
     return (
-      <HTMLTable striped className="table-list-condensed">
-        <thead>
-          <tr>
-            <th>Filename</th>
-            <th>Size</th>
-            <th>Last modified</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {files.map(file => (
-            <tr key={file.name}>
-              <td>{file.name}</td>
-              <td>{prettyBytes(file.size)}</td>
-              <td>
-                <FormattedRelative value={file.lastModifiedTime} />
-              </td>
-              <td>
-                <ActionButtons justifyContent="end">
-                  <Button
-                    small
-                    minimal
-                    icon={<Download />}
-                    aria-label={`Download ${file.name}`}
-                    onClick={() => onDownloadFile(file.name)}
-                  />
-                  {canEdit && (
+      <Flex flexDirection="column" gap={2}>
+        {canEdit && <Flex>{renderDeleteAllButton()}</Flex>}
+        <HTMLTable striped className="table-list-condensed">
+          <thead>
+            <tr>
+              <th>Filename</th>
+              <th>Size</th>
+              <th>Last modified</th>
+              <th className="col-fit" />
+            </tr>
+          </thead>
+          <tbody>
+            {files.map(file => (
+              <tr key={file.name}>
+                <td>{file.name}</td>
+                <td>{prettyBytes(file.size)}</td>
+                <td>
+                  <FormattedRelative value={file.lastModifiedTime} />
+                </td>
+                <td className="col-fit">
+                  <ActionButtons justifyContent="end">
                     <Button
                       small
                       minimal
-                      intent={Intent.DANGER}
-                      icon={<Trash />}
-                      aria-label={`Delete ${file.name}`}
-                      onClick={() => setDeleteTarget(file.name)}
+                      icon={<Download />}
+                      aria-label={`Download ${file.name}`}
+                      onClick={() => onDownloadFile(file.name)}
                     />
-                  )}
-                </ActionButtons>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </HTMLTable>
+                    {canEdit && (
+                      <Button
+                        small
+                        minimal
+                        intent={Intent.DANGER}
+                        icon={<Trash />}
+                        aria-label={`Delete ${file.name}`}
+                        onClick={() => setDeleteTarget(file.name)}
+                      />
+                    )}
+                  </ActionButtons>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </HTMLTable>
+      </Flex>
     );
   };
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>{title}</span>
-          {renderDeleteAllButton()}
-        </h4>
+      <h4>{title}</h4>
+      <Flex flexDirection="column" gap={5}>
+        {canEdit && <FileUploadForm onSubmit={uploadFile} />}
+        {renderFiles()}
       </Flex>
-      {description && (
-        <p>
-          <small>{description}</small>
-        </p>
-      )}
-      {canEdit && <FileUploadForm onSubmit={uploadFile} />}
-      {renderFiles()}
       <Alert
         isOpen={deleteTarget !== undefined}
         intent={Intent.DANGER}

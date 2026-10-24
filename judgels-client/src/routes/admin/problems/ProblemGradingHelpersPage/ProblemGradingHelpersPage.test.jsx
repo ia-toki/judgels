@@ -82,7 +82,7 @@ describe('ProblemGradingHelpersPage', () => {
     const user = userEvent.setup();
 
     await selectFile(user, 'files.zip');
-    await user.click(screen.getByRole('checkbox', { name: /extract as zip/i }));
+    expect(screen.getByRole('checkbox', { name: /extract as zip/i })).toBeChecked();
 
     nockApi().post('/v4/problems/JIDPROG1/grading/helpers/zip').reply(200);
 

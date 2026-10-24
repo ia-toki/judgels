@@ -34,10 +34,10 @@ describe('ProblemEditorialLayout', () => {
   test('renders the tabs of an editorial', async () => {
     await renderComponent({ hasEditorial: true });
 
-    await screen.findByRole('link', { name: 'Content' });
+    await screen.findByRole('link', { name: 'Editorial' });
 
     expect(
-      ['Content', 'Languages', 'Media'].map(name => screen.getByRole('link', { name }).getAttribute('href'))
+      ['Editorial', 'Languages', 'Media'].map(name => screen.getByRole('link', { name }).getAttribute('href'))
     ).toEqual([
       '/admin/problems/problem-1/editorial/content',
       '/admin/problems/problem-1/editorial/languages',
@@ -49,7 +49,7 @@ describe('ProblemEditorialLayout', () => {
   test('creates the editorial of a problem that has none', async () => {
     await renderComponent({ hasEditorial: false });
 
-    expect(await screen.findByText(/no editorial/i)).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /create editorial/i })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Languages' })).not.toBeInTheDocument();
 
     const user = userEvent.setup();

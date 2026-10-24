@@ -14,13 +14,17 @@ describe('ProblemSubmissionsPage', () => {
     window.confirm = () => true;
   });
 
-  const renderComponent = async ({ type = 'PROGRAMMING' } = {}) => {
+  const renderComponent = async ({ type = 'PROGRAMMING', empty = false } = {}) => {
     nockApi().get('/v4/problems/slug/problem-1').reply(200, { jid: 'JIDPROG1', slug: 'problem-1' });
     nockApi()
       .get('/v4/problems/JIDPROG1')
       .reply(200, { id: 1, jid: 'JIDPROG1', slug: 'problem-1', type, authorJid: 'JIDUSER1' });
 
-    if (type === 'PROGRAMMING') {
+    if (empty) {
+      nockApi()
+        .get('/v4/problems/JIDPROG1/submissions/programming')
+        .reply(200, { data: { page: [], totalCount: 0 }, profilesMap: {} });
+    } else if (type === 'PROGRAMMING') {
       nockApi()
         .get('/v4/problems/JIDPROG1/submissions/programming')
         .reply(200, {
@@ -87,7 +91,11 @@ describe('ProblemSubmissionsPage', () => {
       )
     );
 
-    await screen.findByRole('table');
+    if (empty) {
+      await screen.findByText('No submissions.');
+    } else {
+      await screen.findByRole('table');
+    }
   };
 
   const getRows = columns =>
@@ -131,6 +139,12 @@ describe('ProblemSubmissionsPage', () => {
     await user.click(screen.getByRole('button', { name: /regrade all/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('hides regrade all when there are no submissions', async () => {
+    await renderComponent({ empty: true });
+
+    expect(screen.queryByRole('button', { name: /regrade all/i })).not.toBeInTheDocument();
   });
 
   test('bundle submissions', async () => {

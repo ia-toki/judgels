@@ -32,7 +32,6 @@ export default function ProblemGradingHelpersPage() {
   return (
     <FilesPanel
       title="Helpers"
-      description="The source files that the grading config uses as a custom scorer or a communicator."
       noun="helper"
       files={files}
       canEdit

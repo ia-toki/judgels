@@ -74,10 +74,10 @@ describe('ProblemGeneralPage', () => {
     expect(getRows(getSection('Setters'))).toEqual([
       ['Writers', 'writer'],
       ['Developers', ''],
-      ['Testers', 'tester, writer'],
+      ['Testers', 'tester writer'],
       ['Editorialists', ''],
     ]);
-    expect(getRows(getSection('Tags'))).toEqual([['Tags', 'graph, graph: shortest path']]);
+    expect(getRows(getSection('Tags'))).toEqual([['Tags', 'graph: shortest path']]);
   });
 
   test('general edit form', async () => {
@@ -109,6 +109,7 @@ describe('ProblemGeneralPage', () => {
     await user.click(within(section).getByRole('button', { name: /edit/i }));
 
     const developers = await within(section).findByRole('textbox', { name: /developers/i });
+    expect(within(section).getByRole('textbox', { name: /testers/i })).toHaveValue('tester,writer');
     await user.type(developers, 'dev1, dev2');
 
     nockApi()

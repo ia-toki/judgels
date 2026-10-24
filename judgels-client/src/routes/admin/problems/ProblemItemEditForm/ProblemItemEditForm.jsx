@@ -204,9 +204,9 @@ export default function ProblemItemEditForm({ item, onSubmit }) {
               <StatementManual />
             </Flex>
             {isSourceMode ? (
-              <Field component={FormAceEditor} name={statementField.name} />
+              <Field component={FormAceEditor} name={statementField.name} mode="html" tall />
             ) : (
-              <Field component={FormRichTextArea} {...statementField} />
+              <Field component={FormRichTextArea} {...statementField} tall />
             )}
             {type !== ItemType.Statement && <Field component={FormTextInput} {...scoreField} />}
             {(type === ItemType.MultipleChoice || type === ItemType.ShortAnswer) && (

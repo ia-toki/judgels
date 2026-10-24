@@ -117,7 +117,6 @@ export default function ProblemPartnersPage() {
           {renderEditButton()}
         </h4>
       </Flex>
-      <p>Partners can view and edit this problem. Only its author and admins manage them.</p>
       {renderContent()}
     </div>
   );

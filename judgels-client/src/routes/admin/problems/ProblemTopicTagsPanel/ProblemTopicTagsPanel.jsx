@@ -1,9 +1,10 @@
-import { Button } from '@blueprintjs/core';
+import { Button, Intent, Tag } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { getDisplayedTopicTags } from '../../../../components/ProblemTopicTags/ProblemTopicTags';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import {
   problemTopicTagsQueryOptions,
@@ -26,11 +27,15 @@ export default function ProblemTopicTagsPanel({ problemJid }) {
     {
       key: 'topicTags',
       title: 'Tags',
-      value: topicTags
-        .slice()
-        .sort()
-        .map(tag => tag.substring('topic-'.length))
-        .join(', '),
+      value: (
+        <Flex gap={1} flexWrap="wrap">
+          {getDisplayedTopicTags(topicTags).map(tag => (
+            <Tag key={tag} round multiline intent={Intent.PRIMARY}>
+              {tag}
+            </Tag>
+          ))}
+        </Flex>
+      ),
     },
   ];
 
