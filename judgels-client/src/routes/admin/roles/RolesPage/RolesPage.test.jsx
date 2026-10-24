@@ -57,35 +57,24 @@ describe('RolesPage', () => {
     await rowOf('andi');
 
     const rows = screen.getAllByRole('row').slice(1);
-    expect(rows.map(row => within(row).getByRole('link').textContent)).toEqual(['andi', 'budi']);
+    expect(rows.map(row => within(row).getAllByRole('link')[0].textContent)).toEqual(['andi', 'budi']);
     expect(rows.map(renderRoles)).toEqual([
       ['ADMIN', '', '', 'ADMIN'],
       ['', 'ADMIN', '', ''],
     ]);
   });
 
-  test('locks the own system admin role', async () => {
+  test('locks removing the own roles', async () => {
     await renderComponent();
-    const user = userEvent.setup();
-
-    const ownRow = await rowOf('andi');
-    expect(within(ownRow).getByRole('button', { name: /remove/i })).toBeDisabled();
-
-    await user.click(within(ownRow).getByRole('button', { name: /edit/i }));
-    expect(screen.getByRole('checkbox', { name: /system admin/i })).toBeDisabled();
+    expect(within(await rowOf('andi')).getByRole('button', { name: /remove/i })).toBeDisabled();
   });
 
-  test('edits the roles of a user', async () => {
+  test('links to the edit page of each user', async () => {
     await renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(within(await rowOf('budi')).getByRole('button', { name: /edit/i }));
-    expect(screen.getByRole('checkbox', { name: /problem admin/i })).toBeChecked();
-    await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
-
-    const scope = nockApi().put('/v2/user-roles/userJid2', { problem: 'ADMIN', contest: 'ADMIN' }).reply(200);
-    await user.click(screen.getByRole('button', { name: /save/i }));
-    await waitFor(() => expect(scope.isDone()).toBe(true));
+    expect(within(await rowOf('budi')).getByRole('link', { name: /edit/i })).toHaveAttribute(
+      'href',
+      '/admin/roles/budi'
+    );
   });
 
   test('removes a user', async () => {
@@ -100,22 +89,8 @@ describe('RolesPage', () => {
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });
 
-  test('upserts admins, keeping the users not found', async () => {
+  test('links to the upsert page', async () => {
     await renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(await screen.findByRole('button', { name: /upsert roles/i }));
-    await user.type(screen.getByLabelText(/usernames/i), 'caca\ndodi');
-    expect(screen.getByRole('button', { name: /^submit$/i })).toBeDisabled();
-    await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
-
-    const scope = nockApi()
-      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], role: { contest: 'ADMIN' } })
-      .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
-    await user.click(screen.getByRole('button', { name: /^submit$/i }));
-    await waitFor(() => expect(scope.isDone()).toBe(true));
-
-    expect(await screen.findByText('User not found: dodi.')).toBeInTheDocument();
-    expect(screen.getByLabelText(/usernames/i)).toHaveValue('dodi');
+    expect(await screen.findByRole('link', { name: /upsert roles/i })).toHaveAttribute('href', '/admin/roles/-/upsert');
   });
 });

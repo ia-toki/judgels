@@ -1,14 +1,15 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Upload } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { usersQueryOptions } from '../../../../modules/queries/user';
-import { UserUpsertDialog } from '../UserUpsertDialog/UserUpsertDialog';
 
 const PAGE_SIZE = 250;
 
@@ -21,7 +22,10 @@ export default function UsersPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <UserUpsertDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/users/-/upsert">
+          <Upload />
+          <span>Upsert users</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

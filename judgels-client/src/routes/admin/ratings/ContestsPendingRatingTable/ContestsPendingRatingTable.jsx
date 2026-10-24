@@ -1,8 +1,10 @@
-import { Button, HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 
 import './ContestsPendingRatingTable.scss';
 
-export function ContestsPendingRatingTable({ contests, onClickView, isContestViewed }) {
+export function ContestsPendingRatingTable({ contests }) {
   return (
     <HTMLTable striped className="table-list-condensed contests-pending-rating-table">
       <thead>
@@ -16,9 +18,9 @@ export function ContestsPendingRatingTable({ contests, onClickView, isContestVie
           <tr key={c.jid}>
             <td>{c.name}</td>
             <td className="col-actions">
-              <Button small intent="primary" onClick={() => onClickView(c)} disabled={isContestViewed}>
+              <ButtonLink small intent={Intent.PRIMARY} to={`/admin/ratings/${c.slug}`}>
                 View rating changes
-              </Button>
+              </ButtonLink>
             </td>
           </tr>
         ))}

@@ -1,20 +1,19 @@
-import { Alert, Button, HTMLTable, Intent, Tag } from '@blueprintjs/core';
-import { Edit, Trash } from '@blueprintjs/icons';
+import { Alert, Button, Classes, HTMLTable, Intent, Tag } from '@blueprintjs/core';
+import { Edit, Trash, Upload } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { setUserRoleMutationOptions } from '../../../../modules/queries/userRole';
 import { useSession } from '../../../../modules/session';
 import { getRoleFields } from '../RoleCheckboxes/RoleCheckboxes';
-import { RoleEditDialog } from '../RoleEditDialog/RoleEditDialog';
-import { RoleUpsertDialog } from '../RoleUpsertDialog/RoleUpsertDialog';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-function buildUsers(roles, actorJid) {
+export function buildUsers(roles, actorJid) {
   const { data, profilesMap } = roles;
   const users = data.map(({ userJid, role }) => ({
     userJid,
@@ -30,14 +29,12 @@ function buildUsers(roles, actorJid) {
 export function RolesSection({ roles }) {
   const { user: actor } = useSession();
 
-  const [userToEdit, setUserToEdit] = useState(undefined);
   const [userToRemove, setUserToRemove] = useState(undefined);
 
   const removeRoleMutation = useMutation(setUserRoleMutationOptions(userToRemove?.userJid));
 
   const roleFields = getRoleFields();
   const allUsers = buildUsers(roles, actor?.jid);
-  const superadmin = allUsers.find(user => user.isSuperadmin);
   const users = allUsers.filter(user => !user.isSuperadmin);
 
   const removeUser = async () => {
@@ -48,7 +45,14 @@ export function RolesSection({ roles }) {
 
   const renderActions = user => (
     <ActionButtons>
-      <Button small minimal icon={<Edit />} aria-label={`Edit ${user.username}`} onClick={() => setUserToEdit(user)} />
+      <ButtonLink
+        small
+        className={Classes.MINIMAL}
+        aria-label={`Edit ${user.username}`}
+        to={`/admin/roles/${user.username}`}
+      >
+        <Edit />
+      </ButtonLink>
       <Button
         small
         minimal
@@ -75,7 +79,10 @@ export function RolesSection({ roles }) {
   return (
     <Flex flexDirection="column" gap={2}>
       <ActionButtons>
-        <RoleUpsertDialog superadminUsername={superadmin?.username} />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/roles/-/upsert">
+          <Upload />
+          <span>Upsert roles</span>
+        </ButtonLink>
       </ActionButtons>
 
       <HTMLTable striped className="table-list">
@@ -90,8 +97,6 @@ export function RolesSection({ roles }) {
         </thead>
         <tbody>{users.map(renderRow)}</tbody>
       </HTMLTable>
-
-      {userToEdit && <RoleEditDialog user={userToEdit} onClose={() => setUserToEdit(undefined)} />}
 
       <Alert
         isOpen={userToRemove !== undefined}

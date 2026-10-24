@@ -65,6 +65,9 @@ describe('ProblemSetsPage', () => {
 
   test('renders the create button', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new problemset/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new problemset/i })).toHaveAttribute(
+      'href',
+      '/admin/problemsets/-/new'
+    );
   });
 });

@@ -53,6 +53,6 @@ describe('ChaptersPage', () => {
 
   test('renders the create button', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new chapter/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new chapter/i })).toHaveAttribute('href', '/admin/chapters/-/new');
   });
 });

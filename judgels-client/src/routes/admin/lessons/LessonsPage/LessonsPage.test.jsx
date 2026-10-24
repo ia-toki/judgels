@@ -85,13 +85,13 @@ describe('LessonsPage', () => {
 
   test('shows the create button to training admins only', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new lesson/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new lesson/i })).toHaveAttribute('href', '/admin/lessons/-/new');
   });
 
   test('hides the create button from other users', async () => {
     await renderComponent({ role: {} });
 
     expect(await screen.findByText('lesson-1')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /new lesson/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /new lesson/i })).not.toBeInTheDocument();
   });
 });

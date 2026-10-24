@@ -1,13 +1,14 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { HTMLTable, Intent } from '@blueprintjs/core';
+import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { contestsQueryOptions } from '../../../../modules/queries/contest';
-import { ContestCreateDialog } from '../../../contests/contests/ContestCreateDialog/ContestCreateDialog';
 
 const PAGE_SIZE = 20;
 
@@ -58,7 +59,10 @@ export default function ContestsPage() {
   const renderAction = () => {
     return (
       <ActionButtons>
-        <ContestCreateDialog />
+        <ButtonLink intent={Intent.PRIMARY} to="/admin/contests/-/new">
+          <Plus />
+          <span>New contest</span>
+        </ButtonLink>
       </ActionButtons>
     );
   };

@@ -57,8 +57,8 @@ describe('ContestsPage', () => {
     ).toEqual([[], ['1', 'contest-1', 'Contest 1'], ['2', 'contest-2', 'Contest 2']]);
   });
 
-  test('renders the create button', async () => {
+  test('links to the create page', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /new contest/i })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /new contest/i })).toHaveAttribute('href', '/admin/contests/-/new');
   });
 });

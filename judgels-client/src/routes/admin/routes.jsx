@@ -6,6 +6,7 @@ import { archivesQueryOptions } from '../../modules/queries/archive';
 import { chapterByJidQueryOptions } from '../../modules/queries/chapter';
 import { chapterLessonsQueryOptions } from '../../modules/queries/chapterLesson';
 import { chapterProblemsQueryOptions } from '../../modules/queries/chapterProblem';
+import { contestsPendingRatingQueryOptions } from '../../modules/queries/contestRating';
 import { courseBySlugQueryOptions } from '../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../modules/queries/courseChapter';
 import { curriculumByJidQueryOptions } from '../../modules/queries/curriculum';
@@ -55,6 +56,7 @@ import {
 import { basicProfileQueryOptions } from '../../modules/queries/profile';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
+import { userRolesQueryOptions } from '../../modules/queries/userRole';
 import { queryClient } from '../../modules/queryClient';
 import { createDocumentTitle } from '../../utils/title';
 
@@ -78,6 +80,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./users/UsersPage/UsersPage'))),
   });
 
+  const adminUserUpsertRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'users/-/upsert',
+    component: lazyRouteComponent(retryImport(() => import('./users/UserUpsertPage/UserUpsertPage'))),
+  });
+
   const adminUserRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'users/$username',
@@ -94,16 +102,51 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./roles/RolesPage/RolesPage'))),
   });
 
+  const adminRoleUpsertRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'roles/-/upsert',
+    component: lazyRouteComponent(retryImport(() => import('./roles/RoleUpsertPage/RoleUpsertPage'))),
+    loader: async () => {
+      await queryClient.ensureQueryData(userRolesQueryOptions());
+    },
+  });
+
+  const adminRoleEditRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'roles/$username',
+    component: lazyRouteComponent(retryImport(() => import('./roles/RoleEditPage/RoleEditPage'))),
+    loader: async () => {
+      await queryClient.ensureQueryData(userRolesQueryOptions());
+    },
+  });
+
   const adminRatingsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'ratings',
     component: lazyRouteComponent(retryImport(() => import('./ratings/RatingsPage/RatingsPage'))),
   });
 
+  const adminContestRatingChangesRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'ratings/$contestSlug',
+    component: lazyRouteComponent(
+      retryImport(() => import('./ratings/ContestRatingChangesPage/ContestRatingChangesPage'))
+    ),
+    loader: async () => {
+      await queryClient.ensureQueryData(contestsPendingRatingQueryOptions());
+    },
+  });
+
   const adminContestsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'contests',
     component: lazyRouteComponent(retryImport(() => import('./contests/ContestsPage/ContestsPage'))),
+  });
+
+  const adminContestCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'contests/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./contests/ContestCreatePage/ContestCreatePage'))),
   });
 
   const adminCurriculumsRoute = createRoute({
@@ -127,6 +170,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./courses/CoursesPage/CoursesPage'))),
   });
 
+  const adminCourseCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'courses/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./courses/CourseCreatePage/CourseCreatePage'))),
+  });
+
   const adminCourseRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses/$courseSlug',
@@ -141,6 +190,12 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminRoute,
     path: 'chapters',
     component: lazyRouteComponent(retryImport(() => import('./chapters/ChaptersPage/ChaptersPage'))),
+  });
+
+  const adminChapterCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'chapters/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./chapters/ChapterCreatePage/ChapterCreatePage'))),
   });
 
   const adminChapterRoute = createRoute({
@@ -162,6 +217,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./archives/ArchivesPage/ArchivesPage'))),
   });
 
+  const adminArchiveCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'archives/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./archives/ArchiveCreatePage/ArchiveCreatePage'))),
+  });
+
   const adminArchiveRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'archives/$archiveSlug',
@@ -175,6 +236,12 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminRoute,
     path: 'problemsets',
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
+  });
+
+  const adminProblemSetCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'problemsets/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetCreatePage/ProblemSetCreatePage'))),
   });
 
   const adminProblemSetRoute = createRoute({
@@ -194,6 +261,12 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminRoute,
     path: 'problems',
     component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
+  });
+
+  const adminProblemCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'problems/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemCreatePage/ProblemCreatePage'))),
   });
 
   const adminProblemRoute = createRoute({
@@ -468,6 +541,12 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonsPage/LessonsPage'))),
   });
 
+  const adminLessonCreateRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'lessons/-/new',
+    component: lazyRouteComponent(retryImport(() => import('./lessons/LessonCreatePage/LessonCreatePage'))),
+  });
+
   const adminLessonRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons/$lessonSlug',
@@ -554,21 +633,31 @@ export const createAdminRoutes = appRoute => {
   return adminRoute.addChildren([
     adminIndexRoute,
     adminUsersRoute,
+    adminUserUpsertRoute,
     adminUserRoute,
     adminRolesRoute,
+    adminRoleUpsertRoute,
+    adminRoleEditRoute,
     adminRatingsRoute,
+    adminContestRatingChangesRoute,
     adminContestsRoute,
+    adminContestCreateRoute,
     adminCurriculumsRoute,
     adminCurriculumRoute,
     adminCoursesRoute,
+    adminCourseCreateRoute,
     adminCourseRoute,
     adminChaptersRoute,
+    adminChapterCreateRoute,
     adminChapterRoute,
     adminArchivesRoute,
+    adminArchiveCreateRoute,
     adminArchiveRoute,
     adminProblemSetsRoute,
+    adminProblemSetCreateRoute,
     adminProblemSetRoute,
     adminProblemsRoute,
+    adminProblemCreateRoute,
     adminProblemRoute.addChildren([
       adminProblemIndexRoute,
       adminProblemGeneralRoute,
@@ -597,6 +686,7 @@ export const createAdminRoutes = appRoute => {
       adminProblemPartnersRoute,
     ]),
     adminLessonsRoute,
+    adminLessonCreateRoute,
     adminLessonRoute.addChildren([
       adminLessonIndexRoute,
       adminLessonGeneralRoute,

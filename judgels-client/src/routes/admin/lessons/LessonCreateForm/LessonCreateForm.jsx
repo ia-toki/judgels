@@ -1,6 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
+import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormSelect2 } from '../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
@@ -12,7 +13,7 @@ const initialValues = {
   initialLanguage: 'en-US',
 };
 
-export default function LessonCreateForm({ onSubmit, renderFormComponents }) {
+export default function LessonCreateForm({ onSubmit, onCancel }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',
@@ -33,20 +34,19 @@ export default function LessonCreateForm({ onSubmit, renderFormComponents }) {
     optionNamesMap: worldLanguageNamesMap,
   };
 
-  const fields = (
-    <>
-      <Field component={FormTextInput} {...slugField} />
-      <Field component={FormTextArea} {...additionalNoteField} />
-      <Field component={FormSelect2} {...initialLanguageField} />
-    </>
-  );
-
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
-      {({ handleSubmit, submitting }) => {
-        const submitButton = <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
-      }}
+      {({ handleSubmit, submitting }) => (
+        <form onSubmit={handleSubmit}>
+          <Field component={FormTextInput} {...slugField} />
+          <Field component={FormTextArea} {...additionalNoteField} />
+          <Field component={FormSelect2} {...initialLanguageField} />
+          <ActionButtons justifyContent="end">
+            <Button text="Cancel" disabled={submitting} onClick={onCancel} />
+            <Button type="submit" text="Create" intent={Intent.PRIMARY} loading={submitting} />
+          </ActionButtons>
+        </form>
+      )}
     </Form>
   );
 }

@@ -1,6 +1,4 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import nock from 'nock';
+import { act, render, screen, within } from '@testing-library/react';
 
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
@@ -38,12 +36,14 @@ describe('RatingsPage', () => {
     contests = [
       {
         jid: 'contestJid1',
+        slug: 'contest-1',
         name: 'Contest 1',
         beginTime: 100,
         duration: 50,
       },
       {
         jid: 'contestJid2',
+        slug: 'contest-2',
         name: 'Contest 2',
         beginTime: 200,
         duration: 100,
@@ -89,50 +89,13 @@ describe('RatingsPage', () => {
     ]);
   });
 
-  test('renders the users with rating changes', async () => {
+  test('links to the rating changes of each contest', async () => {
     await renderComponent();
 
-    const user = userEvent.setup();
     const rows = await screen.findAllByRole('row');
-    const viewButton = within(rows[1]).getByRole('button', { name: /view rating changes/i });
-    await user.click(viewButton);
-
-    const dialog = screen.getByRole('dialog');
-    const dialogRows = within(dialog).getAllByRole('row').slice(1);
-
-    expect(
-      dialogRows.map(row =>
-        within(row)
-          .getAllByRole('cell')
-          .map(td => td.textContent)
-      )
-    ).toEqual([
-      ['user2', '1700'],
-      ['user1', '1600'],
-    ]);
-  });
-
-  test('calls API', async () => {
-    await renderComponent();
-
-    const user = userEvent.setup();
-    const rows = await screen.findAllByRole('row');
-    const viewButton = within(rows[1]).getByRole('button', { name: /view rating changes/i });
-    await user.click(viewButton);
-
-    nockApi()
-      .post('/v2/user-rating', {
-        eventJid: 'contestJid1',
-        time: 150,
-        ratingsMap: mockRatingChangesMap.contestJid1.ratingsMap,
-      })
-      .reply(200);
-
-    const dialog = screen.getByRole('dialog');
-    const buttons = within(dialog).getAllByRole('button');
-    const applyButton = buttons[buttons.length - 1];
-    await user.click(applyButton);
-
-    await waitFor(() => expect(nock.isDone()).toBe(true));
+    expect(within(rows[1]).getByRole('link', { name: /view rating changes/i })).toHaveAttribute(
+      'href',
+      '/admin/ratings/contest-1'
+    );
   });
 });
