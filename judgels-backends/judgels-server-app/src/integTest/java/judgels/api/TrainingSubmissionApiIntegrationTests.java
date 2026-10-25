@@ -87,8 +87,8 @@ class TrainingSubmissionApiIntegrationTests extends BaseTrainingApiIntegrationTe
 
         assertThat(submissionClient.getSubmission(userAToken, submissionA.getJid()).getJid())
                 .isEqualTo(submissionA.getJid());
-        assertPermitted(() -> submissionClient.getSubmission(adminToken, submissionA.getJid()));
-        assertForbidden(() -> submissionClient.getSubmission(userBToken, submissionA.getJid()));
+        assertPermitted(() -> submissionClient.getSubmission(userBToken, submissionA.getJid()));
+        assertPermitted(() -> submissionClient.getSubmission(null, submissionA.getJid()));
 
         SubmissionWithSourceResponse sourceResponse =
                 submissionClient.getSubmissionWithSourceById(userBToken, submissionA.getId());

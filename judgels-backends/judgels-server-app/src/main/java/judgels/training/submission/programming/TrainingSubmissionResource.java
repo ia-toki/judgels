@@ -159,14 +159,11 @@ public class TrainingSubmissionResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
     public Submission getSubmission(
-            @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
+            @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("submissionJid") String submissionJid) {
 
-        String actorJid = actorChecker.check(authHeader);
-        Submission submission = checkFound(submissionStore.getSubmissionByJid(submissionJid));
-        checkAllowed(submissionRoleChecker.canViewOwn(actorJid, submission.getUserJid()));
-
-        return submission;
+        actorChecker.check(authHeader);
+        return checkFound(submissionStore.getSubmissionByJid(submissionJid));
     }
 
     @GET
