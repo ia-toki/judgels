@@ -7,6 +7,7 @@ import { Link, useLocation } from '@tanstack/react-router';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
@@ -63,12 +64,15 @@ export default function LessonsPage() {
 
     const rows = lessons.page.map(lesson => (
       <tr key={lesson.jid}>
-        <td style={{ width: '60px' }}>{lesson.id}</td>
+        <td className="col-fit">{lesson.id}</td>
         <td>
           <Link to={`/admin/lessons/${lesson.slug}`}>{lesson.slug}</Link>
         </td>
-        <td style={{ width: '200px' }}>
+        <td>
           <UserRef profile={profilesMap[lesson.authorJid]} />
+        </td>
+        <td>
+          <FormattedRelative value={lesson.lastUpdateTime} />
         </td>
       </tr>
     ));
@@ -77,9 +81,10 @@ export default function LessonsPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th>Slug</th>
-            <th style={{ width: '200px' }}>Author</th>
+            <th>Created by</th>
+            <th>Last updated</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

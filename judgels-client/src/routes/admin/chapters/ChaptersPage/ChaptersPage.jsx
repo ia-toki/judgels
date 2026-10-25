@@ -28,7 +28,7 @@ export default function ChaptersPage() {
 
     const rows = chapters.map(chapter => (
       <tr key={chapter.jid}>
-        <td style={{ width: '60px' }}>{chapter.id}</td>
+        <td className="col-fit">{chapter.id}</td>
         <td style={{ width: '200px' }}>
           <Link to={`/admin/chapters/${chapter.jid}`}>{chapter.jid}</Link>
         </td>
@@ -40,7 +40,7 @@ export default function ChaptersPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th style={{ width: '200px' }}>JID</th>
             <th>Name</th>
           </tr>

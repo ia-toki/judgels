@@ -424,7 +424,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemGradingRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/problems/$problemSlug/grading/engine', params, replace: true });
+      throw redirect({ to: '/admin/problems/$problemSlug/grading/config', params, replace: true });
     },
   });
 

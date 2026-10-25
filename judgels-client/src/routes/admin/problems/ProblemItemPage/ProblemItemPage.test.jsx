@@ -67,7 +67,7 @@ describe('ProblemItemPage', () => {
       )
     );
 
-    await screen.findByRole('heading', { name: /(statement|multiple choice|short answer|essay) item/i });
+    await screen.findByRole('heading', { name: /statement item|\((multiple choice|short answer|essay)\)/i });
   };
 
   const nockUpdate = (language, data) =>
@@ -81,14 +81,14 @@ describe('ProblemItemPage', () => {
   test('shows the item in the default language', async () => {
     await renderComponent({ item: multipleChoiceItem });
 
-    expect(screen.getByRole('heading', { name: /multiple choice item \(no\. 2\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /No\. 2 \(Multiple Choice\)/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Items' })).toHaveAttribute('href', '/admin/problems/problem-1/items');
     expect(screen.getByRole('combobox', { name: 'Language' })).toHaveTextContent('Indonesian (id-ID)');
 
     expect(await screen.findByRole('textbox', { name: 'Internal note' })).toHaveValue('addition');
     expect(screen.getByRole('textbox', { name: 'Statement' })).toHaveValue('What is 1 + 1?');
-    expect(screen.getByRole('textbox', { name: /^score/i })).toHaveValue('4');
-    expect(screen.getByRole('textbox', { name: /^penalty/i })).toHaveValue('-1');
+    expect(screen.getByRole('textbox', { name: 'Points for a correct answer' })).toHaveValue('4');
+    expect(screen.getByRole('textbox', { name: 'Points for a wrong answer' })).toHaveValue('-1');
     expect(screen.getByRole('textbox', { name: 'Alias of choice 2' })).toHaveValue('b');
     expect(screen.getByRole('textbox', { name: 'Content of choice 2' })).toHaveValue('two');
     expect(screen.getByRole('checkbox', { name: 'Choice 1 is correct' })).not.toBeChecked();
@@ -121,7 +121,7 @@ describe('ProblemItemPage', () => {
     await renderComponent({ item: statementItem });
     const user = userEvent.setup();
 
-    expect(screen.queryByRole('textbox', { name: /^score/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'Points for a correct answer' })).not.toBeInTheDocument();
 
     const meta = await screen.findByRole('textbox', { name: 'Internal note' });
     await user.clear(meta);
@@ -139,7 +139,7 @@ describe('ProblemItemPage', () => {
     await renderComponent({ item: multipleChoiceItem });
     const user = userEvent.setup();
 
-    const score = await screen.findByRole('textbox', { name: /^score/i });
+    const score = await screen.findByRole('textbox', { name: 'Points for a correct answer' });
     await user.clear(score);
     await user.type(score, '5');
 
@@ -190,7 +190,7 @@ describe('ProblemItemPage', () => {
     await user.type(format, '.*');
     await user.clear(screen.getByRole('textbox', { name: /^correct answer regex/i }));
 
-    const penalty = screen.getByRole('textbox', { name: /^penalty/i });
+    const penalty = screen.getByRole('textbox', { name: 'Points for a wrong answer' });
     await user.clear(penalty);
     await user.type(penalty, '-0.5');
 
@@ -207,9 +207,9 @@ describe('ProblemItemPage', () => {
     await renderComponent({ item: essayItem });
     const user = userEvent.setup();
 
-    expect(screen.queryByRole('textbox', { name: /^penalty/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'Points for a wrong answer' })).not.toBeInTheDocument();
 
-    const score = await screen.findByRole('textbox', { name: /^score/i });
+    const score = await screen.findByRole('textbox', { name: 'Points for a correct answer' });
     await user.clear(score);
     await user.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Must be a number')).toBeInTheDocument();

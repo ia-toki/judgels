@@ -7,6 +7,8 @@ import { nockApi } from '../../../../utils/nock';
 import ProblemsPage from './ProblemsPage';
 
 describe('ProblemsPage', () => {
+  const oneDay = 24 * 60 * 60 * 1000;
+
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -16,8 +18,22 @@ describe('ProblemsPage', () => {
     initialEntry = '/admin/problems',
     problemsQuery = true,
     problems = [
-      { jid: 'JIDPROG1', id: 1, slug: 'problem-1', type: 'PROGRAMMING', authorJid: 'JIDUSER1' },
-      { jid: 'JIDBUND2', id: 2, slug: 'problem-2', type: 'BUNDLE', authorJid: 'JIDUSER2' },
+      {
+        jid: 'JIDPROG1',
+        id: 1,
+        slug: 'problem-1',
+        type: 'PROGRAMMING',
+        authorJid: 'JIDUSER1',
+        lastUpdateTime: Date.now() - 2 * oneDay,
+      },
+      {
+        jid: 'JIDBUND2',
+        id: 2,
+        slug: 'problem-2',
+        type: 'BUNDLE',
+        authorJid: 'JIDUSER2',
+        lastUpdateTime: Date.now() - 3 * oneDay,
+      },
     ],
     profilesMap = {
       JIDUSER1: { username: 'user1' },
@@ -77,7 +93,11 @@ describe('ProblemsPage', () => {
           .queryAllByRole('cell')
           .map(cell => cell.textContent)
       )
-    ).toEqual([[], ['1', 'problem-1', 'Programming', 'user1'], ['2', 'problem-2', 'Bundle', 'user2']]);
+    ).toEqual([
+      [],
+      ['1', 'problem-1', 'Programming', 'user1', '2 days ago'],
+      ['2', 'problem-2', 'Bundle', 'user2', '3 days ago'],
+    ]);
   });
 
   test('links each problem to its page', async () => {

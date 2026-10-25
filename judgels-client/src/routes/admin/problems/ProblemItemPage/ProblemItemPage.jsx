@@ -42,8 +42,8 @@ export default function ProblemItemPage() {
     if (!item) {
       return 'Item';
     }
-    const name = `${itemTypeNamesMap[item.type]} item`;
-    return item.number ? `${name} (no. ${item.number})` : name;
+    const typeName = itemTypeNamesMap[item.type];
+    return item.number ? `No. ${item.number} (${typeName})` : `${typeName} item`;
   };
 
   const renderLanguageSelect = () => {

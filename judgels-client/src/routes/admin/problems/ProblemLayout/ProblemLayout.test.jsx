@@ -72,8 +72,7 @@ describe('ProblemLayout', () => {
 
   test('warns about uncommitted changes', async () => {
     await renderComponent({ hasLocalChanges: true });
-    expect(screen.getByText(/uncommitted changes/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /commit your changes/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'uncommitted changes' })).toHaveAttribute(
       'href',
       '/admin/problems/problem-1/versions'
     );

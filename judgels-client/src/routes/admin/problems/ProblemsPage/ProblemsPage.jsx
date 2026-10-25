@@ -7,6 +7,7 @@ import { Link, useLocation } from '@tanstack/react-router';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import ProblemTagFilter from '../../../../components/ProblemTagFilter/ProblemTagFilter';
@@ -76,13 +77,16 @@ export default function ProblemsPage() {
 
     const rows = problems.page.map(problem => (
       <tr key={problem.jid}>
-        <td style={{ width: '60px' }}>{problem.id}</td>
+        <td className="col-fit">{problem.id}</td>
         <td>
           <Link to={`/admin/problems/${problem.slug}`}>{problem.slug}</Link>
         </td>
-        <td style={{ width: '120px' }}>{problemTypeNamesMap[problem.type]}</td>
-        <td style={{ width: '200px' }}>
+        <td>{problemTypeNamesMap[problem.type]}</td>
+        <td>
           <UserRef profile={profilesMap[problem.authorJid]} />
+        </td>
+        <td>
+          <FormattedRelative value={problem.lastUpdateTime} />
         </td>
       </tr>
     ));
@@ -91,10 +95,11 @@ export default function ProblemsPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th>Slug</th>
-            <th style={{ width: '120px' }}>Type</th>
-            <th style={{ width: '200px' }}>Author</th>
+            <th>Type</th>
+            <th>Created by</th>
+            <th>Last updated</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

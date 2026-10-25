@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import { FormInputValidation } from '../FormInputValidation/FormInputValidation';
 import { getIntent, getIntentClassName } from '../meta';
 
-export function FormTextInput({ input, label, meta, autoFocus, inputType }) {
+export function FormTextInput({ input, label, labelHelper, meta, autoFocus, inputType }) {
   return (
-    <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)}>
+    <FormGroup labelFor={input.name} label={label} intent={getIntent(meta)} labelInfo={labelHelper}>
       <input
         {...input}
         id={input.name}
