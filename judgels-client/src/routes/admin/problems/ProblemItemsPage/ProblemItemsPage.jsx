@@ -159,19 +159,19 @@ export default function ProblemItemsPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th>No.</th>
+            <th className="col-fit">No.</th>
             <th>Type</th>
             <th>Internal note</th>
             <th>Points</th>
             <th>Format</th>
             <th>Answer</th>
-            <th />
+            <th className="col-fit" />
           </tr>
         </thead>
         <tbody>
           {items.map((item, idx) => (
             <tr key={item.jid}>
-              <td>{item.number}</td>
+              <td className="col-fit">{item.number}</td>
               <td>
                 <Link to={`/admin/problems/${problemSlug}/items/${item.jid}`}>{itemTypeNamesMap[item.type]}</Link>
               </td>
@@ -179,7 +179,7 @@ export default function ProblemItemsPage() {
               <td>{formatPoints(item)}</td>
               <td>{formatAnswerFormat(item)}</td>
               <td>{formatAnswer(item)}</td>
-              <td>{renderActions(item, idx)}</td>
+              <td className="col-fit">{renderActions(item, idx)}</td>
             </tr>
           ))}
         </tbody>
@@ -189,12 +189,8 @@ export default function ProblemItemsPage() {
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>Items</span>
-          {renderAddForm()}
-        </h4>
-      </Flex>
+      <h4>Items</h4>
+      {renderAddForm()}
       {renderItems()}
       <Alert
         isOpen={itemToDelete !== undefined}

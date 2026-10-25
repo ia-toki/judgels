@@ -34,7 +34,7 @@ export default function ContestsPage() {
 
     const rows = contests.map(contest => (
       <tr key={contest.jid}>
-        <td style={{ width: '60px' }}>{contest.id}</td>
+        <td className="col-fit">{contest.id}</td>
         <td style={{ width: '200px' }}>
           <Link to={`/contests/${contest.slug}`}>{contest.slug}</Link>
         </td>
@@ -46,7 +46,7 @@ export default function ContestsPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th style={{ width: '200px' }}>Slug</th>
             <th>Name</th>
           </tr>

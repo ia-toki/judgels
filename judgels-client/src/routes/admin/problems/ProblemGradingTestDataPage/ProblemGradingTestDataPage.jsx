@@ -32,6 +32,7 @@ export default function ProblemGradingTestDataPage() {
   return (
     <FilesPanel
       title="Test data"
+      description="Input and output files of the test cases."
       noun="test data"
       files={files}
       onUploadFile={uploadFileMutation.mutateAsync}

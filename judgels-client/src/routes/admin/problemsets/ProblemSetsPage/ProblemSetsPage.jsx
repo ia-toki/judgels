@@ -34,7 +34,7 @@ export default function ProblemSetsPage() {
 
     const rows = problemSets.page.map(problemSet => (
       <tr key={problemSet.jid}>
-        <td style={{ width: '60px' }}>{problemSet.id}</td>
+        <td className="col-fit">{problemSet.id}</td>
         <td style={{ width: '200px' }}>
           <Link to={`/admin/problemsets/${problemSet.slug}`}>{problemSet.slug}</Link>
         </td>
@@ -47,7 +47,7 @@ export default function ProblemSetsPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th style={{ width: '200px' }}>Slug</th>
             <th>Name</th>
             <th>Archive</th>

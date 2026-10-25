@@ -28,7 +28,7 @@ export default function ArchivesPage() {
 
     const rows = archives.map(archive => (
       <tr key={archive.jid}>
-        <td style={{ width: '60px' }}>{archive.id}</td>
+        <td className="col-fit">{archive.id}</td>
         <td style={{ width: '200px' }}>
           <Link to={`/admin/archives/${archive.slug}`}>{archive.slug}</Link>
         </td>
@@ -41,7 +41,7 @@ export default function ArchivesPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th style={{ width: '200px' }}>Slug</th>
             <th>Name</th>
             <th>Category</th>

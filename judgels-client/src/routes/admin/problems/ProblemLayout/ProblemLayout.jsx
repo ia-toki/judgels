@@ -1,4 +1,4 @@
-import { Callout, Intent } from '@blueprintjs/core';
+import { Callout, H5, Intent } from '@blueprintjs/core';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, Outlet, useParams } from '@tanstack/react-router';
 
@@ -77,9 +77,10 @@ export default function ProblemLayout() {
   return (
     <ContentCard title={<BreadcrumbTitle parent="Problems" current={problem.slug} />}>
       {hasLocalChanges && (
-        <Callout intent={Intent.WARNING} title="You have uncommitted changes">
-          Contests and problemsets keep using the last committed version of this problem until you{' '}
-          <Link to={`/admin/problems/${problemSlug}/versions`}>commit your changes</Link>.
+        <Callout intent={Intent.WARNING}>
+          <H5>
+            You have <Link to={`/admin/problems/${problemSlug}/versions`}>uncommitted changes</Link>.
+          </H5>
         </Callout>
       )}
       <ContentWithTopbar items={topbarItems} basePath={`/admin/problems/${problemSlug}`}>

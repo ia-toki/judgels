@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormGroup, HTMLTable, InputGroup, Intent, Switch } from '@blueprintjs/core';
+import { Button, Checkbox, Classes, FormGroup, HTMLTable, InputGroup, Intent, Switch } from '@blueprintjs/core';
 import { Plus, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useState } from 'react';
@@ -50,25 +50,27 @@ const statementField = {
 
 const scoreField = {
   name: 'score',
-  label: 'Score (points for a correct answer)',
+  label: 'Points for a correct answer',
   validate: IsNumber,
 };
 
 const penaltyField = {
   name: 'penalty',
-  label: 'Penalty (points for a wrong answer)',
+  label: 'Points for a wrong answer',
   validate: IsNumber,
 };
 
 const inputValidationRegexField = {
   name: 'inputValidationRegex',
-  label: 'Answer format regex (matches the whole answer, e.g. [0-9]+,[0-9]+)',
+  label: 'Answer format regex',
+  labelHelper: '(matches the whole answer, e.g. [0-9]+,[0-9]+)',
   validate: composeValidators(Required, Regex),
 };
 
 const gradingRegexField = {
   name: 'gradingRegex',
-  label: 'Correct answer regex (optional, matches the whole answer, e.g. (1,2)|(2,1))',
+  label: 'Correct answer regex',
+  labelHelper: '(optional, matches the whole answer, e.g. (1,2)|(2,1))',
   validate: Regex,
 };
 
@@ -114,66 +116,68 @@ function ChoicesInput({ input: { value, onChange }, meta }) {
   const setChoice = (idx, choice) => onChange(choices.map((c, i) => (i === idx ? { ...c, ...choice } : c)));
 
   return (
-    <FormGroup label="Choices" helperText="The content of a choice is written as HTML." intent={getIntent(meta)}>
-      <HTMLTable compact aria-label="Choices" className="problem-item-edit-form__choices">
-        <thead>
-          <tr>
-            <th>Alias</th>
-            <th>Content</th>
-            <th>Correct?</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {choices.map((choice, idx) => (
-            <tr key={idx}>
-              <td className="problem-item-edit-form__choice-alias">
-                <InputGroup
-                  small
-                  aria-label={`Alias of choice ${idx + 1}`}
-                  value={choice.alias}
-                  onChange={e => setChoice(idx, { alias: e.target.value })}
-                />
-              </td>
-              <td>
-                <InputGroup
-                  small
-                  fill
-                  aria-label={`Content of choice ${idx + 1}`}
-                  value={choice.content}
-                  onChange={e => setChoice(idx, { content: e.target.value })}
-                />
-              </td>
-              <td className="problem-item-edit-form__choice-action">
-                <Checkbox
-                  className="problem-item-edit-form__choice-correct"
-                  aria-label={`Choice ${idx + 1} is correct`}
-                  checked={choice.isCorrect}
-                  onChange={e => setChoice(idx, { isCorrect: e.target.checked })}
-                />
-              </td>
-              <td className="problem-item-edit-form__choice-action">
-                <Button
-                  small
-                  minimal
-                  intent={Intent.DANGER}
-                  icon={<Trash />}
-                  aria-label={`Remove choice ${idx + 1}`}
-                  onClick={() => onChange(choices.filter((_, i) => i !== idx))}
-                />
-              </td>
+    <FormGroup label="Choices" intent={getIntent(meta)}>
+      <Flex flexDirection="column" gap={2}>
+        <HTMLTable compact aria-label="Choices" className="problem-item-edit-form__choices">
+          <thead>
+            <tr>
+              <th>Alias</th>
+              <th>
+                Content <span className={Classes.TEXT_MUTED}>(HTML allowed)</span>
+              </th>
+              <th className="problem-item-edit-form__choice-correct-column">Correct?</th>
+              <th />
             </tr>
-          ))}
-        </tbody>
-      </HTMLTable>
-      <ActionButtons>
-        <Button
-          small
-          icon={<Plus />}
-          text="New choice"
-          onClick={() => onChange([...choices, { alias: '', content: '', isCorrect: false }])}
-        />
-      </ActionButtons>
+          </thead>
+          <tbody>
+            {choices.map((choice, idx) => (
+              <tr key={idx}>
+                <td className="problem-item-edit-form__choice-alias">
+                  <InputGroup
+                    aria-label={`Alias of choice ${idx + 1}`}
+                    value={choice.alias}
+                    onChange={e => setChoice(idx, { alias: e.target.value })}
+                  />
+                </td>
+                <td>
+                  <InputGroup
+                    fill
+                    aria-label={`Content of choice ${idx + 1}`}
+                    value={choice.content}
+                    onChange={e => setChoice(idx, { content: e.target.value })}
+                  />
+                </td>
+                <td className="problem-item-edit-form__choice-action problem-item-edit-form__choice-correct-column">
+                  <Checkbox
+                    className="problem-item-edit-form__choice-correct"
+                    aria-label={`Choice ${idx + 1} is correct`}
+                    checked={choice.isCorrect}
+                    onChange={e => setChoice(idx, { isCorrect: e.target.checked })}
+                  />
+                </td>
+                <td className="problem-item-edit-form__choice-action">
+                  <Button
+                    small
+                    minimal
+                    intent={Intent.DANGER}
+                    icon={<Trash />}
+                    aria-label={`Remove choice ${idx + 1}`}
+                    onClick={() => onChange(choices.filter((_, i) => i !== idx))}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </HTMLTable>
+        <ActionButtons>
+          <Button
+            small
+            icon={<Plus />}
+            text="New choice"
+            onClick={() => onChange([...choices, { alias: '', content: '', isCorrect: false }])}
+          />
+        </ActionButtons>
+      </Flex>
       <FormInputValidation meta={meta} />
     </FormGroup>
   );

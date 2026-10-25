@@ -113,45 +113,49 @@ export default function VersionsPanel({
   };
 
   return (
-    <Flex flexDirection="column" gap={2}>
-      <h4>Local changes</h4>
-      {renderLocalChanges()}
-      <h4>History</h4>
-      <HTMLTable striped className="table-list-condensed">
-        <thead>
-          <tr>
-            <th>Version</th>
-            <th>Changes</th>
-            <th>Author</th>
-            <th>Time</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {versions.map((version, idx) => (
-            <tr key={version.hash}>
-              <td>
-                <code>{version.hash.substring(0, 7)}</code>
-              </td>
-              <td>
-                {version.title}
-                {version.description && (
-                  <div style={{ whiteSpace: 'pre-wrap' }}>
-                    <small>{version.description}</small>
-                  </div>
-                )}
-              </td>
-              <td>
-                <UserRef profile={profilesMap[version.userJid]} />
-              </td>
-              <td>
-                <FormattedRelative value={version.time} />
-              </td>
-              <td style={{ textAlign: 'right' }}>{renderRestoreButton(version, idx)}</td>
+    <Flex flexDirection="column" gap={8}>
+      <Flex flexDirection="column" gap={2}>
+        <h4>Local changes</h4>
+        {renderLocalChanges()}
+      </Flex>
+      <Flex flexDirection="column" gap={2}>
+        <h4>History</h4>
+        <HTMLTable striped className="table-list-condensed">
+          <thead>
+            <tr>
+              <th>Version</th>
+              <th>Changes</th>
+              <th>Author</th>
+              <th>Time</th>
+              <th className="col-fit" />
             </tr>
-          ))}
-        </tbody>
-      </HTMLTable>
+          </thead>
+          <tbody>
+            {versions.map((version, idx) => (
+              <tr key={version.hash}>
+                <td>
+                  <code>{version.hash.substring(0, 7)}</code>
+                </td>
+                <td>
+                  {version.title}
+                  {version.description && (
+                    <div style={{ whiteSpace: 'pre-wrap' }}>
+                      <small>{version.description}</small>
+                    </div>
+                  )}
+                </td>
+                <td>
+                  <UserRef profile={profilesMap[version.userJid]} />
+                </td>
+                <td>
+                  <FormattedRelative value={version.time} />
+                </td>
+                <td className="col-fit">{renderRestoreButton(version, idx)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </HTMLTable>
+      </Flex>
       <Alert
         isOpen={isDiscardAlertOpen}
         intent={Intent.DANGER}

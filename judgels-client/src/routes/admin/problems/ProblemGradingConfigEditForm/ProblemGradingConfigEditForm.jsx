@@ -15,7 +15,7 @@ function SubtaskAssignment({ label, subtaskCount, subtaskIds, onChange }) {
 
   return (
     <Flex role="group" aria-label={label} flexDirection="column" gap={1}>
-      <small>Assign to subtasks:</small>
+      <small>Subtasks</small>
       <Flex gap={2} alignItems="center" flexWrap="wrap">
         {[...Array(subtaskCount).keys()].map(idx => (
           <Checkbox
@@ -301,14 +301,14 @@ export default function ProblemGradingConfigEditForm({
         <HTMLTable compact aria-label="Subtasks" className="problem-grading-config-edit-form__subtask-points">
           <thead>
             <tr>
-              <th>No</th>
+              <th className="col-fit">No</th>
               <th>Points</th>
             </tr>
           </thead>
           <tbody>
             {values.subtaskPoints.map((points, idx) => (
               <tr key={idx}>
-                <td>{idx + 1}</td>
+                <td className="col-fit">{idx + 1}</td>
                 <td>
                   <InputGroup
                     aria-label={`Points of subtask ${idx + 1}`}

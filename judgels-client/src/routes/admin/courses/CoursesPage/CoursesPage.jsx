@@ -28,7 +28,7 @@ export default function CoursesPage() {
 
     const rows = courses.map(course => (
       <tr key={course.jid}>
-        <td style={{ width: '60px' }}>{course.id}</td>
+        <td className="col-fit">{course.id}</td>
         <td style={{ width: '200px' }}>
           <Link to={`/admin/courses/${course.slug}`}>{course.slug}</Link>
         </td>
@@ -40,7 +40,7 @@ export default function CoursesPage() {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '60px' }}>ID</th>
+            <th className="col-fit">ID</th>
             <th style={{ width: '200px' }}>Slug</th>
             <th>Name</th>
           </tr>

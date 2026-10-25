@@ -12,7 +12,19 @@
     white-space: nowrap;
   }
 
-  &__choice-correct {
-    margin-bottom: 0;
+  // The checkbox has no label, so it drops the room Blueprint leaves for one.
+  &__choice-correct.bp6-control {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding-left: 0;
+
+    .bp6-control-indicator {
+      margin: 0;
+    }
   }
+}
+
+table.bp6-html-table .problem-item-edit-form__choice-correct-column {
+  text-align: center;
 }

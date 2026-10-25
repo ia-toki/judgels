@@ -5,6 +5,10 @@
   padding-bottom: 0 !important;
 }
 
+.form-table-input td:last-child {
+  padding-right: 0 !important;
+}
+
 .form-table-input td:not(:has(textarea)) {
   line-height: 40px !important;
 }

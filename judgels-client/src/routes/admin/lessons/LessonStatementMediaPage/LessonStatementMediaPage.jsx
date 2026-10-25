@@ -32,6 +32,7 @@ export default function LessonStatementMediaPage() {
   return (
     <FilesPanel
       title="Media"
+      description="Resources such as images to show in the statement."
       noun="media"
       files={files}
       onUploadFile={uploadFileMutation.mutateAsync}

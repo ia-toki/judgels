@@ -7,6 +7,8 @@ import { nockApi } from '../../../../utils/nock';
 import LessonsPage from './LessonsPage';
 
 describe('LessonsPage', () => {
+  const oneDay = 24 * 60 * 60 * 1000;
+
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -16,8 +18,8 @@ describe('LessonsPage', () => {
     initialEntry = '/admin/lessons',
     lessonsQuery = true,
     lessons = [
-      { jid: 'JIDLESS1', id: 1, slug: 'lesson-1', authorJid: 'JIDUSER1' },
-      { jid: 'JIDLESS2', id: 2, slug: 'lesson-2', authorJid: 'JIDUSER2' },
+      { jid: 'JIDLESS1', id: 1, slug: 'lesson-1', authorJid: 'JIDUSER1', lastUpdateTime: Date.now() - 2 * oneDay },
+      { jid: 'JIDLESS2', id: 2, slug: 'lesson-2', authorJid: 'JIDUSER2', lastUpdateTime: Date.now() - 3 * oneDay },
     ],
     profilesMap = {
       JIDUSER1: { username: 'user1' },
@@ -63,7 +65,7 @@ describe('LessonsPage', () => {
           .queryAllByRole('cell')
           .map(cell => cell.textContent)
       )
-    ).toEqual([[], ['1', 'lesson-1', 'user1'], ['2', 'lesson-2', 'user2']]);
+    ).toEqual([[], ['1', 'lesson-1', 'user1', '2 days ago'], ['2', 'lesson-2', 'user2', '3 days ago']]);
   });
 
   test('links each lesson to its page', async () => {

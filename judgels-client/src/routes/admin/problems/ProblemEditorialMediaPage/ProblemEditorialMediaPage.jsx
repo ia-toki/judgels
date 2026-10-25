@@ -32,6 +32,7 @@ export default function ProblemEditorialMediaPage() {
   return (
     <FilesPanel
       title="Media"
+      description="Resources such as images to show in the editorial."
       noun="media"
       files={files}
       onUploadFile={uploadFileMutation.mutateAsync}

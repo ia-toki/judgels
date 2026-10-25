@@ -32,6 +32,7 @@ export default function ProblemGradingHelpersPage() {
   return (
     <FilesPanel
       title="Helpers"
+      description="Additional files for grading such as a custom scorer or a communicator."
       noun="helper"
       files={files}
       onUploadFile={uploadFileMutation.mutateAsync}

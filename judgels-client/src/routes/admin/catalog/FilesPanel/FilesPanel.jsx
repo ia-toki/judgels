@@ -15,6 +15,7 @@ const ALL_FILES = Symbol('all files');
 // One directory of a problem's or a lesson's files: its listing, with upload, download and delete.
 export default function FilesPanel({
   title,
+  description,
   noun,
   files,
   onUploadFile,
@@ -119,11 +120,16 @@ export default function FilesPanel({
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <h4>{title}</h4>
-      <Flex flexDirection="column" gap={5}>
-        <FileUploadForm onSubmit={uploadFile} />
-        {renderFiles()}
+      <Flex flexDirection="column">
+        <h4>{title}</h4>
+        {description && (
+          <p>
+            <small>{description}</small>
+          </p>
+        )}
       </Flex>
+      <FileUploadForm onSubmit={uploadFile} />
+      {renderFiles()}
       <Alert
         isOpen={deleteTarget !== undefined}
         intent={Intent.DANGER}

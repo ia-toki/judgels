@@ -114,29 +114,27 @@ export default function LanguagesPanel({
   return (
     <Flex flexDirection="column" gap={2}>
       <h4>Languages</h4>
-      <Flex flexDirection="column" gap={5}>
-        {renderAddForm()}
-        <HTMLTable striped className="table-list-condensed">
-          <thead>
-            <tr>
-              <th>Language</th>
-              <th>Status</th>
-              <th className="col-fit" />
+      {renderAddForm()}
+      <HTMLTable striped className="table-list-condensed">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Status</th>
+            <th className="col-fit" />
+          </tr>
+        </thead>
+        <tbody>
+          {languages.map(language => (
+            <tr key={language}>
+              <td>{worldLanguageNamesMap[language] || language}</td>
+              <td>{renderStatus(language)}</td>
+              <td className="col-fit" style={{ textAlign: 'right' }}>
+                {renderActions(language)}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {languages.map(language => (
-              <tr key={language}>
-                <td>{worldLanguageNamesMap[language] || language}</td>
-                <td>{renderStatus(language)}</td>
-                <td className="col-fit" style={{ textAlign: 'right' }}>
-                  {renderActions(language)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </HTMLTable>
-      </Flex>
+          ))}
+        </tbody>
+      </HTMLTable>
     </Flex>
   );
 }
