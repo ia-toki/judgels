@@ -14,6 +14,7 @@ import {
   lessonStatementQueryOptions,
   updateLessonStatementMutationOptions,
 } from '../../../../modules/queries/lessonStatement';
+import { useSession } from '../../../../modules/session';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
@@ -23,6 +24,7 @@ import './LessonStatementPage.scss';
 
 export default function LessonStatementPage() {
   const { lessonSlug } = useParams({ strict: false });
+  const { user } = useSession();
 
   const {
     data: { jid: lessonJid },
@@ -84,7 +86,7 @@ export default function LessonStatementPage() {
     }
     return (
       <LessonStatementCard
-        statement={{ title: statement.title, text: formatStatementMediaUrls(statement.text, lessonJid) }}
+        statement={{ title: statement.title, text: formatStatementMediaUrls(statement.text, lessonJid, user.jid) }}
       />
     );
   };

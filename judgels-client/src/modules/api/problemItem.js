@@ -7,18 +7,18 @@ import { formatStatementMediaUrls } from './problemStatement';
 const baseURL = problemJid => `${baseProblemURL(problemJid)}/items`;
 
 // An item's statement and its choices are written like a problem statement, media files included.
-export function formatItemMediaUrls(item, problemJid) {
+export function formatItemMediaUrls(item, problemJid, userJid) {
   const { config } = item;
   return {
     ...item,
     config: {
       ...config,
-      statement: formatStatementMediaUrls(config.statement, problemJid),
+      statement: formatStatementMediaUrls(config.statement, problemJid, userJid),
       ...(config.choices
         ? {
             choices: config.choices.map(choice => ({
               ...choice,
-              content: formatStatementMediaUrls(choice.content, problemJid),
+              content: formatStatementMediaUrls(choice.content, problemJid, userJid),
             })),
           }
         : {}),

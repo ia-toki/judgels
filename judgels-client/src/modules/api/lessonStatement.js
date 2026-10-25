@@ -7,8 +7,8 @@ import { baseLessonURL } from './lesson';
 const baseURL = lessonJid => `${baseLessonURL(lessonJid)}/statement`;
 
 // Media files are written in a statement as `render/<filename>`.
-export function formatStatementMediaUrls(text, lessonJid) {
-  const renderURL = `${APP_CONFIG.apiUrl}/v2/lessons/${lessonJid}/render/`;
+export function formatStatementMediaUrls(text, lessonJid, userJid) {
+  const renderURL = `${APP_CONFIG.apiUrl}/v4/lessons/${lessonJid}/clones/${userJid}/render/`;
   return text.replace(/(src|href)="render\//g, `$1="${renderURL}`).replace(/url=render\//g, `url=${renderURL}`);
 }
 

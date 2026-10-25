@@ -27,6 +27,7 @@ import {
   createProblemSubmissionMutationOptions,
   problemSubmissionConfigQueryOptions,
 } from '../../../../modules/queries/problemSubmission';
+import { useSession } from '../../../../modules/session';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm';
 
@@ -36,6 +37,7 @@ import './ProblemStatementPage.scss';
 
 export default function ProblemStatementPage() {
   const { problemSlug } = useParams({ strict: false });
+  const { user } = useSession();
   const navigate = useNavigate();
 
   const {
@@ -128,14 +130,14 @@ export default function ProblemStatementPage() {
   };
 
   const renderPreview = () => {
-    const text = formatStatementMediaUrls(statement.text, problemJid);
+    const text = formatStatementMediaUrls(statement.text, problemJid, user.jid);
 
     if (isBundle) {
       return (
         <BundleProblemWorksheetCard
           worksheet={{
             statement: { title: statement.title, text },
-            items: itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid)),
+            items: itemsResponse.data.map(item => formatItemMediaUrls(item, problemJid, user.jid)),
             reasonNotAllowedToSubmit,
           }}
           latestSubmissions={Object.fromEntries(
