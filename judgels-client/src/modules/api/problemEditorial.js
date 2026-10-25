@@ -7,8 +7,8 @@ import { baseProblemURL } from './problem';
 const baseURL = problemJid => `${baseProblemURL(problemJid)}/editorial`;
 
 // Media files are written in an editorial as `render/<filename>`.
-export function formatEditorialMediaUrls(text, problemJid) {
-  const renderURL = `${APP_CONFIG.apiUrl}/v2/problems/${problemJid}/editorials/render/`;
+export function formatEditorialMediaUrls(text, problemJid, userJid) {
+  const renderURL = `${APP_CONFIG.apiUrl}/v4/problems/${problemJid}/clones/${userJid}/editorials/render/`;
   return text.replace(/(src|href)="render\//g, `$1="${renderURL}`).replace(/url=render\//g, `url=${renderURL}`);
 }
 

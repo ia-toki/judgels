@@ -15,6 +15,7 @@ import {
   problemEditorialQueryOptions,
   updateProblemEditorialMutationOptions,
 } from '../../../../modules/queries/problemEditorial';
+import { useSession } from '../../../../modules/session';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import ProblemEditorialEditForm from '../ProblemEditorialEditForm/ProblemEditorialEditForm';
 
@@ -22,6 +23,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemEditorialPage() {
   const { problemSlug } = useParams({ strict: false });
+  const { user } = useSession();
 
   const {
     data: { jid: problemJid },
@@ -87,7 +89,7 @@ export default function ProblemEditorialPage() {
     }
     return (
       <ContentCard>
-        <ProblemEditorial>{formatEditorialMediaUrls(editorial.text, problemJid)}</ProblemEditorial>
+        <ProblemEditorial>{formatEditorialMediaUrls(editorial.text, problemJid, user.jid)}</ProblemEditorial>
       </ContentCard>
     );
   };

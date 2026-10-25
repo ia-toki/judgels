@@ -45,7 +45,7 @@ describe('ProblemEditorialPage', () => {
     expect(screen.getByRole('combobox', { name: /language/i })).toHaveTextContent('Indonesian (id-ID)');
     expect(screen.queryByText(/written by/i)).not.toBeInTheDocument();
     expect(document.querySelector('img').getAttribute('src')).toMatch(
-      /\/v2\/problems\/JIDPROG1\/editorials\/render\/apel\.png$/
+      /\/v4\/problems\/JIDPROG1\/clones\/userJid\/editorials\/render\/apel\.png$/
     );
   });
 

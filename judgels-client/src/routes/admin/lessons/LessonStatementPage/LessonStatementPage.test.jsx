@@ -45,7 +45,9 @@ describe('LessonStatementPage', () => {
     expect(screen.getByRole('combobox', { name: /language/i })).toHaveTextContent('Indonesian (id-ID)');
     expect(screen.getByRole('heading', { name: 'Pengantar' })).toBeInTheDocument();
     expect(screen.getByText(/bacalah ini/i)).toBeInTheDocument();
-    expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/lessons\/JIDLESS1\/render\/gambar\.png$/);
+    expect(document.querySelector('img').getAttribute('src')).toMatch(
+      /\/v4\/lessons\/JIDLESS1\/clones\/userJid\/render\/gambar\.png$/
+    );
   });
 
   test('switches the language', async () => {

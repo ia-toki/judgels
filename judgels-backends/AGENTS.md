@@ -4,7 +4,7 @@ Server packages and DTO packages (`judgels.api.…`) follow the layers defined i
 
 | Layer | Packages | API paths |
 |---|---|---|
-| Catalog | `judgels.catalog.problem.*`, `judgels.catalog.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...` |
+| Catalog | `judgels.catalog.problem.*`, `judgels.catalog.lesson.*`; `judgels.catalog.*` for what the two share | `/api/v4/{problems,lessons}/...`; render at `/api/v2/{problems,lessons}/{jid}/render/...`, and from a user's clone at `/api/v4/{problems,lessons}/{jid}/clones/{userJid}/render/...` |
 | Host | `judgels.contest.*`, `judgels.training.*` | `/api/v2/contests/...`; training at `/api/v2/{curriculums,courses,chapters,archives,problemsets}/...` and `/api/v4/training/...` |
 | Submission | `judgels.submission.*` | test submissions at `/api/v4/problems/{problemJid}/submissions/{programming,bundle}/...` |
 | Grading | `judgels.grading.*` | none |

@@ -57,7 +57,9 @@ describe('ProblemStatementPage', () => {
 
     expect(screen.getByRole('combobox', { name: /language/i })).toHaveTextContent('Indonesian (id-ID)');
     expect(screen.getByText(/hitung apel/i)).toBeInTheDocument();
-    expect(document.querySelector('img').getAttribute('src')).toMatch(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/);
+    expect(document.querySelector('img').getAttribute('src')).toMatch(
+      /\/v4\/problems\/JIDPROG1\/clones\/userJid\/render\/apel\.png$/
+    );
   });
 
   const nockBundleItems = () => {
@@ -95,8 +97,8 @@ describe('ProblemStatementPage', () => {
     expect(screen.getByText('Berapa apel?')).toBeInTheDocument();
     expect(screen.getByText('dua')).toBeInTheDocument();
     expect([...document.querySelectorAll('img')].map(img => img.getAttribute('src'))).toEqual([
-      expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/apel\.png$/),
-      expect.stringMatching(/\/v2\/problems\/JIDPROG1\/render\/satu\.png$/),
+      expect.stringMatching(/\/v4\/problems\/JIDPROG1\/clones\/userJid\/render\/apel\.png$/),
+      expect.stringMatching(/\/v4\/problems\/JIDPROG1\/clones\/userJid\/render\/satu\.png$/),
     ]);
   });
 

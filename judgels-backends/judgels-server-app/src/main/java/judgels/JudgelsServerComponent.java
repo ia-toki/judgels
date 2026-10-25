@@ -60,6 +60,7 @@ public interface JudgelsServerComponent {
 
     judgels.catalog.problem.ProblemResource problemResource();
     judgels.catalog.problem.ProblemRenderResource problemRenderResource();
+    judgels.catalog.problem.ProblemCloneRenderResource problemCloneRenderResource();
     judgels.catalog.problem.bundle.item.ProblemItemResource problemItemResource();
     judgels.catalog.problem.editorial.ProblemEditorialResource problemEditorialResource();
     judgels.catalog.problem.programming.grading.ProblemGradingResource problemGradingResource();
@@ -72,6 +73,7 @@ public interface JudgelsServerComponent {
     judgels.submission.programming.ProblemSubmissionResource problemSubmissionResource();
     judgels.catalog.lesson.LessonResource lessonResource();
     judgels.catalog.lesson.LessonRenderResource lessonRenderResource();
+    judgels.catalog.lesson.LessonCloneRenderResource lessonCloneRenderResource();
     judgels.catalog.lesson.statement.LessonStatementResource lessonStatementResource();
     judgels.catalog.lesson.version.LessonVersionResource lessonVersionResource();
 
