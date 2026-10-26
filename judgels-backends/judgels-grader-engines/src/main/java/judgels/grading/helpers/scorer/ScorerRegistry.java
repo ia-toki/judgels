@@ -27,7 +27,7 @@ public class ScorerRegistry {
             scorer.prepare(sandbox, evaluationDir, language, scorerFile);
             return scorer;
         } else {
-            return new DiffScorer(evaluationDir);
+            return new DiffScorer();
         }
     }
 }
