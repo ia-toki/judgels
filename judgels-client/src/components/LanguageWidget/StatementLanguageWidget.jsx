@@ -1,34 +1,28 @@
 import { Flex } from '@blueprintjs/labs';
-import classNames from 'classnames';
 
 import { sortLanguagesByName } from '../../modules/api/language';
 import { useWebPrefs } from '../../modules/webPrefs';
-import LanguageForm from './LanguageForm/LanguageForm';
+import LanguageSelect from './LanguageSelect/LanguageSelect';
 
 import './LanguageWidget.scss';
 
 export default function StatementLanguageWidget({ className, defaultLanguage, statementLanguages }) {
   const { statementLanguage, setStatementLanguage } = useWebPrefs();
 
-  let initialLanguage;
+  let language;
   if (statementLanguages.indexOf(statementLanguage) !== -1) {
-    initialLanguage = statementLanguage;
+    language = statementLanguage;
   } else {
-    initialLanguage = defaultLanguage;
+    language = defaultLanguage;
   }
-  const formProps = {
-    form: 'statement-language-form',
-    languages: sortLanguagesByName(statementLanguages),
-    initialValues: {
-      language: initialLanguage,
-    },
-  };
 
   return (
-    <Flex className={classNames('language-widget', className)} justifyContent="end">
-      <div className="language-widget__right">
-        <LanguageForm onSubmit={data => setStatementLanguage(data.language)} {...formProps} />
-      </div>
+    <Flex className={className} justifyContent="end">
+      <LanguageSelect
+        value={language}
+        languages={sortLanguagesByName(statementLanguages)}
+        onChange={setStatementLanguage}
+      />
     </Flex>
   );
 }
