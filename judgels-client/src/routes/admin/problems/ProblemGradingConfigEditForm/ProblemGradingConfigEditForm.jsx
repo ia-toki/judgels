@@ -73,7 +73,7 @@ function TestCases({ label, testCases, hasOutput, filenames, onChange, renderSub
         <tr>
           <th>Input</th>
           {hasOutput && <th>Output</th>}
-          <th />
+          <th className="problem-grading-config-edit-form__action" />
         </tr>
       </thead>
       <tbody>

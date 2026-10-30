@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
+import { ContentCard } from '../../../components/ContentCard/ContentCard';
 import CursorPagination from '../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../components/LoadingState/LoadingState';
 import SubmissionUserFilter from '../../../components/SubmissionUserFilter/SubmissionUserFilter';
@@ -73,7 +74,7 @@ export default function SubmissionsPage() {
   };
 
   return (
-    <>
+    <ContentCard compact>
       {userJid && <SubmissionUserFilter />}
       {renderSubmissions()}
       {response && (
@@ -83,6 +84,6 @@ export default function SubmissionsPage() {
           hasNextPage={response.data.hasNextPage}
         />
       )}
-    </>
+    </ContentCard>
   );
 }

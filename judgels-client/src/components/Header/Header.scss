@@ -81,6 +81,11 @@
   }
 }
 
+.header__left,
+.header__name {
+  min-width: 0;
+}
+
 .header__logo {
   margin-top: 3px;
   height: 40px;
@@ -89,6 +94,9 @@
 .header__title {
   font-size: $font-size-page-title-compact;
   font-weight: $font-weight-strong;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header__subtitle {
