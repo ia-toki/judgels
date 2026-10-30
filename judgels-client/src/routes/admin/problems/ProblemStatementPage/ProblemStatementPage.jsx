@@ -10,13 +10,14 @@ import { ProblemWorksheetCard as BundleProblemWorksheetCard } from '../../../../
 import { ProblemWorksheetCard } from '../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
 import { ProblemType } from '../../../../modules/api/problem';
 import { formatItemMediaUrls } from '../../../../modules/api/problemItem';
-import { formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
+import { baseStatementMediaURL, formatStatementMediaUrls } from '../../../../modules/api/problemStatement';
 import {
   problemBySlugQueryOptions,
   problemPermissionsQueryOptions,
   problemQueryOptions,
 } from '../../../../modules/queries/problem';
 import { createProblemBundleSubmissionMutationOptions } from '../../../../modules/queries/problemBundleSubmission';
+import { problemGradingConfigQueryOptions } from '../../../../modules/queries/problemGrading';
 import { problemItemsQueryOptions } from '../../../../modules/queries/problemItem';
 import {
   problemStatementLanguagesQueryOptions,
@@ -68,6 +69,11 @@ export default function ProblemStatementPage() {
 
   const { data: submissionConfig } = useQuery({
     ...problemSubmissionConfigQueryOptions(problemJid),
+    enabled: !isBundle,
+  });
+
+  const { data: gradingConfig } = useQuery({
+    ...problemGradingConfigQueryOptions(problemJid),
     enabled: !isBundle,
   });
 
@@ -153,23 +159,27 @@ export default function ProblemStatementPage() {
       <ProblemWorksheetCard
         worksheet={{
           statement: { title: statement.title, text },
-          limits: {},
+          limits: gradingConfig.config,
           submissionConfig,
           reasonNotAllowedToSubmit,
         }}
-        showLimits={false}
         onSubmit={createSubmission}
       />
     );
   };
 
   const renderContent = () => {
-    if (!statement || (isBundle && !itemsResponse) || (!isBundle && !submissionConfig)) {
+    if (!statement || (isBundle && !itemsResponse) || (!isBundle && (!submissionConfig || !gradingConfig))) {
       return <LoadingState />;
     }
     if (isEditing) {
       return (
-        <StatementEditForm initialValues={statement} onSubmit={updateStatement} onCancel={() => setIsEditing(false)} />
+        <StatementEditForm
+          initialValues={statement}
+          onSubmit={updateStatement}
+          onCancel={() => setIsEditing(false)}
+          baseMediaURL={baseStatementMediaURL(problemJid, user.jid)}
+        />
       );
     }
     return renderPreview();

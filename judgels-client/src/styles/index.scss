@@ -9,6 +9,7 @@
 @use './base' as *;
 @use './table';
 @use './ratings';
+@use './content';
 
 body {
   font-family: $primary-font;
@@ -65,141 +66,6 @@ body {
   }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-family: $accent-font !important;
-  font-weight: $font-weight-heading !important;
-  margin: 0 0 10px;
-}
-
-small {
-  line-height: 14px !important;
-
-  .bp6-light & {
-    color: $secondary-text-color;
-  }
-
-  .bp6-dark & {
-    color: $dark-secondary-text-color !important;
-  }
-}
-
-b,
-strong {
-  font-weight: $font-weight-strong;
-
-  .bp6-dark & {
-    color: $dark-strong-text-color;
-  }
-}
-
-h2 {
-  font-size: $font-size-page-title !important;
-}
-
-h3 {
-  font-size: $font-size-title !important;
-}
-
-h4 {
-  font-size: $font-size-large !important;
-  line-height: 20px !important;
-}
-
-h5 {
-  font-size: $font-size !important;
-}
-
-@media only screen and (max-width: 750px) {
-  h2 {
-    font-size: $font-size-page-title-compact !important;
-    line-height: 24px !important;
-  }
-}
-
-hr {
-  margin-top: 15px !important;
-  margin-bottom: 15px !important;
-  width: 100%;
-  border: none;
-
-  .bp6-light & {
-    border-bottom: 1px solid $border-color;
-  }
-
-  .bp6-dark & {
-    border-bottom: 1px solid $dark-border-color;
-  }
-}
-
-a {
-  color: $primary-color;
-
-  .bp6-dark &,
-  .bp6-dark &:hover {
-    color: $dark-link-color;
-  }
-}
-
-ol {
-  list-style: decimal;
-}
-
-ul {
-  list-style: disc;
-}
-
-ol,
-ul {
-  padding-left: 25px;
-}
-
-code,
-pre,
-.ace_editor span {
-  font-family: $mono-font !important;
-}
-
-code,
-pre {
-  background-color: #f5f5f5;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-
-  .bp6-dark & {
-    background-color: #2e3e4a;
-    border-color: #25323b;
-  }
-}
-
-code {
-  font-size: $font-size-code;
-  padding: 0 3px;
-
-  .html-text :not(pre) > & {
-    padding: 3px;
-  }
-}
-
-pre {
-  font-size: $font-size-code;
-  padding: 9px !important;
-  overflow: auto;
-
-  code {
-    padding: initial;
-    border: initial;
-    border-radius: initial;
-  }
-}
-
-em {
-  font-style: oblique;
-}
-
 label:not(.bp6-control) {
   font-size: $font-size-label;
   font-weight: $font-weight-bold;
@@ -220,28 +86,11 @@ select {
   width: 100%;
 }
 
-table {
-  width: 100%;
-}
-
 table.bp6-html-table {
   td,
   th {
     vertical-align: middle;
   }
-}
-
-td,
-th {
-  .bp6-dark & {
-    border-color: $dark-secondary-background-color !important;
-  }
-}
-
-blockquote {
-  border-left: 5px solid #eeeeee;
-  padding: 10px 20px;
-  margin: 0 0 20px;
 }
 
 /* Blueprint overrides */

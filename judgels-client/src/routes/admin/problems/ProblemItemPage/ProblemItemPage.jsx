@@ -6,9 +6,11 @@ import { useState } from 'react';
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { itemTypeNamesMap } from '../../../../modules/api/problemBundle';
+import { baseStatementMediaURL } from '../../../../modules/api/problemStatement';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import { problemItemQueryOptions, updateProblemItemMutationOptions } from '../../../../modules/queries/problemItem';
 import { problemStatementLanguagesQueryOptions } from '../../../../modules/queries/problemStatement';
+import { useSession } from '../../../../modules/session';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 import ProblemItemEditForm from '../ProblemItemEditForm/ProblemItemEditForm';
 
@@ -16,6 +18,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 
 export default function ProblemItemPage() {
   const { problemSlug, itemJid } = useParams({ strict: false });
+  const { user } = useSession();
 
   const {
     data: { jid: problemJid },
@@ -55,7 +58,14 @@ export default function ProblemItemPage() {
       return <LoadingState />;
     }
     // The form holds its own edits, so it starts over whenever the language or the saved item changes.
-    return <ProblemItemEditForm key={JSON.stringify([language, item])} item={item} onSubmit={updateItem} />;
+    return (
+      <ProblemItemEditForm
+        key={JSON.stringify([language, item])}
+        item={item}
+        onSubmit={updateItem}
+        baseMediaURL={baseStatementMediaURL(problemJid, user.jid)}
+      />
+    );
   };
 
   return (

@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 
+import { useWebPrefs } from '../../../modules/webPrefs';
+import contentCssUrl from './TinyMCEContent.scss?url';
+
+import './TinyMCETextArea.scss';
+
 let isTinyMCEScriptAdded = false;
 
 // Statements written in another editor hold markup that TinyMCE strips by default.
@@ -8,8 +13,9 @@ const permissiveOptions = {
   extended_valid_elements: 'iframe[*],embed[*]',
 };
 
-function TinyMCETextArea({ onChange, id, permissive, height }) {
+function TinyMCETextArea({ onChange, id, permissive, height, baseMediaURL }) {
   const [isLoaded, setIsLoaded] = useState(!!window.tinymce);
+  const { isDarkMode } = useWebPrefs();
 
   useEffect(() => {
     if (window.tinymce) {
@@ -48,8 +54,10 @@ function TinyMCETextArea({ onChange, id, permissive, height }) {
 
     tinymce.init({
       selector: `#${id}`,
-      skin_url: '/tinymce/skins/lightgray',
-      content_css: '/skins/judgels/content.css',
+      skin_url: `${window.location.origin}/tinymce/skins/lightgray`,
+      content_css: new URL(contentCssUrl, window.location.origin).href,
+      body_class: 'html-text',
+      visual: false,
       branding: false,
       menubar: false,
       plugins: 'code image link lists',
@@ -63,9 +71,13 @@ function TinyMCETextArea({ onChange, id, permissive, height }) {
       relative_urls: false,
       convert_urls: false,
       remove_script_host: false,
+      ...(baseMediaURL ? { document_base_url: baseMediaURL } : {}),
       ...(height ? { height } : {}),
       ...(permissive ? permissiveOptions : {}),
       setup: editor => {
+        editor.on('PreInit', () => {
+          editor.getDoc().documentElement.classList.add(isDarkMode ? 'bp6-dark' : 'bp6-light');
+        });
         editor.on('change', () => {
           onChange(editor.getContent());
         });
@@ -78,7 +90,7 @@ function TinyMCETextArea({ onChange, id, permissive, height }) {
         editor.remove();
       }
     };
-  }, [isLoaded, id]);
+  }, [isLoaded, id, isDarkMode]);
 
   return null;
 }

@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 import { LessonStatementCard } from '../../../../components/LessonStatementCard/LessonStatementCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
+import { baseStatementMediaURL, formatStatementMediaUrls } from '../../../../modules/api/lessonStatement';
 import { lessonBySlugQueryOptions } from '../../../../modules/queries/lesson';
 import {
   lessonStatementLanguagesQueryOptions,
@@ -81,7 +81,12 @@ export default function LessonStatementPage() {
     }
     if (isEditing) {
       return (
-        <StatementEditForm initialValues={statement} onSubmit={updateStatement} onCancel={() => setIsEditing(false)} />
+        <StatementEditForm
+          initialValues={statement}
+          onSubmit={updateStatement}
+          onCancel={() => setIsEditing(false)}
+          baseMediaURL={baseStatementMediaURL(lessonJid, user.jid)}
+        />
       );
     }
     return (
