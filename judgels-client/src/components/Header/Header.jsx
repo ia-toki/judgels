@@ -37,11 +37,11 @@ export default function Header({ items, homeRoute }) {
   return (
     <Navbar className="header">
       <Flex>
-        <Flex className="header__left" flexShrink={0} gap={4} alignItems="center">
+        <Flex className="header__left" gap={4} alignItems="center">
           <Link to="/">
             <img src={logo} alt="header" className="header__logo" />
           </Link>
-          <Flex flexDirection="column">
+          <Flex className="header__name" flexDirection="column">
             <div className="header__title">{getAppName()}</div>
             <div className="header__subtitle">{getAppSlogan()}</div>
           </Flex>
@@ -69,7 +69,7 @@ export default function Header({ items, homeRoute }) {
           )}
         </Box>
 
-        <Flex alignItems="center">
+        <Flex flexShrink={0} alignItems="center">
           <DarkModeWidget />
           <UserWidget items={items} homeRoute={homeRoute} />
         </Flex>

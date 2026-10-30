@@ -4,6 +4,26 @@
   font-family: $accent-font;
 }
 
+.topbar.bp6-button-group.bp6-fill {
+  flex-wrap: wrap;
+  row-gap: 4px;
+
+  .bp6-button:not(.bp6-fixed) {
+    flex: 1 0 auto;
+  }
+
+  .bp6-button[data-row-start] {
+    border-top-left-radius: var(--bp-surface-border-radius);
+    border-bottom-left-radius: var(--bp-surface-border-radius);
+  }
+
+  .bp6-button[data-row-end] {
+    margin-right: 0;
+    border-top-right-radius: var(--bp-surface-border-radius);
+    border-bottom-right-radius: var(--bp-surface-border-radius);
+  }
+}
+
 .topbar-secondary {
   font-family: $accent-font;
 

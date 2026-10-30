@@ -43,6 +43,11 @@ window.scrollTo = function () {
   return;
 };
 
+window.ResizeObserver = class {
+  observe() {}
+  disconnect() {}
+};
+
 afterEach(() => {
   cleanup();
   nock.cleanAll();

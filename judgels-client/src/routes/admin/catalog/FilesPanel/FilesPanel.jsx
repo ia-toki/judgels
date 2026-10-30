@@ -119,16 +119,18 @@ export default function FilesPanel({
   };
 
   return (
-    <Flex flexDirection="column" gap={2}>
-      <Flex flexDirection="column">
-        <h4>{title}</h4>
-        {description && (
-          <p>
-            <small>{description}</small>
-          </p>
-        )}
+    <Flex flexDirection="column" gap={4}>
+      <Flex flexDirection="column" gap={2}>
+        <Flex flexDirection="column">
+          <h4>{title}</h4>
+          {description && (
+            <p>
+              <small>{description}</small>
+            </p>
+          )}
+        </Flex>
+        <FileUploadForm onSubmit={uploadFile} />
       </Flex>
-      <FileUploadForm onSubmit={uploadFile} />
       {renderFiles()}
       <Alert
         isOpen={deleteTarget !== undefined}

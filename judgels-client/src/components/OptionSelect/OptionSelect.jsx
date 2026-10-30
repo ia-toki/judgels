@@ -52,6 +52,7 @@ export function OptionSelect({
         className="option-select__button"
         disabled={disabled}
         alignText={Alignment.LEFT}
+        ellipsizeText
         text={value ? getOptionName(value) : placeholder}
         endIcon={<CaretDown />}
       />

@@ -10,6 +10,12 @@
     & > .content-card {
       margin-bottom: 0;
     }
+
+    & > .content-card,
+    .problem-submission-editor {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 }
 
