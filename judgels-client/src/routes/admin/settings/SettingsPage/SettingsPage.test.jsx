@@ -46,6 +46,28 @@ describe('SettingsPage', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
+  test('disables the edit buttons of the other sections while one is being edited', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    expect(editButtons).toHaveLength(3);
+    editButtons.forEach(button => expect(button).toBeEnabled());
+
+    await user.click(editButtons[1]);
+
+    const otherEditButtons = screen.getAllByRole('button', { name: /edit/i });
+    expect(otherEditButtons).toHaveLength(2);
+    otherEditButtons.forEach(button => expect(button).toBeDisabled());
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+    const restoredEditButtons = screen.getAllByRole('button', { name: /edit/i });
+    expect(restoredEditButtons).toHaveLength(3);
+    restoredEditButtons.forEach(button => expect(button).toBeEnabled());
+  });
+
   test('app form', async () => {
     await renderComponent();
 

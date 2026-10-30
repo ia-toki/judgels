@@ -62,7 +62,7 @@ export default function ProblemPartnersPage() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <ActionButtons>
+        <ActionButtons justifyContent="end">
           <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
             Edit
           </Button>

@@ -2,8 +2,8 @@ import { Button, HTMLTable } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 
+import { useEditableSection } from '../../../../components/EditableSections/EditableSections';
 import { Alias } from '../../../../components/forms/validations';
 import {
   chapterLessonsQueryOptions,
@@ -17,7 +17,7 @@ export function ChapterLessonsSection({ chapter }) {
   const { data: response } = useSuspenseQuery(chapterLessonsQueryOptions(chapter.jid));
   const setLessonsMutation = useMutation(setChapterLessonsMutationOptions(chapter.jid));
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const updateLessons = async data => {
     const lessons = deserializeLessons(data.lessons);
@@ -30,7 +30,7 @@ export function ChapterLessonsSection({ chapter }) {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -71,7 +71,7 @@ export function ChapterLessonsSection({ chapter }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>Lessons</span>
           {renderEditButton()}

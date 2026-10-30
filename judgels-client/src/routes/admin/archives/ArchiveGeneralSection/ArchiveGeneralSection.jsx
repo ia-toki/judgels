@@ -63,7 +63,7 @@ export function ArchiveGeneralSection({ archive }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>General</span>
           {renderEditButton()}

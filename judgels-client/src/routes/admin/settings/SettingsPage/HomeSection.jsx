@@ -2,10 +2,10 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { useEditableSection } from '../../../../components/EditableSections/EditableSections';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
@@ -16,7 +16,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export function HomeSection({ home = { banner: '' } }) {
   const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const keyStyles = { width: '300px' };
 
@@ -35,7 +35,7 @@ export function HomeSection({ home = { banner: '' } }) {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -69,7 +69,7 @@ export function HomeSection({ home = { banner: '' } }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>Home</span>
           {renderEditButton()}

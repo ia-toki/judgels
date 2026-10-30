@@ -3,9 +3,9 @@ import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { useEditableSection } from '../../../../../../components/EditableSections/EditableSections';
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import {
@@ -25,7 +25,7 @@ export default function ContestDescriptionSection() {
 
   const updateDescriptionMutation = useMutation(updateContestDescriptionMutationOptions(contest.jid));
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const updateContestDescription = async data => {
     await updateDescriptionMutation.mutateAsync(data.description, {
@@ -37,7 +37,7 @@ export default function ContestDescriptionSection() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -73,7 +73,7 @@ export default function ContestDescriptionSection() {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>Description</span>
           {renderEditButton()}

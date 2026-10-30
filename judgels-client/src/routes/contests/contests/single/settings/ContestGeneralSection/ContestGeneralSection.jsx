@@ -3,8 +3,8 @@ import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { useState } from 'react';
 
+import { useEditableSection } from '../../../../../../components/EditableSections/EditableSections';
 import { FormattedDuration } from '../../../../../../components/FormattedDuration/FormattedDuration';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
 import { contestBySlugQueryOptions, updateContestMutationOptions } from '../../../../../../modules/queries/contest';
@@ -21,7 +21,7 @@ export default function ContestGeneralSection() {
 
   const updateContestMutation = useMutation(updateContestMutationOptions(contest.jid, contestSlug));
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const keyStyles = { width: '250px' };
 
@@ -54,7 +54,7 @@ export default function ContestGeneralSection() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -83,7 +83,7 @@ export default function ContestGeneralSection() {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>General</span>
           {renderEditButton()}

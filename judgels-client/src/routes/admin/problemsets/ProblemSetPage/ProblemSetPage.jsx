@@ -4,6 +4,7 @@ import { useParams } from '@tanstack/react-router';
 
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { EditableSections } from '../../../../components/EditableSections/EditableSections';
 import { archivesQueryOptions } from '../../../../modules/queries/archive';
 import { problemSetBySlugQueryOptions } from '../../../../modules/queries/problemSet';
 import { ProblemSetGeneralSection } from '../ProblemSetGeneralSection/ProblemSetGeneralSection';
@@ -19,10 +20,12 @@ export default function ProblemSetPage() {
 
   return (
     <ContentCard title={<BreadcrumbTitle parent="Problemsets" current={problemSet.slug} />}>
-      <Flex flexDirection="column" gap={8}>
-        <ProblemSetGeneralSection problemSet={problemSet} archiveSlug={archiveSlug} />
-        <ProblemSetProblemsSection problemSet={problemSet} />
-      </Flex>
+      <EditableSections>
+        <Flex flexDirection="column" gap={8}>
+          <ProblemSetGeneralSection problemSet={problemSet} archiveSlug={archiveSlug} />
+          <ProblemSetProblemsSection problemSet={problemSet} />
+        </Flex>
+      </EditableSections>
     </ContentCard>
   );
 }
