@@ -1,7 +1,8 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { Box, Flex } from '@blueprintjs/labs';
+import { Cog } from '@blueprintjs/icons';
+import { Box } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Outlet, useLocation, useParams } from '@tanstack/react-router';
+import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -13,7 +14,6 @@ import { contestWebConfigQueryOptions } from '../../../../modules/queries/contes
 import { createDocumentTitle } from '../../../../utils/title';
 import ContestAnnouncementsWidget from './components/ContestAnnouncementsWidget/ContestAnnouncementsWidget';
 import ContestClarificationsWidget from './components/ContestClarificationsWidget/ContestClarificationsWidget';
-import { ContestEditDialog } from './components/ContestEditDialog/ContestEditDialog';
 import ContestStateWidget from './components/ContestStateWidget/ContestStateWidget';
 import { contestIcon } from './modules/contestIcon';
 
@@ -21,8 +21,6 @@ import './SingleContestLayout.scss';
 
 export default function SingleContestLayout() {
   const { contestSlug } = useParams({ strict: false });
-  const location = useLocation();
-  const isEditingContest = location.state?.isEditingContest;
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
   const { data: contestWebConfig } = useSuspenseQuery(contestWebConfigQueryOptions(contest.jid));
 
@@ -30,14 +28,27 @@ export default function SingleContestLayout() {
     document.title = createDocumentTitle(contest.name);
   }, [contestSlug, contest.name]);
 
-  useEffect(() => {
-    if (isEditingContest) {
-      window.history.replaceState({}, '');
-    }
-  }, [isEditingContest]);
-
   const visibleTabs = contestWebConfig && contestWebConfig.visibleTabs;
   const sidebarItems = [
+    {
+      path: 'settings',
+      titleIcon: <Cog />,
+      title: (
+        <Box
+          className="tab-item-with-widget"
+          display="inline-flex"
+          position="absolute"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <div>Settings</div>
+          <div>
+            <Tag className="normal-weight">NEW</Tag>
+          </div>
+        </Box>
+      ),
+      disabled: !contestWebConfig.canManage,
+    },
     {
       path: '',
       titleIcon: contestIcon[ContestTab.Overview],
@@ -159,14 +170,7 @@ export default function SingleContestLayout() {
     basePath: `/contests/${contestSlug}`,
     contentHeader: (
       <Box className="single-contest-routes__header" paddingBottom={2}>
-        <Flex gap={2} justifyContent="space-between" alignItems="baseline">
-          <h2>{contest.name}</h2>
-          <ContestEditDialog
-            contest={contest}
-            canManage={contestWebConfig.canManage}
-            initiallyOpen={isEditingContest}
-          />
-        </Flex>
+        <h2>{contest.name}</h2>
         <ContestStateWidget />
       </Box>
     ),

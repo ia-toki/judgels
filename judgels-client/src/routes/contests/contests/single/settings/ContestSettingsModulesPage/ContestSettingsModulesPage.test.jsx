@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
@@ -7,14 +7,15 @@ import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientPr
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDuration } from '../../../../../../utils/duration';
 import { nockApi } from '../../../../../../utils/nock';
-import ContestEditConfigsTab from './ContestEditConfigsTab';
+import ContestSettingsModulesPage from './ContestSettingsModulesPage';
 
-describe('ContestEditConfigsTab', () => {
+describe('ContestSettingsModulesPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
 
   const renderComponent = async ({
+    modules = ['CLARIFICATION', 'CLARIFICATION_TIME_LIMIT'],
     config = {
       icpcStyle: {
         languageRestriction: { allowedLanguageNames: [] },
@@ -26,54 +27,107 @@ describe('ContestEditConfigsTab', () => {
       clarificationTimeLimit: {
         clarificationDuration: parseDuration('2h'),
       },
-      division: {
-        division: 1,
-        allowHigherDivisionsUnofficially: false,
-      },
-      editorial: {
-        preface: '<p>Thank you</p>',
-      },
-      frozenScoreboard: {
-        scoreboardFreezeTime: parseDuration('1h'),
-        isOfficialScoreboardAllowed: false,
-      },
-      mergedScoreboard: {
-        previousContestJid: 'JIDCONT00000',
-      },
-      externalScoreboard: {
-        receiverUrl: 'http://external.scoreboard',
-        receiverSecret: 'the_secret',
-      },
-      virtual: {
-        virtualDuration: parseDuration('5h'),
-      },
     },
   } = {}) => {
     nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
       jid: 'contestJid',
       slug: 'contest-slug',
+      style: 'ICPC',
     });
 
+    nockApi().get('/v2/contests/contestJid/modules').reply(200, modules);
     nockApi().get('/v2/contests/contestJid/modules/config').reply(200, config);
 
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-            <ContestEditConfigsTab />
+          <TestRouter
+            initialEntries={['/contests/contest-slug/settings/modules']}
+            path="/contests/$contestSlug/settings/modules"
+          >
+            <ContestSettingsModulesPage />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
   };
 
-  test('submits the form when we fill all fields', async () => {
+  const findModule = async title => {
+    const heading = await screen.findByRole('heading', { level: 5, name: title });
+    return heading.closest('.contest-module');
+  };
+
+  test('renders the enabled modules first', async () => {
     await renderComponent();
+
+    const modules = await screen.findAllByRole('heading', { level: 5 });
+    expect(modules.map(h5 => h5.textContent)).toEqual([
+      'ICPC style',
+      'Scoreboard',
+      'Clarification',
+      'Clarification time limit',
+      'Registration',
+      'Division',
+      'Editorial',
+      'Freezable scoreboard',
+      'Merged scoreboard',
+      'External scoreboard',
+      'Virtual contest',
+      'File',
+      'Paused',
+      'Hidden',
+    ]);
+  });
+
+  test('saves the configs of all enabled modules together', async () => {
+    await renderComponent({
+      modules: [
+        'CLARIFICATION_TIME_LIMIT',
+        'DIVISION',
+        'EDITORIAL',
+        'FROZEN_SCOREBOARD',
+        'MERGED_SCOREBOARD',
+        'EXTERNAL_SCOREBOARD',
+        'VIRTUAL',
+      ],
+      config: {
+        icpcStyle: {
+          languageRestriction: { allowedLanguageNames: [] },
+          wrongSubmissionPenalty: 20,
+        },
+        scoreboard: {
+          isIncognitoScoreboard: false,
+        },
+        clarificationTimeLimit: {
+          clarificationDuration: parseDuration('2h'),
+        },
+        division: {
+          division: 1,
+          allowHigherDivisionsUnofficially: false,
+        },
+        editorial: {
+          preface: '<p>Thank you</p>',
+        },
+        frozenScoreboard: {
+          scoreboardFreezeTime: parseDuration('1h'),
+          isOfficialScoreboardAllowed: false,
+        },
+        mergedScoreboard: {
+          previousContestJid: 'JIDCONT00000',
+        },
+        externalScoreboard: {
+          receiverUrl: 'http://external.scoreboard',
+          receiverSecret: 'the_secret',
+        },
+        virtual: {
+          virtualDuration: parseDuration('5h'),
+        },
+      },
+    });
 
     const user = userEvent.setup();
 
-    const button = await screen.findByRole('button', { name: /edit/i });
-    await user.click(button);
+    await user.click(await screen.findByRole('button', { name: /edit/i }));
 
     const icpcWrongSubmissionPenalty = screen.getByRole('textbox', { name: /wrong submission penalty/i });
     await user.clear(icpcWrongSubmissionPenalty);
@@ -158,14 +212,14 @@ describe('ContestEditConfigsTab', () => {
       })
       .reply(200);
 
-    const submitButton = screen.getByRole('button', { name: /save/i });
-    await user.click(submitButton);
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 
   test('submits empty restriction when we allow all languages', async () => {
     await renderComponent({
+      modules: [],
       config: {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: ['C', 'Pascal'] },
@@ -177,11 +231,9 @@ describe('ContestEditConfigsTab', () => {
 
     const user = userEvent.setup();
 
-    const button = await screen.findByRole('button', { name: /edit/i });
-    await user.click(button);
+    await user.click(await screen.findByRole('button', { name: /edit/i }));
 
-    const icpcAllowAllLanguages = screen.getByRole('checkbox', { name: /\(all\)/i });
-    await user.click(icpcAllowAllLanguages);
+    await user.click(screen.getByRole('checkbox', { name: /\(all\)/i }));
 
     nockApi()
       .put('/v2/contests/contestJid/modules/config', {
@@ -193,14 +245,14 @@ describe('ContestEditConfigsTab', () => {
       })
       .reply(200);
 
-    const submitButton = screen.getByRole('button', { name: /save/i });
-    await user.click(submitButton);
+    await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });
 
   test('submits the restriction when we allow not all languages', async () => {
     await renderComponent({
+      modules: [],
       config: {
         icpcStyle: {
           languageRestriction: { allowedLanguageNames: [] },
@@ -212,17 +264,11 @@ describe('ContestEditConfigsTab', () => {
 
     const user = userEvent.setup();
 
-    const button = await screen.findByRole('button', { name: /edit/i });
-    await user.click(button);
+    await user.click(await screen.findByRole('button', { name: /edit/i }));
 
-    const icpcAllowAllLanguages = screen.getByRole('checkbox', { name: /\(all\)/i });
-    await user.click(icpcAllowAllLanguages);
-
-    const icpcAllowedLanguagesPascal = screen.getByRole('checkbox', { name: /pascal/i });
-    await user.click(icpcAllowedLanguagesPascal);
-
-    const icpcAllowedLanguagesPython3 = screen.getByRole('checkbox', { name: /python 3/i });
-    await user.click(icpcAllowedLanguagesPython3);
+    await user.click(screen.getByRole('checkbox', { name: /\(all\)/i }));
+    await user.click(screen.getByRole('checkbox', { name: /pascal/i }));
+    await user.click(screen.getByRole('checkbox', { name: /python 3/i }));
 
     nockApi()
       .put('/v2/contests/contestJid/modules/config', {
@@ -234,8 +280,36 @@ describe('ContestEditConfigsTab', () => {
       })
       .reply(200);
 
-    const submitButton = screen.getByRole('button', { name: /save/i });
-    await user.click(submitButton);
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('cannot enable or disable modules while editing', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    await user.click(await screen.findByRole('button', { name: /edit/i }));
+
+    const toggles = screen.getAllByRole('button', { name: /^(enable|disable)$/i });
+    expect(toggles).toHaveLength(12);
+    toggles.forEach(button => expect(button).toBeDisabled());
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+    screen.getAllByRole('button', { name: /^(enable|disable)$/i }).forEach(button => expect(button).toBeEnabled());
+  });
+
+  test('enables a module', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    nockApi().put('/v2/contests/contestJid/modules/VIRTUAL').reply(200);
+
+    const module = await findModule('Virtual contest');
+    await user.click(within(module).getByRole('button', { name: /enable/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
   });

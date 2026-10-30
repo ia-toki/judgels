@@ -1,4 +1,4 @@
-import { Outlet, createRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { Outlet, createRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
 import { retryImport } from '../../lazy';
 import { ContestStyle } from '../../modules/api/contest';
@@ -20,6 +20,7 @@ import {
 } from '../../modules/queries/contestItemSubmission';
 import { contestLogsQueryOptions } from '../../modules/queries/contestLog';
 import { contestManagersQueryOptions } from '../../modules/queries/contestManager';
+import { contestModulesConfigQueryOptions, contestModulesQueryOptions } from '../../modules/queries/contestModule';
 import {
   contestBundleProblemWorksheetQueryOptions,
   contestProblemsQueryOptions,
@@ -60,6 +61,48 @@ export const createContestsRoutes = appRoute => {
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
+    },
+  });
+
+  const contestSettingsRoute = createRoute({
+    getParentRoute: () => contestRoute,
+    path: 'settings',
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/settings/ContestSettingsLayout/ContestSettingsLayout'))
+    ),
+    head: () => ({ meta: [{ title: createDocumentTitle('Settings') }] }),
+  });
+
+  const contestSettingsIndexRoute = createRoute({
+    getParentRoute: () => contestSettingsRoute,
+    path: '/',
+    beforeLoad: ({ params }) => {
+      throw redirect({ to: '/contests/$contestSlug/settings/general', params, replace: true });
+    },
+  });
+
+  const contestSettingsGeneralRoute = createRoute({
+    getParentRoute: () => contestSettingsRoute,
+    path: 'general',
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/settings/ContestSettingsGeneralPage/ContestSettingsGeneralPage'))
+    ),
+    loader: async ({ params: { contestSlug } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      queryClient.prefetchQuery(contestDescriptionQueryOptions(contest.jid));
+    },
+  });
+
+  const contestSettingsModulesRoute = createRoute({
+    getParentRoute: () => contestSettingsRoute,
+    path: 'modules',
+    component: lazyRouteComponent(
+      retryImport(() => import('./contests/single/settings/ContestSettingsModulesPage/ContestSettingsModulesPage'))
+    ),
+    loader: async ({ params: { contestSlug } }) => {
+      const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
+      queryClient.prefetchQuery(contestModulesQueryOptions(contest.jid));
+      queryClient.prefetchQuery(contestModulesConfigQueryOptions(contest.jid));
     },
   });
 
@@ -316,6 +359,11 @@ export const createContestsRoutes = appRoute => {
   return contestsRoute.addChildren([
     contestsIndexRoute,
     contestRoute.addChildren([
+      contestSettingsRoute.addChildren([
+        contestSettingsIndexRoute,
+        contestSettingsGeneralRoute,
+        contestSettingsModulesRoute,
+      ]),
       contestOverviewRoute,
       contestAnnouncementsRoute,
       contestProblemsRoute,

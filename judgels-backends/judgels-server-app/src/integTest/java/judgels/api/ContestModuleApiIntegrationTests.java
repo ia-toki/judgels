@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import judgels.api.contest.Contest;
 import judgels.api.contest.module.ContestModulesConfig;
+import judgels.api.contest.module.ScoreboardModuleConfig;
 import judgels.api.contest.module.VirtualModuleConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,25 @@ class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
 
         moduleClient.upsertModulesConfig(managerToken, contest.getJid(), config);
         assertThat(moduleClient.getModulesConfig(managerToken, contest.getJid())).isEqualTo(config);
+    }
+
+    @Test
+    void upsert_config_keeps_configs_left_out() {
+        moduleClient.enableModule(managerToken, contest.getJid(), VIRTUAL);
+        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
+                .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(true).build())
+                .build());
+
+        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
+                .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(3)).build())
+                .build());
+
+        ContestModulesConfig config = moduleClient.getModulesConfig(managerToken, contest.getJid());
+        assertThat(config.getScoreboard()).contains(new ScoreboardModuleConfig.Builder()
+                .isIncognitoScoreboard(true)
+                .build());
+        assertThat(config.getVirtual()).contains(new VirtualModuleConfig.Builder()
+                .virtualDuration(Duration.ofHours(3))
+                .build());
     }
 }
