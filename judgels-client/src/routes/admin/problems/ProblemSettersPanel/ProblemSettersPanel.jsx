@@ -2,8 +2,9 @@ import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
+import { useEditableSection } from '../../../../components/EditableSections/EditableSections';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { ProblemSetterRole } from '../../../../modules/api/problem';
@@ -36,7 +37,7 @@ export default function ProblemSettersPanel({ problemJid }) {
 
   const setSettersMutation = useMutation(setProblemSettersMutationOptions(problemJid));
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const keyStyles = { width: '250px' };
 
@@ -69,7 +70,7 @@ export default function ProblemSettersPanel({ problemJid }) {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -93,7 +94,7 @@ export default function ProblemSettersPanel({ problemJid }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>Setters</span>
           {renderEditButton()}

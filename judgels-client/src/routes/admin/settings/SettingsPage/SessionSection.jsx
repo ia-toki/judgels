@@ -2,10 +2,10 @@ import { Button, HTMLTable, Intent } from '@blueprintjs/core';
 import { Edit, SmallCross, SmallTick } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { useEditableSection } from '../../../../components/EditableSections/EditableSections';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { FormTableCheckbox } from '../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
@@ -16,7 +16,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export function SessionSection({ session }) {
   const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const keyStyles = { width: '300px' };
 
@@ -52,7 +52,7 @@ export function SessionSection({ session }) {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -103,7 +103,7 @@ export function SessionSection({ session }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>Session</span>
           {renderEditButton()}

@@ -80,6 +80,23 @@ describe('ProblemGeneralPage', () => {
     expect(getRows(getSection('Tags'))).toEqual([['Tags', 'graph: shortest path']]);
   });
 
+  test('disables the edit buttons of the other sections while one is being edited', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    await user.click(within(getSection('General')).getByRole('button', { name: /edit/i }));
+
+    expect(within(getSection('Setters')).getByRole('button', { name: /edit/i })).toBeDisabled();
+    expect(within(getSection('Tags')).getByRole('button', { name: /edit/i })).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+    expect(within(getSection('General')).getByRole('button', { name: /edit/i })).toBeEnabled();
+    expect(within(getSection('Setters')).getByRole('button', { name: /edit/i })).toBeEnabled();
+    expect(within(getSection('Tags')).getByRole('button', { name: /edit/i })).toBeEnabled();
+  });
+
   test('general edit form', async () => {
     await renderComponent();
 

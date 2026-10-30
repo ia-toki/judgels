@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
+import { EditableSections } from '../../../../../../components/EditableSections/EditableSections';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -33,7 +34,9 @@ describe('ContestGeneralSection', () => {
             initialEntries={['/contests/contest-a/settings/general']}
             path="/contests/$contestSlug/settings/general"
           >
-            <ContestGeneralSection />
+            <EditableSections>
+              <ContestGeneralSection />
+            </EditableSections>
           </TestRouter>
         </QueryClientProviderWrapper>
       )

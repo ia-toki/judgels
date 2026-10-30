@@ -170,7 +170,7 @@ export default function ContestSettingsModulesPage() {
   return (
     <Flex flexDirection="column" gap={8}>
       <div>
-        <Flex asChild gap={2} alignItems="center">
+        <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
           <h4>
             <span>Enabled modules</span>
             {!isEditing && (

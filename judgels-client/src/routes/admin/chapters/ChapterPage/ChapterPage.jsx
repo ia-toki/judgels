@@ -4,6 +4,7 @@ import { useParams } from '@tanstack/react-router';
 
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { EditableSections } from '../../../../components/EditableSections/EditableSections';
 import { chapterByJidQueryOptions } from '../../../../modules/queries/chapter';
 import { ChapterGeneralSection } from '../ChapterGeneralSection/ChapterGeneralSection';
 import { ChapterLessonsSection } from '../ChapterLessonsSection/ChapterLessonsSection';
@@ -16,11 +17,13 @@ export default function ChapterPage() {
 
   return (
     <ContentCard title={<BreadcrumbTitle parent="Chapters" current={chapter.name} />}>
-      <Flex flexDirection="column" gap={8}>
-        <ChapterGeneralSection chapter={chapter} />
-        <ChapterLessonsSection chapter={chapter} />
-        <ChapterProblemsSection chapter={chapter} />
-      </Flex>
+      <EditableSections>
+        <Flex flexDirection="column" gap={8}>
+          <ChapterGeneralSection chapter={chapter} />
+          <ChapterLessonsSection chapter={chapter} />
+          <ChapterProblemsSection chapter={chapter} />
+        </Flex>
+      </EditableSections>
     </ContentCard>
   );
 }

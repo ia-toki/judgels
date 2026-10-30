@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
+import { EditableSections } from '../../../../../../components/EditableSections/EditableSections';
 import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
@@ -27,7 +28,9 @@ describe('ContestDescriptionSection', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-            <ContestDescriptionSection />
+            <EditableSections>
+              <ContestDescriptionSection />
+            </EditableSections>
           </TestRouter>
         </QueryClientProviderWrapper>
       )

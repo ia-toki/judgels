@@ -2,8 +2,8 @@ import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 
+import { useEditableSection } from '../../../../components/EditableSections/EditableSections';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { updateChapterMutationOptions } from '../../../../modules/queries/chapter';
 import ChapterGeneralEditForm from '../ChapterGeneralEditForm/ChapterGeneralEditForm';
@@ -13,7 +13,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export function ChapterGeneralSection({ chapter }) {
   const updateChapterMutation = useMutation(updateChapterMutationOptions(chapter.jid));
 
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
   const keyStyles = { width: '250px' };
 
@@ -29,7 +29,7 @@ export function ChapterGeneralSection({ chapter }) {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -54,7 +54,7 @@ export function ChapterGeneralSection({ chapter }) {
 
   return (
     <div>
-      <Flex asChild gap={2} alignItems="center">
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
         <h4>
           <span>General</span>
           {renderEditButton()}
