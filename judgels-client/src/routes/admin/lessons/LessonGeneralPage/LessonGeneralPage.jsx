@@ -51,7 +51,7 @@ export default function LessonGeneralPage() {
     );
     setIsEditing(false);
     if (data.slug !== lessonSlug) {
-      navigate({ to: `/admin/lessons/${data.slug}` });
+      navigate({ to: `/admin/lessons/${data.slug}/general` });
     }
   };
 

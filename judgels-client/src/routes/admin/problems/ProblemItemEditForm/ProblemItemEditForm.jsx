@@ -183,7 +183,7 @@ function ChoicesInput({ input: { value, onChange }, meta }) {
   );
 }
 
-export default function ProblemItemEditForm({ item, onSubmit }) {
+export default function ProblemItemEditForm({ item, onSubmit, baseMediaURL }) {
   const { type } = item;
 
   const [initialValues] = useState(() => toFormValues(item));
@@ -210,7 +210,7 @@ export default function ProblemItemEditForm({ item, onSubmit }) {
             {isSourceMode ? (
               <Field component={FormAceEditor} name={statementField.name} mode="html" tall />
             ) : (
-              <Field component={FormRichTextArea} {...statementField} tall />
+              <Field component={FormRichTextArea} {...statementField} tall baseMediaURL={baseMediaURL} />
             )}
             {type !== ItemType.Statement && <Field component={FormTextInput} {...scoreField} />}
             {(type === ItemType.MultipleChoice || type === ItemType.ShortAnswer) && (

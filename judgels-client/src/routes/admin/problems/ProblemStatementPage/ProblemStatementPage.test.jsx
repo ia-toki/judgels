@@ -27,6 +27,9 @@ describe('ProblemStatementPage', () => {
           gradingEngine: 'Batch',
           gradingLanguageRestriction: { allowedLanguageNames: ['Cpp11'] },
         });
+      nockApi()
+        .get('/v4/problems/JIDPROG1/grading/config')
+        .reply(200, { engine: 'Batch', config: { timeLimit: 2000, memoryLimit: 262144 } });
     }
     nockApi()
       .get('/v4/problems/JIDPROG1/statement/languages')
@@ -60,6 +63,13 @@ describe('ProblemStatementPage', () => {
     expect(document.querySelector('img').getAttribute('src')).toMatch(
       /\/v4\/problems\/JIDPROG1\/clones\/userJid\/render\/apel\.png$/
     );
+  });
+
+  test('previews the time and memory limits', async () => {
+    await renderComponent();
+
+    expect(screen.getByRole('row', { name: 'Time limit 2 s' })).toBeInTheDocument();
+    expect(screen.getByRole('row', { name: 'Memory limit 256 MB' })).toBeInTheDocument();
   });
 
   const nockBundleItems = () => {

@@ -1,0 +1,35 @@
+@use '../../../styles/base' as *;
+
+.bp6-dark .mce-tinymce {
+  border-color: $dark-border-color;
+
+  .mce-panel,
+  .mce-btn-group:not(:first-child) {
+    border-color: $dark-border-color;
+  }
+
+  .mce-panel,
+  .mce-btn {
+    background-color: $dark-background-color;
+  }
+
+  .mce-btn:hover,
+  .mce-btn.mce-active {
+    background-color: $dark-secondary-background-color;
+  }
+
+  .mce-ico,
+  .mce-btn button,
+  .mce-btn .mce-txt,
+  .mce-path-item {
+    color: $dark-text-color;
+  }
+
+  .mce-caret {
+    border-top-color: $dark-text-color;
+  }
+
+  .mce-resizehandle .mce-ico {
+    color: $dark-secondary-text-color;
+  }
+}

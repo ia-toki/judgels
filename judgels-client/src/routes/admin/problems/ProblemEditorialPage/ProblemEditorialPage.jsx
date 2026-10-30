@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { ProblemEditorial } from '../../../../components/ProblemEditorial/ProblemEditorial';
-import { formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
+import { baseEditorialMediaURL, formatEditorialMediaUrls } from '../../../../modules/api/problemEditorial';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemEditorialLanguagesQueryOptions,
@@ -84,6 +84,7 @@ export default function ProblemEditorialPage() {
           initialValues={editorial}
           onSubmit={updateEditorial}
           onCancel={() => setIsEditing(false)}
+          baseMediaURL={baseEditorialMediaURL(problemJid, user.jid)}
         />
       );
     }

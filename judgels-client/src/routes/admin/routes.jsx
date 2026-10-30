@@ -283,7 +283,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminProblemRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/problems/$problemSlug/general', params, replace: true });
+      throw redirect({ to: '/admin/problems/$problemSlug/statements', params, replace: true });
     },
   });
 
@@ -557,7 +557,7 @@ export const createAdminRoutes = appRoute => {
     getParentRoute: () => adminLessonRoute,
     path: '/',
     beforeLoad: ({ params }) => {
-      throw redirect({ to: '/admin/lessons/$lessonSlug/general', params, replace: true });
+      throw redirect({ to: '/admin/lessons/$lessonSlug/statements', params, replace: true });
     },
   });
 

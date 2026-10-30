@@ -45,7 +45,7 @@ export default function ProblemGeneralSection({ problemJid }) {
     );
     setIsEditing(false);
     if (data.slug !== problemSlug) {
-      navigate({ to: `/admin/problems/${data.slug}` });
+      navigate({ to: `/admin/problems/${data.slug}/general` });
     }
   };
 

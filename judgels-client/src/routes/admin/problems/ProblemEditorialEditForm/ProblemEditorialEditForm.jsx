@@ -15,7 +15,7 @@ const textField = {
   permissive: true,
 };
 
-export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCancel }) {
+export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCancel, baseMediaURL }) {
   const [isSourceMode, setIsSourceMode] = useState(false);
 
   return (
@@ -35,7 +35,7 @@ export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCa
             {isSourceMode ? (
               <Field component={FormAceEditor} name={textField.name} mode="html" tall />
             ) : (
-              <Field component={FormRichTextArea} {...textField} tall />
+              <Field component={FormRichTextArea} {...textField} tall baseMediaURL={baseMediaURL} />
             )}
             <ActionButtons justifyContent="end">
               <Button text="Cancel" disabled={submitting} onClick={onCancel} />

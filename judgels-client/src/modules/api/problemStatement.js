@@ -6,9 +6,13 @@ import { baseProblemURL } from './problem';
 
 const baseURL = problemJid => `${baseProblemURL(problemJid)}/statement`;
 
+export function baseStatementMediaURL(problemJid, userJid) {
+  return `${APP_CONFIG.apiUrl}/v4/problems/${problemJid}/clones/${userJid}/`;
+}
+
 // Media files are written in a statement as `render/<filename>`.
 export function formatStatementMediaUrls(text, problemJid, userJid) {
-  const renderURL = `${APP_CONFIG.apiUrl}/v4/problems/${problemJid}/clones/${userJid}/render/`;
+  const renderURL = `${baseStatementMediaURL(problemJid, userJid)}render/`;
   return text.replace(/(src|href)="render\//g, `$1="${renderURL}`).replace(/url=render\//g, `url=${renderURL}`);
 }
 

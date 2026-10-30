@@ -1,0 +1,24 @@
+@use '../../../../node_modules/reset-css/reset.css';
+@use '../../../../node_modules/normalize.css/normalize.css';
+@use '../../../../node_modules/typeface-open-sans/index.css' as openSans;
+@use '../../../../node_modules/typeface-roboto/index.css' as roboto;
+@use '../../../styles/base' as *;
+@use '../../../styles/content';
+@use '../../HtmlText/HtmlText';
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: $primary-font;
+  color: $text-color;
+  background-color: $card-background-color;
+
+  .bp6-dark & {
+    color: $dark-text-color;
+    background-color: $dark-card-background-color;
+  }
+}
+
+.html-text .spoiler .spoiler-content {
+  display: block;
+}
