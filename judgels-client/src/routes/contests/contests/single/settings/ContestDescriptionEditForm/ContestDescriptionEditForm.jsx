@@ -4,7 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 
-export default function ContestEditDescriptionForm({ onSubmit, initialValues, onCancel }) {
+export default function ContestDescriptionEditForm({ onSubmit, initialValues, onCancel }) {
   const descriptionField = {
     name: 'description',
     rows: 16,
@@ -13,7 +13,7 @@ export default function ContestEditDescriptionForm({ onSubmit, initialValues, on
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
-        <form className="contest-edit-dialog__content" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Field component={FormRichTextArea} {...descriptionField} />
           <hr />
           <ActionButtons justifyContent="end">

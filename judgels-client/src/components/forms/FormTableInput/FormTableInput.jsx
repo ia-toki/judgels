@@ -20,7 +20,7 @@ export function FormTableInput({
   return (
     <tr className="form-table-input">
       <td style={keyStyles} className={keyClassName}>
-        <Box paddingTop={1}>
+        <Box className="form-table-input__key">
           <span className="form-table-input__label">{label}</span>
           {labelHelper && <span className="form-table-input__label-helper"> ({labelHelper})</span>}
         </Box>

@@ -1,4 +1,4 @@
-import { Button, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
@@ -13,11 +13,11 @@ import {
   contestDescriptionQueryOptions,
   updateContestDescriptionMutationOptions,
 } from '../../../../../../modules/queries/contest';
-import ContestEditDescriptionForm from '../ContestEditDescriptionForm/ContestEditDescriptionForm';
+import ContestDescriptionEditForm from '../ContestDescriptionEditForm/ContestDescriptionEditForm';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-export default function ContestEditDescriptionTab() {
+export default function ContestDescriptionSection() {
   const { contestSlug } = useParams({ strict: false });
   const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
 
@@ -27,10 +27,17 @@ export default function ContestEditDescriptionTab() {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const updateContestDescription = async data => {
+    await updateDescriptionMutation.mutateAsync(data.description, {
+      onSuccess: () => toastActions.showSuccessToast('Description updated.'),
+    });
+    setIsEditing(false);
+  };
+
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
           Edit
         </Button>
       )
@@ -42,21 +49,15 @@ export default function ContestEditDescriptionTab() {
       return <LoadingState />;
     }
     if (isEditing) {
-      const initialValues = {
-        description: response.description,
-      };
-      const formProps = {
-        onCancel: () => setIsEditing(false),
-      };
       return (
-        <ContestEditDescriptionForm initialValues={initialValues} onSubmit={updateContestDescription} {...formProps} />
+        <ContestDescriptionEditForm
+          initialValues={{ description: response.description }}
+          onSubmit={updateContestDescription}
+          onCancel={() => setIsEditing(false)}
+        />
       );
     }
-    return renderDescription(response);
-  };
-
-  const renderDescription = ({ description, profilesMap }) => {
-    if (!description) {
+    if (!response.description) {
       return (
         <p>
           <small>No description.</small>
@@ -64,29 +65,21 @@ export default function ContestEditDescriptionTab() {
       );
     }
     return (
-      <ContentCard className="contest-edit-dialog__content">
-        <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
+      <ContentCard compact>
+        <HtmlText profilesMap={response.profilesMap}>{response.description}</HtmlText>
       </ContentCard>
     );
   };
 
-  const updateContestDescription = data => {
-    updateDescriptionMutation.mutate(data.description, {
-      onSuccess: () => toastActions.showSuccessToast('Description updated.'),
-    });
-    setIsEditing(false);
-  };
-
   return (
-    <>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
+    <div>
+      <Flex asChild gap={2} alignItems="center">
         <h4>
-          <span>Description settings</span>
+          <span>Description</span>
           {renderEditButton()}
         </h4>
       </Flex>
-      <hr />
       {renderContent()}
-    </>
+    </div>
   );
 }

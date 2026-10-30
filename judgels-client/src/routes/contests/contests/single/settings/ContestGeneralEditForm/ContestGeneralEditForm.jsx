@@ -9,7 +9,7 @@ import { Required, Slug, composeValidators } from '../../../../../../components/
 import { ContestStyle } from '../../../../../../modules/api/contest';
 import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 
-export default function ContestEditGeneralForm({ onSubmit, initialValues, onCancel }) {
+export default function ContestGeneralEditForm({ onSubmit, initialValues, onCancel }) {
   const slugField = {
     name: 'slug',
     label: 'Slug',

@@ -8,9 +8,9 @@ import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { parseDateTime } from '../../../../../../utils/datetime';
 import { parseDuration } from '../../../../../../utils/duration';
 import { nockApi } from '../../../../../../utils/nock';
-import ContestEditGeneralTab from './ContestEditGeneralTab';
+import ContestGeneralSection from './ContestGeneralSection';
 
-describe('ContestEditGeneralTab', () => {
+describe('ContestGeneralSection', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -29,15 +29,18 @@ describe('ContestEditGeneralTab', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/contests/contest-a']} path="/contests/$contestSlug">
-            <ContestEditGeneralTab />
+          <TestRouter
+            initialEntries={['/contests/contest-a/settings/general']}
+            path="/contests/$contestSlug/settings/general"
+          >
+            <ContestGeneralSection />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
   };
 
-  test('form', async () => {
+  test('updates the contest', async () => {
     await renderComponent();
 
     const user = userEvent.setup();

@@ -15,11 +15,7 @@ public interface ContestModulesConfig {
     Optional<GcjStyleModuleConfig> getGcjStyle();
     Optional<BundleStyleModuleConfig> getBundleStyle();
 
-    @Value.Default
-    default ScoreboardModuleConfig getScoreboard() {
-        return ScoreboardModuleConfig.DEFAULT;
-    }
-
+    Optional<ScoreboardModuleConfig> getScoreboard();
     Optional<ClarificationTimeLimitModuleConfig> getClarificationTimeLimit();
     Optional<DivisionModuleConfig> getDivision();
     Optional<EditorialModuleConfig> getEditorial();

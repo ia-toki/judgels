@@ -146,7 +146,7 @@ public class ContestModuleStore {
         config.getGcjStyle().ifPresent(c -> upsertGcjStyleModule(contestJid, c));
         config.getBundleStyle().ifPresent(c -> upsertBundleStyleModule(contestJid, c));
 
-        upsertScoreboardModule(contestJid, config.getScoreboard());
+        config.getScoreboard().ifPresent(c -> upsertScoreboardModule(contestJid, c));
 
         config.getClarificationTimeLimit().ifPresent(c -> upsertClarificationTimeLimitModule(contestJid, c));
         config.getDivision().ifPresent(c -> upsertDivisionModule(contestJid, c));

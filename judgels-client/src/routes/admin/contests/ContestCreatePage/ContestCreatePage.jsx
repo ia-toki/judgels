@@ -16,7 +16,7 @@ export default function ContestCreatePage() {
   const createContest = async data => {
     await createContestMutation.mutateAsync(data, {
       onSuccess: (_data, { slug }) => {
-        navigate({ to: `/contests/${slug}`, state: { isEditingContest: true } });
+        navigate({ to: `/contests/${slug}/settings/general` });
         toastActions.showSuccessToast('Contest created.');
       },
     });

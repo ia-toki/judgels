@@ -6,9 +6,9 @@ import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockApi } from '../../../../../../utils/nock';
-import ContestEditDescriptionTab from './ContestEditDescriptionTab';
+import ContestDescriptionSection from './ContestDescriptionSection';
 
-describe('ContestEditDescriptionTab', () => {
+describe('ContestDescriptionSection', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -27,14 +27,14 @@ describe('ContestEditDescriptionTab', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
-            <ContestEditDescriptionTab />
+            <ContestDescriptionSection />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
   };
 
-  test('contest edit description tab form', async () => {
+  test('updates the description', async () => {
     await renderComponent();
 
     const user = userEvent.setup();
