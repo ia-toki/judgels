@@ -1,29 +1,14 @@
-import { Console } from '@blueprintjs/icons';
-
-import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
-import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
+import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
 import ContestsPage from './contests/ContestsPage/ContestsPage';
 
+import './ContestsIndexPage.scss';
+
 export default function ContestsIndexPage() {
-  const sidebarItems = [
-    {
-      path: '',
-      titleIcon: <Console />,
-      title: 'Contests',
-    },
-  ];
-
-  const contentWithSidebarProps = {
-    title: 'Menu',
-    items: sidebarItems,
-    basePath: '/contests',
-  };
-
   return (
-    <FullWidthPageLayout>
-      <ContentWithSidebar {...contentWithSidebarProps}>
+    <FullPageLayout>
+      <div className="contests-index-page">
         <ContestsPage />
-      </ContentWithSidebar>
-    </FullWidthPageLayout>
+      </div>
+    </FullPageLayout>
   );
 }
