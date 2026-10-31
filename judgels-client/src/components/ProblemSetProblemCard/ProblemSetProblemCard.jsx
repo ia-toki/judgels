@@ -60,7 +60,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
   };
 
   return (
-    <ContentCardLink to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-cardd">
+    <ContentCardLink framed to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-cardd">
       <h4 data-key="name">
         <Flex justifyContent="space-between">
           <span>

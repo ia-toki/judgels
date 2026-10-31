@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
 import { Card } from '../../../../../components/Card/Card';
+import { ContentCardList } from '../../../../../components/ContentCardList/ContentCardList';
 import { activeContestsQueryOptions } from '../../../../../modules/queries/contest';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
 import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
@@ -22,9 +23,13 @@ export default function ActiveContestsWidget() {
         </p>
       );
     }
-    return contests.map(contest => (
-      <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
-    ));
+    return (
+      <ContentCardList rows>
+        {contests.map(contest => (
+          <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
+        ))}
+      </ContentCardList>
+    );
   };
 
   return (

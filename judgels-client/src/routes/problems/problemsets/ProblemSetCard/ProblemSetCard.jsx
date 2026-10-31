@@ -29,7 +29,7 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress, profi
   };
 
   return (
-    <ContentCardLink to={`/problems/${problemSet.slug}`}>
+    <ContentCardLink framed to={`/problems/${problemSet.slug}`}>
       <Flex asChild gap={2} justifyContent="space-between" alignItems="baseline">
         <h4>
           {problemSet.name}

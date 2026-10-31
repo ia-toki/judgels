@@ -25,7 +25,7 @@ export function ContestProblemCard({
   };
 
   return (
-    <ContentCardLink className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
+    <ContentCardLink framed className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
       <Flex justifyContent="space-between">
         <div>
           <span data-key="name">

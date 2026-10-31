@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
+import { ContentCardList } from '../../../../components/ContentCardList/ContentCardList';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
@@ -65,9 +66,13 @@ export default function ContestsPage() {
       );
     }
 
-    return contests.page.map(contest => (
-      <ContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
-    ));
+    return (
+      <ContentCardList rows>
+        {contests.page.map(contest => (
+          <ContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
+        ))}
+      </ContentCardList>
+    );
   };
 
   const renderPagination = () => {
