@@ -1,5 +1,5 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import { SmallTick } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 
 import { VerdictCode } from '../../modules/api/gradingVerdict';
 import { ProblemType } from '../../modules/api/problem';
@@ -17,7 +17,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
 
     return (
       <Tag round intent={Intent.WARNING}>
-        editorial <SmallTick />
+        editorial
       </Tag>
     );
   };
@@ -35,6 +35,21 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
     );
   };
 
+  const renderStatus = () => {
+    const editorialTag = renderEditorialTag();
+    const progressBar = renderProgress();
+    if (!editorialTag && !progressBar) {
+      return null;
+    }
+
+    return (
+      <Flex alignItems="start" gap={2}>
+        {editorialTag}
+        {progressBar || <div className="content-row__progress-space" />}
+      </Flex>
+    );
+  };
+
   return (
     <ContentRow
       to={`/problems/${problemSet.slug}/${problem.alias}`}
@@ -42,11 +57,10 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
       badges={
         <>
           <ProblemDifficultyTags problem={problem} difficulty={difficulty} />
-          {renderEditorialTag()}
           <ProblemTopicTagList tags={metadata.tags} />
         </>
       }
-      status={renderProgress()}
+      status={renderStatus()}
     />
   );
 }
