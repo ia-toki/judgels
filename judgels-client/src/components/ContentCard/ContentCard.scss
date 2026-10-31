@@ -12,7 +12,14 @@
   line-height: 9px;
 }
 
-.bp6-dark .content-card .content-card,
-.bp6-dark .card .content-card {
+.content-card .content-card.bp6-card:not(.content-card--framed),
+.card .content-card.bp6-card:not(.content-card--framed) {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.bp6-dark .content-card .content-card--framed,
+.bp6-dark .card .content-card--framed {
   box-shadow: 0 0 0 0.5px $dark-secondary-background-color !important;
 }

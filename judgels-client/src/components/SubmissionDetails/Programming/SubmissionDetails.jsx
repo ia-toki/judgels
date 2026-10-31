@@ -150,7 +150,7 @@ export function SubmissionDetails({
     }
 
     return latestGrading.details.subtaskResults.map(subtaskResult => (
-      <ContentCard className="details-card">
+      <ContentCard framed className="details-card">
         <details>
           <summary>
             <h5>
@@ -220,7 +220,7 @@ export function SubmissionDetails({
     }
 
     return (
-      <ContentCard className="details-card">
+      <ContentCard framed className="details-card">
         <details>
           <summary>
             <h5>
@@ -275,7 +275,7 @@ export function SubmissionDetails({
     }
 
     return (
-      <ContentCard className="details-card">
+      <ContentCard framed className="details-card">
         <details>
           <summary>
             <h5>
