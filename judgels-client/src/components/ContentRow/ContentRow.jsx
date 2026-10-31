@@ -6,7 +6,7 @@ import './ContentRow.scss';
 
 export function ContentRow({ className, to, leading, title, meta, badges, status }) {
   return (
-    <Flex asChild alignItems="center" gap={3}>
+    <Flex asChild alignItems="center" gap={3} paddingX={5} paddingY={4}>
       <Link className={classNames('content-row', className)} to={to}>
         {leading}
         <Flex className="content-row__main" flexDirection="column" flexGrow={1} gap={3}>

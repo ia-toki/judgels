@@ -1,4 +1,5 @@
 import { Classes } from '@blueprintjs/core';
+import { Box } from '@blueprintjs/labs';
 import { useEffect, useState } from 'react';
 
 import { ContentList } from '../ContentList/ContentList';
@@ -19,9 +20,9 @@ export function LoadingContentRow() {
 
   return (
     <ContentList>
-      <div className="content-row">
+      <Box className="content-row" paddingX={5} paddingY={4}>
         <h4 className={`content-row__title ${Classes.SKELETON}`}>This is a placeholder for a long content name</h4>
-      </div>
+      </Box>
     </ContentList>
   );
 }

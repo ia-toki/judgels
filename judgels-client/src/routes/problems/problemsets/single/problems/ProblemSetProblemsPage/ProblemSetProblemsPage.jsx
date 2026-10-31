@@ -24,7 +24,7 @@ export default function ProblemSetProblemsPage() {
   const renderHeader = () => {
     return (
       <>
-        <Flex justifyContent="space-between">
+        <Flex justifyContent="space-between" alignItems="center">
           <div>{renderProblemSpoilerWidget()}</div>
           <div>{renderStatementLanguageWidget()}</div>
         </Flex>

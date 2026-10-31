@@ -2,7 +2,6 @@
 
 .content-row {
   min-height: 48px;
-  padding: 10px 20px;
   color: inherit !important;
 
   & + & {
@@ -86,6 +85,7 @@
 }
 
 // Short and of a fixed width, so that the bars line up and do not read as dividers between rows.
-.content-row__progress.bp6-progress-bar {
+.content-row__progress.bp6-progress-bar,
+.content-row__progress-space {
   width: 96px;
 }
