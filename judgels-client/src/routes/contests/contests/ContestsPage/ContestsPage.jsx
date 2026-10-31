@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
-import { ContentCardList } from '../../../../components/ContentCardList/ContentCardList';
-import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { ContentList } from '../../../../components/ContentList/ContentList';
+import { LoadingContentRow } from '../../../../components/ContentRow/LoadingContentRow';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { contestsQueryOptions } from '../../../../modules/queries/contest';
@@ -49,13 +49,13 @@ export default function ContestsPage() {
 
   const renderContests = () => {
     if (!response) {
-      return <LoadingContentCard />;
+      return <LoadingContentRow />;
     }
 
     const rolesMap = response.rolesMap;
     const contests = response.data;
     if (!contests) {
-      return <LoadingContentCard />;
+      return <LoadingContentRow />;
     }
 
     if (contests.page.length === 0) {
@@ -67,11 +67,11 @@ export default function ContestsPage() {
     }
 
     return (
-      <ContentCardList rows>
+      <ContentList>
         {contests.page.map(contest => (
           <ContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
         ))}
-      </ContentCardList>
+      </ContentList>
     );
   };
 

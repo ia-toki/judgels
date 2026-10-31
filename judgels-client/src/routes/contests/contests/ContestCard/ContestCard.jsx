@@ -1,34 +1,27 @@
-import { Flex } from '@blueprintjs/labs';
 import { PureComponent } from 'react';
 
-import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
+import { ContentRow } from '../../../../components/ContentRow/ContentRow';
 import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { FormattedDuration } from '../../../../components/FormattedDuration/FormattedDuration';
 import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';
-
-import './ContestCard.scss';
 
 export class ContestCard extends PureComponent {
   render() {
     const { contest, role } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${contest.slug}`}>
-        <h4>
-          <Flex gap={2} justifyContent="space-between">
-            {contest.name}
-            <div className="contest-card-role">
-              <ContestRoleTag role={role} />
-            </div>
-          </Flex>
-        </h4>
-        <p className="contest-card-date">
-          <small>
-            {this.renderBeginTime(contest)} | {this.renderDuration(contest)}
-          </small>
-        </p>
-      </ContentCardLink>
+      <ContentRow
+        to={`/contests/${contest.slug}`}
+        title={contest.name}
+        meta={
+          <>
+            <span>{this.renderBeginTime(contest)}</span>
+            <span>{this.renderDuration(contest)}</span>
+          </>
+        }
+        status={role && <ContestRoleTag role={role} />}
+      />
     );
   }
 

@@ -1,0 +1,91 @@
+@use '../../styles/base' as *;
+
+.content-row {
+  min-height: 48px;
+  padding: 10px 20px;
+  color: inherit !important;
+
+  & + & {
+    border-top: 1px solid $divider-color;
+
+    .bp6-dark & {
+      border-top-color: $dark-divider-color;
+    }
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    .bp6-light & {
+      background-color: $card-hover-background-color;
+    }
+
+    .bp6-dark & {
+      background-color: $dark-card-hover-background-color;
+    }
+  }
+
+  > .bp6-icon {
+    flex-shrink: 0;
+  }
+}
+
+.content-row__main {
+  min-width: 0;
+}
+
+.content-row__title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+// Keeps to one line, including rich text: a description reads as a sentence, whatever its markup.
+.content-row__meta {
+  overflow: hidden;
+  font-size: $font-size-small;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.72;
+
+  > * + *::before {
+    content: '·';
+    margin: 0 6px;
+  }
+
+  .html-text {
+    font-size: inherit;
+    line-height: inherit !important;
+  }
+
+  .html-text,
+  .html-text * {
+    display: inline;
+    margin: 0;
+    font-weight: inherit;
+    color: inherit;
+  }
+
+  .html-text p + p::before {
+    content: ' ';
+  }
+
+  .html-text img {
+    display: none;
+  }
+}
+
+// The tags in it may each decide not to show, e.g. when spoilers are off.
+.content-row__badges:empty {
+  display: none;
+}
+
+.content-row__status {
+  flex-shrink: 0;
+  font-size: $font-size-small;
+}
+
+// Short and of a fixed width, so that the bars line up and do not read as dividers between rows.
+.content-row__progress.bp6-progress-bar {
+  width: 96px;
+}

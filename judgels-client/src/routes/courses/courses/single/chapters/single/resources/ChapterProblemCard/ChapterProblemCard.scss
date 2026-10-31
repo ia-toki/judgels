@@ -1,46 +1,13 @@
-@use '../../../../../../../../styles/base' as *;
+.chapter-problem-card--future:not(:hover) {
+  opacity: 0.5;
+}
 
-.chapter-problem-card {
-  h4 {
-    margin-bottom: 0;
-  }
-
-  .bp6-icon {
-    padding-top: 1px;
-  }
-
-  .bp6-tag {
-    height: 21px;
-  }
-
-  &__problem-set-problem-paths {
-    font-weight: $font-weight-bold;
-  }
-
-  &--future {
-    background-color: inherit;
-
-    > *,
-    .chapter-problem-card__heading > .bp6-icon {
-      font-weight: normal !important;
-      color: #bcc0c2;
-
-      .bp6-dark & {
-        color: #5d6c79;
-      }
-
-      a:hover & {
-        color: inherit !important;
-        font-weight: inherit !important;
-      }
-    }
-
-    .bp6-tag {
-      background-color: #ced4d8;
-
-      .bp6-dark & {
-        background-color: #5f6d79;
-      }
-    }
+// The status does not shrink, so a long list of paths would squeeze the title on narrow windows.
+@media only screen and (max-width: 600px) {
+  .chapter-problem-card__paths {
+    max-width: 96px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }

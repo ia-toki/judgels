@@ -3,7 +3,8 @@ import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 
-import { ContentCardList } from '../../../../../../../../components/ContentCardList/ContentCardList';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import { ContentList } from '../../../../../../../../components/ContentList/ContentList';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { getLessonName } from '../../../../../../../../modules/api/lesson';
@@ -78,32 +79,26 @@ export default function ChapterResourcesPage() {
     const chapterProblems = problems.filter(p => !problemSetProblemPathsMap[p.problemJid]);
     const problemSetProblems = problems.filter(p => !!problemSetProblemPathsMap[p.problemJid]);
 
-    let chapterResources = null;
-    if (lessons.length > 0 || chapterProblems.length > 0) {
-      chapterResources = (
-        <ContentCardList>
-          {lessons.map(renderLesson)}
-          {chapterProblems.map(renderProblem)}
-        </ContentCardList>
-      );
-    }
-
-    let problemSetResources = null;
-    if (problemSetProblems.length > 0) {
-      problemSetResources = (
-        <div className="chapter-resources-page__problem-set-problems">
-          <h4>Practice Problems</h4>
-          <ContentCardList>
-            {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
-          </ContentCardList>
-        </div>
-      );
-    }
-
     return (
       <Flex flexDirection="column" gap={8}>
-        {chapterResources}
-        {problemSetResources}
+        {(lessons.length > 0 || chapterProblems.length > 0) && (
+          <ContentCard>
+            <ContentList>
+              {lessons.map(renderLesson)}
+              {chapterProblems.map(renderProblem)}
+            </ContentList>
+          </ContentCard>
+        )}
+        {problemSetProblems.length > 0 && (
+          <div>
+            <h4>Practice Problems</h4>
+            <ContentCard>
+              <ContentList>
+                {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
+              </ContentList>
+            </ContentCard>
+          </div>
+        )}
       </Flex>
     );
   };

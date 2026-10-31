@@ -3,8 +3,9 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { ContentList } from '../../../../../../components/ContentList/ContentList';
+import { LoadingContentRow } from '../../../../../../components/ContentRow/LoadingContentRow';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
-import { LoadingContentCard } from '../../../../../../components/LoadingContentCard/LoadingContentCard';
 import { ProblemSetProblemCard } from '../../../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
 import ProblemSpoilerWidget from '../../../../../../components/ProblemSpoilerWidget/ProblemSpoilerWidget';
 import { consolidateLanguages } from '../../../../../../modules/api/language';
@@ -53,7 +54,7 @@ export default function ProblemSetProblemsPage() {
 
   const renderProblems = () => {
     if (!response) {
-      return <LoadingContentCard />;
+      return <LoadingContentRow />;
     }
 
     const { data: problems, problemsMap, problemMetadatasMap, problemDifficultiesMap, problemProgressesMap } = response;
@@ -67,18 +68,22 @@ export default function ProblemSetProblemsPage() {
       );
     }
 
-    return problems.map(problem => {
-      const props = {
-        problemSet,
-        problem,
-        showAlias: true,
-        problemName: getProblemName(problemsMap[problem.problemJid], defaultLanguage),
-        metadata: problemMetadatasMap[problem.problemJid],
-        difficulty: problemDifficultiesMap[problem.problemJid],
-        progress: problemProgressesMap[problem.problemJid],
-      };
-      return <ProblemSetProblemCard key={problem.problemJid} {...props} />;
-    });
+    return (
+      <ContentList>
+        {problems.map(problem => {
+          const props = {
+            problemSet,
+            problem,
+            showAlias: true,
+            problemName: getProblemName(problemsMap[problem.problemJid], defaultLanguage),
+            metadata: problemMetadatasMap[problem.problemJid],
+            difficulty: problemDifficultiesMap[problem.problemJid],
+            progress: problemProgressesMap[problem.problemJid],
+          };
+          return <ProblemSetProblemCard key={problem.problemJid} {...props} />;
+        })}
+      </ContentList>
+    );
   };
 
   return (

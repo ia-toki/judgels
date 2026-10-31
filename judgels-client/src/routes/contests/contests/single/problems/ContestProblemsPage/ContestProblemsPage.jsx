@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { ContentCardList } from '../../../../../../components/ContentCardList/ContentCardList';
+import { ContentList } from '../../../../../../components/ContentList/ContentList';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
@@ -74,29 +74,16 @@ export default function ContestProblemsPage() {
     }
 
     return (
-      <div>
-        {renderOpenProblems(
+      <ContentList>
+        {renderFilteredProblems(
           problems.filter(p => p.status === ContestProblemStatus.Open),
           totalSubmissionsMap
         )}
-        {renderClosedProblems(
+        {renderFilteredProblems(
           problems.filter(p => p.status === ContestProblemStatus.Closed),
           totalSubmissionsMap
         )}
-      </div>
-    );
-  };
-
-  const renderOpenProblems = (problems, totalSubmissionsMap) => {
-    return <ContentCardList>{renderFilteredProblems(problems, totalSubmissionsMap)}</ContentCardList>;
-  };
-
-  const renderClosedProblems = (problems, totalSubmissionsMap) => {
-    return (
-      <div>
-        {problems.length !== 0 && <hr />}
-        <ContentCardList>{renderFilteredProblems(problems, totalSubmissionsMap)}</ContentCardList>
-      </div>
+      </ContentList>
     );
   };
 

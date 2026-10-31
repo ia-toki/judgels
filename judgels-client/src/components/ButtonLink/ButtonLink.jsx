@@ -2,7 +2,7 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Link } from '@tanstack/react-router';
 import classNames from 'classnames';
 
-export function ButtonLink({ className, disabled, active, intent, small, large, ...linkProps }) {
+export function ButtonLink({ className, disabled, active, intent, small, large, minimal, ...linkProps }) {
   if (disabled) {
     return <Button {...linkProps} small={small} disabled />;
   }
@@ -15,6 +15,7 @@ export function ButtonLink({ className, disabled, active, intent, small, large, 
         [Classes.INTENT_WARNING]: intent === Intent.WARNING,
         [Classes.SMALL]: small,
         [Classes.LARGE]: large,
+        [Classes.MINIMAL]: minimal,
       })}
     />
   );

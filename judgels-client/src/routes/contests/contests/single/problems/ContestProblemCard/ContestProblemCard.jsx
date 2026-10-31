@@ -1,10 +1,8 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 
-import { ContentCardLink } from '../../../../../../components/ContentCardLink/ContentCardLink';
+import { ContentRow } from '../../../../../../components/ContentRow/ContentRow';
 import { ContestProblemStatus } from '../../../../../../modules/api/contestProblem';
-
-import './ContestProblemCard.scss';
 
 export function ContestProblemCard({
   contest,
@@ -12,31 +10,30 @@ export function ContestProblemCard({
   problemName,
   totalSubmissions,
 }) {
-  const problemPoints = points === null || points === undefined ? '' : ` [${points} points]`;
+  const isClosed = status === ContestProblemStatus.Closed;
+  const problemPoints = points === null || points === undefined ? null : <span>{points} points</span>;
 
   const renderStatus = () => {
-    if (status === ContestProblemStatus.Closed) {
+    if (isClosed) {
       return <Tag intent={Intent.DANGER}>CLOSED</Tag>;
     }
-    if (!!submissionsLimit) {
-      return <span>{submissionsLimit - totalSubmissions} submissions left</span>;
+    if (!submissionsLimit) {
+      return problemPoints;
     }
-    return <div />;
+    return (
+      <Flex alignItems="center" gap={2}>
+        <Tag>{submissionsLimit - totalSubmissions} submissions left</Tag>
+        {problemPoints}
+      </Flex>
+    );
   };
 
   return (
-    <ContentCardLink framed className="contest-problem-card" to={`/contests/${contest.slug}/problems/${alias}`}>
-      <Flex justifyContent="space-between">
-        <div>
-          <span data-key="name">
-            {alias}. {problemName}
-            {problemPoints}
-          </span>
-        </div>
-        <div data-key="status" className="secondary-info">
-          {renderStatus()}
-        </div>
-      </Flex>
-    </ContentCardLink>
+    <ContentRow
+      to={`/contests/${contest.slug}/problems/${alias}`}
+      title={`${alias}. ${problemName}`}
+      meta={isClosed ? problemPoints : null}
+      status={renderStatus()}
+    />
   );
 }

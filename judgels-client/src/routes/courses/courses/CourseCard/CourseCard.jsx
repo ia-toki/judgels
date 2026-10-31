@@ -1,50 +1,31 @@
-import { Flex } from '@blueprintjs/labs';
-
-import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
+import { ContentTile } from '../../../../components/ContentTile/ContentTile';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
-import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
-
-import './CourseCard.scss';
 
 export function CourseCard({ course: { slug, name, description }, progress }) {
   const renderProgress = () => {
-    if (!progress || progress.totalProblems === 0) {
+    if (!progress || progress.solvedProblems === 0) {
       return null;
     }
 
     const { solvedProblems, totalProblems } = progress;
 
     return (
-      <ProgressTag num={solvedProblems} denom={totalProblems}>
-        {solvedProblems} / {totalProblems} problems completed
-      </ProgressTag>
+      <>
+        <ProgressBar num={solvedProblems} denom={totalProblems} />
+        <span>
+          {solvedProblems} / {totalProblems} problems
+        </span>
+      </>
     );
   };
 
-  const renderProgressBar = () => {
-    if (!progress) {
-      return null;
-    }
-    return <ProgressBar num={progress.solvedProblems} denom={progress.totalProblems} />;
-  };
-
   return (
-    <ContentCardLink to={`/courses/${slug}`} className="course-card">
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h3 className="course-card__title">
-          {`${name}`}
-          {renderProgress()}
-        </h3>
-      </Flex>
-
-      <hr />
-      {description && (
-        <small>
-          <HtmlText>{description}</HtmlText>
-        </small>
-      )}
-      {renderProgressBar()}
-    </ContentCardLink>
+    <ContentTile
+      to={`/courses/${slug}`}
+      title={name}
+      description={description && <HtmlText>{description}</HtmlText>}
+      footer={renderProgress()}
+    />
   );
 }

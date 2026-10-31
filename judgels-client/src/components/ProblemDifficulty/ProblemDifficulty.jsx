@@ -5,7 +5,7 @@ import { useWebPrefs } from '../../modules/webPrefs';
 
 import './ProblemDifficulty.scss';
 
-export default function ProblemDifficulty({ problem, difficulty }) {
+export function ProblemDifficultyTags({ problem, difficulty }) {
   const { hideProblemDifficulty } = useWebPrefs();
   const showProblemDifficulty = !hideProblemDifficulty;
 
@@ -38,9 +38,17 @@ export default function ProblemDifficulty({ problem, difficulty }) {
   }
 
   return (
-    <div className="problem-difficulty">
+    <>
       {renderACStats(difficulty)}
       {renderLevel(difficulty)}
+    </>
+  );
+}
+
+export default function ProblemDifficulty({ problem, difficulty }) {
+  return (
+    <div className="problem-difficulty">
+      <ProblemDifficultyTags problem={problem} difficulty={difficulty} />
     </div>
   );
 }

@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
-import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
+import { ContentList } from '../../../../components/ContentList/ContentList';
+import { LoadingContentRow } from '../../../../components/ContentRow/LoadingContentRow';
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { problemSetsQueryOptions } from '../../../../modules/queries/problemSet';
@@ -22,11 +23,10 @@ export default function ProblemSetsPage() {
 
   const renderHeader = () => {
     return (
-      <>
+      <Flex flexDirection="column" gap={2}>
         <Flex justifyContent="end">{renderFilter()}</Flex>
         <div>{renderFilterResultsBanner()}</div>
-        <hr />
-      </>
+      </Flex>
     );
   };
 
@@ -71,12 +71,12 @@ export default function ProblemSetsPage() {
 
   const renderProblemSets = () => {
     if (!response) {
-      return <LoadingContentCard />;
+      return <LoadingContentRow />;
     }
 
     const { data, archiveDescriptionsMap, problemSetProgressesMap, profilesMap } = response;
     if (!data) {
-      return <LoadingContentCard />;
+      return <LoadingContentRow />;
     }
 
     if (data.page.length === 0) {
@@ -86,15 +86,19 @@ export default function ProblemSetsPage() {
         </p>
       );
     }
-    return data.page.map(problemSet => (
-      <ProblemSetCard
-        key={problemSet.jid}
-        problemSet={problemSet}
-        archiveDescription={archiveDescriptionsMap[problemSet.archiveJid]}
-        progress={problemSetProgressesMap[problemSet.jid]}
-        profilesMap={profilesMap}
-      />
-    ));
+    return (
+      <ContentList>
+        {data.page.map(problemSet => (
+          <ProblemSetCard
+            key={problemSet.jid}
+            problemSet={problemSet}
+            archiveDescription={archiveDescriptionsMap[problemSet.archiveJid]}
+            progress={problemSetProgressesMap[problemSet.jid]}
+            profilesMap={profilesMap}
+          />
+        ))}
+      </ContentList>
+    );
   };
 
   const searchBoxUpdateQueries = (name, queries) => {
@@ -103,9 +107,11 @@ export default function ProblemSetsPage() {
 
   return (
     <Card title="Browse problemsets">
-      {renderHeader()}
-      {renderProblemSets()}
-      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      <Flex flexDirection="column" gap={4}>
+        {renderHeader()}
+        {renderProblemSets()}
+        {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+      </Flex>
     </Card>
   );
 }

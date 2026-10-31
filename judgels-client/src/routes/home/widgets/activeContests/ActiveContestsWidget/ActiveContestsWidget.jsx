@@ -1,18 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 
-import { Card } from '../../../../../components/Card/Card';
-import { ContentCardList } from '../../../../../components/ContentCardList/ContentCardList';
+import { LoadingContentCard } from '../../../../../components/LoadingContentCard/LoadingContentCard';
 import { activeContestsQueryOptions } from '../../../../../modules/queries/contest';
+import { WidgetHeader } from '../../WidgetHeader/WidgetHeader';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
-import { LoadingActiveContestCard } from '../ActiveContestCard/LoadingActiveContestCard';
+
+import './ActiveContestsWidget.scss';
 
 export default function ActiveContestsWidget() {
   const { data: response } = useQuery(activeContestsQueryOptions());
 
   const renderActiveContests = () => {
     if (!response) {
-      return <LoadingActiveContestCard />;
+      return <LoadingContentCard />;
     }
 
     const { data: contests, rolesMap } = response;
@@ -24,21 +24,18 @@ export default function ActiveContestsWidget() {
       );
     }
     return (
-      <ContentCardList rows>
+      <div className="active-contests">
         {contests.map(contest => (
           <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
         ))}
-      </ContentCardList>
+      </div>
     );
   };
 
   return (
-    <Card title="Active contests">
+    <div>
+      <WidgetHeader title="Active contests" to="/contests" />
       {renderActiveContests()}
-
-      <small>
-        <Link to={'/contests'}>See all contests...</Link>
-      </small>
-    </Card>
+    </div>
   );
 }
