@@ -1,47 +1,31 @@
-import { Flex } from '@blueprintjs/labs';
-
-import { ContentCardLink } from '../../../../components/ContentCardLink/ContentCardLink';
+import { ContentRow } from '../../../../components/ContentRow/ContentRow';
+import { ContentRowProgress } from '../../../../components/ContentRow/ContentRowProgress';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
-import { ProgressBar } from '../../../../components/ProgressBar/ProgressBar';
 import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 
 export function ProblemSetCard({ problemSet, archiveDescription, progress, profilesMap }) {
   const description = (archiveDescription || '') + (problemSet.description || '');
 
   const renderProgress = () => {
-    if (!progress || progress.totalProblems === 0) {
+    if (!progress || progress.score === 0) {
       return null;
     }
     const { score, totalProblems } = progress;
     return (
-      <ProgressTag num={score} denom={100 * totalProblems}>
-        {score} pts / {totalProblems}
-      </ProgressTag>
+      <ContentRowProgress num={score} denom={100 * totalProblems}>
+        <ProgressTag num={score} denom={100 * totalProblems}>
+          {score} pts / {totalProblems}
+        </ProgressTag>
+      </ContentRowProgress>
     );
   };
 
-  const renderProgressBar = () => {
-    if (!progress || progress.totalProblems === 0) {
-      return null;
-    }
-    const { score, totalProblems } = progress;
-    return <ProgressBar num={score} denom={100 * totalProblems} />;
-  };
-
   return (
-    <ContentCardLink framed to={`/problems/${problemSet.slug}`}>
-      <Flex asChild gap={2} justifyContent="space-between" alignItems="baseline">
-        <h4>
-          {problemSet.name}
-          {renderProgress()}
-        </h4>
-      </Flex>
-      {description && (
-        <small>
-          <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
-        </small>
-      )}
-      {renderProgressBar()}
-    </ContentCardLink>
+    <ContentRow
+      to={`/problems/${problemSet.slug}`}
+      title={problemSet.name}
+      meta={description && <HtmlText profilesMap={profilesMap}>{description}</HtmlText>}
+      status={renderProgress()}
+    />
   );
 }

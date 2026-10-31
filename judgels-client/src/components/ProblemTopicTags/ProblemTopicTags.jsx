@@ -21,26 +21,27 @@ export function getDisplayedTopicTags(tags) {
     .map(formatTagName);
 }
 
-export default function ProblemTopicTags({ tags, alignLeft }) {
+export function ProblemTopicTagList({ className, tags }) {
   const { showProblemTopicTags } = useWebPrefs();
 
   if (!showProblemTopicTags) {
     return null;
   }
 
+  return getDisplayedTopicTags(tags).map(tag => (
+    <Tag round multiline intent={Intent.PRIMARY} key={tag} className={className}>
+      {tag}
+    </Tag>
+  ));
+}
+
+export default function ProblemTopicTags({ tags, alignLeft }) {
   return (
     <div>
-      {getDisplayedTopicTags(tags).map(tag => (
-        <Tag
-          round
-          multiline
-          intent={Intent.PRIMARY}
-          key={tag}
-          className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
-        >
-          {tag}
-        </Tag>
-      ))}
+      <ProblemTopicTagList
+        tags={tags}
+        className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
+      />
     </div>
   );
 }

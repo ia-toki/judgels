@@ -101,7 +101,7 @@ describe('ContestProblemsPage', () => {
     await waitFor(() => {
       const cards = screen.getAllByRole('link');
       expect(cards.map(card => card.textContent)).toEqual([
-        'B. Problem B [100 points]8 submissions left',
+        'B. Problem B8 submissions left100 points',
         'A. Problem ACLOSED',
       ]);
     });

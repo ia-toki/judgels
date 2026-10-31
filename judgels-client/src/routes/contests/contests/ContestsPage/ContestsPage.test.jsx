@@ -58,7 +58,8 @@ describe('ContestsPage', () => {
     const links = await screen.findAllByRole('link');
     expect(links).toHaveLength(2);
 
-    expect(links[0]).toHaveTextContent('Contest 1CONTESTANT');
+    expect(links[0]).toHaveTextContent('Contest 1');
+    expect(links[0]).toHaveTextContent('CONTESTANT');
     expect(links[0]).toHaveAttribute('href', '/contests/contest-1');
 
     expect(links[1]).toHaveTextContent('Contest 2');

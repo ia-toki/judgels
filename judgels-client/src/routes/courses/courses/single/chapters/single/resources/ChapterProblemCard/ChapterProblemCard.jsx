@@ -2,8 +2,7 @@ import { Code, Form } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 
-import { ContentCardLink } from '../../../../../../../../components/ContentCardLink/ContentCardLink';
-import { ProgressBar } from '../../../../../../../../components/ProgressBar/ProgressBar';
+import { ContentRow } from '../../../../../../../../components/ContentRow/ContentRow';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
@@ -24,38 +23,31 @@ export function ChapterProblemCard({
       return null;
     }
     return (
-      <div className="chapter-problem-card__problem-set-problem-paths">
-        {problemSetProblemPaths.map(p => p.join('/')).join(', ')}
-      </div>
+      <span className="chapter-problem-card__paths">{problemSetProblemPaths.map(p => p.join('/')).join(', ')}</span>
     );
   };
 
   const renderProgress = () => {
-    if (!progress) {
+    if (!progress || progress.verdict === VerdictCode.PND) {
       return null;
     }
 
     const { verdict } = progress;
-    return <ChapterProblemProgressTag className="chapter-problem-card__progress" verdict={verdict} />;
+    return <ChapterProblemProgressTag verdict={verdict} />;
   };
 
   return (
-    <ContentCardLink
-      className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
+    <ContentRow
+      className={classNames({ 'chapter-problem-card--future': isFuture })}
       to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}`}
-    >
-      <Flex justifyContent="space-between" alignItems="center">
-        <Flex gap={2}>
-          {problem.type === ProblemType.Programming ? <Code /> : <Form />}
-          <h4 data-key="name">
-            {problem.alias}. {problemName}
-          </h4>
-        </Flex>
-        <Flex gap={2} alignItems="baseline">
+      leading={problem.type === ProblemType.Programming ? <Code /> : <Form />}
+      title={`${problem.alias}. ${problemName}`}
+      status={
+        <Flex alignItems="center" gap={2}>
           {renderProblemSetProblemPaths()}
           {renderProgress()}
         </Flex>
-      </Flex>
-    </ContentCardLink>
+      }
+    />
   );
 }

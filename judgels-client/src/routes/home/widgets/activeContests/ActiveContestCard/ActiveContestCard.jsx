@@ -1,29 +1,22 @@
-import { Flex } from '@blueprintjs/labs';
 import { PureComponent } from 'react';
 
-import { ContentCardLink } from '../../../../../components/ContentCardLink/ContentCardLink';
+import { ContentTile } from '../../../../../components/ContentTile/ContentTile';
 import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
 import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
 import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
-
-import './ActiveContestCard.scss';
+import { ContestRole } from '../../../../../modules/api/contestWeb';
 
 export class ActiveContestCard extends PureComponent {
   render() {
     const { contest, role } = this.props;
 
     return (
-      <ContentCardLink to={`/contests/${contest.slug}`}>
-        <Flex asChild justifyContent="space-between">
-          <h4>
-            {contest.name}
-            <ContestRoleTag role={role} />
-          </h4>
-        </Flex>
-        <p className="active-contest-card-date">
-          <small>{this.renderBeginTime(contest)}</small>
-        </p>
-      </ContentCardLink>
+      <ContentTile
+        to={`/contests/${contest.slug}`}
+        title={contest.name}
+        description={this.renderBeginTime(contest)}
+        footer={role && role !== ContestRole.None && <ContestRoleTag role={role} />}
+      />
     );
   }
 

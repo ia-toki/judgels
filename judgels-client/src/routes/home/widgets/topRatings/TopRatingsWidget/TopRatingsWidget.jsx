@@ -2,21 +2,23 @@ import { HTMLTable } from '@blueprintjs/core';
 import { Box } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 
-import { Card } from '../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { topRatedProfilesQueryOptions } from '../../../../../modules/queries/profile';
+import { WidgetHeader } from '../../WidgetHeader/WidgetHeader';
 
 import './TopRatingsWidget.scss';
 
 export default function TopRatingsWidget() {
   const { data: response } = useQuery(topRatedProfilesQueryOptions({ page: 1, pageSize: 10 }));
 
-  if (!response) {
-    return <LoadingState />;
-  }
+  const renderTable = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
 
-  const renderTable = profiles => {
+    const profiles = response.page;
     if (profiles.length === 0) {
       return (
         <Box padding={5}>
@@ -50,8 +52,9 @@ export default function TopRatingsWidget() {
   };
 
   return (
-    <Card className="top-ratings-widget" title="Top ratings">
-      {renderTable(response.page)}
-    </Card>
+    <div>
+      <WidgetHeader title="Top ratings" to="/ranking" />
+      <ContentCard className="top-ratings-widget">{renderTable()}</ContentCard>
+    </div>
   );
 }

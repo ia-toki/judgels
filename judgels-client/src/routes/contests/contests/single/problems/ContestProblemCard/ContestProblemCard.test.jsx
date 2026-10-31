@@ -47,7 +47,8 @@ describe('ContestProblemCard', () => {
     });
 
     const nameElement = document.querySelector('[data-key="name"]');
-    expect(nameElement.textContent).toEqual('A. The Problem [30 points]');
+    expect(nameElement.textContent).toEqual('A. The Problem');
+    expect(document.querySelector('[data-key="status"]').textContent).toEqual('40 submissions left30 points');
 
     const linkElement = screen.getByRole('link');
     expect(linkElement.getAttribute('href')).toEqual('/contests/contest-a/problems/A');
@@ -75,8 +76,8 @@ describe('ContestProblemCard', () => {
       points: undefined,
     });
 
-    const statusElement = document.querySelector('[data-key="status"]');
-    expect(statusElement.textContent).toEqual('');
+    expect(document.querySelector('[data-key="meta"]')).toBeNull();
+    expect(document.querySelector('[data-key="status"]')).toBeNull();
   });
 
   test('closed problem', async () => {

@@ -72,9 +72,12 @@
   .home-banner__contents {
     max-width: 100%;
   }
+}
 
+@media only screen and (max-width: 900px) {
   .home-widget-row {
     flex-direction: column;
+    gap: 16px;
   }
 }
 

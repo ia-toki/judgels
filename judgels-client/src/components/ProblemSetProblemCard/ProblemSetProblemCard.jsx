@@ -1,80 +1,52 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { SmallTick } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
 
+import { VerdictCode } from '../../modules/api/gradingVerdict';
 import { ProblemType } from '../../modules/api/problem';
-import { ContentCardLink } from '../ContentCardLink/ContentCardLink';
-import ProblemDifficulty from '../ProblemDifficulty/ProblemDifficulty';
-import ProblemTopicsTags from '../ProblemTopicTags/ProblemTopicTags';
-import { ProgressBar } from '../ProgressBar/ProgressBar';
+import { ContentRow } from '../ContentRow/ContentRow';
+import { ContentRowProgress } from '../ContentRow/ContentRowProgress';
+import { ProblemDifficultyTags } from '../ProblemDifficulty/ProblemDifficulty';
+import { ProblemTopicTagList } from '../ProblemTopicTags/ProblemTopicTags';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 
 export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, metadata, difficulty, progress }) {
-  const renderDifficulty = () => {
-    return <ProblemDifficulty problem={problem} difficulty={difficulty} />;
-  };
-
-  const renderMetadata = () => {
-    return renderTopicTags();
-  };
-
   const renderEditorialTag = () => {
     if (!metadata.hasEditorial) {
       return null;
     }
 
     return (
-      <Tag round intent={Intent.WARNING} className="problemset-problem-card__editorial-tag">
+      <Tag round intent={Intent.WARNING}>
         editorial <SmallTick />
       </Tag>
     );
   };
 
-  const renderTopicTags = () => {
-    return <ProblemTopicsTags tags={metadata.tags} />;
-  };
-
-  const renderSpoilers = () => {
-    return (
-      <Flex justifyContent="space-between">
-        {renderDifficulty()}
-        {renderMetadata()}
-      </Flex>
-    );
-  };
-
   const renderProgress = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
+    if (problem.type === ProblemType.Bundle || !progress || progress.verdict === VerdictCode.PND) {
       return null;
     }
 
     const { verdict, score } = progress;
-    return <VerdictProgressTag verdict={verdict} score={score} />;
-  };
-
-  const renderProgressBar = () => {
-    if (problem.type === ProblemType.Bundle || !progress) {
-      return null;
-    }
-    return <ProgressBar verdict={progress.verdict} num={progress.score} denom={100} />;
+    return (
+      <ContentRowProgress verdict={verdict} num={score} denom={100}>
+        <VerdictProgressTag verdict={verdict} score={score} />
+      </ContentRowProgress>
+    );
   };
 
   return (
-    <ContentCardLink framed to={`/problems/${problemSet.slug}/${problem.alias}`} className="problemset-problem-cardd">
-      <h4 data-key="name">
-        <Flex justifyContent="space-between">
-          <span>
-            {showAlias && <>{problem.alias}. </>}
-            {problemName}
-          </span>
-          <Flex gap={1}>
-            {renderEditorialTag()}
-            {renderProgress()}
-          </Flex>
-        </Flex>
-      </h4>
-      {renderProgressBar()}
-      {renderSpoilers()}
-    </ContentCardLink>
+    <ContentRow
+      to={`/problems/${problemSet.slug}/${problem.alias}`}
+      title={showAlias ? `${problem.alias}. ${problemName}` : problemName}
+      badges={
+        <>
+          <ProblemDifficultyTags problem={problem} difficulty={difficulty} />
+          {renderEditorialTag()}
+          <ProblemTopicTagList tags={metadata.tags} />
+        </>
+      }
+      status={renderProgress()}
+    />
   );
 }

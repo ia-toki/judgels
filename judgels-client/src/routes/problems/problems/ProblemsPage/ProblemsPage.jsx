@@ -1,8 +1,8 @@
-import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
+import { ContentList } from '../../../../components/ContentList/ContentList';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { ProblemSetProblemCard } from '../../../../components/ProblemSetProblemCard/ProblemSetProblemCard';
@@ -52,28 +52,29 @@ export default function ProblemsPage() {
       );
     }
 
-    return problems.page.map(problem => {
-      const { problemSetSlug, problemAlias, problemJid } = problem;
-      const props = {
-        problemSet: { slug: problemSetSlug },
-        problem: { type: ProblemType.Programming, alias: problemAlias },
-        problemName: getProblemName(problemsMap[problemJid], 'en'),
-        metadata: problemMetadatasMap[problemJid],
-        difficulty: problemDifficultiesMap[problemJid],
-        progress: problemProgressesMap[problemJid],
-      };
-      return <ProblemSetProblemCard key={problemJid} {...props} />;
-    });
+    return (
+      <ContentList>
+        {problems.page.map(problem => {
+          const { problemSetSlug, problemAlias, problemJid } = problem;
+          const props = {
+            problemSet: { slug: problemSetSlug },
+            problem: { type: ProblemType.Programming, alias: problemAlias },
+            problemName: getProblemName(problemsMap[problemJid], 'en'),
+            metadata: problemMetadatasMap[problemJid],
+            difficulty: problemDifficultiesMap[problemJid],
+            progress: problemProgressesMap[problemJid],
+          };
+          return <ProblemSetProblemCard key={problemJid} {...props} />;
+        })}
+      </ContentList>
+    );
   };
 
   return (
     <Card title="Browse problems">
       <ProblemSpoilerWidget />
-      <hr />
-      <Flex flexDirection="column" gap={2}>
-        {renderProblems()}
-        {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
-      </Flex>
+      {renderProblems()}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </Card>
   );
 }

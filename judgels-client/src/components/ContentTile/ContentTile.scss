@@ -1,0 +1,49 @@
+@use '../../styles/base' as *;
+
+.content-tile.bp6-card {
+  padding: 16px;
+  color: inherit !important;
+
+  &:hover {
+    text-decoration: none;
+
+    .bp6-light & {
+      background-color: $card-hover-background-color;
+    }
+
+    .bp6-dark & {
+      background-color: $dark-card-hover-background-color;
+    }
+  }
+}
+
+.content-tile__title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.content-tile__description {
+  font-size: $font-size-small;
+  overflow-wrap: anywhere;
+
+  .bp6-light & {
+    color: $secondary-text-color;
+  }
+
+  .bp6-dark & {
+    color: $dark-secondary-text-color;
+  }
+
+  .html-text {
+    font-size: inherit;
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+}
+
+.content-tile__footer {
+  font-size: $font-size-small;
+  white-space: nowrap;
+}

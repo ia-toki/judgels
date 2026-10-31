@@ -84,13 +84,13 @@ describe('ChapterResourcesPage', () => {
   test('renders placeholder when there are no resources', async () => {
     await renderComponent({ lessons: [], problems: [] });
     await screen.findByText(/no resources/i);
-    expect(document.querySelectorAll('a.content-card-link')).toHaveLength(0);
+    expect(document.querySelectorAll('a.content-row')).toHaveLength(0);
   });
 
   test('renders the resources', async () => {
     await renderComponent();
     await screen.findByText('X. Lesson X');
-    const cards = document.querySelectorAll('a.content-card-link');
+    const cards = document.querySelectorAll('a.content-row');
     expect([...cards].map(card => [card.textContent, card.pathname])).toEqual([
       ['X. Lesson X', '/courses/courseSlug/chapters/chapter-1/lessons/X'],
       ['Y. Lesson Y', '/courses/courseSlug/chapters/chapter-1/lessons/Y'],

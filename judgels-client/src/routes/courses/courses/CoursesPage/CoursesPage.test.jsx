@@ -66,12 +66,12 @@ describe('CoursesPage', () => {
     const links = await screen.findAllByRole('link');
     expect(links).toHaveLength(2);
 
-    expect(within(links[0]).getByRole('heading', { level: 3 })).toHaveTextContent('Course 1');
-    expect(within(links[0]).getByRole('heading', { level: 3 })).toHaveTextContent('2 / 6 problems completed');
+    expect(within(links[0]).getByRole('heading', { level: 4 })).toHaveTextContent('Course 1');
+    expect(links[0]).toHaveTextContent('2 / 6 problems');
     expect(links[0]).toHaveAttribute('href', '/courses/course-1');
     expect(links[0]).toHaveTextContent('This is course 1');
 
-    expect(within(links[1]).getByRole('heading', { level: 3 })).toHaveTextContent('Course 2');
+    expect(within(links[1]).getByRole('heading', { level: 4 })).toHaveTextContent('Course 2');
     expect(links[1]).toHaveAttribute('href', '/courses/course-2');
     expect(links[1]).toHaveTextContent('This is course 2');
   });
