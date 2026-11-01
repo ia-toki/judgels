@@ -74,6 +74,21 @@
   }
 }
 
+.content-row__description {
+  font-size: $font-size-small;
+  overflow-wrap: anywhere;
+  opacity: 0.72;
+
+  .html-text {
+    font-size: inherit;
+
+    p:last-child,
+    ul {
+      margin-bottom: 0;
+    }
+  }
+}
+
 // The tags in it may each decide not to show, e.g. when spoilers are off.
 .content-row__badges:empty {
   display: none;

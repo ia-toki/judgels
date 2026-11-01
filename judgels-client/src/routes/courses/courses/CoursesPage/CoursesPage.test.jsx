@@ -75,4 +75,29 @@ describe('CoursesPage', () => {
     expect(links[1]).toHaveAttribute('href', '/courses/course-2');
     expect(links[1]).toHaveTextContent('This is course 2');
   });
+
+  test('shows the image in the description on the left of the rest of the description', async () => {
+    await renderComponent({
+      courses: [
+        {
+          jid: 'courseJid1',
+          slug: 'course-1',
+          name: 'Course 1',
+          description:
+            '<div style="float: left"><img src="https://example.com/course.png" /></div>' +
+            '<div style="float: left">Learn:<ul><li>Loops</li><li>Arrays</li></ul></div>',
+        },
+      ],
+    });
+
+    const [link] = await screen.findAllByRole('link');
+    const images = link.querySelectorAll('img');
+
+    expect(images).toHaveLength(1);
+    expect(link.firstChild).toBe(images[0]);
+    expect(images[0]).toHaveAttribute('src', 'https://example.com/course.png');
+
+    expect(within(link).getAllByRole('listitem')).toHaveLength(2);
+    expect(link.querySelector('.html-text [style]')).not.toBeInTheDocument();
+  });
 });
