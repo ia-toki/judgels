@@ -2,7 +2,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { Box } from '@blueprintjs/labs';
 
 import { getCountryName } from '../../../../../../assets/data/countries';
-import { Card } from '../../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { getRatingClass } from '../../../../../../modules/api/userRating';
 
 import './BasicProfilePanel.scss';
@@ -52,12 +52,12 @@ export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, c
   };
 
   return (
-    <Card title="Basic profile" className="profile-summary-card basic-profile-card">
+    <ContentCard title="Basic profile" className="profile-summary-card basic-profile-card">
       <div className="basic-profile-card__wrapper">
         {renderMain()}
         <div className="basic-profile-card__divider" />
         {renderDetails()}
       </div>
-    </Card>
+    </ContentCard>
   );
 }

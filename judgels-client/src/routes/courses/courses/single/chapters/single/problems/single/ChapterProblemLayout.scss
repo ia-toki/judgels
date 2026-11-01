@@ -1,12 +1,13 @@
 @use '../../../../../../../../styles/base' as *;
 
 .chapter-problem-page {
-  padding: 0 1px;
+  // The parent is a wrapping flex row: without this, wide content pushes the whole page below the rail.
+  min-width: 0;
 }
 
 @media only screen and (min-width: 1025px) {
   .chapter-problem-page {
-    height: calc(100vh - 85px);
+    height: calc(100vh - 50px - var(--app-content-padding-top));
   }
 }
 

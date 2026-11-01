@@ -67,7 +67,7 @@ export default function ProblemStatementPage(props) {
   };
 
   return (
-    <ContentCard>
+    <ContentCard title="Statement">
       {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>

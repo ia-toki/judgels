@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
-import { Card } from '../../../../components/Card/Card';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ContentList } from '../../../../components/ContentList/ContentList';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -71,10 +71,10 @@ export default function ProblemsPage() {
   };
 
   return (
-    <Card title="Browse problems">
+    <ContentCard title="Browse problems">
       <ProblemSpoilerWidget />
       {renderProblems()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
-    </Card>
+    </ContentCard>
   );
 }

@@ -1,17 +1,25 @@
-.bp6-card.card__title {
-  height: 45px;
-  line-height: 9px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  margin-bottom: 1px;
+@use '../../styles/base' as *;
+
+.bp6-card.card {
+  padding: 0;
 }
 
-.card__title__action {
-  margin-top: -8px;
+.card__title {
+  @include card-heading;
 }
 
-.bp6-card.card__content {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.card__content {
+  padding: 20px;
+  border-radius: inherit;
   overflow-x: auto;
+}
+
+.card--full-height {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--app-page-min-height);
+
+  .card__content {
+    flex-grow: 1;
+  }
 }

@@ -159,7 +159,7 @@ export default function ChapterProblemLayout() {
   };
 
   return (
-    <Box className="chapter-problem-page" flex={1} width={100} overflowX="auto">
+    <Box className="chapter-problem-page" flex={1} width={100}>
       {renderHeader()}
       {renderContent()}
     </Box>

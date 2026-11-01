@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
-import { Card } from '../../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import CursorPagination from '../../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { profileSubmissionsQueryOptions } from '../../../../../../modules/queries/trainingSubmission';
@@ -49,7 +49,7 @@ export default function SubmissionHistoryPage() {
   };
 
   return (
-    <Card title="Submission history">
+    <ContentCard title="Submission history">
       {renderSubmissions()}
       {response && (
         <CursorPagination
@@ -58,6 +58,6 @@ export default function SubmissionHistoryPage() {
           hasNextPage={response.data.hasNextPage}
         />
       )}
-    </Card>
+    </ContentCard>
   );
 }

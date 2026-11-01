@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Box } from '@blueprintjs/labs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { Card } from '../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import {
   deleteUserAvatarMutationOptions,
@@ -69,11 +69,11 @@ export default function ChangeAvatarPage() {
   );
 
   return (
-    <Card title="Change avatar" className="card-change-avatar">
+    <ContentCard title="Change avatar" className="card-change-avatar">
       <div className="card-change-avatar__content">
         {currentAvatar}
         {newAvatar}
       </div>
-    </Card>
+    </ContentCard>
   );
 }

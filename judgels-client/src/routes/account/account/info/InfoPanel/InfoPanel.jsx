@@ -1,7 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { useState } from 'react';
 
-import { Card } from '../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import InfoForm from '../InfoForm/InfoForm';
 import { InfoTable } from '../InfoTable/InfoTable';
 
@@ -31,8 +31,8 @@ export function InfoPanel({ email, info, onUpdateInfo }) {
   };
 
   return (
-    <Card title="Info" action={action} actionRightJustified className="info-panel-card">
+    <ContentCard title="Info" action={action} className="info-panel-card">
       {renderContent()}
-    </Card>
+    </ContentCard>
   );
 }

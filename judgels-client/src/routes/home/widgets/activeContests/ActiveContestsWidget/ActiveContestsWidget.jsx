@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
+import { Card } from '../../../../../components/Card/Card';
+import { ContentList } from '../../../../../components/ContentList/ContentList';
 import { LoadingContentCard } from '../../../../../components/LoadingContentCard/LoadingContentCard';
 import { activeContestsQueryOptions } from '../../../../../modules/queries/contest';
-import { WidgetHeader } from '../../WidgetHeader/WidgetHeader';
 import { ActiveContestCard } from '../ActiveContestCard/ActiveContestCard';
-
-import './ActiveContestsWidget.scss';
 
 export default function ActiveContestsWidget() {
   const { data: response } = useQuery(activeContestsQueryOptions());
@@ -24,18 +24,24 @@ export default function ActiveContestsWidget() {
       );
     }
     return (
-      <div className="active-contests">
+      <ContentList>
         {contests.map(contest => (
           <ActiveContestCard key={contest.jid} contest={contest} role={rolesMap[contest.jid]} />
         ))}
-      </div>
+      </ContentList>
     );
   };
 
   return (
-    <div>
-      <WidgetHeader title="Active contests" to="/contests" />
+    <Card
+      title="Active contests"
+      action={
+        <ButtonLink to="/contests" small minimal aria-label="See all active contests">
+          See all
+        </ButtonLink>
+      }
+    >
       {renderActiveContests()}
-    </div>
+    </Card>
   );
 }

@@ -1,102 +1,77 @@
-import { Popover, Position, Tab, Tabs } from '@blueprintjs/core';
-import { ChevronDown, ChevronRight, Menu } from '@blueprintjs/icons';
-import { Box } from '@blueprintjs/labs';
+import { Button, Popover, Position } from '@blueprintjs/core';
+import { Menu } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
 import { Link } from '@tanstack/react-router';
-import { PureComponent } from 'react';
-
-import { Card } from '../Card/Card';
+import classNames from 'classnames';
+import { useState } from 'react';
 
 import './Sidebar.scss';
 
-export class Sidebar extends PureComponent {
-  state = { isResponsivePopoverOpen: false };
+export function Sidebar({ className, title, activeItemPath, items, widget, compact, onResolveItemUrl }) {
+  const [isResponsiveMenuOpen, setIsResponsiveMenuOpen] = useState(false);
 
-  render() {
-    const { title, action, activeItemPath, items, widget, onResolveItemUrl } = this.props;
-
-    const renderTab = item => {
-      const ItemIcon = widget ? ChevronDown : ChevronRight;
-
-      const icon = item.path === activeItemPath && <ItemIcon className="card-sidebar__arrow" />;
-
-      return (
-        <Tab key={item.path} id={item.path}>
-          <Link to={onResolveItemUrl(item.path)}>
-            {item.titleIcon}
-            {item.titleIcon && <span>&nbsp;&nbsp;</span>}
-            {item.title}
-          </Link>
-          {icon}
-        </Tab>
-      );
-    };
-
-    const tabs = items.flatMap(item => {
-      if (item.children) {
-        return [
-          <Box key={item.title} className="card-sidebar__group" paddingX={5} marginTop={4}>
-            {item.title}
-          </Box>,
-          ...item.children.map(renderTab),
-        ];
-      }
-      return [renderTab(item)];
-    });
-
-    const tabsContainer = (
-      <Tabs
-        id="sidebar"
-        selectedTabId={activeItemPath}
-        onChange={this.onResponsiveItemClick}
-        animate={!this.state.isResponsivePopoverOpen}
-        vertical
-        renderActiveTabPanelOnly
-      >
-        {tabs}
-      </Tabs>
-    );
-
-    const card = (
-      <Card className="card-sidebar card-sidebar__full" title={title} action={action} actionRightJustified>
-        {tabsContainer}
-      </Card>
-    );
-
-    const responsiveMenu = (
-      <div className="card-sidebar card-sidebar__responsive">
-        <Popover
-          content={tabsContainer}
-          position={Position.BOTTOM_LEFT}
-          isOpen={this.state.isResponsivePopoverOpen}
-          onInteraction={this.onResponsivePopoverInteraction}
-          usePortal={false}
-        >
-          <div>
-            <p className="card-sidebar__responsive-menu">
-              <Menu />
-              &nbsp;<small>{title}</small>
-            </p>
-          </div>
-        </Popover>
-      </div>
-    );
+  const renderItem = (item, { compact, onClick }) => {
+    const isActive = item.path === activeItemPath;
 
     return (
-      <div>
-        {card}
-        {responsiveMenu}
-        {widget}
-      </div>
+      <Flex key={item.path} asChild alignItems="center" gap={2}>
+        <Link
+          className={classNames('sidebar__item', {
+            'sidebar__item--active': isActive,
+            'sidebar__item--muted': item.muted,
+          })}
+          to={onResolveItemUrl(item.path)}
+          activeOptions={{ exact: true }}
+          aria-current={isActive ? 'page' : undefined}
+          onClick={onClick}
+        >
+          {item.titleIcon}
+          <span className="sidebar__item-title">{compact ? item.compactTitle : item.title}</span>
+          {item.trailing}
+        </Link>
+      </Flex>
     );
-  }
-
-  onResponsivePopoverInteraction = state => {
-    this.setState({ isResponsivePopoverOpen: state });
   };
 
-  onResponsiveItemClick = () => {
-    setTimeout(() => {
-      this.setState({ isResponsivePopoverOpen: false });
-    }, 200);
-  };
+  const renderItems = options => (
+    <Flex asChild flexDirection="column" gap={0.5}>
+      <nav aria-label={title}>
+        {items.flatMap(item => {
+          if (item.children) {
+            return [
+              <div key={item.title} className="sidebar__group">
+                {item.title}
+              </div>,
+              ...item.children.map(child => renderItem(child, options)),
+            ];
+          }
+          return [renderItem(item, options)];
+        })}
+      </nav>
+    </Flex>
+  );
+
+  return (
+    <div className={classNames('sidebar', className)}>
+      <div className="sidebar__full">{renderItems({ compact })}</div>
+      <div className="sidebar__responsive">
+        <Popover
+          content={
+            <div className="sidebar__responsive-items">
+              {renderItems({ onClick: () => setIsResponsiveMenuOpen(false) })}
+            </div>
+          }
+          position={Position.BOTTOM_LEFT}
+          isOpen={isResponsiveMenuOpen}
+          onInteraction={setIsResponsiveMenuOpen}
+          usePortal={false}
+        >
+          <Button small minimal icon={<Menu />}>
+            {title}
+          </Button>
+        </Popover>
+      </div>
+      {widget}
+    </div>
+  );
 }

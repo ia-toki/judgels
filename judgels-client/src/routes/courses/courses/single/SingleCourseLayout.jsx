@@ -8,6 +8,8 @@ import { courseBySlugQueryOptions } from '../../../../modules/queries/course';
 import { createDocumentTitle } from '../../../../utils/title';
 import CourseChaptersSidebar from './CourseChaptersSidebar/CourseChaptersSidebar';
 
+import './SingleCourseLayout.scss';
+
 export default function SingleCourseLayout() {
   const { courseSlug } = useParams({ strict: false });
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
@@ -18,7 +20,7 @@ export default function SingleCourseLayout() {
 
   return (
     <FullWidthPageLayout>
-      <Flex flexWrap="wrap">
+      <Flex className="single-course-layout">
         <CourseChaptersSidebar />
         <Outlet />
       </Flex>

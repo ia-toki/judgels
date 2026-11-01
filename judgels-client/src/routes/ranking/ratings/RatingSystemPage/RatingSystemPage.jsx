@@ -1,11 +1,11 @@
 import { HTMLTable } from '@blueprintjs/core';
 
-import { Card } from '../../../../components/Card/Card';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { getRatingClass } from '../../../../modules/api/userRating';
 
 export default function RatingSystemPage() {
   return (
-    <Card title="Rating system">
+    <ContentCard title="Rating system">
       <h4>Rating table</h4>
       <HTMLTable striped className="table-list">
         <thead>
@@ -176,6 +176,6 @@ export default function RatingSystemPage() {
           hidden<sub>A</sub> = floor(hidden<sub>A</sub>)
         </li>
       </ol>
-    </Card>
+    </ContentCard>
   );
 }

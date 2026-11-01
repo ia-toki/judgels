@@ -1,0 +1,19 @@
+.single-course-layout {
+  flex-wrap: wrap;
+  min-height: var(--app-page-min-height);
+}
+
+// Where the sidebar sits above or below the page, the page alone takes the extra height.
+@media only screen and (max-width: 750px) {
+  .single-course-layout {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .single-course-layout:has(.course-chapters-sidebar--wide) {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}

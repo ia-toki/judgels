@@ -1,110 +1,42 @@
-@use '../../../../../styles/base' as *;
-
 .course-chapters-sidebar {
   flex-grow: 1;
   max-width: 320px;
   margin-top: 40px;
   margin-right: 25px;
-  font-family: $accent-font;
-  background-color: inherit !important;
-  box-shadow: none !important;
   transition: flex-grow 0.2s ease-in-out;
-
-  .bp6-dark & {
-    border-color: $dark-border-color;
-  }
-
-  hr {
-    margin: 0 !important;
-  }
 
   &--compact {
     flex-grow: unset;
     margin-right: 10px;
   }
-
-  &__responsive {
-    display: none;
-  }
-}
-
-a.course-chapters-sidebar__item {
-  display: block;
-  padding: 10px;
-  margin-bottom: 1px;
-  color: inherit;
-  text-decoration: none;
-
-  &:hover {
-    color: inherit;
-    background-color: $tertiary-background-color;
-    border-radius: 3px;
-
-    .bp6-dark & {
-      background-color: $dark-tertiary-background-color;
-    }
-
-    .bp6-dark &.course-chapters-sidebar__item--selected {
-      background-color: $dark-secondary-background-color;
-    }
-  }
-
-  &--future {
-    color: #bcc0c2;
-
-    .bp6-dark & {
-      color: #5d6c79;
-    }
-
-    .bp6-tag {
-      background-color: #ced4d8;
-
-      .bp6-dark & {
-        background-color: #5f6d79;
-      }
-    }
-  }
-
-  &--selected {
-    color: inherit;
-    background-color: $tertiary-background-color;
-    border-radius: 3px;
-
-    .bp6-dark & {
-      color: inherit;
-      background-color: $dark-secondary-background-color;
-    }
-  }
 }
 
 @media only screen and (max-width: 750px) {
   .course-chapters-sidebar {
-    &__full {
-      display: none;
-    }
-
-    &__responsive {
-      display: block;
-      flex: none;
-      width: 100%;
-      max-width: unset;
-      margin-top: 0;
-      margin-bottom: 10px;
-    }
+    flex: none;
+    width: 100%;
+    max-width: unset;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 }
 
 @media only screen and (max-width: 1024px) {
-  .course-chapters-sidebar--wide.course-chapters-sidebar__full {
-    display: block;
+  .course-chapters-sidebar--wide {
     flex: none;
     order: 2;
     width: 100%;
     max-width: unset;
     margin-top: 20px;
-  }
+    margin-right: 0;
 
-  .course-chapters-sidebar--wide.course-chapters-sidebar__responsive {
-    display: none;
+    .sidebar__full {
+      display: block;
+    }
+
+    .sidebar__responsive {
+      display: none;
+    }
   }
 }

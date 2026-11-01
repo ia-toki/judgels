@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 
-import { ContentTile } from '../../../../../components/ContentTile/ContentTile';
+import { ContentRow } from '../../../../../components/ContentRow/ContentRow';
 import { ContestRoleTag } from '../../../../../components/ContestRole/ContestRoleTag';
 import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
 import { TimeanddateLink } from '../../../../../components/TimeanddateLink/TimeanddateLink';
@@ -11,11 +11,11 @@ export class ActiveContestCard extends PureComponent {
     const { contest, role } = this.props;
 
     return (
-      <ContentTile
+      <ContentRow
         to={`/contests/${contest.slug}`}
         title={contest.name}
-        description={this.renderBeginTime(contest)}
-        footer={role && role !== ContestRole.None && <ContestRoleTag role={role} />}
+        meta={<span>{this.renderBeginTime(contest)}</span>}
+        status={role && role !== ContestRole.None && <ContestRoleTag role={role} />}
       />
     );
   }

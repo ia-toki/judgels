@@ -2,6 +2,10 @@
 
 .chapter-resources-page {
   max-width: 865px;
+
+  > .content-card {
+    flex-grow: 1;
+  }
 }
 
 .chapter-resources-page__title {

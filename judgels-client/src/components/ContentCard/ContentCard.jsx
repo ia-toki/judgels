@@ -1,13 +1,22 @@
 import { Card } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
+import { createContext, useContext } from 'react';
+
+import { CardHeading } from '../CardHeading/CardHeading';
 
 import './ContentCard.scss';
 
+// True directly inside a page's main card: a titled card there is a section of the page, with a heading bar.
+export const PageContentContext = createContext(false);
+
 export function ContentCard({ id, className, compact, framed, header, title, subtitle, action, children }) {
+  const isPageSection = useContext(PageContentContext) && !!title;
+
   const cardClassName = classNames(className, 'content-card', {
     'content-card--compact': compact,
     'content-card--framed': framed,
+    'content-card--page-section': isPageSection,
   });
 
   if (!header && !title) {
@@ -25,41 +34,19 @@ export function ContentCard({ id, className, compact, framed, header, title, sub
       return header;
     }
 
-    if (subtitle) {
-      return (
-        <>
-          <Flex justifyContent="space-between" alignItems="baseline">
-            <h3 className="content-card__title">{title}</h3>
-            <small>{subtitle}</small>
-          </Flex>
-          <hr />
-        </>
-      );
-    }
-    if (action) {
-      return (
-        <>
-          <Flex gap={2} alignItems="baseline">
-            <h3 className="content-card__title">{title}</h3>
-            {action}
-          </Flex>
-          <hr />
-        </>
-      );
-    }
     return (
       <>
-        <h3 className="content-card__title">{title}</h3>
-        <hr />
+        <CardHeading title={title} action={subtitle ? <small>{subtitle}</small> : action} />
+        {!isPageSection && <hr />}
       </>
     );
   };
 
   return (
     <Card id={id} className={cardClassName}>
-      {renderHeader()}
-      <Flex flexDirection="column" gap={2}>
-        {children}
+      <div className="content-card__heading">{renderHeader()}</div>
+      <Flex className="content-card__body" flexDirection="column" gap={2}>
+        <PageContentContext.Provider value={false}>{children}</PageContentContext.Provider>
       </Flex>
     </Card>
   );

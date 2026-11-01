@@ -1,9 +1,7 @@
 @use '../../../../../../styles/base' as *;
 
-.basic-profile-card {
-  .card__content {
-    padding: 0;
-  }
+.basic-profile-card.content-card > .content-card__body {
+  padding: 0;
 }
 
 .basic-profile-card__wrapper {

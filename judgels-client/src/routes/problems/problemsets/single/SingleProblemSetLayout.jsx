@@ -1,8 +1,6 @@
-import { Button } from '@blueprintjs/core';
-import { ChevronLeft, Manual } from '@blueprintjs/icons';
-import { Box } from '@blueprintjs/labs';
+import { Manual } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
+import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -10,20 +8,13 @@ import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/
 import { problemSetBySlugQueryOptions } from '../../../../modules/queries/problemSet';
 import { createDocumentTitle } from '../../../../utils/title';
 
-import './SingleProblemSetLayout.scss';
-
 export default function SingleProblemSetLayout() {
   const { problemSetSlug } = useParams({ strict: false });
-  const navigate = useNavigate();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
 
   useEffect(() => {
     document.title = createDocumentTitle(problemSet.name);
   }, [problemSetSlug, problemSet.name]);
-
-  const onClickBack = () => {
-    navigate({ to: '/problems/problemsets' });
-  };
 
   const sidebarItems = [
     {
@@ -37,16 +28,7 @@ export default function SingleProblemSetLayout() {
     title: 'Problemset Menu',
     items: sidebarItems,
     basePath: `/problems/${problemSet.slug}`,
-    action: (
-      <Button small icon={<ChevronLeft />} onClick={onClickBack}>
-        Back
-      </Button>
-    ),
-    contentHeader: (
-      <Box className="single-problemset-routes__header" paddingBottom={2}>
-        <h2>{problemSet.name}</h2>
-      </Box>
-    ),
+    contentHeader: <h2>{problemSet.name}</h2>,
   };
 
   return (

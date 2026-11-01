@@ -2,11 +2,11 @@ import { HTMLTable } from '@blueprintjs/core';
 import { Box } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 
-import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
+import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
+import { Card } from '../../../../../components/Card/Card';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 import { topRatedProfilesQueryOptions } from '../../../../../modules/queries/profile';
-import { WidgetHeader } from '../../WidgetHeader/WidgetHeader';
 
 import './TopRatingsWidget.scss';
 
@@ -52,9 +52,16 @@ export default function TopRatingsWidget() {
   };
 
   return (
-    <div>
-      <WidgetHeader title="Top ratings" to="/ranking" />
-      <ContentCard className="top-ratings-widget">{renderTable()}</ContentCard>
-    </div>
+    <Card
+      className="top-ratings-widget"
+      title="Top ratings"
+      action={
+        <ButtonLink to="/ranking" small minimal aria-label="See all top ratings">
+          See all
+        </ButtonLink>
+      }
+    >
+      {renderTable()}
+    </Card>
   );
 }

@@ -1,8 +1,6 @@
 .footer {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding-top: 50px;
-  padding-bottom: 15px;
+  height: var(--app-footer-height);
+  padding-top: 12px;
 }
 
 @media only screen and (min-width: 1025px) {

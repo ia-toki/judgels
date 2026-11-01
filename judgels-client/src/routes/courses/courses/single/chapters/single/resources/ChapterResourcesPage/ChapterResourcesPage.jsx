@@ -1,5 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Box, Flex } from '@blueprintjs/labs';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 
@@ -82,21 +82,17 @@ export default function ChapterResourcesPage() {
     return (
       <Flex flexDirection="column" gap={8}>
         {(lessons.length > 0 || chapterProblems.length > 0) && (
-          <ContentCard>
-            <ContentList>
-              {lessons.map(renderLesson)}
-              {chapterProblems.map(renderProblem)}
-            </ContentList>
-          </ContentCard>
+          <ContentList>
+            {lessons.map(renderLesson)}
+            {chapterProblems.map(renderProblem)}
+          </ContentList>
         )}
         {problemSetProblems.length > 0 && (
           <div>
             <h4>Practice Problems</h4>
-            <ContentCard>
-              <ContentList>
-                {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
-              </ContentList>
-            </ContentCard>
+            <ContentList>
+              {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
+            </ContentList>
           </div>
         )}
       </Flex>
@@ -127,9 +123,9 @@ export default function ChapterResourcesPage() {
   };
 
   return (
-    <Box className="chapter-resources-page" flex={1}>
+    <Flex className="chapter-resources-page" flexDirection="column" flex={1}>
       {renderHeader()}
-      {renderResources()}
-    </Box>
+      <ContentCard>{renderResources()}</ContentCard>
+    </Flex>
   );
 }

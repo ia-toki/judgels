@@ -77,7 +77,7 @@ export default function ProblemStatementPage({ worksheet }) {
   };
 
   return (
-    <ContentCard>
+    <ContentCard title="Statement">
       {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>

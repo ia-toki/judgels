@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { ContentCard } from '../../../../components/ContentCard/ContentCard';
+import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { constructProblemUrl } from '../../../../modules/api/submission';
@@ -46,5 +46,9 @@ export default function SubmissionPage() {
     );
   };
 
-  return <ContentCard title={`Submission #${submissionId}`}>{renderSubmission()}</ContentCard>;
+  return (
+    <Card title={`Submission #${submissionId}`} fullHeight>
+      {renderSubmission()}
+    </Card>
+  );
 }

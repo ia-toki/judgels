@@ -2,7 +2,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
-import { Card } from '../../../../components/Card/Card';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
 import { UserRef } from '../../../../components/UserRef/UserRef';
@@ -49,9 +49,9 @@ export default function RatingsPage() {
   };
 
   return (
-    <Card title="Top ratings">
+    <ContentCard title="Top ratings">
       {renderRatings()}
       {profiles && <Pagination pageSize={PAGE_SIZE} totalCount={profiles.totalCount} />}
-    </Card>
+    </ContentCard>
   );
 }
