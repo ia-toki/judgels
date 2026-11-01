@@ -116,7 +116,7 @@ export default function ProblemItemsPage() {
 
   const renderActions = (item, idx) => {
     return (
-      <ActionButtons justifyContent="end">
+      <ActionButtons justifyContent="end" flexWrap="nowrap">
         <Button
           small
           minimal

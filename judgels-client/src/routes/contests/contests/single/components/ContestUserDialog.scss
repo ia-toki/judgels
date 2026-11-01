@@ -1,5 +1,5 @@
 .contest-user-dialog__body {
-  height: 420px;
+  min-height: 420px;
 }
 
 .contest-user-dialog__result-body {
@@ -14,7 +14,10 @@
 .contest-supervisor-dialog {
   width: 380px;
 
-  .contest-user-dialog__body,
+  .contest-user-dialog__body {
+    min-height: 430px;
+  }
+
   .contest-user-dialog__result-body {
     height: 430px;
   }

@@ -44,7 +44,7 @@ export function RolesSection({ roles }) {
   };
 
   const renderActions = user => (
-    <ActionButtons>
+    <ActionButtons flexWrap="nowrap">
       <ButtonLink
         small
         className={Classes.MINIMAL}

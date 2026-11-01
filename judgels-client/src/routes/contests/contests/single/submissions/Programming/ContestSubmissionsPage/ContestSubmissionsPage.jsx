@@ -38,6 +38,10 @@ function ContestSubmissionsPage() {
   const regradeSubmissionsMutation = useMutation(regradeContestSubmissionsMutationOptions(contest.jid));
 
   const renderActions = () => {
+    if (!response || (!response.config.canManage && !response.config.canSupervise)) {
+      return null;
+    }
+
     return (
       <Flex gap={1} justifyContent="space-between" alignItems="center" flexWrap="wrap">
         {renderRegradeAllButton()}
@@ -125,8 +129,10 @@ function ContestSubmissionsPage() {
 
   return (
     <ContentCard title="Submissions">
-      {renderActions()}
-      {renderSubmissions()}
+      <Flex flexDirection="column" gap={4}>
+        {renderActions()}
+        {renderSubmissions()}
+      </Flex>
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );

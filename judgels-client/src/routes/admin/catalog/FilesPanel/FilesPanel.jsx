@@ -92,7 +92,7 @@ export default function FilesPanel({
                   <FormattedRelative value={file.lastModifiedTime} />
                 </td>
                 <td className="col-fit">
-                  <ActionButtons justifyContent="end">
+                  <ActionButtons justifyContent="end" flexWrap="nowrap">
                     <Button
                       small
                       minimal

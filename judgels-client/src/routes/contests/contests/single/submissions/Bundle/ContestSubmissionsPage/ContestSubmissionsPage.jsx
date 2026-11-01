@@ -104,6 +104,19 @@ function ContestSubmissionsPage() {
     }
   };
 
+  const renderActions = () => {
+    if (!response || (!response.config.canManage && !response.config.canSupervise)) {
+      return null;
+    }
+
+    return (
+      <Flex justifyContent="space-between" flexWrap="wrap">
+        {renderRegradeAllButton()}
+        <Box marginLeft="auto">{renderFilterWidget()}</Box>
+      </Flex>
+    );
+  };
+
   const renderRegradeAllButton = () => {
     if (!response || !response.config.canManage) {
       return null;
@@ -144,11 +157,10 @@ function ContestSubmissionsPage() {
 
   return (
     <ContentCard title="Submissions">
-      <Flex justifyContent="space-between" flexWrap="wrap">
-        {renderRegradeAllButton()}
-        <Box marginLeft="auto">{renderFilterWidget()}</Box>
+      <Flex flexDirection="column" gap={4}>
+        {renderActions()}
+        {renderSubmissions()}
       </Flex>
-      {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
   );
