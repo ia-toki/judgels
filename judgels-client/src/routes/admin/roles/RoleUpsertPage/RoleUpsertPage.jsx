@@ -9,6 +9,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 import { upsertUserRolesMutationOptions, userRolesQueryOptions } from '../../../../modules/queries/userRole';
 import { RoleCheckboxes } from '../RoleCheckboxes/RoleCheckboxes';
@@ -47,7 +48,7 @@ export default function RoleUpsertPage() {
 
   const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
 
-  const goToRoles = () => navigate({ to: '/admin/roles' });
+  const goToRoles = () => navigate({ to: '/admin/roles', ignoreBlocker: true });
 
   const upsertUsers = async (values, form) => {
     const usernames = parseUsernames(values.usernames);
@@ -83,6 +84,7 @@ export default function RoleUpsertPage() {
         <Form onSubmit={upsertUsers} initialValues={initialValues}>
           {({ handleSubmit, submitting, values }) => (
             <form onSubmit={handleSubmit}>
+              <FormUnsavedChangesAlert />
               <Field component={FormTextArea} {...usernamesField} />
               <FormGroup label="Roles">
                 <Field name="roles">

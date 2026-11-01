@@ -9,6 +9,7 @@ import { useEditableSection } from '../../../../components/EditableSections/Edit
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { FormTableCheckbox } from '../../../../components/forms/FormTableCheckbox/FormTableCheckbox';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { updateSettingsMutationOptions } from '../../../../modules/queries/setting';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -70,6 +71,7 @@ export function SessionSection({ session }) {
           {({ handleSubmit, submitting }) => (
             <Flex asChild flexDirection="column" gap={2}>
               <form onSubmit={handleSubmit}>
+                <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
                     <Field

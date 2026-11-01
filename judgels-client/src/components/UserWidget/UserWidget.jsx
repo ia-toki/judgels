@@ -23,7 +23,7 @@ export function UserWidget({ user, profile, items, homeRoute }) {
   const logOutMutation = useMutation(logOutMutationOptions);
 
   const logOut = () => {
-    logOutMutation.mutate(undefined, { onSuccess: () => navigate({ to: '/' }) });
+    logOutMutation.mutate(undefined, { onSuccess: () => navigate({ to: '/', ignoreBlocker: true }) });
   };
 
   const renderForUser = () => {

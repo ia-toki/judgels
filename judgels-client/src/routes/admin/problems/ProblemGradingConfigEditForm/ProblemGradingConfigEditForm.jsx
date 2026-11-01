@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { OptionSelect } from '../../../../components/OptionSelect/OptionSelect';
+import { UnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { getGradingConfigFields, toConfig, toFormValues, validate } from './gradingConfigForm';
 
 import './ProblemGradingConfigEditForm.scss';
@@ -141,6 +142,8 @@ export default function ProblemGradingConfigEditForm({
   const [error, setError] = useState(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAutoPopulating, setIsAutoPopulating] = useState(false);
+
+  const isDirty = JSON.stringify(values) !== JSON.stringify(toFormValues(engine, config));
 
   const setValue = (name, value) => setValues(v => ({ ...v, [name]: value }));
 
@@ -332,6 +335,7 @@ export default function ProblemGradingConfigEditForm({
   return (
     <Flex asChild flexDirection="column" gap={6}>
       <form onSubmit={submit}>
+        <UnsavedChangesAlert when={isDirty && !isSubmitting} />
         <ActionButtons>
           <Button
             small

@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { FormCheckbox } from '../../../../../../components/forms/FormCheckbox/FormCheckbox';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 import { supervisorManagementPermissions } from '../../../../../../modules/api/contestSupervisor';
 
@@ -14,6 +15,7 @@ export default function ContestSupervisorAddForm({ onSubmit, renderFormComponent
       <Form onSubmit={onSubmit} initialValues={initialValues}>
         {({ handleSubmit, values, submitting }) => (
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             {renderFormComponents(renderFields(values), renderSubmitButton(submitting))}
           </form>
         )}

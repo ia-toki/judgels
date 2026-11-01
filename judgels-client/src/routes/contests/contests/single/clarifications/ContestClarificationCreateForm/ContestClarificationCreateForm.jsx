@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../../../components/forms/validations';
 import { constructProblemName } from '../../../../../../modules/api/problem';
 
@@ -57,7 +58,12 @@ export default function ContestClarificationCreateForm({
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => {
         const submitButton = <Button type="submit" text="Submit" intent={Intent.PRIMARY} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+        return (
+          <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
+            {renderFormComponents(fields, submitButton)}
+          </form>
+        );
       }}
     </Form>
   );

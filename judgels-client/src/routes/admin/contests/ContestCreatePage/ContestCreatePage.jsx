@@ -24,7 +24,10 @@ export default function ContestCreatePage() {
 
   return (
     <ContentCard title={<BreadcrumbTitle parent="Contests" current="New" />}>
-      <ContestCreateForm onSubmit={createContest} onCancel={() => navigate({ to: '/admin/contests' })} />
+      <ContestCreateForm
+        onSubmit={createContest}
+        onCancel={() => navigate({ to: '/admin/contests', ignoreBlocker: true })}
+      />
     </ContentCard>
   );
 }

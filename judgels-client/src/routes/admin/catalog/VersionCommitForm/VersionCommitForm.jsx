@@ -5,6 +5,7 @@ import { Field, Form } from 'react-final-form';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -29,6 +30,7 @@ export default function VersionCommitForm({ onSubmit, disabled }) {
       {({ handleSubmit, submitting, submitError }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             {submitError && <Callout intent={Intent.DANGER}>{submitError}</Callout>}
             <HTMLTable striped>
               <tbody>

@@ -6,6 +6,7 @@ import { Field, Form } from 'react-final-form';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import FormAceEditor from '../../../../components/forms/FormAceEditor/FormAceEditor';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { StatementManual } from '../../catalog/StatementManual/StatementManual';
 
 const textField = {
@@ -23,6 +24,7 @@ export default function ProblemEditorialEditForm({ onSubmit, initialValues, onCa
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <Flex justifyContent="space-between" alignItems="center">
               <Switch
                 style={{ marginBottom: 0 }}

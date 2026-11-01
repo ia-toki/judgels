@@ -3,6 +3,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -18,6 +19,7 @@ export default function ContestCreateForm({ onSubmit, onCancel }) {
     <Form onSubmit={withSubmissionError(onSubmit)}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Field component={FormTextInput} {...slugField} />
           <ActionButtons justifyContent="end">
             <Button text="Cancel" disabled={submitting} onClick={onCancel} />

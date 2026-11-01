@@ -5,6 +5,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { FormSelect2 } from '../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { gradingEngineNamesMap } from '../../../../modules/api/gradingEngine';
 import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
@@ -49,6 +50,7 @@ export default function ProblemCreateForm({ onSubmit, onCancel }) {
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Field component={FormTextInput} {...slugField} />
           <Field component={FormSelect2} {...gradingEngineField} />
           <Field component={FormTextArea} {...additionalNoteField} />

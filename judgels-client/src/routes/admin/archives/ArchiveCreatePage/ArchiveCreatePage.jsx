@@ -24,7 +24,10 @@ export default function ArchiveCreatePage() {
 
   return (
     <ContentCard title={<BreadcrumbTitle parent="Archives" current="New" />}>
-      <ArchiveCreateForm onSubmit={createArchive} onCancel={() => navigate({ to: '/admin/archives' })} />
+      <ArchiveCreateForm
+        onSubmit={createArchive}
+        onCancel={() => navigate({ to: '/admin/archives', ignoreBlocker: true })}
+      />
     </ContentCard>
   );
 }

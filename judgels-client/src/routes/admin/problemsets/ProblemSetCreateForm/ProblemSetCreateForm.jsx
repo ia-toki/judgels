@@ -5,6 +5,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { FormDateInput } from '../../../../components/forms/FormDateInput/FormDateInput';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -55,6 +56,7 @@ export default function ProblemSetCreateForm({ onSubmit, initialValues, onCancel
       {({ handleSubmit, submitting }) => {
         return (
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             {fields}
             <ActionButtons justifyContent="end">
               <Button text="Cancel" disabled={submitting} onClick={onCancel} />

@@ -9,6 +9,7 @@ import { Form } from 'react-final-form';
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { allModules, moduleDescriptionsMap, moduleTitlesMap } from '../../../../../../modules/api/contestModule';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
@@ -131,6 +132,7 @@ export default function ContestSettingsModulesPage() {
       <Form onSubmit={upsertConfig} initialValues={initialValues}>
         {({ handleSubmit, values, submitting }) => (
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             {renderEnabledModulesCard(
               values,
               <ActionButtons justifyContent="end">

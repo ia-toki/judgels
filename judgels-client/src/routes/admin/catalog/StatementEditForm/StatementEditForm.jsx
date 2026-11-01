@@ -7,6 +7,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import FormAceEditor from '../../../../components/forms/FormAceEditor/FormAceEditor';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 import { StatementManual } from '../StatementManual/StatementManual';
 
@@ -31,6 +32,7 @@ export default function StatementEditForm({ onSubmit, initialValues, onCancel, b
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <Field component={FormTextInput} {...titleField} />
             <Flex justifyContent="space-between" alignItems="center">
               <Switch

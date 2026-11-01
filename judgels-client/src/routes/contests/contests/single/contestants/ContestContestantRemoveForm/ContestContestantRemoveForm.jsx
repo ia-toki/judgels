@@ -2,6 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Max1000Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 
 export default function ContestContestantRemoveForm({ onSubmit, renderFormComponents }) {
@@ -21,7 +22,12 @@ export default function ContestContestantRemoveForm({ onSubmit, renderFormCompon
     <Form onSubmit={onSubmit}>
       {({ handleSubmit, submitting }) => {
         const submitButton = <Button type="submit" text="Remove" intent={Intent.DANGER} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+        return (
+          <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
+            {renderFormComponents(fields, submitButton)}
+          </form>
+        );
       }}
     </Form>
   );

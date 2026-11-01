@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 export default function ProblemPartnersEditForm({ onSubmit, initialValues, validateUsernames, onCancel }) {
@@ -12,6 +13,7 @@ export default function ProblemPartnersEditForm({ onSubmit, initialValues, valid
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <Field
               component={FormTextArea}
               name="usernames"

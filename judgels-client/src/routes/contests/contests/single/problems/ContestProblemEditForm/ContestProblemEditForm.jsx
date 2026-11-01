@@ -2,6 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Field, Form } from 'react-final-form';
 
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Max100Lines, Required, composeValidators } from '../../../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../../../modules/form/submissionError';
 
@@ -22,7 +23,12 @@ export default function ContestProblemEditForm({ onSubmit, initialValues, render
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => {
         const submitButton = <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+        return (
+          <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
+            {renderFormComponents(fields, submitButton)}
+          </form>
+        );
       }}
     </Form>
   );

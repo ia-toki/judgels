@@ -41,7 +41,7 @@ export default function ProblemSetCreatePage() {
     <ContentCard title={<BreadcrumbTitle parent="Problemsets" current="New" />}>
       <ProblemSetCreateForm
         onSubmit={createProblemSet}
-        onCancel={() => navigate({ to: '/admin/problemsets' })}
+        onCancel={() => navigate({ to: '/admin/problemsets', ignoreBlocker: true })}
         initialValues={initialValues}
       />
     </ContentCard>

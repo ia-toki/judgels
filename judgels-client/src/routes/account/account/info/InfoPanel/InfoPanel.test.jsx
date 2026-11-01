@@ -1,13 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
+import { TestRouter } from '../../../../../test/RouterWrapper';
 import { InfoPanel } from './InfoPanel';
 
 describe('InfoPanel', () => {
   const onUpdateInfo = vi.fn().mockReturnValue(Promise.resolve());
 
-  const renderComponent = () => {
+  const renderComponent = async () => {
     const info = {
       name: 'My Name',
       gender: 'MALE',
@@ -20,11 +21,17 @@ describe('InfoPanel', () => {
       institutionCity: 'My City',
     };
 
-    render(<InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />);
+    await act(async () =>
+      render(
+        <TestRouter>
+          <InfoPanel email="user@domain.com" info={info} onUpdateInfo={onUpdateInfo} />
+        </TestRouter>
+      )
+    );
   };
 
   test('form', async () => {
-    renderComponent();
+    await renderComponent();
 
     const user = userEvent.setup();
 

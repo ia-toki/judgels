@@ -7,6 +7,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { FormTableSelect } from '../../../../components/forms/FormTableSelect/FormTableSelect';
 import { FormTableTextArea } from '../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
 const keyStyles = { width: '250px' };
@@ -69,6 +70,7 @@ export default function UserInfoEditForm({ onSubmit, initialValues, onCancel }) 
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <HTMLTable striped>
               <tbody>
                 <Field component={FormTableTextInput} {...nameField} />

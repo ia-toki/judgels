@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
 import { FormTextInput } from '../../../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../../../components/forms/validations';
 import { ContestAnnouncementStatus } from '../../../../../../modules/api/contestAnnouncement';
 import { ContestAnnouncementInstruction } from '../ContestAnnouncementInstruction/ContestAnnouncementInstruction';
@@ -43,7 +44,12 @@ export default function ContestAnnouncementEditForm({ onSubmit, initialValues, r
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => {
         const submitButton = <Button type="submit" text="Save" intent={Intent.PRIMARY} loading={submitting} />;
-        return <form onSubmit={handleSubmit}>{renderFormComponents(fields, submitButton)}</form>;
+        return (
+          <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
+            {renderFormComponents(fields, submitButton)}
+          </form>
+        );
       }}
     </Form>
   );
