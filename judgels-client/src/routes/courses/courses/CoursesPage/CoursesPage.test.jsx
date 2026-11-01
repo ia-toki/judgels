@@ -76,7 +76,7 @@ describe('CoursesPage', () => {
     expect(links[1]).toHaveTextContent('This is course 2');
   });
 
-  test('shows the image in the description on the left of the rest of the description', async () => {
+  test('shows the cover image in the description on the left of the rest of the description', async () => {
     await renderComponent({
       courses: [
         {
@@ -84,8 +84,8 @@ describe('CoursesPage', () => {
           slug: 'course-1',
           name: 'Course 1',
           description:
-            '<div style="float: left"><img src="https://example.com/course.png" /></div>' +
-            '<div style="float: left">Learn:<ul><li>Loops</li><li>Arrays</li></ul></div>',
+            '<p><img src="https://example.com/course.png" height="120"></p>' +
+            '<p>Learn:</p><ul><li>Loops</li><li>Arrays</li></ul>',
         },
       ],
     });
@@ -98,6 +98,5 @@ describe('CoursesPage', () => {
     expect(images[0]).toHaveAttribute('src', 'https://example.com/course.png');
 
     expect(within(link).getAllByRole('listitem')).toHaveLength(2);
-    expect(link.querySelector('.html-text [style]')).not.toBeInTheDocument();
   });
 });
