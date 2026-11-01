@@ -3,3 +3,18 @@
   width: 64px;
   height: 64px;
 }
+
+@media only screen and (max-width: 750px) {
+  .course-card {
+    flex-direction: column;
+  }
+
+  .course-card .content-row__main,
+  .course-card .content-row__status {
+    align-self: stretch;
+  }
+
+  .course-card__image {
+    align-self: flex-start;
+  }
+}

@@ -76,7 +76,7 @@ export default function ChapterResourcesPage() {
     const problemSetProblems = problems.filter(p => !!problemSetProblemPathsMap[p.problemJid]);
 
     return (
-      <Flex flexDirection="column" gap={8}>
+      <Flex flexDirection="column">
         {(lessons.length > 0 || chapterProblems.length > 0) && (
           <ContentList>
             {lessons.map(renderLesson)}
@@ -85,7 +85,7 @@ export default function ChapterResourcesPage() {
         )}
         {problemSetProblems.length > 0 && (
           <div>
-            <h4>Practice Problems</h4>
+            <h4 className="chapter-resources-page__section-title">Practice Problems</h4>
             <ContentList>
               {problemSetProblems.map((p, idx) => renderProblem(p, idx + chapterProblems.length))}
             </ContentList>

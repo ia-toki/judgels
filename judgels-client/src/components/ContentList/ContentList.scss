@@ -10,3 +10,8 @@
     margin-bottom: -20px;
   }
 }
+
+.card__content .content-list:first-child,
+.content-card__body .content-list:first-child {
+  margin-top: 0;
+}

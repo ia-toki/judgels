@@ -27,6 +27,7 @@ export function CourseCard({ course: { slug, name, description }, progress }) {
 
   return (
     <ContentRow
+      className="course-card"
       to={`/courses/${slug}`}
       leading={imageUrl && <img className="course-card__image" src={imageUrl} alt="" />}
       title={name}

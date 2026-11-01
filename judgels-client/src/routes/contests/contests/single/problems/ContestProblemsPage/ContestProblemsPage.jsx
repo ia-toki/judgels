@@ -29,7 +29,7 @@ export default function ContestProblemsPage() {
     return consolidateLanguages(response.problemsMap, statementLanguage);
   }, [response, statementLanguage]);
 
-  const renderAction = () => {
+  const renderEditDialog = () => {
     if (!response || !response.config.canManage) {
       return null;
     }
@@ -94,8 +94,15 @@ export default function ContestProblemsPage() {
   };
 
   return (
-    <ContentCard title="Problems" action={renderAction()}>
-      {renderStatementLanguageWidget()}
+    <ContentCard
+      title="Problems"
+      action={
+        <>
+          {renderEditDialog()}
+          {renderStatementLanguageWidget()}
+        </>
+      }
+    >
       {renderProblems()}
     </ContentCard>
   );

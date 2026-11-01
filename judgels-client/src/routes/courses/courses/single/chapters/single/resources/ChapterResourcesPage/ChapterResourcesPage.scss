@@ -13,3 +13,27 @@
   font-size: $font-size-page-title-compact !important;
   line-height: 24px !important;
 }
+
+.chapter-resources-page__section-title {
+  margin: 0 -20px;
+  padding: 0 20px 8px;
+  border-bottom: 1px solid $divider-color;
+  font-size: $font-size-small !important;
+  font-weight: $font-weight-bold !important;
+  line-height: 16px !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  .bp6-light & {
+    color: $secondary-text-color;
+  }
+
+  .bp6-dark & {
+    border-bottom-color: $dark-divider-color;
+    color: $dark-secondary-text-color;
+  }
+
+  :not(:first-child) > & {
+    margin-top: 32px;
+  }
+}

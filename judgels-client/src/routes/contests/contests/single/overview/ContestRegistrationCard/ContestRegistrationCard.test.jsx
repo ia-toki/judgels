@@ -19,7 +19,6 @@ describe('ContestRegistrationCard', () => {
     nockApi().get('/v2/contests/slug/contest-slug/config').reply(200, {});
 
     nockApi().get('/v2/contests/contestJid/contestants/me/state').reply(200, JSON.stringify(contestantState));
-    nockApi().get('/v2/contests/contestJid/contestants/approved/count').reply(200, 10);
 
     await act(async () =>
       render(
@@ -53,4 +52,13 @@ describe('ContestRegistrationCard', () => {
       });
     }
   );
+
+  test('shows nothing when contestant state is NONE', async () => {
+    await renderComponent({ contestantState: 'NONE' });
+
+    await waitFor(() => {
+      expect(document.body.querySelector('.bp6-spinner')).toBeNull();
+      expect(document.body.querySelector('.contest-registration-card')).toBeNull();
+    });
+  });
 });

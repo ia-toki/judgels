@@ -121,8 +121,8 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
     return (
       <>
         {renderEvaluationResults()}
-        <Flex gap={2}>
-          <h5>Verdict</h5>
+        <Flex alignItems="center" gap={2}>
+          <h5 className="problem-submission-summary__title">Verdict</h5>
           {renderScore(latestGrading)}
           <ButtonLink to={submissionUrl} className="problem-submission-summary__details-button" small>
             Details

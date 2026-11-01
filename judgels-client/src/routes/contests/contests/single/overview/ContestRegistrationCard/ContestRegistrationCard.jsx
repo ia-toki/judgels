@@ -1,21 +1,18 @@
 import { Button, Callout, Intent, Tag } from '@blueprintjs/core';
-import { BanCircle, People, Tick } from '@blueprintjs/icons';
+import { BanCircle, Tick } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
-import { useState } from 'react';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { ContestContestantState } from '../../../../../../modules/api/contestContestant';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import {
-  contestApprovedContestantsCountQueryOptions,
   myContestantStateQueryOptions,
   registerMyselfAsContestantMutationOptions,
   unregisterMyselfAsContestantMutationOptions,
 } from '../../../../../../modules/queries/contestContestant';
 import { useSession } from '../../../../../../modules/session';
-import ContestRegistrantsDialog from '../ContestRegistrantsDialog/ContestRegistrantsDialog';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
@@ -31,15 +28,8 @@ export default function ContestRegistrationCard() {
     enabled: isLoggedIn,
   });
 
-  const { data: contestantsCount } = useQuery({
-    ...contestApprovedContestantsCountQueryOptions(contest.jid),
-    enabled: isLoggedIn,
-  });
-
   const registerMutation = useMutation(registerMyselfAsContestantMutationOptions(contest.jid));
   const unregisterMutation = useMutation(unregisterMyselfAsContestantMutationOptions(contest.jid));
-
-  const [isRegistrantsDialogOpen, setIsRegistrantsDialogOpen] = useState(false);
 
   if (!isLoggedIn) {
     return (
@@ -49,20 +39,20 @@ export default function ContestRegistrationCard() {
     );
   }
 
+  if (contestantState === ContestContestantState.None) {
+    return null;
+  }
+
   const renderCard = () => {
-    if (contestantState === undefined || contestantsCount === undefined) {
+    if (contestantState === undefined) {
       return <LoadingState />;
     }
 
     return (
-      <>
-        <Flex gap={1} alignItems="center">
-          {renderContestantStateTag(contestantState)}
-          {renderActionButton(contestantState)}
-          {renderViewRegistrantsButton(contestantsCount)}
-        </Flex>
-        {renderRegistrantsDialog()}
-      </>
+      <Flex gap={1} alignItems="center">
+        {renderContestantStateTag(contestantState)}
+        {renderActionButton(contestantState)}
+      </Flex>
     );
   };
 
@@ -114,23 +104,6 @@ export default function ContestRegistrationCard() {
       );
     }
     return null;
-  };
-
-  const renderViewRegistrantsButton = contestantsCount => {
-    return (
-      <Button
-        icon={<People />}
-        text={`View registrants (${contestantsCount})`}
-        onClick={() => setIsRegistrantsDialogOpen(true)}
-      />
-    );
-  };
-
-  const renderRegistrantsDialog = () => {
-    if (!isRegistrantsDialogOpen) {
-      return null;
-    }
-    return <ContestRegistrantsDialog onClose={() => setIsRegistrantsDialogOpen(false)} />;
   };
 
   const register = () => {

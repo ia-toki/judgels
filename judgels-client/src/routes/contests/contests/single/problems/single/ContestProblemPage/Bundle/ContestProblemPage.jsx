@@ -51,9 +51,7 @@ export default function ContestProblemPage() {
       return null;
     }
     return (
-      <div className="language-widget-wrapper">
-        <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
-      </div>
+      <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
     );
   };
 
@@ -83,8 +81,8 @@ export default function ContestProblemPage() {
           items={[{ text: 'Problems', to: `/contests/${contestSlug}/problems` }, { text: problemAlias }]}
         />
       }
+      action={renderStatementLanguageWidget()}
     >
-      {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>
   );

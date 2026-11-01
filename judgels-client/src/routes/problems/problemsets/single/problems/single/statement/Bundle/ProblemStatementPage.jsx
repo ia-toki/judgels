@@ -38,11 +38,7 @@ export default function ProblemStatementPage(props) {
       defaultLanguage: defaultLanguage,
       statementLanguages: languages,
     };
-    return (
-      <div className="language-widget-wrapper">
-        <StatementLanguageWidget {...widgetProps} />
-      </div>
-    );
+    return <StatementLanguageWidget {...widgetProps} />;
   };
 
   const renderStatement = () => {
@@ -67,8 +63,7 @@ export default function ProblemStatementPage(props) {
   };
 
   return (
-    <ContentCard title="Statement">
-      {renderStatementLanguageWidget()}
+    <ContentCard title="Statement" action={renderStatementLanguageWidget()}>
       {renderStatement()}
     </ContentCard>
   );
