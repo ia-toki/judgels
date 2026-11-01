@@ -19,6 +19,8 @@
 
   .card-heading__action {
     flex-shrink: 1;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     height: auto;
     margin-left: auto;
     white-space: normal;

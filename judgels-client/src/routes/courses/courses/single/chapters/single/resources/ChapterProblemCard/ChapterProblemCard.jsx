@@ -36,18 +36,28 @@ export function ChapterProblemCard({
     return <ChapterProblemProgressTag verdict={verdict} />;
   };
 
+  const renderStatus = () => {
+    const paths = renderProblemSetProblemPaths();
+    const progressTag = renderProgress();
+    if (!paths && !progressTag) {
+      return null;
+    }
+
+    return (
+      <Flex alignItems="center" gap={2}>
+        {paths}
+        {progressTag}
+      </Flex>
+    );
+  };
+
   return (
     <ContentRow
-      className={classNames({ 'chapter-problem-card--future': isFuture })}
+      className={classNames('chapter-problem-card', { 'chapter-problem-card--future': isFuture })}
       to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problem.alias}`}
       leading={problem.type === ProblemType.Programming ? <Code /> : <Form />}
       title={`${problem.alias}. ${problemName}`}
-      status={
-        <Flex alignItems="center" gap={2}>
-          {renderProblemSetProblemPaths()}
-          {renderProgress()}
-        </Flex>
-      }
+      status={renderStatus()}
     />
   );
 }

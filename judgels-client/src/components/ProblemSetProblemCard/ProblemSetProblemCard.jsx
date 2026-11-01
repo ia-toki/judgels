@@ -9,6 +9,8 @@ import { ProblemDifficultyTags } from '../ProblemDifficulty/ProblemDifficulty';
 import { ProblemTopicTagList } from '../ProblemTopicTags/ProblemTopicTags';
 import { VerdictProgressTag } from '../VerdictProgressTag/VerdictProgressTag';
 
+import './ProblemSetProblemCard.scss';
+
 export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemName, metadata, difficulty, progress }) {
   const renderEditorialTag = () => {
     if (!metadata.hasEditorial) {
@@ -52,6 +54,7 @@ export function ProblemSetProblemCard({ problemSet, problem, showAlias, problemN
 
   return (
     <ContentRow
+      className="problem-set-problem-card"
       to={`/problems/${problemSet.slug}/${problem.alias}`}
       title={showAlias ? `${problem.alias}. ${problemName}` : problemName}
       badges={

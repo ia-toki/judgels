@@ -1,4 +1,3 @@
-import { Box } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -15,8 +14,6 @@ import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 
 import * as toastActions from '../../../../../../../../modules/toast/toastActions';
-
-import './ContestProblemPage.scss';
 
 export default function ContestProblemPage() {
   const { contestSlug, problemAlias } = useParams({ strict: false });
@@ -54,9 +51,7 @@ export default function ContestProblemPage() {
       return null;
     }
     return (
-      <Box className="contest-programming-problem-page__widget" width={100} marginX="auto">
-        <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
-      </Box>
+      <StatementLanguageWidget defaultLanguage={response.defaultLanguage} statementLanguages={response.languages} />
     );
   };
 
@@ -91,8 +86,8 @@ export default function ContestProblemPage() {
           items={[{ text: 'Problems', to: `/contests/${contestSlug}/problems` }, { text: problemAlias }]}
         />
       }
+      action={renderStatementLanguageWidget()}
     >
-      {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>
   );

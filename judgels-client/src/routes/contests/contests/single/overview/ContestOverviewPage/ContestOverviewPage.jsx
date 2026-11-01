@@ -6,6 +6,7 @@ import { ContentCard } from '../../../../../../components/ContentCard/ContentCar
 import { HtmlText } from '../../../../../../components/HtmlText/HtmlText';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { contestBySlugQueryOptions, contestDescriptionQueryOptions } from '../../../../../../modules/queries/contest';
+import ContestRegistrantsButton from '../ContestRegistrantsButton/ContestRegistrantsButton';
 import ContestRegistrationCard from '../ContestRegistrationCard/ContestRegistrationCard';
 
 export default function ContestOverviewPage() {
@@ -31,7 +32,7 @@ export default function ContestOverviewPage() {
   };
 
   return (
-    <ContentCard title="Overview">
+    <ContentCard title="Overview" action={<ContestRegistrantsButton />}>
       <Flex flexDirection="column" gap={4}>
         {renderRegistration()}
         {renderDescription()}

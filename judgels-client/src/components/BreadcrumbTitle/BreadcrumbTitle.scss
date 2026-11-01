@@ -1,6 +1,7 @@
 @use '../../styles/variables/colors' as *;
 
 .breadcrumb-title.bp6-breadcrumbs {
+  flex-wrap: wrap;
   height: auto;
 
   // As tall as the text, so that the separator does not make the heading taller.

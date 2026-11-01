@@ -1,0 +1,13 @@
+@media only screen and (max-width: 750px) {
+  .problem-set-problem-card {
+    flex-direction: column;
+  }
+
+  .problem-set-problem-card .content-row__main {
+    align-self: stretch;
+  }
+
+  .problem-set-problem-card .content-row__status {
+    align-self: flex-end;
+  }
+}
