@@ -51,7 +51,7 @@ export function ContestClarificationCreateDialog({ contest, problemJids, problem
 
   return (
     <>
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+      <Button small intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New clarification
       </Button>
       <Dialog

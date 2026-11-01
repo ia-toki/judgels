@@ -2,7 +2,6 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
@@ -49,14 +48,12 @@ function ContestClarificationsPage() {
     }
 
     return (
-      <ActionButtons>
-        <ContestClarificationCreateDialog
-          contest={contest}
-          problemJids={response.config.problemJids}
-          problemAliasesMap={response.problemAliasesMap}
-          problemNamesMap={response.problemNamesMap}
-        />
-      </ActionButtons>
+      <ContestClarificationCreateDialog
+        contest={contest}
+        problemJids={response.config.problemJids}
+        problemAliasesMap={response.problemAliasesMap}
+        problemNamesMap={response.problemNamesMap}
+      />
     );
   };
 
@@ -119,8 +116,7 @@ function ContestClarificationsPage() {
   };
 
   return (
-    <ContentCard title="Clarifications">
-      {renderAction()}
+    <ContentCard title="Clarifications" action={renderAction()}>
       {renderFilterWidget()}
       {renderClarifications()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}

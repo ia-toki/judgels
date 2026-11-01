@@ -1,10 +1,8 @@
 import { HTMLTable, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
@@ -42,19 +40,19 @@ export default function ProblemsPage() {
   };
 
   const renderAction = () => {
+    if (!canCreate) {
+      return null;
+    }
     return (
-      <Flex justifyContent="space-between" alignItems="center" gap={2}>
-        <ActionButtons>
-          {canCreate && (
-            <ButtonLink intent={Intent.PRIMARY} to="/admin/problems/-/new">
-              <Plus />
-              <span>New problem</span>
-            </ButtonLink>
-          )}
-        </ActionButtons>
-        <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={term || ''} isLoading={isFetching} />
-      </Flex>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/problems/-/new">
+        <Plus />
+        <span>New problem</span>
+      </ButtonLink>
     );
+  };
+
+  const renderSearchBox = () => {
+    return <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={term || ''} isLoading={isFetching} />;
   };
 
   const renderProblems = () => {
@@ -104,8 +102,8 @@ export default function ProblemsPage() {
   };
 
   return (
-    <ContentCard title="Problems">
-      {renderAction()}
+    <ContentCard title="Problems" action={renderAction()}>
+      {renderSearchBox()}
       {renderProblems()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

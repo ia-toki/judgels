@@ -46,7 +46,7 @@ export default function ContestSupervisorsPage() {
       return null;
     }
     return (
-      <ActionButtons>
+      <ActionButtons justifyContent="end">
         <ContestSupervisorAddDialog contest={contest} />
         <ContestSupervisorRemoveDialog contest={contest} />
       </ActionButtons>
@@ -54,8 +54,7 @@ export default function ContestSupervisorsPage() {
   };
 
   return (
-    <ContentCard title="Supervisors">
-      {renderActions()}
+    <ContentCard title="Supervisors" action={renderActions()}>
       {renderSupervisors()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

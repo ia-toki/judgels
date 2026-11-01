@@ -3,7 +3,6 @@ import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -52,18 +51,15 @@ export default function ChaptersPage() {
 
   const renderAction = () => {
     return (
-      <ActionButtons>
-        <ButtonLink intent={Intent.PRIMARY} to="/admin/chapters/-/new">
-          <Plus />
-          <span>New chapter</span>
-        </ButtonLink>
-      </ActionButtons>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/chapters/-/new">
+        <Plus />
+        <span>New chapter</span>
+      </ButtonLink>
     );
   };
 
   return (
-    <ContentCard title="Chapters">
-      {renderAction()}
+    <ContentCard title="Chapters" action={renderAction()}>
       {renderChapters()}
     </ContentCard>
   );

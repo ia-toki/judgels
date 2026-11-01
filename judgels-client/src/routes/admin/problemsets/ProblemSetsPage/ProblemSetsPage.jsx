@@ -3,7 +3,6 @@ import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -60,18 +59,15 @@ export default function ProblemSetsPage() {
 
   const renderAction = () => {
     return (
-      <ActionButtons>
-        <ButtonLink intent={Intent.PRIMARY} to="/admin/problemsets/-/new">
-          <Plus />
-          <span>New problemset</span>
-        </ButtonLink>
-      </ActionButtons>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/problemsets/-/new">
+        <Plus />
+        <span>New problemset</span>
+      </ButtonLink>
     );
   };
 
   return (
-    <ContentCard title="Problemsets">
-      {renderAction()}
+    <ContentCard title="Problemsets" action={renderAction()}>
       {renderProblemSets()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

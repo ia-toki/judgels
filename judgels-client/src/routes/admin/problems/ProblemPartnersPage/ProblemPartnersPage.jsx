@@ -1,11 +1,10 @@
-import { Button, HTMLTable, Intent } from '@blueprintjs/core';
+import { Button, HTMLTable } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
@@ -62,11 +61,9 @@ export default function ProblemPartnersPage() {
   const renderEditButton = () => {
     return (
       !isEditing && (
-        <ActionButtons justifyContent="end">
-          <Button intent={Intent.PRIMARY} icon={<Edit />} onClick={() => setIsEditing(true)}>
-            Edit
-          </Button>
-        </ActionButtons>
+        <Button small variant="outlined" icon={<Edit />} onClick={() => setIsEditing(true)}>
+          Edit
+        </Button>
       )
     );
   };
@@ -115,12 +112,16 @@ export default function ProblemPartnersPage() {
   return (
     <Flex flexDirection="column" gap={2}>
       <Flex flexDirection="column">
-        <h4>Partners</h4>
+        <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
+          <h4>
+            <span>Partners</span>
+            {renderEditButton()}
+          </h4>
+        </Flex>
         <p>
           <small>Users that can also edit this problem.</small>
         </p>
       </Flex>
-      {renderEditButton()}
       {renderContent()}
     </Flex>
   );

@@ -49,7 +49,7 @@ export default function ContestManagersPage() {
       return null;
     }
     return (
-      <ActionButtons>
+      <ActionButtons justifyContent="end">
         <ContestManagerAddDialog contest={contest} />
         <ContestManagerRemoveDialog contest={contest} />
       </ActionButtons>
@@ -57,8 +57,7 @@ export default function ContestManagersPage() {
   };
 
   return (
-    <ContentCard title="Managers">
-      {renderActions()}
+    <ContentCard title="Managers" action={renderActions()}>
       {renderManagers()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

@@ -1,9 +1,7 @@
-import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
-import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { ContentList } from '../../../../../../components/ContentList/ContentList';
 import StatementLanguageWidget from '../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -43,11 +41,7 @@ export default function ContestProblemsPage() {
       submissionsLimit: p.submissionsLimit,
       points: p.points,
     }));
-    return (
-      <ActionButtons>
-        <ContestProblemEditDialog contest={contest} problems={problems} />
-      </ActionButtons>
-    );
+    return <ContestProblemEditDialog contest={contest} problems={problems} />;
   };
 
   const renderStatementLanguageWidget = () => {
@@ -100,11 +94,8 @@ export default function ContestProblemsPage() {
   };
 
   return (
-    <ContentCard title="Problems">
-      <Flex justifyContent="space-between" alignItems="center">
-        {renderAction()}
-        {renderStatementLanguageWidget()}
-      </Flex>
+    <ContentCard title="Problems" action={renderAction()}>
+      {renderStatementLanguageWidget()}
       {renderProblems()}
     </ContentCard>
   );

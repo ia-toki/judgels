@@ -3,7 +3,6 @@ import { Upload } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
@@ -21,12 +20,10 @@ export default function UsersPage() {
 
   const renderAction = () => {
     return (
-      <ActionButtons>
-        <ButtonLink intent={Intent.PRIMARY} to="/admin/users/-/upsert">
-          <Upload />
-          <span>Upsert users</span>
-        </ButtonLink>
-      </ActionButtons>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/users/-/upsert">
+        <Upload />
+        <span>Upsert users</span>
+      </ButtonLink>
     );
   };
 
@@ -69,8 +66,7 @@ export default function UsersPage() {
   };
 
   return (
-    <ContentCard title="Users">
-      {renderAction()}
+    <ContentCard title="Users" action={renderAction()}>
       {renderUsers()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

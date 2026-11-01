@@ -2,7 +2,7 @@ import { Flex } from '@blueprintjs/labs';
 
 export function ActionButtons({ justifyContent = 'start', children }) {
   return (
-    <Flex justifyContent={justifyContent} gap={1}>
+    <Flex justifyContent={justifyContent} flexWrap="wrap" gap={1}>
       {children}
     </Flex>
   );

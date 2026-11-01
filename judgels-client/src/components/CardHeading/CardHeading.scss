@@ -11,3 +11,16 @@
   height: 9px;
   white-space: nowrap;
 }
+
+@media only screen and (max-width: 750px) {
+  .card-heading {
+    flex-wrap: wrap;
+  }
+
+  .card-heading__action {
+    flex-shrink: 1;
+    height: auto;
+    margin-left: auto;
+    white-space: normal;
+  }
+}

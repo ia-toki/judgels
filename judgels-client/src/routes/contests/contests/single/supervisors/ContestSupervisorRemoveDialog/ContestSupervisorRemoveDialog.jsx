@@ -78,6 +78,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
   return (
     <>
       <Button
+        small
         className="contest-supervisor-dialog-button"
         intent={Intent.DANGER}
         icon={<Trash />}
