@@ -9,6 +9,7 @@ import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../../../../modules/queries/courseChapter';
+import { splitCourseDescription } from '../../splitCourseDescription';
 
 import './CourseOverview.scss';
 
@@ -18,6 +19,7 @@ export default function CourseOverview() {
   const {
     data: { data: chapters },
   } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
+  const { imageUrl, text } = splitCourseDescription(course.description);
 
   const renderStartButton = () => {
     if (!chapters || chapters.length === 0) {
@@ -38,7 +40,10 @@ export default function CourseOverview() {
       <h2>{course.name}</h2>
       <ContentCard>
         <Flex flexDirection="column" gap={4}>
-          <HtmlText>{course.description}</HtmlText>
+          <div className="course-overview__description">
+            {imageUrl && <img className="course-overview__image" src={imageUrl} alt="" />}
+            <HtmlText>{text}</HtmlText>
+          </div>
           {renderStartButton()}
         </Flex>
       </ContentCard>

@@ -2,21 +2,12 @@ import { ContentRow } from '../../../../components/ContentRow/ContentRow';
 import { ContentRowProgress } from '../../../../components/ContentRow/ContentRowProgress';
 import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
+import { splitCourseDescription } from '../splitCourseDescription';
 
 import './CourseCard.scss';
 
-function splitDescription(description) {
-  const { body } = new DOMParser().parseFromString(description || '', 'text/html');
-
-  const image = body.querySelector('img');
-  image?.remove();
-  body.querySelectorAll('[style]').forEach(element => element.removeAttribute('style'));
-
-  return { imageUrl: image?.getAttribute('src'), text: body.innerHTML };
-}
-
 export function CourseCard({ course: { slug, name, description }, progress }) {
-  const { imageUrl, text } = splitDescription(description);
+  const { imageUrl, text } = splitCourseDescription(description);
 
   const renderProgress = () => {
     if (!progress || progress.solvedProblems === 0) {
