@@ -22,21 +22,3 @@
   line-height: 24px !important;
   margin-bottom: 0;
 }
-
-.chapter-problem-page__title--link {
-  color: inherit !important;
-
-  &:hover {
-    text-decoration: none;
-    color: $primary-color !important;
-  }
-
-  & .bp6-icon {
-    height: 22px;
-  }
-}
-
-.chapter-problem-page__title--chevron {
-  height: 24px;
-  color: $dark-secondary-background-color !important;
-}

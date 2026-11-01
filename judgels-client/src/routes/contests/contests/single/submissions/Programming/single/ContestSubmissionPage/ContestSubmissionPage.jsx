@@ -1,6 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
@@ -48,5 +49,18 @@ export default function ContestSubmissionPage() {
     contestSubmissionAPI.downloadSubmission(getToken(), response.data.submission.jid);
   };
 
-  return <ContentCard title={`Submission #${submissionId}`}>{renderSubmission()}</ContentCard>;
+  return (
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Submissions', to: `/contests/${contest.slug}/submissions` },
+            { text: `#${submissionId}`, to: `/contests/${contest.slug}/submissions/${submissionId}` },
+          ]}
+        />
+      }
+    >
+      {renderSubmission()}
+    </ContentCard>
+  );
 }

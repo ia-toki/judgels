@@ -75,7 +75,16 @@ export default function ProblemLayout() {
   ];
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Problems" current={problem.slug} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Problems', to: '/admin/problems' },
+            { text: problem.slug, to: `/admin/problems/${problem.slug}` },
+          ]}
+        />
+      }
+    >
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING}>
           <H5>

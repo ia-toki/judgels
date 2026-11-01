@@ -25,7 +25,16 @@ export default function RoleEditPage() {
   }
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Roles" current={username} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Roles', to: '/admin/roles' },
+            { text: username, to: `/admin/roles/${username}` },
+          ]}
+        />
+      }
+    >
       <RoleEditForm user={user} />
     </ContentCard>
   );

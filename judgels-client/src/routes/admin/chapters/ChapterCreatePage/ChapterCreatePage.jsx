@@ -23,7 +23,16 @@ export default function ChapterCreatePage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Chapters" current="New" />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Chapters', to: '/admin/chapters' },
+            { text: 'New', to: '/admin/chapters/-/new' },
+          ]}
+        />
+      }
+    >
       <ChapterCreateForm
         onSubmit={createChapter}
         onCancel={() => navigate({ to: '/admin/chapters', ignoreBlocker: true })}

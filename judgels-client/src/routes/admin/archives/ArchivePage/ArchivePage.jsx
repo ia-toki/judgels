@@ -12,7 +12,16 @@ export default function ArchivePage() {
   const { data: archive } = useSuspenseQuery(archiveBySlugQueryOptions(archiveSlug));
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Archives" current={archive.slug} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Archives', to: '/admin/archives' },
+            { text: archive.slug, to: `/admin/archives/${archive.slug}` },
+          ]}
+        />
+      }
+    >
       <ArchiveGeneralSection archive={archive} />
     </ContentCard>
   );

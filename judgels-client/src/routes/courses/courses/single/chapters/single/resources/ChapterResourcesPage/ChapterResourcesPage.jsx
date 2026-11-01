@@ -1,8 +1,8 @@
-import { ChevronRight } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 
+import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { ContentList } from '../../../../../../../../components/ContentList/ContentList';
 import { LoadingContentCard } from '../../../../../../../../components/LoadingContentCard/LoadingContentCard';
@@ -52,13 +52,12 @@ export default function ChapterResourcesPage() {
   const renderHeader = () => {
     return (
       <h2 className="chapter-resources-page__title">
-        <Link className="chapter-resources-page__title--link" to={`/courses/${course.slug}`}>
-          {course.name}
-        </Link>
-        &nbsp;
-        <ChevronRight className="chapter-resources-page__title--chevron" size={20} />
-        &nbsp;
-        {chapterAlias}. {chapter.name}
+        <BreadcrumbTitle
+          items={[
+            { text: course.name, to: `/courses/${course.slug}` },
+            { text: `${chapterAlias}. ${chapter.name}`, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
+          ]}
+        />
       </h2>
     );
   };

@@ -1,9 +1,8 @@
-import { ChevronLeft } from '@blueprintjs/icons';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { ButtonLink } from '../../../../../../../../../../../../components/ButtonLink/ButtonLink';
+import { BreadcrumbTitle } from '../../../../../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
@@ -49,15 +48,19 @@ export default function ChapterProblemSubmissionPage() {
 
   return (
     <ContentCard
-      title={`Submission #${submissionId}`}
-      action={
-        <ButtonLink
-          small
-          icon={<ChevronLeft />}
-          to={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`}
-        >
-          Back
-        </ButtonLink>
+      title={
+        <BreadcrumbTitle
+          items={[
+            {
+              text: 'Submissions',
+              to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`,
+            },
+            {
+              text: `#${submissionId}`,
+              to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions/${submissionId}`,
+            },
+          ]}
+        />
       }
     >
       {renderSubmission()}

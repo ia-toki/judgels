@@ -26,7 +26,16 @@ export default function ProblemCreatePage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Problems" current="New" />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Problems', to: '/admin/problems' },
+            { text: 'New', to: '/admin/problems/-/new' },
+          ]}
+        />
+      }
+    >
       <ProblemCreateForm
         onSubmit={createProblem}
         onCancel={() => navigate({ to: '/admin/problems', ignoreBlocker: true })}

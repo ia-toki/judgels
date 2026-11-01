@@ -13,21 +13,3 @@
   font-size: $font-size-page-title-compact !important;
   line-height: 24px !important;
 }
-
-.chapter-resources-page__title--link {
-  color: inherit !important;
-
-  &:hover {
-    text-decoration: none;
-    color: $primary-color !important;
-  }
-
-  & .bp6-icon {
-    height: 22px;
-  }
-}
-
-.chapter-resources-page__title--chevron {
-  height: 24px;
-  color: $dark-secondary-background-color !important;
-}

@@ -87,11 +87,11 @@ describe('ProblemSubmissionPage', () => {
   test('programming submission', async () => {
     await renderComponent();
 
-    expect(screen.getByRole('heading', { name: /submission #10/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Submissions.*#10/ })).toBeInTheDocument();
     expect(screen.getByText(/C\+\+17/)).toBeInTheDocument();
     // The source is highlighted, which splits it across elements.
     await waitFor(() => expect(document.body.textContent).toContain('int main() {}'));
-    expect(screen.getByRole('link', { name: /back/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Submissions' })).toHaveAttribute(
       'href',
       '/admin/problems/problem-1/submissions'
     );

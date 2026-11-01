@@ -16,7 +16,16 @@ export default function ChapterPage() {
   const { data: chapter } = useSuspenseQuery(chapterByJidQueryOptions(chapterJid));
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Chapters" current={chapter.name} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Chapters', to: '/admin/chapters' },
+            { text: chapter.name, to: `/admin/chapters/${chapterJid}` },
+          ]}
+        />
+      }
+    >
       <EditableSections>
         <Flex flexDirection="column" gap={8}>
           <ChapterGeneralSection chapter={chapter} />

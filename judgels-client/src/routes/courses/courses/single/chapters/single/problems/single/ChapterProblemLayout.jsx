@@ -1,9 +1,10 @@
-import { ChevronRight, Home } from '@blueprintjs/icons';
+import { Home } from '@blueprintjs/icons';
 import { Box, Flex } from '@blueprintjs/labs';
 import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 
+import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
@@ -85,19 +86,16 @@ export default function ChapterProblemLayout() {
     return (
       <Flex className="chapter-problem-page__title" flexWrap="wrap">
         <h2>
-          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}`}>
-            <Home />
-          </Link>
-          &nbsp;
-          <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
-          &nbsp;
-          <Link className="chapter-problem-page__title--link" to={`/courses/${course.slug}/chapters/${chapterAlias}`}>
-            {chapterAlias}
-          </Link>
-          &nbsp;
-          <ChevronRight className="chapter-problem-page__title--chevron" size={20} />
-          &nbsp;
-          {problemAlias}. {problemTitle}
+          <BreadcrumbTitle
+            items={[
+              { icon: <Home title={course.name} />, to: `/courses/${course.slug}` },
+              { text: chapterAlias, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
+              {
+                text: `${problemAlias}. ${problemTitle ?? ''}`,
+                to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`,
+              },
+            ]}
+          />
         </h2>
 
         {renderProgress()}

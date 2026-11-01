@@ -85,7 +85,16 @@ export default function ContestProblemPage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Problems" current={problemAlias} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Problems', to: `/contests/${contestSlug}/problems` },
+            { text: problemAlias, to: `/contests/${contestSlug}/problems/${problemAlias}` },
+          ]}
+        />
+      }
+    >
       {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>

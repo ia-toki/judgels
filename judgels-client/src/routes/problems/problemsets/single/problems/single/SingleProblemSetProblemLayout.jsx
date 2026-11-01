@@ -1,9 +1,9 @@
-import { ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
+import { Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Link, Outlet, useParams } from '@tanstack/react-router';
+import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { BreadcrumbTitle } from '../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ProblemType } from '../../../../../../modules/api/problem';
@@ -11,8 +11,6 @@ import { problemSetBySlugQueryOptions } from '../../../../../../modules/queries/
 import { problemSetProblemQueryOptions } from '../../../../../../modules/queries/problemSetProblem';
 import { createDocumentTitle } from '../../../../../../utils/title';
 import ProblemReportWidget from './ProblemReportWidget/ProblemReportWidget';
-
-import './SingleProblemSetProblemLayout.scss';
 
 export default function SingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
@@ -51,15 +49,14 @@ export default function SingleProblemSetProblemLayout() {
     items: sidebarItems,
     basePath: `/problems/${problemSetSlug}/${problemAlias}`,
     contentHeader: (
-      <Flex asChild alignItems="center" gap={1}>
-        <h2>
-          <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
-            {problemSet.name}
-          </Link>
-          <ChevronRight className="single-problemset-problem-routes__title--chevron" size={20} />
-          {problem.alias}
-        </h2>
-      </Flex>
+      <h2>
+        <BreadcrumbTitle
+          items={[
+            { text: problemSet.name, to: `/problems/${problemSet.slug}` },
+            { text: problem.alias, to: `/problems/${problemSet.slug}/${problem.alias}` },
+          ]}
+        />
+      </h2>
     ),
     stickyWidget1: ProblemReportWidget,
   };

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { Card } from '../../../../components/Card/Card';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
@@ -47,7 +48,17 @@ export default function SubmissionPage() {
   };
 
   return (
-    <Card title={`Submission #${submissionId}`} fullHeight>
+    <Card
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Submissions', to: '/submissions' },
+            { text: `#${submissionId}`, to: `/submissions/${submissionId}` },
+          ]}
+        />
+      }
+      fullHeight
+    >
       {renderSubmission()}
     </Card>
   );
