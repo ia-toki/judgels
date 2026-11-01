@@ -17,14 +17,7 @@ export default function ChapterPage() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Chapters', to: '/admin/chapters' },
-            { text: chapter.name, to: `/admin/chapters/${chapterJid}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Chapters', to: '/admin/chapters' }, { text: chapter.name }]} />}
     >
       <EditableSections>
         <Flex flexDirection="column" gap={8}>

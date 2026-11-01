@@ -55,10 +55,7 @@ export default function ChapterProblemSubmissionPage() {
               text: 'Submissions',
               to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`,
             },
-            {
-              text: `#${submissionId}`,
-              to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions/${submissionId}`,
-            },
+            { text: `#${submissionId}` },
           ]}
         />
       }

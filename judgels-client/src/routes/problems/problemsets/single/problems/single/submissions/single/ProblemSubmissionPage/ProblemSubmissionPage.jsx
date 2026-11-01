@@ -65,10 +65,7 @@ export default function ProblemSubmissionPage() {
         <BreadcrumbTitle
           items={[
             { text: 'Submissions', to: `/problems/${problemSet.slug}/${problemAlias}/submissions` },
-            {
-              text: `#${submissionId}`,
-              to: `/problems/${problemSet.slug}/${problemAlias}/submissions/${submissionId}`,
-            },
+            { text: `#${submissionId}` },
           ]}
         />
       }

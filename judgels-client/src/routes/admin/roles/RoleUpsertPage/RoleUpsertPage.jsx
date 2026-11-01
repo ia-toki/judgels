@@ -78,16 +78,7 @@ export default function RoleUpsertPage() {
   };
 
   return (
-    <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Roles', to: '/admin/roles' },
-            { text: 'Upsert', to: '/admin/roles/-/upsert' },
-          ]}
-        />
-      }
-    >
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Roles', to: '/admin/roles' }, { text: 'Upsert' }]} />}>
       <Flex flexDirection="column" gap={4}>
         {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
         <Form onSubmit={upsertUsers} initialValues={initialValues}>

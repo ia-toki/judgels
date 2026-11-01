@@ -48,6 +48,6 @@ describe('ChapterProblemSubmissionPage', () => {
 
   test('page', async () => {
     await renderComponent();
-    await screen.findByRole('link', { name: '#10' });
+    await screen.findByText('#10');
   });
 });

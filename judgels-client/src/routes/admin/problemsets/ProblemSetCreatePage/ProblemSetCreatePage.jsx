@@ -39,14 +39,7 @@ export default function ProblemSetCreatePage() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Problemsets', to: '/admin/problemsets' },
-            { text: 'New', to: '/admin/problemsets/-/new' },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Problemsets', to: '/admin/problemsets' }, { text: 'New' }]} />}
     >
       <ProblemSetCreateForm
         onSubmit={createProblemSet}

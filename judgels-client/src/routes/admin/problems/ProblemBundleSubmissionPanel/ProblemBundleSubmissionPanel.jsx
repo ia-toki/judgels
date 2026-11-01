@@ -69,7 +69,7 @@ export default function ProblemBundleSubmissionPanel({ problem, submissionId }) 
         <BreadcrumbTitle
           items={[
             { text: 'Submissions', to: `/admin/problems/${problem.slug}/submissions` },
-            { text: `#${submissionId}`, to: `/admin/problems/${problem.slug}/submissions/${submissionId}` },
+            { text: `#${submissionId}` },
           ]}
         />
       </h4>

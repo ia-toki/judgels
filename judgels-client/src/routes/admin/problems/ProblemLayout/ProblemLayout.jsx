@@ -76,14 +76,7 @@ export default function ProblemLayout() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Problems', to: '/admin/problems' },
-            { text: problem.slug, to: `/admin/problems/${problem.slug}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Problems', to: '/admin/problems' }, { text: problem.slug }]} />}
     >
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING}>

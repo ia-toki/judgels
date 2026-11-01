@@ -13,14 +13,7 @@ export default function ArchivePage() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Archives', to: '/admin/archives' },
-            { text: archive.slug, to: `/admin/archives/${archive.slug}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Archives', to: '/admin/archives' }, { text: archive.slug }]} />}
     >
       <ArchiveGeneralSection archive={archive} />
     </ContentCard>

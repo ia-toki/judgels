@@ -23,16 +23,7 @@ export default function ArchiveCreatePage() {
   };
 
   return (
-    <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Archives', to: '/admin/archives' },
-            { text: 'New', to: '/admin/archives/-/new' },
-          ]}
-        />
-      }
-    >
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Archives', to: '/admin/archives' }, { text: 'New' }]} />}>
       <ArchiveCreateForm
         onSubmit={createArchive}
         onCancel={() => navigate({ to: '/admin/archives', ignoreBlocker: true })}

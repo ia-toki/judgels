@@ -20,14 +20,7 @@ export default function ProblemSetPage() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Problemsets', to: '/admin/problemsets' },
-            { text: problemSet.slug, to: `/admin/problemsets/${problemSet.slug}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Problemsets', to: '/admin/problemsets' }, { text: problemSet.slug }]} />}
     >
       <EditableSections>
         <Flex flexDirection="column" gap={8}>

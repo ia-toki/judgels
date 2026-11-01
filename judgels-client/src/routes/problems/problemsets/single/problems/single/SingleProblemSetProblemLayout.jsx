@@ -51,10 +51,7 @@ export default function SingleProblemSetProblemLayout() {
     contentHeader: (
       <h2>
         <BreadcrumbTitle
-          items={[
-            { text: problemSet.name, to: `/problems/${problemSet.slug}` },
-            { text: problem.alias, to: `/problems/${problemSet.slug}/${problem.alias}` },
-          ]}
+          items={[{ text: problemSet.name, to: `/problems/${problemSet.slug}` }, { text: problem.alias }]}
         />
       </h2>
     ),

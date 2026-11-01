@@ -88,10 +88,7 @@ export default function ContestProblemPage() {
     <ContentCard
       title={
         <BreadcrumbTitle
-          items={[
-            { text: 'Problems', to: `/contests/${contestSlug}/problems` },
-            { text: problemAlias, to: `/contests/${contestSlug}/problems/${problemAlias}` },
-          ]}
+          items={[{ text: 'Problems', to: `/contests/${contestSlug}/problems` }, { text: problemAlias }]}
         />
       }
     >

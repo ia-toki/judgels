@@ -53,10 +53,7 @@ export default function ChapterResourcesPage() {
     return (
       <h2 className="chapter-resources-page__title">
         <BreadcrumbTitle
-          items={[
-            { text: course.name, to: `/courses/${course.slug}` },
-            { text: `${chapterAlias}. ${chapter.name}`, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
-          ]}
+          items={[{ text: course.name, to: `/courses/${course.slug}` }, { text: `${chapterAlias}. ${chapter.name}` }]}
         />
       </h2>
     );

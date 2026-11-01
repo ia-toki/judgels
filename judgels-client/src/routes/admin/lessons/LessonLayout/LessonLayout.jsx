@@ -43,16 +43,7 @@ export default function LessonLayout() {
   ];
 
   return (
-    <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Lessons', to: '/admin/lessons' },
-            { text: lesson.slug, to: `/admin/lessons/${lesson.slug}` },
-          ]}
-        />
-      }
-    >
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Lessons', to: '/admin/lessons' }, { text: lesson.slug }]} />}>
       {hasLocalChanges && (
         <Callout intent={Intent.WARNING}>
           <H5>

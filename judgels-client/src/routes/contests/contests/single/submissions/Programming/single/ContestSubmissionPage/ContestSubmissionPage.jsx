@@ -53,10 +53,7 @@ export default function ContestSubmissionPage() {
     <ContentCard
       title={
         <BreadcrumbTitle
-          items={[
-            { text: 'Submissions', to: `/contests/${contest.slug}/submissions` },
-            { text: `#${submissionId}`, to: `/contests/${contest.slug}/submissions/${submissionId}` },
-          ]}
+          items={[{ text: 'Submissions', to: `/contests/${contest.slug}/submissions` }, { text: `#${submissionId}` }]}
         />
       }
     >

@@ -13,14 +13,7 @@ export default function CurriculumPage() {
 
   return (
     <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Curriculum', to: '/admin/curriculums' },
-            { text: curriculum.name, to: `/admin/curriculums/${curriculumJid}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Curriculum', to: '/admin/curriculums' }, { text: curriculum.name }]} />}
     >
       <CurriculumGeneralSection curriculum={curriculum} />
     </ContentCard>

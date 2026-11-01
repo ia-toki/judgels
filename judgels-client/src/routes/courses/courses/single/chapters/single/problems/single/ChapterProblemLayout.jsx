@@ -90,10 +90,7 @@ export default function ChapterProblemLayout() {
             items={[
               { icon: <Home title={course.name} />, to: `/courses/${course.slug}` },
               { text: chapterAlias, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
-              {
-                text: `${problemAlias}. ${problemTitle ?? ''}`,
-                to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`,
-              },
+              { text: `${problemAlias}. ${problemTitle ?? ''}` },
             ]}
           />
         </h2>
