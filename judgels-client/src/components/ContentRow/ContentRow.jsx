@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import './ContentRow.scss';
 
-export function ContentRow({ className, to, leading, title, meta, badges, status }) {
+export function ContentRow({ className, to, leading, title, meta, description, badges, status }) {
   return (
     <Flex asChild alignItems="center" gap={3} paddingX={5} paddingY={4}>
       <Link className={classNames('content-row', className)} to={to}>
@@ -19,6 +19,7 @@ export function ContentRow({ className, to, leading, title, meta, badges, status
                 {meta}
               </div>
             )}
+            {description && <div className="content-row__description">{description}</div>}
           </Flex>
           {badges && (
             <Flex className="content-row__badges" flexWrap="wrap" gap={1}>
