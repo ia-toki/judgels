@@ -1,9 +1,3 @@
 .layout-full-width-page {
-  min-height: calc(100vh - 195px);
-}
-
-@media only screen and (max-width: 1024px) {
-  .layout-full-width-page {
-    min-height: calc(100vh - 175px);
-  }
+  min-height: var(--app-page-min-height);
 }

@@ -2,7 +2,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
-import { Card } from '../../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/userRating';
@@ -19,7 +19,7 @@ export default function ContestHistoryPage() {
     return <LoadingState />;
   }
 
-  return <Card title="Contest history">{renderTable(response)}</Card>;
+  return <ContentCard title="Contest history">{renderTable(response)}</ContentCard>;
 }
 
 function renderTable(response) {

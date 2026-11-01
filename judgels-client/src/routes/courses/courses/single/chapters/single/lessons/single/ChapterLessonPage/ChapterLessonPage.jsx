@@ -1,5 +1,5 @@
 import { ChevronRight } from '@blueprintjs/icons';
-import { Box, Flex } from '@blueprintjs/labs';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -105,12 +105,12 @@ export default function ChapterLessonPage() {
   };
 
   return (
-    <Box className="chapter-lesson-page" flex={1}>
+    <Flex className="chapter-lesson-page" flexDirection="column" flex={1}>
       {renderHeader()}
       <ContentCard>
         {renderStatementLanguageWidget()}
         {renderStatement()}
       </ContentCard>
-    </Box>
+    </Flex>
   );
 }

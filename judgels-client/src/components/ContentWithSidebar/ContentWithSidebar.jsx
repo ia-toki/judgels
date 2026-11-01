@@ -1,28 +1,43 @@
-import { Box } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
 
+import { ContentCard, PageContentContext } from '../ContentCard/ContentCard';
 import { Sidebar } from '../Sidebar/Sidebar';
 
 import './ContentWithSidebar.scss';
 
-function ContentAndSidebar({ sidebarElement, contentElement, stickyWidget, smallContent }) {
+function ContentAndSidebar({
+  headerElement,
+  sidebarElement,
+  bannerElement,
+  contentElement,
+  stickyWidget,
+  smallContent,
+}) {
   const responsive = window.matchMedia && window.matchMedia('(max-width: 750px)').matches;
   return (
     <div className="content-with-sidebar">
-      <Box className="content-with-sidebar__sidebar" flexShrink={0} marginBottom={4}>
+      {headerElement && <div className="content-with-sidebar__header">{headerElement}</div>}
+      <Box className="content-with-sidebar__sidebar" marginBottom={4}>
         {sidebarElement}
         {!responsive && stickyWidget}
       </Box>
-      <Box
-        flexGrow={1}
+      <Flex
         className={classNames('content-with-sidebar__content', {
           'content-with-sidebar__content--small': smallContent,
         })}
+        flexDirection="column"
+        gap={2}
       >
-        {contentElement}
+        {bannerElement}
+        <ContentCard className="content-with-sidebar__card">
+          <div className="content-with-sidebar__card-content">
+            <PageContentContext.Provider value={true}>{contentElement}</PageContentContext.Provider>
+          </div>
+        </ContentCard>
         {responsive && stickyWidget}
-      </Box>
+      </Flex>
     </div>
   );
 }
@@ -34,8 +49,8 @@ function resolveUrl(parentPath, childPath) {
 export default function ContentWithSidebar({
   items,
   title,
-  action,
   contentHeader,
+  contentBanner,
   stickyWidget1,
   stickyWidget2,
   smallContent,
@@ -47,18 +62,12 @@ export default function ContentWithSidebar({
   const renderSidebar = () => {
     const sidebarItems = items
       .filter(item => !item.disabled)
-      .map(item => ({
-        path: item.path,
-        titleIcon: item.titleIcon,
-        title: item.title,
-        children: item.children && item.children.filter(child => !child.disabled),
-      }));
+      .map(item => ({ ...item, children: item.children && item.children.filter(child => !child.disabled) }));
     const sidebarWidget = renderSidebarWidget();
 
     return (
       <Sidebar
         title={title}
-        action={action}
         activeItemPath={getActiveItemPath()}
         items={sidebarItems}
         widget={sidebarWidget}
@@ -101,6 +110,9 @@ export default function ContentWithSidebar({
     if (!activeItem || !activeItem.widgetComponent) {
       return null;
     }
+    if (activeItem.widgetExact && getRelativePath() !== activeItem.path) {
+      return null;
+    }
 
     const Widget = activeItem.widgetComponent;
     return (
@@ -111,21 +123,16 @@ export default function ContentWithSidebar({
     );
   };
 
-  const renderContent = () => {
-    return (
-      <div>
-        {contentHeader}
-        {children}
-      </div>
-    );
-  };
-
   const onResolveItemUrl = itemPath => {
     return resolveUrl(basePath, itemPath);
   };
 
+  const getRelativePath = () => {
+    return location.pathname.slice(basePath.length).replace(/^\/|\/$/g, '');
+  };
+
   const getActiveItemPath = () => {
-    const relativePath = location.pathname.slice(basePath.length).replace(/^\//, '');
+    const relativePath = getRelativePath();
 
     const itemPaths = items.flatMap(item => (item.children ? item.children.map(child => child.path) : [item.path]));
     const matchedPath = itemPaths
@@ -137,8 +144,10 @@ export default function ContentWithSidebar({
 
   return (
     <ContentAndSidebar
+      headerElement={contentHeader}
       sidebarElement={renderSidebar()}
-      contentElement={renderContent()}
+      bannerElement={contentBanner}
+      contentElement={children}
       stickyWidget={renderStickyWidget()}
       smallContent={smallContent}
     />

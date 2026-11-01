@@ -1,10 +1,11 @@
 import { Intent } from '@blueprintjs/core';
 import { SendMessage } from '@blueprintjs/icons';
-import { Box } from '@blueprintjs/labs';
+import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
 import { courseBySlugQueryOptions } from '../../../../../modules/queries/course';
 import { courseChaptersQueryOptions } from '../../../../../modules/queries/courseChapter';
@@ -33,11 +34,14 @@ export default function CourseOverview() {
   };
 
   return (
-    <Box className="course-overview" flex={1}>
+    <Flex className="course-overview" flexDirection="column" flex={1}>
       <h2>{course.name}</h2>
-      <HtmlText>{course.description}</HtmlText>
-      <br />
-      {renderStartButton()}
-    </Box>
+      <ContentCard>
+        <Flex flexDirection="column" gap={4}>
+          <HtmlText>{course.description}</HtmlText>
+          {renderStartButton()}
+        </Flex>
+      </ContentCard>
+    </Flex>
   );
 }

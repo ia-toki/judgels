@@ -2,7 +2,7 @@ import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
-import { Card } from '../../../../components/Card/Card';
+import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { ContentList } from '../../../../components/ContentList/ContentList';
 import { LoadingContentRow } from '../../../../components/ContentRow/LoadingContentRow';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -106,12 +106,12 @@ export default function ProblemSetsPage() {
   };
 
   return (
-    <Card title="Browse problemsets">
+    <ContentCard title="Browse problemsets">
       <Flex flexDirection="column" gap={4}>
         {renderHeader()}
         {renderProblemSets()}
         {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
       </Flex>
-    </Card>
+    </ContentCard>
   );
 }

@@ -1,0 +1,13 @@
+.card-heading__title {
+  min-width: 0;
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+  line-height: 9px;
+}
+
+// As tall as the title, so that a button or subtitle does not make the row taller.
+.card-heading__action {
+  flex-shrink: 0;
+  height: 9px;
+  white-space: nowrap;
+}

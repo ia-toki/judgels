@@ -4,3 +4,9 @@
   margin-block: -4px;
   color: $dark-secondary-background-color;
 }
+
+// Only the current page wraps: the parent is a short label that would otherwise break mid-word.
+.breadcrumb-title__parent,
+.breadcrumb-title__separator {
+  flex-shrink: 0;
+}

@@ -27,17 +27,15 @@ export default function ContestOverviewPage() {
       return null;
     }
 
-    return (
-      <ContentCard>
-        <HtmlText profilesMap={profilesMap}>{description}</HtmlText>
-      </ContentCard>
-    );
+    return <HtmlText profilesMap={profilesMap}>{description}</HtmlText>;
   };
 
   return (
-    <Flex flexDirection="column" gap={4}>
-      {renderRegistration()}
-      {renderDescription()}
-    </Flex>
+    <ContentCard title="Overview">
+      <Flex flexDirection="column" gap={4}>
+        {renderRegistration()}
+        {renderDescription()}
+      </Flex>
+    </ContentCard>
   );
 }

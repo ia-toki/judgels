@@ -1,13 +1,3 @@
-.single-contest-routes__header {
-  margin-top: -2px;
-}
-
-.tab-item-with-widget {
-  width: 240px;
-}
-
-@media only screen and (max-width: 1280px) {
-  .tab-item-with-widget {
-    width: 190px;
-  }
+.single-contest-routes__header .bp6-tag {
+  flex-shrink: 0;
 }

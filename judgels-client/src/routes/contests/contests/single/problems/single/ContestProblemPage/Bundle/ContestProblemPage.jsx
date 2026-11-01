@@ -2,6 +2,7 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
@@ -76,7 +77,7 @@ export default function ContestProblemPage() {
   };
 
   return (
-    <ContentCard>
+    <ContentCard title={<BreadcrumbTitle parent="Problems" current={problemAlias} />}>
       {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>

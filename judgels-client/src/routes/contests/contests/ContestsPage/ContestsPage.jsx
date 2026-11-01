@@ -87,7 +87,7 @@ export default function ContestsPage() {
   };
 
   return (
-    <Card title="Contests">
+    <Card title="Contests" fullHeight>
       {renderHeader()}
       {renderContests()}
       {renderPagination()}

@@ -171,6 +171,11 @@ table.bp6-html-table {
   }
 }
 
+// Blueprint stacks a focused button below an active one: https://github.com/palantir/blueprint/issues/6889
+.bp6-button-group .bp6-button:focus-visible {
+  z-index: 13 !important;
+}
+
 .bp6-callout {
   padding: 10px 12px 9px;
 

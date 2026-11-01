@@ -2,6 +2,10 @@
 
 .chapter-lesson-page {
   max-width: 865px;
+
+  > .content-card {
+    flex-grow: 1;
+  }
 }
 
 .chapter-lesson-page__title {

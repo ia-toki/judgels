@@ -1,4 +1,4 @@
-import { Card } from '../../../../../../components/Card/Card';
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 
 export function ProblemStatsPanel({ userStats: { totalScores, totalProblemsTried, totalProblemVerdictsMap } }) {
   const renderVerdictsMap = () => {
@@ -16,7 +16,7 @@ export function ProblemStatsPanel({ userStats: { totalScores, totalProblemsTried
   };
 
   return (
-    <Card title="Problem stats">
+    <ContentCard title="Problem stats">
       <ul>
         <li>
           Total problem scores: <b>{totalScores}</b> pts
@@ -26,6 +26,6 @@ export function ProblemStatsPanel({ userStats: { totalScores, totalProblemsTried
           {renderVerdictsMap()}
         </li>
       </ul>
-    </Card>
+    </ContentCard>
   );
 }

@@ -1,88 +1,73 @@
 @use '../../styles/base' as *;
 
-.card-sidebar {
-  *:focus {
-    outline: none;
-  }
+.sidebar {
+  font-family: $accent-font;
+}
 
-  .bp6-icon {
-    padding-bottom: 1px;
-  }
+a.sidebar__item {
+  min-height: 40px;
+  padding: 8px;
+  border-radius: 3px;
+  color: inherit;
+  text-decoration: none;
 
-  .bp6-card.card__content {
-    padding: 0;
-  }
-
-  .bp6-tab-list {
-    width: 100%;
-  }
-
-  .bp6-tab-indicator {
-    border-radius: 0 !important;
-
-    .bp6-light & {
-      background-color: $secondary-background-color !important;
-      border-left: 3px solid $primary-color;
-    }
+  &:hover {
+    color: inherit;
+    background-color: $tertiary-background-color;
 
     .bp6-dark & {
-      background-color: $dark-secondary-background-color !important;
-      border-left: 3px solid $gray3;
+      background-color: $dark-tertiary-background-color;
+    }
+
+    .bp6-dark &.sidebar__item--active {
+      background-color: $dark-secondary-background-color;
     }
   }
 
-  .bp6-tab {
-    position: relative;
-    padding-left: 20px !important;
-    border-radius: 0 !important;
-    line-height: 50px;
-    height: 50px;
+  &--muted {
+    color: #bcc0c2;
 
-    &:hover {
-      .bp6-light & {
-        background-color: $tertiary-background-color !important;
-      }
-
-      .bp6-dark & {
-        background-color: $dark-tertiary-background-color !important;
-      }
+    .bp6-dark & {
+      color: #5d6c79;
     }
 
-    &[aria-selected='true'] {
-      font-weight: $font-weight-bold;
-
-      .bp6-light & {
-        color: $text-color;
-      }
+    .bp6-tag {
+      background-color: #ced4d8;
 
       .bp6-dark & {
-        color: inherit;
+        background-color: #5f6d79;
       }
     }
+  }
 
-    &[aria-selected='false'] {
-      .bp6-light & {
-        color: $primary-color;
-      }
-    }
+  // After --muted, because the current item keeps its full contrast.
+  &--active {
+    color: inherit;
+    background-color: $tertiary-background-color;
 
-    a {
-      width: 100%;
-
-      .bp6-dark & {
-        color: $dark-text-color !important;
-      }
+    .bp6-dark & {
+      color: inherit;
+      background-color: $dark-secondary-background-color;
     }
   }
 }
 
-.card-sidebar__group {
+.sidebar__item-title {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.sidebar__group {
+  padding: 0 8px;
   line-height: 30px;
-  height: 30px;
   font-weight: $font-weight-bold;
   font-size: $font-size-small;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+
+  &:not(:first-child) {
+    margin-top: 16px;
+  }
 
   .bp6-light & {
     color: $secondary-text-color;
@@ -93,44 +78,32 @@
   }
 }
 
-.card-sidebar__arrow {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.sidebar .content-card.bp6-card {
+  padding: 0 8px;
+  background: none;
+  box-shadow: none;
+}
 
-  .bp6-light & {
-    color: $primary-color !important;
+.sidebar__responsive {
+  display: none;
+
+  .bp6-overlay-start-focus-trap,
+  .bp6-overlay-end-focus-trap {
+    outline: none;
   }
 }
 
-.card-sidebar__full {
-  display: block;
-}
-
-.card-sidebar__responsive {
-  display: none !important;
+.sidebar__responsive-items {
+  width: 270px;
+  padding: 4px;
 }
 
 @media only screen and (max-width: 750px) {
-  .card-sidebar__full {
-    display: none !important;
+  .sidebar__full {
+    display: none;
   }
 
-  .card-sidebar__responsive {
-    display: block !important;
-    width: 200px;
-    top: -15px;
-
-    .bp6-tab-list {
-      left: 0;
-      width: 270px;
-    }
-  }
-
-  .card-sidebar__responsive-menu {
-    .bp6-icon {
-      padding-bottom: 0 !important;
-    }
+  .sidebar__responsive {
+    display: block;
   }
 }

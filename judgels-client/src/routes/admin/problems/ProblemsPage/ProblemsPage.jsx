@@ -10,16 +10,12 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
 import Pagination from '../../../../components/Pagination/Pagination';
-import ProblemTagFilter from '../../../../components/ProblemTagFilter/ProblemTagFilter';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { problemTypeNamesMap } from '../../../../modules/api/problem';
 import { ProblemAdminRole } from '../../../../modules/api/problemAdminRole';
 import { problemsQueryOptions } from '../../../../modules/queries/problem';
-import { problemAllTagsQueryOptions } from '../../../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
-
-import './ProblemsPage.scss';
 
 const PAGE_SIZE = 20;
 
@@ -108,15 +104,10 @@ export default function ProblemsPage() {
   };
 
   return (
-    <Flex className="admin-problems-page" alignItems="start" gap={2}>
-      <ContentCard className="admin-problems-page__problems" title="Problems">
-        {renderAction()}
-        {renderProblems()}
-        {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
-      </ContentCard>
-      <div className="admin-problems-page__filter">
-        <ProblemTagFilter queryOptions={problemAllTagsQueryOptions()} />
-      </div>
-    </Flex>
+    <ContentCard title="Problems">
+      {renderAction()}
+      {renderProblems()}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
   );
 }

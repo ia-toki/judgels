@@ -1,8 +1,7 @@
-import { Button } from '@blueprintjs/core';
-import { ChevronLeft, ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
+import { ChevronRight, Document, Layers, ManuallyEnteredData } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
+import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../../../components/ContentWithSidebar/ContentWithSidebar';
@@ -17,17 +16,12 @@ import './SingleProblemSetProblemLayout.scss';
 
 export default function SingleProblemSetProblemLayout() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
-  const navigate = useNavigate();
   const { data: problemSet } = useSuspenseQuery(problemSetBySlugQueryOptions(problemSetSlug));
   const { data: problem } = useSuspenseQuery(problemSetProblemQueryOptions(problemSet.jid, problemAlias));
 
   useEffect(() => {
     document.title = createDocumentTitle(`${problemSet.name} / ${problemAlias}`);
   }, [problemSet.name, problemAlias]);
-
-  const clickBack = () => {
-    navigate({ to: `/problems/${problemSet.slug}` });
-  };
 
   const sidebarItems = [
     {
@@ -56,14 +50,9 @@ export default function SingleProblemSetProblemLayout() {
     title: 'Problem Menu',
     items: sidebarItems,
     basePath: `/problems/${problemSetSlug}/${problemAlias}`,
-    action: (
-      <Button small icon={<ChevronLeft />} onClick={clickBack}>
-        Back
-      </Button>
-    ),
     contentHeader: (
       <Flex asChild alignItems="center" gap={1}>
-        <h2 className="single-problemset-problem-routes__title">
+        <h2>
           <Link className="single-problemset-problem-routes__title--link" to={`/problems/${problemSet.slug}`}>
             {problemSet.name}
           </Link>

@@ -1,7 +1,7 @@
 @use '../../../styles/base' as *;
 
 .home-banner {
-  margin: -35px -10px 20px -10px;
+  margin: calc(-1 * var(--app-content-padding-top)) -10px 20px -10px;
   padding-top: 40px;
   padding-bottom: 20px;
 
@@ -65,10 +65,6 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .home-banner {
-    margin-top: 0;
-  }
-
   .home-banner__contents {
     max-width: 100%;
   }
@@ -84,11 +80,5 @@
 @media only screen and (max-width: 370px) {
   .home-banner__button-register {
     margin-right: 0;
-  }
-}
-
-@media only screen and (max-width: 750px) {
-  .home-banner {
-    margin-top: -15px;
   }
 }

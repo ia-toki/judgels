@@ -17,11 +17,15 @@ import { Outlet } from '@tanstack/react-router';
 
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
+import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
 import { isTLX } from '../../conf';
 import { ContestAdminRole } from '../../modules/api/contestAdminRole';
 import { SystemAdminRole } from '../../modules/api/systemAdminRole';
 import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
+import { problemAllTagsQueryOptions } from '../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
+
+const AdminProblemTagFilter = () => <ProblemTagFilter queryOptions={problemAllTagsQueryOptions()} />;
 
 export default function AdminLayout() {
   const {
@@ -70,6 +74,8 @@ export default function AdminLayout() {
           title: 'Problems',
           // Problem management is in beta: only system admins see it for now.
           visible: isAccountAdmin,
+          widgetComponent: AdminProblemTagFilter,
+          widgetExact: true,
         },
         {
           path: 'contests',

@@ -5,7 +5,6 @@ import './Footer.scss';
 export function Footer() {
   return (
     <div className="footer">
-      <hr />
       <small className="footer__text">
         <Flex justifyContent="end">
           <div>
