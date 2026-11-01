@@ -15,16 +15,7 @@ export default function CoursePage() {
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
 
   return (
-    <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Courses', to: '/admin/courses' },
-            { text: course.slug, to: `/admin/courses/${course.slug}` },
-          ]}
-        />
-      }
-    >
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Courses', to: '/admin/courses' }, { text: course.slug }]} />}>
       <EditableSections>
         <Flex flexDirection="column" gap={8}>
           <CourseGeneralSection course={course} />

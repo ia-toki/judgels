@@ -73,10 +73,7 @@ export default function ProblemItemPage() {
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <BreadcrumbTitle
-            items={[
-              { text: 'Items', to: `/admin/problems/${problemSlug}/items` },
-              { text: renderTitle(), to: `/admin/problems/${problemSlug}/items/${itemJid}` },
-            ]}
+            items={[{ text: 'Items', to: `/admin/problems/${problemSlug}/items` }, { text: renderTitle() }]}
           />
           {renderLanguageSelect()}
         </h4>

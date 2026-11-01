@@ -23,16 +23,7 @@ export default function CourseCreatePage() {
   };
 
   return (
-    <ContentCard
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Courses', to: '/admin/courses' },
-            { text: 'New', to: '/admin/courses/-/new' },
-          ]}
-        />
-      }
-    >
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Courses', to: '/admin/courses' }, { text: 'New' }]} />}>
       <CourseCreateForm
         onSubmit={createCourse}
         onCancel={() => navigate({ to: '/admin/courses', ignoreBlocker: true })}

@@ -49,14 +49,7 @@ export default function SubmissionPage() {
 
   return (
     <Card
-      title={
-        <BreadcrumbTitle
-          items={[
-            { text: 'Submissions', to: '/submissions' },
-            { text: `#${submissionId}`, to: `/submissions/${submissionId}` },
-          ]}
-        />
-      }
+      title={<BreadcrumbTitle items={[{ text: 'Submissions', to: '/submissions' }, { text: `#${submissionId}` }]} />}
       fullHeight
     >
       {renderSubmission()}

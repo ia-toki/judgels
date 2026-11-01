@@ -51,6 +51,6 @@ describe('ContestSubmissionPage', () => {
   test('page', async () => {
     await renderComponent();
 
-    expect(await screen.findByRole('link', { name: '#10' })).toBeInTheDocument();
+    expect(await screen.findByText('#10')).toBeInTheDocument();
   });
 });

@@ -18,11 +18,11 @@
     margin-right: 0;
   }
 
-  &:hover {
+  &:not(.bp6-breadcrumb-current):hover {
     color: $primary-color;
 
     .bp6-dark & {
-      color: $dark-strong-text-color;
+      color: $dark-link-color;
     }
   }
 }

@@ -13,26 +13,23 @@ describe('BreadcrumbTitle', () => {
             items={[
               { icon: <Home title="My course" />, to: '/courses/my-course' },
               { text: 'Chapter', to: '/courses/my-course/chapters/A' },
-              { text: 'Lesson', to: '/courses/my-course/chapters/A/lessons/B' },
+              { text: 'Lesson' },
             ]}
           />
         </h2>
       </TestRouter>
     );
-    await screen.findByRole('link', { name: 'Lesson' });
+    await screen.findByRole('link', { name: 'Chapter' });
   };
 
-  it('links every item, with the last one as the current page', async () => {
+  it('links every item but the last one, which is the current page', async () => {
     await renderComponent();
 
     expect(screen.getByRole('link', { name: 'My course' })).toHaveAttribute('href', '/courses/my-course');
     expect(screen.getByRole('link', { name: 'Chapter' })).toHaveAttribute('href', '/courses/my-course/chapters/A');
     expect(screen.getByRole('link', { name: 'Chapter' })).not.toHaveClass('bp6-breadcrumb-current');
-    expect(screen.getByRole('link', { name: 'Lesson' })).toHaveAttribute(
-      'href',
-      '/courses/my-course/chapters/A/lessons/B'
-    );
-    expect(screen.getByRole('link', { name: 'Lesson' })).toHaveClass('bp6-breadcrumb-current');
+    expect(screen.queryByRole('link', { name: 'Lesson' })).not.toBeInTheDocument();
+    expect(screen.getByText('Lesson')).toHaveClass('bp6-breadcrumb-current');
   });
 
   it('keeps the items as the name of the heading around it', async () => {

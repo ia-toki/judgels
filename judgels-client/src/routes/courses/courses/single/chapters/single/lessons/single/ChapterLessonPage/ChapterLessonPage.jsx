@@ -47,7 +47,7 @@ export default function ChapterLessonPage() {
             items={[
               { text: course.name, to: `/courses/${course.slug}` },
               { text: `${chapterAlias}. ${chapter.name}`, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
-              { text: lessonAlias, to: `/courses/${course.slug}/chapters/${chapterAlias}/lessons/${lessonAlias}` },
+              { text: lessonAlias },
             ]}
           />
         </h2>
