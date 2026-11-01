@@ -21,7 +21,7 @@ const verdictDisplayName = {
   [Verdict.WRONG_ANSWER]: 'Incorrect',
 };
 
-export function VerdictTag({ verdict }) {
+export function ItemVerdictTag({ verdict }) {
   const intent = verdictIntentMap[verdict] || Intent.NONE;
   let displayName = verdictDisplayName[verdict] || verdict;
   if (verdict === Verdict.PENDING_REGRADE) {

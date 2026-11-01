@@ -9,17 +9,15 @@ import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedCha
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-const keyStyles = { width: '250px' };
-
 const slugField = {
-  keyStyles,
+  fixedKey: true,
   name: 'slug',
   label: 'Slug',
   validate: composeValidators(Required, Slug),
 };
 
 const additionalNoteField = {
-  keyStyles,
+  fixedKey: true,
   name: 'additionalNote',
   label: 'Additional note',
 };

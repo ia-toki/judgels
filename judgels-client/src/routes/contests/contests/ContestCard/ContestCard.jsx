@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 
 import { ContentRow } from '../../../../components/ContentRow/ContentRow';
-import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
+import { ContestRoleTag } from '../../../../components/ContestRoleTag/ContestRoleTag';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { FormattedDuration } from '../../../../components/FormattedDuration/FormattedDuration';
 import { TimeanddateLink } from '../../../../components/TimeanddateLink/TimeanddateLink';

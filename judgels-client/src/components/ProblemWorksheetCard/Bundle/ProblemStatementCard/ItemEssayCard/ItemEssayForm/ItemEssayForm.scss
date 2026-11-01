@@ -1,3 +1,5 @@
+@use '../../../../../../styles/base' as *;
+
 .item-essay-form {
   .text-area {
     width: 80%;
@@ -9,17 +11,17 @@
 
     &.readonly {
       resize: none;
-      background-color: rgba(206, 217, 224, 0.5);
+      background-color: $readonly-background-color;
     }
   }
 
   .essay-button {
-    height: 35px;
+    height: $control-height;
     flex-shrink: 0 !important;
   }
 
   .essay-callout {
-    height: 35px;
+    height: $control-height;
     line-height: 14px;
 
     .bp6-icon {
@@ -28,7 +30,7 @@
   }
 
   .essay-callout-edit {
-    height: 35px;
+    height: $control-height;
     background-color: white;
     color: white;
   }

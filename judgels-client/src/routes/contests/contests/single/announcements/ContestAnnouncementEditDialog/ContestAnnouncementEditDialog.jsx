@@ -7,7 +7,7 @@ import ContestAnnouncementEditForm from '../ContestAnnouncementEditForm/ContestA
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-import './ContestAnnouncementEditDialog.scss';
+import '../ContestAnnouncementDialog.scss';
 
 export function ContestAnnouncementEditDialog({ contest, announcement, onToggleEditDialog }) {
   const updateAnnouncementMutation = useMutation(updateContestAnnouncementMutationOptions(contest.jid));
@@ -52,7 +52,7 @@ export function ContestAnnouncementEditDialog({ contest, announcement, onToggleE
 
   return (
     <Dialog
-      className="contest-announcement-edit-dialog"
+      className="contest-announcement-dialog"
       isOpen={!!announcement}
       onClose={closeDialog}
       title="Edit announcement"

@@ -4,7 +4,7 @@ import './SingleColumnLayout.scss';
 
 export function SingleColumnLayout({ children }) {
   return (
-    <Flex className="layout-single-col" flexDirection="column" margin="auto">
+    <Flex className="single-column-layout" flexDirection="column" margin="auto">
       {children}
     </Flex>
   );

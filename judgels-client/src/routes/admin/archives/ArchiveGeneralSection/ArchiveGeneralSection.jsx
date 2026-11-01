@@ -16,8 +16,6 @@ export function ArchiveGeneralSection({ archive }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'slug', title: 'Slug', value: archive.slug },
     { key: 'name', title: 'Name', value: archive.name },
@@ -58,7 +56,7 @@ export function ArchiveGeneralSection({ archive }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

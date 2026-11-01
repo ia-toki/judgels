@@ -1,12 +1,12 @@
 @use '../../../../styles/base' as *;
 
-.form-login__actions-register {
+.login-form__register {
   margin-left: auto;
   margin-top: auto;
   margin-bottom: auto;
   font-size: $font-size-small;
 }
 
-.form-login__actions-forgot-password {
+.login-form__forgot-password {
   font-size: $font-size-small;
 }

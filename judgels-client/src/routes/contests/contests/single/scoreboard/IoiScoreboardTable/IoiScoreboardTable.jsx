@@ -3,8 +3,6 @@ import classNames from 'classnames';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './IoiScoreboardTable.scss';
-
 export function IoiScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);

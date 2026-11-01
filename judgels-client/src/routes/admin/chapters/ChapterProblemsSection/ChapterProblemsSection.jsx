@@ -62,9 +62,9 @@ export function ChapterProblemsSection({ chapter }) {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '50px' }}>Alias</th>
+            <th className="col-narrow">Alias</th>
             <th>Slug</th>
-            <th style={{ width: '150px' }}>Type</th>
+            <th className="col-medium">Type</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

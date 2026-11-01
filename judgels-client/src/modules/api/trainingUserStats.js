@@ -10,9 +10,4 @@ export const trainingUserStatsAPI = {
     const params = stringify({ username });
     return get(`${baseStatsURL}/users/?${params}`);
   },
-
-  getTopUserStats: (page, pageSize) => {
-    const params = stringify({ page, pageSize });
-    return get(`${baseStatsURL}/users/top?${params}`);
-  },
 };

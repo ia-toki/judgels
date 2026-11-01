@@ -1,5 +1,7 @@
+@use '../../styles/base' as *;
+
 .language-widget-wrapper {
-  max-width: 800px;
+  max-width: $statement-width;
   width: 100%;
   margin-left: auto;
   margin-right: auto;

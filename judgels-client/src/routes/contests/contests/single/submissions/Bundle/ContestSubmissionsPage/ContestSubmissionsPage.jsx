@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, HTMLTable, Intent } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
@@ -9,8 +9,7 @@ import { FormattedRelative } from '../../../../../../../components/FormattedRela
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { FormattedAnswer } from '../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
-import { VerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
-import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
+import { ItemVerdictTag } from '../../../../../../../components/SubmissionDetails/Bundle/ItemVerdictTag/ItemVerdictTag';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
@@ -18,10 +17,9 @@ import {
   regradeContestItemSubmissionsMutationOptions,
 } from '../../../../../../../modules/queries/contestItemSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
+import { SubmissionFilterWidget } from '../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
-
-import '../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
 const PAGE_SIZE = 20;
 
@@ -74,13 +72,15 @@ function ContestSubmissionsPage() {
                 <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
               </td>
               {canManage && (
-                <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
+                <td className="col-verdict">
+                  {item.grading ? <ItemVerdictTag verdict={item.grading.verdict} /> : '-'}
+                </td>
               )}
               <td>
                 <FormattedRelative value={item.time} />
               </td>
               <td className="col-action">
-                <ButtonGroup minimal className="action-button-group">
+                <ButtonGroup minimal>
                   <Link to={`/contests/${contest.slug}/submissions/users/${profilesMap[item.userJid].username}`}>
                     <Button icon={<Search />} intent={Intent.NONE} small />
                   </Link>
@@ -146,7 +146,7 @@ function ContestSubmissionsPage() {
     <ContentCard title="Submissions">
       <Flex justifyContent="space-between" flexWrap="wrap">
         {renderRegradeAllButton()}
-        <div style={{ marginLeft: 'auto' }}>{renderFilterWidget()}</div>
+        <Box marginLeft="auto">{renderFilterWidget()}</Box>
       </Flex>
       {renderSubmissions()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}

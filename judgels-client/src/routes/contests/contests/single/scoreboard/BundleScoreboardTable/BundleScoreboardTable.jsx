@@ -3,8 +3,6 @@ import classNames from 'classnames';
 import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './BundleScoreboardTable.scss';
-
 export function BundleScoreboardTable({ userJid, scoreboard, profilesMap, onClickTotalScoresCell }) {
   const renderData = content => {
     let rows = content.entries.map(renderRow);

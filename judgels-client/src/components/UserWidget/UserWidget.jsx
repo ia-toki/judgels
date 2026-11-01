@@ -35,12 +35,12 @@ export function UserWidget({ user, profile, items, homeRoute }) {
       </>
     );
 
-    const menu = <Menu className="widget-user__menu">{menuItems}</Menu>;
+    const menu = <Menu className="user-widget__menu">{menuItems}</Menu>;
 
     const popover = (
-      <Popover className="widget-user__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
-        <div className="widget-user__profile">
-          <span className="widget-user__user__username">
+      <Popover className="user-widget__avatar-menu" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
+        <div className="user-widget__profile">
+          <span className="user-widget__username">
             <span data-key="username" className={getRatingClass(profile.rating)}>
               {profile.username}
             </span>
@@ -56,14 +56,14 @@ export function UserWidget({ user, profile, items, homeRoute }) {
         {items.map(item => (
           <MenuItemLink key={item.route.path} text={item.title} to={item.route.path} />
         ))}
-        <MenuDivider className="widget-user__menu-helper" />
+        <MenuDivider className="user-widget__menu-helper" />
         {menuItems}
       </Menu>
     );
 
     const responsivePopover = (
       <Popover
-        className="widget-user__burger"
+        className="user-widget__burger"
         content={responsiveMenu}
         position={Position.BOTTOM_RIGHT}
         usePortal={false}
@@ -74,8 +74,8 @@ export function UserWidget({ user, profile, items, homeRoute }) {
 
     return (
       <Navbar.Group align={Alignment.RIGHT}>
-        <div className="widget-user__avatar-wrapper">
-          <img src={avatarUrl} alt="avatar" className="widget-user__avatar" />
+        <div className="user-widget__avatar-wrapper">
+          <img src={avatarUrl} alt="avatar" className="user-widget__avatar" />
         </div>
         {popover}
         {responsivePopover}
@@ -86,13 +86,13 @@ export function UserWidget({ user, profile, items, homeRoute }) {
   const renderForGuest = () => {
     return (
       <Navbar.Group align={Alignment.RIGHT}>
-        <Box className="widget-user__link" marginRight={5}>
+        <Box className="user-widget__link" marginRight={5}>
           <Link data-key="login" to="/login">
             Log in
           </Link>
         </Box>
         {isTLX() && (
-          <Box className="widget-user__link" marginRight={5}>
+          <Box className="user-widget__link" marginRight={5}>
             <Link data-key="register" to="/register">
               Register
             </Link>
@@ -105,16 +105,16 @@ export function UserWidget({ user, profile, items, homeRoute }) {
 
   const renderGuestResponsiveMenu = () => {
     const menu = (
-      <Menu className="widget-user__menu">
+      <Menu className="user-widget__menu">
         <MenuItemLink text={homeRoute.title} to="/" />
         {items.map(item => (
-          <MenuItemLink text={item.title} to={item.route.path} />
+          <MenuItemLink key={item.route.path} text={item.title} to={item.route.path} />
         ))}
       </Menu>
     );
 
     return (
-      <Popover className="widget-user__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
+      <Popover className="user-widget__burger" content={menu} position={Position.BOTTOM_RIGHT} usePortal={false}>
         <IconMenu />
       </Popover>
     );

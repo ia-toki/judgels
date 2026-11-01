@@ -1,22 +1,13 @@
 @use '../../../../../../../../styles/base' as *;
 
-.chapter-resources-page {
-  max-width: 865px;
-
-  > .content-card {
-    flex-grow: 1;
-  }
-}
-
 .chapter-resources-page__title {
+  @include page-title-compact;
   margin-bottom: 16px;
-  font-size: $font-size-page-title-compact !important;
-  line-height: 24px !important;
 }
 
 .chapter-resources-page__section-title {
-  margin: 0 -20px;
-  padding: 0 20px 8px;
+  margin: 0 (-$card-padding);
+  padding: 0 $card-padding 8px;
   border-bottom: 1px solid $divider-color;
   font-size: $font-size-small !important;
   font-weight: $font-weight-bold !important;

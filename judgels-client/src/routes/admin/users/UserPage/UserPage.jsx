@@ -13,8 +13,6 @@ export default function UserPage() {
 
   const { data: user } = useSuspenseQuery(userByUsernameQueryOptions(username));
 
-  const keyStyles = { width: '250px' };
-
   const generalRows = [
     { key: 'jid', title: 'JID', value: user.jid },
     { key: 'email', title: 'Email', value: user.email },
@@ -25,7 +23,7 @@ export default function UserPage() {
       <Flex flexDirection="column" gap={8}>
         <div>
           <h4>General</h4>
-          <FormTable keyStyles={keyStyles} rows={generalRows} />
+          <FormTable fixedKey rows={generalRows} />
         </div>
         <UserInfoSection user={user} />
       </Flex>

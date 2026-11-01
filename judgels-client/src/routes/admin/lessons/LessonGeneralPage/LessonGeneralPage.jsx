@@ -33,8 +33,6 @@ export default function LessonGeneralPage() {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'jid', title: 'JID', value: lesson.jid },
     { key: 'slug', title: 'Slug', value: lesson.slug },
@@ -79,7 +77,7 @@ export default function LessonGeneralPage() {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

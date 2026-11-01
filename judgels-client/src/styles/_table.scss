@@ -11,3 +11,40 @@
     padding-bottom: 4px !important;
   }
 }
+
+.submissions-table {
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
+  }
+}
+
+.item-submissions-table {
+  .col-prob {
+    width: 80px;
+  }
+
+  .col-item-num {
+    width: 50px;
+  }
+
+  .col-verdict {
+    width: 70px;
+    text-align: center;
+  }
+
+  .col-action {
+    width: 50px;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+
+  .action + .action {
+    margin-left: 2px;
+  }
+}

@@ -119,7 +119,7 @@ export default function ChapterResourcesPage() {
   };
 
   return (
-    <Flex className="chapter-resources-page" flexDirection="column" flex={1}>
+    <Flex className="course-content" flexDirection="column" flex={1}>
       {renderHeader()}
       <ContentCard>{renderResources()}</ContentCard>
     </Flex>

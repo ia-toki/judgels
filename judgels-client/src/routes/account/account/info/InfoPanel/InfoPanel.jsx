@@ -31,7 +31,7 @@ export function InfoPanel({ email, info, onUpdateInfo }) {
   };
 
   return (
-    <ContentCard title="Info" action={action} className="info-panel-card">
+    <ContentCard title="Info" action={action} className="info-panel">
       {renderContent()}
     </ContentCard>
   );

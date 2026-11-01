@@ -15,7 +15,7 @@ export function FormCheckbox({ input, label, small, meta }) {
       defaultChecked={!!value}
       onChange={newOnChange}
       {...inputProps}
-      className={classNames('form-checkbox', { 'form-checkbox--small': small }, getIntentClassName(meta))}
+      className={classNames({ 'form-checkbox--small': small }, getIntentClassName(meta))}
     />
   );
 }

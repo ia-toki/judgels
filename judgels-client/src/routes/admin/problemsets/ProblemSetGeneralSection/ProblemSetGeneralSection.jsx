@@ -16,8 +16,6 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'slug', title: 'Slug', value: problemSet.slug },
     { key: 'name', title: 'Name', value: problemSet.name },
@@ -69,7 +67,7 @@ export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

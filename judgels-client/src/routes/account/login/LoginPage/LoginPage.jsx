@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   return (
     <SingleColumnLayout>
-      <Card title="Log in" className="card-login">
+      <Card title="Log in" className="login-page__card">
         <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
         {isInternalAuthEnabled && <LoginForm onSubmit={onLogIn} />}
       </Card>

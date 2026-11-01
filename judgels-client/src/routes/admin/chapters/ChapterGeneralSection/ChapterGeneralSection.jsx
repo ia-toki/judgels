@@ -15,8 +15,6 @@ export function ChapterGeneralSection({ chapter }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [{ key: 'name', title: 'Name', value: chapter.name }];
 
   const updateChapter = async data => {
@@ -49,7 +47,7 @@ export function ChapterGeneralSection({ chapter }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

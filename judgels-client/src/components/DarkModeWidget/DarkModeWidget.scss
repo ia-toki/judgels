@@ -1,3 +1,5 @@
+@use '../../styles/base' as *;
+
 .bp6-button.dark-mode-widget__button {
   background-color: transparent !important;
 
@@ -18,7 +20,7 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $breakpoint-phone) {
   .dark-mode-widget__button {
     display: none;
   }

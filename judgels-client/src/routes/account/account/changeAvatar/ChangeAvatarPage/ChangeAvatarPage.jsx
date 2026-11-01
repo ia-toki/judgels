@@ -50,7 +50,7 @@ export default function ChangeAvatarPage() {
   }
 
   const currentAvatar = avatarExists && (
-    <Box className="card-change-avatar__panel" flexGrow={1} marginBottom={4}>
+    <Box className="change-avatar-panel__preview" flexGrow={1} marginBottom={4}>
       <h4>Current avatar</h4>
       <img src={avatarUrl} alt="avatar" />
       <div>
@@ -62,15 +62,15 @@ export default function ChangeAvatarPage() {
   );
 
   const newAvatar = (
-    <Box className="card-change-avatar__panel" flexGrow={1} marginBottom={4}>
+    <Box className="change-avatar-panel__preview" flexGrow={1} marginBottom={4}>
       <h4>Upload new avatar</h4>
       <ChangeAvatarForm onSubmit={uploadAvatar} />
     </Box>
   );
 
   return (
-    <ContentCard title="Change avatar" className="card-change-avatar">
-      <div className="card-change-avatar__content">
+    <ContentCard title="Change avatar">
+      <div className="change-avatar-panel__content">
         {currentAvatar}
         {newAvatar}
       </div>

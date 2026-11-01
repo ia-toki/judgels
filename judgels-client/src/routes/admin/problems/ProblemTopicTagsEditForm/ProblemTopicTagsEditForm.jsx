@@ -9,13 +9,11 @@ import { withSubmissionError } from '../../../../modules/form/submissionError';
 import { problemAllTopicTagsQueryOptions } from '../../../../modules/queries/problemTag';
 import { ProblemTopicTagsInput } from '../ProblemTopicTagsInput/ProblemTopicTagsInput';
 
-const keyStyles = { width: '250px' };
-
 export default function ProblemTopicTagsEditForm({ onSubmit, initialValues, onCancel }) {
   const { data: topicTags } = useSuspenseQuery(problemAllTopicTagsQueryOptions());
 
   const topicTagsField = {
-    keyStyles,
+    fixedKey: true,
     name: 'topicTags',
     label: 'Tags',
     topicTags,

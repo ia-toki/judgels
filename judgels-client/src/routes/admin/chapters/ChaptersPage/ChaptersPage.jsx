@@ -28,7 +28,7 @@ export default function ChaptersPage() {
     const rows = chapters.map(chapter => (
       <tr key={chapter.jid}>
         <td className="col-fit">{chapter.id}</td>
-        <td style={{ width: '200px' }}>
+        <td>
           <Link to={`/admin/chapters/${chapter.jid}`}>{chapter.jid}</Link>
         </td>
         <td>{chapter.name}</td>
@@ -40,7 +40,7 @@ export default function ChaptersPage() {
         <thead>
           <tr>
             <th className="col-fit">ID</th>
-            <th style={{ width: '200px' }}>JID</th>
+            <th className="col-wide">JID</th>
             <th>Name</th>
           </tr>
         </thead>

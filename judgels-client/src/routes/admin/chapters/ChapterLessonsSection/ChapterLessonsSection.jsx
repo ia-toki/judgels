@@ -60,7 +60,7 @@ export function ChapterLessonsSection({ chapter }) {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '50px' }}>Alias</th>
+            <th className="col-narrow">Alias</th>
             <th>Slug</th>
           </tr>
         </thead>

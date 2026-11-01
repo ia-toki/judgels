@@ -49,3 +49,9 @@ These stay in a stylesheet as well:
 - Everything that is not layout: color, typography, border.
 
 Delete a stylesheet, and its import, once it is empty.
+
+# Stylesheets
+
+- A value with a shared meaning is a variable in `src/styles/variables`: breakpoints, the header height, card padding, content widths and colors. They are Sass variables because media queries cannot read custom properties.
+- A stylesheet's classes are named after its component in BEM: `UserWidget` has `.user-widget` and `.user-widget__avatar`.
+- A style used by several components that have no common parent component goes in `src/styles`, not in a directory of its own under `src/components`.

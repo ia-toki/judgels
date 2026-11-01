@@ -1,9 +1,11 @@
+@use '../../../../../../styles/base' as *;
+
 .item-short-answer-form {
   .text-input {
     margin-left: 24px;
 
     &.readonly {
-      background-color: rgba(206, 217, 224, 0.5);
+      background-color: $readonly-background-color;
     }
   }
 
@@ -12,7 +14,7 @@
   }
 
   .callout {
-    height: 35px;
+    height: $control-height;
     line-height: 14px;
     flex-shrink: 0;
     flex-basis: fit-content;

@@ -1,13 +1,15 @@
+@use '../../styles/base' as *;
+
 // Rows reach the edges of the surface around the list, so that the surface is the only box.
 .content-list {
-  margin: 0 -20px;
+  margin: 0 (-$card-padding);
 
   &:first-child {
-    margin-top: -20px;
+    margin-top: -$card-padding;
   }
 
   &:last-child {
-    margin-bottom: -20px;
+    margin-bottom: -$card-padding;
   }
 }
 

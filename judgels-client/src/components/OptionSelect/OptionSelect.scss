@@ -1,3 +1,5 @@
+@use '../../styles/base' as *;
+
 .option-select__button {
-  width: 210px;
+  width: $select-width;
 }

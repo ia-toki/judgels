@@ -1,8 +1,10 @@
+@use '../../../../../../../../styles/base' as *;
+
 .chapter-problem-card--future:not(:hover) {
   opacity: 0.5;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $breakpoint-mobile) {
   .chapter-problem-card {
     flex-wrap: wrap;
   }

@@ -31,7 +31,7 @@ export default function LoginForm({ onSubmit }) {
           <Field component={FormTextInput} {...usernameOrEmailField} />
           <Field component={FormTextInput} {...passwordField} />
           {isTLX() && (
-            <p className="form-login__actions-forgot-password">
+            <p className="login-form__forgot-password">
               <Link to="/forgot-password">Forgot your password?</Link>
             </p>
           )}
@@ -41,7 +41,7 @@ export default function LoginForm({ onSubmit }) {
           <Flex>
             <Button type="submit" text="Log in" intent={Intent.PRIMARY} loading={submitting} />
             {isTLX() && (
-              <p className="form-login__actions-register">
+              <p className="login-form__register">
                 Don't have account? <Link to="/register">Register now</Link>
               </p>
             )}

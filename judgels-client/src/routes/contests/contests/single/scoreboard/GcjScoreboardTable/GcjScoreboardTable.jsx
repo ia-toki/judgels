@@ -4,8 +4,6 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { GcjScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './GcjScoreboardTable.scss';
-
 export function GcjScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     let rows = content.entries.map(renderRow);

@@ -1,6 +1,7 @@
+@use '../../styles/base' as *;
+
 pre.source-code {
-  border-color: #cccccc;
-  background-color: #f5f5f5 !important;
+  background-color: $code-background-color !important;
   overflow-y: auto !important;
 
   .bp6-light & {
@@ -10,7 +11,6 @@ pre.source-code {
   }
 
   .bp6-dark & {
-    border-color: #25323b;
-    background-color: #2e3e4a !important;
+    background-color: $dark-code-background-color !important;
   }
 }

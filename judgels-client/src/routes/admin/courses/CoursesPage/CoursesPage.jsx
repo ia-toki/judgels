@@ -28,7 +28,7 @@ export default function CoursesPage() {
     const rows = courses.map(course => (
       <tr key={course.jid}>
         <td className="col-fit">{course.id}</td>
-        <td style={{ width: '200px' }}>
+        <td>
           <Link to={`/admin/courses/${course.slug}`}>{course.slug}</Link>
         </td>
         <td>{course.name}</td>
@@ -40,7 +40,7 @@ export default function CoursesPage() {
         <thead>
           <tr>
             <th className="col-fit">ID</th>
-            <th style={{ width: '200px' }}>Slug</th>
+            <th className="col-wide">Slug</th>
             <th>Name</th>
           </tr>
         </thead>

@@ -18,7 +18,7 @@ export function TimeanddateLink({ time, message, children }) {
     return children;
   }
   return (
-    <span className="timeanddate" onClick={onClick}>
+    <span className="timeanddate-link" onClick={onClick}>
       {children}
     </span>
   );

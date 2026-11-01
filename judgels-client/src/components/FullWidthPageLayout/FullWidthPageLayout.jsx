@@ -1,5 +1,5 @@
 import './FullWidthPageLayout.scss';
 
 export function FullWidthPageLayout({ children }) {
-  return <div className="layout-full-width-page">{children}</div>;
+  return <div className="full-width-page-layout">{children}</div>;
 }

@@ -16,10 +16,6 @@
     padding-bottom: 6px !important;
   }
 
-  .col-info {
-    width: 150px;
-  }
-
   .col-id {
     width: 50px;
   }
@@ -32,10 +28,6 @@
     width: 110px;
   }
 
-  .col-centered {
-    text-align: center;
-  }
-
   .general-info__time {
     white-space: nowrap;
     line-height: 24px;
@@ -43,10 +35,6 @@
 
   .pending-loader {
     margin-bottom: 15px;
-  }
-
-  details summary {
-    cursor: pointer;
   }
 
   details summary > * {

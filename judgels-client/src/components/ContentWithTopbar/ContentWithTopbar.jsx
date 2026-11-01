@@ -1,21 +1,8 @@
 import { Flex } from '@blueprintjs/labs';
 import { useLocation } from '@tanstack/react-router';
-import classNames from 'classnames';
 
+import { resolveUrl } from '../../utils/url';
 import { Topbar } from '../Topbar/Topbar';
-
-function ContentAndTopbar({ className, gap, topbarElement, contentElement }) {
-  return (
-    <Flex className={classNames('content-with-topbar', className)} flexDirection="column" gap={gap}>
-      {topbarElement}
-      {contentElement}
-    </Flex>
-  );
-}
-
-function resolveUrl(parentPath, childPath) {
-  return (parentPath + '/' + childPath).replace(/\/\/+/g, '/');
-}
 
 export default function ContentWithTopbar({ className, items, basePath, secondary, gap = 5, children }) {
   const location = useLocation();
@@ -53,5 +40,10 @@ export default function ContentWithTopbar({ className, items, basePath, secondar
     return currentPath.substring(basePath.length + 1, nextSlashPos);
   };
 
-  return <ContentAndTopbar className={className} gap={gap} topbarElement={renderTopbar()} contentElement={children} />;
+  return (
+    <Flex className={className} flexDirection="column" gap={gap}>
+      {renderTopbar()}
+      {children}
+    </Flex>
+  );
 }

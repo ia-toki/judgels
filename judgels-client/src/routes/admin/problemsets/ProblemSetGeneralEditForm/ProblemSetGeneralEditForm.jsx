@@ -10,38 +10,36 @@ import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedCha
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-const keyStyles = { width: '250px' };
-
 const slugField = {
-  keyStyles,
+  fixedKey: true,
   name: 'slug',
   label: 'Slug',
   validate: composeValidators(Required, Slug),
 };
 
 const nameField = {
-  keyStyles,
+  fixedKey: true,
   name: 'name',
   label: 'Name',
   validate: Required,
 };
 
 const archiveSlugField = {
-  keyStyles,
+  fixedKey: true,
   name: 'archiveSlug',
   label: 'Archive slug',
   validate: Required,
 };
 
 const contestTimeField = {
-  keyStyles,
+  fixedKey: true,
   name: 'contestTime',
   label: 'Contest time',
   validate: Required,
 };
 
 const descriptionField = {
-  keyStyles,
+  fixedKey: true,
   name: 'description',
   label: 'Description',
   rows: 15,

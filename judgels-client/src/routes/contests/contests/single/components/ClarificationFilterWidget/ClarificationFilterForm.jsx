@@ -2,8 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
-import { FormSelect2 } from '../forms/FormSelect2/FormSelect2';
-import { Required } from '../forms/validations';
+import { FormSelect2 } from '../../../../../../components/forms/FormSelect2/FormSelect2';
+import { Required } from '../../../../../../components/forms/validations';
 
 import './ClarificationFilterForm.scss';
 

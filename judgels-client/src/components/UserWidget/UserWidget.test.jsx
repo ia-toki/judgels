@@ -52,7 +52,7 @@ describe('UserWidget', () => {
     });
 
     const user = userEvent.setup();
-    await user.click(container.querySelector('.widget-user__profile'));
+    await user.click(container.querySelector('.user-widget__profile'));
     await user.click(screen.getByText('Log out'));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));

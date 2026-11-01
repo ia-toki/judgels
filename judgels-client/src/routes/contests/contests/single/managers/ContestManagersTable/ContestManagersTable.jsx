@@ -7,7 +7,7 @@ export function ContestManagersTable({ managers, profilesMap }) {
     return (
       <thead>
         <tr>
-          <th className="col-user">User</th>
+          <th>User</th>
         </tr>
       </thead>
     );

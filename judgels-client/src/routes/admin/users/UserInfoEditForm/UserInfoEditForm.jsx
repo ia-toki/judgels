@@ -10,10 +10,8 @@ import { FormTableTextInput } from '../../../../components/forms/FormTableTextIn
 import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-const keyStyles = { width: '250px' };
-
 const nameField = {
-  keyStyles,
+  fixedKey: true,
   name: 'name',
   label: 'Name',
 };

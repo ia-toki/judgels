@@ -4,8 +4,6 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { TrocScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './TrocScoreboardTable.scss';
-
 export function TrocScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     let rows = content.entries.map(renderRow);

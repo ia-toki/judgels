@@ -20,7 +20,7 @@ export default function Announcement() {
       <Flex asChild alignItems="center" justifyContent="center" gap={2}>
         <Navbar.Heading className="announcement__text">
           <WarningSign className="announcement__icon" />
-          <div className="announcement__body">{HTMLReactParser(announcement)}</div>
+          <div>{HTMLReactParser(announcement)}</div>
         </Navbar.Heading>
       </Flex>
     </Navbar>

@@ -16,8 +16,6 @@ export function CourseGeneralSection({ course }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'slug', title: 'Slug', value: course.slug },
     { key: 'name', title: 'Name', value: course.name },
@@ -56,7 +54,7 @@ export function CourseGeneralSection({ course }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

@@ -34,8 +34,6 @@ import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-import './ProblemStatementPage.scss';
-
 export default function ProblemStatementPage() {
   const { problemSlug } = useParams({ strict: false });
   const { user } = useSession();
@@ -186,7 +184,7 @@ export default function ProblemStatementPage() {
   };
 
   return (
-    <Flex className="problem-statement-page" flexDirection="column" gap={2} width={100} marginX="auto">
+    <Flex className="statement-width" flexDirection="column" gap={2} width={100} marginX="auto">
       <Flex justifyContent="end" alignItems="center" gap={2}>
         {renderLanguageSelect()}
         {renderEditButton()}

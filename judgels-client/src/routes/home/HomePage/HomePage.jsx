@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import { Box } from '@blueprintjs/labs';
+import { Flex } from '@blueprintjs/labs';
 
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
@@ -26,16 +26,16 @@ export default function HomePage() {
           <div className="home-banner__text">
             <HtmlText>{getHomeBanner() || ''}</HtmlText>
           </div>
-          <Box marginTop={5}>
+          <Flex justifyContent="center" flexWrap="wrap" gap={2} marginTop={7}>
             {isTLX() && (
-              <ButtonLink to="/register" intent={Intent.PRIMARY} large className="home-banner__button-register">
+              <ButtonLink to="/register" intent={Intent.PRIMARY} large>
                 Register and start training for free
               </ButtonLink>
             )}
-            <ButtonLink to="/login" intent={Intent.NONE} large className="home-banner__button-login">
+            <ButtonLink to="/login" intent={Intent.NONE} large>
               Log in
             </ButtonLink>
-          </Box>
+          </Flex>
         </div>
       </div>
     );

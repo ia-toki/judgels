@@ -9,17 +9,15 @@ import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedCha
 import { Required } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-const keyStyles = { width: '250px' };
-
 const nameField = {
-  keyStyles,
+  fixedKey: true,
   name: 'name',
   label: 'Name',
   validate: Required,
 };
 
 const descriptionField = {
-  keyStyles,
+  fixedKey: true,
   name: 'description',
   label: 'Description',
 };

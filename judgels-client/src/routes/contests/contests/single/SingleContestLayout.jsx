@@ -6,7 +6,7 @@ import { Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../../components/ContentWithSidebar/ContentWithSidebar';
-import { ContestRoleTag } from '../../../../components/ContestRole/ContestRoleTag';
+import { ContestRoleTag } from '../../../../components/ContestRoleTag/ContestRoleTag';
 import { FullWidthPageLayout } from '../../../../components/FullWidthPageLayout/FullWidthPageLayout';
 import { ContestTab } from '../../../../modules/api/contestWeb';
 import { contestBySlugQueryOptions } from '../../../../modules/queries/contest';
@@ -122,7 +122,7 @@ export default function SingleContestLayout() {
     items: sidebarItems,
     basePath: `/contests/${contestSlug}`,
     contentHeader: (
-      <Flex className="single-contest-routes__header" alignItems="center" gap={2}>
+      <Flex className="single-contest-layout__header" alignItems="center" gap={2}>
         <h2>{contest.name}</h2>
         <ContestRoleTag role={contestWebConfig.role} />
       </Flex>

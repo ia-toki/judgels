@@ -20,8 +20,6 @@ import { reallyConfirm } from '../../../../utils/confirmation';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-import '../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
-
 const PAGE_SIZE = 20;
 
 export default function ProblemProgrammingSubmissionsPanel({ problem }) {

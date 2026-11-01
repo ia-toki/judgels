@@ -1,3 +1,5 @@
+@use '../../../styles/base' as *;
+
 .language-select button {
-  width: 210px;
+  width: $select-width;
 }

@@ -17,7 +17,7 @@ export default function ContestFileUploadForm({ onSubmit }) {
   return (
     <Form onSubmit={onSubmit}>
       {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit} className="contest-file-upload-form">
+        <form onSubmit={handleSubmit}>
           <Flex gap={2} alignItems="start">
             <table className="contest-file-upload-form__table">
               <tbody>

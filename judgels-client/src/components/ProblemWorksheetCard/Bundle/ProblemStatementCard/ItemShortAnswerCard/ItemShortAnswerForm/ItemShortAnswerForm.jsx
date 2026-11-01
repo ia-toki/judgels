@@ -202,7 +202,7 @@ export default class ItemShortAnswerForm extends PureComponent {
     return (
       <Flex asChild gap={0.5}>
         <form onSubmit={this.onSubmit} className="item-short-answer-form">
-          <ControlGroup fill className="answer-form">
+          <ControlGroup fill>
             {this.renderTextInput()}
             {this.renderSubmitButton()}
             {this.renderCancelButton()}

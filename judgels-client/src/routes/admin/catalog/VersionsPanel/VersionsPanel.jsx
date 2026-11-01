@@ -139,7 +139,7 @@ export default function VersionsPanel({
                 <td>
                   {version.title}
                   {version.description && (
-                    <div style={{ whiteSpace: 'pre-wrap' }}>
+                    <div className="multiline-text">
                       <small>{version.description}</small>
                     </div>
                   )}

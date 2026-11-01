@@ -76,7 +76,7 @@ export default function RegisterForm({ onSubmit, useRecaptcha, recaptchaSiteKey 
 
           <Flex>
             <Button type="submit" text="Register" intent={Intent.PRIMARY} loading={submitting} />
-            <p className="form-register__actions-login">
+            <p className="register-form__login">
               Have an account already? <Link to="/login">Log in now</Link>
             </p>
           </Flex>

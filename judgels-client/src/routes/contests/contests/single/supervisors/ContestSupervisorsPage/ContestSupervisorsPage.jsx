@@ -11,8 +11,6 @@ import { ContestSupervisorAddDialog } from '../ContestSupervisorAddDialog/Contes
 import { ContestSupervisorRemoveDialog } from '../ContestSupervisorRemoveDialog/ContestSupervisorRemoveDialog';
 import { ContestSupervisorsTable } from '../ContestSupervisorsTable/ContestSupervisorsTable';
 
-import './ContestSupervisorsPage.scss';
-
 const PAGE_SIZE = 250;
 
 export default function ContestSupervisorsPage() {

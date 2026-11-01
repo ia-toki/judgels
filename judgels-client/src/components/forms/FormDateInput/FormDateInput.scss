@@ -1,6 +1,8 @@
+@use '../../../styles/base' as *;
+
 .form-date-input {
   .bp6-timepicker-input-row {
-    height: 35px !important;
+    height: $control-height !important;
   }
 
   .bp6-tag {

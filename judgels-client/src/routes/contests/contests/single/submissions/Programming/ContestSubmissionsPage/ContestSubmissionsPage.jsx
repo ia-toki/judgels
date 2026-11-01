@@ -1,4 +1,4 @@
-import { Flex } from '@blueprintjs/labs';
+import { Box, Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 
@@ -6,7 +6,6 @@ import { ContentCard } from '../../../../../../../components/ContentCard/Content
 import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../components/Pagination/Pagination';
 import { RegradeAllButton } from '../../../../../../../components/RegradeAllButton/RegradeAllButton';
-import { SubmissionFilterWidget } from '../../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
   contestSubmissionsQueryOptions,
@@ -14,6 +13,7 @@ import {
   regradeContestSubmissionsMutationOptions,
 } from '../../../../../../../modules/queries/contestSubmission';
 import { reallyConfirm } from '../../../../../../../utils/confirmation';
+import { SubmissionFilterWidget } from '../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { ContestSubmissionsTable } from '../ContestSubmissionsTable/ContestSubmissionsTable';
 
 import * as toastActions from '../../../../../../../modules/toast/toastActions';
@@ -41,7 +41,7 @@ function ContestSubmissionsPage() {
     return (
       <Flex gap={1} justifyContent="space-between" alignItems="center" flexWrap="wrap">
         {renderRegradeAllButton()}
-        <div style={{ marginLeft: 'auto' }}>{renderFilterWidget()}</div>
+        <Box marginLeft="auto">{renderFilterWidget()}</Box>
       </Flex>
     );
   };

@@ -8,8 +8,6 @@ import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedCha
 import { ProblemSetterRole } from '../../../../modules/api/problem';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
-const keyStyles = { width: '250px' };
-
 const setterInputHelpers = {
   [ProblemSetterRole.Developer]: 'Comma-separated usernames. Fill only if different from writers.',
 };
@@ -27,7 +25,7 @@ export default function ProblemSettersEditForm({ onSubmit, initialValues, setter
                   <Field
                     key={role}
                     component={FormTableTextInput}
-                    keyStyles={keyStyles}
+                    fixedKey
                     name={role}
                     label={title}
                     inputHelper={setterInputHelpers[role] || 'Comma-separated usernames.'}

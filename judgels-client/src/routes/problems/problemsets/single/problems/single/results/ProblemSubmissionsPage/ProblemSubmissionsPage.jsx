@@ -5,11 +5,11 @@ import { Link, useLocation, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../../../../../components/FormattedRelative/FormattedRelative';
-import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../../../components/Pagination/Pagination';
 import { FormattedAnswer } from '../../../../../../../../components/SubmissionDetails/Bundle/FormattedAnswer/FormattedAnswer';
-import { VerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/VerdictTag/VerdictTag';
+import { ItemVerdictTag } from '../../../../../../../../components/SubmissionDetails/Bundle/ItemVerdictTag/ItemVerdictTag';
+import { ItemSubmissionUserFilter } from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
@@ -22,8 +22,6 @@ import { useSession } from '../../../../../../../../modules/session';
 import { reallyConfirm } from '../../../../../../../../utils/confirmation';
 
 import * as toastActions from '../../../../../../../../modules/toast/toastActions';
-
-import '../../../../../../../../components/SubmissionsTable/Bundle/ItemSubmissionsTable.scss';
 
 const PAGE_SIZE = 20;
 
@@ -98,13 +96,15 @@ export default function ProblemSubmissionsPage() {
                 <FormattedAnswer answer={item.answer} type={itemTypesMap[item.itemJid]} />
               </td>
               {canManage && (
-                <td className="col-verdict">{item.grading ? <VerdictTag verdict={item.grading.verdict} /> : '-'}</td>
+                <td className="col-verdict">
+                  {item.grading ? <ItemVerdictTag verdict={item.grading.verdict} /> : '-'}
+                </td>
               )}
               <td>
                 <FormattedRelative value={item.time} />
               </td>
               <td className="col-action">
-                <ButtonGroup minimal className="action-button-group">
+                <ButtonGroup minimal>
                   {(canManage || userJid === item.userJid) && (
                     <Link
                       to={`/problems/${problemSet.slug}/${problem.alias}/results/users/${
@@ -132,12 +132,7 @@ export default function ProblemSubmissionsPage() {
     }
 
     return (
-      <Button
-        className="item-submissions-table__regrade-button"
-        intent="primary"
-        icon={<Refresh />}
-        onClick={onRegradeAll}
-      >
+      <Button intent="primary" icon={<Refresh />} onClick={onRegradeAll}>
         Regrade all pages
       </Button>
     );

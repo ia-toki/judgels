@@ -95,7 +95,7 @@ describe('BundleContestProblemPage', () => {
 
     const user = userEvent.setup();
 
-    const input = document.querySelector('.problem-multiple-choice-item-choice input');
+    const input = document.querySelector('.item-multiple-choice-card__choice input');
     await user.click(input);
 
     await waitFor(() => {

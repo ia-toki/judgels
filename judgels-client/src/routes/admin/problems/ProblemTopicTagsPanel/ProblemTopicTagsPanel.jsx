@@ -21,8 +21,6 @@ export default function ProblemTopicTagsPanel({ problemJid }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     {
       key: 'topicTags',
@@ -67,7 +65,7 @@ export default function ProblemTopicTagsPanel({ problemJid }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

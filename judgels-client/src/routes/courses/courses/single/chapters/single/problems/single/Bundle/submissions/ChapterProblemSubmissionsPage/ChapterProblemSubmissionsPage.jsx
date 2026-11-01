@@ -7,14 +7,12 @@ import { ButtonLink } from '../../../../../../../../../../../components/ButtonLi
 import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
 import { ProblemEditorialCard } from '../../../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemEditorialCard/ProblemEditorialCard';
-import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails';
 import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
 import { courseChapterQueryOptions } from '../../../../../../../../../../../modules/queries/courseChapter';
 import { chapterItemSubmissionSummaryQueryOptions } from '../../../../../../../../../../../modules/queries/trainingItemSubmission';
 import { useSession } from '../../../../../../../../../../../modules/session';
 import { useWebPrefs } from '../../../../../../../../../../../modules/webPrefs';
-
-import './ChapterProblemSubmissionsPage.scss';
 
 export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigation }) {
   const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
@@ -83,7 +81,7 @@ export default function ChapterProblemSubmissionsPage({ worksheet, renderNavigat
 
   return (
     <ContentCard
-      className="chapter-bundle-problem-submissions-page"
+      className="chapter-problem-pane"
       title="Results"
       action={
         <ButtonLink

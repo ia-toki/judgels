@@ -1,22 +1,24 @@
+@use '../../styles/base' as *;
+
 .app-content {
   --app-content-padding-top: 30px;
   --app-footer-height: 40px;
 
   // The space between the header and the footer.
-  --app-page-min-height: calc(100vh - 50px - var(--app-footer-height) - var(--app-content-padding-top));
+  --app-page-min-height: calc(100vh - #{$header-height} - var(--app-footer-height) - var(--app-content-padding-top));
 
   padding-top: var(--app-content-padding-top);
   overflow-x: auto;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $breakpoint-mobile) {
   .app-content {
     --app-content-padding-top: 15px;
   }
 }
 
-@media only screen and (min-width: 1025px) {
+@media only screen and (min-width: $breakpoint-tablet + 1) {
   .app-content.is-course-chapter-problem {
-    height: calc(100vh - 50px);
+    height: calc(100vh - #{$header-height});
   }
 }

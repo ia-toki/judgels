@@ -31,7 +31,7 @@ export function Topbar({ activeItemPath, items, secondary, onResolveItemUrl }) {
           <Tab key={item.path} id={item.path}>
             <Link to={onResolveItemUrl(item.path)}>
               {item.titleIcon}
-              <span className="topbar__item">{item.title}</span>
+              <span>{item.title}</span>
             </Link>
           </Tab>
         ))}
@@ -43,7 +43,7 @@ export function Topbar({ activeItemPath, items, secondary, onResolveItemUrl }) {
     return (
       <ButtonLink key={item.path} id={item.path} active={item.path === activeItemPath} to={onResolveItemUrl(item.path)}>
         {item.titleIcon}
-        <span className="topbar__item">{item.title}</span>
+        <span>{item.title}</span>
       </ButtonLink>
     );
   });

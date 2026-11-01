@@ -7,8 +7,6 @@ import { GradingVerdictTag } from '../../../../../../../components/GradingVerdic
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { getGradingLanguageName } from '../../../../../../../modules/api/gradingLanguage.js';
 
-import '../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
-
 export function ContestSubmissionsTable({
   contest,
   submissions,

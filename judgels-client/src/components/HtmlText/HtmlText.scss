@@ -27,7 +27,7 @@
 
     td,
     th {
-      border: solid 1px #cccccc;
+      border: solid 1px $code-border-color;
       text-align: left;
       padding: 5px;
     }
@@ -83,19 +83,19 @@
 
   .highlight {
     background-color: #ffe39f;
-    margin-left: -20px;
-    margin-right: -20px;
-    margin-bottom: 20px;
-    padding: 10px 20px;
+    margin-left: -$card-padding;
+    margin-right: -$card-padding;
+    margin-bottom: $card-padding;
+    padding: 10px $card-padding;
     border-radius: 3px;
     overflow-x: auto;
 
     .bp6-dark & {
-      background-color: #0c5174;
+      background-color: $dark-blue-main-background-color;
     }
 
     &:first-child {
-      margin-top: -20px;
+      margin-top: -$card-padding;
     }
 
     &:not(:first-child) {
@@ -103,7 +103,7 @@
     }
 
     &:last-child {
-      margin-bottom: -20px;
+      margin-bottom: -$card-padding;
     }
 
     h3:first-child {

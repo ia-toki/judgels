@@ -1,16 +1,9 @@
 @use '../../../../../styles/base' as *;
 
 .course-overview {
-  max-width: 865px;
-
-  > .content-card {
-    flex-grow: 1;
-  }
-
   h2 {
+    @include page-title-compact;
     margin-bottom: 16px;
-    font-size: $font-size-page-title-compact !important;
-    line-height: 24px !important;
   }
 
   .bp6-icon {
@@ -27,7 +20,7 @@
     min-width: 0;
   }
 
-  @media only screen and (max-width: 750px) {
+  @media only screen and (max-width: $breakpoint-mobile) {
     flex-direction: column;
   }
 }

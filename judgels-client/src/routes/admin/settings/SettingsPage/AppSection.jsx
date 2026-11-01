@@ -20,8 +20,6 @@ export function AppSection({ app }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '300px' };
-
   const rows = [
     { key: 'name', title: 'Name', value: app.name },
     { key: 'slogan', title: 'Slogan', value: app.slogan },
@@ -63,8 +61,8 @@ export function AppSection({ app }) {
                 <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
-                    <Field component={FormTableTextInput} keyStyles={keyStyles} name="name" label="Name" />
-                    <Field component={FormTableTextInput} keyStyles={keyStyles} name="slogan" label="Slogan" />
+                    <Field component={FormTableTextInput} fixedKey name="name" label="Name" />
+                    <Field component={FormTableTextInput} fixedKey name="slogan" label="Slogan" />
                   </tbody>
                 </HTMLTable>
                 <Field component={FormRichTextArea} rows={5} name="announcement" label="Announcement" />
@@ -79,7 +77,7 @@ export function AppSection({ app }) {
       );
     }
 
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

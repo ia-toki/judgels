@@ -14,7 +14,7 @@ export function ContestContestantsTable({ contest, virtualModuleConfig, contesta
       <thead>
         <tr>
           <th className="col-no">#</th>
-          <th className="col-user">User</th>
+          <th>User</th>
           {isVirtualContest && <th>Virtual Progress</th>}
           {isVirtualContest && <th>Virtual Start Time</th>}
         </tr>
@@ -42,7 +42,7 @@ export function ContestContestantsTable({ contest, virtualModuleConfig, contesta
         <td>
           <UserRef profile={profilesMap[contestant.userJid]} />
         </td>
-        {isVirtualContest && <td className="col-virtual-progress">{renderVirtualProgress(contestant)}</td>}
+        {isVirtualContest && <td>{renderVirtualProgress(contestant)}</td>}
         {isVirtualContest && <td className="col-virtual-start-time">{renderVirtualStartTime(contestant)}</td>}
       </tr>
     ));
@@ -69,7 +69,7 @@ export function ContestContestantsTable({ contest, virtualModuleConfig, contesta
   };
 
   return (
-    <HTMLTable striped className="table-list-condensed contestants-table">
+    <HTMLTable striped className="table-list-condensed contest-contestants-table">
       {renderHeader()}
       {renderRows()}
     </HTMLTable>

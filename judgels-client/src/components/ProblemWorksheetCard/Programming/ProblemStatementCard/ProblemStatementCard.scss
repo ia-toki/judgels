@@ -1,3 +1,5 @@
+@use '../../../../styles/base' as *;
+
 .programming-problem-statement__name {
   text-align: center;
 }
@@ -10,14 +12,7 @@
 
   td,
   th {
-    border: 1px #dee0e1 solid;
+    border: 1px $table-border-color solid;
     border-top: 0;
-  }
-}
-
-.programming-problem-statement__text {
-  embed {
-    width: 100%;
-    min-height: 800px;
   }
 }

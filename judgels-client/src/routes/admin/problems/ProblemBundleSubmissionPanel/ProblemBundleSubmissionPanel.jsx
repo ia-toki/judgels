@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { FormattedDate } from '../../../../components/FormattedDate/FormattedDate';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
-import { SubmissionDetails } from '../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { SubmissionDetails } from '../../../../components/SubmissionDetails/Bundle/SubmissionDetails';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { ItemType } from '../../../../modules/api/problemBundle';
 import {

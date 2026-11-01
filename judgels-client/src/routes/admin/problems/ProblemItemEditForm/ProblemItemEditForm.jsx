@@ -119,7 +119,7 @@ function ChoicesInput({ input: { value, onChange }, meta }) {
   return (
     <FormGroup label="Choices" intent={getIntent(meta)}>
       <Flex flexDirection="column" gap={2}>
-        <HTMLTable compact aria-label="Choices" className="problem-item-edit-form__choices">
+        <HTMLTable compact aria-label="Choices">
           <thead>
             <tr>
               <th>Alias</th>

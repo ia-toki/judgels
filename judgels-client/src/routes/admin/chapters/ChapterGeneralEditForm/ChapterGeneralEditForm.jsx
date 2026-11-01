@@ -7,10 +7,8 @@ import { FormTableTextInput } from '../../../../components/forms/FormTableTextIn
 import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 
-const keyStyles = { width: '250px' };
-
 const nameField = {
-  keyStyles,
+  fixedKey: true,
   name: 'name',
   label: 'Name',
   validate: Required,

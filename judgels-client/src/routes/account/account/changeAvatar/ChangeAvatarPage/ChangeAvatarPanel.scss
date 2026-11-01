@@ -1,15 +1,17 @@
-.card-change-avatar__content {
+@use '../../../../../styles/base' as *;
+
+.change-avatar-panel__content {
   display: flex;
 }
 
-.card-change-avatar__panel {
+.change-avatar-panel__preview {
   img {
     max-width: 200px;
   }
 }
 
-@media only screen and (max-width: 750px) {
-  .card-change-avatar__content {
+@media only screen and (max-width: $breakpoint-mobile) {
+  .change-avatar-panel__content {
     display: block;
   }
 }

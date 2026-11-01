@@ -94,7 +94,7 @@ export default function ProblemReportWidget() {
   };
 
   const renderTopicTags = ({ metadata }) => {
-    return <ProblemTopicTags tags={metadata.tags} alignLeft />;
+    return <ProblemTopicTags tags={metadata.tags} />;
   };
 
   const renderEditorial = ({ metadata, profilesMap }) => {

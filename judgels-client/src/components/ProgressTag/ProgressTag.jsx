@@ -1,5 +1,4 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import classNames from 'classnames';
 
 export function ProgressTag({ className, large, num, denom, children }) {
   if (denom === 0) {
@@ -15,7 +14,7 @@ export function ProgressTag({ className, large, num, denom, children }) {
     intent = Intent.PRIMARY;
   }
   return (
-    <Tag large={!!large} className={classNames('progress-tag', className)} intent={intent}>
+    <Tag large={!!large} className={className} intent={intent}>
       {children}
     </Tag>
   );

@@ -2,9 +2,9 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import ItemSubmissionUserFilter from '../../../../../../../../components/ItemSubmissionUserFilter/ItemSubmissionUserFilter';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { SubmissionDetails } from '../../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails';
+import { ItemSubmissionUserFilter } from '../../../../../../../../components/SubmissionUserFilter/SubmissionUserFilter';
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
 import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';

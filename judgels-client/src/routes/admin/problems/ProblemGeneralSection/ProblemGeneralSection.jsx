@@ -26,8 +26,6 @@ export default function ProblemGeneralSection({ problemJid }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'jid', title: 'JID', value: problem.jid },
     { key: 'slug', title: 'Slug', value: problem.slug },
@@ -73,7 +71,7 @@ export default function ProblemGeneralSection({ problemJid }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

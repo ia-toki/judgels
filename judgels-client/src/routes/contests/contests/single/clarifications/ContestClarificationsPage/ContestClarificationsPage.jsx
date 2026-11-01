@@ -2,7 +2,6 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-import { ClarificationFilterWidget } from '../../../../../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -10,6 +9,7 @@ import { askDesktopNotificationPermission } from '../../../../../../modules/noti
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestClarificationsQueryOptions } from '../../../../../../modules/queries/contestClarification';
 import { useWebPrefs } from '../../../../../../modules/webPrefs';
+import { ClarificationFilterWidget } from '../../components/ClarificationFilterWidget/ClarificationFilterWidget';
 import { ContestClarificationCard } from '../ContestClarificationCard/ContestClarificationCard';
 import { ContestClarificationCreateDialog } from '../ContestClarificationCreateDialog/ContestClarificationCreateDialog';
 

@@ -93,7 +93,7 @@ export default function ProblemSubmissionForm({
         <form onSubmit={handleSubmit}>
           {renderWarning()}
           {isSingleSourceCode && renderSourceEditor(values.gradingLanguage)}
-          <table className="programming-problem-submission-form__table">
+          <table>
             <tbody>
               {renderSourceFields()}
               {renderGradingLanguageFields()}

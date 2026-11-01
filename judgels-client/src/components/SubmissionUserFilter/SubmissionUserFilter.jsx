@@ -5,22 +5,32 @@ import { ButtonLink } from '../ButtonLink/ButtonLink';
 
 import './SubmissionUserFilter.scss';
 
-export default function SubmissionUserFilter() {
+export default function SubmissionUserFilter({
+  segment = 'mine',
+  baseLabel = 'All submissions',
+  segmentLabel = 'My submissions',
+}) {
   const location = useLocation();
 
-  const isMine = (location.pathname + '/').includes('/mine/');
+  const isInSegment = (location.pathname + '/').includes(`/${segment}/`);
 
-  const basePath = isMine ? location.pathname.substring(0, location.pathname.lastIndexOf('/mine')) : location.pathname;
-  const minePath = (basePath + '/mine').replace('//', '/');
+  const basePath = isInSegment
+    ? location.pathname.substring(0, location.pathname.lastIndexOf(`/${segment}`))
+    : location.pathname;
+  const segmentPath = (basePath + `/${segment}`).replace('//', '/');
 
   return (
     <ButtonGroup className="submission-user-filter" fill>
-      <ButtonLink to={basePath} active={!isMine}>
-        All submissions
+      <ButtonLink to={basePath} active={!isInSegment}>
+        {baseLabel}
       </ButtonLink>
-      <ButtonLink to={minePath} active={isMine}>
-        My submissions
+      <ButtonLink to={segmentPath} active={isInSegment}>
+        {segmentLabel}
       </ButtonLink>
     </ButtonGroup>
   );
+}
+
+export function ItemSubmissionUserFilter() {
+  return <SubmissionUserFilter segment="all" baseLabel="My result" segmentLabel="All submissions" />;
 }

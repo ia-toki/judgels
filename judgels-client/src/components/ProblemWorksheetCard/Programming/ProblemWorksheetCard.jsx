@@ -3,8 +3,6 @@ import { Flex } from '@blueprintjs/labs';
 import { ProblemStatementCard } from './ProblemStatementCard/ProblemStatementCard';
 import { ProblemSubmissionCard } from './ProblemSubmissionCard/ProblemSubmissionCard';
 
-import './ProblemWorksheetCard.scss';
-
 export function ProblemWorksheetCard({
   alias,
   worksheet: { statement, limits, submissionConfig, reasonNotAllowedToSubmit },
@@ -42,7 +40,7 @@ export function ProblemWorksheetCard({
   };
 
   return (
-    <Flex className="programming-problem-worksheet" flexDirection="column" gap={2} width={100} marginX="auto">
+    <Flex className="statement-width" flexDirection="column" gap={2} width={100} marginX="auto">
       {renderStatement()}
       {renderSubmission()}
     </Flex>
