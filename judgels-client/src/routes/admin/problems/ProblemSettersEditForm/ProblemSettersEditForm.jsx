@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { ProblemSetterRole } from '../../../../modules/api/problem';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -19,6 +20,7 @@ export default function ProblemSettersEditForm({ onSubmit, initialValues, setter
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <HTMLTable striped>
               <tbody>
                 {setterFields.map(({ role, title }) => (

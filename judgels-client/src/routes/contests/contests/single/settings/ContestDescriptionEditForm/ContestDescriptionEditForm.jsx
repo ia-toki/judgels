@@ -3,6 +3,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { FormRichTextArea } from '../../../../../../components/forms/FormRichTextArea/FormRichTextArea';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 
 export default function ContestDescriptionEditForm({ onSubmit, initialValues, onCancel }) {
   const descriptionField = {
@@ -14,6 +15,7 @@ export default function ContestDescriptionEditForm({ onSubmit, initialValues, on
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Field component={FormRichTextArea} {...descriptionField} />
           <hr />
           <ActionButtons justifyContent="end">

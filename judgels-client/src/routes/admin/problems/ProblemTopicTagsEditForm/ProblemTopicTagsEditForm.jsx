@@ -4,6 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 import { problemAllTopicTagsQueryOptions } from '../../../../modules/queries/problemTag';
 import { ProblemTopicTagsInput } from '../ProblemTopicTagsInput/ProblemTopicTagsInput';
@@ -25,6 +26,7 @@ export default function ProblemTopicTagsEditForm({ onSubmit, initialValues, onCa
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <HTMLTable striped>
               <tbody>
                 <Field component={ProblemTopicTagsInput} {...topicTagsField} />

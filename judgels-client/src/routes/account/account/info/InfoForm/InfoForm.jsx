@@ -8,6 +8,7 @@ import { HorizontalInnerDivider } from '../../../../../components/HorizontalInne
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
 import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 
 const nameField = {
   name: 'name',
@@ -65,6 +66,7 @@ export default function InfoForm({ onSubmit, initialValues, onCancel }) {
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <h4>My info</h4>
           <HTMLTable striped>
             <tbody>

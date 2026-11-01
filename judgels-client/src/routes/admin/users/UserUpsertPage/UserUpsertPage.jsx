@@ -9,6 +9,7 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 import { upsertUsersMutationOptions } from '../../../../modules/queries/user';
 
@@ -19,7 +20,7 @@ export default function UserUpsertPage() {
 
   const upsertMutation = useMutation(upsertUsersMutationOptions());
 
-  const goToUsers = () => navigate({ to: '/admin/users' });
+  const goToUsers = () => navigate({ to: '/admin/users', ignoreBlocker: true });
 
   const handleSubmit = async values => {
     const response = await upsertMutation.mutateAsync(values.csv);
@@ -88,6 +89,7 @@ export default function UserUpsertPage() {
     <Form onSubmit={handleSubmit}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Field component={FormTextArea} {...csvField} />
           <ActionButtons justifyContent="end">
             <Button text="Cancel" disabled={submitting} onClick={goToUsers} />

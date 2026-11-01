@@ -10,6 +10,7 @@ import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTable } from '../../../../components/forms/FormTable/FormTable';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { updateSettingsMutationOptions } from '../../../../modules/queries/setting';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
@@ -59,6 +60,7 @@ export function AppSection({ app }) {
           {({ handleSubmit, submitting }) => (
             <Flex asChild flexDirection="column" gap={2}>
               <form onSubmit={handleSubmit}>
+                <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
                     <Field component={FormTableTextInput} keyStyles={keyStyles} name="name" label="Name" />

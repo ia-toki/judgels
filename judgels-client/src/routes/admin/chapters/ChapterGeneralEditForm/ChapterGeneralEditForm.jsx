@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 
 const keyStyles = { width: '250px' };
@@ -21,6 +22,7 @@ export default function ChapterGeneralEditForm({ onSubmit, initialValues, onCanc
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <HTMLTable striped>
               <tbody>
                 <Field component={FormTableTextInput} {...nameField} />

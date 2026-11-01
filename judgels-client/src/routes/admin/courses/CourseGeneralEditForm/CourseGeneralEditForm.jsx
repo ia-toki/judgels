@@ -5,6 +5,7 @@ import { Field, Form } from 'react-final-form';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTableRichTextArea } from '../../../../components/forms/FormTableRichTextArea/FormTableRichTextArea';
 import { FormTableTextInput } from '../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required, Slug, composeValidators } from '../../../../components/forms/validations';
 import { withSubmissionError } from '../../../../modules/form/submissionError';
 
@@ -35,6 +36,7 @@ export default function CourseGeneralEditForm({ onSubmit, initialValues, onCance
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <HTMLTable striped>
               <tbody>
                 <Field component={FormTableTextInput} {...slugField} />

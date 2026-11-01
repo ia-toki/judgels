@@ -3,6 +3,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
 
 export default function ChapterCreateForm({ onSubmit, onCancel }) {
@@ -20,6 +21,7 @@ export default function ChapterCreateForm({ onSubmit, onCancel }) {
       {({ handleSubmit, submitting }) => {
         return (
           <form onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             {fields}
             <ActionButtons justifyContent="end">
               <Button text="Cancel" disabled={submitting} onClick={onCancel} />

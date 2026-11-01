@@ -3,6 +3,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { FormTextArea } from '../../../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../../../components/forms/validations';
 
 export default function ContestClarificationAnswerForm({ onSubmit, isLoading, onCancel }) {
@@ -18,6 +19,7 @@ export default function ContestClarificationAnswerForm({ onSubmit, isLoading, on
     <Form onSubmit={onSubmit}>
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Field component={FormTextArea} {...answerField} />
           <ActionButtons>
             <Button type="submit" text="Answer" intent={Intent.PRIMARY} loading={isLoading} />

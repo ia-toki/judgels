@@ -4,6 +4,7 @@ import { Field, Form } from 'react-final-form';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Max100Lines, Required, composeValidators } from '../../../../components/forms/validations';
 
 export default function ChapterProblemsEditForm({ onSubmit, initialValues, validator, onCancel }) {
@@ -21,6 +22,7 @@ export default function ChapterProblemsEditForm({ onSubmit, initialValues, valid
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <Flex flexDirection="column" gap={2}>
             <Field component={FormTextArea} {...problemsField} />
             <Callout icon={null}>

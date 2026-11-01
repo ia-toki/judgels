@@ -5,6 +5,7 @@ import { ActionButtons } from '../../../../../../components/ActionButtons/Action
 import { FormTableDateInput } from '../../../../../../components/forms/FormTableDateInput/FormTableDateInput';
 import { FormTableSelect2 } from '../../../../../../components/forms/FormTableSelect2/FormTableSelect2';
 import { FormTableTextInput } from '../../../../../../components/forms/FormTableTextInput/FormTableTextInput';
+import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required, Slug, composeValidators } from '../../../../../../components/forms/validations';
 import { ContestStyle } from '../../../../../../modules/api/contest';
 import { withSubmissionError } from '../../../../../../modules/form/submissionError';
@@ -53,6 +54,7 @@ export default function ContestGeneralEditForm({ onSubmit, initialValues, onCanc
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
+          <FormUnsavedChangesAlert />
           <HTMLTable striped>
             <tbody>
               <Field component={FormTableTextInput} {...slugField} />

@@ -9,6 +9,7 @@ import FormAceEditor from '../../../../components/forms/FormAceEditor/FormAceEdi
 import { FormInputValidation } from '../../../../components/forms/FormInputValidation/FormInputValidation';
 import { FormRichTextArea } from '../../../../components/forms/FormRichTextArea/FormRichTextArea';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
+import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { getIntent } from '../../../../components/forms/meta';
 import { Required, composeValidators } from '../../../../components/forms/validations';
 import { ItemType } from '../../../../modules/api/problemBundle';
@@ -197,6 +198,7 @@ export default function ProblemItemEditForm({ item, onSubmit, baseMediaURL }) {
       {({ handleSubmit, submitting }) => (
         <Flex asChild flexDirection="column" gap={2}>
           <form className="problem-item-edit-form" onSubmit={handleSubmit}>
+            <FormUnsavedChangesAlert />
             <Field component={FormTextInput} {...metaField} />
             <Flex justifyContent="space-between" alignItems="center">
               <Switch
