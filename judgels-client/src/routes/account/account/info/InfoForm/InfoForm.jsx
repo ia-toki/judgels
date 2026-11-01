@@ -4,7 +4,6 @@ import { Field, Form } from 'react-final-form';
 import { countriesData } from '../../../../../assets/data/countries';
 import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
 import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
-import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
 import { FormTableSelect } from '../../../../../components/forms/FormTableSelect/FormTableSelect';
 import { FormTableTextArea } from '../../../../../components/forms/FormTableTextArea/FormTableTextArea';
 import { FormTableTextInput } from '../../../../../components/forms/FormTableTextInput/FormTableTextInput';
@@ -95,7 +94,7 @@ export default function InfoForm({ onSubmit, initialValues, onCancel }) {
             </tbody>
           </HTMLTable>
 
-          <HorizontalInnerDivider />
+          <HorizontalDivider inner />
 
           <h4>My institution (school/organization represented)</h4>
           <HTMLTable striped>

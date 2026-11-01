@@ -1,42 +1,13 @@
 import { ProgressBar } from '@blueprintjs/core';
-import { PureComponent } from 'react';
 
 import { SingleColumnLayout } from '../SingleColumnLayout/SingleColumnLayout';
+import { useShowAfterDelay } from './useShowAfterDelay';
 
 import './LoadingState.scss';
 
-export class LoadingState extends PureComponent {
-  timer;
+export function LoadingState({ large }) {
+  const showProgressBar = useShowAfterDelay(500);
 
-  state = {
-    showProgressBar: false,
-  };
-
-  componentDidMount() {
-    this.timer = setTimeout(() => {
-      this.setState({ showProgressBar: true });
-      this.timer = 0;
-    }, 500);
-  }
-
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = 0;
-    }
-  }
-
-  render() {
-    if (this.props.large) {
-      return <SingleColumnLayout>{this.renderProgressBar()}</SingleColumnLayout>;
-    }
-    return this.renderProgressBar();
-  }
-
-  renderProgressBar = () => {
-    if (!this.state.showProgressBar) {
-      return null;
-    }
-    return <ProgressBar className="loading-state" />;
-  };
+  const progressBar = showProgressBar ? <ProgressBar className="loading-state" /> : null;
+  return large ? <SingleColumnLayout>{progressBar}</SingleColumnLayout> : progressBar;
 }

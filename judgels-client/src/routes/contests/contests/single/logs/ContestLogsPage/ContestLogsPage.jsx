@@ -4,9 +4,9 @@ import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
-import { SubmissionFilterWidget } from '../../../../../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
 import { contestLogsQueryOptions } from '../../../../../../modules/queries/contestLog';
+import { SubmissionFilterWidget } from '../../components/SubmissionFilterWidget/SubmissionFilterWidget';
 import { ContestLogsTable } from '../ContestLogsTable/ContestLogsTable';
 
 const PAGE_SIZE = 100;

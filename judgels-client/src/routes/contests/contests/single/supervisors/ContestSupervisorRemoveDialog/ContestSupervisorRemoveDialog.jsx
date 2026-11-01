@@ -10,6 +10,8 @@ import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveRe
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
+import '../../components/ContestUserDialog.scss';
+
 export function ContestSupervisorRemoveDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
@@ -23,7 +25,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
 
   const renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={toggleDialog} />
@@ -52,7 +54,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
     const { deletedSupervisorProfilesMap } = response;
     return (
       <>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-result-body')}>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestSupervisorRemoveResultTable
             usernames={usernames}
             deletedSupervisorProfilesMap={deletedSupervisorProfilesMap}
@@ -77,14 +79,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
 
   return (
     <>
-      <Button
-        small
-        className="contest-supervisor-dialog-button"
-        intent={Intent.DANGER}
-        icon={<Trash />}
-        onClick={toggleDialog}
-        disabled={isDialogOpen}
-      >
+      <Button small intent={Intent.DANGER} icon={<Trash />} onClick={toggleDialog} disabled={isDialogOpen}>
         Remove supervisors
       </Button>
       <Dialog

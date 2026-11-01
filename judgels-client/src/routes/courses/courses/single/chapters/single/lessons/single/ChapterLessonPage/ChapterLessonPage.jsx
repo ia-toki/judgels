@@ -99,7 +99,7 @@ export default function ChapterLessonPage() {
   };
 
   return (
-    <Flex className="chapter-lesson-page" flexDirection="column" flex={1}>
+    <Flex className="course-content" flexDirection="column" flex={1}>
       {renderHeader()}
       <ContentCard>
         {renderStatementLanguageWidget()}

@@ -20,14 +20,14 @@ export default function ProblemSpoilerWidget() {
   return (
     <Flex gap={2}>
       <Switch
-        className="problem-spoiler-switch"
+        className="problem-spoiler-widget__switch"
         alignIndicator={Alignment.LEFT}
         label="Show difficulty"
         checked={showProblemDifficulty}
         onChange={changeShowProblemDifficulty}
       />
       <Switch
-        className="problem-spoiler-switch"
+        className="problem-spoiler-widget__switch"
         alignIndicator={Alignment.LEFT}
         label="Show tags"
         checked={showProblemTopicTags}

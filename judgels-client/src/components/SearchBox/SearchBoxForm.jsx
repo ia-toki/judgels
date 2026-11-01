@@ -12,7 +12,7 @@ export default function SearchBoxForm({ onSubmit, initialValues, isLoading }) {
   };
 
   const fields = (
-    <div className="search-box-input">
+    <div className="search-box__input">
       <Field component={FormTextInput} {...contentField} />
     </div>
   );

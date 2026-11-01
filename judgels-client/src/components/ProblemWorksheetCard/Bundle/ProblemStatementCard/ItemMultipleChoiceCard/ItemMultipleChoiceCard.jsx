@@ -45,22 +45,22 @@ export class ItemMultipleChoiceCard extends Component {
         </Flex>
         <Divider />
         <RadioGroup
-          className="problem-multiple-choice-item-choices"
+          className="item-multiple-choice-card__choices"
           onChange={this.handleRadioChange}
           selectedValue={this.state.value}
         >
           {config.choices.map(choice => (
             <Radio
               key={choice.alias}
-              className="problem-multiple-choice-item-choice"
+              className="item-multiple-choice-card__choice"
               value={choice.alias}
               onClick={this.handleRadioClick}
               disabled={this.props.disabled}
             >
-              <Tag className="__alias-tag">
+              <Tag className="item-multiple-choice-card__alias-tag">
                 <HtmlText>{choice.alias}</HtmlText>
               </Tag>
-              <div className="__content">
+              <div className="item-multiple-choice-card__content">
                 <RichStatementText>{choice.content.replace('<br>', '\n')}</RichStatementText>
               </div>
             </Radio>

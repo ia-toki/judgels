@@ -70,7 +70,7 @@ export function ProblemSetProblemsSection({ problemSet }) {
       <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
-            <th style={{ width: '50px' }}>Alias</th>
+            <th className="col-narrow">Alias</th>
             <th>Slug</th>
             <th>Contest</th>
           </tr>

@@ -1,8 +1,10 @@
+@use '../../../../styles/base' as *;
+
 .problem-submission-editor {
   flex-grow: 1;
   margin-bottom: 0;
 
-  @media only screen and (max-width: 1024px) {
+  @media only screen and (max-width: $breakpoint-tablet) {
     margin-bottom: 1px;
   }
 
@@ -12,7 +14,7 @@
     align-items: flex-start;
     height: 100%;
 
-    @media only screen and (max-width: 1024px) {
+    @media only screen and (max-width: $breakpoint-tablet) {
       display: none;
 
       &.show {
@@ -42,7 +44,7 @@
   .responsive-button {
     display: none;
 
-    @media only screen and (max-width: 1024px) {
+    @media only screen and (max-width: $breakpoint-tablet) {
       display: block;
     }
   }

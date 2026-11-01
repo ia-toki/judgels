@@ -4,8 +4,6 @@ import { UserRef } from '../../../../../../components/UserRef/UserRef';
 import { IcpcScoreboardProblemState } from '../../../../../../modules/api/scoreboard';
 import { ScoreboardTable } from '../ScoreboardTable/ScoreboardTable';
 
-import './IcpcScoreboardTable.scss';
-
 export function IcpcScoreboardTable({ userJid, scoreboard: { state, content }, profilesMap, onClickSubmissionCell }) {
   const renderData = () => {
     const rows = content.entries.map(renderRow);

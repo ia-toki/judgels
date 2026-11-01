@@ -3,21 +3,20 @@
 .content-with-sidebar {
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 320px minmax(0, 1fr);
-  column-gap: 25px;
+  grid-template-columns: $sidebar-width minmax(0, 1fr);
+  column-gap: $sidebar-gap;
   min-height: var(--app-page-min-height);
 }
 
 .content-with-sidebar__header {
   grid-row: 1;
   grid-column: 2;
-  max-width: 920px;
+  max-width: $content-width;
   margin-bottom: 16px;
 
   h2 {
+    @include page-title-compact;
     margin-bottom: 0;
-    font-size: $font-size-page-title-compact !important;
-    line-height: 24px !important;
   }
 }
 
@@ -29,7 +28,7 @@
 .content-with-sidebar__content {
   grid-row: 2;
   grid-column: 2;
-  max-width: 920px;
+  max-width: $content-width;
 }
 
 .content-with-sidebar__content--small {
@@ -42,16 +41,16 @@
 }
 
 .content-with-sidebar__card-content > :not(.content-card--page-section, :has(.content-card--page-section)) {
-  margin: 20px;
+  margin: $card-padding;
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: $breakpoint-wide) {
   .content-with-sidebar {
-    grid-template-columns: 270px minmax(0, 1fr);
+    grid-template-columns: $sidebar-width-narrow minmax(0, 1fr);
   }
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $breakpoint-mobile) {
   .content-with-sidebar {
     display: flex;
     flex-direction: column;

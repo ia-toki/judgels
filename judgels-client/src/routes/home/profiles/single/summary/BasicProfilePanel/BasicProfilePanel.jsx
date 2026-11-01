@@ -10,9 +10,9 @@ import './BasicProfilePanel.scss';
 export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, country, rating } }) {
   const renderMain = () => {
     return (
-      <Box className="basic-profile-card__main" padding={4}>
-        <div className="basic-profile-card__avatar-wrapper">
-          <img className="basic-profile-card__avatar" src={avatarUrl} alt="avatar" />
+      <Box className="basic-profile-panel__main" padding={4}>
+        <div className="basic-profile-panel__avatar-wrapper">
+          <img className="basic-profile-panel__avatar" src={avatarUrl} alt="avatar" />
         </div>
         <p className={getRatingClass(rating)}>{username}</p>
         {renderCountry()}
@@ -26,23 +26,23 @@ export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, c
     }
     return (
       <div>
-        <img alt={country} src={`/flags/flags-iso/shiny/24/${country}.png`} className="basic-profile-card__flag" />
-        <span className="basic-profile-card__country">{getCountryName(country)}</span>
+        <img alt={country} src={`/flags/flags-iso/shiny/24/${country}.png`} className="basic-profile-panel__flag" />
+        <span className="basic-profile-panel__country">{getCountryName(country)}</span>
       </div>
     );
   };
 
   const renderDetails = () => {
     return (
-      <div className="basic-profile-card__details">
-        <HTMLTable striped className="basic-profile-card__details-table">
+      <div className="basic-profile-panel__details">
+        <HTMLTable striped className="basic-profile-panel__details-table">
           <tbody>
             <tr>
-              <td className="basic-profile-card__details-keys">Name</td>
+              <td className="basic-profile-panel__details-keys">Name</td>
               <td>{name || '-'}</td>
             </tr>
             <tr>
-              <td className="basic-profile-card__details-keys">Rating</td>
+              <td className="basic-profile-panel__details-keys">Rating</td>
               <td className={getRatingClass(rating)}>{(rating && rating.publicRating) || '-'}</td>
             </tr>
           </tbody>
@@ -52,10 +52,10 @@ export function BasicProfilePanel({ avatarUrl, basicProfile: { username, name, c
   };
 
   return (
-    <ContentCard title="Basic profile" className="profile-summary-card basic-profile-card">
-      <div className="basic-profile-card__wrapper">
+    <ContentCard title="Basic profile" className="profile-summary-page basic-profile-panel">
+      <div className="basic-profile-panel__wrapper">
         {renderMain()}
-        <div className="basic-profile-card__divider" />
+        <div className="basic-profile-panel__divider" />
         {renderDetails()}
       </div>
     </ContentCard>

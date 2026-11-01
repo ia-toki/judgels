@@ -1,5 +1,5 @@
 import { getCountryName } from '../../../../../assets/data/countries';
-import { HorizontalInnerDivider } from '../../../../../components/HorizontalInnerDivider/HorizontalInnerDivider';
+import { HorizontalDivider } from '../../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
 import { userInfoGender } from '../../../../../modules/api/userInfo';
 
@@ -33,7 +33,7 @@ export function InfoTable({ email, info }) {
       <h4>My info</h4>
       <FormTable rows={infoRows} />
 
-      <HorizontalInnerDivider />
+      <HorizontalDivider inner />
 
       <h4>My institution</h4>
       <FormTable rows={institutionRows} />

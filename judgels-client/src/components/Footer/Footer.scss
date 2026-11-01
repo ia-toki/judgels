@@ -1,9 +1,11 @@
+@use '../../styles/base' as *;
+
 .footer {
   height: var(--app-footer-height);
   padding-top: 12px;
 }
 
-@media only screen and (min-width: 1025px) {
+@media only screen and (min-width: $breakpoint-tablet + 1) {
   .is-course-chapter-problem .footer {
     display: none;
   }

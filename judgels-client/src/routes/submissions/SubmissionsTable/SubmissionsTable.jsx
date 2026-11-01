@@ -9,8 +9,6 @@ import { getGradingLanguageName } from '../../../modules/api/gradingLanguage';
 import { constructProblemName } from '../../../modules/api/problem';
 import { constructContainerUrl, constructProblemUrl } from '../../../modules/api/submission';
 
-import '../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
-
 export function SubmissionsTable({
   submissions,
   canManage,

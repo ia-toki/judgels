@@ -82,7 +82,7 @@ button {
 input:not([type='checkbox']):not([type='radio']) {
   font-family: $primary-font;
   width: 100%;
-  height: 35px !important;
+  height: $control-height !important;
   border-radius: 2px;
 }
 
@@ -100,7 +100,7 @@ table.bp6-html-table {
 /* Blueprint overrides */
 
 .toast {
-  margin-top: 50px;
+  margin-top: $header-height;
 }
 
 .bp6-intent-primary {
@@ -326,9 +326,29 @@ table.bp6-html-table.bp6-html-table-striped tbody tr:nth-child(odd) td {
   font-weight: normal !important;
 }
 
+.statement-width {
+  max-width: $statement-width;
+}
+
 .col-fit {
   width: 1%;
   white-space: nowrap;
+}
+
+.col-narrow {
+  width: 50px;
+}
+
+.col-medium {
+  width: 150px;
+}
+
+.col-wide {
+  width: 200px;
+}
+
+.col-key {
+  width: 250px;
 }
 
 .bp6-overlay-start-focus-trap,

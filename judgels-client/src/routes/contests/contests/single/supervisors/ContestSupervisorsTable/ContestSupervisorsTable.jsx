@@ -25,8 +25,8 @@ export function ContestSupervisorsTable({ supervisors, profilesMap }) {
     return (
       <thead>
         <tr>
-          <th className="col-user">User</th>
-          <th className="col-management-permission">Management permissions</th>
+          <th>User</th>
+          <th>Management permissions</th>
         </tr>
       </thead>
     );
@@ -62,7 +62,7 @@ export function ContestSupervisorsTable({ supervisors, profilesMap }) {
   };
 
   return (
-    <HTMLTable striped className="table-list-condensed supervisors-table">
+    <HTMLTable striped className="table-list-condensed">
       {renderHeader()}
       {renderRows()}
     </HTMLTable>

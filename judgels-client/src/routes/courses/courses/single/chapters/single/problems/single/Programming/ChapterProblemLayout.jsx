@@ -5,9 +5,6 @@ import ContentWithTopbar from '../../../../../../../../../components/ContentWith
 import { ChapterProblemContext } from '../ChapterProblemContext';
 import ChapterProblemStatementPage from './ChapterProblemStatementPage/ChapterProblemStatementPage';
 
-import './ChapterProblemLayout.scss';
-import './ChapterProblemStatementLayout.scss';
-
 export default function ChapterProblemLayout({ worksheet, renderNavigation, reloadProblem }) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const problemAlias = worksheet?.problem?.alias;
@@ -26,10 +23,10 @@ export default function ChapterProblemLayout({ worksheet, renderNavigation, relo
   const basePath = `/courses/${courseSlug}/chapters/${chapterAlias}/problems/${problemAlias}`;
 
   return (
-    <div className="chapter-programming-problem-page">
+    <div className="chapter-problem-panes">
       <ChapterProblemStatementPage worksheet={worksheet} />
       <Flex asChild flex={1} flexDirection="column">
-        <ContentWithTopbar className="chapter-problem-statement-routes" items={topbarItems} basePath={basePath} gap={2}>
+        <ContentWithTopbar className="chapter-problem-routes" items={topbarItems} basePath={basePath} gap={2}>
           <ChapterProblemContext.Provider value={{ worksheet, renderNavigation, reloadProblem }}>
             <Outlet />
           </ChapterProblemContext.Provider>

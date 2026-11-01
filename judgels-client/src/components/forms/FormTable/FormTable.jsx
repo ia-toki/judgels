@@ -3,12 +3,10 @@ import classNames from 'classnames';
 
 import './FormTable.scss';
 
-export function FormTable({ rows, small, keyClassName, keyStyles }) {
+export function FormTable({ rows, small, fixedKey }) {
   const htmlRows = rows.map(({ key, title, value }) => (
     <tr key={key}>
-      <td className={classNames(keyClassName, 'form-table__title', { 'form-table--small': small })} style={keyStyles}>
-        {title}
-      </td>
+      <td className={classNames('form-table__title', { 'form-table--small': small, 'col-key': fixedKey })}>{title}</td>
       <td data-key={key} className={classNames('form-table__value', { 'form-table--small': small })}>
         {value}
       </td>

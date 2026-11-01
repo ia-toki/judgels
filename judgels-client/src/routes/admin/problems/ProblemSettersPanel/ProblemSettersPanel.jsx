@@ -39,8 +39,6 @@ export default function ProblemSettersPanel({ problemJid }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const getSetterJids = role => setterJidsMap[role] || [];
 
   const getSetterUsernames = role =>
@@ -89,7 +87,7 @@ export default function ProblemSettersPanel({ problemJid }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

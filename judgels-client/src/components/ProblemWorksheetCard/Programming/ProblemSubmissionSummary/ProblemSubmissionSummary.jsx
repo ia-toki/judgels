@@ -29,7 +29,7 @@ export function ProblemSubmissionSummary({ submissionJid, submission, submission
       return null;
     }
 
-    return <Tag className="problem-submission-summary__score">{score}</Tag>;
+    return <Tag>{score}</Tag>;
   };
 
   const renderErrors = () => {

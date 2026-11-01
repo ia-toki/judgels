@@ -14,7 +14,7 @@ export default function NeedActivationPage() {
 
   return (
     <SingleColumnLayout>
-      <Card title="Activation required" className="card-need-activation">
+      <Card title="Activation required">
         <p>Your account has not been activated.</p>
         <p data-key="instruction">
           A confirmation email has been sent to&nbsp;

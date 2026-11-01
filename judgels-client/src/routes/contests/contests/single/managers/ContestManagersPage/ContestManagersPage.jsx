@@ -11,8 +11,6 @@ import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManag
 import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
 import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
 
-import './ContestManagersPage.scss';
-
 const PAGE_SIZE = 250;
 
 export default function ContestManagersPage() {

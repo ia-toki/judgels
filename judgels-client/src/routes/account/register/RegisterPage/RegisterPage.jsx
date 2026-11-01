@@ -45,11 +45,11 @@ export default function RegisterPage() {
   let content;
   if (registeredUser) {
     content = (
-      <Card title="Activation required" className="card-register">
+      <Card title="Activation required" className="register-page__card">
         <p>
           Thank you for registering, <strong>{registeredUser.username}</strong>.
         </p>
-        <p data-key="instruction" className="card-register__instruction">
+        <p data-key="instruction">
           A confirmation email has been sent to&nbsp;
           <strong>{registeredUser.email}</strong> with instruction to activate your account.
         </p>
@@ -63,7 +63,7 @@ export default function RegisterPage() {
       recaptchaSiteKey: config.recaptcha && config.recaptcha.siteKey,
     };
     content = (
-      <Card title="Register and start training for free" className="card-register">
+      <Card title="Register and start training for free" className="register-page__card">
         <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
         {isInternalAuthEnabled && <RegisterForm onSubmit={onRegisterUser} {...registerFormProps} />}
       </Card>

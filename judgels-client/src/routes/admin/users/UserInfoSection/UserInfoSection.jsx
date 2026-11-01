@@ -18,8 +18,6 @@ export function UserInfoSection({ user }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'name', title: 'Name', value: userInfo.name },
     { key: 'gender', title: 'Gender', value: userInfo.gender && userInfoGender[userInfo.gender] },
@@ -70,7 +68,7 @@ export function UserInfoSection({ user }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

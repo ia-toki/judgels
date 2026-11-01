@@ -12,7 +12,7 @@ export function FormTextArea({ input, label, labelHelper, meta, autoFocus, rows,
       <textarea
         {...input}
         id={input.name}
-        className={classNames(Classes.INPUT, 'form-textarea', getIntentClassName(meta), {
+        className={classNames(Classes.INPUT, Classes.FILL, getIntentClassName(meta), {
           'form-textarea--code': isCode,
         })}
         rows={rows}

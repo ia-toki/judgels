@@ -34,7 +34,7 @@ export default function ProblemSetsPage() {
     const rows = problemSets.page.map(problemSet => (
       <tr key={problemSet.jid}>
         <td className="col-fit">{problemSet.id}</td>
-        <td style={{ width: '200px' }}>
+        <td>
           <Link to={`/admin/problemsets/${problemSet.slug}`}>{problemSet.slug}</Link>
         </td>
         <td>{problemSet.name}</td>
@@ -47,7 +47,7 @@ export default function ProblemSetsPage() {
         <thead>
           <tr>
             <th className="col-fit">ID</th>
-            <th style={{ width: '200px' }}>Slug</th>
+            <th className="col-wide">Slug</th>
             <th>Name</th>
             <th>Archive</th>
           </tr>

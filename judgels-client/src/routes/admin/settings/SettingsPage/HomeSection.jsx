@@ -19,8 +19,6 @@ export function HomeSection({ home = { banner: '' } }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '300px' };
-
   const rows = [{ key: 'banner', title: 'Banner', value: <HtmlText>{home.banner || ''}</HtmlText> }];
 
   const updateSettings = async values => {
@@ -66,7 +64,7 @@ export function HomeSection({ home = { banner: '' } }) {
       );
     }
 
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

@@ -1,18 +1,13 @@
 import { Classes } from '@blueprintjs/core';
 import { Box } from '@blueprintjs/labs';
-import { useEffect, useState } from 'react';
 
 import { ContentList } from '../ContentList/ContentList';
+import { useShowAfterDelay } from '../LoadingState/useShowAfterDelay';
 
 import './ContentRow.scss';
 
 export function LoadingContentRow() {
-  const [showSkeleton, setShowSkeleton] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSkeleton(true), 200);
-    return () => clearTimeout(timer);
-  }, []);
+  const showSkeleton = useShowAfterDelay(200);
 
   if (!showSkeleton) {
     return null;

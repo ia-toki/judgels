@@ -1,9 +1,8 @@
 import { HTMLTable } from '@blueprintjs/core';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
-import { ContestLink } from '../../../../../../components/ContestLink/ContestLink';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import { getRatingClass } from '../../../../../../modules/api/userRating';
 import { contestPublicHistoryQueryOptions } from '../../../../../../modules/queries/contestHistory';
@@ -75,7 +74,7 @@ function renderRows(response) {
       <tr key={event.contestJid}>
         <td>{idx + 1}</td>
         <td>
-          <ContestLink contest={contestsMap[event.contestJid]} />
+          <Link to={`/contests/${contestsMap[event.contestJid].slug}`}>{contestsMap[event.contestJid].name}</Link>
         </td>
         <td>{event.rank === 0 ? '-' : event.rank}</td>
         <td>{ratingChange}</td>

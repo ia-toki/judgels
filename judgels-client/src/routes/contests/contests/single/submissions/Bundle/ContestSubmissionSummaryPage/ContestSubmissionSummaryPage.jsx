@@ -2,7 +2,7 @@ import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { ContentCard } from '../../../../../../../components/ContentCard/ContentCard';
-import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails/SubmissionDetails';
+import { SubmissionDetails } from '../../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails';
 import { UserRef } from '../../../../../../../components/UserRef/UserRef';
 import { contestBySlugQueryOptions } from '../../../../../../../modules/queries/contest';
 import {
@@ -50,7 +50,7 @@ export default function ContestSubmissionSummaryPage() {
   };
 
   return (
-    <ContentCard className="contest-submision-summary-page" title="Submissions">
+    <ContentCard title="Submissions">
       <ContentCard>
         Summary for <UserRef profile={profile} />
       </ContentCard>

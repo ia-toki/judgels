@@ -32,7 +32,7 @@ function escapeHtml(text) {
 
 function LatexExamplesTable({ examples }) {
   return (
-    <HTMLTable bordered style={{ width: '100%' }}>
+    <HTMLTable bordered>
       <tbody>
         {examples.map(({ code, note }) => (
           <tr key={code}>

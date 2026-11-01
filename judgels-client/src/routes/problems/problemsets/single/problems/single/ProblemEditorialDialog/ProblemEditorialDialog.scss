@@ -1,5 +1,7 @@
+@use '../../../../../../../styles/base' as *;
+
 .problem-editorial-dialog {
-  width: 800px;
+  width: $dialog-width-large;
 }
 
 .problem-editorial-dialog-button {
@@ -11,7 +13,7 @@
   overflow: auto;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: $dialog-width-large) {
   .problem-editorial-dialog {
     width: inherit;
   }

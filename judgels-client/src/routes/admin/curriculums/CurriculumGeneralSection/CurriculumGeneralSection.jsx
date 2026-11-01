@@ -15,8 +15,6 @@ export function CurriculumGeneralSection({ curriculum }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'name', title: 'Name', value: curriculum.name },
     { key: 'description', title: 'Description', value: curriculum.description },
@@ -53,7 +51,7 @@ export function CurriculumGeneralSection({ curriculum }) {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

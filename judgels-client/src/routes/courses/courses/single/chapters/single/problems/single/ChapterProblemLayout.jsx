@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react';
 
 import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { sendGAEvent } from '../../../../../../../../ga';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
@@ -19,6 +18,7 @@ import {
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
+import { ChapterProblemProgressTag } from '../../resources/ChapterProblemProgressTag/ChapterProblemProgressTag';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
 import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
 

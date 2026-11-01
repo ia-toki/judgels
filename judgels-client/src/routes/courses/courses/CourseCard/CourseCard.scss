@@ -1,10 +1,12 @@
+@use '../../../../styles/base' as *;
+
 .course-card__image {
   flex-shrink: 0;
   width: 64px;
   height: 64px;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $breakpoint-mobile) {
   .course-card {
     flex-direction: column;
   }

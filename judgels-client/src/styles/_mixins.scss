@@ -1,9 +1,11 @@
 @use './variables/colors' as *;
+@use './variables/fonts' as *;
+@use './variables/layout' as *;
 
 // The bar that gives a card's heading its own space, separated from the content by the page color.
 @mixin card-heading {
   min-height: 45px;
-  padding: 12px 20px;
+  padding: 12px $card-padding;
   border-bottom: 1px solid $background-color;
 
   .bp6-dark & {
@@ -13,4 +15,9 @@
   .card-heading__title {
     line-height: 20px;
   }
+}
+
+@mixin page-title-compact {
+  font-size: $font-size-page-title-compact !important;
+  line-height: $page-title-compact-line-height !important;
 }

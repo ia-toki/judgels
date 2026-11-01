@@ -13,8 +13,6 @@ import {
   createChapterItemSubmissionMutationOptions,
 } from '../../../../../../../../../../modules/queries/trainingItemSubmission';
 
-import './ChapterProblemStatementPage.scss';
-
 export default function ChapterProblemStatementPage(props) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
   const location = useLocation();
@@ -92,7 +90,7 @@ export default function ChapterProblemStatementPage(props) {
   };
 
   return (
-    <ContentCard className="chapter-bundle-problem-statement-page">
+    <ContentCard className="chapter-problem-pane chapter-problem-pane--statement">
       {renderStatementLanguageWidget()}
       {renderStatement()}
     </ContentCard>

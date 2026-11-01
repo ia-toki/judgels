@@ -10,7 +10,7 @@
   }
 
   .bp6-dark & {
-    background-color: rgba(19, 124, 189, 0.25);
+    background-color: $dark-blue-secondary-background-color;
   }
 }
 
@@ -41,15 +41,6 @@
   margin-bottom: 5px !important;
 }
 
-.home-banner__button-register {
-  margin-top: 10px;
-  margin-right: 5px;
-}
-
-.home-banner__button-login {
-  margin-top: 10px;
-}
-
 .home-widget-row {
   display: flex;
   gap: 10px;
@@ -64,7 +55,7 @@
   flex: 1 1 0;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: $breakpoint-phone) {
   .home-banner__contents {
     max-width: 100%;
   }
@@ -74,11 +65,5 @@
   .home-widget-row {
     flex-direction: column;
     gap: 16px;
-  }
-}
-
-@media only screen and (max-width: 370px) {
-  .home-banner__button-register {
-    margin-right: 0;
   }
 }

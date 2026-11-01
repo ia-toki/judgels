@@ -1,4 +1,6 @@
-@media only screen and (max-width: 750px) {
+@use '../../styles/base' as *;
+
+@media only screen and (max-width: $breakpoint-mobile) {
   .problem-set-problem-card {
     flex-direction: column;
   }

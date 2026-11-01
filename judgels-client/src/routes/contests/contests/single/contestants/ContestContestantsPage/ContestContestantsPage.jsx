@@ -19,8 +19,6 @@ import { ContestContestantsTable } from '../ContestContestantsTable/ContestConte
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-import './ContestContestantsPage.scss';
-
 const PAGE_SIZE = 1000;
 
 export default function ContestContestantsPage() {

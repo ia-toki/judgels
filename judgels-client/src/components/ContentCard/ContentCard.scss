@@ -28,7 +28,7 @@
 
   // Holds the card's padding, because the rows of a ContentList reach into it and this scroll area would clip them.
   > .content-card__body {
-    padding: 20px;
+    padding: $card-padding;
     overflow-x: auto;
   }
 

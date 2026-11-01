@@ -55,7 +55,7 @@ export default function SingleProblemSetProblemLayout() {
         />
       </h2>
     ),
-    stickyWidget1: ProblemReportWidget,
+    stickyWidget: ProblemReportWidget,
   };
 
   return (

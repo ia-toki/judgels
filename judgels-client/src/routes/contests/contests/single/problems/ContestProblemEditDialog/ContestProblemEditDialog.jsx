@@ -1,7 +1,6 @@
 import { Button, Callout, Classes, Dialog, Intent } from '@blueprintjs/core';
 import { Edit } from '@blueprintjs/icons';
 import { useMutation } from '@tanstack/react-query';
-import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { setContestProblemsMutationOptions } from '../../../../../../modules/queries/contestProblem';
@@ -9,8 +8,6 @@ import ContestProblemEditForm from '../ContestProblemEditForm/ContestProblemEdit
 import { getContestProblemEditor } from '../modules/editor/contestProblemEditorRegistry';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
-
-import './ContestProblemEditDialog.scss';
 
 export function ContestProblemEditDialog({ contest, problems }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -23,7 +20,7 @@ export function ContestProblemEditDialog({ contest, problems }) {
 
   const renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-problem-edit-dialog__body')}>
+      <div className={Classes.DIALOG_BODY}>
         {fields}
         {renderInstructions()}
       </div>
@@ -71,18 +68,10 @@ export function ContestProblemEditDialog({ contest, problems }) {
 
   return (
     <div>
-      <Button
-        small
-        className="contest-problem-set-dialog__button"
-        intent={Intent.PRIMARY}
-        icon={<Edit />}
-        onClick={toggleDialog}
-        disabled={isDialogOpen}
-      >
+      <Button small intent={Intent.PRIMARY} icon={<Edit />} onClick={toggleDialog} disabled={isDialogOpen}>
         Edit problems
       </Button>
       <Dialog
-        className="contest-problem-set-dialog"
         isOpen={isDialogOpen}
         onClose={toggleDialog}
         title="Edit problems"

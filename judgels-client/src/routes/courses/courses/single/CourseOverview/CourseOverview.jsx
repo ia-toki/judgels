@@ -36,7 +36,7 @@ export default function CourseOverview() {
   };
 
   return (
-    <Flex className="course-overview" flexDirection="column" flex={1}>
+    <Flex className="course-content course-overview" flexDirection="column" flex={1}>
       <h2>{course.name}</h2>
       <ContentCard>
         <Flex flexDirection="column" gap={4}>

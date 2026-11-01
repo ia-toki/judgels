@@ -5,7 +5,7 @@ import './Footer.scss';
 export function Footer() {
   return (
     <div className="footer">
-      <small className="footer__text">
+      <small>
         <Flex justifyContent="end">
           <div>
             Powered by <a href="https://github.com/ia-toki/judgels">Judgels</a>

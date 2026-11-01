@@ -1,65 +1,41 @@
 @use './base' as *;
 
-.rating-unrated {
-  color: $text-color !important;
-  font-weight: $font-weight-bold;
+@mixin rating($color, $dark-color: $color) {
+  color: $color !important;
+  font-weight: $font-weight-strong;
 
   .bp6-dark & {
-    color: $dark-text-color !important;
+    color: $dark-color !important;
   }
+}
+
+.rating-unrated {
+  @include rating($text-color, $dark-text-color);
+  font-weight: $font-weight-bold;
 }
 
 .rating-gray {
-  color: #b7b7b7 !important;
-  font-weight: $font-weight-strong;
-
-  .bp6-dark & {
-    color: #738694 !important;
-  }
+  @include rating(#b7b7b7, #738694);
 }
 
 .rating-green {
-  &,
-  .bp6-dark & {
-    color: #70ad47 !important;
-    font-weight: $font-weight-strong;
-  }
+  @include rating(#70ad47);
 }
 
 .rating-blue {
-  color: #3c78d8 !important;
-  font-weight: $font-weight-strong;
-
-  .bp6-dark & {
-    color: #39ace7 !important;
-    font-weight: $font-weight-strong;
-  }
+  @include rating(#3c78d8, #39ace7);
 }
 
 .rating-purple {
-  color: #7030a0 !important;
-  font-weight: $font-weight-strong;
-
-  .bp6-dark & {
-    color: #cc99cd !important;
-  }
+  @include rating(#7030a0, #cc99cd);
 }
 
 .rating-orange {
-  &,
-  .bp-dark & {
-    color: #f6b26b !important;
-    font-weight: $font-weight-strong;
-  }
+  @include rating(#f6b26b);
 }
 
 .rating-red {
-  color: #ff0000 !important;
-  font-weight: $font-weight-strong;
-
-  .bp6-dark & {
-    color: #ff4545 !important;
-  }
+  @include rating(#ff0000, #ff4545);
 }
 
 .rating-legend {

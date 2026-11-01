@@ -1,9 +1,5 @@
 @use '../../../styles/base' as *;
 
-.form-textarea {
-  width: 100%;
-}
-
 .form-textarea--code {
   font-family: $mono-font;
   font-size: $font-size-small;

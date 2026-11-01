@@ -1,6 +1,6 @@
 @use '../../styles/base' as *;
 
-.widget-user__profile {
+.user-widget__profile {
   border-radius: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -26,56 +26,49 @@
   color: inherit;
 }
 
-.widget-user__avatar-wrapper {
+.user-widget__avatar-wrapper {
   height: 60px;
   padding-top: 10px;
   padding-left: 10px;
 }
 
-.widget-user__avatar {
+.user-widget__avatar {
   height: 40px;
   width: 40px;
   margin-right: 10px;
   border-radius: 50%;
 }
 
-.widget-user__link {
+.user-widget__link {
   font-size: $font-size-small;
 }
 
-.widget-user__burger,
-.widget-user__menu-helper {
+.user-widget__burger,
+.user-widget__menu-helper {
   display: none !important;
 }
 
-.widget-user__menu a {
+.user-widget__menu a {
   color: inherit !important;
 }
 
-.widget-user__user__username {
+.user-widget__username {
   cursor: pointer;
 }
 
-@media only screen and (max-width: 600px) {
-  .widget-user__avatar-wrapper {
+@media only screen and (max-width: $breakpoint-phone) {
+  .user-widget__avatar-wrapper {
     display: none;
-  }
-
-  .widget-user__burger,
-  .widget-user__menu-helper {
-    display: flex !important;
-    align-items: center;
-    cursor: pointer;
   }
 }
 
-@media only screen and (max-width: 960px) {
-  .widget-user__avatar-menu {
+@media only screen and (max-width: $breakpoint-menubar) {
+  .user-widget__avatar-menu {
     margin-right: 10px;
   }
 
-  .widget-user__burger,
-  .widget-user__menu-helper {
+  .user-widget__burger,
+  .user-widget__menu-helper {
     display: flex !important;
     align-items: center;
     cursor: pointer;

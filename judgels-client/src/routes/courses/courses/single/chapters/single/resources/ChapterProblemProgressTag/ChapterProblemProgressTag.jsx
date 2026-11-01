@@ -1,11 +1,11 @@
 import { Intent, Tag } from '@blueprintjs/core';
 import { Circle, Confirm, Dashboard } from '@blueprintjs/icons';
 
-import { VerdictCode } from '../../modules/api/gradingVerdict';
+import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 
 import './ChapterProblemProgressTag.scss';
 
-export const ChapterProblemProgressTag = ({ verdict }) => {
+export function ChapterProblemProgressTag({ verdict }) {
   if (verdict === VerdictCode.AC) {
     return (
       <Tag className="chapter-problem-progress-tag" intent={Intent.SUCCESS}>
@@ -28,4 +28,4 @@ export const ChapterProblemProgressTag = ({ verdict }) => {
       </Tag>
     );
   }
-};
+}

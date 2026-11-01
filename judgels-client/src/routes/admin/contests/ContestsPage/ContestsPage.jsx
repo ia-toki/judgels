@@ -34,7 +34,7 @@ export default function ContestsPage() {
     const rows = contests.map(contest => (
       <tr key={contest.jid}>
         <td className="col-fit">{contest.id}</td>
-        <td style={{ width: '200px' }}>
+        <td>
           <Link to={`/contests/${contest.slug}`}>{contest.slug}</Link>
         </td>
         <td>{contest.name}</td>
@@ -46,7 +46,7 @@ export default function ContestsPage() {
         <thead>
           <tr>
             <th className="col-fit">ID</th>
-            <th style={{ width: '200px' }}>Slug</th>
+            <th className="col-wide">Slug</th>
             <th>Name</th>
           </tr>
         </thead>

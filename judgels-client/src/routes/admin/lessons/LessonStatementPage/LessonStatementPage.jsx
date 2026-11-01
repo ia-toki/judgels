@@ -20,8 +20,6 @@ import StatementEditForm from '../../catalog/StatementEditForm/StatementEditForm
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-import './LessonStatementPage.scss';
-
 export default function LessonStatementPage() {
   const { lessonSlug } = useParams({ strict: false });
   const { user } = useSession();
@@ -97,7 +95,7 @@ export default function LessonStatementPage() {
   };
 
   return (
-    <Flex className="lesson-statement-page" flexDirection="column" gap={2} width={100} marginX="auto">
+    <Flex className="statement-width" flexDirection="column" gap={2} width={100} marginX="auto">
       <Flex justifyContent="end" alignItems="center" gap={2}>
         {renderLanguageSelect()}
         {renderEditButton()}

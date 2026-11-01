@@ -23,8 +23,6 @@ export default function ContestGeneralSection() {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '250px' };
-
   const rows = [
     { key: 'jid', title: 'JID', value: contest.jid },
     { key: 'slug', title: 'Slug', value: contest.slug },
@@ -78,7 +76,7 @@ export default function ContestGeneralSection() {
         />
       );
     }
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

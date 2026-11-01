@@ -3,9 +3,9 @@ import { Flex } from '@blueprintjs/labs';
 import classNames from 'classnames';
 
 import { ContentRow } from '../../../../../../../../components/ContentRow/ContentRow';
-import { ChapterProblemProgressTag } from '../../../../../../../../components/VerdictProgressTag/ChapterProblemProgressTag';
 import { VerdictCode } from '../../../../../../../../modules/api/gradingVerdict';
 import { ProblemType } from '../../../../../../../../modules/api/problem';
+import { ChapterProblemProgressTag } from '../ChapterProblemProgressTag/ChapterProblemProgressTag';
 
 import './ChapterProblemCard.scss';
 
@@ -22,9 +22,7 @@ export function ChapterProblemCard({
     if (!problemSetProblemPaths) {
       return null;
     }
-    return (
-      <span className="chapter-problem-card__paths">{problemSetProblemPaths.map(p => p.join('/')).join(', ')}</span>
-    );
+    return <span>{problemSetProblemPaths.map(p => p.join('/')).join(', ')}</span>;
   };
 
   const renderProgress = () => {

@@ -11,6 +11,8 @@ import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTa
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
+import '../../components/ContestUserDialog.scss';
+
 export function ContestSupervisorAddDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
@@ -24,7 +26,7 @@ export function ContestSupervisorAddDialog({ contest }) {
 
   const renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-body')}>{fields}</div>
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={toggleDialog} />
@@ -65,7 +67,7 @@ export function ContestSupervisorAddDialog({ contest }) {
     const { upsertedSupervisorProfilesMap: insertedSupervisorProfilesMap } = response;
     return (
       <>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-supervisor-dialog-result-body')}>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestSupervisorAddResultTable
             usernames={usernames}
             insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
@@ -90,14 +92,7 @@ export function ContestSupervisorAddDialog({ contest }) {
 
   return (
     <>
-      <Button
-        small
-        className="contest-supervisor-dialog-button"
-        intent={Intent.PRIMARY}
-        icon={<Plus />}
-        onClick={toggleDialog}
-        disabled={isDialogOpen}
-      >
+      <Button small intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         Add/update supervisors
       </Button>
       <Dialog

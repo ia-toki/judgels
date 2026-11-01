@@ -7,8 +7,6 @@ import { GradingVerdictTag } from '../../../../../../../../components/GradingVer
 import { UserRef } from '../../../../../../../../components/UserRef/UserRef';
 import { getGradingLanguageName } from '../../../../../../../../modules/api/gradingLanguage.js';
 
-import '../../../../../../../../components/SubmissionsTable/Programming/SubmissionsTable.scss';
-
 export function ProblemSubmissionsTable({ problemSet, problem, submissions, canManage, profilesMap, onRegrade }) {
   const renderHeader = () => {
     return (

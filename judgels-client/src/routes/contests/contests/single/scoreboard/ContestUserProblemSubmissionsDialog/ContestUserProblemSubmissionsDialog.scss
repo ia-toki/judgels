@@ -1,9 +1,7 @@
-.contest-user-problem-submissions-dialog {
-  width: 800px;
+@use '../../../../../../styles/base' as *;
 
-  details summary {
-    cursor: pointer;
-  }
+.contest-user-problem-submissions-dialog {
+  width: $dialog-width-large;
 
   details summary > * {
     display: inline-block;
@@ -16,7 +14,7 @@
   }
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: $dialog-width-large) {
   .contest-user-problem-submissions-dialog {
     width: inherit;
   }

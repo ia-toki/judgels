@@ -100,7 +100,10 @@ export default function ChapterProblemStatementPage({ worksheet }) {
   };
 
   return (
-    <ContentCard id="chapter-problem-statement" className="chapter-programming-problem-statement-page">
+    <ContentCard
+      id="chapter-problem-statement"
+      className="chapter-problem-pane chapter-problem-pane--statement chapter-problem-statement-page"
+    >
       {renderStatementHeader()}
       {renderStatement()}
       <div className="chapter-problem-editorial">{renderEditorial()}</div>

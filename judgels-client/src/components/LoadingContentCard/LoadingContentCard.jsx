@@ -1,40 +1,21 @@
 import { Classes } from '@blueprintjs/core';
-import { Component } from 'react';
 
 import { ContentCard } from '../ContentCard/ContentCard';
+import { useShowAfterDelay } from '../LoadingState/useShowAfterDelay';
 
-export class LoadingContentCard extends Component {
-  timer;
+export function LoadingContentCard() {
+  const showSkeleton = useShowAfterDelay(200);
 
-  state = {
-    showSkeleton: false,
-  };
-
-  componentDidMount() {
-    this.timer = setTimeout(() => {
-      this.setState({ showSkeleton: true });
-      this.timer = 0;
-    }, 200);
+  if (!showSkeleton) {
+    return null;
   }
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = 0;
-    }
-  }
-
-  render() {
-    if (!this.state.showSkeleton) {
-      return null;
-    }
-    return (
-      <ContentCard>
-        <h4 className={Classes.SKELETON}>This is a placeholder for a long content name</h4>
-        <p className={Classes.SKELETON}>
-          <small>Placeholder for content description</small>
-        </p>
-      </ContentCard>
-    );
-  }
+  return (
+    <ContentCard>
+      <h4 className={Classes.SKELETON}>This is a placeholder for a long content name</h4>
+      <p className={Classes.SKELETON}>
+        <small>Placeholder for content description</small>
+      </p>
+    </ContentCard>
+  );
 }

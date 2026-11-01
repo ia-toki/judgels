@@ -40,7 +40,6 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
   const renderDialog = () => {
     return (
       <Dialog
-        className="google-auth-dialog"
         isOpen={state.isRegisterDialogOpen}
         onClose={closeDialog}
         title="Register new account"

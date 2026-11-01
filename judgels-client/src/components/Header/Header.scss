@@ -1,12 +1,11 @@
 @use '../../styles/base' as *;
 
 .bp6-navbar.header {
-  height: 50px;
+  height: $header-height;
   color: white;
 
   .bp6-light & {
     background-color: $primary-color !important;
-    height: 50px;
   }
 
   .bp6-dark & {
@@ -103,19 +102,19 @@
   font-size: $font-size-small;
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: $breakpoint-menubar) {
   .header__subtitle {
     display: none;
   }
 }
 
-@media only screen and (min-width: 961px) {
+@media only screen and (min-width: $breakpoint-menubar + 1) {
   .header__left {
     width: 275px;
   }
 }
 
-@media only screen and (min-width: 1281px) {
+@media only screen and (min-width: $breakpoint-wide + 1) {
   .header__left {
     width: 325px;
   }

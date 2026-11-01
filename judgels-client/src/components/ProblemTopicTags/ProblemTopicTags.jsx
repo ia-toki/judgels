@@ -1,5 +1,4 @@
 import { Intent, Tag } from '@blueprintjs/core';
-import classNames from 'classnames';
 
 import { useWebPrefs } from '../../modules/webPrefs';
 
@@ -35,13 +34,10 @@ export function ProblemTopicTagList({ className, tags }) {
   ));
 }
 
-export default function ProblemTopicTags({ tags, alignLeft }) {
+export default function ProblemTopicTags({ tags }) {
   return (
     <div>
-      <ProblemTopicTagList
-        tags={tags}
-        className={classNames({ 'problem-topic-tag': !alignLeft, 'problem-topic-tag-left': alignLeft })}
-      />
+      <ProblemTopicTagList tags={tags} className="problem-topic-tag" />
     </div>
   );
 }

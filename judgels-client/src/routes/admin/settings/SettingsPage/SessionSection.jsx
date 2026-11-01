@@ -19,8 +19,6 @@ export function SessionSection({ session }) {
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
-  const keyStyles = { width: '300px' };
-
   const rows = [
     {
       key: 'disableLogout',
@@ -74,15 +72,10 @@ export function SessionSection({ session }) {
                 <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
-                    <Field
-                      component={FormTableCheckbox}
-                      keyStyles={keyStyles}
-                      name="disableLogout"
-                      label="Disable logout"
-                    />
+                    <Field component={FormTableCheckbox} fixedKey name="disableLogout" label="Disable logout" />
                     <Field
                       component={FormTableTextInput}
-                      keyStyles={keyStyles}
+                      fixedKey
                       name="maxConcurrentSessionsPerUser"
                       label="Max concurrent sessions per user"
                       type="number"
@@ -100,7 +93,7 @@ export function SessionSection({ session }) {
       );
     }
 
-    return <FormTable keyStyles={keyStyles} rows={rows} />;
+    return <FormTable fixedKey rows={rows} />;
   };
 
   return (

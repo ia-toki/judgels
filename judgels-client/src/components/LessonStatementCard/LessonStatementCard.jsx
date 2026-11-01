@@ -7,7 +7,7 @@ import './LessonStatementCard.scss';
 
 export function LessonStatementCard({ alias, statement }) {
   return (
-    <ContentCard className="lesson-statement">
+    <ContentCard className="statement-width">
       <h2 className="lesson-statement__name">
         {alias && `${alias}. `}
         {statement.title}

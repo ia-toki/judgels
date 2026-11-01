@@ -70,7 +70,7 @@ export function SubmissionDetails({
     const grading = latestGrading;
 
     return (
-      <div className="general-info">
+      <div>
         {(containerName || problemName) && (
           <h4>
             {containerName && <>{containerName} / </>}

@@ -1,6 +1,12 @@
-.layout-full-page {
-  max-width: 1160px;
+@use '../../styles/base' as *;
+
+.full-page-layout {
+  max-width: $page-width;
   min-height: var(--app-page-min-height);
   margin-left: auto;
   margin-right: auto;
+}
+
+.full-page-layout--narrow {
+  max-width: $content-width;
 }

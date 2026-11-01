@@ -10,6 +10,8 @@ import { ContestContestantRemoveResultTable } from '../ContestContestantRemoveRe
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
+import '../../components/ContestUserDialog.scss';
+
 export function ContestContestantRemoveDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
@@ -23,7 +25,7 @@ export function ContestContestantRemoveDialog({ contest }) {
 
   const renderDialogForm = (fields, submitButton) => (
     <>
-      <div className={classNames(Classes.DIALOG_BODY, 'contest-contestant-dialog-body')}>{fields}</div>
+      <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__body')}>{fields}</div>
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
           <Button text="Cancel" onClick={toggleDialog} />
@@ -52,7 +54,7 @@ export function ContestContestantRemoveDialog({ contest }) {
     const { deletedContestantProfilesMap } = response;
     return (
       <>
-        <div className={classNames(Classes.DIALOG_BODY, 'contest-contestant-dialog-result-body')}>
+        <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestContestantRemoveResultTable
             usernames={usernames}
             deletedContestantProfilesMap={deletedContestantProfilesMap}

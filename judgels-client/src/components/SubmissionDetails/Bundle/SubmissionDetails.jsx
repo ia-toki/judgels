@@ -2,10 +2,10 @@ import { Button, HTMLTable } from '@blueprintjs/core';
 import { Refresh } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 
-import { ContentCard } from '../../../ContentCard/ContentCard';
-import { FormattedRelative } from '../../../FormattedRelative/FormattedRelative';
-import { FormattedAnswer } from '../FormattedAnswer/FormattedAnswer';
-import { VerdictTag } from '../VerdictTag/VerdictTag';
+import { ContentCard } from '../../ContentCard/ContentCard';
+import { FormattedRelative } from '../../FormattedRelative/FormattedRelative';
+import { FormattedAnswer } from './FormattedAnswer/FormattedAnswer';
+import { ItemVerdictTag } from './ItemVerdictTag/ItemVerdictTag';
 
 import './SubmissionDetails.scss';
 
@@ -34,7 +34,7 @@ export function SubmissionDetails({
             <>
               {showVerdict && (
                 <td className="col-fit">
-                  {submission.grading ? <VerdictTag verdict={submission.grading.verdict} /> : '-'}
+                  {submission.grading ? <ItemVerdictTag verdict={submission.grading.verdict} /> : '-'}
                 </td>
               )}
               <td className="col-fit">{submission.grading ? submission.grading.score : '-'}</td>

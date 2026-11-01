@@ -9,7 +9,7 @@ import ContestAnnouncementCreateForm from '../ContestAnnouncementCreateForm/Cont
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-import './ContestAnnouncementCreateDialog.scss';
+import '../ContestAnnouncementDialog.scss';
 
 export function ContestAnnouncementCreateDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -56,7 +56,7 @@ export function ContestAnnouncementCreateDialog({ contest }) {
     };
     return (
       <Dialog
-        className="contest-announcement-create-dialog"
+        className="contest-announcement-dialog"
         isOpen={isDialogOpen}
         onClose={toggleDialog}
         title="Create new announcement"

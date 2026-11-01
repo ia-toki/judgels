@@ -11,6 +11,10 @@ $secondary-background-color: #d9e2f6;
 $tertiary-background-color: rgba(191, 204, 214, 0.4);
 $border-color: rgba($text-color, 0.15);
 $divider-color: blueprint.$pt-divider-black;
+$table-border-color: #dee0e1;
+$readonly-background-color: rgba(206, 217, 224, 0.5);
+$code-background-color: #f5f5f5;
+$code-border-color: #cccccc;
 
 $dark-background-color: #3e5261;
 $dark-text-color: #c9d1d9;
@@ -27,3 +31,5 @@ $dark-card-hover-background-color: #455c6e;
 $dark-border-color: #617687;
 $dark-divider-color: blueprint.$pt-dark-divider-white;
 $dark-progress-track-color: rgba(255, 255, 255, 0.1);
+$dark-code-background-color: #2e3e4a;
+$dark-code-border-color: #25323b;
