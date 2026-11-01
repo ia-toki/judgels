@@ -72,6 +72,7 @@ export function ContestProblemEditDialog({ contest, problems }) {
   return (
     <div>
       <Button
+        small
         className="contest-problem-set-dialog__button"
         intent={Intent.PRIMARY}
         icon={<Edit />}

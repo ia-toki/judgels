@@ -22,7 +22,7 @@ export function ContestAnnouncementCreateDialog({ contest }) {
 
   const renderButton = () => {
     return (
-      <Button intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
+      <Button small intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
         New announcement
       </Button>
     );

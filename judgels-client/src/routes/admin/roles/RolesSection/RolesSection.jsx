@@ -1,5 +1,5 @@
 import { Alert, Button, Classes, HTMLTable, Intent, Tag } from '@blueprintjs/core';
-import { Edit, Trash, Upload } from '@blueprintjs/icons';
+import { Edit, Trash } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -78,13 +78,6 @@ export function RolesSection({ roles }) {
 
   return (
     <Flex flexDirection="column" gap={2}>
-      <ActionButtons>
-        <ButtonLink intent={Intent.PRIMARY} to="/admin/roles/-/upsert">
-          <Upload />
-          <span>Upsert roles</span>
-        </ButtonLink>
-      </ActionButtons>
-
       <HTMLTable striped className="table-list">
         <thead>
           <tr>

@@ -1,10 +1,8 @@
 import { HTMLTable, Intent } from '@blueprintjs/core';
 import { Plus } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
@@ -33,19 +31,19 @@ export default function LessonsPage() {
   };
 
   const renderAction = () => {
+    if (!canCreate) {
+      return null;
+    }
     return (
-      <Flex justifyContent="space-between" alignItems="center" gap={2}>
-        <ActionButtons>
-          {canCreate && (
-            <ButtonLink intent={Intent.PRIMARY} to="/admin/lessons/-/new">
-              <Plus />
-              <span>New lesson</span>
-            </ButtonLink>
-          )}
-        </ActionButtons>
-        <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={term || ''} isLoading={isFetching} />
-      </Flex>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/lessons/-/new">
+        <Plus />
+        <span>New lesson</span>
+      </ButtonLink>
     );
+  };
+
+  const renderSearchBox = () => {
+    return <SearchBox onRouteChange={searchBoxUpdateQueries} initialValue={term || ''} isLoading={isFetching} />;
   };
 
   const renderLessons = () => {
@@ -93,8 +91,8 @@ export default function LessonsPage() {
   };
 
   return (
-    <ContentCard title="Lessons">
-      {renderAction()}
+    <ContentCard title="Lessons" action={renderAction()}>
+      {renderSearchBox()}
       {renderLessons()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

@@ -77,7 +77,7 @@ export function ContestContestantRemoveDialog({ contest }) {
 
   return (
     <>
-      <Button intent={Intent.DANGER} icon={<Trash />} onClick={toggleDialog} disabled={isDialogOpen}>
+      <Button small intent={Intent.DANGER} icon={<Trash />} onClick={toggleDialog} disabled={isDialogOpen}>
         Remove contestants
       </Button>
       <Dialog

@@ -79,6 +79,7 @@ export function ContestManagerAddDialog({ contest }) {
   return (
     <>
       <Button
+        small
         className="contest-manager-dialog-button"
         intent={Intent.PRIMARY}
         icon={<Plus />}

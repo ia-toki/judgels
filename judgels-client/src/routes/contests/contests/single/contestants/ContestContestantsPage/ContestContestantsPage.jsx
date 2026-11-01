@@ -79,11 +79,11 @@ export default function ContestContestantsPage() {
     const { data: contestants } = response;
     const isVirtualContest = contestants.page.some(contestant => contestant.contestStartTime !== null);
     return (
-      <ActionButtons>
+      <ActionButtons justifyContent="end">
         <ContestContestantAddDialog contest={contest} />
         <ContestContestantRemoveDialog contest={contest} />
         {isVirtualContest && (
-          <Button intent={Intent.DANGER} icon={<Refresh />} onClick={onResetVirtualContest}>
+          <Button small intent={Intent.DANGER} icon={<Refresh />} onClick={onResetVirtualContest}>
             Reset all contestant virtual start times
           </Button>
         )}
@@ -92,8 +92,7 @@ export default function ContestContestantsPage() {
   };
 
   return (
-    <ContentCard title="Contestants">
-      {renderActions()}
+    <ContentCard title="Contestants" action={renderActions()}>
       {renderContestants()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>

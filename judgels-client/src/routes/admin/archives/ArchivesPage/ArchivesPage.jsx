@@ -3,7 +3,6 @@ import { Plus } from '@blueprintjs/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingContentCard } from '../../../../components/LoadingContentCard/LoadingContentCard';
@@ -54,18 +53,15 @@ export default function ArchivesPage() {
 
   const renderAction = () => {
     return (
-      <ActionButtons>
-        <ButtonLink intent={Intent.PRIMARY} to="/admin/archives/-/new">
-          <Plus />
-          <span>New archive</span>
-        </ButtonLink>
-      </ActionButtons>
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/archives/-/new">
+        <Plus />
+        <span>New archive</span>
+      </ButtonLink>
     );
   };
 
   return (
-    <ContentCard title="Archives">
-      {renderAction()}
+    <ContentCard title="Archives" action={renderAction()}>
       {renderArchives()}
     </ContentCard>
   );

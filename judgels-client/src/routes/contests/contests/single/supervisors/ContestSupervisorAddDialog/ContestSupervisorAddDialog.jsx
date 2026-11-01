@@ -91,6 +91,7 @@ export function ContestSupervisorAddDialog({ contest }) {
   return (
     <>
       <Button
+        small
         className="contest-supervisor-dialog-button"
         intent={Intent.PRIMARY}
         icon={<Plus />}

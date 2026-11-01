@@ -2,7 +2,6 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-import { ActionButtons } from '../../../../../../components/ActionButtons/ActionButtons';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../../../components/Pagination/Pagination';
@@ -68,11 +67,7 @@ export default function ContestAnnouncementsPage() {
       return null;
     }
 
-    return (
-      <ActionButtons>
-        <ContestAnnouncementCreateDialog contest={contest} />
-      </ActionButtons>
-    );
+    return <ContestAnnouncementCreateDialog contest={contest} />;
   };
 
   const renderEditDialog = () => {
@@ -97,8 +92,7 @@ export default function ContestAnnouncementsPage() {
   };
 
   return (
-    <ContentCard title="Announcements">
-      {renderAction()}
+    <ContentCard title="Announcements" action={renderAction()}>
       {renderAnnouncements()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
       {renderEditDialog()}
