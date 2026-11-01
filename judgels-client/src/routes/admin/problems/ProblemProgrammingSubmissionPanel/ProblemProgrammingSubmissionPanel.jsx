@@ -1,8 +1,6 @@
-import { ChevronLeft } from '@blueprintjs/icons';
-import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 
-import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
+import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../components/SubmissionDetails/Programming/SubmissionDetails';
 import { problemSubmissionWithSourceByIdQueryOptions } from '../../../../modules/queries/problemSubmission';
@@ -29,14 +27,14 @@ export default function ProblemProgrammingSubmissionPanel({ problem, submissionI
 
   return (
     <div>
-      <Flex asChild justifyContent="space-between" alignItems="baseline">
-        <h4>
-          <span>Submission #{submissionId}</span>
-          <ButtonLink small icon={<ChevronLeft />} to={`/admin/problems/${problem.slug}/submissions`}>
-            Back
-          </ButtonLink>
-        </h4>
-      </Flex>
+      <h4>
+        <BreadcrumbTitle
+          items={[
+            { text: 'Submissions', to: `/admin/problems/${problem.slug}/submissions` },
+            { text: `#${submissionId}`, to: `/admin/problems/${problem.slug}/submissions/${submissionId}` },
+          ]}
+        />
+      </h4>
       {renderSubmission()}
     </div>
   );

@@ -26,7 +26,16 @@ export default function LessonCreatePage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Lessons" current="New" />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Lessons', to: '/admin/lessons' },
+            { text: 'New', to: '/admin/lessons/-/new' },
+          ]}
+        />
+      }
+    >
       <LessonCreateForm
         onSubmit={createLesson}
         onCancel={() => navigate({ to: '/admin/lessons', ignoreBlocker: true })}

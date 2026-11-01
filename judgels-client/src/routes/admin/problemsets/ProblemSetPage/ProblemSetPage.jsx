@@ -19,7 +19,16 @@ export default function ProblemSetPage() {
   const archiveSlug = archivesResponse.data.find(a => a.jid === problemSet.archiveJid)?.slug;
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Problemsets" current={problemSet.slug} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Problemsets', to: '/admin/problemsets' },
+            { text: problemSet.slug, to: `/admin/problemsets/${problemSet.slug}` },
+          ]}
+        />
+      }
+    >
       <EditableSections>
         <Flex flexDirection="column" gap={8}>
           <ProblemSetGeneralSection problemSet={problemSet} archiveSlug={archiveSlug} />

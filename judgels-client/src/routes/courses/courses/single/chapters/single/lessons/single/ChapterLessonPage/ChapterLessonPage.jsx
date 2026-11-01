@@ -1,9 +1,9 @@
-import { ChevronRight } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { BreadcrumbTitle } from '../../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
 import { LessonStatementCard } from '../../../../../../../../../components/LessonStatementCard/LessonStatementCard';
@@ -43,19 +43,13 @@ export default function ChapterLessonPage() {
     return (
       <Flex className="chapter-lesson-page__title" flexWrap="wrap" marginBottom={4}>
         <h2>
-          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}`}>
-            {course.name}
-          </Link>
-          &nbsp;
-          <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
-          &nbsp;
-          <Link className="chapter-lesson-page__title--link" to={`/courses/${course.slug}/chapters/${chapterAlias}`}>
-            {chapterAlias}. {chapter.name}
-          </Link>
-          &nbsp;
-          <ChevronRight className="chapter-lesson-page__title--chevron" size={20} />
-          &nbsp;
-          {lessonAlias}
+          <BreadcrumbTitle
+            items={[
+              { text: course.name, to: `/courses/${course.slug}` },
+              { text: `${chapterAlias}. ${chapter.name}`, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
+              { text: lessonAlias, to: `/courses/${course.slug}/chapters/${chapterAlias}/lessons/${lessonAlias}` },
+            ]}
+          />
         </h2>
 
         {renderPrevAndNextResourcePaths()}

@@ -18,17 +18,3 @@
   line-height: 24px !important;
   margin-bottom: 0;
 }
-
-.chapter-lesson-page__title--link {
-  color: inherit !important;
-
-  &:hover {
-    text-decoration: none;
-    color: $primary-color !important;
-  }
-}
-
-.chapter-lesson-page__title--chevron {
-  height: 24px;
-  color: $dark-secondary-background-color !important;
-}

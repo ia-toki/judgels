@@ -1,6 +1,6 @@
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
@@ -73,8 +73,10 @@ export default function ProblemItemPage() {
       <Flex asChild justifyContent="space-between" alignItems="baseline">
         <h4>
           <BreadcrumbTitle
-            parent={<Link to={`/admin/problems/${problemSlug}/items`}>Items</Link>}
-            current={renderTitle()}
+            items={[
+              { text: 'Items', to: `/admin/problems/${problemSlug}/items` },
+              { text: renderTitle(), to: `/admin/problems/${problemSlug}/items/${itemJid}` },
+            ]}
           />
           {renderLanguageSelect()}
         </h4>

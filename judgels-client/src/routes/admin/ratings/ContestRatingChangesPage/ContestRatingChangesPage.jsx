@@ -81,7 +81,16 @@ export default function ContestRatingChangesPage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Ratings" current={contest.name} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Ratings', to: '/admin/ratings' },
+            { text: contest.name, to: `/admin/ratings/${contestSlug}` },
+          ]}
+        />
+      }
+    >
       <Flex flexDirection="column" gap={2}>
         {renderTable()}
         <ActionButtons justifyContent="end">

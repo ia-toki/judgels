@@ -2,6 +2,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { BreadcrumbTitle } from '../../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
 import { SubmissionDetails } from '../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
@@ -58,5 +59,21 @@ export default function ProblemSubmissionPage() {
     );
   };
 
-  return <ContentCard title={`Submission #${submissionId}`}>{renderSubmission()}</ContentCard>;
+  return (
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Submissions', to: `/problems/${problemSet.slug}/${problemAlias}/submissions` },
+            {
+              text: `#${submissionId}`,
+              to: `/problems/${problemSet.slug}/${problemAlias}/submissions/${submissionId}`,
+            },
+          ]}
+        />
+      }
+    >
+      {renderSubmission()}
+    </ContentCard>
+  );
 }

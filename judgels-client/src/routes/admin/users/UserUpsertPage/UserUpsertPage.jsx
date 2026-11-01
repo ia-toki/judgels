@@ -139,5 +139,18 @@ export default function UserUpsertPage() {
     );
   };
 
-  return <ContentCard title={<BreadcrumbTitle parent="Users" current="Upsert" />}>{renderContent()}</ContentCard>;
+  return (
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Users', to: '/admin/users' },
+            { text: 'Upsert', to: '/admin/users/-/upsert' },
+          ]}
+        />
+      }
+    >
+      {renderContent()}
+    </ContentCard>
+  );
 }

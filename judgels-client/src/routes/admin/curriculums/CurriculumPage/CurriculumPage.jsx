@@ -12,7 +12,16 @@ export default function CurriculumPage() {
   const { data: curriculum } = useSuspenseQuery(curriculumByJidQueryOptions(curriculumJid));
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Curriculum" current={curriculum.name} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Curriculum', to: '/admin/curriculums' },
+            { text: curriculum.name, to: `/admin/curriculums/${curriculumJid}` },
+          ]}
+        />
+      }
+    >
       <CurriculumGeneralSection curriculum={curriculum} />
     </ContentCard>
   );

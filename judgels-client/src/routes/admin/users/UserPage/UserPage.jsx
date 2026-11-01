@@ -21,7 +21,16 @@ export default function UserPage() {
   ];
 
   return (
-    <ContentCard title={<BreadcrumbTitle parent="Users" current={user.username} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Users', to: '/admin/users' },
+            { text: user.username, to: `/admin/users/${user.username}` },
+          ]}
+        />
+      }
+    >
       <Flex flexDirection="column" gap={8}>
         <div>
           <h4>General</h4>
