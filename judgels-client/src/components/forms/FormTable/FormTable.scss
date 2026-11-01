@@ -6,6 +6,10 @@
 
 .form-table__value {
   white-space: pre-wrap;
+
+  .html-text {
+    white-space: normal;
+  }
 }
 
 .form-table--small {

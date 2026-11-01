@@ -1,4 +1,5 @@
 import { Callout, Intent } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 
 import { Card } from '../../../../components/Card/Card';
@@ -27,7 +28,7 @@ export default function CoursesPage() {
     }
 
     return (
-      <>
+      <Flex flexDirection="column" gap={5}>
         <Callout intent={Intent.PRIMARY} icon={null}>
           <HtmlText>{curriculum.description}</HtmlText>
         </Callout>
@@ -36,7 +37,7 @@ export default function CoursesPage() {
             <CourseCard key={course.jid} course={course} progress={courseProgressesMap[course.jid]} />
           ))}
         </ContentList>
-      </>
+      </Flex>
     );
   };
 

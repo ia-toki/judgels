@@ -1,3 +1,4 @@
+import { Box } from '@blueprintjs/labs';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from '@tanstack/react-router';
 
@@ -72,7 +73,9 @@ export default function ProblemsPage() {
 
   return (
     <ContentCard title="Browse problems">
-      <ProblemSpoilerWidget />
+      <Box marginBottom={3}>
+        <ProblemSpoilerWidget />
+      </Box>
       {renderProblems()}
       {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
     </ContentCard>
