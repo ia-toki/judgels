@@ -12,16 +12,6 @@
   }
 }
 
-.submissions-table {
-  .action {
-    cursor: pointer;
-  }
-
-  .action + .action {
-    margin-left: 2px;
-  }
-}
-
 .item-submissions-table {
   .col-prob {
     width: 80px;
@@ -38,13 +28,5 @@
 
   .col-action {
     width: 50px;
-  }
-
-  .action {
-    cursor: pointer;
-  }
-
-  .action + .action {
-    margin-left: 2px;
   }
 }

@@ -1,9 +1,10 @@
-import { HTMLTable } from '@blueprintjs/core';
+import { Button, HTMLTable } from '@blueprintjs/core';
 import { Refresh, Search } from '@blueprintjs/icons';
 import { Flex } from '@blueprintjs/labs';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Link, useLocation } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 
+import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { FormattedRelative } from '../../../../components/FormattedRelative/FormattedRelative';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
 import Pagination from '../../../../components/Pagination/Pagination';
@@ -58,7 +59,7 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
     }
 
     return (
-      <HTMLTable striped className="table-list-condensed submissions-table">
+      <HTMLTable striped className="table-list-condensed">
         <thead>
           <tr>
             <th className="col-fit">ID</th>
@@ -75,10 +76,11 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
                 {submission.id}
                 <>
                   &nbsp;&nbsp;&nbsp;
-                  <Refresh
-                    className="action"
-                    intent="primary"
-                    title={`Regrade submission ${submission.id}`}
+                  <Button
+                    small
+                    minimal
+                    icon={<Refresh title={`Regrade submission ${submission.id}`} />}
+                    aria-label={`Regrade submission ${submission.id}`}
                     onClick={() => regradeSubmission(submission.jid)}
                   />
                 </>
@@ -91,9 +93,9 @@ export default function ProblemBundleSubmissionsPanel({ problem }) {
                 <FormattedRelative value={submission.time} />
               </td>
               <td className="col-fit">
-                <Link className="action" to={`/admin/problems/${problem.slug}/submissions/${submission.id}`}>
+                <ButtonLink small minimal to={`/admin/problems/${problem.slug}/submissions/${submission.id}`}>
                   <Search title={`View submission ${submission.id}`} />
-                </Link>
+                </ButtonLink>
               </td>
             </tr>
           ))}

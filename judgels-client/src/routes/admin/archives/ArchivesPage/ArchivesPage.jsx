@@ -41,7 +41,7 @@ export default function ArchivesPage() {
         <thead>
           <tr>
             <th className="col-fit">ID</th>
-            <th className="col-wide">Slug</th>
+            <th>Slug</th>
             <th>Name</th>
             <th>Category</th>
           </tr>

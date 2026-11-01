@@ -79,7 +79,7 @@ export default function LanguagesPanel({
       return null;
     }
     return (
-      <ActionButtons justifyContent="end">
+      <ActionButtons justifyContent="end" flexWrap="nowrap">
         <Button
           small
           text="Disable"

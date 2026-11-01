@@ -2,6 +2,7 @@ import { HTMLTable } from '@blueprintjs/core';
 import { Search } from '@blueprintjs/icons';
 import { Link } from '@tanstack/react-router';
 
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
 import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
 import { GradingVerdictTag } from '../../../../../../components/GradingVerdictTag/GradingVerdictTag';
 import { getGradingLanguageName } from '../../../../../../modules/api/gradingLanguage.js';
@@ -62,9 +63,9 @@ export function SubmissionsTable({
           <FormattedRelative value={submission.time} />
         </td>
         <td className="col-fit">
-          <Link className="action" to={`/submissions/${submission.id}`}>
+          <ButtonLink small minimal to={`/submissions/${submission.id}`}>
             <Search title="search" />
-          </Link>
+          </ButtonLink>
         </td>
       </tr>
     ));
@@ -73,7 +74,7 @@ export function SubmissionsTable({
   };
 
   return (
-    <HTMLTable striped className="table-list-condensed submissions-table">
+    <HTMLTable striped className="table-list-condensed">
       {renderHeader()}
       {renderRows()}
     </HTMLTable>
