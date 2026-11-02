@@ -29,16 +29,29 @@ describe('ProblemSetsPage', () => {
   test('renders problemsets', async () => {
     await renderComponent({
       data: {
-        page: [{ jid: 'JIDPS1', slug: 'ps-1', name: 'Problemset One', archiveJid: 'JIDARC1', description: '' }],
+        page: [
+          {
+            jid: 'JIDPS1',
+            slug: 'ps-1',
+            name: 'Problemset One',
+            archiveJid: 'JIDARC1',
+            description: '<p>Problemset text</p>',
+          },
+        ],
         totalCount: 1,
       },
-      archiveDescriptionsMap: {},
+      archiveDescriptionsMap: { JIDARC1: '<p>Archive text</p>' },
       problemSetProgressesMap: {},
       profilesMap: {},
     });
 
     expect(await screen.findByText('Problemset One')).toBeInTheDocument();
     expect(screen.getByText(/most recently added problemsets/i)).toBeInTheDocument();
+
+    const problemSetDescription = screen.getByText('Problemset text');
+    const archiveDescription = screen.getByText('Archive text');
+    expect(problemSetDescription.closest('.content-row__meta')).not.toContainElement(archiveDescription);
+    expect(problemSetDescription.compareDocumentPosition(archiveDescription)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
   test('renders archive filter banner', async () => {

@@ -4,8 +4,6 @@ import { HtmlText } from '../../../../components/HtmlText/HtmlText';
 import { ProgressTag } from '../../../../components/ProgressTag/ProgressTag';
 
 export function ProblemSetCard({ problemSet, archiveDescription, progress, profilesMap }) {
-  const description = (archiveDescription || '') + (problemSet.description || '');
-
   const renderProgress = () => {
     if (!progress || progress.score === 0) {
       return null;
@@ -24,7 +22,8 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress, profi
     <ContentRow
       to={`/problems/${problemSet.slug}`}
       title={problemSet.name}
-      meta={description && <HtmlText profilesMap={profilesMap}>{description}</HtmlText>}
+      meta={problemSet.description && <HtmlText profilesMap={profilesMap}>{problemSet.description}</HtmlText>}
+      description={archiveDescription && <HtmlText profilesMap={profilesMap}>{archiveDescription}</HtmlText>}
       status={renderProgress()}
     />
   );
