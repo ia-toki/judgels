@@ -22,8 +22,8 @@ export function ProblemSetCard({ problemSet, archiveDescription, progress, profi
     <ContentRow
       to={`/problems/${problemSet.slug}`}
       title={problemSet.name}
-      meta={problemSet.description && <HtmlText profilesMap={profilesMap}>{problemSet.description}</HtmlText>}
-      description={archiveDescription && <HtmlText profilesMap={profilesMap}>{archiveDescription}</HtmlText>}
+      meta={archiveDescription && <HtmlText profilesMap={profilesMap}>{archiveDescription}</HtmlText>}
+      description={problemSet.description && <HtmlText profilesMap={profilesMap}>{problemSet.description}</HtmlText>}
       status={renderProgress()}
     />
   );

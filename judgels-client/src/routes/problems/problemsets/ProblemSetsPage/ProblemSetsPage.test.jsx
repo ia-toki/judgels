@@ -48,10 +48,10 @@ describe('ProblemSetsPage', () => {
     expect(await screen.findByText('Problemset One')).toBeInTheDocument();
     expect(screen.getByText(/most recently added problemsets/i)).toBeInTheDocument();
 
-    const problemSetDescription = screen.getByText('Problemset text');
     const archiveDescription = screen.getByText('Archive text');
-    expect(problemSetDescription.closest('.content-row__meta')).not.toContainElement(archiveDescription);
-    expect(problemSetDescription.compareDocumentPosition(archiveDescription)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    const problemSetDescription = screen.getByText('Problemset text');
+    expect(archiveDescription.closest('.content-row__meta')).not.toContainElement(problemSetDescription);
+    expect(archiveDescription.compareDocumentPosition(problemSetDescription)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
   test('renders archive filter banner', async () => {
