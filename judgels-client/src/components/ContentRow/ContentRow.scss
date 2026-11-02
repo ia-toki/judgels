@@ -58,7 +58,7 @@
   }
 
   .html-text,
-  .html-text * {
+  .html-text *:not(.user-ref__username) {
     display: inline;
     margin: 0;
     font-weight: inherit;
