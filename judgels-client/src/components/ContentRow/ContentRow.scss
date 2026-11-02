@@ -38,14 +38,25 @@
   overflow-wrap: anywhere;
 }
 
+.content-row__meta,
+.content-row__description {
+  font-size: $font-size-small;
+
+  .bp6-light & {
+    color: $secondary-text-color;
+  }
+
+  .bp6-dark & {
+    color: $dark-secondary-text-color;
+  }
+}
+
 // Keeps to one line, including rich text: a description reads as a sentence, whatever its markup.
 .content-row__meta {
   overflow: hidden;
-  font-size: $font-size-small;
   line-height: 16px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  opacity: 0.72;
 
   > * + *::before {
     content: '·';
@@ -75,9 +86,7 @@
 }
 
 .content-row__description {
-  font-size: $font-size-small;
   overflow-wrap: anywhere;
-  opacity: 0.72;
 
   .html-text {
     font-size: inherit;
