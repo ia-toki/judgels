@@ -5,7 +5,8 @@
             INSERT INTO judgels_user_role (userJid, role, createdAt)
             SELECT u.jid, 'PROBLEM_WRITER', NOW(3)
             FROM jophiel_user u
-            WHERE u.jid IN (
+            WHERE u.username &lt;&gt; 'superadmin'
+            AND u.jid IN (
                 SELECT createdBy FROM sandalphon_problem
                 UNION
                 SELECT userJid FROM sandalphon_problem_partner

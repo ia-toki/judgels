@@ -29,7 +29,7 @@ describe('RoleUpsertPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/roles/-/upsert']}>
+          <TestRouter initialEntries={['/admin/roles/admins/-/upsert']}>
             <RoleUpsertPage />
           </TestRouter>
         </QueryClientProviderWrapper>
