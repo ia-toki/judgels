@@ -1,6 +1,7 @@
 package judgels.user.role;
 
 import jakarta.inject.Inject;
+import java.util.Set;
 import judgels.api.user.role.UserRole;
 import judgels.session.Actor;
 
@@ -20,7 +21,11 @@ public class ProblemAdminRoleChecker {
         return userRoleStore.getRoles(userJid).contains(UserRole.PROBLEM_ADMIN);
     }
 
-    public boolean isWriter(Actor actor) {
-        return true; // TODO(fushar): create separate role if necessary
+    public boolean isWriter(String userJid) {
+        return isWriter(userRoleStore.getRoles(userJid));
+    }
+
+    private static boolean isWriter(Set<UserRole> roles) {
+        return roles.contains(UserRole.PROBLEM_WRITER) || roles.contains(UserRole.PROBLEM_ADMIN);
     }
 }

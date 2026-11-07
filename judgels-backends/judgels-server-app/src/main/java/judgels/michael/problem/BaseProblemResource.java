@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemType;
-import judgels.catalog.problem.ProblemRoleChecker;
 import judgels.catalog.problem.ProblemStore;
 import judgels.catalog.problem.editorial.ProblemEditorialStore;
 import judgels.catalog.problem.statement.ProblemStatementStore;
@@ -16,7 +15,7 @@ import judgels.session.Actor;
 import judgels.user.UserStore;
 
 public abstract class BaseProblemResource extends BaseResource {
-    @Inject protected ProblemRoleChecker roleChecker;
+    @Inject protected MichaelProblemRoleChecker roleChecker;
     @Inject protected ProblemStore problemStore;
     @Inject protected ProblemStatementStore statementStore;
     @Inject protected ProblemEditorialStore editorialStore;

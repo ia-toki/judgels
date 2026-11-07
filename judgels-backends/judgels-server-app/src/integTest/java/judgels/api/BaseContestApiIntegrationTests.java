@@ -96,6 +96,7 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
     static void setUpContest() {
         manager = createUser("manager");
         managerToken = getToken(manager);
+        grantProblemWriter(manager);
 
         supervisor = createUser("supervisor");
         supervisorToken = getToken(supervisor);

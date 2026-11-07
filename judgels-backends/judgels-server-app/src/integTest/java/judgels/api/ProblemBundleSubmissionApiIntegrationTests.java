@@ -30,6 +30,7 @@ class ProblemBundleSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrati
     @Test
     void submit_get_regrade_submissions() {
         User partner = createUser("bundle-submission-partner");
+        grantProblemWriter(partner);
         String partnerToken = getToken(partner);
 
         Problem problem = createBundleProblem(adminToken, "bundle-submission-problem");

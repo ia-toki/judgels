@@ -54,11 +54,11 @@ public class UserRoleStore {
         return result;
     }
 
-    public void setRoles(String userJid, Set<UserRole> roles) {
+    public void setRoles(String userJid, Set<UserRole> roles, Set<UserRole> scope) {
         Set<UserRole> held = EnumSet.noneOf(UserRole.class);
         for (UserRoleModel m : userRoleDao.selectAllByUserJid(userJid)) {
             UserRole role = UserRole.valueOf(m.role);
-            if (roles.contains(role)) {
+            if (roles.contains(role) || !scope.contains(role)) {
                 held.add(role);
             } else {
                 userRoleDao.delete(m);
@@ -67,7 +67,7 @@ public class UserRoleStore {
         userRoleDao.flush();
 
         for (UserRole role : roles) {
-            if (!held.contains(role)) {
+            if (scope.contains(role) && !held.contains(role)) {
                 insert(userJid, role);
             }
         }

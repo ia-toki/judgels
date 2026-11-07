@@ -5,6 +5,7 @@ export const UserRole = {
   Superadmin: 'SUPERADMIN',
   SystemAdmin: 'SYSTEM_ADMIN',
   ProblemAdmin: 'PROBLEM_ADMIN',
+  ProblemWriter: 'PROBLEM_WRITER',
   ContestAdmin: 'CONTEST_ADMIN',
   TrainingAdmin: 'TRAINING_ADMIN',
 };
@@ -17,6 +18,7 @@ function holds(roles, role) {
 export const isSuperadmin = roles => !!roles && roles.includes(UserRole.Superadmin);
 export const isSystemAdmin = roles => holds(roles, UserRole.SystemAdmin);
 export const isProblemAdmin = roles => holds(roles, UserRole.ProblemAdmin);
+export const isProblemWriter = roles => holds(roles, UserRole.ProblemWriter) || isProblemAdmin(roles);
 export const isContestAdmin = roles => holds(roles, UserRole.ContestAdmin);
 export const isTrainingAdmin = roles => holds(roles, UserRole.TrainingAdmin);
 

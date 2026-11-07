@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { Navigate } from '@tanstack/react-router';
 
 import { isTLX } from '../../conf';
-import { isContestAdmin, isSystemAdmin, isTrainingAdmin } from '../../modules/api/userRole';
+import { isContestAdmin, isProblemWriter, isSystemAdmin, isTrainingAdmin } from '../../modules/api/userRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
 export default function AdminIndexPage() {
@@ -18,6 +18,9 @@ export default function AdminIndexPage() {
   }
   if (isTLX() && isTrainingAdmin(roles)) {
     return <Navigate to="/admin/courses" />;
+  }
+  if (isProblemWriter(roles)) {
+    return <Navigate to="/admin/problems" />;
   }
   return <Navigate to="/" />;
 }

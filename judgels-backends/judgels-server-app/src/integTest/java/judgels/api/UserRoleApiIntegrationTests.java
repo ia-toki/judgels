@@ -2,6 +2,7 @@ package judgels.api;
 
 import static judgels.api.user.role.UserRole.CONTEST_ADMIN;
 import static judgels.api.user.role.UserRole.PROBLEM_ADMIN;
+import static judgels.api.user.role.UserRole.PROBLEM_WRITER;
 import static judgels.api.user.role.UserRole.SUPERADMIN;
 import static judgels.api.user.role.UserRole.SYSTEM_ADMIN;
 import static judgels.api.user.role.UserRole.TRAINING_ADMIN;
@@ -16,17 +17,20 @@ import judgels.api.user.role.UserRolesUpsertData;
 import judgels.api.user.role.UserWithRoles;
 import judgels.client.SessionClient;
 import judgels.client.UserRoleClient;
+import judgels.client.UserWebClient;
 import org.junit.jupiter.api.Test;
 
 public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private static final Set<UserRole> ADMIN_ROLES = Set.of(SYSTEM_ADMIN, PROBLEM_ADMIN, CONTEST_ADMIN, TRAINING_ADMIN);
 
     private final UserRoleClient userRoleClient = createClient(UserRoleClient.class);
+    private final UserWebClient userWebClient = createClient(UserWebClient.class);
 
     @Test
     void upsert_set_get_roles() {
         String superadminJid = getSuperadminJid();
-        UserWithRoles superadminRoles = userWithRoles(superadminJid, Set.of(UserRole.values()));
+        UserWithRoles superadminRoles = userWithRoles(superadminJid, Set.of(SUPERADMIN, SYSTEM_ADMIN, PROBLEM_ADMIN,
+                CONTEST_ADMIN, TRAINING_ADMIN));
 
         User andi = createUser("andi");
         User budi = createUser("budi");
@@ -74,6 +78,37 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
                 .addUsernames("budi2")
                 .addRoles(SUPERADMIN)
                 .build()));
+    }
+
+    @Test
+    void refuses_problem_writer_role() {
+        User cici = createUser("cici");
+
+        assertBadRequest(() -> userRoleClient.setRoles(adminToken, cici.getJid(), Set.of(PROBLEM_WRITER)));
+        assertBadRequest(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+                .addUsernames("cici")
+                .addRoles(PROBLEM_WRITER)
+                .build()));
+    }
+
+    @Test
+    void hides_and_keeps_problem_writer_role() {
+        User dodi = createUser("dodi");
+        String dodiToken = getToken(dodi);
+        grantProblemWriter(dodi);
+
+        assertThat(userRoleClient.getRoles(adminToken).getData())
+                .extracting(UserWithRoles::getUserJid)
+                .doesNotContain(dodi.getJid());
+
+        userRoleClient.setRoles(adminToken, dodi.getJid(), Set.of(CONTEST_ADMIN));
+        assertThat(userRoleClient.getRoles(adminToken).getData())
+                .contains(userWithRoles(dodi.getJid(), Set.of(CONTEST_ADMIN)));
+
+        assertThat(userWebClient.getWebConfig(dodiToken).getRoles()).containsExactlyInAnyOrder(
+                CONTEST_ADMIN, PROBLEM_WRITER);
+        userRoleClient.setRoles(adminToken, dodi.getJid(), Set.of());
+        assertThat(userWebClient.getWebConfig(dodiToken).getRoles()).containsExactly(PROBLEM_WRITER);
     }
 
     @Test

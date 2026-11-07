@@ -21,7 +21,11 @@ describe('AppRoutes', () => {
   });
 
   test('problem admin', () => {
-    testAppRoutes([UserRole.ProblemAdmin], ['contests', 'courses', 'problems', 'submissions', 'ranking']);
+    testAppRoutes([UserRole.ProblemAdmin], ['admin', 'contests', 'courses', 'problems', 'submissions', 'ranking']);
+  });
+
+  test('problem writer', () => {
+    testAppRoutes([UserRole.ProblemWriter], ['admin', 'contests', 'courses', 'problems', 'submissions', 'ranking']);
   });
 
   test('training admin', () => {

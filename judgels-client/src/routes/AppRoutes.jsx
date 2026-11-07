@@ -1,7 +1,7 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { isContestAdmin, isSystemAdmin, isTrainingAdmin } from '../modules/api/userRole';
+import { isContestAdmin, isProblemWriter, isSystemAdmin, isTrainingAdmin } from '../modules/api/userRole';
 
 const appRoutes = [
   {
@@ -11,7 +11,8 @@ const appRoutes = [
     route: {
       path: '/admin',
     },
-    visible: roles => isSystemAdmin(roles) || isContestAdmin(roles) || (isTLX() && isTrainingAdmin(roles)),
+    visible: roles =>
+      isSystemAdmin(roles) || isProblemWriter(roles) || isContestAdmin(roles) || (isTLX() && isTrainingAdmin(roles)),
   },
   {
     id: 'contests',

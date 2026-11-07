@@ -54,6 +54,9 @@ class ProblemTagApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertForbidden(() -> problemTagClient.getTopicTags(userToken, problemJid));
         assertForbidden(() -> problemTagClient.setTopicTags(userToken, problemJid, Set.of()));
 
+        assertForbidden(() -> problemTagClient.getAllTags(userToken));
+
+        grantProblemWriter(user);
         response = problemTagClient.getAllTags(userToken);
 
         assertThat(response.getData()).extracting(ProblemTagCategory::getTitle)

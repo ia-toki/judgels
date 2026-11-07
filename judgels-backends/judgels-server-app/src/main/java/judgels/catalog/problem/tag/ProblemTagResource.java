@@ -42,6 +42,7 @@ public class ProblemTagResource {
     @UnitOfWork(readOnly = true)
     public ProblemTagsResponse getAllTags(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.isWriter(actorJid));
 
         Map<String, Integer> tagCounts = tagStore.getTagCounts(roleChecker.isAdmin(actorJid));
 

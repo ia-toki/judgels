@@ -29,6 +29,7 @@ class ProblemSubmissionApiIntegrationTests extends BaseJudgelsApiIntegrationTest
     @Test
     void submit_get_regrade_submissions() {
         User partner = createUser("submission-partner");
+        grantProblemWriter(partner);
         String partnerToken = getToken(partner);
 
         String problemJid = createProblem(adminToken, "submission-problem").getJid();

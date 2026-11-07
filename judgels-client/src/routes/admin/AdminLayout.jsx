@@ -19,7 +19,13 @@ import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithS
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
 import { isTLX } from '../../conf';
-import { isContestAdmin, isSystemAdmin, isTrainingAdmin } from '../../modules/api/userRole';
+import {
+  isContestAdmin,
+  isProblemAdmin,
+  isProblemWriter,
+  isSystemAdmin,
+  isTrainingAdmin,
+} from '../../modules/api/userRole';
 import { problemAllTagsQueryOptions } from '../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
@@ -31,6 +37,7 @@ export default function AdminLayout() {
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
   const canAdministerSystem = isSystemAdmin(roles);
+  const canWriteProblems = isProblemWriter(roles);
   const canAdministerContests = isContestAdmin(roles);
   const canAdministerTraining = isTLX() && isTrainingAdmin(roles);
 
@@ -64,15 +71,14 @@ export default function AdminLayout() {
     },
     {
       title: 'Competition',
-      visible: canAdministerContests || canAdministerSystem,
+      visible: canWriteProblems || canAdministerContests,
       children: [
         {
           path: 'problems',
           titleIcon: <Manual />,
           title: 'Problems',
-          // Problem management is in beta: only system admins see it for now.
-          visible: canAdministerSystem,
-          widgetComponent: AdminProblemTagFilter,
+          visible: canWriteProblems,
+          widgetComponent: isProblemAdmin(roles) ? AdminProblemTagFilter : undefined,
           widgetExact: true,
         },
         {

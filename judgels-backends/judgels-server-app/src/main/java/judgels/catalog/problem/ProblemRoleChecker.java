@@ -27,13 +27,13 @@ public class ProblemRoleChecker {
         return roleChecker.isAdmin(actor);
     }
 
-    public boolean isWriter(Actor actor) {
-        return roleChecker.isWriter(actor);
+    public boolean isWriter(String actorJid) {
+        return roleChecker.isWriter(actorJid);
     }
 
     public boolean canView(String actorJid, Problem problem) {
-        return isAuthorOrAbove(actorJid, problem)
-                || isPartner(actorJid, problem);
+        return isAdmin(actorJid)
+                || (isWriter(actorJid) && (isAuthor(actorJid, problem) || isPartner(actorJid, problem)));
     }
 
     public boolean canView(Actor actor, Problem problem) {
@@ -72,7 +72,7 @@ public class ProblemRoleChecker {
     }
 
     public boolean isAuthorOrAbove(String actorJid, Problem problem) {
-        return isAdmin(actorJid) || isAuthor(actorJid, problem);
+        return isAdmin(actorJid) || (isWriter(actorJid) && isAuthor(actorJid, problem));
     }
 
     public boolean isAuthorOrAbove(Actor actor, Problem problem) {

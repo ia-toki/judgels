@@ -1,9 +1,11 @@
 package judgels.api;
 
 import static judgels.api.catalog.problem.ProblemErrors.PARTNER_USERNAMES_NOT_FOUND;
+import static judgels.api.catalog.problem.ProblemErrors.PARTNER_USERNAMES_NOT_WRITERS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.catalog.problem.ProblemPermissions;
 import judgels.api.catalog.problem.partner.ProblemPartner;
@@ -34,6 +36,13 @@ class ProblemPartnerApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(response.getProfilesMap()).isEmpty();
 
         List<ProblemPartnerData> data = List.of(partnerData(andi.getUsername()), partnerData(budi.getUsername()));
+
+        assertBadRequest(() -> partnerClient.setPartners(adminToken, problemJid, data))
+                .hasMessageContaining(PARTNER_USERNAMES_NOT_WRITERS)
+                .hasFieldOrPropertyWithValue("args", Map.of("usernames", "andi, budi"));
+
+        grantProblemWriter(andi);
+        grantProblemWriter(budi);
 
         partnerClient.setPartners(adminToken, problemJid, data);
 

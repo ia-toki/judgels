@@ -2,6 +2,7 @@ package judgels.user.role;
 
 import static judgels.api.user.role.UserRole.CONTEST_ADMIN;
 import static judgels.api.user.role.UserRole.PROBLEM_ADMIN;
+import static judgels.api.user.role.UserRole.PROBLEM_WRITER;
 import static judgels.api.user.role.UserRole.SUPERADMIN;
 import static judgels.api.user.role.UserRole.SYSTEM_ADMIN;
 import static judgels.api.user.role.UserRole.TRAINING_ADMIN;
@@ -25,19 +26,32 @@ class UserRoleStoreIntegrationTests extends BaseUserIntegrationTests {
         store = createComponent(sessionFactory).userRoleStore();
     }
 
+    private static final Set<UserRole> ADMIN_ROLES = Set.of(SYSTEM_ADMIN, PROBLEM_ADMIN, CONTEST_ADMIN, TRAINING_ADMIN);
+
     @Test
     void set_roles() {
         assertThat(store.getRoles("andi")).isEmpty();
 
-        store.setRoles("andi", Set.of(PROBLEM_ADMIN, CONTEST_ADMIN));
+        store.setRoles("andi", Set.of(PROBLEM_ADMIN, CONTEST_ADMIN), ADMIN_ROLES);
         assertThat(store.getRoles("andi")).containsExactlyInAnyOrder(PROBLEM_ADMIN, CONTEST_ADMIN);
 
-        store.setRoles("andi", Set.of(CONTEST_ADMIN, TRAINING_ADMIN));
+        store.setRoles("andi", Set.of(CONTEST_ADMIN, TRAINING_ADMIN), ADMIN_ROLES);
         assertThat(store.getRoles("andi")).containsExactlyInAnyOrder(CONTEST_ADMIN, TRAINING_ADMIN);
         assertThat(store.getUserJidsByRole(PROBLEM_ADMIN)).isEmpty();
 
-        store.setRoles("andi", Set.of());
+        store.setRoles("andi", Set.of(), ADMIN_ROLES);
         assertThat(store.getRoles("andi")).isEmpty();
+    }
+
+    @Test
+    void set_roles_leaves_roles_outside_scope_alone() {
+        store.addRoles("andi", Set.of(PROBLEM_WRITER, CONTEST_ADMIN));
+
+        store.setRoles("andi", Set.of(TRAINING_ADMIN), ADMIN_ROLES);
+        assertThat(store.getRoles("andi")).containsExactlyInAnyOrder(PROBLEM_WRITER, TRAINING_ADMIN);
+
+        store.setRoles("andi", Set.of(SUPERADMIN), ADMIN_ROLES);
+        assertThat(store.getRoles("andi")).containsExactly(PROBLEM_WRITER);
     }
 
     @Test
