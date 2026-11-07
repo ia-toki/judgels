@@ -55,6 +55,7 @@ public class ProblemResource {
             @QueryParam("page") @DefaultValue("1") int pageNumber) {
 
         String actorJid = actorChecker.check(authHeader);
+        checkAllowed(roleChecker.isWriter(actorJid));
 
         Optional<String> userJid = roleChecker.isAdmin(actorJid) ? Optional.empty() : Optional.of(actorJid);
         Page<Problem> problems = problemStore.getProblems(userJid, termFilter, tagsFilter, pageNumber, PAGE_SIZE);
@@ -76,7 +77,7 @@ public class ProblemResource {
             ProblemCreateData data) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.isAdmin(actorJid));
+        checkAllowed(roleChecker.isWriter(actorJid));
 
         if (!isGradingEngineValid(data.getGradingEngine()) || !isLanguageValid(data.getInitialLanguage())) {
             throw new BadRequestException();

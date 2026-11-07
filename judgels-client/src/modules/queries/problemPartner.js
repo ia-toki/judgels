@@ -21,6 +21,9 @@ export const setProblemPartnersMutationOptions = problemJid => ({
       if (error instanceof BadRequestError && error.message === ProblemErrors.PartnerUsernamesNotFound) {
         throw new SubmissionError({ usernames: 'Users not found: ' + error.args.usernames });
       }
+      if (error instanceof BadRequestError && error.message === ProblemErrors.PartnerUsernamesNotWriters) {
+        throw new SubmissionError({ usernames: 'Users not problem writers: ' + error.args.usernames });
+      }
       throw error;
     }
   },

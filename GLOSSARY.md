@@ -115,7 +115,10 @@ A site-wide option the system admin sets, such as the site's name and slogan or 
 A user who can create and manage every contest.
 
 **Problem admin**:
-A user who can see, create and manage every problem.
+A user who can see, create and manage every problem. A problem admin can do everything a problem writer can.
+
+**Problem writer**:
+A user who can create problems, and see and edit the problems they author or are a partner on. Only problem writers can be partners on a problem.
 
 **Training admin**:
 A user who manages training, including every lesson.

@@ -103,8 +103,13 @@ describe('ProblemsPage', () => {
     expect(screen.getByRole('textbox')).toHaveValue('tree');
   });
 
-  test('shows the create button to problem admins only', async () => {
+  test('shows the create button to problem admins', async () => {
     await renderComponent();
+    expect(await screen.findByRole('link', { name: /new problem/i })).toHaveAttribute('href', '/admin/problems/-/new');
+  });
+
+  test('shows the create button to problem writers', async () => {
+    await renderComponent({ roles: ['PROBLEM_WRITER'] });
     expect(await screen.findByRole('link', { name: /new problem/i })).toHaveAttribute('href', '/admin/problems/-/new');
   });
 

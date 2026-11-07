@@ -7,6 +7,7 @@ import static judgels.core.JudgelsRequestChecks.checkAllowed;
 import static judgels.core.JudgelsRequestChecks.checkFound;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -35,6 +36,12 @@ import judgels.user.UserStore;
 
 @Path("/api/v2/user-roles")
 public class UserRoleResource {
+    private static final Set<UserRole> ADMIN_ROLES = Sets.immutableEnumSet(
+            UserRole.SYSTEM_ADMIN,
+            UserRole.PROBLEM_ADMIN,
+            UserRole.CONTEST_ADMIN,
+            UserRole.TRAINING_ADMIN);
+
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
@@ -50,7 +57,11 @@ public class UserRoleResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        List<UserWithRoles> roles = userRoleStore.getUsersWithRoles();
+        List<UserWithRoles> roles = userRoleStore.getUsersWithRoles()
+                .stream()
+                .map(UserRoleResource::withoutNonAdminRoles)
+                .filter(u -> !u.getRoles().isEmpty())
+                .collect(Collectors.toList());
 
         var userJids = Lists.transform(roles, UserWithRoles::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
@@ -113,7 +124,7 @@ public class UserRoleResource {
         // A system admin cannot lock themselves out.
         checkAllowed(!userJid.equals(actorJid) || roles.contains(UserRole.SYSTEM_ADMIN));
 
-        userRoleStore.setRoles(userJid, roles);
+        userRoleStore.setRoles(userJid, roles, ADMIN_ROLES);
     }
 
     private boolean isSuperadmin(String userJid) {
@@ -121,6 +132,15 @@ public class UserRoleResource {
     }
 
     private static void checkRoles(Set<UserRole> roles) {
-        checkArgument(!roles.contains(UserRole.SUPERADMIN), "Cannot grant %s.", UserRole.SUPERADMIN);
+        for (UserRole role : roles) {
+            checkArgument(ADMIN_ROLES.contains(role), "Cannot grant %s.", role);
+        }
+    }
+
+    private static UserWithRoles withoutNonAdminRoles(UserWithRoles user) {
+        return new UserWithRoles.Builder()
+                .userJid(user.getUserJid())
+                .roles(Sets.filter(user.getRoles(), r -> r == UserRole.SUPERADMIN || ADMIN_ROLES.contains(r)))
+                .build();
     }
 }

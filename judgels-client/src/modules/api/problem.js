@@ -24,6 +24,7 @@ export const ProblemErrors = {
   SlugAlreadyExists: 'ProblemSlugAlreadyExists',
   SetterUsernamesNotFound: 'ProblemSetterUsernamesNotFound',
   PartnerUsernamesNotFound: 'ProblemPartnerUsernamesNotFound',
+  PartnerUsernamesNotWriters: 'ProblemPartnerUsernamesNotWriters',
   VersionLocalChangesOutdated: 'ProblemVersionLocalChangesOutdated',
   VersionLocalChangesConflict: 'ProblemVersionLocalChangesConflict',
 };

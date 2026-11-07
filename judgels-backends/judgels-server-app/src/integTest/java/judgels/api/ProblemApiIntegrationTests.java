@@ -108,13 +108,18 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         // as user
 
-        assertForbidden(() -> problemClient
-                .createProblem(userToken, new ProblemCreateData.Builder()
-                        .slug("problem-c")
-                        .gradingEngine("Batch")
-                        .additionalNote("")
-                        .initialLanguage("en-US")
-                        .build()));
+        ProblemCreateData problemCData = new ProblemCreateData.Builder()
+                .slug("problem-c")
+                .gradingEngine("Batch")
+                .additionalNote("")
+                .initialLanguage("en-US")
+                .build();
+
+        assertForbidden(() -> problemClient.createProblem(userToken, problemCData));
+        assertForbidden(() -> problemClient.getProblems(userToken, new GetProblemsParams()));
+        assertForbidden(() -> problemClient.getProblem(userToken, problemB.getJid()));
+
+        grantProblemWriter(user);
 
         assertForbidden(() -> problemClient.getProblem(userToken, problemAJid));
         assertForbidden(() -> problemClient.getProblemPermissions(userToken, problemAJid));
@@ -131,5 +136,8 @@ class ProblemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .extracting(Problem::getJid)
                 .containsExactly(problemB.getJid());
         assertThat(response.getProfilesMap()).containsOnlyKeys(user.getJid());
+
+        Problem problemC = problemClient.createProblem(userToken, problemCData);
+        assertThat(problemC.getAuthorJid()).isEqualTo(user.getJid());
     }
 }

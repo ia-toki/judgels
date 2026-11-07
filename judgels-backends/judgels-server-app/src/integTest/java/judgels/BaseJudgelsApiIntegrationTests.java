@@ -22,6 +22,10 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -222,6 +226,19 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                 .password("pass")
                 .email(username + "@domain.com")
                 .build());
+    }
+
+    protected static void grantProblemWriter(User user) {
+        String sql = "insert into judgels_user_role (userJid, role, createdAt) values (?, ?, ?)";
+        try (Connection conn = DriverManager.getConnection("jdbc:h2:mem:test")) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, user.getJid());
+            stmt.setString(2, UserRole.PROBLEM_WRITER.name());
+            stmt.setTimestamp(3, java.sql.Timestamp.from(Instant.now()));
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected static String getToken(User user) {

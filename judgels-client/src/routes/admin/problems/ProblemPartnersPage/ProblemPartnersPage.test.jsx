@@ -108,4 +108,20 @@ describe('ProblemPartnersPage', () => {
 
     expect(await screen.findByText('Users not found: ghost')).toBeInTheDocument();
   });
+
+  test('shows which partners are not problem writers', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+    const usernames = await openEditForm(user);
+    await user.type(usernames, '\nreader');
+
+    nockApi()
+      .put('/v4/problems/JIDPROG1/partners')
+      .reply(400, { message: 'ProblemPartnerUsernamesNotWriters', args: { usernames: 'reader' } });
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(await screen.findByText('Users not problem writers: reader')).toBeInTheDocument();
+  });
 });

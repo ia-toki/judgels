@@ -93,6 +93,15 @@ public class ProblemPartnerResource {
             throw ProblemErrors.partnerUsernamesNotFound(new TreeSet<>(usernamesNotFound));
         }
 
+        Set<String> usernamesNotWriters = usernameToJidMap.entrySet()
+                .stream()
+                .filter(e -> !roleChecker.isWriter(e.getValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toCollection(TreeSet::new));
+        if (!usernamesNotWriters.isEmpty()) {
+            throw ProblemErrors.partnerUsernamesNotWriters(usernamesNotWriters);
+        }
+
         partnerStore.setPartners(problemJid, usernameToJidMap.values());
     }
 }
