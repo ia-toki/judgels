@@ -14,7 +14,7 @@ describe('ProblemsPage', () => {
   });
 
   const renderComponent = async ({
-    role = { problem: 'ADMIN' },
+    roles = ['PROBLEM_ADMIN'],
     initialEntry = '/admin/problems',
     problemsQuery = true,
     problems = [
@@ -40,7 +40,7 @@ describe('ProblemsPage', () => {
       JIDUSER2: { username: 'user2' },
     },
   } = {}) => {
-    nockApi().get('/v2/user-web/config').reply(200, { role });
+    nockApi().get('/v2/user-web/config').reply(200, { roles });
 
     nockApi()
       .get('/v4/problems')
@@ -109,7 +109,7 @@ describe('ProblemsPage', () => {
   });
 
   test('hides the create button from other users', async () => {
-    await renderComponent({ role: {} });
+    await renderComponent({ roles: [] });
 
     expect(await screen.findByText('problem-1')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /new problem/i })).not.toBeInTheDocument();

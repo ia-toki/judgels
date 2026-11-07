@@ -1,30 +1,31 @@
 import { Checkbox } from '@blueprintjs/core';
 
 import { isTLX } from '../../../../conf';
+import { UserRole } from '../../../../modules/api/userRole';
 
 export function getRoleFields() {
   const fields = [
-    { key: 'account', label: 'System' },
-    { key: 'problem', label: 'Problem' },
-    { key: 'contest', label: 'Contest' },
+    { role: UserRole.SystemAdmin, label: 'System' },
+    { role: UserRole.ProblemAdmin, label: 'Problem' },
+    { role: UserRole.ContestAdmin, label: 'Contest' },
   ];
   if (isTLX()) {
-    fields.push({ key: 'training', label: 'Training' });
+    fields.push({ role: UserRole.TrainingAdmin, label: 'Training' });
   }
   return fields;
 }
 
-// `value` holds the checked roles, as `{ [key]: true }`.
-export function RoleCheckboxes({ value, onChange, disabledKeys = [] }) {
+// `value` holds the checked roles, as `{ [role]: true }`.
+export function RoleCheckboxes({ value, onChange, disabledRoles = [] }) {
   return (
     <div>
-      {getRoleFields().map(({ key, label }) => (
+      {getRoleFields().map(({ role, label }) => (
         <Checkbox
-          key={key}
+          key={role}
           label={`${label} admin`}
-          checked={!!value[key]}
-          disabled={disabledKeys.includes(key)}
-          onChange={e => onChange({ ...value, [key]: e.target.checked })}
+          checked={!!value[role]}
+          disabled={disabledRoles.includes(role)}
+          onChange={e => onChange({ ...value, [role]: e.target.checked })}
         />
       ))}
     </div>

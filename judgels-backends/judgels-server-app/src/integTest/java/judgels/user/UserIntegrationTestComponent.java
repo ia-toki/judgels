@@ -8,7 +8,7 @@ import judgels.persistence.JudgelsPersistenceModule;
 import judgels.session.SessionStore;
 import judgels.user.account.UserResetPasswordStore;
 import judgels.user.avatar.UserAvatarIntegrationTestModule;
-import judgels.user.role.SuperadminRoleStore;
+import judgels.user.role.UserRoleStore;
 
 @Component(modules = {
         JudgelsModule.class,
@@ -19,6 +19,6 @@ import judgels.user.role.SuperadminRoleStore;
 public interface UserIntegrationTestComponent {
     UserStore userStore();
     SessionStore sessionStore();
-    SuperadminRoleStore superadminRoleStore();
     UserResetPasswordStore userResetPasswordStore();
+    UserRoleStore userRoleStore();
 }

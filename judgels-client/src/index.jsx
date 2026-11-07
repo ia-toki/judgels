@@ -26,7 +26,7 @@ root.render(
     client={queryClient}
     persistOptions={{
       persister,
-      buster: `17:${getUser()?.jid || ''}`,
+      buster: `18:${getUser()?.jid || ''}`,
       dehydrateOptions: {
         shouldDehydrateQuery: query => {
           if (query.state.status !== 'success') return false;

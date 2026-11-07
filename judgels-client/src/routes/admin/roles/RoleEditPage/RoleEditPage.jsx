@@ -7,7 +7,8 @@ import { ActionButtons } from '../../../../components/ActionButtons/ActionButton
 import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { NotFoundError } from '../../../../modules/api/error';
-import { setUserRoleMutationOptions, userRolesQueryOptions } from '../../../../modules/queries/userRole';
+import { UserRole } from '../../../../modules/api/userRole';
+import { setUserRolesMutationOptions, userRolesQueryOptions } from '../../../../modules/queries/userRole';
 import { useSession } from '../../../../modules/session';
 import { RoleCheckboxes, getRoleFields } from '../RoleCheckboxes/RoleCheckboxes';
 import { buildUsers } from '../RolesSection/RolesSection';
@@ -34,26 +35,20 @@ export default function RoleEditPage() {
 function RoleEditForm({ user }) {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(() =>
-    Object.fromEntries(getRoleFields().map(({ key }) => [key, !!user.role[key]]))
+    Object.fromEntries(getRoleFields().map(({ role }) => [role, user.roles.includes(role)]))
   );
 
-  const setRoleMutation = useMutation(setUserRoleMutationOptions(user.userJid));
+  const setRoleMutation = useMutation(setUserRolesMutationOptions(user.userJid));
 
   // Roles not shown here are kept as they are.
-  const role = Object.fromEntries(Object.entries(user.role).filter(([, value]) => value));
-  for (const { key } of getRoleFields()) {
-    if (checked[key]) {
-      role[key] = 'ADMIN';
-    } else {
-      delete role[key];
-    }
-  }
-  const isRemoving = Object.keys(role).length === 0;
+  const shownRoles = getRoleFields().map(({ role }) => role);
+  const roles = [...user.roles.filter(role => !shownRoles.includes(role)), ...shownRoles.filter(role => checked[role])];
+  const isRemoving = roles.length === 0;
 
   const goToRoles = () => navigate({ to: '/admin/roles' });
 
   const save = async () => {
-    await setRoleMutation.mutateAsync(role);
+    await setRoleMutation.mutateAsync(roles);
     toastActions.showSuccessToast(isRemoving ? 'Roles removed.' : 'Roles updated.');
     goToRoles();
   };
@@ -61,7 +56,11 @@ function RoleEditForm({ user }) {
   return (
     <div>
       <FormGroup label="Roles">
-        <RoleCheckboxes value={checked} onChange={setChecked} disabledKeys={user.isSelf ? ['account'] : []} />
+        <RoleCheckboxes
+          value={checked}
+          onChange={setChecked}
+          disabledRoles={user.isSelf ? [UserRole.SystemAdmin] : []}
+        />
       </FormGroup>
       <ActionButtons justifyContent="end">
         <Button text="Cancel" disabled={setRoleMutation.isPending} onClick={goToRoles} />

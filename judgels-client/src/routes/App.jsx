@@ -19,14 +19,14 @@ export default function App() {
   const { user } = useSession();
   const userJid = user?.jid;
   const {
-    data: { role },
+    data: { roles },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
   useEffect(() => {
     setGAUser(userJid);
   }, []);
 
-  const visibleAppRoutes = getVisibleAppRoutes(role);
+  const visibleAppRoutes = getVisibleAppRoutes(roles);
   const homeRoute = getHomeRoute();
 
   return (

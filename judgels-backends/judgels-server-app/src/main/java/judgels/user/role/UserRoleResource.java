@@ -19,15 +19,14 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import judgels.api.profile.Profile;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 import judgels.api.user.role.UserRolesUpsertData;
 import judgels.api.user.role.UserRolesUpsertResponse;
-import judgels.api.user.role.UserWithRole;
+import judgels.api.user.role.UserWithRoles;
 import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
@@ -40,7 +39,6 @@ public class UserRoleResource {
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
     @Inject protected UserRoleStore userRoleStore;
-    @Inject protected SuperadminRoleStore superadminRoleStore;
     @Inject protected ProfileStore profileStore;
 
     @Inject public UserRoleResource() {}
@@ -52,9 +50,9 @@ public class UserRoleResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        List<UserWithRole> roles = userRoleStore.getRoles();
+        List<UserWithRoles> roles = userRoleStore.getUsersWithRoles();
 
-        var userJids = Lists.transform(roles, UserWithRole::getUserJid);
+        var userJids = Lists.transform(roles, UserWithRoles::getUserJid);
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
         return new UserRolesResponse.Builder()
@@ -76,15 +74,15 @@ public class UserRoleResource {
         checkAllowed(roleChecker.canAdminister(actorJid));
 
         checkArgument(data.getUsernames().size() <= 100, "Cannot add more than 100 users.");
-        checkRole(data.getRole());
-        checkArgument(!data.getRole().equals(new UserRole.Builder().build()), "No role given.");
+        checkRoles(data.getRoles());
+        checkArgument(!data.getRoles().isEmpty(), "No role given.");
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(data.getUsernames());
         for (String userJid : usernameToJidMap.values()) {
-            checkAllowed(!superadminRoleStore.isSuperadmin(userJid));
+            checkAllowed(!isSuperadmin(userJid));
         }
         for (String userJid : usernameToJidMap.values()) {
-            userRoleStore.upsertRole(userJid, data.getRole());
+            userRoleStore.addRoles(userJid, data.getRoles());
         }
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
@@ -101,26 +99,28 @@ public class UserRoleResource {
     @Path("/{userJid}")
     @Consumes(APPLICATION_JSON)
     @UnitOfWork
-    public void setRole(
+    public void setRoles(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("userJid") String userJid,
-            UserRole role) {
+            Set<UserRole> roles) {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
         checkFound(userStore.getUserByJid(userJid));
 
-        checkRole(role);
-        checkAllowed(!superadminRoleStore.isSuperadmin(userJid));
+        checkRoles(roles);
+        checkAllowed(!isSuperadmin(userJid));
         // A system admin cannot lock themselves out.
-        checkAllowed(!userJid.equals(actorJid) || role.getAccount().isPresent());
+        checkAllowed(!userJid.equals(actorJid) || roles.contains(UserRole.SYSTEM_ADMIN));
 
-        userRoleStore.setRole(userJid, role);
+        userRoleStore.setRoles(userJid, roles);
     }
 
-    private static void checkRole(UserRole role) {
-        Stream.of(role.getAccount(), role.getProblem(), role.getContest(), role.getTraining())
-                .flatMap(Optional::stream)
-                .forEach(r -> checkArgument(r.equals("ADMIN"), "Unknown role: %s.", r));
+    private boolean isSuperadmin(String userJid) {
+        return userRoleStore.getRoles(userJid).contains(UserRole.SUPERADMIN);
+    }
+
+    private static void checkRoles(Set<UserRole> roles) {
+        checkArgument(!roles.contains(UserRole.SUPERADMIN), "Cannot grant %s.", UserRole.SUPERADMIN);
     }
 }

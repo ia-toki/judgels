@@ -3,6 +3,7 @@ package judgels.client;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import java.util.Set;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesResponse;
 import judgels.api.user.role.UserRolesUpsertData;
@@ -19,5 +20,5 @@ public interface UserRoleClient {
 
     @RequestLine("PUT /api/v2/user-roles/{userJid}")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    void setRole(@Param("token") String token, @Param("userJid") String userJid, UserRole role);
+    void setRoles(@Param("token") String token, @Param("userJid") String userJid, Set<UserRole> roles);
 }

@@ -17,9 +17,12 @@ describe('RoleEditPage', () => {
       .get('/v2/user-roles')
       .reply(200, {
         data: [
-          { userJid: 'superadminJid', role: { account: 'SUPERADMIN', contest: 'ADMIN' } },
-          { userJid: 'userJid2', role: { account: null, problem: 'ADMIN', contest: null, training: null } },
-          { userJid: 'userJid1', role: { account: 'ADMIN', training: 'ADMIN' } },
+          {
+            userJid: 'superadminJid',
+            roles: ['SUPERADMIN', 'SYSTEM_ADMIN', 'PROBLEM_ADMIN', 'CONTEST_ADMIN', 'TRAINING_ADMIN'],
+          },
+          { userJid: 'userJid2', roles: ['PROBLEM_ADMIN'] },
+          { userJid: 'userJid1', roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'] },
         ],
         profilesMap: {
           superadminJid: { username: 'superadmin' },
@@ -52,7 +55,7 @@ describe('RoleEditPage', () => {
     expect(await screen.findByRole('checkbox', { name: /problem admin/i })).toBeChecked();
     await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
 
-    const scope = nockApi().put('/v2/user-roles/userJid2', { problem: 'ADMIN', contest: 'ADMIN' }).reply(200);
+    const scope = nockApi().put('/v2/user-roles/userJid2', ['PROBLEM_ADMIN', 'CONTEST_ADMIN']).reply(200);
     await user.click(screen.getByRole('button', { name: /save/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });

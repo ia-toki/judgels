@@ -2,116 +2,105 @@ package judgels.user.role;
 
 import jakarta.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
-import judgels.api.user.role.SystemAdminRole;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import judgels.api.user.role.UserRole;
-import judgels.api.user.role.UserWithRole;
-import judgels.persistence.UnmodifiableModel_;
-import judgels.persistence.api.OrderDir;
+import judgels.api.user.role.UserWithRoles;
 import judgels.persistence.dao.UserRoleDao;
 import judgels.persistence.model.UserRoleModel;
 
 public class UserRoleStore {
     private final UserRoleDao userRoleDao;
-    private final SuperadminRoleStore superadminRoleStore;
 
     @Inject
-    public UserRoleStore(UserRoleDao adminRoleDao, SuperadminRoleStore superadminRoleStore) {
-        this.userRoleDao = adminRoleDao;
-        this.superadminRoleStore = superadminRoleStore;
+    public UserRoleStore(UserRoleDao userRoleDao) {
+        this.userRoleDao = userRoleDao;
     }
 
-    public List<UserWithRole> getRoles() {
-        List<UserWithRole> roles = new ArrayList<>();
-        superadminRoleStore.getSuperadminJid().ifPresent(userJid -> roles.add(new UserWithRole.Builder()
-                .userJid(userJid)
-                .role(getRole(userJid))
-                .build()));
+    public Set<UserRole> getRoles(String userJid) {
+        return expand(fromModels(userRoleDao.selectAllByUserJid(userJid)));
+    }
 
-        for (UserRoleModel m : userRoleDao.select().orderBy(UnmodifiableModel_.ID, OrderDir.ASC).all()) {
-            if (!superadminRoleStore.isSuperadmin(m.userJid)) {
-                roles.add(new UserWithRole.Builder()
-                        .userJid(m.userJid)
-                        .role(fromModel(m))
-                        .build());
+    public List<String> getUserJidsByRole(UserRole role) {
+        return userRoleDao.selectAllByRole(role).stream()
+                .map(m -> m.userJid)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserWithRoles> getUsersWithRoles() {
+        Map<String, Set<UserRole>> rolesByUserJid = new LinkedHashMap<>();
+        for (UserRoleModel m : userRoleDao.selectAll()) {
+            rolesByUserJid.computeIfAbsent(m.userJid, k -> EnumSet.noneOf(UserRole.class)).add(UserRole.valueOf(m.role));
+        }
+
+        List<UserWithRoles> superadmins = new ArrayList<>();
+        List<UserWithRoles> others = new ArrayList<>();
+        for (Map.Entry<String, Set<UserRole>> e : rolesByUserJid.entrySet()) {
+            Set<UserRole> roles = e.getValue();
+            UserWithRoles userWithRoles = new UserWithRoles.Builder()
+                    .userJid(e.getKey())
+                    .roles(expand(roles))
+                    .build();
+            (roles.contains(UserRole.SUPERADMIN) ? superadmins : others).add(userWithRoles);
+        }
+
+        List<UserWithRoles> result = new ArrayList<>(superadmins);
+        result.addAll(others);
+        return result;
+    }
+
+    public void setRoles(String userJid, Set<UserRole> roles) {
+        Set<UserRole> held = EnumSet.noneOf(UserRole.class);
+        for (UserRoleModel m : userRoleDao.selectAllByUserJid(userJid)) {
+            UserRole role = UserRole.valueOf(m.role);
+            if (roles.contains(role)) {
+                held.add(role);
+            } else {
+                userRoleDao.delete(m);
             }
+        }
+        userRoleDao.flush();
+
+        for (UserRole role : roles) {
+            if (!held.contains(role)) {
+                insert(userJid, role);
+            }
+        }
+    }
+
+    public void addRoles(String userJid, Set<UserRole> roles) {
+        Set<UserRole> held = fromModels(userRoleDao.selectAllByUserJid(userJid));
+        for (UserRole role : roles) {
+            if (!held.contains(role)) {
+                insert(userJid, role);
+            }
+        }
+    }
+
+    private void insert(String userJid, UserRole role) {
+        UserRoleModel m = new UserRoleModel();
+        m.userJid = userJid;
+        m.role = role.name();
+        userRoleDao.insert(m);
+    }
+
+    private static Set<UserRole> fromModels(Collection<UserRoleModel> models) {
+        Set<UserRole> roles = EnumSet.noneOf(UserRole.class);
+        for (UserRoleModel m : models) {
+            roles.add(UserRole.valueOf(m.role));
         }
         return roles;
     }
 
-    public void setRole(String userJid, UserRole role) {
-        Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
-        if (isEmpty(role)) {
-            maybeModel.ifPresent(userRoleDao::delete);
-        } else if (maybeModel.isPresent()) {
-            UserRoleModel model = maybeModel.get();
-            toModel(role, model);
-            userRoleDao.update(model);
-        } else {
-            UserRoleModel model = new UserRoleModel();
-            model.userJid = userJid;
-            toModel(role, model);
-            userRoleDao.insert(model);
+    private static Set<UserRole> expand(Set<UserRole> roles) {
+        if (roles.contains(UserRole.SUPERADMIN)) {
+            return EnumSet.allOf(UserRole.class);
         }
-    }
-
-    public void upsertRole(String userJid, UserRole role) {
-        UserRole.Builder merged = new UserRole.Builder();
-        userRoleDao.selectByUserJid(userJid).ifPresent(model -> merged.from(fromModel(model)));
-        role.getAccount().ifPresent(merged::account);
-        role.getProblem().ifPresent(merged::problem);
-        role.getContest().ifPresent(merged::contest);
-        role.getTraining().ifPresent(merged::training);
-        setRole(userJid, merged.build());
-    }
-
-    public UserRole getRole(String userJid) {
-        UserRole.Builder role = new UserRole.Builder();
-
-        if (superadminRoleStore.isSuperadmin(userJid)) {
-            role.account(SystemAdminRole.SUPERADMIN.name());
-            role.problem("ADMIN");
-            role.contest("ADMIN");
-            role.training("ADMIN");
-        } else {
-            Optional<UserRoleModel> maybeModel = userRoleDao.selectByUserJid(userJid);
-            if (maybeModel.isPresent()) {
-                return fromModel(maybeModel.get());
-            }
-        }
-
-        return role.build();
-    }
-
-    private static boolean isEmpty(UserRole role) {
-        return role.getAccount().isEmpty()
-                && role.getProblem().isEmpty()
-                && role.getContest().isEmpty()
-                && role.getTraining().isEmpty();
-    }
-
-    private UserRole fromModel(UserRoleModel model) {
-        UserRole.Builder role = new UserRole.Builder();
-        if (model.jophiel != null) {
-            role.account(model.jophiel);
-        }
-        if (model.sandalphon != null) {
-            role.problem(model.sandalphon);
-        }
-        if (model.uriel != null) {
-            role.contest(model.uriel);
-        }
-        if (model.jerahmeel != null) {
-            role.training(model.jerahmeel);
-        }
-        return role.build();
-    }
-
-    private void toModel(UserRole role, UserRoleModel model) {
-        model.jophiel = role.getAccount().orElse(null);
-        model.sandalphon = role.getProblem().orElse(null);
-        model.uriel = role.getContest().orElse(null);
-        model.jerahmeel = role.getTraining().orElse(null);
+        return roles;
     }
 }

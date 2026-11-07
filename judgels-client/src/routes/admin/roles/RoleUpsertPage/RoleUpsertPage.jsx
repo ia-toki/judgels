@@ -11,6 +11,7 @@ import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
 import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../components/forms/validations';
+import { isSuperadmin } from '../../../../modules/api/userRole';
 import { upsertUserRolesMutationOptions, userRolesQueryOptions } from '../../../../modules/queries/userRole';
 import { RoleCheckboxes } from '../RoleCheckboxes/RoleCheckboxes';
 
@@ -41,9 +42,9 @@ export default function RoleUpsertPage() {
   const [error, setError] = useState(undefined);
 
   const {
-    data: { data: roles, profilesMap },
+    data: { data: users, profilesMap },
   } = useSuspenseQuery(userRolesQueryOptions());
-  const superadminJid = roles.find(({ role }) => role.account === 'SUPERADMIN')?.userJid;
+  const superadminJid = users.find(({ roles }) => isSuperadmin(roles))?.userJid;
   const superadminUsername = profilesMap[superadminJid]?.username;
 
   const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
@@ -57,12 +58,10 @@ export default function RoleUpsertPage() {
       return;
     }
 
-    const role = Object.fromEntries(
-      Object.entries(values.roles)
-        .filter(([, checked]) => checked)
-        .map(([key]) => [key, 'ADMIN'])
-    );
-    const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({ usernames, role });
+    const roles = Object.entries(values.roles)
+      .filter(([, checked]) => checked)
+      .map(([role]) => role);
+    const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({ usernames, roles });
 
     const notFound = usernames.filter(username => !upsertedUserProfilesMap[username]);
     if (notFound.length < usernames.length) {

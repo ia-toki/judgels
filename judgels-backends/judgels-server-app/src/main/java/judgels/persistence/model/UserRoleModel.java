@@ -2,19 +2,19 @@ package judgels.persistence.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import judgels.persistence.Model;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import judgels.persistence.UnmodifiableModel;
 
 @SuppressWarnings("checkstyle:visibilitymodifier")
-@Entity(name = "jophiel_user_role")
-public class UserRoleModel extends Model {
-    @Column(unique = true, nullable = false)
+@Entity(name = "judgels_user_role")
+@Table(indexes = {
+        @Index(columnList = "userJid,role", unique = true),
+        @Index(columnList = "role")})
+public class UserRoleModel extends UnmodifiableModel {
+    @Column(nullable = false)
     public String userJid;
 
-    public String jophiel;
-
-    public String sandalphon;
-
-    public String uriel;
-
-    public String jerahmeel;
+    @Column(nullable = false)
+    public String role;
 }

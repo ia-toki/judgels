@@ -7,7 +7,8 @@ import { useState } from 'react';
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { setUserRoleMutationOptions } from '../../../../modules/queries/userRole';
+import { isSuperadmin } from '../../../../modules/api/userRole';
+import { setUserRolesMutationOptions } from '../../../../modules/queries/userRole';
 import { useSession } from '../../../../modules/session';
 import { getRoleFields } from '../RoleCheckboxes/RoleCheckboxes';
 
@@ -15,12 +16,12 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function buildUsers(roles, actorJid) {
   const { data, profilesMap } = roles;
-  const users = data.map(({ userJid, role }) => ({
+  const users = data.map(({ userJid, roles }) => ({
     userJid,
-    role,
+    roles,
     profile: profilesMap[userJid],
     username: profilesMap[userJid]?.username ?? userJid,
-    isSuperadmin: role.account === 'SUPERADMIN',
+    isSuperadmin: isSuperadmin(roles),
     isSelf: userJid === actorJid,
   }));
   return users.sort((a, b) => a.username.localeCompare(b.username));
@@ -31,14 +32,14 @@ export function RolesSection({ roles }) {
 
   const [userToRemove, setUserToRemove] = useState(undefined);
 
-  const removeRoleMutation = useMutation(setUserRoleMutationOptions(userToRemove?.userJid));
+  const removeRoleMutation = useMutation(setUserRolesMutationOptions(userToRemove?.userJid));
 
   const roleFields = getRoleFields();
   const allUsers = buildUsers(roles, actor?.jid);
   const users = allUsers.filter(user => !user.isSuperadmin);
 
   const removeUser = async () => {
-    await removeRoleMutation.mutateAsync({});
+    await removeRoleMutation.mutateAsync([]);
     toastActions.showSuccessToast('Roles removed.');
     setUserToRemove(undefined);
   };
@@ -69,8 +70,8 @@ export function RolesSection({ roles }) {
   const renderRow = user => (
     <tr key={user.userJid}>
       <td>{user.profile ? <UserRef profile={user.profile} /> : user.username}</td>
-      {roleFields.map(({ key }) => (
-        <td key={key}>{user.role[key] && <Tag intent={Intent.DANGER}>ADMIN</Tag>}</td>
+      {roleFields.map(({ role }) => (
+        <td key={role}>{user.roles.includes(role) && <Tag intent={Intent.DANGER}>ADMIN</Tag>}</td>
       ))}
       <td className="col-fit">{renderActions(user)}</td>
     </tr>
@@ -82,8 +83,8 @@ export function RolesSection({ roles }) {
         <thead>
           <tr>
             <th>User</th>
-            {roleFields.map(({ key, label }) => (
-              <th key={key}>{label}</th>
+            {roleFields.map(({ role, label }) => (
+              <th key={role}>{label}</th>
             ))}
             <th />
           </tr>

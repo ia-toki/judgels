@@ -10,7 +10,7 @@ import { LoadingContentCard } from '../../../../components/LoadingContentCard/Lo
 import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { UserRef } from '../../../../components/UserRef/UserRef';
-import { TrainingAdminRole } from '../../../../modules/api/trainingAdminRole';
+import { isTrainingAdmin } from '../../../../modules/api/userRole';
 import { lessonsQueryOptions } from '../../../../modules/queries/lesson';
 import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
 
@@ -24,7 +24,7 @@ export default function LessonsPage() {
   const { data: webConfig } = useQuery(userWebConfigQueryOptions());
   const { data: response, isFetching } = useQuery(lessonsQueryOptions({ term, page }));
 
-  const canCreate = webConfig?.role.training === TrainingAdminRole.Admin;
+  const canCreate = isTrainingAdmin(webConfig?.roles);
 
   const searchBoxUpdateQueries = (term, queries) => {
     return { ...queries, page: undefined, term };

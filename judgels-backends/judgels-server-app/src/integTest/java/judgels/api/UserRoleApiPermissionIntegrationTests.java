@@ -1,5 +1,6 @@
 package judgels.api;
 
+import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesUpsertData;
@@ -22,8 +23,8 @@ public class UserRoleApiPermissionIntegrationTests extends BaseJudgelsApiIntegra
                 () -> userRoleClient.getRoles(token),
                 () -> userRoleClient.upsertRoles(token, new UserRolesUpsertData.Builder()
                         .addUsernames("user")
-                        .role(new UserRole.Builder().contest("ADMIN").build())
+                        .addRoles(UserRole.CONTEST_ADMIN)
                         .build()),
-                () -> userRoleClient.setRole(token, user.getJid(), new UserRole.Builder().build()));
+                () -> userRoleClient.setRoles(token, user.getJid(), Set.of()));
     }
 }

@@ -1,7 +1,6 @@
 package judgels.user.role;
 
 import jakarta.inject.Inject;
-import judgels.api.user.role.TrainingAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.session.Actor;
 
@@ -14,11 +13,10 @@ public class TrainingAdminRoleChecker {
     }
 
     public boolean isAdmin(Actor actor) {
-        return actor.getRole().getTraining().orElse("").equals(TrainingAdminRole.ADMIN.name());
+        return actor.getRoles().contains(UserRole.TRAINING_ADMIN);
     }
 
     public boolean isAdmin(String userJid) {
-        UserRole role = userRoleStore.getRole(userJid);
-        return role.getTraining().orElse("").equals(TrainingAdminRole.ADMIN.name());
+        return userRoleStore.getRoles(userJid).contains(UserRole.TRAINING_ADMIN);
     }
 }

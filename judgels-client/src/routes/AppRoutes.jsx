@@ -1,9 +1,7 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
 import { isTLX } from '../conf';
-import { ContestAdminRole } from '../modules/api/contestAdminRole';
-import { SystemAdminRole } from '../modules/api/systemAdminRole';
-import { TrainingAdminRole } from '../modules/api/trainingAdminRole';
+import { isContestAdmin, isSystemAdmin, isTrainingAdmin } from '../modules/api/userRole';
 
 const appRoutes = [
   {
@@ -13,11 +11,7 @@ const appRoutes = [
     route: {
       path: '/admin',
     },
-    visible: role =>
-      role.account === SystemAdminRole.Superadmin ||
-      role.account === SystemAdminRole.Admin ||
-      role.contest === ContestAdminRole.Admin ||
-      (isTLX() && role.training === TrainingAdminRole.Admin),
+    visible: roles => isSystemAdmin(roles) || isContestAdmin(roles) || (isTLX() && isTrainingAdmin(roles)),
   },
   {
     id: 'contests',
@@ -73,8 +67,8 @@ const homeRoute = {
   route: {},
 };
 
-export function getVisibleAppRoutes(role) {
-  return appRoutes.filter(route => route.visible(role));
+export function getVisibleAppRoutes(roles) {
+  return appRoutes.filter(route => route.visible(roles));
 }
 
 export function getHomeRoute() {

@@ -19,9 +19,7 @@ import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithS
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
 import { isTLX } from '../../conf';
-import { ContestAdminRole } from '../../modules/api/contestAdminRole';
-import { SystemAdminRole } from '../../modules/api/systemAdminRole';
-import { TrainingAdminRole } from '../../modules/api/trainingAdminRole';
+import { isContestAdmin, isSystemAdmin, isTrainingAdmin } from '../../modules/api/userRole';
 import { problemAllTagsQueryOptions } from '../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 
@@ -29,17 +27,17 @@ const AdminProblemTagFilter = () => <ProblemTagFilter queryOptions={problemAllTa
 
 export default function AdminLayout() {
   const {
-    data: { role },
+    data: { roles },
   } = useSuspenseQuery(userWebConfigQueryOptions());
 
-  const isAccountAdmin = role.account === SystemAdminRole.Admin || role.account === SystemAdminRole.Superadmin;
-  const isContestAdmin = role.contest === ContestAdminRole.Admin;
-  const isTrainingAdmin = isTLX() && role.training === TrainingAdminRole.Admin;
+  const canAdministerSystem = isSystemAdmin(roles);
+  const canAdministerContests = isContestAdmin(roles);
+  const canAdministerTraining = isTLX() && isTrainingAdmin(roles);
 
   const sidebarItems = [
     {
       title: 'System',
-      visible: isAccountAdmin,
+      visible: canAdministerSystem,
       children: [
         {
           path: 'users',
@@ -66,14 +64,14 @@ export default function AdminLayout() {
     },
     {
       title: 'Competition',
-      visible: isContestAdmin || isAccountAdmin,
+      visible: canAdministerContests || canAdministerSystem,
       children: [
         {
           path: 'problems',
           titleIcon: <Manual />,
           title: 'Problems',
           // Problem management is in beta: only system admins see it for now.
-          visible: isAccountAdmin,
+          visible: canAdministerSystem,
           widgetComponent: AdminProblemTagFilter,
           widgetExact: true,
         },
@@ -81,13 +79,13 @@ export default function AdminLayout() {
           path: 'contests',
           titleIcon: <Console />,
           title: 'Contests',
-          visible: isContestAdmin,
+          visible: canAdministerContests,
         },
       ].filter(child => child.visible !== false),
     },
     {
       title: 'Training',
-      visible: isTrainingAdmin,
+      visible: canAdministerTraining,
       children: [
         {
           path: 'curriculums',

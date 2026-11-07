@@ -1,92 +1,103 @@
 package judgels.api;
 
+import static judgels.api.user.role.UserRole.CONTEST_ADMIN;
+import static judgels.api.user.role.UserRole.PROBLEM_ADMIN;
+import static judgels.api.user.role.UserRole.SUPERADMIN;
+import static judgels.api.user.role.UserRole.SYSTEM_ADMIN;
+import static judgels.api.user.role.UserRole.TRAINING_ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
 import judgels.api.user.User;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.role.UserRolesUpsertData;
-import judgels.api.user.role.UserWithRole;
+import judgels.api.user.role.UserWithRoles;
 import judgels.client.SessionClient;
 import judgels.client.UserRoleClient;
 import org.junit.jupiter.api.Test;
 
 public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
-    private static final UserRole ALL_ROLES =
-            new UserRole.Builder().account("ADMIN").problem("ADMIN").contest("ADMIN").training("ADMIN").build();
+    private static final Set<UserRole> ADMIN_ROLES = Set.of(SYSTEM_ADMIN, PROBLEM_ADMIN, CONTEST_ADMIN, TRAINING_ADMIN);
 
     private final UserRoleClient userRoleClient = createClient(UserRoleClient.class);
 
     @Test
     void upsert_set_get_roles() {
-        String superadminJid = createClient(SessionClient.class)
-                .logIn(Credentials.of("superadmin", "superadmin"))
-                .getUserJid();
-        UserWithRole superadminRole = userWithRole(superadminJid, new UserRole.Builder()
-                .account("SUPERADMIN")
-                .problem("ADMIN")
-                .contest("ADMIN")
-                .training("ADMIN")
-                .build());
+        String superadminJid = getSuperadminJid();
+        UserWithRoles superadminRoles = userWithRoles(superadminJid, Set.of(UserRole.values()));
 
         User andi = createUser("andi");
         User budi = createUser("budi");
 
         assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactly(
-                superadminRole,
-                userWithRole(admin.getJid(), ALL_ROLES));
+                superadminRoles,
+                userWithRoles(admin.getJid(), ADMIN_ROLES));
 
         // Unknown usernames are left out of the response.
         assertThat(userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
                 .addUsernames("andi", "budi", "nonexistent")
-                .role(new UserRole.Builder().contest("ADMIN").build())
+                .addRoles(CONTEST_ADMIN)
                 .build()).getUpsertedUserProfilesMap()).containsOnlyKeys("andi", "budi");
 
         // Upserting grants roles on top of the ones already held.
         userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
                 .addUsernames("budi")
-                .role(new UserRole.Builder().training("ADMIN").build())
+                .addRoles(TRAINING_ADMIN)
                 .build());
 
         assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactlyInAnyOrder(
-                superadminRole,
-                userWithRole(admin.getJid(), ALL_ROLES),
-                userWithRole(andi.getJid(), new UserRole.Builder().contest("ADMIN").build()),
-                userWithRole(budi.getJid(), new UserRole.Builder().contest("ADMIN").training("ADMIN").build()));
+                superadminRoles,
+                userWithRoles(admin.getJid(), ADMIN_ROLES),
+                userWithRoles(andi.getJid(), Set.of(CONTEST_ADMIN)),
+                userWithRoles(budi.getJid(), Set.of(CONTEST_ADMIN, TRAINING_ADMIN)));
 
         // Setting replaces the roles held, and setting none removes the user.
-        userRoleClient.setRole(adminToken, budi.getJid(), new UserRole.Builder().problem("ADMIN").build());
-        userRoleClient.setRole(adminToken, andi.getJid(), new UserRole.Builder().build());
+        userRoleClient.setRoles(adminToken, budi.getJid(), Set.of(PROBLEM_ADMIN));
+        userRoleClient.setRoles(adminToken, andi.getJid(), Set.of());
 
         assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactly(
-                superadminRole,
-                userWithRole(admin.getJid(), ALL_ROLES),
-                userWithRole(budi.getJid(), new UserRole.Builder().problem("ADMIN").build()));
+                superadminRoles,
+                userWithRoles(admin.getJid(), ADMIN_ROLES),
+                userWithRoles(budi.getJid(), Set.of(PROBLEM_ADMIN)));
 
-        assertBadRequest(() -> userRoleClient
-                .setRole(adminToken, budi.getJid(), new UserRole.Builder().account("SUPERADMIN").build()));
-        assertNotFound(() -> userRoleClient.setRole(adminToken, "nonexistent", ALL_ROLES));
+        assertNotFound(() -> userRoleClient.setRoles(adminToken, "nonexistent", ADMIN_ROLES));
+    }
+
+    @Test
+    void refuses_superadmin_role() {
+        User budi = createUser("budi2");
+
+        assertBadRequest(() -> userRoleClient.setRoles(adminToken, budi.getJid(), Set.of(SUPERADMIN)));
+        assertBadRequest(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+                .addUsernames("budi2")
+                .addRoles(SUPERADMIN)
+                .build()));
     }
 
     @Test
     void protects_superadmin_and_own_system_admin_role() {
-        String superadminJid = createClient(SessionClient.class)
-                .logIn(Credentials.of("superadmin", "superadmin"))
-                .getUserJid();
+        String superadminJid = getSuperadminJid();
 
-        assertForbidden(() -> userRoleClient.setRole(adminToken, superadminJid, ALL_ROLES));
+        assertForbidden(() -> userRoleClient.setRoles(adminToken, superadminJid, ADMIN_ROLES));
+        assertForbidden(() -> userRoleClient.setRoles(superadminToken, superadminJid, Set.of()));
         assertForbidden(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
                 .addUsernames("superadmin")
-                .role(ALL_ROLES)
+                .addRoles(CONTEST_ADMIN)
                 .build()));
 
-        assertForbidden(() -> userRoleClient
-                .setRole(adminToken, admin.getJid(), new UserRole.Builder().problem("ADMIN").build()));
-        assertForbidden(() -> userRoleClient.setRole(adminToken, admin.getJid(), new UserRole.Builder().build()));
+        assertForbidden(() -> userRoleClient.setRoles(adminToken, admin.getJid(), Set.of(PROBLEM_ADMIN)));
+        assertForbidden(() -> userRoleClient.setRoles(adminToken, admin.getJid(), Set.of()));
     }
 
-    private static UserWithRole userWithRole(String userJid, UserRole role) {
-        return new UserWithRole.Builder().userJid(userJid).role(role).build();
+    private String getSuperadminJid() {
+        return createClient(SessionClient.class)
+                .logIn(Credentials.of("superadmin", "superadmin"))
+                .getUserJid();
+    }
+
+    private static UserWithRoles userWithRoles(String userJid, Set<UserRole> roles) {
+        return new UserWithRoles.Builder().userJid(userJid).roles(roles).build();
     }
 }

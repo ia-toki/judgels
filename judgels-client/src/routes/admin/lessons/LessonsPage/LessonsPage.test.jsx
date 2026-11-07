@@ -14,7 +14,7 @@ describe('LessonsPage', () => {
   });
 
   const renderComponent = async ({
-    role = { training: 'ADMIN' },
+    roles = ['TRAINING_ADMIN'],
     initialEntry = '/admin/lessons',
     lessonsQuery = true,
     lessons = [
@@ -26,7 +26,7 @@ describe('LessonsPage', () => {
       JIDUSER2: { username: 'user2' },
     },
   } = {}) => {
-    nockApi().get('/v2/user-web/config').reply(200, { role });
+    nockApi().get('/v2/user-web/config').reply(200, { roles });
 
     nockApi()
       .get('/v4/lessons')
@@ -91,7 +91,7 @@ describe('LessonsPage', () => {
   });
 
   test('hides the create button from other users', async () => {
-    await renderComponent({ role: {} });
+    await renderComponent({ roles: [] });
 
     expect(await screen.findByText('lesson-1')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /new lesson/i })).not.toBeInTheDocument();

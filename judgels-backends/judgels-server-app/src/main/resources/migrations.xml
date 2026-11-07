@@ -8,4 +8,5 @@
 
     <include file="migrations/000_init.xml"/>
     <include file="migrations/001_add_judgels_setting.xml"/>
+    <include file="migrations/002_add_judgels_user_role.xml"/>
 </databaseChangeLog>

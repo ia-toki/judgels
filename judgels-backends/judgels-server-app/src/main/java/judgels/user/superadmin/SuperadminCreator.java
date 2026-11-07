@@ -2,10 +2,12 @@ package judgels.user.superadmin;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
+import java.util.Set;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
+import judgels.api.user.role.UserRole;
 import judgels.user.UserStore;
-import judgels.user.role.SuperadminRoleStore;
+import judgels.user.role.UserRoleStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +17,16 @@ public class SuperadminCreator {
     private static final String SUPERADMIN_INITIAL_EMAIL = SUPERADMIN_USERNAME + "@judgels.com";
 
     private final UserStore userStore;
-    private final SuperadminRoleStore superadminRoleStore;
+    private final UserRoleStore userRoleStore;
     private final Optional<SuperadminCreatorConfiguration> config;
 
     public SuperadminCreator(
             UserStore userStore,
-            SuperadminRoleStore superadminRoleStore,
+            UserRoleStore userRoleStore,
             Optional<SuperadminCreatorConfiguration> config) {
 
         this.userStore = userStore;
-        this.superadminRoleStore = superadminRoleStore;
+        this.userRoleStore = userRoleStore;
         this.config = config;
     }
 
@@ -45,6 +47,6 @@ public class SuperadminCreator {
                     .build());
             LOGGER.info("Created superadmin user");
         }
-        superadminRoleStore.setSuperadmin(user.getJid());
+        userRoleStore.addRoles(user.getJid(), Set.of(UserRole.SUPERADMIN));
     }
 }

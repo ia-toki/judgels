@@ -16,7 +16,12 @@ describe('RoleUpsertPage', () => {
     nockApi()
       .get('/v2/user-roles')
       .reply(200, {
-        data: [{ userJid: 'superadminJid', role: { account: 'SUPERADMIN', contest: 'ADMIN' } }],
+        data: [
+          {
+            userJid: 'superadminJid',
+            roles: ['SUPERADMIN', 'SYSTEM_ADMIN', 'PROBLEM_ADMIN', 'CONTEST_ADMIN', 'TRAINING_ADMIN'],
+          },
+        ],
         profilesMap: { superadminJid: { username: 'superadmin' } },
       })
       .persist();
@@ -41,7 +46,7 @@ describe('RoleUpsertPage', () => {
     await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
 
     const scope = nockApi()
-      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], role: { contest: 'ADMIN' } })
+      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], roles: ['CONTEST_ADMIN'] })
       .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
     await user.click(screen.getByRole('button', { name: /^submit$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
