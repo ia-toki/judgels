@@ -25,6 +25,7 @@ export const ProblemErrors = {
   SetterUsernamesNotFound: 'ProblemSetterUsernamesNotFound',
   PartnerUsernamesNotFound: 'ProblemPartnerUsernamesNotFound',
   PartnerUsernamesNotWriters: 'ProblemPartnerUsernamesNotWriters',
+  WriterUsernamesNotFound: 'ProblemWriterUsernamesNotFound',
   VersionLocalChangesOutdated: 'ProblemVersionLocalChangesOutdated',
   VersionLocalChangesConflict: 'ProblemVersionLocalChangesConflict',
 };

@@ -26,7 +26,17 @@ export default function RoleEditPage() {
   }
 
   return (
-    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Roles', to: '/admin/roles' }, { text: username }]} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Roles', to: '/admin/roles' },
+            { text: 'Admins', to: '/admin/roles/admins' },
+            { text: username },
+          ]}
+        />
+      }
+    >
       <RoleEditForm user={user} />
     </ContentCard>
   );
@@ -45,7 +55,7 @@ function RoleEditForm({ user }) {
   const roles = [...user.roles.filter(role => !shownRoles.includes(role)), ...shownRoles.filter(role => checked[role])];
   const isRemoving = roles.length === 0;
 
-  const goToRoles = () => navigate({ to: '/admin/roles' });
+  const goToRoles = () => navigate({ to: '/admin/roles/admins' });
 
   const save = async () => {
     await setRoleMutation.mutateAsync(roles);

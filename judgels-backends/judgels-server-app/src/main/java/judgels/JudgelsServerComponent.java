@@ -69,6 +69,7 @@ public interface JudgelsServerComponent {
     judgels.catalog.problem.statement.ProblemStatementResource problemStatementResource();
     judgels.catalog.problem.tag.ProblemTagResource problemTagResource();
     judgels.catalog.problem.version.ProblemVersionResource problemVersionResource();
+    judgels.catalog.problem.writer.ProblemWriterResource problemWriterResource();
     judgels.submission.bundle.ProblemBundleSubmissionResource problemBundleSubmissionResource();
     judgels.submission.programming.ProblemSubmissionResource problemSubmissionResource();
     judgels.catalog.lesson.LessonResource lessonResource();

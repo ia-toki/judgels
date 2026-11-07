@@ -22,11 +22,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,6 +41,8 @@ import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
 import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.version.ProblemVersionCommitData;
+import judgels.api.catalog.problem.writer.ProblemWriterData;
+import judgels.api.catalog.problem.writer.ProblemWritersResponse;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
@@ -55,6 +54,7 @@ import judgels.client.ProblemEditorialClient;
 import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
 import judgels.client.ProblemVersionClient;
+import judgels.client.ProblemWriterClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
@@ -229,16 +229,14 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
     }
 
     protected static void grantProblemWriter(User user) {
-        String sql = "insert into judgels_user_role (userJid, role, createdAt) values (?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection("jdbc:h2:mem:test")) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, user.getJid());
-            stmt.setString(2, UserRole.PROBLEM_WRITER.name());
-            stmt.setTimestamp(3, java.sql.Timestamp.from(Instant.now()));
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        ProblemWriterClient writerClient = createClient(ProblemWriterClient.class);
+        ProblemWritersResponse writers = writerClient.getWriters(superadminToken);
+        List<ProblemWriterData> data = new ArrayList<>();
+        for (String userJid : writers.getData()) {
+            data.add(new ProblemWriterData.Builder().username(writers.getProfilesMap().get(userJid).getUsername()).build());
         }
+        data.add(new ProblemWriterData.Builder().username(user.getUsername()).build());
+        writerClient.setWriters(superadminToken, data);
     }
 
     protected static String getToken(User user) {
