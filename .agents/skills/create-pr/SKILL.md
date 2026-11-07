@@ -33,7 +33,7 @@ Rows now show the archive description first. Row text is muted with the secondar
 
 The PR title is the commit subject. The description starts with a `## Summary` heading followed by the commit body's two paragraphs.
 
-Then add a `## Details` heading listing what the summary leaves out: which classes, endpoints or migrations change and how, trade-offs and alternatives rejected, and work left for a follow-up. Prefer a list when there are several parts, so a reviewer can scan it. Leave out Details only when the summary already names everything the diff does.
+Then add a `## Details` heading listing what the summary leaves out: which classes, endpoints or migrations change and how, trade-offs and alternatives rejected, and work left for a follow-up. Put the list in a collapsed `<details>` block whose `<summary>` is `Click to view details`, with a blank line after `<summary>` and before `</details>` so that GitHub renders the Markdown inside. Prefer a list when there are several parts, so a reviewer can scan it. Leave out Details only when the summary already names everything the diff does.
 
 ```
 ## Summary
@@ -44,10 +44,17 @@ Registration now also accepts users whose rating falls in a higher division when
 
 ## Details
 
+<details>
+<summary>Click to view details</summary>
+
 - `ContestContestantRoleChecker` accepts a user whose division number is lower than the contest's, and only when `allowHigherDivisionsUnofficially` is set.
 - Ratings and scoreboards already treat these users as unofficial, so nothing else changes.
+
+</details>
 ```
 
 ## 4. Commit, push and open the PR
+
+Unless told specifically otherwise, every pull request targets `master`, from its own branch made from the latest `master` and pushed to `origin`.
 
 Omit tool attribution such as a "Generated with Claude Code" footer or a `Co-Authored-By` trailer.
