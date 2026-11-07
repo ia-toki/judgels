@@ -31,16 +31,18 @@ Rows now show the archive description first. Row text is muted with the secondar
 
 ## 3. Write the PR description
 
-The PR title is the commit subject. The description starts with a `## Summary` heading followed by the commit body's two paragraphs.
+The PR title is the commit subject. The description reuses the commit body's two paragraphs in reverse order, each under its own heading: `## What` holds the fix paragraph rewritten to start with a verb in the imperative, like the subject's summary, then `## Why` holds the problem paragraph as is.
 
-Then add a `## Details` heading listing what the summary leaves out: which classes, endpoints or migrations change and how, trade-offs and alternatives rejected, and work left for a follow-up. Put the list in a collapsed `<details>` block whose `<summary>` is `Click to view details`, with a blank line after `<summary>` and before `</details>` so that GitHub renders the Markdown inside. Prefer a list when there are several parts, so a reviewer can scan it. Leave out Details only when the summary already names everything the diff does.
+Then add a `## Details` heading listing what What and Why leave out: which classes, endpoints or migrations change and how, trade-offs and alternatives rejected, and work left for a follow-up. Put the list in a collapsed `<details>` block whose `<summary>` is `Click to view details`, with a blank line after `<summary>` and before `</details>` so that GitHub renders the Markdown inside. Prefer a list when there are several parts, so a reviewer can scan it. Leave out Details only when What already names everything the diff does.
 
 ```
-## Summary
+## What
+
+Accept users whose rating falls in a higher division at registration too, when the option is enabled.
+
+## Why
 
 The `allowHigherDivisionsUnofficially` division option was applied to ratings and scoreboards but not to registration. Higher-division users were stuck at `REGISTRABLE_WRONG_DIVISION`, so they could never join as unofficial contestants.
-
-Registration now also accepts users whose rating falls in a higher division when the option is enabled.
 
 ## Details
 
