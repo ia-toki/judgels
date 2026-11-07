@@ -2,6 +2,7 @@ package judgels.api.user.web;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
+import java.util.Set;
 import judgels.api.profile.Profile;
 import judgels.api.user.role.UserRole;
 import org.immutables.value.Value;
@@ -13,7 +14,7 @@ public interface UserWebConfig {
     String getAppSlogan();
     Optional<String> getAppAnnouncement();
     String getHomeBanner();
-    UserRole getRole();
+    Set<UserRole> getRoles();
     Optional<Profile> getProfile();
 
     class Builder extends ImmutableUserWebConfig.Builder {}

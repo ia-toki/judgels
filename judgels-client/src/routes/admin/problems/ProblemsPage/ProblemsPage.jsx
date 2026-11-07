@@ -11,7 +11,7 @@ import Pagination from '../../../../components/Pagination/Pagination';
 import SearchBox from '../../../../components/SearchBox/SearchBox';
 import { UserRef } from '../../../../components/UserRef/UserRef';
 import { problemTypeNamesMap } from '../../../../modules/api/problem';
-import { ProblemAdminRole } from '../../../../modules/api/problemAdminRole';
+import { isProblemAdmin } from '../../../../modules/api/userRole';
 import { problemsQueryOptions } from '../../../../modules/queries/problem';
 import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
 
@@ -33,7 +33,7 @@ export default function ProblemsPage() {
   const { data: webConfig } = useQuery(userWebConfigQueryOptions());
   const { data: response, isFetching } = useQuery(problemsQueryOptions({ term, tags, page }));
 
-  const canCreate = webConfig?.role.problem === ProblemAdminRole.Admin;
+  const canCreate = isProblemAdmin(webConfig?.roles);
 
   const searchBoxUpdateQueries = (term, queries) => {
     return { ...queries, page: undefined, term };

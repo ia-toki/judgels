@@ -6,7 +6,7 @@ import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.user.UserStore;
-import judgels.user.role.SuperadminRoleStore;
+import judgels.user.role.UserRoleStore;
 
 @Module
 public class SuperadminModule {
@@ -21,10 +21,10 @@ public class SuperadminModule {
     SuperadminCreator superadminCreator(
             UnitOfWorkAwareProxyFactory unitOfWorkAwareProxyFactory,
             UserStore userStore,
-            SuperadminRoleStore superadminRoleStore) {
+            UserRoleStore userRoleStore) {
         return unitOfWorkAwareProxyFactory.create(
                 SuperadminCreator.class,
-                new Class<?>[]{UserStore.class, SuperadminRoleStore.class, Optional.class},
-                new Object[]{userStore, superadminRoleStore, config});
+                new Class<?>[]{UserStore.class, UserRoleStore.class, Optional.class},
+                new Object[]{userStore, userRoleStore, config});
     }
 }

@@ -1,7 +1,6 @@
 package judgels.user;
 
 import jakarta.inject.Inject;
-import judgels.api.user.role.SystemAdminRole;
 import judgels.api.user.role.UserRole;
 import judgels.user.role.UserRoleStore;
 
@@ -14,17 +13,10 @@ public class UserRoleChecker {
     }
 
     public boolean canAdminister(String actorJid) {
-        UserRole role = userRoleStore.getRole(actorJid);
-        String accountRole = role.getAccount().orElse("");
-        return accountRole.equals(SystemAdminRole.SUPERADMIN.name())
-                || accountRole.equals(SystemAdminRole.ADMIN.name());
+        return userRoleStore.getRoles(actorJid).contains(UserRole.SYSTEM_ADMIN);
     }
 
     public boolean canManage(String actorJid, String userJid) {
-        UserRole role = userRoleStore.getRole(actorJid);
-        String accountRole = role.getAccount().orElse("");
-        return accountRole.equals(SystemAdminRole.SUPERADMIN.name())
-                || accountRole.equals(SystemAdminRole.ADMIN.name())
-                || actorJid.equals(userJid);
+        return canAdminister(actorJid) || actorJid.equals(userJid);
     }
 }

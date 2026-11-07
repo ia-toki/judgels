@@ -125,5 +125,5 @@ A user who manages every user, the roles users hold and the site settings.
 _Avoid_: User admin, account admin
 
 **Superadmin**:
-The built-in user, created when the server first starts, who holds every admin role and cannot lose them.
+The built-in user, created when the server first starts, who holds every admin role and cannot lose them. It holds the `SUPERADMIN` role, which implies every other role.
 _Avoid_: Root, super user

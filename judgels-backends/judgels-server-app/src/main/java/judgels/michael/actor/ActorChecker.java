@@ -7,6 +7,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Optional;
+import java.util.Set;
 import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.role.UserRole;
@@ -39,11 +40,11 @@ public class ActorChecker {
                         Optional<User> user = userStore.getUserByJid(userJid);
                         if (user.isPresent()) {
                             PerRequestActorProvider.setJid(userJid);
-                            UserRole role = userRoleStore.getRole(userJid);
+                            Set<UserRole> roles = userRoleStore.getRoles(userJid);
                             return new Actor.Builder()
                                     .userJid(userJid)
                                     .username(user.get().getUsername())
-                                    .role(role)
+                                    .roles(roles)
                                     .avatarUrl("/api/v2/users/" + userJid + "/avatar")
                                     .build();
                         }

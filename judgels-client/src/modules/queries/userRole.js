@@ -11,14 +11,14 @@ export const userRolesQueryOptions = () =>
   });
 
 export const upsertUserRolesMutationOptions = () => ({
-  mutationFn: ({ usernames, role }) => userRoleAPI.upsertRoles(getToken(), usernames, role),
+  mutationFn: ({ usernames, roles }) => userRoleAPI.upsertRoles(getToken(), usernames, roles),
   onSuccess: () => {
     queryClient.invalidateQueries(userRolesQueryOptions());
   },
 });
 
-export const setUserRoleMutationOptions = userJid => ({
-  mutationFn: role => userRoleAPI.setRole(getToken(), userJid, role),
+export const setUserRolesMutationOptions = userJid => ({
+  mutationFn: roles => userRoleAPI.setRoles(getToken(), userJid, roles),
   onSuccess: () => {
     queryClient.invalidateQueries(userRolesQueryOptions());
   },

@@ -9,7 +9,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableUserRolesResponse.class)
 public interface UserRolesResponse {
-    List<UserWithRole> getData();
+    List<UserWithRoles> getData();
     Map<String, Profile> getProfilesMap();
 
     class Builder extends ImmutableUserRolesResponse.Builder {}

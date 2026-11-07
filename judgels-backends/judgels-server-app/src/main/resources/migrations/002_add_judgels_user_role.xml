@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="ia-toki" id="add-judgels-user-role-1">
+        <createTable catalogName="judgels" schemaName="judgels" tableName="judgels_user_role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="userJid" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdAt" type="datetime(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdBy" type="VARCHAR(32)"/>
+            <column name="createdIp" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ia-toki" id="add-judgels-user-role-2">
+        <createIndex catalogName="judgels" indexName="userJid_role" schemaName="judgels" tableName="judgels_user_role" unique="true">
+            <column name="userJid"/>
+            <column name="role"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ia-toki" id="add-judgels-user-role-3">
+        <createIndex catalogName="judgels" indexName="role" schemaName="judgels" tableName="judgels_user_role">
+            <column name="role"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="ia-toki" id="add-judgels-user-role-4">
+        <sql>
+            INSERT INTO judgels_user_role (userJid, role, createdAt)
+            SELECT userJid, 'SYSTEM_ADMIN', NOW(3) FROM jophiel_user_role WHERE jophiel = 'ADMIN';
+
+            INSERT INTO judgels_user_role (userJid, role, createdAt)
+            SELECT userJid, 'PROBLEM_ADMIN', NOW(3) FROM jophiel_user_role WHERE sandalphon = 'ADMIN';
+
+            INSERT INTO judgels_user_role (userJid, role, createdAt)
+            SELECT userJid, 'CONTEST_ADMIN', NOW(3) FROM jophiel_user_role WHERE uriel = 'ADMIN';
+
+            INSERT INTO judgels_user_role (userJid, role, createdAt)
+            SELECT userJid, 'TRAINING_ADMIN', NOW(3) FROM jophiel_user_role WHERE jerahmeel = 'ADMIN';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,5 +1,6 @@
 package judgels.session;
 
+import java.util.Set;
 import judgels.api.user.role.UserRole;
 import org.immutables.value.Value;
 
@@ -7,7 +8,7 @@ import org.immutables.value.Value;
 public interface Actor {
     String getUserJid();
     String getUsername();
-    UserRole getRole();
+    Set<UserRole> getRoles();
     String getAvatarUrl();
 
     class Builder extends ImmutableActor.Builder {}

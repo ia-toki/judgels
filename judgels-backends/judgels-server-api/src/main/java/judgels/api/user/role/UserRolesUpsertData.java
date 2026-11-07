@@ -8,7 +8,7 @@ import org.immutables.value.Value;
 @JsonDeserialize(as = ImmutableUserRolesUpsertData.class)
 public interface UserRolesUpsertData {
     Set<String> getUsernames();
-    UserRole getRole();
+    Set<UserRole> getRoles();
 
     class Builder extends ImmutableUserRolesUpsertData.Builder {}
 }

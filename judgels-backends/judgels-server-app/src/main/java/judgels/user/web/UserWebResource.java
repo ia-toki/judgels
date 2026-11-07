@@ -10,8 +10,8 @@ import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.Optional;
+import java.util.Set;
 import judgels.api.setting.Settings;
-import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
@@ -41,11 +41,11 @@ public class UserWebResource {
                 .homeBanner(settings.getHome().getBanner());
 
         if (!authHeader.isPresent()) {
-            config.role(new UserRole.Builder().build());
+            config.roles(Set.of());
         } else {
             String actorJid = actorChecker.check(authHeader.get());
             config
-                    .role(roleStore.getRole(actorJid))
+                    .roles(roleStore.getRoles(actorJid))
                     .profile(profileStore.getProfile(actorJid));
         }
         return config.build();

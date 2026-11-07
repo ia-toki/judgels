@@ -20,10 +20,10 @@ describe('RolesPage', () => {
         data: [
           {
             userJid: 'superadminJid',
-            role: { account: 'SUPERADMIN', problem: 'ADMIN', contest: 'ADMIN', training: 'ADMIN' },
+            roles: ['SUPERADMIN', 'SYSTEM_ADMIN', 'PROBLEM_ADMIN', 'CONTEST_ADMIN', 'TRAINING_ADMIN'],
           },
-          { userJid: 'userJid2', role: { account: null, problem: 'ADMIN', contest: null, training: null } },
-          { userJid: 'userJid1', role: { account: 'ADMIN', training: 'ADMIN' } },
+          { userJid: 'userJid2', roles: ['PROBLEM_ADMIN'] },
+          { userJid: 'userJid1', roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'] },
         ],
         profilesMap: {
           superadminJid: { username: 'superadmin' },
@@ -84,7 +84,7 @@ describe('RolesPage', () => {
     await user.click(within(await rowOf('budi')).getByRole('button', { name: /remove/i }));
     expect(screen.getByText('Remove all roles from budi?')).toBeInTheDocument();
 
-    const scope = nockApi().put('/v2/user-roles/userJid2', {}).reply(200);
+    const scope = nockApi().put('/v2/user-roles/userJid2', []).reply(200);
     await user.click(screen.getByRole('button', { name: /^remove$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });
