@@ -6,24 +6,16 @@ import { useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { UserRef } from '../../../../components/UserRef/UserRef';
+import { UsernamesEditForm, parseUsernames } from '../../../../components/forms/UsernamesEditForm/UsernamesEditForm';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   problemPartnersQueryOptions,
   setProblemPartnersMutationOptions,
 } from '../../../../modules/queries/problemPartner';
-import ProblemPartnersEditForm from '../ProblemPartnersEditForm/ProblemPartnersEditForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 const MAX_PARTNERS = 100;
-
-function parseUsernames(text) {
-  const usernames = (text || '')
-    .split('\n')
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-  return [...new Set(usernames)];
-}
 
 function validateUsernames(text) {
   if (parseUsernames(text).length > MAX_PARTNERS) {
@@ -74,7 +66,8 @@ export default function ProblemPartnersPage() {
         usernames: partners.map(partner => profilesMap[partner.userJid]?.username).join('\n'),
       };
       return (
-        <ProblemPartnersEditForm
+        <UsernamesEditForm
+          label="Partners"
           initialValues={initialValues}
           validateUsernames={validateUsernames}
           onSubmit={setPartners}

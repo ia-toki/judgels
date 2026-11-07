@@ -49,7 +49,7 @@ export default function RoleUpsertPage() {
 
   const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
 
-  const goToRoles = () => navigate({ to: '/admin/roles', ignoreBlocker: true });
+  const goToRoles = () => navigate({ to: '/admin/roles/admins', ignoreBlocker: true });
 
   const upsertUsers = async (values, form) => {
     const usernames = parseUsernames(values.usernames);
@@ -77,7 +77,17 @@ export default function RoleUpsertPage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Roles', to: '/admin/roles' }, { text: 'Upsert' }]} />}>
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            { text: 'Roles', to: '/admin/roles' },
+            { text: 'Admins', to: '/admin/roles/admins' },
+            { text: 'Upsert' },
+          ]}
+        />
+      }
+    >
       <Flex flexDirection="column" gap={4}>
         {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
         <Form onSubmit={upsertUsers} initialValues={initialValues}>

@@ -2,12 +2,20 @@ import { Button, Intent } from '@blueprintjs/core';
 import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
-import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
-import { FormTextArea } from '../../../../components/forms/FormTextArea/FormTextArea';
-import { FormUnsavedChangesAlert } from '../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
-import { withSubmissionError } from '../../../../modules/form/submissionError';
+import { withSubmissionError } from '../../../modules/form/submissionError';
+import { ActionButtons } from '../../ActionButtons/ActionButtons';
+import { FormTextArea } from '../FormTextArea/FormTextArea';
+import { FormUnsavedChangesAlert } from '../UnsavedChangesAlert/UnsavedChangesAlert';
 
-export default function ProblemPartnersEditForm({ onSubmit, initialValues, validateUsernames, onCancel }) {
+export function parseUsernames(text) {
+  const usernames = (text || '')
+    .split('\n')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+  return [...new Set(usernames)];
+}
+
+export function UsernamesEditForm({ label, onSubmit, initialValues, validateUsernames, onCancel }) {
   return (
     <Form onSubmit={withSubmissionError(onSubmit)} initialValues={initialValues}>
       {({ handleSubmit, submitting }) => (
@@ -17,7 +25,7 @@ export default function ProblemPartnersEditForm({ onSubmit, initialValues, valid
             <Field
               component={FormTextArea}
               name="usernames"
-              label="Partners"
+              label={label}
               labelHelper="(one username per line)"
               rows={10}
               isCode

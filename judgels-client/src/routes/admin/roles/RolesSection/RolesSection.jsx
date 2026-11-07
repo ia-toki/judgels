@@ -50,7 +50,7 @@ export function RolesSection({ roles }) {
         small
         className={Classes.MINIMAL}
         aria-label={`Edit ${user.username}`}
-        to={`/admin/roles/${user.username}`}
+        to={`/admin/roles/admins/${user.username}`}
       >
         <Edit />
       </ButtonLink>

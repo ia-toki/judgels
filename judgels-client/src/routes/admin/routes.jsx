@@ -49,6 +49,7 @@ import {
   problemVersionLocalChangesExistQueryOptions,
   problemVersionsQueryOptions,
 } from '../../modules/queries/problemVersion';
+import { problemWritersQueryOptions } from '../../modules/queries/problemWriter';
 import { basicProfileQueryOptions } from '../../modules/queries/profile';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
@@ -95,21 +96,45 @@ export const createAdminRoutes = appRoute => {
   const adminRolesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'roles',
+    component: lazyRouteComponent(retryImport(() => import('./roles/RolesIndexPage'))),
+  });
+
+  const adminRoleAdminsRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'roles/admins',
     component: lazyRouteComponent(retryImport(() => import('./roles/RolesPage/RolesPage'))),
   });
 
   const adminRoleUpsertRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'roles/-/upsert',
+    path: 'roles/admins/-/upsert',
     component: lazyRouteComponent(retryImport(() => import('./roles/RoleUpsertPage/RoleUpsertPage'))),
     loader: async () => {
       await queryClient.ensureQueryData(userRolesQueryOptions());
     },
   });
 
+  const adminProblemWritersRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'roles/problem-writers',
+    component: lazyRouteComponent(retryImport(() => import('./roles/ProblemWritersPage/ProblemWritersPage'))),
+    loader: async () => {
+      await queryClient.ensureQueryData(problemWritersQueryOptions());
+    },
+  });
+
+  const adminProblemWritersEditRoute = createRoute({
+    getParentRoute: () => adminRoute,
+    path: 'roles/problem-writers/edit',
+    component: lazyRouteComponent(retryImport(() => import('./roles/ProblemWritersEditPage/ProblemWritersEditPage'))),
+    loader: async () => {
+      await queryClient.ensureQueryData(problemWritersQueryOptions());
+    },
+  });
+
   const adminRoleEditRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'roles/$username',
+    path: 'roles/admins/$username',
     component: lazyRouteComponent(retryImport(() => import('./roles/RoleEditPage/RoleEditPage'))),
     loader: async () => {
       await queryClient.ensureQueryData(userRolesQueryOptions());
@@ -628,7 +653,10 @@ export const createAdminRoutes = appRoute => {
     adminUserUpsertRoute,
     adminUserRoute,
     adminRolesRoute,
+    adminRoleAdminsRoute,
     adminRoleUpsertRoute,
+    adminProblemWritersRoute,
+    adminProblemWritersEditRoute,
     adminRoleEditRoute,
     adminRatingsRoute,
     adminContestRatingChangesRoute,
