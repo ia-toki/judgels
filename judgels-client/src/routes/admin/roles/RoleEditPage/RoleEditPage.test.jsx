@@ -35,7 +35,7 @@ describe('RoleEditPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={[`/admin/roles/${username}`]} path="/admin/roles/$username">
+          <TestRouter initialEntries={[`/admin/roles/admins/${username}`]} path="/admin/roles/admins/$username">
             <RoleEditPage />
           </TestRouter>
         </QueryClientProviderWrapper>

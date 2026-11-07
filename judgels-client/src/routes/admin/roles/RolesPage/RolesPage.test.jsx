@@ -15,6 +15,9 @@ describe('RolesPage', () => {
 
   const renderComponent = async () => {
     nockApi()
+      .get('/v2/user-web/config')
+      .reply(200, { roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'] });
+    nockApi()
       .get('/v2/user-roles')
       .reply(200, {
         data: [
@@ -36,7 +39,7 @@ describe('RolesPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/roles']}>
+          <TestRouter initialEntries={['/admin/roles/admins']}>
             <RolesPage />
           </TestRouter>
         </QueryClientProviderWrapper>
@@ -73,7 +76,7 @@ describe('RolesPage', () => {
     await renderComponent();
     expect(within(await rowOf('budi')).getByRole('link', { name: /edit/i })).toHaveAttribute(
       'href',
-      '/admin/roles/budi'
+      '/admin/roles/admins/budi'
     );
   });
 
@@ -91,6 +94,9 @@ describe('RolesPage', () => {
 
   test('links to the upsert page', async () => {
     await renderComponent();
-    expect(await screen.findByRole('link', { name: /upsert roles/i })).toHaveAttribute('href', '/admin/roles/-/upsert');
+    expect(await screen.findByRole('link', { name: /upsert admins/i })).toHaveAttribute(
+      'href',
+      '/admin/roles/admins/-/upsert'
+    );
   });
 });

@@ -1,28 +1,37 @@
-import { Intent } from '@blueprintjs/core';
-import { Upload } from '@blueprintjs/icons';
-import { useQuery } from '@tanstack/react-query';
+import { Flex } from '@blueprintjs/labs';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { Navigate } from '@tanstack/react-router';
 
-import { ButtonLink } from '../../../../components/ButtonLink/ButtonLink';
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import { LoadingState } from '../../../../components/LoadingState/LoadingState';
+import { isSystemAdmin } from '../../../../modules/api/userRole';
 import { userRolesQueryOptions } from '../../../../modules/queries/userRole';
+import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
 import { RolesSection } from '../RolesSection/RolesSection';
+import { RolesTopbar } from '../RolesTopbar/RolesTopbar';
+
+import { RolesActions } from '../RolesActions/RolesActions';
 
 export default function RolesPage() {
+  const {
+    data: { roles },
+  } = useSuspenseQuery(userWebConfigQueryOptions());
+
+  if (!isSystemAdmin(roles)) {
+    return <Navigate to="/admin/roles/problem-writers" replace />;
+  }
+  return <AdminRoles />;
+}
+
+function AdminRoles() {
   const { data: response } = useQuery(userRolesQueryOptions());
 
-  const renderAction = () => {
-    return (
-      <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/-/upsert">
-        <Upload />
-        <span>Upsert roles</span>
-      </ButtonLink>
-    );
-  };
-
   return (
-    <ContentCard title="Roles" action={renderAction()}>
-      {response ? <RolesSection roles={response} /> : <LoadingState />}
+    <ContentCard title="Roles" action={<RolesActions />}>
+      <Flex flexDirection="column" gap={5}>
+        <RolesTopbar activeItemPath="/admin/roles/admins" />
+        {response ? <RolesSection roles={response} /> : <LoadingState />}
+      </Flex>
     </ContentCard>
   );
 }

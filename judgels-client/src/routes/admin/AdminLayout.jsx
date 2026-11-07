@@ -38,18 +38,20 @@ export default function AdminLayout() {
 
   const canAdministerSystem = isSystemAdmin(roles);
   const canWriteProblems = isProblemWriter(roles);
+  const canManageRoles = canAdministerSystem || isProblemAdmin(roles);
   const canAdministerContests = isContestAdmin(roles);
   const canAdministerTraining = isTLX() && isTrainingAdmin(roles);
 
   const sidebarItems = [
     {
       title: 'System',
-      visible: canAdministerSystem,
+      visible: canManageRoles,
       children: [
         {
           path: 'users',
           titleIcon: <People />,
           title: 'Users',
+          visible: canAdministerSystem,
         },
         {
           path: 'roles',
@@ -60,17 +62,18 @@ export default function AdminLayout() {
           path: 'ratings',
           titleIcon: <TimelineLineChart />,
           title: 'Ratings',
-          visible: isTLX(),
+          visible: canAdministerSystem && isTLX(),
         },
         {
           path: 'settings',
           titleIcon: <Cog />,
           title: 'Settings',
+          visible: canAdministerSystem,
         },
       ].filter(child => child.visible !== false),
     },
     {
-      title: 'Competition',
+      title: 'Writing',
       visible: canWriteProblems || canAdministerContests,
       children: [
         {
