@@ -16,7 +16,7 @@ import { updateSettingsMutationOptions } from '../../../../modules/queries/setti
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function UserRegistrationSection({ userRegistration }) {
+export function UserRegistrationSection({ userRegistration, mailerConfigured, recaptchaConfigured }) {
   const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
@@ -89,8 +89,22 @@ export function UserRegistrationSection({ userRegistration }) {
                 <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
-                    <Field component={FormTableCheckbox} fixedKey name="enabled" label="Enabled" />
-                    <Field component={FormTableCheckbox} fixedKey name="recaptchaEnabled" label="reCAPTCHA enabled" />
+                    <Field
+                      component={FormTableCheckbox}
+                      fixedKey
+                      name="enabled"
+                      label="Enabled"
+                      disabled={!mailerConfigured && !userRegistration.enabled}
+                      inputHelper={!mailerConfigured && 'Needs the mailer config in judgels-server.yml.'}
+                    />
+                    <Field
+                      component={FormTableCheckbox}
+                      fixedKey
+                      name="recaptchaEnabled"
+                      label="reCAPTCHA enabled"
+                      disabled={!recaptchaConfigured && !userRegistration.recaptchaEnabled}
+                      inputHelper={!recaptchaConfigured && 'Needs the recaptcha config in judgels-server.yml.'}
+                    />
                     <Field
                       component={FormTableTextInput}
                       fixedKey

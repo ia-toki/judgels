@@ -9,8 +9,6 @@ import RegisterPage from './RegisterPage';
 
 describe('RegisterPage', () => {
   const renderComponent = async () => {
-    nockApi().get('/v2/users/registration/web/config').reply(200, { recaptchaEnabled: false });
-
     await act(async () =>
       render(
         <QueryClientProviderWrapper>

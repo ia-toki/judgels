@@ -9,6 +9,7 @@ import judgels.core.mailer.MailerConfiguration;
 import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.core.recaptcha.RecaptchaConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.setting.GoogleAnalyticsConfiguration;
 import judgels.training.TrainingConfiguration;
 import judgels.user.account.UserResetPasswordConfiguration;
 import judgels.user.rating.UserRatingConfiguration;
@@ -54,6 +55,11 @@ public interface JudgelsServerConfiguration {
 
     @JsonProperty("rating")
     Optional<UserRatingConfiguration> getUserRatingConfig();
+
+    // Deprecated: Only read to seed the Google Analytics tracking ID setting. Removed after 4.0.
+    @Deprecated
+    @JsonProperty("googleAnalytics")
+    Optional<GoogleAnalyticsConfiguration> getGoogleAnalyticsConfig();
 
     class Builder extends ImmutableJudgelsServerConfiguration.Builder {}
 }

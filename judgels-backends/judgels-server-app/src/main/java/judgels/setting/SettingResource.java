@@ -40,7 +40,7 @@ public class SettingResource {
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        return store.getSettings();
+        return getSettingsWithConfig();
     }
 
     @PUT
@@ -57,7 +57,15 @@ public class SettingResource {
 
         store.updateSettings(data);
 
-        return store.getSettings();
+        return getSettingsWithConfig();
+    }
+
+    private Settings getSettingsWithConfig() {
+        return new Settings.Builder()
+                .from(store.getSettings())
+                .mailerConfigured(mailer.isPresent())
+                .recaptchaConfigured(recaptchaVerifier.isPresent())
+                .build();
     }
 
     private void checkValid(SettingUpdateData data) {

@@ -16,6 +16,10 @@ public class GoogleAuth {
         this.config = config;
     }
 
+    public String getClientId() {
+        return config.getClientId();
+    }
+
     public GoogleIdToken.Payload verifyIdToken(String idTokenString) {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(

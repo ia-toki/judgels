@@ -16,6 +16,7 @@ import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
 
 public class SettingStore {
+    static final String APP_GOOGLE_ANALYTICS_TRACKING_ID = "app_google_analytics_tracking_id";
     static final String USER_REGISTRATION_ENABLED = "user_registration_enabled";
     static final String USER_RESET_PASSWORD_ENABLED = "user_reset_password_enabled";
 
@@ -36,6 +37,8 @@ public class SettingStore {
                         .slogan(settings.getOrDefault("app_slogan", ""))
                         .announcement(Optional.ofNullable(settings.get("app_announcement"))
                                 .filter(announcement -> !announcement.isEmpty()))
+                        .googleAnalyticsTrackingId(Optional.ofNullable(settings.get(APP_GOOGLE_ANALYTICS_TRACKING_ID))
+                                .filter(trackingId -> !trackingId.isEmpty()))
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner(settings.getOrDefault("home_banner", ""))
@@ -78,6 +81,7 @@ public class SettingStore {
             upsertSetting("app_name", app.getName());
             upsertSetting("app_slogan", app.getSlogan());
             upsertSetting("app_announcement", app.getAnnouncement().orElse(""));
+            upsertSetting(APP_GOOGLE_ANALYTICS_TRACKING_ID, app.getGoogleAnalyticsTrackingId().orElse(""));
         });
         data.getHome().ifPresent(home -> {
             upsertSetting("home_banner", home.getBanner());

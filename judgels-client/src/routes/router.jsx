@@ -4,6 +4,7 @@ import { parse, stringify } from 'query-string';
 import { LoadingState } from '../components/LoadingState/LoadingState';
 import { NotFoundPage } from '../components/NotFoundPage/NotFoundPage';
 import { APP_CONFIG } from '../conf';
+import { initGA } from '../ga';
 import { NotFoundError } from '../modules/api/error';
 import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
 import { queryClient } from '../modules/queryClient';
@@ -28,6 +29,7 @@ export const appRoute = createRoute({
   component: App,
   beforeLoad: async () => {
     await queryClient.ensureQueryData(userWebConfigQueryOptions());
+    initGA();
   },
 });
 

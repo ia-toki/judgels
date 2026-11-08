@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
 import { registerUserMutationOptions } from '../../../../modules/queries/userAccount';
-import { userRegistrationWebConfigQueryOptions } from '../../../../modules/queries/userRegistrationWeb';
+import { getRecaptchaSiteKey } from '../../../../modules/webConfig';
 import GoogleAuth from '../../login/GoogleAuth/GoogleAuth';
 import ResendActivation from '../../needActivation/ResendActivation/ResendActivation';
 import RegisterForm from '../RegisterForm/RegisterForm';
@@ -14,8 +14,6 @@ import './RegisterPage.scss';
 export default function RegisterPage() {
   const [registeredUser, setRegisteredUser] = useState(undefined);
   const [isInternalAuthEnabled, setIsInternalAuthEnabled] = useState(true);
-
-  const { data: config } = useQuery(userRegistrationWebConfigQueryOptions());
 
   const registerMutation = useMutation(registerUserMutationOptions);
 
@@ -38,10 +36,6 @@ export default function RegisterPage() {
     setIsInternalAuthEnabled(prev => !prev);
   };
 
-  if (!config) {
-    return null;
-  }
-
   let content;
   if (registeredUser) {
     content = (
@@ -58,9 +52,10 @@ export default function RegisterPage() {
       </Card>
     );
   } else {
+    const recaptchaSiteKey = getRecaptchaSiteKey();
     const registerFormProps = {
-      recaptchaEnabled: config.recaptchaEnabled,
-      recaptchaSiteKey: config.recaptcha && config.recaptcha.siteKey,
+      recaptchaEnabled: !!recaptchaSiteKey,
+      recaptchaSiteKey,
     };
     content = (
       <Card title="Register" className="register-page__card">

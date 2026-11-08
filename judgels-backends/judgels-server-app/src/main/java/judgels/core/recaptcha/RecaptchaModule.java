@@ -20,6 +20,6 @@ public class RecaptchaModule {
     @Provides
     @Singleton
     Optional<RecaptchaVerifier> recaptchaVerifier() {
-        return config.map(c -> new RecaptchaVerifier(c.getSecretKey()));
+        return config.map(c -> new RecaptchaVerifier(c.getSiteKey(), c.getSecretKey()));
     }
 }

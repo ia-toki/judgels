@@ -18,6 +18,9 @@ public interface UserWebConfig {
     boolean getUserResetPasswordEnabled();
     boolean getTrainingEnabled();
     boolean getRatingEnabled();
+    Optional<String> getGoogleAuthClientId();
+    Optional<String> getRecaptchaSiteKey();
+    Optional<String> getGoogleAnalyticsTrackingId();
     Set<UserRole> getRoles();
     Optional<Profile> getProfile();
 

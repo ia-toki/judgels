@@ -12,5 +12,15 @@ public interface Settings {
     UserRegistrationSettings getUserRegistration();
     UserResetPasswordSettings getUserResetPassword();
 
+    @Value.Default
+    default boolean getMailerConfigured() {
+        return false;
+    }
+
+    @Value.Default
+    default boolean getRecaptchaConfigured() {
+        return false;
+    }
+
     class Builder extends ImmutableSettings.Builder {}
 }

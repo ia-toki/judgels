@@ -32,3 +32,15 @@ export function isTrainingEnabled() {
 export function isRatingEnabled() {
   return !!getUserWebConfig()?.ratingEnabled;
 }
+
+export function getGoogleAuthClientId() {
+  return getUserWebConfig()?.googleAuthClientId;
+}
+
+export function getRecaptchaSiteKey() {
+  return getUserWebConfig()?.recaptchaSiteKey;
+}
+
+export function getGoogleAnalyticsTrackingId() {
+  return getUserWebConfig()?.googleAnalyticsTrackingId;
+}

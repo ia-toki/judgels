@@ -20,7 +20,6 @@ import judgels.core.fs.aws.AwsFsConfiguration;
 import judgels.core.mailer.MailerModule;
 import judgels.core.messaging.RabbitMQModule;
 import judgels.core.recaptcha.RecaptchaModule;
-import judgels.core.recaptcha.web.RecaptchaWebConfig;
 import judgels.grading.GradingModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
@@ -153,9 +152,9 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .recaptchaModule(new RecaptchaModule(judgelsConfig.getRecaptchaConfig()))
                 .settingModule(new SettingModule(
                         judgelsConfig.getUserRegistrationConfig(),
-                        judgelsConfig.getUserResetPasswordConfig()))
-                .userRegistrationModule(new UserRegistrationModule(
-                        judgelsConfig.getRecaptchaConfig().map(RecaptchaWebConfig::fromServerConfig)))
+                        judgelsConfig.getUserResetPasswordConfig(),
+                        judgelsConfig.getGoogleAnalyticsConfig()))
+                .userRegistrationModule(new UserRegistrationModule())
                 .userWebModule(new UserWebModule(trainingEnabled, ratingEnabled))
                 .contestRatingModule(new ContestRatingModule(ratingEnabled))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
@@ -180,7 +179,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
         env.jersey().register(component.userAccountResource());
-        env.jersey().register(component.userRegistrationWebResource());
 
         component.scheduler().scheduleWithFixedDelay(
                 "session-cleaner",
