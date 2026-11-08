@@ -6,7 +6,7 @@ import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayou
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
 import { isTLX } from '../../../conf';
 import { useSession } from '../../../modules/session';
-import { getHomeBanner } from '../../../modules/webConfig';
+import { getHomeBanner, isUserRegistrationEnabled } from '../../../modules/webConfig';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 
@@ -27,9 +27,9 @@ export default function HomePage() {
             <HtmlText>{getHomeBanner() || ''}</HtmlText>
           </div>
           <Flex justifyContent="center" flexWrap="wrap" gap={2} marginTop={7}>
-            {isTLX() && (
+            {isUserRegistrationEnabled() && (
               <ButtonLink to="/register" intent={Intent.PRIMARY} large>
-                Register and start training for free
+                Register
               </ButtonLink>
             )}
             <ButtonLink to="/login" intent={Intent.NONE} large>

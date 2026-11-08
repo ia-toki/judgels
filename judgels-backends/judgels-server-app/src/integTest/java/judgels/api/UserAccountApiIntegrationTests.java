@@ -9,12 +9,17 @@ import java.util.regex.Pattern;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
 import judgels.api.session.SessionWithRegistrationErrors;
+import judgels.api.setting.SettingUpdateData;
+import judgels.api.setting.UserRegistrationSettings;
+import judgels.api.setting.UserResetPasswordSettings;
 import judgels.api.user.UserData;
 import judgels.api.user.account.PasswordResetData;
 import judgels.api.user.account.UserRegistrationData;
 import judgels.client.SessionClient;
+import judgels.client.SettingClient;
 import judgels.client.UserAccountClient;
 import judgels.client.UserClient;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.subethamail.wiser.Wiser;
 
@@ -22,6 +27,28 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserAccountClient accountClient = createClient(UserAccountClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
+    private final SettingClient settingClient = createClient(SettingClient.class);
+
+    @BeforeEach
+    void enableAccountFeatures() {
+        setAccountFeaturesEnabled(true);
+    }
+
+    @Test
+    void account_features_are_not_found_when_disabled() {
+        setAccountFeaturesEnabled(false);
+
+        assertNotFound(() -> accountClient.registerUser(new UserRegistrationData.Builder()
+                .username("gamma")
+                .name("Gamma")
+                .password("pass")
+                .email("gamma@domain.com")
+                .build()));
+        assertNotFound(() -> accountClient.activateUser("code"));
+        assertNotFound(() -> accountClient.resendActivationEmail("gamma@domain.com"));
+        assertNotFound(() -> accountClient.requestToResetPassword("gamma@domain.com"));
+        assertNotFound(() -> accountClient.resetPassword(PasswordResetData.of("code", "newPass")));
+    }
 
     @Test
     void register_activate_user() {
@@ -135,6 +162,21 @@ class UserAccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(emailCode3).isNotEqualTo(emailCode2);
 
         wiser.stop();
+    }
+
+    private void setAccountFeaturesEnabled(boolean enabled) {
+        settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .userRegistration(new UserRegistrationSettings.Builder()
+                        .enabled(enabled)
+                        .recaptchaEnabled(false)
+                        .activationEmailTemplate(UserRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE)
+                        .build())
+                .userResetPassword(new UserResetPasswordSettings.Builder()
+                        .enabled(enabled)
+                        .requestEmailTemplate(UserResetPasswordSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE)
+                        .resetEmailTemplate(UserResetPasswordSettings.DEFAULT_RESET_EMAIL_TEMPLATE)
+                        .build())
+                .build());
     }
 
     private static String readEmail(Wiser wiser, int index) {

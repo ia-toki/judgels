@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.setting.AppSettings;
+import judgels.api.setting.EmailTemplate;
 import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
+import judgels.api.setting.UserRegistrationSettings;
+import judgels.api.setting.UserResetPasswordSettings;
 import judgels.client.SettingClient;
 import org.junit.jupiter.api.Test;
 
@@ -38,5 +41,70 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(updated.getHome().getBanner()).isEqualTo("<h1>Hello</h1>");
 
         assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);
+    }
+
+    @Test
+    void get_and_update_account_settings() {
+        Settings settings = settingClient.getSettings(adminToken);
+        assertThat(settings.getUserRegistration()).isEqualTo(new UserRegistrationSettings.Builder()
+                .enabled(false)
+                .recaptchaEnabled(false)
+                .activationEmailTemplate(UserRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE)
+                .build());
+        assertThat(settings.getUserResetPassword()).isEqualTo(new UserResetPasswordSettings.Builder()
+                .enabled(false)
+                .requestEmailTemplate(UserResetPasswordSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE)
+                .resetEmailTemplate(UserResetPasswordSettings.DEFAULT_RESET_EMAIL_TEMPLATE)
+                .build());
+
+        UserRegistrationSettings userRegistration = new UserRegistrationSettings.Builder()
+                .enabled(true)
+                .recaptchaEnabled(false)
+                .activationEmailTemplate(EmailTemplate.of("Activate", "Code: {{emailCode}}"))
+                .build();
+        UserResetPasswordSettings userResetPassword = new UserResetPasswordSettings.Builder()
+                .enabled(true)
+                .requestEmailTemplate(EmailTemplate.of("Reset?", "Code: {{emailCode}}"))
+                .resetEmailTemplate(EmailTemplate.of("Reset", "Done, {{username}}"))
+                .build();
+        Settings updated = settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .userRegistration(userRegistration)
+                .userResetPassword(userResetPassword)
+                .build());
+
+        assertThat(updated.getUserRegistration()).isEqualTo(userRegistration);
+        assertThat(updated.getUserResetPassword()).isEqualTo(userResetPassword);
+        assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);
+    }
+
+    @Test
+    void reject_invalid_account_settings() {
+        Settings before = settingClient.getSettings(adminToken);
+
+        assertBadRequest(() -> settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .userRegistration(new UserRegistrationSettings.Builder()
+                        .enabled(true)
+                        .recaptchaEnabled(true)
+                        .activationEmailTemplate(UserRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE)
+                        .build())
+                .build()));
+
+        assertBadRequest(() -> settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .userRegistration(new UserRegistrationSettings.Builder()
+                        .enabled(true)
+                        .recaptchaEnabled(false)
+                        .activationEmailTemplate(EmailTemplate.of("Activate", "No code"))
+                        .build())
+                .build()));
+
+        assertBadRequest(() -> settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .userResetPassword(new UserResetPasswordSettings.Builder()
+                        .enabled(true)
+                        .requestEmailTemplate(EmailTemplate.of("Reset?", "No code"))
+                        .resetEmailTemplate(UserResetPasswordSettings.DEFAULT_RESET_EMAIL_TEMPLATE)
+                        .build())
+                .build()));
+
+        assertThat(settingClient.getSettings(adminToken)).isEqualTo(before);
     }
 }

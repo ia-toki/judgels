@@ -5,14 +5,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import judgels.api.setting.AppSettings;
+import judgels.api.setting.EmailTemplate;
 import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SessionSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
+import judgels.api.setting.UserRegistrationSettings;
+import judgels.api.setting.UserResetPasswordSettings;
 import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
 
 public class SettingStore {
+    static final String USER_REGISTRATION_ENABLED = "user_registration_enabled";
+    static final String USER_RESET_PASSWORD_ENABLED = "user_reset_password_enabled";
+
     private final SettingDao settingDao;
 
     @Inject
@@ -40,7 +46,31 @@ public class SettingStore {
                         .maxConcurrentSessionsPerUser(Integer.parseInt(
                                 settings.getOrDefault("session_max_concurrent_sessions_per_user", "-1")))
                         .build())
+                .userRegistration(new UserRegistrationSettings.Builder()
+                        .enabled(Boolean.parseBoolean(settings.getOrDefault(USER_REGISTRATION_ENABLED, "false")))
+                        .recaptchaEnabled(Boolean.parseBoolean(
+                                settings.getOrDefault("user_registration_recaptcha_enabled", "false")))
+                        .activationEmailTemplate(getEmailTemplate(
+                                settings,
+                                "user_registration_activation_email",
+                                UserRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE))
+                        .build())
+                .userResetPassword(new UserResetPasswordSettings.Builder()
+                        .enabled(Boolean.parseBoolean(settings.getOrDefault(USER_RESET_PASSWORD_ENABLED, "false")))
+                        .requestEmailTemplate(getEmailTemplate(
+                                settings,
+                                "user_reset_password_request_email",
+                                UserResetPasswordSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE))
+                        .resetEmailTemplate(getEmailTemplate(
+                                settings,
+                                "user_reset_password_reset_email",
+                                UserResetPasswordSettings.DEFAULT_RESET_EMAIL_TEMPLATE))
+                        .build())
                 .build();
+    }
+
+    boolean hasSetting(String key) {
+        return settingDao.selectByKey(key).isPresent();
     }
 
     public void updateSettings(SettingUpdateData data) {
@@ -58,6 +88,30 @@ public class SettingStore {
                     "session_max_concurrent_sessions_per_user",
                     String.valueOf(session.getMaxConcurrentSessionsPerUser()));
         });
+        data.getUserRegistration().ifPresent(userRegistration -> {
+            upsertSetting(USER_REGISTRATION_ENABLED, String.valueOf(userRegistration.getEnabled()));
+            upsertSetting(
+                    "user_registration_recaptcha_enabled",
+                    String.valueOf(userRegistration.getRecaptchaEnabled()));
+            upsertEmailTemplate("user_registration_activation_email", userRegistration.getActivationEmailTemplate());
+        });
+        data.getUserResetPassword().ifPresent(userResetPassword -> {
+            upsertSetting(USER_RESET_PASSWORD_ENABLED, String.valueOf(userResetPassword.getEnabled()));
+            upsertEmailTemplate("user_reset_password_request_email", userResetPassword.getRequestEmailTemplate());
+            upsertEmailTemplate("user_reset_password_reset_email", userResetPassword.getResetEmailTemplate());
+        });
+    }
+
+    private static EmailTemplate getEmailTemplate(Map<String, String> settings, String keyPrefix, EmailTemplate defaultTemplate) {
+        return new EmailTemplate.Builder()
+                .subject(settings.getOrDefault(keyPrefix + "_subject", defaultTemplate.getSubject()))
+                .body(settings.getOrDefault(keyPrefix + "_body", defaultTemplate.getBody()))
+                .build();
+    }
+
+    private void upsertEmailTemplate(String keyPrefix, EmailTemplate template) {
+        upsertSetting(keyPrefix + "_subject", template.getSubject());
+        upsertSetting(keyPrefix + "_body", template.getBody());
     }
 
     private void upsertSetting(String key, String value) {

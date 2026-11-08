@@ -50,9 +50,9 @@ const confirmPasswordField = {
   validate: composeValidators(Required, ConfirmPassword),
 };
 
-export default function RegisterForm({ onSubmit, useRecaptcha, recaptchaSiteKey }) {
+export default function RegisterForm({ onSubmit, recaptchaEnabled, recaptchaSiteKey }) {
   let recaptchaChallengeField;
-  if (useRecaptcha) {
+  if (recaptchaEnabled) {
     const recaptchaField = {
       name: 'recaptchaResponse',
       siteKey: recaptchaSiteKey,

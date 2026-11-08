@@ -59,18 +59,5 @@ judgels:
     gradingResponseQueueName: judgels-grading-response
 #    fake: true
 
-  userResetPassword:
-    enabled: false
-    requestEmailTemplate:
-      subject: Someone requested to reset your password
-      body: |
-        <p>Dear {{username}},</p>
-        <p><a href="http://localhost:3000/reset-password/{{emailCode}}">Click here</a> to reset your password.</p>
-    resetEmailTemplate:
-      subject: Your password has been reset
-      body: |
-        <p>Dear {{username}},</p>
-        <p>Your password has been reset.</p>
-
   superadmin:
     initialPassword: superadmin

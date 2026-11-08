@@ -20,18 +20,18 @@ import judgels.core.fs.aws.AwsFsConfiguration;
 import judgels.core.mailer.MailerModule;
 import judgels.core.messaging.RabbitMQModule;
 import judgels.core.recaptcha.RecaptchaModule;
+import judgels.core.recaptcha.web.RecaptchaWebConfig;
 import judgels.grading.GradingModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.session.SessionModule;
+import judgels.setting.SettingModule;
 import judgels.training.TrainingConfiguration;
 import judgels.training.stats.StatsConfiguration;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
-import judgels.user.account.UserResetPasswordModule;
 import judgels.user.registration.UserRegistrationModule;
-import judgels.user.registration.web.UserRegistrationWebConfig;
 import judgels.user.superadmin.SuperadminModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
@@ -144,8 +144,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .sessionModule(new SessionModule())
                 .mailerModule(new MailerModule(judgelsConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(judgelsConfig.getRecaptchaConfig()))
-                .userRegistrationModule(new UserRegistrationModule(UserRegistrationWebConfig.fromServerConfig(judgelsConfig)))
-                .userResetPasswordModule(new UserResetPasswordModule(judgelsConfig.getUserResetPasswordConfig()))
+                .settingModule(new SettingModule(
+                        judgelsConfig.getUserRegistrationConfig(),
+                        judgelsConfig.getUserResetPasswordConfig()))
+                .userRegistrationModule(new UserRegistrationModule(
+                        judgelsConfig.getRecaptchaConfig().map(RecaptchaWebConfig::fromServerConfig)))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(statsConfig))
                 .build();
@@ -167,11 +170,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
-
-        if (JudgelsApp.isTLX()) {
-            env.jersey().register(component.userAccountResource());
-            env.jersey().register(component.userRegistrationWebResource());
-        }
+        env.jersey().register(component.userAccountResource());
+        env.jersey().register(component.userRegistrationWebResource());
 
         component.scheduler().scheduleWithFixedDelay(
                 "session-cleaner",

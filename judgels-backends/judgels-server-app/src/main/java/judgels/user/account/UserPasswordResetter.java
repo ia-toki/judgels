@@ -1,8 +1,11 @@
 package judgels.user.account;
 
 import java.time.Duration;
+import java.util.Optional;
 import judgels.api.user.User;
 import judgels.api.user.account.PasswordResetData;
+import judgels.core.mailer.Mailer;
+import judgels.setting.SettingStore;
 import judgels.user.UserStore;
 
 public class UserPasswordResetter {
@@ -11,15 +14,25 @@ public class UserPasswordResetter {
     private final UserStore userStore;
     private final UserResetPasswordStore userResetPasswordStore;
     private final UserResetPasswordMailer userResetPasswordMailer;
+    private final SettingStore settingStore;
+    private final Optional<Mailer> mailer;
 
     public UserPasswordResetter(
             UserStore userStore,
             UserResetPasswordStore userResetPasswordStore,
-            UserResetPasswordMailer userResetPasswordMailer) {
+            UserResetPasswordMailer userResetPasswordMailer,
+            SettingStore settingStore,
+            Optional<Mailer> mailer) {
 
         this.userStore = userStore;
         this.userResetPasswordStore = userResetPasswordStore;
         this.userResetPasswordMailer = userResetPasswordMailer;
+        this.settingStore = settingStore;
+        this.mailer = mailer;
+    }
+
+    public boolean isEnabled() {
+        return mailer.isPresent() && settingStore.getSettings().getUserResetPassword().getEnabled();
     }
 
     public void request(User user, String email) {

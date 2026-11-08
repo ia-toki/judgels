@@ -6,9 +6,9 @@ import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
 import { nockApi } from '../../../../utils/nock';
-import SettingsPage from './SettingsPage';
+import GeneralSettingsPage from './GeneralSettingsPage';
 
-describe('SettingsPage', () => {
+describe('GeneralSettingsPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -26,7 +26,7 @@ describe('SettingsPage', () => {
       render(
         <QueryClientProviderWrapper>
           <TestRouter>
-            <SettingsPage />
+            <GeneralSettingsPage />
           </TestRouter>
         </QueryClientProviderWrapper>
       )

@@ -14,6 +14,8 @@ public interface UserWebConfig {
     String getAppSlogan();
     Optional<String> getAppAnnouncement();
     String getHomeBanner();
+    boolean getUserRegistrationEnabled();
+    boolean getUserResetPasswordEnabled();
     Set<UserRole> getRoles();
     Optional<Profile> getProfile();
 

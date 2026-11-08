@@ -6,6 +6,7 @@ import static judgels.core.JudgelsRequestChecks.checkFound;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -22,8 +23,8 @@ import judgels.user.registration.UserRegistrationEmailStore;
 @Path("/api/v2/user-account")
 public class UserAccountResource {
     @Inject protected UserStore userStore;
-    @Inject protected Optional<UserPasswordResetter> userPasswordResetter;
-    @Inject protected Optional<UserRegisterer> userRegisterer;
+    @Inject protected UserPasswordResetter userPasswordResetter;
+    @Inject protected UserRegisterer userRegisterer;
     @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject public UserAccountResource() {}
@@ -34,7 +35,8 @@ public class UserAccountResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public User registerUser(UserRegistrationData data) {
-        return checkFound(userRegisterer).register(data);
+        checkRegistrationEnabled();
+        return userRegisterer.register(data);
     }
 
     @POST
@@ -43,33 +45,37 @@ public class UserAccountResource {
     @Produces(APPLICATION_JSON)
     @UnitOfWork
     public User registerGoogleUser(GoogleUserRegistrationData data) {
-        return checkFound(userRegisterer).registerGoogleUser(data);
+        checkRegistrationEnabled();
+        return userRegisterer.registerGoogleUser(data);
     }
 
     @POST
     @Path("/activate/{emailCode}")
     @UnitOfWork
     public void activateUser(@PathParam("emailCode") String emailCode) {
-        checkFound(userRegisterer).activate(emailCode);
+        checkRegistrationEnabled();
+        userRegisterer.activate(emailCode);
     }
 
     @POST
     @Path("/resend-activation-email/{email}")
     @UnitOfWork
     public void resendActivationEmail(@PathParam("email") String email) {
+        checkRegistrationEnabled();
         User user = checkFound(userStore.getUserByEmail(email)
                 .filter(u -> !userRegistrationEmailStore.isUserActivated(u.getJid())));
-        checkFound(userRegisterer).resendActivationEmail(user);
+        userRegisterer.resendActivationEmail(user);
     }
 
     @POST
     @Path("/request-reset-password/{email}")
     @UnitOfWork
     public void requestToResetPassword(@PathParam("email") String email) {
+        checkResetPasswordEnabled();
         Optional<User> user = userStore.getUserByEmail(email);
 
         if (user.isPresent()) {
-            checkFound(userPasswordResetter).request(user.get(), email);
+            userPasswordResetter.request(user.get(), email);
         }
     }
 
@@ -78,6 +84,19 @@ public class UserAccountResource {
     @Consumes(APPLICATION_JSON)
     @UnitOfWork
     public void resetPassword(PasswordResetData data) {
-        checkFound(userPasswordResetter).reset(data);
+        checkResetPasswordEnabled();
+        userPasswordResetter.reset(data);
+    }
+
+    private void checkRegistrationEnabled() {
+        if (!userRegisterer.isEnabled()) {
+            throw new NotFoundException();
+        }
+    }
+
+    private void checkResetPasswordEnabled() {
+        if (!userPasswordResetter.isEnabled()) {
+            throw new NotFoundException();
+        }
     }
 }

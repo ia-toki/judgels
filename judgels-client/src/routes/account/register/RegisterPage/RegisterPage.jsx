@@ -59,11 +59,11 @@ export default function RegisterPage() {
     );
   } else {
     const registerFormProps = {
-      useRecaptcha: config.useRecaptcha,
+      recaptchaEnabled: config.recaptchaEnabled,
       recaptchaSiteKey: config.recaptcha && config.recaptcha.siteKey,
     };
     content = (
-      <Card title="Register and start training for free" className="register-page__card">
+      <Card title="Register" className="register-page__card">
         <GoogleAuth onToggleInternalAuth={toggleInternalAuth} />
         {isInternalAuthEnabled && <RegisterForm onSubmit={onRegisterUser} {...registerFormProps} />}
       </Card>
