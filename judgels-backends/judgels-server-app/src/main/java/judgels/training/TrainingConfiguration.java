@@ -10,6 +10,17 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(as = ImmutableTrainingConfiguration.class)
 public interface TrainingConfiguration {
+    @Value.Default
+    default boolean getEnabled() {
+        return false;
+    }
+
+    @JsonProperty("rating")
+    @Value.Default
+    default RatingConfiguration getRatingConfig() {
+        return RatingConfiguration.DEFAULT;
+    }
+
     @JsonProperty("aws")
     Optional<judgels.core.fs.aws.AwsConfiguration> getAwsConfig();
 
@@ -17,7 +28,10 @@ public interface TrainingConfiguration {
     Optional<SubmissionConfiguration> getSubmissionConfig();
 
     @JsonProperty("stats")
-    StatsConfiguration getStatsConfig();
+    @Value.Default
+    default StatsConfiguration getStatsConfig() {
+        return StatsConfiguration.DEFAULT;
+    }
 
     class Builder extends ImmutableTrainingConfiguration.Builder {}
 }

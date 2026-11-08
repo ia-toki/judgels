@@ -1,6 +1,6 @@
 import { Checkbox } from '@blueprintjs/core';
 
-import { isTLX } from '../../../../conf';
+import { isTrainingEnabled } from '../../../../conf';
 import { UserRole } from '../../../../modules/api/userRole';
 
 export function getRoleFields() {
@@ -9,7 +9,7 @@ export function getRoleFields() {
     { role: UserRole.ProblemAdmin, label: 'Problem' },
     { role: UserRole.ContestAdmin, label: 'Contest' },
   ];
-  if (isTLX()) {
+  if (isTrainingEnabled()) {
     fields.push({ role: UserRole.TrainingAdmin, label: 'Training' });
   }
   return fields;

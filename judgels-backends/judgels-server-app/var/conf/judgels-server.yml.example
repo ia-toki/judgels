@@ -46,9 +46,6 @@ webSecurity:
 judgels:
   baseDataDir: var/data
 
-  app:
-    mode: JUDGELS
-
 #  rabbitmq:
 #    host: localhost
 #    username: guest
@@ -61,3 +58,8 @@ judgels:
 
   superadmin:
     initialPassword: superadmin
+
+training:
+  enabled: false
+  rating:
+    enabled: false

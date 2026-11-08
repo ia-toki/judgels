@@ -1,10 +1,9 @@
-export const Mode = {
-  JUDGELS: 'JUDGELS',
-  TLX: 'TLX',
-};
-
 export const APP_CONFIG = window.conf;
 
-export function isTLX() {
-  return APP_CONFIG.mode === Mode.TLX;
+export function isTrainingEnabled() {
+  return !!APP_CONFIG.training?.enabled;
+}
+
+export function isRatingEnabled() {
+  return isTrainingEnabled() && !!APP_CONFIG.training?.rating?.enabled;
 }

@@ -4,7 +4,7 @@ import { Flex } from '@blueprintjs/labs';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
-import { isTLX } from '../../../conf';
+import { isRatingEnabled } from '../../../conf';
 import { useSession } from '../../../modules/session';
 import { getHomeBanner, isUserRegistrationEnabled } from '../../../modules/webConfig';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="home-widget-row__two-thirds">
           <ActiveContestsWidget />
         </div>
-        <div className="home-widget-row__one-third">{isTLX() && <TopRatingsWidget />}</div>
+        <div className="home-widget-row__one-third">{isRatingEnabled() && <TopRatingsWidget />}</div>
       </div>
     );
   };

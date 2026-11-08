@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { isTLX } from '../../conf';
+import { isTrainingEnabled } from '../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
 import { ProblemSetErrors, problemSetAPI } from '../api/problemSet';
 import { SubmissionError } from '../form/submissionError';
@@ -64,7 +64,7 @@ export const searchProblemSetQueryOptions = contestJid =>
   queryOptions({
     queryKey: ['problem-set-by-contest-jid', contestJid],
     queryFn: async () => {
-      if (!isTLX()) {
+      if (!isTrainingEnabled()) {
         return null;
       }
       try {

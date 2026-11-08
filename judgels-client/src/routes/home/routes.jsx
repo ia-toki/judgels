@@ -1,6 +1,6 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
-import { isTLX } from '../../conf';
+import { isTrainingEnabled } from '../../conf';
 import { retryImport } from '../../lazy';
 import { contestPublicHistoryQueryOptions } from '../../modules/queries/contestHistory';
 import { basicProfileQueryOptions } from '../../modules/queries/profile';
@@ -39,7 +39,7 @@ export const createHomeRoutes = appRoute => {
       const userJid = await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
       queryClient.prefetchQuery(userAvatarUrlQueryOptions(userJid));
       queryClient.prefetchQuery(basicProfileQueryOptions(userJid));
-      if (isTLX()) {
+      if (isTrainingEnabled()) {
         queryClient.prefetchQuery(trainingUserStatsQueryOptions(username));
       }
     },
@@ -56,7 +56,7 @@ export const createHomeRoutes = appRoute => {
     },
   });
 
-  const profileSubmissionHistoryRoute = isTLX()
+  const profileSubmissionHistoryRoute = isTrainingEnabled()
     ? createRoute({
         getParentRoute: () => profilesRoute,
         path: 'submission-history',

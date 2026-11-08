@@ -18,7 +18,7 @@ import { Outlet } from '@tanstack/react-router';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
-import { isTLX } from '../../conf';
+import { isRatingEnabled, isTrainingEnabled } from '../../conf';
 import {
   isContestAdmin,
   isProblemAdmin,
@@ -40,7 +40,7 @@ export default function AdminLayout() {
   const canWriteProblems = isProblemWriter(roles);
   const canManageRoles = canAdministerSystem || isProblemAdmin(roles);
   const canAdministerContests = isContestAdmin(roles);
-  const canAdministerTraining = isTLX() && isTrainingAdmin(roles);
+  const canAdministerTraining = isTrainingEnabled() && isTrainingAdmin(roles);
 
   const sidebarItems = [
     {
@@ -62,7 +62,7 @@ export default function AdminLayout() {
           path: 'ratings',
           titleIcon: <TimelineLineChart />,
           title: 'Ratings',
-          visible: canAdministerSystem && isTLX(),
+          visible: canAdministerSystem && isRatingEnabled(),
         },
         {
           path: 'settings',

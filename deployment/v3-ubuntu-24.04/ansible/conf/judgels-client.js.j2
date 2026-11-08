@@ -1,5 +1,4 @@
 window.conf = {
-  mode: '{{ app_mode | default('JUDGELS', true) }}',
 {% if nginx_certbot_enabled | default(true) | bool %}
   apiUrl: 'https://{{ nginx_domain_judgels_server_api }}',
 {% else %}
@@ -15,4 +14,10 @@ window.conf = {
     clientId: '{{ auth_google_clientId }}',
   },
 {% endif %}
+  training: {
+    enabled: {{ training_enabled | default(false) | bool | lower }},
+    rating: {
+      enabled: {{ training_rating_enabled | default(false) | bool | lower }},
+    },
+  },
 };
