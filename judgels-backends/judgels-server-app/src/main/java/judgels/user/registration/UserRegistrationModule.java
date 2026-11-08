@@ -7,53 +7,43 @@ import java.util.Optional;
 import judgels.core.auth.google.GoogleAuth;
 import judgels.core.mailer.Mailer;
 import judgels.core.recaptcha.RecaptchaVerifier;
+import judgels.core.recaptcha.web.RecaptchaWebConfig;
+import judgels.setting.SettingStore;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;
-import judgels.user.registration.web.UserRegistrationWebConfig;
 
 @Module
 public class UserRegistrationModule {
-    private final Optional<UserRegistrationWebConfig> webConfig;
+    private final Optional<RecaptchaWebConfig> recaptchaWebConfig;
 
-    public UserRegistrationModule() {
-        this.webConfig = Optional.empty();
-    }
-
-    public UserRegistrationModule(Optional<UserRegistrationWebConfig> webConfig) {
-        this.webConfig = webConfig;
+    public UserRegistrationModule(Optional<RecaptchaWebConfig> recaptchaWebConfig) {
+        this.recaptchaWebConfig = recaptchaWebConfig;
     }
 
     @Provides
-    Optional<UserRegistrationWebConfig> userRegistrationWebConfig() {
-        return webConfig;
+    Optional<RecaptchaWebConfig> recaptchaWebConfig() {
+        return recaptchaWebConfig;
     }
 
     @Provides
     @Singleton
-    Optional<UserRegisterer> userRegisterer(
-            Optional<UserRegistrationConfiguration> config,
+    UserRegisterer userRegisterer(
             UserStore userStore,
             UserInfoStore userInfoStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
+            SettingStore settingStore,
             Optional<Mailer> mailer,
             Optional<RecaptchaVerifier> recaptchaVerifier,
             Optional<GoogleAuth> googleAuth) {
 
-        if (config.isEmpty() || !config.get().getEnabled()) {
-            return Optional.empty();
-        }
-
-        Optional<RecaptchaVerifier> actualRecaptchaVerifier = recaptchaVerifier;
-        if (!config.get().getUseRecaptcha()) {
-            actualRecaptchaVerifier = Optional.empty();
-        }
-
-        return Optional.of(new UserRegisterer(
+        return new UserRegisterer(
                 userStore,
                 userInfoStore,
                 userRegistrationEmailStore,
-                new UserRegistrationEmailMailer(mailer.get(), config.get().getActivationEmailTemplate()),
-                actualRecaptchaVerifier,
-                googleAuth));
+                new UserRegistrationEmailMailer(mailer, settingStore),
+                settingStore,
+                mailer,
+                recaptchaVerifier,
+                googleAuth);
     }
 }

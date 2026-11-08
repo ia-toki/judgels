@@ -66,8 +66,6 @@ import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.training.TrainingConfiguration;
 import judgels.training.stats.StatsConfiguration;
-import judgels.user.account.UserResetPasswordConfiguration;
-import judgels.user.registration.UserRegistrationConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -129,8 +127,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
                         .password("wiser")
                         .sender("noreply@wiser.com")
                         .build())
-                .userRegistrationConfig(UserRegistrationConfiguration.DEFAULT)
-                .userResetPasswordConfig(UserResetPasswordConfiguration.DEFAULT)
                 .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT);
 
         if (System.getenv("CI") != null) {

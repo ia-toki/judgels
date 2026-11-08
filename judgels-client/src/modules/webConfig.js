@@ -16,3 +16,11 @@ export function getAppSlogan() {
 export function getHomeBanner() {
   return getUserWebConfig()?.homeBanner;
 }
+
+export function isUserRegistrationEnabled() {
+  return !!getUserWebConfig()?.userRegistrationEnabled;
+}
+
+export function isUserResetPasswordEnabled() {
+  return !!getUserWebConfig()?.userResetPasswordEnabled;
+}

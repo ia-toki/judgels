@@ -9,6 +9,8 @@ public interface Settings {
     AppSettings getApp();
     HomeSettings getHome();
     SessionSettings getSession();
+    UserRegistrationSettings getUserRegistration();
+    UserResetPasswordSettings getUserResetPassword();
 
     class Builder extends ImmutableSettings.Builder {}
 }

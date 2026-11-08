@@ -10,7 +10,9 @@ import judgels.api.user.account.GoogleUserRegistrationData;
 import judgels.api.user.account.UserRegistrationData;
 import judgels.api.user.info.UserInfo;
 import judgels.core.auth.google.GoogleAuth;
+import judgels.core.mailer.Mailer;
 import judgels.core.recaptcha.RecaptchaVerifier;
+import judgels.setting.SettingStore;
 import judgels.user.UserStore;
 import judgels.user.info.UserInfoStore;
 
@@ -19,6 +21,8 @@ public class UserRegisterer {
     private final UserInfoStore userInfoStore;
     private final UserRegistrationEmailStore userRegistrationEmailStore;
     private final UserRegistrationEmailMailer userRegistrationEmailMailer;
+    private final SettingStore settingStore;
+    private final Optional<Mailer> mailer;
     private final Optional<RecaptchaVerifier> recaptchaVerifier;
     private final Optional<GoogleAuth> googleAuth;
 
@@ -27,18 +31,30 @@ public class UserRegisterer {
             UserInfoStore userInfoStore,
             UserRegistrationEmailStore userRegistrationEmailStore,
             UserRegistrationEmailMailer userRegistrationEmailMailer,
+            SettingStore settingStore,
+            Optional<Mailer> mailer,
             Optional<RecaptchaVerifier> recaptchaVerifier,
             Optional<GoogleAuth> googleAuth) {
         this.userStore = userStore;
         this.userInfoStore = userInfoStore;
         this.userRegistrationEmailStore = userRegistrationEmailStore;
         this.userRegistrationEmailMailer = userRegistrationEmailMailer;
+        this.settingStore = settingStore;
+        this.mailer = mailer;
         this.recaptchaVerifier = recaptchaVerifier;
         this.googleAuth = googleAuth;
     }
 
+    public boolean isEnabled() {
+        return mailer.isPresent() && settingStore.getSettings().getUserRegistration().getEnabled();
+    }
+
+    public boolean isRecaptchaEnabled() {
+        return recaptchaVerifier.isPresent() && settingStore.getSettings().getUserRegistration().getRecaptchaEnabled();
+    }
+
     public User register(UserRegistrationData data) {
-        if (recaptchaVerifier.isPresent()) {
+        if (isRecaptchaEnabled()) {
             if (!data.getRecaptchaResponse().isPresent()) {
                 throw new IllegalArgumentException("Missing recaptcha response");
             }

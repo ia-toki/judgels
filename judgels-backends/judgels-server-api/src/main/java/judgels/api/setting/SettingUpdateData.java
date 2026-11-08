@@ -10,6 +10,8 @@ public interface SettingUpdateData {
     Optional<AppSettings> getApp();
     Optional<HomeSettings> getHome();
     Optional<SessionSettings> getSession();
+    Optional<UserRegistrationSettings> getUserRegistration();
+    Optional<UserResetPasswordSettings> getUserResetPassword();
 
     class Builder extends ImmutableSettingUpdateData.Builder {}
 }

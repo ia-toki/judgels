@@ -1,36 +1,28 @@
 package judgels.user.account;
+
 import dagger.Module;
 import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import judgels.core.mailer.Mailer;
+import judgels.setting.SettingStore;
 import judgels.user.UserStore;
 
 @Module
 public class UserResetPasswordModule {
-    private final UserResetPasswordConfiguration config;
-
-    public UserResetPasswordModule(UserResetPasswordConfiguration config) {
-        this.config = config;
-    }
-
     @Provides
     @Singleton
-    Optional<UserPasswordResetter> userPasswordResetter(
+    UserPasswordResetter userPasswordResetter(
             UserStore userStore,
             UserResetPasswordStore userResetPasswordStore,
+            SettingStore settingStore,
             Optional<Mailer> mailer) {
 
-        if (!config.getEnabled()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new UserPasswordResetter(
+        return new UserPasswordResetter(
                 userStore,
                 userResetPasswordStore,
-                new UserResetPasswordMailer(
-                        mailer.get(),
-                        config.getRequestEmailTemplate(),
-                        config.getResetEmailTemplate())));
+                new UserResetPasswordMailer(mailer, settingStore),
+                settingStore,
+                mailer);
     }
 }

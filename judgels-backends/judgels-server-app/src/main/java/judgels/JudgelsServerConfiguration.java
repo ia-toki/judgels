@@ -35,8 +35,10 @@ public interface JudgelsServerConfiguration {
     @JsonProperty("mailer")
     Optional<MailerConfiguration> getMailerConfig();
 
+    // Deprecated: Only read to seed the user reset password settings. Removed after 4.0.
+    @Deprecated
     @JsonProperty("userResetPassword")
-    UserResetPasswordConfiguration getUserResetPasswordConfig();
+    Optional<UserResetPasswordConfiguration> getUserResetPasswordConfig();
 
     @JsonProperty("superadmin")
     Optional<SuperadminCreatorConfiguration> getSuperadminCreatorConfig();
@@ -44,22 +46,10 @@ public interface JudgelsServerConfiguration {
     @JsonProperty("recaptcha")
     Optional<RecaptchaConfiguration> getRecaptchaConfig();
 
+    // Deprecated: Only read to seed the user registration settings. Removed after 4.0.
+    @Deprecated
     @JsonProperty("userRegistration")
     Optional<UserRegistrationConfiguration> getUserRegistrationConfig();
-
-    @Value.Check
-    default void check() {
-        if (getUserRegistrationConfig().isPresent() && getUserRegistrationConfig().get().getUseRecaptcha() && !getRecaptchaConfig().isPresent()) {
-            throw new IllegalStateException("recaptcha config is required by userRegistration config");
-        }
-        if (getUserRegistrationConfig().isPresent() && getUserRegistrationConfig().get().getEnabled() && !getMailerConfig().isPresent()) {
-            throw new IllegalStateException("mailer config is required by userRegistration config");
-        }
-
-        if (getUserResetPasswordConfig().getEnabled() && !getMailerConfig().isPresent()) {
-            throw new IllegalStateException("mailer config is required by userResetPassword config");
-        }
-    }
 
     class Builder extends ImmutableJudgelsServerConfiguration.Builder {}
 }

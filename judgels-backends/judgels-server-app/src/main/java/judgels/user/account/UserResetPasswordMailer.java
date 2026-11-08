@@ -1,36 +1,39 @@
 package judgels.user.account;
 
+import java.util.Optional;
+import judgels.api.setting.EmailTemplate;
+import judgels.api.setting.UserResetPasswordSettings;
 import judgels.api.user.User;
-import judgels.core.mailer.EmailTemplate;
 import judgels.core.mailer.Mailer;
+import judgels.setting.SettingStore;
 
 public class UserResetPasswordMailer {
-    private final Mailer mailer;
-    private final EmailTemplate requestEmailTemplate;
-    private final EmailTemplate resetEmailTemplate;
+    private final Optional<Mailer> mailer;
+    private final SettingStore settingStore;
 
-    public UserResetPasswordMailer(
-            Mailer mailer,
-            EmailTemplate requestEmailTemplate,
-            EmailTemplate resetEmailTemplate) {
-
+    public UserResetPasswordMailer(Optional<Mailer> mailer, SettingStore settingStore) {
         this.mailer = mailer;
-        this.requestEmailTemplate = requestEmailTemplate;
-        this.resetEmailTemplate = resetEmailTemplate;
+        this.settingStore = settingStore;
     }
 
     public void sendRequestEmail(User user, String email, String emailCode) {
-        String subject = requestEmailTemplate.getSubject();
-        String body = requestEmailTemplate.getBody()
+        EmailTemplate template = getSettings().getRequestEmailTemplate();
+        String subject = template.getSubject();
+        String body = template.getBody()
                 .replace("{{username}}", user.getUsername())
                 .replace("{{emailCode}}", emailCode);
-        mailer.send(email, subject, body);
+        mailer.orElseThrow().send(email, subject, body);
     }
 
     public void sendResetEmail(User user, String email) {
-        String subject = resetEmailTemplate.getSubject();
-        String body = resetEmailTemplate.getBody()
+        EmailTemplate template = getSettings().getResetEmailTemplate();
+        String subject = template.getSubject();
+        String body = template.getBody()
                 .replace("{{username}}", user.getUsername());
-        mailer.send(email, subject, body);
+        mailer.orElseThrow().send(email, subject, body);
+    }
+
+    private UserResetPasswordSettings getSettings() {
+        return settingStore.getSettings().getUserResetPassword();
     }
 }
