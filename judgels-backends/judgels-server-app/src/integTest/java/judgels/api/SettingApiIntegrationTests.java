@@ -22,6 +22,9 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(settings.getApp().getName()).isEqualTo(AppSettings.DEFAULT_NAME);
         assertThat(settings.getApp().getSlogan()).isEqualTo(AppSettings.DEFAULT_SLOGAN);
         assertThat(settings.getApp().getAnnouncement()).isEmpty();
+        assertThat(settings.getApp().getGoogleAnalyticsTrackingId()).isEmpty();
+        assertThat(settings.getMailerConfigured()).isTrue();
+        assertThat(settings.getRecaptchaConfigured()).isFalse();
         assertThat(settings.getHome().getBanner()).isEqualTo(HomeSettings.DEFAULT_BANNER);
 
         Settings updated = settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
@@ -29,6 +32,7 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .name("My Judge")
                         .slogan("Train hard")
                         .announcement("Maintenance tonight")
+                        .googleAnalyticsTrackingId("G-TEST")
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner("<h1>Hello</h1>")
@@ -38,6 +42,7 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(updated.getApp().getName()).isEqualTo("My Judge");
         assertThat(updated.getApp().getSlogan()).isEqualTo("Train hard");
         assertThat(updated.getApp().getAnnouncement()).contains("Maintenance tonight");
+        assertThat(updated.getApp().getGoogleAnalyticsTrackingId()).contains("G-TEST");
         assertThat(updated.getHome().getBanner()).isEqualTo("<h1>Hello</h1>");
 
         assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);

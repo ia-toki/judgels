@@ -11,10 +11,16 @@ import java.util.Map;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
 public class RecaptchaVerifier {
+    private final String recaptchaSiteKey;
     private final String recaptchaSecretKey;
 
-    public RecaptchaVerifier(String recaptchaSecretKey) {
+    public RecaptchaVerifier(String recaptchaSiteKey, String recaptchaSecretKey) {
+        this.recaptchaSiteKey = recaptchaSiteKey;
         this.recaptchaSecretKey = recaptchaSecretKey;
+    }
+
+    public String getSiteKey() {
+        return recaptchaSiteKey;
     }
 
     public boolean verify(String response) {

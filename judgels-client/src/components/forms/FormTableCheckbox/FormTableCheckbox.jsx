@@ -5,7 +5,7 @@ import { FormTableInput } from '../FormTableInput/FormTableInput';
 import { getIntentClassName } from '../meta';
 
 export function FormTableCheckbox(props) {
-  const { input, meta } = props;
+  const { input, meta, disabled } = props;
   const { value, onChange, ...inputProps } = input;
   const newOnChange = ({ target }) => onChange(target.checked);
 
@@ -15,6 +15,7 @@ export function FormTableCheckbox(props) {
         defaultChecked={!!value}
         onChange={newOnChange}
         aria-label={props.label}
+        disabled={disabled}
         {...inputProps}
         className={classNames(getIntentClassName(meta))}
       />

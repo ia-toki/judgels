@@ -4,14 +4,4 @@ window.conf = {
 {% else %}
   apiUrl: '/api',
 {% endif %}
-{% if googleAnalytics_trackingId is defined %}
-  googleAnalytics: {
-    trackingId: '{{ googleAnalytics_trackingId }}',
-  },
-{% endif %}
-{% if auth_google_clientId is defined %}
-  googleAuth: {
-    clientId: '{{ auth_google_clientId }}',
-  },
-{% endif %}
 };

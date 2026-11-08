@@ -16,7 +16,7 @@ import { updateSettingsMutationOptions } from '../../../../modules/queries/setti
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
-export function UserResetPasswordSection({ userResetPassword }) {
+export function UserResetPasswordSection({ userResetPassword, mailerConfigured }) {
   const updateSettingsMutation = useMutation(updateSettingsMutationOptions());
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
@@ -98,7 +98,14 @@ export function UserResetPasswordSection({ userResetPassword }) {
                 <FormUnsavedChangesAlert />
                 <HTMLTable striped>
                   <tbody>
-                    <Field component={FormTableCheckbox} fixedKey name="enabled" label="Enabled" />
+                    <Field
+                      component={FormTableCheckbox}
+                      fixedKey
+                      name="enabled"
+                      label="Enabled"
+                      disabled={!mailerConfigured && !userResetPassword.enabled}
+                      inputHelper={!mailerConfigured && 'Needs the mailer config in judgels-server.yml.'}
+                    />
                     <Field
                       component={FormTableTextInput}
                       fixedKey

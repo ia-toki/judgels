@@ -15,6 +15,7 @@ import java.util.Set;
 import judgels.api.setting.Settings;
 import judgels.api.user.web.UserWebConfig;
 import judgels.core.api.AuthHeader;
+import judgels.core.auth.google.GoogleAuth;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
 import judgels.setting.SettingStore;
@@ -30,6 +31,7 @@ public class UserWebResource {
     @Inject protected SettingStore settingStore;
     @Inject protected UserRegisterer userRegisterer;
     @Inject protected UserPasswordResetter userPasswordResetter;
+    @Inject protected Optional<GoogleAuth> googleAuth;
     @Inject @Named("trainingEnabled") protected boolean trainingEnabled;
     @Inject @Named("ratingEnabled") protected boolean ratingEnabled;
 
@@ -49,7 +51,10 @@ public class UserWebResource {
                 .userRegistrationEnabled(userRegisterer.isEnabled())
                 .userResetPasswordEnabled(userPasswordResetter.isEnabled())
                 .trainingEnabled(trainingEnabled)
-                .ratingEnabled(ratingEnabled);
+                .ratingEnabled(ratingEnabled)
+                .googleAuthClientId(googleAuth.map(GoogleAuth::getClientId))
+                .recaptchaSiteKey(userRegisterer.getRecaptchaSiteKey())
+                .googleAnalyticsTrackingId(settings.getApp().getGoogleAnalyticsTrackingId());
 
         if (!authHeader.isPresent()) {
             config.roles(Set.of());

@@ -53,6 +53,13 @@ public class UserRegisterer {
         return recaptchaVerifier.isPresent() && settingStore.getSettings().getUserRegistration().getRecaptchaEnabled();
     }
 
+    public Optional<String> getRecaptchaSiteKey() {
+        if (!isEnabled() || !isRecaptchaEnabled()) {
+            return Optional.empty();
+        }
+        return recaptchaVerifier.map(RecaptchaVerifier::getSiteKey);
+    }
+
     public User register(UserRegistrationData data) {
         if (isRecaptchaEnabled()) {
             if (!data.getRecaptchaResponse().isPresent()) {

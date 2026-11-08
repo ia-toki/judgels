@@ -19,8 +19,15 @@ export default function AccountSettingsPage() {
         {data ? (
           <EditableSections>
             <Flex flexDirection="column" gap={8}>
-              <UserRegistrationSection userRegistration={data.userRegistration} />
-              <UserResetPasswordSection userResetPassword={data.userResetPassword} />
+              <UserRegistrationSection
+                userRegistration={data.userRegistration}
+                mailerConfigured={data.mailerConfigured}
+                recaptchaConfigured={data.recaptchaConfigured}
+              />
+              <UserResetPasswordSection
+                userResetPassword={data.userResetPassword}
+                mailerConfigured={data.mailerConfigured}
+              />
             </Flex>
           </EditableSections>
         ) : (

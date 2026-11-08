@@ -30,6 +30,9 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(anonymousConfig.getUserResetPasswordEnabled()).isFalse();
         assertThat(anonymousConfig.getTrainingEnabled()).isTrue();
         assertThat(anonymousConfig.getRatingEnabled()).isTrue();
+        assertThat(anonymousConfig.getGoogleAuthClientId()).isEmpty();
+        assertThat(anonymousConfig.getRecaptchaSiteKey()).isEmpty();
+        assertThat(anonymousConfig.getGoogleAnalyticsTrackingId()).isEmpty();
 
         UserWebConfig adminConfig = userWebClient.getWebConfig(adminToken);
         assertThat(adminConfig.getRoles()).containsExactlyInAnyOrder(
@@ -48,6 +51,7 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .name("Updated")
                         .slogan("Updated slogan")
                         .announcement("Hi")
+                        .googleAnalyticsTrackingId("G-TEST")
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner("<h1>Updated</h1>")
@@ -68,6 +72,7 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(updatedConfig.getAppName()).isEqualTo("Updated");
         assertThat(updatedConfig.getAppSlogan()).isEqualTo("Updated slogan");
         assertThat(updatedConfig.getAppAnnouncement()).contains("Hi");
+        assertThat(updatedConfig.getGoogleAnalyticsTrackingId()).contains("G-TEST");
         assertThat(updatedConfig.getHomeBanner()).isEqualTo("<h1>Updated</h1>");
         assertThat(updatedConfig.getUserRegistrationEnabled()).isTrue();
         assertThat(updatedConfig.getUserResetPasswordEnabled()).isTrue();

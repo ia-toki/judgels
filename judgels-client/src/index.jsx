@@ -5,15 +5,12 @@ import { createRoot } from 'react-dom/client';
 import 'typeface-open-sans';
 import 'typeface-roboto';
 
-import { initGA } from './ga';
 import { queryClient } from './modules/queryClient';
 import { getUser } from './modules/session';
 import { WebPrefsProvider } from './modules/webPrefs';
 import { router } from './routes/router';
 
 import './styles/index.scss';
-
-initGA();
 
 const persister = createAsyncStoragePersister({
   storage: window.localStorage,
@@ -26,7 +23,7 @@ root.render(
     client={queryClient}
     persistOptions={{
       persister,
-      buster: `20:${getUser()?.jid || ''}`,
+      buster: `21:${getUser()?.jid || ''}`,
       dehydrateOptions: {
         shouldDehydrateQuery: query => {
           if (query.state.status !== 'success') return false;

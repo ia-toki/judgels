@@ -24,11 +24,19 @@ export function AppSection({ app }) {
     { key: 'name', title: 'Name', value: app.name },
     { key: 'slogan', title: 'Slogan', value: app.slogan },
     { key: 'announcement', title: 'Announcement', value: <HtmlText>{app.announcement || ''}</HtmlText> },
+    { key: 'googleAnalyticsTrackingId', title: 'Google Analytics tracking ID', value: app.googleAnalyticsTrackingId },
   ];
 
   const updateSettings = async values => {
     await updateSettingsMutation.mutateAsync(
-      { app: { name: values.name, slogan: values.slogan, announcement: values.announcement || '' } },
+      {
+        app: {
+          name: values.name,
+          slogan: values.slogan,
+          announcement: values.announcement || '',
+          googleAnalyticsTrackingId: values.googleAnalyticsTrackingId || '',
+        },
+      },
       {
         onSuccess: () => toastActions.showSuccessToast('Settings updated.'),
       }
@@ -52,6 +60,7 @@ export function AppSection({ app }) {
         name: app.name,
         slogan: app.slogan,
         announcement: app.announcement,
+        googleAnalyticsTrackingId: app.googleAnalyticsTrackingId,
       };
       return (
         <Form onSubmit={updateSettings} initialValues={initialValues}>
@@ -63,6 +72,12 @@ export function AppSection({ app }) {
                   <tbody>
                     <Field component={FormTableTextInput} fixedKey name="name" label="Name" />
                     <Field component={FormTableTextInput} fixedKey name="slogan" label="Slogan" />
+                    <Field
+                      component={FormTableTextInput}
+                      fixedKey
+                      name="googleAnalyticsTrackingId"
+                      label="Google Analytics tracking ID"
+                    />
                   </tbody>
                 </HTMLTable>
                 <Field component={FormRichTextArea} rows={5} name="announcement" label="Announcement" />

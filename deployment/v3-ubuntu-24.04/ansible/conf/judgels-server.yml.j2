@@ -115,6 +115,11 @@ judgels:
   superadmin:
     initialPassword: {{ superadmin_initialPassword }}
 
+{% if googleAnalytics_trackingId is defined %}
+  googleAnalytics:
+    trackingId: {{ googleAnalytics_trackingId }}
+{% endif %}
+
   training:
     enabled: {{ training_enabled | default(false) | bool | lower }}
 

@@ -1,5 +1,6 @@
 package judgels.setting;
 
+import static judgels.setting.SettingStore.APP_GOOGLE_ANALYTICS_TRACKING_ID;
 import static judgels.setting.SettingStore.USER_REGISTRATION_ENABLED;
 import static judgels.setting.SettingStore.USER_RESET_PASSWORD_ENABLED;
 
@@ -20,15 +21,18 @@ public class SettingCreator {
     // Deprecated: the config these come from is only read to seed the settings, and goes away after 4.0.
     private final Optional<UserRegistrationConfiguration> userRegistrationConfig;
     private final Optional<UserResetPasswordConfiguration> userResetPasswordConfig;
+    private final Optional<GoogleAnalyticsConfiguration> googleAnalyticsConfig;
 
     public SettingCreator(
             SettingStore settingStore,
             Optional<UserRegistrationConfiguration> userRegistrationConfig,
-            Optional<UserResetPasswordConfiguration> userResetPasswordConfig) {
+            Optional<UserResetPasswordConfiguration> userResetPasswordConfig,
+            Optional<GoogleAnalyticsConfiguration> googleAnalyticsConfig) {
 
         this.settingStore = settingStore;
         this.userRegistrationConfig = userRegistrationConfig;
         this.userResetPasswordConfig = userResetPasswordConfig;
+        this.googleAnalyticsConfig = googleAnalyticsConfig;
     }
 
     @UnitOfWork
@@ -40,12 +44,17 @@ public class SettingCreator {
         boolean appInitialized = !app.getName().isEmpty() && !app.getSlogan().isEmpty();
         boolean homeInitialized = !home.getBanner().isEmpty();
 
+        Optional<String> googleAnalyticsTrackingId = googleAnalyticsConfig
+                .map(GoogleAnalyticsConfiguration::getTrackingId)
+                .filter(c -> !settingStore.hasSetting(APP_GOOGLE_ANALYTICS_TRACKING_ID));
+
         SettingUpdateData.Builder data = new SettingUpdateData.Builder();
-        if (!appInitialized) {
+        if (!appInitialized || googleAnalyticsTrackingId.isPresent()) {
             data.app(new AppSettings.Builder()
                     .name(app.getName().isEmpty() ? AppSettings.DEFAULT_NAME : app.getName())
                     .slogan(app.getSlogan().isEmpty() ? AppSettings.DEFAULT_SLOGAN : app.getSlogan())
                     .announcement(app.getAnnouncement())
+                    .googleAnalyticsTrackingId(googleAnalyticsTrackingId.or(app::getGoogleAnalyticsTrackingId))
                     .build());
         }
         if (!homeInitialized) {

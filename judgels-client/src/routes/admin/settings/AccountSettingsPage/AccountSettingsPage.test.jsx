@@ -27,10 +27,14 @@ describe('AccountSettingsPage', () => {
       requestEmailTemplate: { subject: 'Reset?', body: 'Reset code: {{emailCode}}' },
       resetEmailTemplate: { subject: 'Reset', body: 'Done' },
     },
+    mailerConfigured: true,
+    recaptchaConfigured: true,
   };
 
-  const renderComponent = async () => {
-    nockApi().get('/v2/settings').reply(200, settings);
+  const renderComponent = async (overrides = {}) => {
+    nockApi()
+      .get('/v2/settings')
+      .reply(200, { ...settings, ...overrides });
 
     await act(async () =>
       render(
@@ -105,5 +109,19 @@ describe('AccountSettingsPage', () => {
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('disables the toggles whose config is missing', async () => {
+    await renderComponent({ mailerConfigured: false, recaptchaConfigured: false });
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[0]);
+
+    expect(screen.getByLabelText(/^enabled$/i)).toBeDisabled();
+    expect(screen.getByLabelText(/^recaptcha enabled$/i)).toBeDisabled();
+    expect(screen.getByText('Needs the mailer config in judgels-server.yml.')).toBeInTheDocument();
+    expect(screen.getByText('Needs the recaptcha config in judgels-server.yml.')).toBeInTheDocument();
   });
 });

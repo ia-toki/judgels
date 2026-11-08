@@ -1,16 +1,17 @@
 import { stringify } from 'query-string';
 import ReactGA from 'react-ga4';
 
-import { APP_CONFIG } from './conf';
+import { getGoogleAnalyticsTrackingId } from './modules/webConfig';
 
 export function initGA() {
-  if (APP_CONFIG.googleAnalytics) {
-    ReactGA.initialize(APP_CONFIG.googleAnalytics.trackingId);
+  const trackingId = getGoogleAnalyticsTrackingId();
+  if (trackingId && !ReactGA.isInitialized) {
+    ReactGA.initialize(trackingId);
   }
 }
 
 export function sendGAPageview(location) {
-  if (APP_CONFIG.googleAnalytics) {
+  if (ReactGA.isInitialized) {
     let page = location.pathname.replace(/\/+$/, '');
     if (page === '') {
       page = '/';
@@ -27,7 +28,7 @@ export function sendGAPageview(location) {
 }
 
 export function setGAUser(userJid) {
-  if (APP_CONFIG.googleAnalytics) {
+  if (ReactGA.isInitialized) {
     if (userJid) {
       ReactGA.set({ user_id: userJid });
     }
@@ -35,7 +36,7 @@ export function setGAUser(userJid) {
 }
 
 export function sendGAEvent(args) {
-  if (APP_CONFIG.googleAnalytics) {
+  if (ReactGA.isInitialized) {
     ReactGA.event(args);
   }
 }

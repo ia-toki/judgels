@@ -4,9 +4,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { APP_CONFIG } from '../../../../conf';
 import { afterLogin, logInWithGoogleMutationOptions } from '../../../../modules/queries/session';
 import { registerGoogleUserMutationOptions } from '../../../../modules/queries/userAccount';
+import { getGoogleAuthClientId } from '../../../../modules/webConfig';
 import GoogleAuthRegisterForm from './GoogleAuthRegisterForm';
 
 import './GoogleAuth.scss';
@@ -23,7 +23,8 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
   const googleLogInMutation = useMutation(logInWithGoogleMutationOptions);
   const googleRegisterMutation = useMutation(registerGoogleUserMutationOptions);
 
-  if (!APP_CONFIG.googleAuth) {
+  const clientId = getGoogleAuthClientId();
+  if (!clientId) {
     return null;
   }
 
@@ -97,7 +98,7 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
   };
 
   return (
-    <GoogleOAuthProvider clientId={APP_CONFIG.googleAuth.clientId}>
+    <GoogleOAuthProvider clientId={clientId}>
       <GoogleLogin onSuccess={logIn} className="google-auth" />
       <hr />
       {renderDialog()}
