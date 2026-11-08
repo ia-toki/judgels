@@ -40,6 +40,7 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.core.mailer.MailerModule.class,
         judgels.core.recaptcha.RecaptchaModule.class,
         judgels.user.registration.UserRegistrationModule.class,
+        judgels.user.web.UserWebModule.class,
         judgels.user.account.UserResetPasswordModule.class,
 
         judgels.tasks.JudgelsServerTaskModule.class})

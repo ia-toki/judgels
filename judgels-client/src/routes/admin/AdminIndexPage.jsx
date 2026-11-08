@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Navigate } from '@tanstack/react-router';
 
-import { isTrainingEnabled } from '../../conf';
 import { isContestAdmin, isProblemWriter, isSystemAdmin, isTrainingAdmin } from '../../modules/api/userRole';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
+import { isTrainingEnabled } from '../../modules/webConfig';
 
 export default function AdminIndexPage() {
   const {

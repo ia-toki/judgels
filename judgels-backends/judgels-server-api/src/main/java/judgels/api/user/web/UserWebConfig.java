@@ -16,6 +16,8 @@ public interface UserWebConfig {
     String getHomeBanner();
     boolean getUserRegistrationEnabled();
     boolean getUserResetPasswordEnabled();
+    boolean getTrainingEnabled();
+    boolean getRatingEnabled();
     Set<UserRole> getRoles();
     Optional<Profile> getProfile();
 

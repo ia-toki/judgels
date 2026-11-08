@@ -1,11 +1,11 @@
 import { queryOptions } from '@tanstack/react-query';
 
-import { isTrainingEnabled } from '../../conf';
 import { BadRequestError, NotFoundError, RemoteError } from '../api/error';
 import { ProblemSetErrors, problemSetAPI } from '../api/problemSet';
 import { SubmissionError } from '../form/submissionError';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
+import { isTrainingEnabled } from '../webConfig';
 
 export const problemSetsQueryOptions = params => {
   const { archiveSlug, name, page } = params || {};

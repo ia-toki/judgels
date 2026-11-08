@@ -2,11 +2,11 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { isTrainingEnabled } from '../../../../../../conf';
 import { basicProfileQueryOptions } from '../../../../../../modules/queries/profile';
 import { trainingUserStatsQueryOptions } from '../../../../../../modules/queries/trainingUserStats';
 import { userAvatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
 import { userJidByUsernameQueryOptions } from '../../../../../../modules/queries/userSearch';
+import { isTrainingEnabled } from '../../../../../../modules/webConfig';
 import { BasicProfilePanel } from '../BasicProfilePanel/BasicProfilePanel';
 import { ProblemStatsPanel } from '../ProblemStatsPanel/ProblemStatsPanel';
 

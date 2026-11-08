@@ -28,6 +28,8 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(anonymousConfig.getProfile()).isEmpty();
         assertThat(anonymousConfig.getUserRegistrationEnabled()).isFalse();
         assertThat(anonymousConfig.getUserResetPasswordEnabled()).isFalse();
+        assertThat(anonymousConfig.getTrainingEnabled()).isTrue();
+        assertThat(anonymousConfig.getRatingEnabled()).isTrue();
 
         UserWebConfig adminConfig = userWebClient.getWebConfig(adminToken);
         assertThat(adminConfig.getRoles()).containsExactlyInAnyOrder(

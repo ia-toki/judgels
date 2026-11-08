@@ -18,7 +18,6 @@ import { Outlet } from '@tanstack/react-router';
 import ContentWithSidebar from '../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullWidthPageLayout } from '../../components/FullWidthPageLayout/FullWidthPageLayout';
 import ProblemTagFilter from '../../components/ProblemTagFilter/ProblemTagFilter';
-import { isRatingEnabled, isTrainingEnabled } from '../../conf';
 import {
   isContestAdmin,
   isProblemAdmin,
@@ -28,6 +27,7 @@ import {
 } from '../../modules/api/userRole';
 import { problemAllTagsQueryOptions } from '../../modules/queries/problemTag';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
+import { isRatingEnabled, isTrainingEnabled } from '../../modules/webConfig';
 
 const AdminProblemTagFilter = () => <ProblemTagFilter queryOptions={problemAllTagsQueryOptions()} />;
 

@@ -1,4 +1,4 @@
-import { isTrainingEnabled } from '../../conf';
+import { isTrainingEnabled } from '../../modules/webConfig';
 
 import './TimeanddateLink.scss';
 

@@ -5,6 +5,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
@@ -29,6 +30,8 @@ public class UserWebResource {
     @Inject protected SettingStore settingStore;
     @Inject protected UserRegisterer userRegisterer;
     @Inject protected UserPasswordResetter userPasswordResetter;
+    @Inject @Named("trainingEnabled") protected boolean trainingEnabled;
+    @Inject @Named("ratingEnabled") protected boolean ratingEnabled;
 
     @Inject public UserWebResource() {}
 
@@ -44,7 +47,9 @@ public class UserWebResource {
                 .appAnnouncement(settings.getApp().getAnnouncement())
                 .homeBanner(settings.getHome().getBanner())
                 .userRegistrationEnabled(userRegisterer.isEnabled())
-                .userResetPasswordEnabled(userPasswordResetter.isEnabled());
+                .userResetPasswordEnabled(userPasswordResetter.isEnabled())
+                .trainingEnabled(trainingEnabled)
+                .ratingEnabled(ratingEnabled);
 
         if (!authHeader.isPresent()) {
             config.roles(Set.of());

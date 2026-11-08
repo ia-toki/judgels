@@ -1,6 +1,6 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
-import { isTrainingEnabled } from '../../conf';
+import EnabledRoute from '../../components/EnabledRoute/EnabledRoute';
 import { retryImport } from '../../lazy';
 import { contestPublicHistoryQueryOptions } from '../../modules/queries/contestHistory';
 import { basicProfileQueryOptions } from '../../modules/queries/profile';
@@ -9,8 +9,13 @@ import { trainingUserStatsQueryOptions } from '../../modules/queries/trainingUse
 import { userAvatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { userJidByUsernameQueryOptions } from '../../modules/queries/userSearch';
 import { queryClient } from '../../modules/queryClient';
+import { isTrainingEnabled } from '../../modules/webConfig';
 import { createDocumentTitle } from '../../utils/title';
 import HomePage from './HomePage/HomePage';
+
+const SubmissionHistoryPage = lazyRouteComponent(
+  retryImport(() => import('./profiles/single/submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage'))
+);
 
 export const createHomeRoutes = appRoute => {
   const homeRoute = createRoute({
@@ -56,25 +61,25 @@ export const createHomeRoutes = appRoute => {
     },
   });
 
-  const profileSubmissionHistoryRoute = isTrainingEnabled()
-    ? createRoute({
-        getParentRoute: () => profilesRoute,
-        path: 'submission-history',
-        component: lazyRouteComponent(
-          retryImport(() => import('./profiles/single/submissionHistory/SubmissionHistoryPage/SubmissionHistoryPage'))
-        ),
-        loader: ({ params: { username }, search = {} }) => {
-          queryClient.prefetchQuery(
-            profileSubmissionsQueryOptions(username, { beforeId: search.before, afterId: search.after })
-          );
-        },
-      })
-    : null;
+  const profileSubmissionHistoryRoute = createRoute({
+    getParentRoute: () => profilesRoute,
+    path: 'submission-history',
+    component: () => (
+      <EnabledRoute enabled={isTrainingEnabled()}>
+        <SubmissionHistoryPage />
+      </EnabledRoute>
+    ),
+    loader: ({ params: { username }, search = {} }) => {
+      if (isTrainingEnabled()) {
+        queryClient.prefetchQuery(
+          profileSubmissionsQueryOptions(username, { beforeId: search.before, afterId: search.after })
+        );
+      }
+    },
+  });
 
   return [
     homeRoute,
-    profilesRoute.addChildren(
-      [profileIndexRoute, profileContestHistoryRoute, profileSubmissionHistoryRoute].filter(Boolean)
-    ),
+    profilesRoute.addChildren([profileIndexRoute, profileContestHistoryRoute, profileSubmissionHistoryRoute]),
   ];
 };
