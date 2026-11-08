@@ -115,24 +115,25 @@ judgels:
   superadmin:
     initialPassword: {{ superadmin_initialPassword }}
 
-training:
-  enabled: {{ training_enabled | default(false) | bool | lower }}
-  rating:
-    enabled: {{ training_rating_enabled | default(false) | bool | lower }}
+  training:
+    enabled: {{ training_enabled | default(false) | bool | lower }}
 
 {% if training_aws_accessKey is defined %}
-  aws:
-    accessKey: {{ training_aws_accessKey }}
-    secretKey: {{ training_aws_secretKey }}
-    s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
+    aws:
+      accessKey: {{ training_aws_accessKey }}
+      secretKey: {{ training_aws_secretKey }}
+      s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
 {% endif %}
 
-  submission:
-    fs:
-      type: {{ training_submission_fs_type | default('local', true) }}
+    submission:
+      fs:
+        type: {{ training_submission_fs_type | default('local', true) }}
 {% if training_submission_fs_type | default('local', true) != 'local' %}
-      s3BucketName: {{ training_submission_fs_s3BucketName }}
+        s3BucketName: {{ training_submission_fs_s3BucketName }}
 {% endif %}
 
-  stats:
-    enabled: {{ training_stats_enabled | default(false, true) }}
+    stats:
+      enabled: {{ training_stats_enabled | default(false, true) }}
+
+  rating:
+    enabled: {{ rating_enabled | default(false) | bool | lower }}

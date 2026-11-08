@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,8 +61,8 @@ import judgels.core.feign.FeignClients;
 import judgels.core.mailer.MailerConfiguration;
 import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
-import judgels.training.RatingConfiguration;
 import judgels.training.TrainingConfiguration;
+import judgels.user.rating.UserRatingConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -108,6 +107,14 @@ public abstract class BaseJudgelsApiIntegrationTests {
                 .gradingResponseQueueName("grading-response")
                 .build();
 
+        TrainingConfiguration trainingConfig = new TrainingConfiguration.Builder()
+                .enabled(true)
+                .build();
+
+        UserRatingConfiguration userRatingConfig = new UserRatingConfiguration.Builder()
+                .enabled(true)
+                .build();
+
         JudgelsServerConfiguration.Builder judgelsConfigBuilder = new JudgelsServerConfiguration.Builder()
                 .baseDataDir(baseDataDir.toAbsolutePath())
                 .gradingConfig(gradingConfig)
@@ -119,7 +126,9 @@ public abstract class BaseJudgelsApiIntegrationTests {
                         .password("wiser")
                         .sender("noreply@wiser.com")
                         .build())
-                .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT);
+                .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
+                .trainingConfig(trainingConfig)
+                .userRatingConfig(userRatingConfig);
 
         if (System.getenv("CI") != null) {
             judgelsConfigBuilder.rabbitMQConfig(RabbitMQConfiguration.DEFAULT);
@@ -127,16 +136,10 @@ public abstract class BaseJudgelsApiIntegrationTests {
 
         JudgelsServerConfiguration judgelsConfig = judgelsConfigBuilder.build();
 
-        TrainingConfiguration trainingConfig = new TrainingConfiguration.Builder()
-                .enabled(true)
-                .ratingConfig(new RatingConfiguration.Builder().enabled(true).build())
-                .build();
-
         JudgelsServerApplicationConfiguration config = new JudgelsServerApplicationConfiguration(
                 dbConfig,
                 webSecurityConfig,
-                judgelsConfig,
-                Optional.of(trainingConfig)) {
+                judgelsConfig) {
             {
                 DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
 

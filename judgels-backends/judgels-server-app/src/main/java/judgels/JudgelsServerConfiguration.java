@@ -9,7 +9,9 @@ import judgels.core.mailer.MailerConfiguration;
 import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.core.recaptcha.RecaptchaConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.training.TrainingConfiguration;
 import judgels.user.account.UserResetPasswordConfiguration;
+import judgels.user.rating.UserRatingConfiguration;
 import judgels.user.registration.UserRegistrationConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.immutables.value.Value;
@@ -46,6 +48,12 @@ public interface JudgelsServerConfiguration {
     @Deprecated
     @JsonProperty("userRegistration")
     Optional<UserRegistrationConfiguration> getUserRegistrationConfig();
+
+    @JsonProperty("training")
+    Optional<TrainingConfiguration> getTrainingConfig();
+
+    @JsonProperty("rating")
+    Optional<UserRatingConfiguration> getUserRatingConfig();
 
     class Builder extends ImmutableJudgelsServerConfiguration.Builder {}
 }
