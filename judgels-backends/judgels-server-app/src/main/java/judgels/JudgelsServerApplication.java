@@ -8,7 +8,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
 import java.util.Optional;
-import judgels.core.JudgelsApp;
+import judgels.contest.rating.ContestRatingModule;
 import judgels.core.JudgelsJerseyFeature;
 import judgels.core.JudgelsObjectMappers;
 import judgels.core.JudgelsSchedulerModule;
@@ -57,8 +57,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     @Override
     public void run(JudgelsServerApplicationConfiguration config, Environment env) throws Exception {
-        JudgelsApp.initialize(config.getJudgelsConfig().getAppConfig());
-
         // Shared so that, without RabbitMQ, both components exchange messages through the same fake one.
         RabbitMQModule rabbitMQModule = new RabbitMQModule(config.getJudgelsConfig().getRabbitMQConfig());
 
@@ -118,10 +116,17 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
+        Optional<TrainingConfiguration> enabledTrainingConfig = config.getTrainingConfig()
+                .filter(TrainingConfiguration::getEnabled);
+        boolean trainingEnabled = enabledTrainingConfig.isPresent();
+        boolean ratingEnabled = enabledTrainingConfig
+                .map(c -> c.getRatingConfig().getEnabled())
+                .orElse(false);
+
         StatsConfiguration statsConfig = StatsConfiguration.DEFAULT;
         Optional<FileSystem> trainingSubmissionFs = Optional.empty();
-        if (JudgelsApp.isTLX() && config.getTrainingConfig().isPresent()) {
-            TrainingConfiguration trainingConfig = config.getTrainingConfig().get();
+        if (trainingEnabled) {
+            TrainingConfiguration trainingConfig = enabledTrainingConfig.get();
             statsConfig = trainingConfig.getStatsConfig();
 
             if (trainingConfig.getSubmissionConfig().isPresent()
@@ -149,6 +154,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                         judgelsConfig.getUserResetPasswordConfig()))
                 .userRegistrationModule(new UserRegistrationModule(
                         judgelsConfig.getRecaptchaConfig().map(RecaptchaWebConfig::fromServerConfig)))
+                .contestRatingModule(new ContestRatingModule(ratingEnabled))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(statsConfig))
                 .build();
@@ -156,7 +162,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         component.superadminCreator().ensureSuperadminExists();
         component.settingCreator().initializeSettings();
 
-        if (JudgelsApp.isTLX()) {
+        if (trainingEnabled) {
             component.curriculumCreator().ensureCurriculumExists();
         }
 
@@ -222,7 +228,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestItemSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
-        if (JudgelsApp.isTLX()) {
+        if (ratingEnabled) {
             env.jersey().register(component.contestRatingResource());
         }
 
@@ -240,12 +246,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.dumpContestTask());
 
-        if (JudgelsApp.isTLX()) {
+        if (trainingEnabled) {
             env.admin().addTask(component.replaceContestProblemTask());
         }
 
         // Training
-        if (JudgelsApp.isTLX()) {
+        if (trainingEnabled) {
             env.jersey().register(component.archiveResource());
             env.jersey().register(component.curriculumResource());
             env.jersey().register(component.courseResource());

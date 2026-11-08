@@ -58,14 +58,12 @@ import judgels.client.ProblemWriterClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
-import judgels.core.BaseJudgelsAppIntegrationTests;
-import judgels.core.JudgelsAppConfiguration;
 import judgels.core.feign.FeignClients;
 import judgels.core.mailer.MailerConfiguration;
 import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.training.RatingConfiguration;
 import judgels.training.TrainingConfiguration;
-import judgels.training.stats.StatsConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -76,7 +74,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppIntegrationTests {
+public abstract class BaseJudgelsApiIntegrationTests {
     private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
     private static Path baseDataDir;
 
@@ -105,11 +103,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
 
         baseDataDir = Files.createTempDirectory("judgels");
 
-        setEditionAsTLX();
-
-        JudgelsAppConfiguration judgelsAppConfig = new JudgelsAppConfiguration.Builder()
-                .build();
-
         JudgelsServerGradingConfiguration gradingConfig = new JudgelsServerGradingConfiguration.Builder()
                 .gradingRequestQueueName("grading-request")
                 .gradingResponseQueueName("grading-response")
@@ -117,7 +110,6 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
 
         JudgelsServerConfiguration.Builder judgelsConfigBuilder = new JudgelsServerConfiguration.Builder()
                 .baseDataDir(baseDataDir.toAbsolutePath())
-                .appConfig(judgelsAppConfig)
                 .gradingConfig(gradingConfig)
                 .mailerConfig(new MailerConfiguration.Builder()
                         .host("localhost")
@@ -136,7 +128,8 @@ public abstract class BaseJudgelsApiIntegrationTests extends BaseJudgelsAppInteg
         JudgelsServerConfiguration judgelsConfig = judgelsConfigBuilder.build();
 
         TrainingConfiguration trainingConfig = new TrainingConfiguration.Builder()
-                .statsConfig(StatsConfiguration.DEFAULT)
+                .enabled(true)
+                .ratingConfig(new RatingConfiguration.Builder().enabled(true).build())
                 .build();
 
         JudgelsServerApplicationConfiguration config = new JudgelsServerApplicationConfiguration(

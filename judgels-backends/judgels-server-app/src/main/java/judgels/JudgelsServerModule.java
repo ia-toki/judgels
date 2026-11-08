@@ -3,7 +3,6 @@ package judgels;
 import dagger.Module;
 import dagger.Provides;
 import java.nio.file.Path;
-import judgels.core.JudgelsAppConfiguration;
 import judgels.core.JudgelsBaseDataDir;
 
 @Module
@@ -18,10 +17,5 @@ public class JudgelsServerModule {
     @JudgelsBaseDataDir
     Path baseDataDir() {
         return config.getBaseDataDir();
-    }
-
-    @Provides
-    JudgelsAppConfiguration appConfig() {
-        return config.getAppConfig();
     }
 }

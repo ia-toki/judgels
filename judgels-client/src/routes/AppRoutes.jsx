@@ -1,6 +1,6 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
-import { isTLX } from '../conf';
+import { isRatingEnabled, isTrainingEnabled } from '../conf';
 import { isContestAdmin, isProblemWriter, isSystemAdmin, isTrainingAdmin } from '../modules/api/userRole';
 
 const appRoutes = [
@@ -12,7 +12,10 @@ const appRoutes = [
       path: '/admin',
     },
     visible: roles =>
-      isSystemAdmin(roles) || isProblemWriter(roles) || isContestAdmin(roles) || (isTLX() && isTrainingAdmin(roles)),
+      isSystemAdmin(roles) ||
+      isProblemWriter(roles) ||
+      isContestAdmin(roles) ||
+      (isTrainingEnabled() && isTrainingAdmin(roles)),
   },
   {
     id: 'contests',
@@ -30,7 +33,7 @@ const appRoutes = [
     route: {
       path: '/courses',
     },
-    visible: () => isTLX(),
+    visible: () => isTrainingEnabled(),
   },
   {
     id: 'problems',
@@ -39,7 +42,7 @@ const appRoutes = [
     route: {
       path: '/problems',
     },
-    visible: () => isTLX(),
+    visible: () => isTrainingEnabled(),
   },
   {
     id: 'submissions',
@@ -48,7 +51,7 @@ const appRoutes = [
     route: {
       path: '/submissions',
     },
-    visible: () => isTLX(),
+    visible: () => isTrainingEnabled(),
   },
   {
     id: 'ranking',
@@ -57,7 +60,7 @@ const appRoutes = [
     route: {
       path: '/ranking',
     },
-    visible: () => isTLX(),
+    visible: () => isRatingEnabled(),
   },
 ];
 

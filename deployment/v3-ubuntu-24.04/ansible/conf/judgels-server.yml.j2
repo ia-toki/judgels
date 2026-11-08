@@ -47,9 +47,6 @@ webSecurity:
 judgels:
   baseDataDir: var/data
 
-  app:
-    mode: {{ app_mode | default('JUDGELS', true) }}
-
 {% if rabbitmq_username is defined %}
   rabbitmq:
     host: localhost
@@ -118,8 +115,11 @@ judgels:
   superadmin:
     initialPassword: {{ superadmin_initialPassword }}
 
-{% if app_mode | default('JUDGELS', true) == 'TLX' %}
 training:
+  enabled: {{ training_enabled | default(false) | bool | lower }}
+  rating:
+    enabled: {{ training_rating_enabled | default(false) | bool | lower }}
+
 {% if training_aws_accessKey is defined %}
   aws:
     accessKey: {{ training_aws_accessKey }}
@@ -136,4 +136,3 @@ training:
 
   stats:
     enabled: {{ training_stats_enabled | default(false, true) }}
-{% endif %}

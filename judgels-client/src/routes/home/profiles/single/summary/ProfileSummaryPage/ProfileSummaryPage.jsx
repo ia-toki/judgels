@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 
 import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
-import { isTLX } from '../../../../../../conf';
+import { isTrainingEnabled } from '../../../../../../conf';
 import { basicProfileQueryOptions } from '../../../../../../modules/queries/profile';
 import { trainingUserStatsQueryOptions } from '../../../../../../modules/queries/trainingUserStats';
 import { userAvatarUrlQueryOptions } from '../../../../../../modules/queries/userAvatar';
@@ -20,7 +20,7 @@ export default function ProfileSummaryPage() {
   const { data: basicProfile } = useQuery(basicProfileQueryOptions(userJid));
   const { data: userStats } = useQuery({
     ...trainingUserStatsQueryOptions(username),
-    enabled: isTLX(),
+    enabled: isTrainingEnabled(),
   });
 
   const renderBasicProfile = () => {
@@ -32,7 +32,7 @@ export default function ProfileSummaryPage() {
   };
 
   const renderProblemStats = () => {
-    if (!isTLX()) {
+    if (!isTrainingEnabled()) {
       return null;
     }
     if (!userStats) {

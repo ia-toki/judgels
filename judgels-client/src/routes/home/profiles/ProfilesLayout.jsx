@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
-import { isTLX } from '../../../conf';
+import { isTrainingEnabled } from '../../../conf';
 import { userJidByUsernameQueryOptions } from '../../../modules/queries/userSearch';
 import { createDocumentTitle } from '../../../utils/title';
 
@@ -28,7 +28,7 @@ export default function ProfilesLayout() {
       titleIcon: <TimelineEvents />,
       title: 'Contest history',
     },
-    ...(isTLX()
+    ...(isTrainingEnabled()
       ? [
           {
             path: 'submission-history',

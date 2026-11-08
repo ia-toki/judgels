@@ -1,4 +1,4 @@
-import { isTLX } from '../../conf';
+import { isTrainingEnabled } from '../../conf';
 
 import './TimeanddateLink.scss';
 
@@ -14,7 +14,7 @@ export function TimeanddateLink({ time, message, children }) {
     window.open(`https://www.timeanddate.com/worldclock/fixedtime.html?msg=${encodeURIComponent(message)}&iso=${date}`);
   };
 
-  if (!isTLX()) {
+  if (!isTrainingEnabled()) {
     return children;
   }
   return (
