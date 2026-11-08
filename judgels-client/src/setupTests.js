@@ -33,9 +33,6 @@ vi.mock('./modules/toast/toastActions', () => ({
 }));
 
 window.conf = {
-  training: { enabled: true, rating: { enabled: true } },
-  name: 'Judgels',
-  slogan: 'Judgment Angels',
   apiUrl: 'http://api',
 };
 

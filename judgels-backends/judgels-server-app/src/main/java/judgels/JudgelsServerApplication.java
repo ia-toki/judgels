@@ -33,6 +33,7 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
 import judgels.user.registration.UserRegistrationModule;
 import judgels.user.superadmin.SuperadminModule;
+import judgels.user.web.UserWebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
@@ -154,6 +155,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                         judgelsConfig.getUserResetPasswordConfig()))
                 .userRegistrationModule(new UserRegistrationModule(
                         judgelsConfig.getRecaptchaConfig().map(RecaptchaWebConfig::fromServerConfig)))
+                .userWebModule(new UserWebModule(trainingEnabled, ratingEnabled))
                 .contestRatingModule(new ContestRatingModule(ratingEnabled))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(statsConfig))

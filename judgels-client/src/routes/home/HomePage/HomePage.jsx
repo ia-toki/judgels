@@ -4,9 +4,8 @@ import { Flex } from '@blueprintjs/labs';
 import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
-import { isRatingEnabled } from '../../../conf';
 import { useSession } from '../../../modules/session';
-import { getHomeBanner, isUserRegistrationEnabled } from '../../../modules/webConfig';
+import { getHomeBanner, isRatingEnabled, isUserRegistrationEnabled } from '../../../modules/webConfig';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 

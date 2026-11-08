@@ -1,7 +1,7 @@
 import { Checkbox } from '@blueprintjs/core';
 
-import { isTrainingEnabled } from '../../../../conf';
 import { UserRole } from '../../../../modules/api/userRole';
+import { isTrainingEnabled } from '../../../../modules/webConfig';
 
 export function getRoleFields() {
   const fields = [

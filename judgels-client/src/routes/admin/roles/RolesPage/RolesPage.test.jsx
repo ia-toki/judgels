@@ -2,6 +2,8 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
 
+import { userWebConfigQueryOptions } from '../../../../modules/queries/userWeb';
+import { queryClient } from '../../../../modules/queryClient';
 import { setSession } from '../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../test/RouterWrapper';
@@ -13,10 +15,15 @@ describe('RolesPage', () => {
     setSession('token', { jid: 'userJid1' });
   });
 
+  afterEach(() => {
+    queryClient.clear();
+  });
+
   const renderComponent = async () => {
+    queryClient.setQueryData(userWebConfigQueryOptions().queryKey, { trainingEnabled: true });
     nockApi()
       .get('/v2/user-web/config')
-      .reply(200, { roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'] });
+      .reply(200, { roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'], trainingEnabled: true });
     nockApi()
       .get('/v2/user-roles')
       .reply(200, {

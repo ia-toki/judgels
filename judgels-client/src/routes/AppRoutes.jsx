@@ -1,7 +1,7 @@
 import { Console, Home, Key, Layers, Manual, PredictiveAnalysis, TimelineLineChart } from '@blueprintjs/icons';
 
-import { isRatingEnabled, isTrainingEnabled } from '../conf';
 import { isContestAdmin, isProblemWriter, isSystemAdmin, isTrainingAdmin } from '../modules/api/userRole';
+import { isRatingEnabled, isTrainingEnabled } from '../modules/webConfig';
 
 const appRoutes = [
   {

@@ -26,7 +26,7 @@ export const appRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'app',
   component: App,
-  loader: async () => {
+  beforeLoad: async () => {
     await queryClient.ensureQueryData(userWebConfigQueryOptions());
   },
 });

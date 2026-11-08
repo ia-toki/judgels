@@ -1,4 +1,3 @@
 window.conf = {
   apiUrl: 'http://localhost:9101/api',
-  training: { enabled: false, rating: { enabled: false } },
 };

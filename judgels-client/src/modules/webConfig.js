@@ -24,3 +24,11 @@ export function isUserRegistrationEnabled() {
 export function isUserResetPasswordEnabled() {
   return !!getUserWebConfig()?.userResetPasswordEnabled;
 }
+
+export function isTrainingEnabled() {
+  return !!getUserWebConfig()?.trainingEnabled;
+}
+
+export function isRatingEnabled() {
+  return !!getUserWebConfig()?.ratingEnabled;
+}
