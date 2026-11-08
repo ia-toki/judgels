@@ -15,12 +15,6 @@ public interface TrainingConfiguration {
         return false;
     }
 
-    @JsonProperty("rating")
-    @Value.Default
-    default RatingConfiguration getRatingConfig() {
-        return RatingConfiguration.DEFAULT;
-    }
-
     @JsonProperty("aws")
     Optional<judgels.core.fs.aws.AwsConfiguration> getAwsConfig();
 

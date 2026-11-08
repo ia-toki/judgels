@@ -59,7 +59,8 @@ judgels:
   superadmin:
     initialPassword: superadmin
 
-training:
-  enabled: false
+  training:
+    enabled: false
+
   rating:
     enabled: false

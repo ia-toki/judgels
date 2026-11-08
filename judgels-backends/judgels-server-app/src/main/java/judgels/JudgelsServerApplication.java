@@ -31,6 +31,7 @@ import judgels.training.TrainingConfiguration;
 import judgels.training.stats.StatsConfiguration;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
+import judgels.user.rating.UserRatingConfiguration;
 import judgels.user.registration.UserRegistrationModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.UserWebModule;
@@ -117,11 +118,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
-        Optional<TrainingConfiguration> enabledTrainingConfig = config.getTrainingConfig()
+        Optional<TrainingConfiguration> enabledTrainingConfig = judgelsConfig.getTrainingConfig()
                 .filter(TrainingConfiguration::getEnabled);
         boolean trainingEnabled = enabledTrainingConfig.isPresent();
-        boolean ratingEnabled = enabledTrainingConfig
-                .map(c -> c.getRatingConfig().getEnabled())
+        boolean ratingEnabled = judgelsConfig.getUserRatingConfig()
+                .map(UserRatingConfiguration::getEnabled)
                 .orElse(false);
 
         StatsConfiguration statsConfig = StatsConfiguration.DEFAULT;
