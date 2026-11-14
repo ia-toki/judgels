@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { useEffect } from 'react';
 
 import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
 import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
@@ -15,22 +16,20 @@ import {
 
 export default function ChapterProblemStatementPage(props) {
   const { courseSlug, chapterAlias } = useParams({ strict: false });
-  const location = useLocation();
+  const pathname = useLocation({ select: location => location.pathname });
   const navigate = useNavigate();
   const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
   const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
 
-  const isInSubmissionsPath = () => {
-    return (location.pathname + '/').includes('/submissions/');
-  };
+  const isInSubmissionsPath = (pathname + '/').includes('/submissions/');
+  const resultsUrl = (pathname + '/submissions').replace('//', '/');
 
-  if (!isInSubmissionsPath()) {
+  useEffect(() => {
     const { progress } = props.worksheet;
-    if (progress && progress.verdict !== VerdictCode.PND) {
-      const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
-      navigate(resultsUrl, { replace: true });
+    if (!isInSubmissionsPath && progress && progress.verdict !== VerdictCode.PND) {
+      navigate({ to: resultsUrl, replace: true });
     }
-  }
+  }, [props.worksheet.problem.alias]);
 
   const { data: latestSubmissions } = useQuery(
     chapterLatestItemSubmissionsQueryOptions(chapter.jid, props.worksheet.problem.alias)
@@ -71,11 +70,7 @@ export default function ChapterProblemStatementPage(props) {
       return <LoadingState />;
     }
 
-    const reasonNotAllowedToSubmit = isInSubmissionsPath()
-      ? 'Submission received.'
-      : worksheet.reasonNotAllowedToSubmit;
-
-    const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
+    const reasonNotAllowedToSubmit = isInSubmissionsPath ? 'Submission received.' : worksheet.reasonNotAllowedToSubmit;
 
     return (
       <ProblemWorksheetCard
