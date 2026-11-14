@@ -9,30 +9,30 @@ import java.util.Optional;
 import judgels.persistence.Dao;
 import judgels.persistence.DaoData;
 import judgels.persistence.Model_;
-import judgels.persistence.model.UserResetPasswordModel;
-import judgels.persistence.model.UserResetPasswordModel_;
+import judgels.persistence.model.AccountPasswordResetModel;
+import judgels.persistence.model.AccountPasswordResetModel_;
 
-public class UserResetPasswordDao extends Dao<UserResetPasswordModel> {
+public class AccountPasswordResetDao extends Dao<AccountPasswordResetModel> {
 
     private final Clock clock;
 
     @Inject
-    public UserResetPasswordDao(DaoData data) {
+    public AccountPasswordResetDao(DaoData data) {
         super(data);
         this.clock = data.getClock();
     }
 
-    public Optional<UserResetPasswordModel> selectByUserJid(String userJid, Duration expiration) {
-        return selectByColumn(expiration, UserResetPasswordModel_.userJid, userJid);
+    public Optional<AccountPasswordResetModel> selectByUserJid(String userJid, Duration expiration) {
+        return selectByColumn(expiration, AccountPasswordResetModel_.userJid, userJid);
     }
 
-    public Optional<UserResetPasswordModel> selectByEmailCode(String emailCode, Duration expiration) {
-        return selectByColumn(expiration, UserResetPasswordModel_.emailCode, emailCode);
+    public Optional<AccountPasswordResetModel> selectByEmailCode(String emailCode, Duration expiration) {
+        return selectByColumn(expiration, AccountPasswordResetModel_.emailCode, emailCode);
     }
 
-    private Optional<UserResetPasswordModel> selectByColumn(
+    private Optional<AccountPasswordResetModel> selectByColumn(
             Duration expiration,
-            SingularAttribute<UserResetPasswordModel, String> column,
+            SingularAttribute<AccountPasswordResetModel, String> column,
             String val) {
 
         Instant currentInstant = clock.instant();
@@ -40,7 +40,7 @@ public class UserResetPasswordDao extends Dao<UserResetPasswordModel> {
 
         return select()
                 .where(columnEq(column, val))
-                .where((cb, cq, root) -> cb.isFalse(root.get(UserResetPasswordModel_.consumed)))
+                .where((cb, cq, root) -> cb.isFalse(root.get(AccountPasswordResetModel_.consumed)))
                 .where((cb, cq, root) -> cb.between(root.get(Model_.createdAt), cb.literal(pastInstant), cb.literal(currentInstant)))
                 .all()
                 .stream()

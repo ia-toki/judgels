@@ -8,8 +8,8 @@ import java.nio.file.Path;
 import java.util.concurrent.ThreadPoolExecutor;
 import judgels.core.JudgelsBaseDataDir;
 import judgels.core.JudgelsScheduler;
-import judgels.core.messaging.MessageClient;
 import judgels.core.messaging.MessageListener;
+import judgels.core.messaging.MessageSender;
 
 @Module
 public final class GradingModule {
@@ -36,12 +36,12 @@ public final class GradingModule {
     FakeGradingRequestPoller fakeGradingRequestPoller(
             JudgelsScheduler scheduler,
             MessageListener messageListener,
-            MessageClient messageClient,
+            MessageSender messageSender,
             @JudgelsBaseDataDir Path baseDataDir) {
 
         return new FakeGradingRequestPoller(
                 messageListener,
-                messageClient,
+                messageSender,
                 config.getGradingRequestQueueName(),
                 (ThreadPoolExecutor) scheduler.createExecutorService("fake-grading-request-processor-%d", 2),
                 baseDataDir,

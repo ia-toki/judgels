@@ -1,4 +1,4 @@
-package judgels.api.catalog.problem;
+package judgels.api.catalog.problem.setter;
 
 public enum ProblemSetterRole {
     WRITER,

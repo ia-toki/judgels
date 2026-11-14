@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.bundle.ItemSubmission;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.api.submission.programming.Grading;
 import judgels.api.submission.programming.Submission;
 import judgels.api.training.archive.Archive;
@@ -100,7 +101,6 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
     private judgels.training.stats.SubmissionStatsProcessor programmingStatsProcessor;
     private judgels.training.stats.ItemSubmissionStatsProcessor bundleStatsProcessor;
 
-
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
         TrainingIntegrationTestComponent component = createComponent(sessionFactory);
@@ -172,12 +172,12 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
         assertCourseProgress(course.getJid(), 3, 4);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 3);
 
-        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, judgels.api.submission.bundle.Verdict.WRONG_ANSWER);
+        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, ItemVerdict.WRONG_ANSWER);
 
         assertCourseProgress(course.getJid(), 3, 4);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 2, 3);
 
-        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, judgels.api.submission.bundle.Verdict.ACCEPTED);
+        submitItem(USER_JID_1, chapter2.getJid(), PROBLEM_JID_4, ItemVerdict.ACCEPTED);
 
         assertCourseProgress(course.getJid(), 4, 4);
         assertChapterProgresses(chapter1.getJid(), 1, 1, chapter2.getJid(), 3, 3);
@@ -379,7 +379,7 @@ class StatsIntegrationTests extends BaseTrainingIntegrationTests {
                 .build());
     }
 
-    private void submitItem(String userJid, String containerJid, String problemJid, judgels.api.submission.bundle.Verdict verdict) {
+    private void submitItem(String userJid, String containerJid, String problemJid, ItemVerdict verdict) {
         judgels.api.submission.bundle.Grading grading = new judgels.api.submission.bundle.Grading.Builder()
                 .verdict(verdict)
                 .build();

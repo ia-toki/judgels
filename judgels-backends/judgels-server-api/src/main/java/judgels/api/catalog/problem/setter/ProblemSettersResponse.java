@@ -3,7 +3,6 @@ package judgels.api.catalog.problem.setter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
-import judgels.api.catalog.problem.ProblemSetterRole;
 import judgels.api.profile.Profile;
 import org.immutables.value.Value;
 

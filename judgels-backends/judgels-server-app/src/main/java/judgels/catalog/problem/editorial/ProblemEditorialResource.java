@@ -21,7 +21,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.Optional;
-import judgels.api.catalog.problem.ProblemEditorial;
+import judgels.api.catalog.problem.editorial.ProblemEditorial;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
 import judgels.api.catalog.problem.editorial.ProblemEditorialMediaFilesResponse;

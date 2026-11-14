@@ -62,11 +62,11 @@ import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.Page;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
-import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionDownloader;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.Submitter;
 import judgels.user.UserStore;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -83,7 +83,7 @@ public class ContestSubmissionResource {
     @Inject @ContestSubmissionStore protected SubmissionStore submissionStore;
     @Inject @ContestSubmissionSourceBuilder protected SubmissionSourceBuilder submissionSourceBuilder;
     @Inject protected SubmissionDownloader submissionDownloader;
-    @Inject @ContestSubmissionClient protected SubmissionClient submissionClient;
+    @Inject @ContestSubmitter protected Submitter submitter;
     @Inject @ContestSubmissionRegrader protected SubmissionRegrader submissionRegrader;
     @Inject protected ScoreboardIncrementalMarker scoreboardIncrementalMarker;
     @Inject protected ContestSubmissionRoleChecker submissionRoleChecker;
@@ -267,7 +267,7 @@ public class ContestSubmissionResource {
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(data.getProblemJid());
-        Submission submission = submissionClient.submit(data, source, config);
+        Submission submission = submitter.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 

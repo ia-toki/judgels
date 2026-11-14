@@ -1,4 +1,4 @@
-package judgels.api.catalog.problem;
+package judgels.api.catalog.problem.editorial;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;

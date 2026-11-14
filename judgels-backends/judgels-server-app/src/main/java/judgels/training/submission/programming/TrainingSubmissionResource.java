@@ -45,10 +45,10 @@ import judgels.grading.api.SubmissionSource;
 import judgels.persistence.api.CursorPage;
 import judgels.profile.ProfileStore;
 import judgels.session.ActorChecker;
-import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.Submitter;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.problem.ChapterProblemStore;
 import judgels.training.problemset.ProblemSetStore;
@@ -65,7 +65,7 @@ public class TrainingSubmissionResource {
     @Inject protected ActorChecker actorChecker;
     @Inject @TrainingSubmissionStore protected SubmissionStore submissionStore;
     @Inject @TrainingSubmissionSourceBuilder protected SubmissionSourceBuilder submissionSourceBuilder;
-    @Inject @TrainingSubmissionClient protected SubmissionClient submissionClient;
+    @Inject @TrainingSubmitter protected Submitter submitter;
     @Inject @TrainingSubmissionRegrader protected SubmissionRegrader submissionRegrader;
     @Inject protected TrainingSubmissionRoleChecker submissionRoleChecker;
     @Inject protected ProfileStore profileStore;
@@ -250,7 +250,7 @@ public class TrainingSubmissionResource {
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config = problemService.getProgrammingProblemSubmissionConfig(data.getProblemJid());
         GradingOptions options = new GradingOptions.Builder().shouldRevealEvaluation(true).build();
-        Submission submission = submissionClient.submit(data, source, config, options);
+        Submission submission = submitter.submit(data, source, config, options);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 

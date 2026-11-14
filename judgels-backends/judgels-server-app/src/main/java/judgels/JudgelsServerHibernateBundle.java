@@ -2,6 +2,8 @@ package judgels;
 
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
+import judgels.persistence.model.AccountPasswordResetModel;
+import judgels.persistence.model.AccountRegistrationEmailModel;
 import judgels.persistence.model.ArchiveModel;
 import judgels.persistence.model.BundleGradingModel;
 import judgels.persistence.model.BundleSubmissionModel;
@@ -48,8 +50,6 @@ import judgels.persistence.model.UserInfoModel;
 import judgels.persistence.model.UserModel;
 import judgels.persistence.model.UserRatingEventModel;
 import judgels.persistence.model.UserRatingModel;
-import judgels.persistence.model.UserRegistrationEmailModel;
-import judgels.persistence.model.UserResetPasswordModel;
 import judgels.persistence.model.UserRoleModel;
 
 public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerApplicationConfiguration> {
@@ -60,10 +60,10 @@ public class JudgelsServerHibernateBundle extends HibernateBundle<JudgelsServerA
                 UserModel.class,
                 UserInfoModel.class,
                 UserRatingModel.class,
-                UserResetPasswordModel.class,
+                AccountPasswordResetModel.class,
                 UserRoleModel.class,
                 UserRatingEventModel.class,
-                UserRegistrationEmailModel.class,
+                AccountRegistrationEmailModel.class,
 
                 BundleGradingModel.class,
                 BundleSubmissionModel.class,

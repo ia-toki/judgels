@@ -5,7 +5,7 @@ import feign.Param;
 import feign.RequestLine;
 import feign.Response;
 import feign.form.FormData;
-import judgels.api.catalog.problem.ProblemEditorial;
+import judgels.api.catalog.problem.editorial.ProblemEditorial;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
 import judgels.api.catalog.problem.editorial.ProblemEditorialMediaFilesResponse;

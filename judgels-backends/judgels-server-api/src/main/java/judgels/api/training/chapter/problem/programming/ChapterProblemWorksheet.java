@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import judgels.api.catalog.problem.ProblemEditorialInfo;
+import judgels.api.catalog.problem.editorial.ProblemEditorialInfo;
 import judgels.api.catalog.problem.programming.ProblemSkeleton;
 import judgels.api.catalog.problem.programming.ProblemWorksheet;
 import judgels.api.submission.programming.Submission;

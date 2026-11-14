@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.persistence.Model_;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -170,7 +170,7 @@ public class BaseItemSubmissionStore<M extends AbstractBundleItemSubmissionModel
                 .userJid(model.updatedBy)
                 .time(model.updatedAt)
                 .grading(new Grading.Builder()
-                        .verdict(Verdict.valueOf(model.verdict))
+                        .verdict(ItemVerdict.valueOf(model.verdict))
                         .score(Optional.ofNullable(model.score))
                         .build())
                 .build();

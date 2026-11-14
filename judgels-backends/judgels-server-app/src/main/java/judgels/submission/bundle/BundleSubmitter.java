@@ -19,7 +19,7 @@ import judgels.persistence.model.BundleGradingModel;
 import judgels.persistence.model.BundleSubmissionModel;
 import judgels.submission.SubmissionFs;
 
-public class BundleSubmissionClient {
+public class BundleSubmitter {
     private final ObjectMapper mapper;
     private final FileSystem submissionFs;
     private final BundleSubmissionDao submissionDao;
@@ -27,7 +27,7 @@ public class BundleSubmissionClient {
     private final BundleProblemGrader grader;
 
     @Inject
-    public BundleSubmissionClient(
+    public BundleSubmitter(
             ObjectMapper mapper,
             @SubmissionFs FileSystem submissionFs,
             BundleSubmissionDao submissionDao,

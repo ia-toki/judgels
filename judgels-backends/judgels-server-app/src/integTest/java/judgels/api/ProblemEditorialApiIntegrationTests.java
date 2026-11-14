@@ -12,7 +12,7 @@ import java.util.zip.ZipOutputStream;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.catalog.CatalogFile;
 import judgels.api.catalog.problem.Problem;
-import judgels.api.catalog.problem.ProblemEditorial;
+import judgels.api.catalog.problem.editorial.ProblemEditorial;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialLanguagesResponse;
 import judgels.client.ProblemEditorialClient;

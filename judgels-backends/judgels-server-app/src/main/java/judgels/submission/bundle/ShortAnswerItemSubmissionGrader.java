@@ -4,7 +4,7 @@ import java.util.Optional;
 import judgels.api.catalog.problem.bundle.Item;
 import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 import judgels.api.submission.bundle.Grading;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,26 +20,26 @@ public class ShortAnswerItemSubmissionGrader implements ItemSubmissionGrader {
 
             if (gradingRegex.isEmpty()) {
                 return new Grading.Builder()
-                        .verdict(Verdict.PENDING_MANUAL_GRADING)
+                        .verdict(ItemVerdict.PENDING_MANUAL_GRADING)
                         .score(Optional.empty())
                         .build();
             }
 
             if (answer.matches(gradingRegex)) {
                 return new Grading.Builder()
-                        .verdict(Verdict.ACCEPTED)
+                        .verdict(ItemVerdict.ACCEPTED)
                         .score(Optional.of(config.getScore()))
                         .build();
             } else {
                 return new Grading.Builder()
-                        .verdict(Verdict.WRONG_ANSWER)
+                        .verdict(ItemVerdict.WRONG_ANSWER)
                         .score(Optional.of(config.getPenalty()))
                         .build();
             }
         } catch (RuntimeException e) {
             LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
-                    .verdict(Verdict.INTERNAL_ERROR)
+                    .verdict(ItemVerdict.INTERNAL_ERROR)
                     .score(Optional.empty())
                     .build();
         }

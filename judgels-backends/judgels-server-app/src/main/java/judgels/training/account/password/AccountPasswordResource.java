@@ -1,4 +1,4 @@
-package judgels.training.account;
+package judgels.training.account.password;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -13,7 +13,6 @@ import java.util.Optional;
 import judgels.api.training.account.password.AccountPasswordResetData;
 import judgels.api.user.User;
 import judgels.setting.TrainingAccountChecker;
-import judgels.training.account.password.AccountPasswordResetter;
 import judgels.user.UserStore;
 
 @Path("/api/v4/account/password")

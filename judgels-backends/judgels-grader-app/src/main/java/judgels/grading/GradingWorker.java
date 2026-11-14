@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import judgels.core.JudgelsObjectMappers;
-import judgels.core.messaging.MessageClient;
+import judgels.core.messaging.MessageSender;
 import judgels.core.messaging.api.Message;
 import judgels.grading.api.GradingConfig;
 import judgels.grading.api.GradingEngine;
@@ -47,7 +47,7 @@ public class GradingWorker {
     private final JudgelsGraderGradingConfiguration gradingConfig;
     private final Path workersDir;
     private final ProblemCache problemCache;
-    private final MessageClient messageClient;
+    private final MessageSender messageSender;
     private final Optional<IsolateSandboxFactory> isolateSandboxFactory;
 
     private Message message;
@@ -75,13 +75,13 @@ public class GradingWorker {
             JudgelsGraderGradingConfiguration gradingConfig,
             @Named("workersDir") Path workersDir,
             ProblemCache problemCache,
-            MessageClient messageClient,
+            MessageSender messageSender,
             Optional<IsolateSandboxFactory> isolateSandboxFactory) {
 
         this.gradingConfig = gradingConfig;
         this.workersDir = workersDir;
         this.problemCache = problemCache;
-        this.messageClient = messageClient;
+        this.messageSender = messageSender;
         this.isolateSandboxFactory = isolateSandboxFactory;
     }
 
@@ -163,7 +163,7 @@ public class GradingWorker {
                 .build();
 
         try {
-            messageClient.sendMessage(
+            messageSender.sendMessage(
                     gradingConfig.getGradingRequestQueueName(),
                     message.getSourceQueueName(),
                     "GradingResponse",

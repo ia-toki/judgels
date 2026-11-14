@@ -2,7 +2,7 @@ package judgels.submission.bundle;
 
 import jakarta.inject.Inject;
 import judgels.api.catalog.problem.bundle.ItemType;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 
 public class ItemSubmissionGraderRegistry {
     private static final MultipleChoiceItemSubmissionGrader MULTIPLE_CHOICE_ITEM_SUBMISSION_GRADER =
@@ -10,7 +10,7 @@ public class ItemSubmissionGraderRegistry {
     private static final ShortAnswerItemSubmissionGrader SHORT_ANSWER_ITEM_SUBMISSION_GRADER =
             new ShortAnswerItemSubmissionGrader();
     private static final FixedVerdictItemSubmissionGrader MANUAL_ITEM_SUBMISSION_GRADER =
-            new FixedVerdictItemSubmissionGrader(Verdict.PENDING_MANUAL_GRADING);
+            new FixedVerdictItemSubmissionGrader(ItemVerdict.PENDING_MANUAL_GRADING);
 
     @Inject
     public ItemSubmissionGraderRegistry() {}

@@ -1,4 +1,4 @@
-package judgels.training.submission.programming;
+package judgels.contest.submission.programming;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -7,4 +7,4 @@ import java.lang.annotation.Retention;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface TrainingSubmissionClient {}
+public @interface ContestSubmitter {}

@@ -2,37 +2,37 @@ package judgels.training.account.registration;
 
 import jakarta.inject.Inject;
 import java.util.Optional;
-import judgels.persistence.dao.UserRegistrationEmailDao;
-import judgels.persistence.model.UserRegistrationEmailModel;
+import judgels.persistence.dao.AccountRegistrationEmailDao;
+import judgels.persistence.model.AccountRegistrationEmailModel;
 import judgels.user.RandomCodeGenerator;
 
 public class AccountRegistrationEmailStore {
-    private final UserRegistrationEmailDao userRegistrationEmailDao;
+    private final AccountRegistrationEmailDao accountRegistrationEmailDao;
 
     @Inject
-    public AccountRegistrationEmailStore(UserRegistrationEmailDao userRegistrationEmailDao) {
-        this.userRegistrationEmailDao = userRegistrationEmailDao;
+    public AccountRegistrationEmailStore(AccountRegistrationEmailDao accountRegistrationEmailDao) {
+        this.accountRegistrationEmailDao = accountRegistrationEmailDao;
     }
 
     public String generateEmailCode(String userJid) {
-        UserRegistrationEmailModel model = new UserRegistrationEmailModel();
+        AccountRegistrationEmailModel model = new AccountRegistrationEmailModel();
         model.userJid = userJid;
         model.emailCode = RandomCodeGenerator.newCode();
-        userRegistrationEmailDao.insert(model);
+        accountRegistrationEmailDao.insert(model);
         return model.emailCode;
     }
 
     public Optional<String> getEmailCode(String userJid) {
-        return userRegistrationEmailDao.selectByUserJid(userJid).map(model -> model.emailCode);
+        return accountRegistrationEmailDao.selectByUserJid(userJid).map(model -> model.emailCode);
     }
 
     public boolean verifyEmailCode(String emailCode) {
-        return userRegistrationEmailDao.selectByEmailCode(emailCode).flatMap(model -> {
+        return accountRegistrationEmailDao.selectByEmailCode(emailCode).flatMap(model -> {
             if (model.verified) {
                 return Optional.empty();
             }
             model.verified = true;
-            userRegistrationEmailDao.update(model);
+            accountRegistrationEmailDao.update(model);
             return Optional.of(true);
         }).isPresent();
     }

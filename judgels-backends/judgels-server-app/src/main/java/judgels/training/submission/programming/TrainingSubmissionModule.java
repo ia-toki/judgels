@@ -14,20 +14,20 @@ import judgels.core.JudgelsBaseDataDir;
 import judgels.core.JudgelsScheduler;
 import judgels.core.fs.FileSystem;
 import judgels.core.fs.local.LocalFileSystem;
-import judgels.core.messaging.MessageClient;
 import judgels.core.messaging.MessageListener;
+import judgels.core.messaging.MessageSender;
 import judgels.persistence.dao.TrainingProgrammingGradingDao;
 import judgels.persistence.dao.TrainingProgrammingSubmissionDao;
 import judgels.submission.programming.BaseSubmissionStore;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.submission.programming.GradingResponseProcessor;
 import judgels.submission.programming.NoOpSubmissionConsumer;
-import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionConsumer;
 import judgels.submission.programming.SubmissionRegradeProcessor;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.Submitter;
 import judgels.training.stats.StatsConfiguration;
 import judgels.training.stats.SubmissionStatsProcessor;
 import org.hibernate.SessionFactory;
@@ -69,21 +69,21 @@ public class TrainingSubmissionModule {
 
     @Provides
     @Singleton
-    @TrainingSubmissionClient
-    static SubmissionClient submissionClient(
+    @TrainingSubmitter
+    static Submitter submitter(
             SessionFactory sessionFactory,
             @TrainingSubmissionStore SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            MessageClient messageClient,
+            MessageSender messageSender,
             ObjectMapper mapper) {
 
-        return new SubmissionClient(
+        return new Submitter(
                 sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
                 gradingResponseQueueName + "-training",
-                messageClient,
+                messageSender,
                 mapper);
     }
 
@@ -94,13 +94,13 @@ public class TrainingSubmissionModule {
             JudgelsScheduler scheduler,
             @TrainingSubmissionStore SubmissionStore submissionStore,
             @TrainingSubmissionSourceBuilder SubmissionSourceBuilder submissionSourceBuilder,
-            @TrainingSubmissionClient SubmissionClient submissionClient) {
+            @TrainingSubmitter Submitter submitter) {
 
         ExecutorService executorService = scheduler.createExecutorService("training-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
-                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submitter));
     }
 
     @Provides

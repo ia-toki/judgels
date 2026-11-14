@@ -9,18 +9,18 @@ import judgels.setting.SettingStore;
 import judgels.user.UserStore;
 
 @Module
-public class AccountResetPasswordModule {
+public class AccountPasswordResetModule {
     @Provides
     @Singleton
     AccountPasswordResetter accountPasswordResetter(
             UserStore userStore,
-            AccountResetPasswordStore accountResetPasswordStore,
+            AccountPasswordResetStore accountPasswordResetStore,
             SettingStore settingStore,
             Optional<Mailer> mailer) {
 
         return new AccountPasswordResetter(
                 userStore,
-                accountResetPasswordStore,
-                new AccountResetPasswordMailer(mailer, settingStore));
+                accountPasswordResetStore,
+                new AccountPasswordResetMailer(mailer, settingStore));
     }
 }

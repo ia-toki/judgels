@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import judgels.api.catalog.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import judgels.catalog.problem.tag.ProblemTagStore;
 
 public class ProblemUpdater {

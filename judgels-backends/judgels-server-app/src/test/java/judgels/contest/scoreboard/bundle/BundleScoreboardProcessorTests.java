@@ -21,7 +21,7 @@ import judgels.api.contest.scoreboard.ScoreboardState;
 import judgels.api.profile.Profile;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.contest.scoreboard.ScoreboardProcessParams;
 import judgels.contest.scoreboard.ScoreboardProcessResult;
 import org.junit.jupiter.api.Nested;
@@ -77,7 +77,7 @@ public class BundleScoreboardProcessorTests {
                             .userJid("c1")
                             .problemJid("p2")
                             .grading(new Grading.Builder()
-                                    .verdict(Verdict.ACCEPTED)
+                                    .verdict(ItemVerdict.ACCEPTED)
                                     .score(4)
                                     .build())
                             .build(),
@@ -90,7 +90,7 @@ public class BundleScoreboardProcessorTests {
                             .userJid("c2")
                             .problemJid("p1")
                             .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
+                                    .verdict(ItemVerdict.WRONG_ANSWER)
                                     .score(-1)
                                     .build())
                             .build(),
@@ -103,7 +103,7 @@ public class BundleScoreboardProcessorTests {
                             .userJid("c1")
                             .problemJid("p2")
                             .grading(new Grading.Builder()
-                                    .verdict(Verdict.ACCEPTED)
+                                    .verdict(ItemVerdict.ACCEPTED)
                                     .score(4)
                                     .build())
                             .build(),
@@ -116,7 +116,7 @@ public class BundleScoreboardProcessorTests {
                             .userJid("c1")
                             .problemJid("p1")
                             .grading(new Grading.Builder()
-                                    .verdict(Verdict.WRONG_ANSWER)
+                                    .verdict(ItemVerdict.WRONG_ANSWER)
                                     .score(-1)
                                     .build())
                             .build()
@@ -164,7 +164,7 @@ public class BundleScoreboardProcessorTests {
                                 .userJid("c1")
                                 .problemJid("p1")
                                 .grading(new Grading.Builder()
-                                        .verdict(Verdict.ACCEPTED)
+                                        .verdict(ItemVerdict.ACCEPTED)
                                         .score(4)
                                         .build())
                                 .build(),
@@ -177,7 +177,7 @@ public class BundleScoreboardProcessorTests {
                                 .userJid("c2")
                                 .problemJid("p1")
                                 .grading(new Grading.Builder()
-                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .verdict(ItemVerdict.WRONG_ANSWER)
                                         .score(-1)
                                         .build())
                                 .build(),
@@ -190,7 +190,7 @@ public class BundleScoreboardProcessorTests {
                                 .userJid("c1")
                                 .problemJid("p2")
                                 .grading(new Grading.Builder()
-                                        .verdict(Verdict.ACCEPTED)
+                                        .verdict(ItemVerdict.ACCEPTED)
                                         .score(4)
                                         .build())
                                 .build()
@@ -235,7 +235,7 @@ public class BundleScoreboardProcessorTests {
                                 .userJid("c1")
                                 .problemJid("p1")
                                 .grading(new Grading.Builder()
-                                        .verdict(Verdict.ACCEPTED)
+                                        .verdict(ItemVerdict.ACCEPTED)
                                         .score(4)
                                         .build())
                                 .build(),
@@ -248,7 +248,7 @@ public class BundleScoreboardProcessorTests {
                                 .userJid("c2")
                                 .problemJid("p1")
                                 .grading(new Grading.Builder()
-                                        .verdict(Verdict.WRONG_ANSWER)
+                                        .verdict(ItemVerdict.WRONG_ANSWER)
                                         .score(4)
                                         .build())
                                 .build()

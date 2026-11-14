@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.catalog.problem.ProblemEditorial;
+import judgels.api.catalog.problem.editorial.ProblemEditorial;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.problem.BaseProblemStore;
 import judgels.catalog.problem.ProblemFs;

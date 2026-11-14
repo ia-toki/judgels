@@ -5,19 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Duration;
 import judgels.persistence.TestClock;
 import judgels.persistence.WithHibernateSession;
-import judgels.persistence.model.UserResetPasswordModel;
+import judgels.persistence.model.AccountPasswordResetModel;
 import judgels.training.BaseTrainingIntegrationTests;
 import judgels.training.TrainingIntegrationTestComponent;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@WithHibernateSession(models = {UserResetPasswordModel.class})
-public class AccountResetPasswordStoreIntegrationTests extends BaseTrainingIntegrationTests {
+@WithHibernateSession(models = {AccountPasswordResetModel.class})
+public class AccountPasswordResetStoreIntegrationTests extends BaseTrainingIntegrationTests {
     private static final String USER_JID = "userJid";
 
     private TestClock clock;
-    private AccountResetPasswordStore store;
+    private AccountPasswordResetStore store;
 
     @BeforeEach
     void setUpSession(SessionFactory sessionFactory) {
@@ -25,7 +25,7 @@ public class AccountResetPasswordStoreIntegrationTests extends BaseTrainingInteg
 
         TrainingIntegrationTestComponent component = createComponent(sessionFactory, clock);
 
-        store = component.accountResetPasswordStore();
+        store = component.accountPasswordResetStore();
     }
 
     @Test

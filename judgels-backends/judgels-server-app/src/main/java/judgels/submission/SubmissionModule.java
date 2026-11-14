@@ -13,20 +13,20 @@ import judgels.core.JudgelsBaseDataDir;
 import judgels.core.JudgelsScheduler;
 import judgels.core.fs.FileSystem;
 import judgels.core.fs.local.LocalFileSystem;
-import judgels.core.messaging.MessageClient;
 import judgels.core.messaging.MessageListener;
+import judgels.core.messaging.MessageSender;
 import judgels.persistence.dao.ProgrammingGradingDao;
 import judgels.persistence.dao.ProgrammingSubmissionDao;
 import judgels.submission.programming.BaseSubmissionStore;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.submission.programming.GradingResponseProcessor;
 import judgels.submission.programming.NoOpSubmissionConsumer;
-import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionConsumer;
 import judgels.submission.programming.SubmissionRegradeProcessor;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.Submitter;
 import org.hibernate.SessionFactory;
 
 @Module
@@ -57,20 +57,20 @@ public class SubmissionModule {
 
     @Provides
     @Singleton
-    static SubmissionClient submissionClient(
+    static Submitter submitter(
             SessionFactory sessionFactory,
             SubmissionStore submissionStore,
             @Named("gradingRequestQueueName") String gradingRequestQueueName,
             @Named("gradingResponseQueueName") String gradingResponseQueueName,
-            MessageClient messageClient,
+            MessageSender messageSender,
             ObjectMapper mapper) {
 
-        return new SubmissionClient(
+        return new Submitter(
                 sessionFactory,
                 submissionStore,
                 gradingRequestQueueName,
                 gradingResponseQueueName + "-problem",
-                messageClient,
+                messageSender,
                 mapper);
     }
 
@@ -80,13 +80,13 @@ public class SubmissionModule {
             JudgelsScheduler scheduler,
             SubmissionStore submissionStore,
             SubmissionSourceBuilder submissionSourceBuilder,
-            SubmissionClient submissionClient) {
+            Submitter submitter) {
 
         ExecutorService executorService = scheduler.createExecutorService("problem-submission-regrade-processor-%d", 5);
         return new SubmissionRegrader(
                 submissionStore,
                 executorService,
-                new SubmissionRegradeProcessor(submissionSourceBuilder, submissionClient));
+                new SubmissionRegradeProcessor(submissionSourceBuilder, submitter));
     }
 
     @Provides

@@ -1,6 +1,6 @@
 package judgels.api.submission.bundle;
 
-public enum Verdict {
+public enum ItemVerdict {
     PENDING_REGRADE,
     PENDING_MANUAL_GRADING,
     INTERNAL_ERROR,

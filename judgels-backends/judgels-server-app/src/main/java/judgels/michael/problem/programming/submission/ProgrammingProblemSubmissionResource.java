@@ -37,10 +37,10 @@ import judgels.michael.problem.programming.BaseProgrammingProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
 import judgels.session.Actor;
-import judgels.submission.programming.SubmissionClient;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
+import judgels.submission.programming.Submitter;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("/problems/programming/{problemId}/submissions")
@@ -49,7 +49,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
 
     @Inject protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
-    @Inject protected SubmissionClient submissionClient;
+    @Inject protected Submitter submitter;
     @Inject protected SubmissionRegrader submissionRegrader;
 
     @Inject public ProgrammingProblemSubmissionResource() {}
@@ -109,7 +109,7 @@ public class ProgrammingProblemSubmissionResource extends BaseProgrammingProblem
                 .gradingLanguageRestriction(gradingLanguageRestriction)
                 .gradingLastUpdateTime(gradingLastUpdateTime)
                 .build();
-        Submission submission = submissionClient.submit(data, source, config);
+        Submission submission = submitter.submit(data, source, config);
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 
         return redirect("/problems/programming/" + problemId + "/submissions");

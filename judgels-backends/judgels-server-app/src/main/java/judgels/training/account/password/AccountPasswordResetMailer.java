@@ -7,11 +7,11 @@ import judgels.api.user.User;
 import judgels.core.mailer.Mailer;
 import judgels.setting.SettingStore;
 
-public class AccountResetPasswordMailer {
+public class AccountPasswordResetMailer {
     private final Optional<Mailer> mailer;
     private final SettingStore settingStore;
 
-    public AccountResetPasswordMailer(Optional<Mailer> mailer, SettingStore settingStore) {
+    public AccountPasswordResetMailer(Optional<Mailer> mailer, SettingStore settingStore) {
         this.mailer = mailer;
         this.settingStore = settingStore;
     }
