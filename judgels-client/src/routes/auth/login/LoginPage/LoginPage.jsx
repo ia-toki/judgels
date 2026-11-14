@@ -26,7 +26,7 @@ export default function LoginPage() {
       password: data.password,
     });
     if (result.redirect) {
-      navigate({ to: result.redirect, search: { email: result.email } });
+      navigate({ to: result.redirect, state: { email: result.email } });
       return;
     }
     await afterLogin(result);
