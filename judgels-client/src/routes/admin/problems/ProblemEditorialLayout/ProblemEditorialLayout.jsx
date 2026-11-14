@@ -9,7 +9,7 @@ import { worldLanguageNamesMap } from '../../../../modules/api/worldLanguage';
 import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   createProblemEditorialMutationOptions,
-  problemEditorialExistsQueryOptions,
+  problemHasEditorialQueryOptions,
 } from '../../../../modules/queries/problemEditorial';
 import LanguageSelect from '../../catalog/LanguageSelect/LanguageSelect';
 
@@ -30,7 +30,7 @@ export default function ProblemEditorialLayout() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
-  const { data: editorialExists } = useSuspenseQuery(problemEditorialExistsQueryOptions(problemJid));
+  const { data: hasEditorial } = useSuspenseQuery(problemHasEditorialQueryOptions(problemJid));
 
   const createEditorialMutation = useMutation(createProblemEditorialMutationOptions(problemJid));
 
@@ -46,7 +46,7 @@ export default function ProblemEditorialLayout() {
   };
 
   // A problem has no editorial until one is created, and only then is there anything for the tabs to show.
-  if (!editorialExists) {
+  if (!hasEditorial) {
     return (
       <Flex flexDirection="column" gap={2}>
         <h4>Editorial</h4>

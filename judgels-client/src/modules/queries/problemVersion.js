@@ -24,7 +24,7 @@ export const problemVersionsQueryOptions = problemJid =>
     queryFn: () => problemVersionAPI.getVersions(getToken(), problemJid),
   });
 
-export const problemVersionLocalChangesExistQueryOptions = problemJid =>
+export const problemHasVersionLocalChangesQueryOptions = problemJid =>
   queryOptions({
     queryKey: ['problem', problemJid, 'versions', 'local', 'exists'],
     queryFn: () => problemVersionAPI.hasVersionLocalChanges(getToken(), problemJid),

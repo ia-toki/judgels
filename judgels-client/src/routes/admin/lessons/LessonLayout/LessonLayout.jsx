@@ -6,7 +6,7 @@ import { BreadcrumbTitle } from '../../../../components/BreadcrumbTitle/Breadcru
 import { ContentCard } from '../../../../components/ContentCard/ContentCard';
 import ContentWithTopbar from '../../../../components/ContentWithTopbar/ContentWithTopbar';
 import { lessonBySlugQueryOptions, lessonQueryOptions } from '../../../../modules/queries/lesson';
-import { lessonVersionLocalChangesExistQueryOptions } from '../../../../modules/queries/lessonVersion';
+import { lessonHasVersionLocalChangesQueryOptions } from '../../../../modules/queries/lessonVersion';
 
 export default function LessonLayout() {
   const { lessonSlug } = useParams({ strict: false });
@@ -17,7 +17,7 @@ export default function LessonLayout() {
 
   const { data: lesson } = useSuspenseQuery(lessonQueryOptions(lessonJid));
 
-  const { data: hasLocalChanges } = useSuspenseQuery(lessonVersionLocalChangesExistQueryOptions(lessonJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(lessonHasVersionLocalChangesQueryOptions(lessonJid));
 
   const topbarItems = [
     {

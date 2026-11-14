@@ -24,7 +24,7 @@ export const lessonVersionsQueryOptions = lessonJid =>
     queryFn: () => lessonVersionAPI.getVersions(getToken(), lessonJid),
   });
 
-export const lessonVersionLocalChangesExistQueryOptions = lessonJid =>
+export const lessonHasVersionLocalChangesQueryOptions = lessonJid =>
   queryOptions({
     queryKey: ['lesson', lessonJid, 'versions', 'local', 'exists'],
     queryFn: () => lessonVersionAPI.hasVersionLocalChanges(getToken(), lessonJid),

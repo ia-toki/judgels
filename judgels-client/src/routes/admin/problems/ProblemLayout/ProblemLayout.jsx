@@ -11,7 +11,7 @@ import {
   problemPermissionsQueryOptions,
   problemQueryOptions,
 } from '../../../../modules/queries/problem';
-import { problemVersionLocalChangesExistQueryOptions } from '../../../../modules/queries/problemVersion';
+import { problemHasVersionLocalChangesQueryOptions } from '../../../../modules/queries/problemVersion';
 
 export default function ProblemLayout() {
   const { problemSlug } = useParams({ strict: false });
@@ -26,7 +26,7 @@ export default function ProblemLayout() {
     data: { canManage },
   } = useSuspenseQuery(problemPermissionsQueryOptions(problemJid));
 
-  const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(problemHasVersionLocalChangesQueryOptions(problemJid));
 
   const topbarItems = [
     {

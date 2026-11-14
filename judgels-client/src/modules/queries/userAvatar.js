@@ -4,9 +4,9 @@ import { userAvatarAPI } from '../api/userAvatar';
 import { queryClient } from '../queryClient';
 import { getToken } from '../session';
 
-export const userAvatarExistsQueryOptions = userJid =>
+export const userHasAvatarQueryOptions = userJid =>
   queryOptions({
-    queryKey: ['user', userJid, 'avatar-exists'],
+    queryKey: ['user', userJid, 'avatar', 'exists'],
     queryFn: () => userAvatarAPI.hasAvatar(userJid),
   });
 
@@ -19,7 +19,7 @@ export const userAvatarUrlQueryOptions = userJid =>
 export const updateUserAvatarMutationOptions = userJid => ({
   mutationFn: file => userAvatarAPI.updateAvatar(getToken(), userJid, file),
   onSuccess: () => {
-    queryClient.invalidateQueries(userAvatarExistsQueryOptions(userJid));
+    queryClient.invalidateQueries(userHasAvatarQueryOptions(userJid));
     queryClient.invalidateQueries(userAvatarUrlQueryOptions(userJid));
   },
 });
@@ -27,7 +27,7 @@ export const updateUserAvatarMutationOptions = userJid => ({
 export const deleteUserAvatarMutationOptions = userJid => ({
   mutationFn: () => userAvatarAPI.deleteAvatar(getToken(), userJid),
   onSuccess: () => {
-    queryClient.invalidateQueries(userAvatarExistsQueryOptions(userJid));
+    queryClient.invalidateQueries(userHasAvatarQueryOptions(userJid));
     queryClient.invalidateQueries(userAvatarUrlQueryOptions(userJid));
   },
 });

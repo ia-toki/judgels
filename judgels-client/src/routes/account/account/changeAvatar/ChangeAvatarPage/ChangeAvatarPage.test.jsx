@@ -12,8 +12,8 @@ describe('ChangeAvatarPage', () => {
     setSession('token', { jid: 'JIDUSER1' });
   });
 
-  const renderComponent = async avatarExists => {
-    nockApi().get('/v2/users/JIDUSER1/avatar/exists').reply(200, avatarExists);
+  const renderComponent = async hasAvatar => {
+    nockApi().get('/v2/users/JIDUSER1/avatar/exists').reply(200, hasAvatar);
 
     await act(async () =>
       render(

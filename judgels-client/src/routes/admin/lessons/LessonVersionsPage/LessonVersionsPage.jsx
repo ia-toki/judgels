@@ -5,7 +5,7 @@ import { lessonBySlugQueryOptions } from '../../../../modules/queries/lesson';
 import {
   commitLessonVersionLocalChangesMutationOptions,
   discardLessonVersionLocalChangesMutationOptions,
-  lessonVersionLocalChangesExistQueryOptions,
+  lessonHasVersionLocalChangesQueryOptions,
   lessonVersionsQueryOptions,
   rebaseLessonVersionLocalChangesMutationOptions,
   restoreLessonVersionMutationOptions,
@@ -19,7 +19,7 @@ export default function LessonVersionsPage() {
     data: { jid: lessonJid },
   } = useSuspenseQuery(lessonBySlugQueryOptions(lessonSlug));
 
-  const { data: hasLocalChanges } = useSuspenseQuery(lessonVersionLocalChangesExistQueryOptions(lessonJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(lessonHasVersionLocalChangesQueryOptions(lessonJid));
 
   const {
     data: { data: versions, profilesMap },

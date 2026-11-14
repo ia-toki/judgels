@@ -7,8 +7,8 @@ import { LoadingState } from '../../../../../components/LoadingState/LoadingStat
 import {
   deleteUserAvatarMutationOptions,
   updateUserAvatarMutationOptions,
-  userAvatarExistsQueryOptions,
   userAvatarUrlQueryOptions,
+  userHasAvatarQueryOptions,
 } from '../../../../../modules/queries/userAvatar';
 import { useSession } from '../../../../../modules/session';
 import ChangeAvatarForm from './ChangeAvatarForm';
@@ -21,7 +21,7 @@ export default function ChangeAvatarPage() {
   const { user } = useSession();
   const userJid = user.jid;
 
-  const { data: avatarExists } = useQuery(userAvatarExistsQueryOptions(userJid));
+  const { data: hasAvatar } = useQuery(userHasAvatarQueryOptions(userJid));
   const { data: avatarUrl } = useQuery(userAvatarUrlQueryOptions(userJid));
 
   const deleteAvatarMutation = useMutation(deleteUserAvatarMutationOptions(userJid));
@@ -49,7 +49,7 @@ export default function ChangeAvatarPage() {
     return <LoadingState />;
   }
 
-  const currentAvatar = avatarExists && (
+  const currentAvatar = hasAvatar && (
     <Box className="change-avatar-panel__preview" flexGrow={1} marginBottom={4}>
       <h4>Current avatar</h4>
       <img src={avatarUrl} alt="avatar" />
