@@ -1,0 +1,155 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+
+import { setSession } from '../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../test/RouterWrapper';
+import { nockApi } from '../../../../../utils/nock';
+import GeneralSettingsPage from './GeneralSettingsPage';
+
+describe('GeneralSettingsPage', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  const settings = {
+    app: {
+      name: 'Judgels',
+      slogan: 'Programming Contest System',
+      announcement: 'Hi',
+      googleAnalyticsTrackingId: 'G-OLD',
+    },
+    home: { banner: 'Welcome' },
+    session: { disableLogout: false, maxConcurrentSessionsPerUser: 5 },
+  };
+
+  const renderComponent = async () => {
+    nockApi().get('/v2/settings').reply(200, settings);
+
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <GeneralSettingsPage />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+  };
+
+  test('details', async () => {
+    await renderComponent();
+
+    await screen.findByText('App');
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Session')).toBeInTheDocument();
+
+    expect(screen.getByText('Judgels')).toBeInTheDocument();
+    expect(screen.getByText('Programming Contest System')).toBeInTheDocument();
+    expect(screen.getByText('G-OLD')).toBeInTheDocument();
+    expect(screen.getByText('Welcome')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  test('disables the edit buttons of the other sections while one is being edited', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    expect(editButtons).toHaveLength(3);
+    editButtons.forEach(button => expect(button).toBeEnabled());
+
+    await user.click(editButtons[1]);
+
+    const otherEditButtons = screen.getAllByRole('button', { name: /edit/i });
+    expect(otherEditButtons).toHaveLength(2);
+    otherEditButtons.forEach(button => expect(button).toBeDisabled());
+
+    await user.click(screen.getByRole('button', { name: /cancel/i }));
+
+    const restoredEditButtons = screen.getAllByRole('button', { name: /edit/i });
+    expect(restoredEditButtons).toHaveLength(3);
+    restoredEditButtons.forEach(button => expect(button).toBeEnabled());
+  });
+
+  test('app form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[0]);
+
+    const name = screen.getByRole('textbox', { name: /name/i });
+    expect(name).toHaveValue('Judgels');
+    await user.clear(name);
+    await user.type(name, 'New Judge');
+
+    const trackingId = screen.getByRole('textbox', { name: /google analytics tracking id/i });
+    expect(trackingId).toHaveValue('G-OLD');
+    await user.clear(trackingId);
+    await user.type(trackingId, 'G-NEW');
+
+    nockApi()
+      .put('/v2/settings', {
+        app: {
+          name: 'New Judge',
+          slogan: 'Programming Contest System',
+          announcement: 'Hi',
+          googleAnalyticsTrackingId: 'G-NEW',
+        },
+      })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('home form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[1]);
+
+    const banner = screen.getByRole('textbox', { name: /banner/i });
+    expect(banner).toHaveValue('Welcome');
+    await user.clear(banner);
+    await user.type(banner, 'New banner');
+
+    nockApi()
+      .put('/v2/settings', { home: { banner: 'New banner' } })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('session form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[2]);
+
+    const maxSessions = screen.getByLabelText(/max concurrent sessions per user/i);
+    await user.clear(maxSessions);
+    await user.type(maxSessions, '10');
+
+    await user.click(screen.getByLabelText(/disable logout/i));
+
+    nockApi()
+      .put('/v2/settings', { session: { disableLogout: true, maxConcurrentSessionsPerUser: 10 } })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+});

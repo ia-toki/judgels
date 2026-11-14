@@ -5,7 +5,7 @@ import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import CursorPagination from '../../../../../components/CursorPagination/CursorPagination';
 import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
 import { profileSubmissionsQueryOptions } from '../../../../../modules/queries/trainingSubmission';
-import { SubmissionsTable } from '../SubmissionsTable/SubmissionsTable';
+import { SubmissionHistoryTable } from '../SubmissionHistoryTable/SubmissionHistoryTable';
 
 export default function SubmissionHistoryPage() {
   const { username } = useParams({ strict: false });
@@ -37,7 +37,7 @@ export default function SubmissionHistoryPage() {
     }
 
     return (
-      <SubmissionsTable
+      <SubmissionHistoryTable
         submissions={submissions.page}
         canManage={config.canManage}
         problemAliasesMap={problemAliasesMap}

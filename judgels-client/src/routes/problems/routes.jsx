@@ -43,7 +43,7 @@ export const createProblemsRoutes = appRoute => {
   const problemsProblemsRoute = createRoute({
     getParentRoute: () => problemsIndexRoute,
     path: '/',
-    component: lazyRouteComponent(retryImport(() => import('./problems/ProblemsPage/ProblemsPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./ProblemsPage/ProblemsPage'))),
     loader: ({ search = {} }) => {
       queryClient.prefetchQuery(trainingProblemsQueryOptions({ tags: search.tags, page: search.page }));
       queryClient.prefetchQuery(trainingProblemTagsQueryOptions());
@@ -210,7 +210,8 @@ export const createProblemsRoutes = appRoute => {
     path: 'all',
     component: lazyRouteComponent(
       retryImport(
-        () => import('./problemsets/single/problems/single/results/ProblemSubmissionsPage/ProblemSubmissionsPage')
+        () =>
+          import('./problemsets/single/problems/single/results/ProblemItemSubmissionsPage/ProblemItemSubmissionsPage')
       )
     ),
     loader: async ({ params: { problemSetSlug, problemAlias } }) => {

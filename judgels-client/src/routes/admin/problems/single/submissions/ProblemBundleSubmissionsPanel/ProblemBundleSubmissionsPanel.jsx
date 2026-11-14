@@ -1,0 +1,119 @@
+import { Button, HTMLTable } from '@blueprintjs/core';
+import { Refresh, Search } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
+
+import { ButtonLink } from '../../../../../../components/ButtonLink/ButtonLink';
+import { FormattedRelative } from '../../../../../../components/FormattedRelative/FormattedRelative';
+import { LoadingState } from '../../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../../components/Pagination/Pagination';
+import { RegradeAllButton } from '../../../../../../components/RegradeAllButton/RegradeAllButton';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import {
+  problemBundleSubmissionsQueryOptions,
+  regradeProblemBundleSubmissionMutationOptions,
+  regradeProblemBundleSubmissionsMutationOptions,
+} from '../../../../../../modules/queries/problemBundleSubmission';
+import { reallyConfirm } from '../../../../../../utils/confirmation';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
+
+const PAGE_SIZE = 20;
+
+export default function ProblemBundleSubmissionsPanel({ problem }) {
+  const location = useLocation();
+  const page = location.search.page;
+
+  const { data: response } = useQuery(problemBundleSubmissionsQueryOptions(problem.jid, { page }));
+
+  const regradeSubmissionMutation = useMutation(regradeProblemBundleSubmissionMutationOptions(problem.jid));
+  const regradeSubmissionsMutation = useMutation(regradeProblemBundleSubmissionsMutationOptions(problem.jid));
+
+  const regradeSubmission = submissionJid => {
+    regradeSubmissionMutation.mutate(submissionJid, {
+      onSuccess: () => toastActions.showSuccessToast('Submission regraded.'),
+    });
+  };
+
+  const regradeSubmissions = () => {
+    if (reallyConfirm('Regrade all submissions in all pages?')) {
+      regradeSubmissionsMutation.mutate(undefined, {
+        onSuccess: () => toastActions.showSuccessToast('Submissions regraded.'),
+      });
+    }
+  };
+
+  const renderSubmissions = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    const { data: submissions, profilesMap } = response;
+    if (submissions.page.length === 0) {
+      return (
+        <p>
+          <small>No submissions.</small>
+        </p>
+      );
+    }
+
+    return (
+      <HTMLTable striped className="table-list-condensed">
+        <thead>
+          <tr>
+            <th className="col-fit">ID</th>
+            <th>User</th>
+            <th className="col-fit">Score</th>
+            <th>Time</th>
+            <th className="col-fit" />
+          </tr>
+        </thead>
+        <tbody>
+          {submissions.page.map(submission => (
+            <tr key={submission.jid}>
+              <td className="col-fit">
+                {submission.id}
+                <>
+                  &nbsp;&nbsp;&nbsp;
+                  <Button
+                    small
+                    minimal
+                    icon={<Refresh title={`Regrade submission ${submission.id}`} />}
+                    aria-label={`Regrade submission ${submission.id}`}
+                    onClick={() => regradeSubmission(submission.jid)}
+                  />
+                </>
+              </td>
+              <td>
+                <UserRef profile={profilesMap[submission.authorJid]} />
+              </td>
+              <td className="col-fit">{submission.latestGrading.score}</td>
+              <td>
+                <FormattedRelative value={submission.time} />
+              </td>
+              <td className="col-fit">
+                <ButtonLink small minimal to={`/admin/problems/${problem.slug}/submissions/${submission.id}`}>
+                  <Search title={`View submission ${submission.id}`} />
+                </ButtonLink>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </HTMLTable>
+    );
+  };
+
+  return (
+    <Flex flexDirection="column" gap={2}>
+      <h4>Submissions</h4>
+      {response?.data.totalCount > 0 && (
+        <Flex>
+          <RegradeAllButton onRegradeAll={regradeSubmissions} />
+        </Flex>
+      )}
+      {renderSubmissions()}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </Flex>
+  );
+}
