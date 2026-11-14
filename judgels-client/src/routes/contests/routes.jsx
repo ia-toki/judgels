@@ -67,9 +67,7 @@ export const createContestsRoutes = appRoute => {
   const contestSettingsRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'settings',
-    component: lazyRouteComponent(
-      retryImport(() => import('./single/settings/ContestSettingsLayout/ContestSettingsLayout'))
-    ),
+    component: lazyRouteComponent(retryImport(() => import('./single/settings/ContestSettingsLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Settings') }] }),
   });
 
