@@ -9,28 +9,28 @@ public class AccountPasswordResetter {
     private static final Duration FORGOT_PASSWORD_EXPIRATION = Duration.ofHours(1);
 
     private final UserStore userStore;
-    private final AccountResetPasswordStore accountResetPasswordStore;
-    private final AccountResetPasswordMailer accountResetPasswordMailer;
+    private final AccountPasswordResetStore accountPasswordResetStore;
+    private final AccountPasswordResetMailer accountPasswordResetMailer;
 
     public AccountPasswordResetter(
             UserStore userStore,
-            AccountResetPasswordStore accountResetPasswordStore,
-            AccountResetPasswordMailer accountResetPasswordMailer) {
+            AccountPasswordResetStore accountPasswordResetStore,
+            AccountPasswordResetMailer accountPasswordResetMailer) {
 
         this.userStore = userStore;
-        this.accountResetPasswordStore = accountResetPasswordStore;
-        this.accountResetPasswordMailer = accountResetPasswordMailer;
+        this.accountPasswordResetStore = accountPasswordResetStore;
+        this.accountPasswordResetMailer = accountPasswordResetMailer;
     }
 
     public void request(User user, String email) {
-        String emailCode = accountResetPasswordStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
-        accountResetPasswordMailer.sendRequestEmail(user, email, emailCode);
+        String emailCode = accountPasswordResetStore.generateEmailCode(user.getJid(), FORGOT_PASSWORD_EXPIRATION);
+        accountPasswordResetMailer.sendRequestEmail(user, email, emailCode);
     }
 
     public void reset(AccountPasswordResetData data) {
         String emailCode = data.getEmailCode();
 
-        String userJid = accountResetPasswordStore.consumeEmailCode(emailCode, FORGOT_PASSWORD_EXPIRATION)
+        String userJid = accountPasswordResetStore.consumeEmailCode(emailCode, FORGOT_PASSWORD_EXPIRATION)
                 .orElseThrow(IllegalArgumentException::new);
         User user = userStore.getUserByJid(userJid)
                 .orElseThrow(IllegalStateException::new);
@@ -39,6 +39,6 @@ public class AccountPasswordResetter {
 
         userStore.updateUserPassword(user.getJid(), data.getNewPassword());
 
-        accountResetPasswordMailer.sendResetEmail(user, email);
+        accountPasswordResetMailer.sendResetEmail(user, email);
     }
 }

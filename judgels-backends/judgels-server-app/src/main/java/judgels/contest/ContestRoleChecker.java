@@ -2,7 +2,7 @@ package judgels.contest;
 
 import jakarta.inject.Inject;
 import judgels.api.contest.Contest;
-import judgels.api.contest.role.ContestRole;
+import judgels.api.contest.ContestRole;
 import judgels.persistence.dao.ContestRoleDao;
 import judgels.user.role.ContestAdminRoleChecker;
 

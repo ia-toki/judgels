@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.grading.api.Verdict;
 import judgels.persistence.dao.ChapterProblemDao;
 import judgels.persistence.dao.StatsUserProblemDao;
@@ -43,7 +44,7 @@ public class ItemSubmissionStatsProcessor implements ItemSubmissionConsumer {
 
         Verdict newVerdict = Verdict.ACCEPTED;
         for (Optional<Grading> grading : itemGradingsMap.values()) {
-            if (grading.isEmpty() || grading.get().getVerdict() != judgels.api.submission.bundle.Verdict.ACCEPTED) {
+            if (grading.isEmpty() || grading.get().getVerdict() != ItemVerdict.ACCEPTED) {
                 newVerdict = Verdict.WRONG_ANSWER;
                 break;
             }

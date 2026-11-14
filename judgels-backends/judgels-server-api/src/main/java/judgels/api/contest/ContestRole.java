@@ -1,4 +1,4 @@
-package judgels.api.contest.role;
+package judgels.api.contest;
 
 public enum ContestRole {
     ADMIN,

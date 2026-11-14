@@ -2,7 +2,7 @@ package judgels.persistence.dao;
 
 import jakarta.inject.Inject;
 import java.util.List;
-import judgels.api.catalog.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import judgels.persistence.DaoData;
 import judgels.persistence.UnmodifiableDao;
 import judgels.persistence.UnmodifiableModel_;

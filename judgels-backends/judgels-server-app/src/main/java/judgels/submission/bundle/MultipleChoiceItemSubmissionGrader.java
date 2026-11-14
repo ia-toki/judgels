@@ -4,7 +4,7 @@ import java.util.Optional;
 import judgels.api.catalog.problem.bundle.Item;
 import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
 import judgels.api.submission.bundle.Grading;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
         } catch (RuntimeException e) {
             LOGGER.error("Internal error grading item submission", e);
             return new Grading.Builder()
-                    .verdict(Verdict.INTERNAL_ERROR)
+                    .verdict(ItemVerdict.INTERNAL_ERROR)
                     .score(Optional.empty())
                     .build();
         }
@@ -27,7 +27,7 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
         boolean noCorrectChoice = config.getChoices().stream().noneMatch(c -> c.getIsCorrect().orElse(false));
         if (noCorrectChoice) {
             return new Grading.Builder()
-                    .verdict(Verdict.PENDING_MANUAL_GRADING)
+                    .verdict(ItemVerdict.PENDING_MANUAL_GRADING)
                     .score(Optional.empty())
                     .build();
         }
@@ -38,12 +38,12 @@ public class MultipleChoiceItemSubmissionGrader implements ItemSubmissionGrader 
 
         if (matchingChoice.isPresent() && matchingChoice.get().getIsCorrect().orElse(false)) {
             return new Grading.Builder()
-                    .verdict(Verdict.ACCEPTED)
+                    .verdict(ItemVerdict.ACCEPTED)
                     .score(Optional.of(config.getScore()))
                     .build();
         } else {
             return new Grading.Builder()
-                    .verdict(Verdict.WRONG_ANSWER)
+                    .verdict(ItemVerdict.WRONG_ANSWER)
                     .score(Optional.of(config.getPenalty()))
                     .build();
         }

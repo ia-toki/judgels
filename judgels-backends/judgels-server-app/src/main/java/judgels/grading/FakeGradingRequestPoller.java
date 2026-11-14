@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ThreadPoolExecutor;
 import judgels.core.JudgelsObjectMappers;
-import judgels.core.messaging.MessageClient;
 import judgels.core.messaging.MessageListener;
+import judgels.core.messaging.MessageSender;
 import judgels.core.messaging.api.Message;
 import judgels.grading.api.GradingRequest;
 import judgels.grading.api.GradingResponse;
@@ -21,7 +21,7 @@ public class FakeGradingRequestPoller implements Managed {
     private static final Logger LOGGER = LoggerFactory.getLogger(FakeGradingRequestPoller.class);
 
     private final MessageListener messageListener;
-    private final MessageClient messageClient;
+    private final MessageSender messageSender;
     private final String queueName;
     private final ThreadPoolExecutor executorService;
     private final Path baseDataDir;
@@ -29,14 +29,14 @@ public class FakeGradingRequestPoller implements Managed {
 
     public FakeGradingRequestPoller(
             MessageListener messageListener,
-            MessageClient messageClient,
+            MessageSender messageSender,
             String queueName,
             ThreadPoolExecutor executorService,
             Path baseDataDir,
             FakeGrader grader) {
 
         this.messageListener = messageListener;
-        this.messageClient = messageClient;
+        this.messageSender = messageSender;
         this.queueName = queueName;
         this.executorService = executorService;
         this.baseDataDir = baseDataDir;
@@ -63,7 +63,7 @@ public class FakeGradingRequestPoller implements Managed {
             GradingRequest request = MAPPER.readValue(message.getContent(), GradingRequest.class);
             GradingResponse response = grader.grade(request, readGradingEngine(request.getProblemJid()));
 
-            messageClient.sendMessage(
+            messageSender.sendMessage(
                     queueName,
                     message.getSourceQueueName(),
                     GradingResponse.class.getSimpleName(),

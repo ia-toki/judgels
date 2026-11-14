@@ -16,7 +16,7 @@ import judgels.api.contest.submission.bundle.ContestSubmissionSummaryResponse;
 import judgels.api.submission.bundle.Grading;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.client.ContestItemSubmissionClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -170,7 +170,6 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getGrading()).isEmpty();
         assertThat(itemSubmissionResult.getTime()).isAfter(Instant.EPOCH);
 
-
         params2 = new ContestItemSubmissionClient.GetLatestItemSubmissionsParams();
         params2.username = CONTESTANT;
         answersMap = submissionClient.getLatestItemSubmissions(contestantToken, contest.getJid(), PROBLEM_3_ALIAS, params2);
@@ -252,7 +251,7 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("b");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(-1).build());
+                new Grading.Builder().verdict(ItemVerdict.WRONG_ANSWER).score(-1).build());
 
         submissionClient.createItemSubmission(contestantToken, new ItemSubmissionData.Builder()
                 .containerJid(contest.getJid())
@@ -304,14 +303,14 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0).build());
+                new Grading.Builder().verdict(ItemVerdict.WRONG_ANSWER).score(0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get(item3Jid);
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo(item3Jid);
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4).build());
+                new Grading.Builder().verdict(ItemVerdict.ACCEPTED).score(4).build());
 
         submissionClient.createItemSubmission(contestantToken, new ItemSubmissionData.Builder()
                 .containerJid(contest.getJid())
@@ -358,27 +357,27 @@ class ContestItemSubmissionApiIntegrationTests extends BaseContestApiIntegration
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.WRONG_ANSWER).score(0.0).build());
+                new Grading.Builder().verdict(ItemVerdict.WRONG_ANSWER).score(0.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get(item3Jid);
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo(item3Jid);
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("a");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
+                new Grading.Builder().verdict(ItemVerdict.ACCEPTED).score(4.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get(item4Jid);
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo(item4Jid);
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("123");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.ACCEPTED).score(4.0).build());
+                new Grading.Builder().verdict(ItemVerdict.ACCEPTED).score(4.0).build());
 
         itemSubmissionResult = summaryResult.getSubmissionsByItemJid().get(item5Jid);
         assertThat(itemSubmissionResult.getItemJid()).isEqualTo(item5Jid);
         assertThat(itemSubmissionResult.getJid()).isNotEmpty();
         assertThat(itemSubmissionResult.getAnswer()).isEqualTo("print('hello world!')");
         assertThat(itemSubmissionResult.getGrading().get()).isEqualTo(
-                new Grading.Builder().verdict(Verdict.PENDING_MANUAL_GRADING).build());
+                new Grading.Builder().verdict(ItemVerdict.PENDING_MANUAL_GRADING).build());
     }
 }

@@ -7,7 +7,7 @@ import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.submission.bundle.Grading;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -90,19 +90,19 @@ public class ShortAnswerItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem1, "123");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
         assertThat(grading.getScore()).contains(1.0);
 
         grading = grader.grade(testItem2, "2,-2");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
         assertThat(grading.getScore()).contains(4.0);
 
         grading = grader.grade(testItem2, "-2,2");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
         assertThat(grading.getScore()).contains(4.0);
 
         grading = grader.grade(testItem2, "-2,2,");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
         assertThat(grading.getScore()).contains(4.0);
     }
 
@@ -112,43 +112,43 @@ public class ShortAnswerItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem1, "99");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "124");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "1234");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem1, "1123");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(0.0);
 
         grading = grader.grade(testItem2, "2");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "-2");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "2,2");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "2,");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "-2,");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem2, "c");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
     }
 
@@ -158,11 +158,11 @@ public class ShortAnswerItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem3, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.INTERNAL_ERROR);
         assertThat(grading.getScore()).isEmpty();
 
         grading = grader.grade(testItem4, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.INTERNAL_ERROR);
         assertThat(grading.getScore()).isEmpty();
     }
 
@@ -172,7 +172,7 @@ public class ShortAnswerItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem5, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
 }

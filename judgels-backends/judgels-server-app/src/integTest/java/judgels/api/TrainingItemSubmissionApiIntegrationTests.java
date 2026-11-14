@@ -10,7 +10,7 @@ import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
 import judgels.api.catalog.problem.bundle.ShortAnswerItemConfig;
 import judgels.api.submission.bundle.ItemSubmission;
 import judgels.api.submission.bundle.ItemSubmissionData;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import judgels.api.training.archive.ArchiveCreateData;
 import judgels.api.training.problemset.ProblemSet;
 import judgels.api.training.problemset.ProblemSetCreateData;
@@ -86,7 +86,7 @@ class TrainingItemSubmissionApiIntegrationTests extends BaseTrainingApiIntegrati
         assertThat(submission.getUserJid()).isEqualTo(userA.getJid());
         assertThat(submission.getItemJid()).isEqualTo(item1Jid);
         assertThat(submission.getAnswer()).isEqualTo("a");
-        assertThat(submission.getGrading().get().getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(submission.getGrading().get().getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
 
         var params = new TrainingItemSubmissionClient.GetItemSubmissionsParams();
         params.username = USER_B;

@@ -1,4 +1,4 @@
-package judgels.training.account;
+package judgels.training.account.registration;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static judgels.core.JudgelsRequestChecks.checkFound;
@@ -15,7 +15,6 @@ import judgels.api.training.account.registration.AccountRegistrationData;
 import judgels.api.training.account.registration.GoogleAccountRegistrationData;
 import judgels.api.user.User;
 import judgels.setting.TrainingAccountChecker;
-import judgels.training.account.registration.AccountRegisterer;
 import judgels.user.UserStore;
 
 @Path("/api/v4/account/registration")

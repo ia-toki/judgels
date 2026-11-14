@@ -8,22 +8,22 @@ import judgels.grading.api.SubmissionSource;
 
 public class SubmissionRegradeProcessor {
     private final SubmissionSourceBuilder submissionSourceBuilder;
-    private final SubmissionClient submissionClient;
+    private final Submitter submitter;
 
     @Inject
     public SubmissionRegradeProcessor(
             SubmissionSourceBuilder submissionSourceBuilder,
-            SubmissionClient submissionClient) {
+            Submitter submitter) {
 
         this.submissionSourceBuilder = submissionSourceBuilder;
-        this.submissionClient = submissionClient;
+        this.submitter = submitter;
     }
 
     public void process(Map<String, Submission> submissionsMap, Map<String, ProblemSubmissionConfig> configsMap) {
         submissionsMap.forEach((gradingJid, submission) -> {
             SubmissionSource source = submissionSourceBuilder.fromPastSubmission(submission.getJid());
             ProblemSubmissionConfig config = configsMap.get(submission.getProblemJid());
-            submissionClient.regrade(gradingJid, submission, source, config);
+            submitter.regrade(gradingJid, submission, source, config);
         });
     }
 }

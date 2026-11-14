@@ -13,19 +13,19 @@ import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
+import judgels.persistence.dao.AccountRegistrationEmailDao;
 import judgels.persistence.dao.UserDao;
-import judgels.persistence.dao.UserRegistrationEmailDao;
 import judgels.persistence.model.UserModel;
 import judgels.persistence.model.UserModel_;
 
 public class UserStore {
     private final UserDao userDao;
-    private final UserRegistrationEmailDao userRegistrationEmailDao;
+    private final AccountRegistrationEmailDao accountRegistrationEmailDao;
 
     @Inject
-    public UserStore(UserDao userDao, UserRegistrationEmailDao userRegistrationEmailDao) {
+    public UserStore(UserDao userDao, AccountRegistrationEmailDao accountRegistrationEmailDao) {
         this.userDao = userDao;
-        this.userRegistrationEmailDao = userRegistrationEmailDao;
+        this.accountRegistrationEmailDao = accountRegistrationEmailDao;
     }
 
     public User createUser(UserData userData) {
@@ -85,7 +85,7 @@ public class UserStore {
     // A user who registered must activate their account by email before logging in.
     // A user created any other way, e.g. by an admin, has nothing to activate.
     public boolean isUserActivated(String userJid) {
-        return userRegistrationEmailDao.selectByUserJid(userJid)
+        return accountRegistrationEmailDao.selectByUserJid(userJid)
                 .map(model -> model.verified)
                 .orElse(true);
     }

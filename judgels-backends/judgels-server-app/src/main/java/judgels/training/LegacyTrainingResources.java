@@ -8,6 +8,7 @@ import judgels.training.stats.TrainingUserStatsResource;
 import judgels.training.submission.bundle.TrainingItemSubmissionResource;
 import judgels.training.submission.programming.TrainingSubmissionResource;
 
+// Deprecated: The old /api/v2 paths of the training-wide endpoints, now under /api/v4/training. Removed after 4.0.
 public final class LegacyTrainingResources {
     private LegacyTrainingResources() {}
 

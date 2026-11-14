@@ -28,17 +28,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import judgels.api.catalog.problem.ProblemEditorialInfo;
 import judgels.api.catalog.problem.ProblemInfo;
 import judgels.api.catalog.problem.ProblemMetadata;
 import judgels.api.catalog.problem.ProblemType;
+import judgels.api.catalog.problem.editorial.ProblemEditorialInfo;
 import judgels.api.contest.ContestInfo;
 import judgels.api.profile.Profile;
 import judgels.api.training.problemset.ProblemSetErrors;
-import judgels.api.training.problemset.problem.ProblemEditorialResponse;
-import judgels.api.training.problemset.problem.ProblemReportResponse;
 import judgels.api.training.problemset.problem.ProblemSetProblem;
 import judgels.api.training.problemset.problem.ProblemSetProblemData;
+import judgels.api.training.problemset.problem.ProblemSetProblemEditorialResponse;
+import judgels.api.training.problemset.problem.ProblemSetProblemReportResponse;
 import judgels.api.training.problemset.problem.ProblemSetProblemWorksheet;
 import judgels.api.training.problemset.problem.ProblemSetProblemsResponse;
 import judgels.api.training.stats.ProblemDifficulty;
@@ -163,7 +163,7 @@ public class ProblemSetProblemResource {
     @Path("/{problemAlias}/report")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemReportResponse getProblemReport(
+    public ProblemSetProblemReportResponse getProblemReport(
             @HeaderParam(AUTHORIZATION) Optional<AuthHeader> authHeader,
             @PathParam("problemSetJid") String problemSetJid,
             @PathParam("problemAlias") String problemAlias) {
@@ -193,7 +193,7 @@ public class ProblemSetProblemResource {
         topStats.getTopUsersByMemory().forEach(e -> userJids.add(e.getUserJid()));
         Map<String, Profile> profilesMap = profileStore.getProfiles(userJids);
 
-        return new ProblemReportResponse.Builder()
+        return new ProblemSetProblemReportResponse.Builder()
                 .metadata(metadata)
                 .difficulty(difficulty)
                 .topStats(topStats)
@@ -207,7 +207,7 @@ public class ProblemSetProblemResource {
     @Path("/{problemAlias}/editorial")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public ProblemEditorialResponse getProblemEditorial(
+    public ProblemSetProblemEditorialResponse getProblemEditorial(
             @Context HttpServletRequest req,
             @Context UriInfo uriInfo,
             @PathParam("problemSetJid") String problemSetJid,
@@ -218,7 +218,7 @@ public class ProblemSetProblemResource {
 
         ProblemSetProblem problem = checkFound(problemStore.getProblemByAlias(problemSetJid, problemAlias));
         ProblemEditorialInfo editorial = checkFound(problemService.getProblemEditorial(req, uriInfo, problem.getProblemJid(), language));
-        return new ProblemEditorialResponse.Builder()
+        return new ProblemSetProblemEditorialResponse.Builder()
                 .editorial(editorial)
                 .build();
     }

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import judgels.api.catalog.problem.Problem;
-import judgels.api.catalog.problem.ProblemEditorial;
+import judgels.api.catalog.problem.editorial.ProblemEditorial;
 import judgels.catalog.StatementLanguageStatus;
 import judgels.catalog.WorldLanguageRegistry;
 import judgels.core.JudgelsResponseBuilders;

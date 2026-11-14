@@ -28,15 +28,15 @@ import judgels.michael.problem.bundle.BaseBundleProblemResource;
 import judgels.michael.template.HtmlTemplate;
 import judgels.persistence.api.Page;
 import judgels.session.Actor;
-import judgels.submission.bundle.BundleSubmissionClient;
 import judgels.submission.bundle.BundleSubmissionStore;
+import judgels.submission.bundle.BundleSubmitter;
 
 @Path("/problems/bundle/{problemId}/submissions")
 public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
     private static final int PAGE_SIZE = 20;
 
     @Inject protected BundleSubmissionStore submissionStore;
-    @Inject protected BundleSubmissionClient submissionClient;
+    @Inject protected BundleSubmitter bundleSubmitter;
 
     @Inject BundleProblemSubmissionResource() {}
 
@@ -77,8 +77,8 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         Set<String> enabledLanguages = statementStore.getStatementEnabledLanguages(actor.getUserJid(), problem.getJid());
         String language = resolveStatementLanguage(req, actor, problem, enabledLanguages);
 
-        BundleAnswer answer = submissionClient.createBundleAnswerFromNewSubmission(form, language);
-        submissionClient.submit(problem.getJid(), answer);
+        BundleAnswer answer = bundleSubmitter.createBundleAnswerFromNewSubmission(form, language);
+        bundleSubmitter.submit(problem.getJid(), answer);
 
         return redirect("/problems/bundle/" + problemId + "/submissions");
     }
@@ -96,7 +96,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
             if (submissions.isEmpty()) {
                 break;
             }
-            submissionClient.regradeSubmissions(submissions);
+            bundleSubmitter.regradeSubmissions(submissions);
         }
 
         return redirect("/problems/bundle/" + problemId + "/submissions");
@@ -115,7 +115,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         checkAllowed(roleChecker.canView(actor, problem));
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
-        BundleAnswer answer = submissionClient.createBundleAnswerFromPastSubmission(submission.getJid());
+        BundleAnswer answer = bundleSubmitter.createBundleAnswerFromPastSubmission(submission.getJid());
         Profile profile = profileStore.getProfile(submission.getAuthorJid());
 
         HtmlTemplate template = newProblemSubmissionTemplate(actor, problem);
@@ -135,7 +135,7 @@ public class BundleProblemSubmissionResource extends BaseBundleProblemResource {
         checkAllowed(roleChecker.canEdit(actor, problem));
 
         BundleSubmission submission = checkFound(submissionStore.getSubmissionById(submissionId));
-        submissionClient.regradeSubmission(submission);
+        bundleSubmitter.regradeSubmission(submission);
 
         return redirect("/problems/bundle/" + problemId + "/submissions");
     }

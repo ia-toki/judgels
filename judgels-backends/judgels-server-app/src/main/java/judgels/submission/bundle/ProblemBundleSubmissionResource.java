@@ -46,7 +46,7 @@ public class ProblemBundleSubmissionResource {
     @Inject protected ProblemStore problemStore;
     @Inject protected ProblemStatementStore statementStore;
     @Inject protected BundleSubmissionStore submissionStore;
-    @Inject protected BundleSubmissionClient submissionClient;
+    @Inject protected BundleSubmitter bundleSubmitter;
     @Inject protected ProfileStore profileStore;
 
     @Inject public ProblemBundleSubmissionResource() {}
@@ -90,7 +90,7 @@ public class ProblemBundleSubmissionResource {
 
         return new ProblemBundleSubmissionWithAnswerResponse.Builder()
                 .data(submission)
-                .answer(submissionClient.createBundleAnswerFromPastSubmission(submission.getJid()))
+                .answer(bundleSubmitter.createBundleAnswerFromPastSubmission(submission.getJid()))
                 .profile(checkFound(Optional.ofNullable(profileStore.getProfile(submission.getAuthorJid()))))
                 .build();
     }
@@ -117,7 +117,7 @@ public class ProblemBundleSubmissionResource {
                 .languageCode(data.getLanguageCode())
                 .build();
 
-        submissionClient.submit(problemJid, answer);
+        bundleSubmitter.submit(problemJid, answer);
     }
 
     @POST
@@ -132,7 +132,7 @@ public class ProblemBundleSubmissionResource {
         Problem problem = checkFoundBundle(problemJid);
         checkAllowed(roleChecker.canEdit(actorJid, problem));
 
-        submissionClient.regradeSubmission(
+        bundleSubmitter.regradeSubmission(
                 checkFoundInProblem(submissionStore.getSubmissionByJid(submissionJid), problemJid));
     }
 
@@ -152,7 +152,7 @@ public class ProblemBundleSubmissionResource {
             if (submissions.isEmpty()) {
                 break;
             }
-            submissionClient.regradeSubmissions(submissions);
+            bundleSubmitter.regradeSubmissions(submissions);
         }
     }
 

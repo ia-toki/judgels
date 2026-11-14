@@ -9,7 +9,7 @@ import judgels.persistence.Model;
 @SuppressWarnings("checkstyle:visibilitymodifier")
 @Entity(name = "jophiel_user_reset_password")
 @Table(indexes = {@Index(columnList = "userJid")})
-public class UserResetPasswordModel extends Model {
+public class AccountPasswordResetModel extends Model {
     @Column(nullable = false)
     public String userJid;
 

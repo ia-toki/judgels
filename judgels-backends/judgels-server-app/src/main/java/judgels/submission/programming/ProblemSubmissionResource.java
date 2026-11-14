@@ -52,7 +52,7 @@ public class ProblemSubmissionResource {
     @Inject protected ProgrammingProblemStore programmingProblemStore;
     @Inject protected SubmissionStore submissionStore;
     @Inject protected SubmissionSourceBuilder submissionSourceBuilder;
-    @Inject protected SubmissionClient submissionClient;
+    @Inject protected Submitter submitter;
     @Inject protected SubmissionRegrader submissionRegrader;
     @Inject protected ProfileStore profileStore;
 
@@ -143,7 +143,7 @@ public class ProblemSubmissionResource {
                 .build();
         SubmissionSource source = submissionSourceBuilder.fromNewSubmission(parts);
         ProblemSubmissionConfig config = programmingProblemStore.getProgrammingProblemSubmissionConfig(problemJid);
-        Submission submission = submissionClient.submit(data, source, config);
+        Submission submission = submitter.submit(data, source, config);
 
         submissionSourceBuilder.storeSubmissionSource(submission.getJid(), source);
 

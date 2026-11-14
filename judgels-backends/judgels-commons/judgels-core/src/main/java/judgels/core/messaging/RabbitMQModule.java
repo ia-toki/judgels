@@ -30,8 +30,8 @@ public class RabbitMQModule {
 
     @Provides
     @Singleton
-    MessageClient messageClient(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
-        return new MessageClient(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty(), fakeRabbitMQ);
+    MessageSender messageSender(ObjectMapper objectMapper, RabbitMQ rabbitMQ) {
+        return new MessageSender(objectMapper, enabled ? Optional.of(rabbitMQ) : Optional.empty(), fakeRabbitMQ);
     }
 
     @Provides

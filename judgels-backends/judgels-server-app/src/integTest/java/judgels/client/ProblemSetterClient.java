@@ -5,7 +5,7 @@ import feign.Param;
 import feign.RequestLine;
 import java.util.List;
 import java.util.Map;
-import judgels.api.catalog.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import judgels.api.catalog.problem.setter.ProblemSettersResponse;
 
 public interface ProblemSetterClient {

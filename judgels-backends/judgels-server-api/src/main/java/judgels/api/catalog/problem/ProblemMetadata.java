@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import org.immutables.value.Value;
 
 @Value.Immutable

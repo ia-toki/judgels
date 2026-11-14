@@ -11,14 +11,14 @@ import judgels.core.messaging.api.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MessageClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageClient.class);
+public class MessageSender {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
 
     private final ObjectMapper objectMapper;
     private final Optional<RabbitMQ> rabbitMQ;
     private final FakeRabbitMQ fakeRabbitMQ;
 
-    public MessageClient(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ, FakeRabbitMQ fakeRabbitMQ) {
+    public MessageSender(ObjectMapper objectMapper, Optional<RabbitMQ> rabbitMQ, FakeRabbitMQ fakeRabbitMQ) {
         this.objectMapper = objectMapper;
         this.rabbitMQ = rabbitMQ;
         this.fakeRabbitMQ = fakeRabbitMQ;

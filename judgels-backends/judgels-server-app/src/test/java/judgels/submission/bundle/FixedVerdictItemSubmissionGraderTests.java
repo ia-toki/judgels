@@ -6,7 +6,7 @@ import judgels.api.catalog.problem.bundle.Item;
 import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.submission.bundle.Grading;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,10 +25,10 @@ public class FixedVerdictItemSubmissionGraderTests {
 
     @Test
     void pending_manual_grading() {
-        FixedVerdictItemSubmissionGrader grader = new FixedVerdictItemSubmissionGrader(Verdict.PENDING_MANUAL_GRADING);
+        FixedVerdictItemSubmissionGrader grader = new FixedVerdictItemSubmissionGrader(ItemVerdict.PENDING_MANUAL_GRADING);
 
         Grading grading = grader.grade(item, "any answer");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
 }

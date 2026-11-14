@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 import judgels.BaseJudgelsApiIntegrationTests;
-import judgels.api.catalog.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import judgels.api.catalog.problem.setter.ProblemSettersResponse;
 import judgels.api.user.User;
 import judgels.client.ProblemSetterClient;

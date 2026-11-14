@@ -2,7 +2,6 @@ package judgels.api.contest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
-import judgels.api.contest.role.ContestRole;
 import judgels.persistence.api.Page;
 import org.immutables.value.Value;
 

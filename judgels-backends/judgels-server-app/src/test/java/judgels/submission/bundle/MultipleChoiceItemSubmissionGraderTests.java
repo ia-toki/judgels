@@ -7,7 +7,7 @@ import judgels.api.catalog.problem.bundle.ItemType;
 import judgels.api.catalog.problem.bundle.MultipleChoiceItemConfig;
 import judgels.api.catalog.problem.bundle.StatementItemConfig;
 import judgels.api.submission.bundle.Grading;
-import judgels.api.submission.bundle.Verdict;
+import judgels.api.submission.bundle.ItemVerdict;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -107,7 +107,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
 
         Grading grading = grader.grade(testItem1, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.ACCEPTED);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.ACCEPTED);
         assertThat(grading.getScore()).contains(4.0);
     }
 
@@ -117,19 +117,19 @@ public class MultipleChoiceItemSubmissionGraderTests {
         Grading grading;
 
         grading = grader.grade(testItem1, "a");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "c");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "an answer which is not included in item choices");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
 
         grading = grader.grade(testItem1, "");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.WRONG_ANSWER);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.WRONG_ANSWER);
         assertThat(grading.getScore()).contains(-1.0);
     }
 
@@ -138,7 +138,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
 
         Grading grading = grader.grade(testItem2, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.INTERNAL_ERROR);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.INTERNAL_ERROR);
         assertThat(grading.getScore()).isEmpty();
     }
 
@@ -147,7 +147,7 @@ public class MultipleChoiceItemSubmissionGraderTests {
         MultipleChoiceItemSubmissionGrader grader = new MultipleChoiceItemSubmissionGrader();
 
         Grading grading = grader.grade(testItem3, "b");
-        assertThat(grading.getVerdict()).isEqualTo(Verdict.PENDING_MANUAL_GRADING);
+        assertThat(grading.getVerdict()).isEqualTo(ItemVerdict.PENDING_MANUAL_GRADING);
         assertThat(grading.getScore()).isEmpty();
     }
 }

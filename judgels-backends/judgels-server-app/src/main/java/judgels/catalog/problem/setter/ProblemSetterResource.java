@@ -24,7 +24,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import judgels.api.catalog.problem.Problem;
 import judgels.api.catalog.problem.ProblemErrors;
-import judgels.api.catalog.problem.ProblemSetterRole;
+import judgels.api.catalog.problem.setter.ProblemSetterRole;
 import judgels.api.catalog.problem.setter.ProblemSettersResponse;
 import judgels.catalog.problem.ProblemRoleChecker;
 import judgels.catalog.problem.ProblemStore;

@@ -4,8 +4,8 @@ import io.dropwizard.hibernate.UnitOfWork;
 import java.time.Duration;
 import java.util.Optional;
 import judgels.api.contest.Contest;
+import judgels.api.contest.ContestRole;
 import judgels.api.contest.log.ContestLog;
-import judgels.api.contest.role.ContestRole;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
 

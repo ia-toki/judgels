@@ -9,7 +9,7 @@ import java.io.IOException;
 import judgels.api.catalog.problem.programming.ProblemSubmissionConfig;
 import judgels.api.submission.programming.Submission;
 import judgels.api.submission.programming.SubmissionData;
-import judgels.core.messaging.MessageClient;
+import judgels.core.messaging.MessageSender;
 import judgels.grading.api.GradingOptions;
 import judgels.grading.api.GradingRequest;
 import judgels.grading.api.LanguageRestriction;
@@ -17,27 +17,27 @@ import judgels.grading.api.SubmissionSource;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-public class SubmissionClient {
+public class Submitter {
     private final SessionFactory sessionFactory;
     private final SubmissionStore submissionStore;
     private final String gradingRequestQueueName;
     private final String gradingResponseQueueName;
-    private final MessageClient messageClient;
+    private final MessageSender messageSender;
     private final ObjectMapper mapper;
 
-    public SubmissionClient(
+    public Submitter(
             SessionFactory sessionFactory,
             SubmissionStore submissionStore,
             String gradingRequestQueueName,
             String gradingResponseQueueName,
-            MessageClient messageClient,
+            MessageSender messageSender,
             ObjectMapper mapper) {
 
         this.sessionFactory = sessionFactory;
         this.submissionStore = submissionStore;
         this.gradingRequestQueueName = gradingRequestQueueName;
         this.gradingResponseQueueName = gradingResponseQueueName;
-        this.messageClient = messageClient;
+        this.messageSender = messageSender;
         this.mapper = mapper;
     }
 
@@ -109,7 +109,7 @@ public class SubmissionClient {
 
     private void sendGradingRequest(GradingRequest gradingRequest) {
         try {
-            messageClient.sendMessage(
+            messageSender.sendMessage(
                     gradingResponseQueueName,
                     gradingRequestQueueName,
                     GradingRequest.class.getSimpleName(),

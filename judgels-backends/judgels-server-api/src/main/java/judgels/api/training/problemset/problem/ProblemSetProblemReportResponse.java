@@ -12,8 +12,8 @@ import judgels.api.training.stats.ProblemTopStats;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableProblemReportResponse.class)
-public interface ProblemReportResponse {
+@JsonDeserialize(as = ImmutableProblemSetProblemReportResponse.class)
+public interface ProblemSetProblemReportResponse {
     ProblemMetadata getMetadata();
     ProblemDifficulty getDifficulty();
     ProblemTopStats getTopStats();
@@ -21,5 +21,5 @@ public interface ProblemReportResponse {
     List<ContestInfo> getContests();
     Map<String, Profile> getProfilesMap();
 
-    class Builder extends ImmutableProblemReportResponse.Builder {}
+    class Builder extends ImmutableProblemSetProblemReportResponse.Builder {}
 }
