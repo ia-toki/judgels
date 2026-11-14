@@ -1,0 +1,110 @@
+import { Flex } from '@blueprintjs/labs';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect } from 'react';
+
+import { BreadcrumbTitle } from '../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
+import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LessonStatementCard } from '../../../../../../../../components/LessonStatementCard/LessonStatementCard';
+import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
+import { chapterLessonStatementQueryOptions } from '../../../../../../../../modules/queries/chapterLesson';
+import { courseBySlugQueryOptions } from '../../../../../../../../modules/queries/course';
+import {
+  courseChapterQueryOptions,
+  courseChaptersQueryOptions,
+} from '../../../../../../../../modules/queries/courseChapter';
+import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
+import { createDocumentTitle } from '../../../../../../../../utils/title';
+import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+
+import './ChapterLessonPage.scss';
+
+export default function ChapterLessonPage() {
+  const { courseSlug, chapterAlias, lessonAlias } = useParams({ strict: false });
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
+  const {
+    data: { data: chapters },
+  } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
+  const { statementLanguage } = useWebPrefs();
+
+  const { data: response } = useQuery(
+    chapterLessonStatementQueryOptions(chapter.jid, lessonAlias, { language: statementLanguage })
+  );
+
+  useEffect(() => {
+    if (response) {
+      document.title = createDocumentTitle(`${chapterAlias} / ${response.lesson.alias}`);
+    }
+  }, [response, chapterAlias]);
+
+  const renderHeader = () => {
+    return (
+      <Flex className="chapter-lesson-page__title" flexWrap="wrap" marginBottom={4}>
+        <h2>
+          <BreadcrumbTitle
+            items={[
+              { text: course.name, to: `/courses/${course.slug}` },
+              { text: `${chapterAlias}. ${chapter.name}`, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
+              { text: lessonAlias },
+            ]}
+          />
+        </h2>
+
+        {renderPrevAndNextResourcePaths()}
+      </Flex>
+    );
+  };
+
+  const renderStatementLanguageWidget = () => {
+    if (!response) {
+      return null;
+    }
+    const { defaultLanguage, languages } = response;
+    const props = {
+      defaultLanguage: defaultLanguage,
+      statementLanguages: languages,
+    };
+    return (
+      <div className="language-widget-wrapper">
+        <StatementLanguageWidget {...props} />
+      </div>
+    );
+  };
+
+  const renderStatement = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    return <LessonStatementCard alias={response.lesson.alias} statement={response.statement} />;
+  };
+
+  const renderPrevAndNextResourcePaths = () => {
+    if (!response) {
+      return null;
+    }
+
+    const { previousResourcePath, nextResourcePath } = response;
+    return (
+      <ChapterNavigation
+        courseSlug={course.slug}
+        chapterAlias={chapterAlias}
+        previousResourcePath={previousResourcePath}
+        nextResourcePath={nextResourcePath}
+        chapters={chapters}
+      />
+    );
+  };
+
+  return (
+    <Flex className="course-content" flexDirection="column" flex={1}>
+      {renderHeader()}
+      <ContentCard>
+        {renderStatementLanguageWidget()}
+        {renderStatement()}
+      </ContentCard>
+    </Flex>
+  );
+}

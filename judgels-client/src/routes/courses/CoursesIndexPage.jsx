@@ -1,5 +1,5 @@
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import CoursesPage from './courses/CoursesPage/CoursesPage';
+import CoursesPage from './CoursesPage/CoursesPage';
 
 export default function CoursesIndexPage() {
   return (

@@ -1,0 +1,62 @@
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+
+import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
+import { SubmissionDetails } from '../../../../../../components/SubmissionDetails/Bundle/SubmissionDetails';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { contestBySlugQueryOptions } from '../../../../../../modules/queries/contest';
+import {
+  contestItemSubmissionSummaryQueryOptions,
+  regradeContestItemSubmissionsMutationOptions,
+} from '../../../../../../modules/queries/contestItemSubmission';
+import { useWebPrefs } from '../../../../../../modules/webPrefs';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
+
+export default function ContestSubmissionSummaryPage() {
+  const { contestSlug, username } = useParams({ strict: false });
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { statementLanguage: language } = useWebPrefs();
+
+  const { data: response } = useQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, username, { language }));
+
+  const regradeSubmissionsMutation = useMutation(regradeContestItemSubmissionsMutationOptions(contest.jid));
+
+  if (!response) {
+    return null;
+  }
+
+  const { config, profile } = response;
+
+  const problemSummaries = config.problemJids.map(problemJid => ({
+    name: response.problemNamesMap[problemJid] || '-',
+    alias: response.problemAliasesMap[problemJid] || '-',
+    itemJids: response.itemJidsByProblemJid[problemJid],
+    submissionsByItemJid: response.submissionsByItemJid,
+    canViewGrading: config.canManage,
+    canManage: config.canManage,
+    itemTypesMap: response.itemTypesMap,
+    onRegrade: () => regrade(problemJid),
+  }));
+
+  const regrade = problemJid => {
+    const userJid = config.userJids[0];
+    regradeSubmissionsMutation.mutate(
+      { username: userJid, problemAlias: problemJid },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Regraded.'),
+      }
+    );
+  };
+
+  return (
+    <ContentCard title="Submissions">
+      <ContentCard>
+        Summary for <UserRef profile={profile} />
+      </ContentCard>
+      {problemSummaries.map(props => (
+        <SubmissionDetails key={props.alias} {...props} />
+      ))}
+    </ContentCard>
+  );
+}

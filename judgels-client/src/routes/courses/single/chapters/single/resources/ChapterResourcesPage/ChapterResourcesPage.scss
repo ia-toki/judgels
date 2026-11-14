@@ -1,0 +1,30 @@
+@use '../../../../../../../styles/base' as *;
+
+.chapter-resources-page__title {
+  @include page-title-compact;
+  margin-bottom: 16px;
+}
+
+.chapter-resources-page__section-title {
+  margin: 0 (-$card-padding);
+  padding: 0 $card-padding 8px;
+  border-bottom: 1px solid $divider-color;
+  font-size: $font-size-small !important;
+  font-weight: $font-weight-bold !important;
+  line-height: 16px !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  .bp6-light & {
+    color: $secondary-text-color;
+  }
+
+  .bp6-dark & {
+    border-bottom-color: $dark-divider-color;
+    color: $dark-secondary-text-color;
+  }
+
+  :not(:first-child) > & {
+    margin-top: 32px;
+  }
+}

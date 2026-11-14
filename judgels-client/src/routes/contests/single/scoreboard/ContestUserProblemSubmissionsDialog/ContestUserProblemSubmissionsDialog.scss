@@ -1,0 +1,21 @@
+@use '../../../../../styles/base' as *;
+
+.contest-user-problem-submissions-dialog {
+  width: $dialog-width-large;
+
+  details summary > * {
+    display: inline-block;
+    margin-left: 4px;
+    margin-bottom: 0;
+  }
+
+  .details-heading {
+    margin-right: 8px;
+  }
+}
+
+@media only screen and (max-width: $dialog-width-large) {
+  .contest-user-problem-submissions-dialog {
+    width: inherit;
+  }
+}

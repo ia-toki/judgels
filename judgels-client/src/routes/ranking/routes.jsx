@@ -16,7 +16,7 @@ export const createRankingRoutes = appRoute => {
   const rankingIndexRoute = createRoute({
     getParentRoute: () => rankingRoute,
     path: '/',
-    component: lazyRouteComponent(retryImport(() => import('./ratings/RatingsPage/RatingsPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./RatingsPage/RatingsPage'))),
     loader: ({ search = {} }) => {
       queryClient.prefetchQuery(topRatedProfilesQueryOptions({ page: search.page, pageSize: 50 }));
     },
@@ -25,7 +25,7 @@ export const createRankingRoutes = appRoute => {
   const rankingRatingSystemRoute = createRoute({
     getParentRoute: () => rankingRoute,
     path: 'rating-system',
-    component: lazyRouteComponent(retryImport(() => import('./ratings/RatingSystemPage/RatingSystemPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./RatingSystemPage/RatingSystemPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Rating system') }] }),
   });
 

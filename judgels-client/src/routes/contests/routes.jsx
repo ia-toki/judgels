@@ -57,7 +57,7 @@ export const createContestsRoutes = appRoute => {
   const contestRoute = createRoute({
     getParentRoute: () => contestsRoute,
     path: '$contestSlug',
-    component: lazyRouteComponent(retryImport(() => import('./contests/single/SingleContestLayout'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/SingleContestLayout'))),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
@@ -68,7 +68,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'settings',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/settings/ContestSettingsLayout/ContestSettingsLayout'))
+      retryImport(() => import('./single/settings/ContestSettingsLayout/ContestSettingsLayout'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Settings') }] }),
   });
@@ -85,7 +85,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSettingsRoute,
     path: 'general',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/settings/ContestSettingsGeneralPage/ContestSettingsGeneralPage'))
+      retryImport(() => import('./single/settings/ContestSettingsGeneralPage/ContestSettingsGeneralPage'))
     ),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -97,7 +97,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSettingsRoute,
     path: 'modules',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/settings/ContestSettingsModulesPage/ContestSettingsModulesPage'))
+      retryImport(() => import('./single/settings/ContestSettingsModulesPage/ContestSettingsModulesPage'))
     ),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -110,7 +110,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: '/',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/overview/ContestOverviewPage/ContestOverviewPage'))
+      retryImport(() => import('./single/overview/ContestOverviewPage/ContestOverviewPage'))
     ),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -122,7 +122,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'announcements',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/announcements/ContestAnnouncementsPage/ContestAnnouncementsPage'))
+      retryImport(() => import('./single/announcements/ContestAnnouncementsPage/ContestAnnouncementsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Announcements') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -135,7 +135,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'problems',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/problems/ContestProblemsPage/ContestProblemsPage'))
+      retryImport(() => import('./single/problems/ContestProblemsPage/ContestProblemsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Problems') }] }),
     loader: async ({ params: { contestSlug } }) => {
@@ -148,7 +148,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'problems/$problemAlias',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/problems/single/ContestProblemPage/ContestProblemPage'))
+      retryImport(() => import('./single/problems/single/ContestProblemPage/ContestProblemPage'))
     ),
     loader: async ({ params: { contestSlug, problemAlias } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -173,7 +173,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'editorial',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/editorial/ContestEditorialPage/ContestEditorialPage'))
+      retryImport(() => import('./single/editorial/ContestEditorialPage/ContestEditorialPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Editorial') }] }),
     loader: async ({ params: { contestSlug } }) => {
@@ -187,7 +187,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'contestants',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/contestants/ContestContestantsPage/ContestContestantsPage'))
+      retryImport(() => import('./single/contestants/ContestContestantsPage/ContestContestantsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Contestants') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -200,7 +200,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'supervisors',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/supervisors/ContestSupervisorsPage/ContestSupervisorsPage'))
+      retryImport(() => import('./single/supervisors/ContestSupervisorsPage/ContestSupervisorsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Supervisors') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -213,7 +213,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'managers',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/managers/ContestManagersPage/ContestManagersPage'))
+      retryImport(() => import('./single/managers/ContestManagersPage/ContestManagersPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Managers') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -232,7 +232,7 @@ export const createContestsRoutes = appRoute => {
   const contestSubmissionsIndexRoute = createRoute({
     getParentRoute: () => contestSubmissionsRoute,
     path: '/',
-    component: lazyRouteComponent(retryImport(() => import('./contests/single/submissions/ContestSubmissionsPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/submissions/ContestSubmissionsPage'))),
     loader: async ({ params: { contestSlug }, search = {} }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       if (contest.style === ContestStyle.Bundle) {
@@ -265,9 +265,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSubmissionsRoute,
     path: '$submissionId',
     component: lazyRouteComponent(
-      retryImport(
-        () => import('./contests/single/submissions/Programming/single/ContestSubmissionPage/ContestSubmissionPage')
-      )
+      retryImport(() => import('./single/submissions/Programming/single/ContestSubmissionPage/ContestSubmissionPage'))
     ),
     loader: async ({ params: { contestSlug, submissionId } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -280,9 +278,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSubmissionsRoute,
     path: 'users/$username',
     component: lazyRouteComponent(
-      retryImport(
-        () => import('./contests/single/submissions/Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage')
-      )
+      retryImport(() => import('./single/submissions/Bundle/ContestSubmissionSummaryPage/ContestSubmissionSummaryPage'))
     ),
     loader: async ({ params: { contestSlug, username } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -295,7 +291,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'clarifications',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/clarifications/ContestClarificationsPage/ContestClarificationsPage'))
+      retryImport(() => import('./single/clarifications/ContestClarificationsPage/ContestClarificationsPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Clarifications') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -311,7 +307,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestRoute,
     path: 'scoreboard',
     component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/scoreboard/ContestScoreboardPage/ContestScoreboardPage'))
+      retryImport(() => import('./single/scoreboard/ContestScoreboardPage/ContestScoreboardPage'))
     ),
     head: () => ({ meta: [{ title: createDocumentTitle('Scoreboard') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
@@ -329,9 +325,7 @@ export const createContestsRoutes = appRoute => {
   const contestFilesRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'files',
-    component: lazyRouteComponent(
-      retryImport(() => import('./contests/single/files/ContestFilesPage/ContestFilesPage'))
-    ),
+    component: lazyRouteComponent(retryImport(() => import('./single/files/ContestFilesPage/ContestFilesPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Files') }] }),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -342,7 +336,7 @@ export const createContestsRoutes = appRoute => {
   const contestLogsRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'logs',
-    component: lazyRouteComponent(retryImport(() => import('./contests/single/logs/ContestLogsPage/ContestLogsPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/logs/ContestLogsPage/ContestLogsPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Logs') }] }),
     loader: async ({ params: { contestSlug }, search = {} }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));

@@ -1,0 +1,27 @@
+@use '../../../../../../../../../styles/base' as *;
+
+.chapter-problem-statement-page {
+  details summary {
+    margin-bottom: 10px;
+  }
+
+  details summary > * {
+    display: inline;
+  }
+
+  .statement-header {
+    max-width: $statement-width;
+
+    &__limits {
+      white-space: nowrap;
+    }
+
+    &__problem-set-problem-paths {
+      flex: 1;
+    }
+  }
+
+  .chapter-problem-editorial {
+    max-width: $statement-width;
+  }
+}

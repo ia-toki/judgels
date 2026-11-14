@@ -12,10 +12,12 @@ import App from './App';
 import Root from './Root';
 import { createAccountRoutes } from './account/routes';
 import { createAdminRoutes } from './admin/routes';
+import { createAuthRoutes } from './auth/routes';
 import { createContestsRoutes } from './contests/routes';
 import { createCoursesRoutes } from './courses/routes';
 import { createHomeRoutes } from './home/routes';
 import { createProblemsRoutes } from './problems/routes';
+import { createProfilesRoutes } from './profiles/routes';
 import { createRankingRoutes } from './ranking/routes';
 import { createSubmissionsRoutes } from './submissions/routes';
 
@@ -34,8 +36,10 @@ export const appRoute = createRoute({
 });
 
 const appChildren = [
-  ...createHomeRoutes(appRoute),
-  ...createAccountRoutes(appRoute),
+  createHomeRoutes(appRoute),
+  ...createAuthRoutes(appRoute),
+  createAccountRoutes(appRoute),
+  createProfilesRoutes(appRoute),
   createAdminRoutes(appRoute),
   createContestsRoutes(appRoute),
   createCoursesRoutes(appRoute),

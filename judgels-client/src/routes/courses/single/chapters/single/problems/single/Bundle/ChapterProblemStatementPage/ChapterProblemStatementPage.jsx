@@ -1,0 +1,98 @@
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+
+import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { VerdictCode } from '../../../../../../../../../modules/api/gradingVerdict';
+import { courseBySlugQueryOptions } from '../../../../../../../../../modules/queries/course';
+import { courseChapterQueryOptions } from '../../../../../../../../../modules/queries/courseChapter';
+import {
+  chapterLatestItemSubmissionsQueryOptions,
+  createChapterItemSubmissionMutationOptions,
+} from '../../../../../../../../../modules/queries/trainingItemSubmission';
+
+export default function ChapterProblemStatementPage(props) {
+  const { courseSlug, chapterAlias } = useParams({ strict: false });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
+
+  const isInSubmissionsPath = () => {
+    return (location.pathname + '/').includes('/submissions/');
+  };
+
+  if (!isInSubmissionsPath()) {
+    const { progress } = props.worksheet;
+    if (progress && progress.verdict !== VerdictCode.PND) {
+      const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
+      navigate(resultsUrl, { replace: true });
+    }
+  }
+
+  const { data: latestSubmissions } = useQuery(
+    chapterLatestItemSubmissionsQueryOptions(chapter.jid, props.worksheet.problem.alias)
+  );
+
+  const createItemSubmissionMutation = useMutation(
+    createChapterItemSubmissionMutationOptions(chapter.jid, props.worksheet.problem.alias)
+  );
+
+  const createSubmission = (itemJid, answer) => {
+    const { problem } = props.worksheet;
+    createItemSubmissionMutation.mutate({ problemJid: problem.problemJid, itemJid, answer });
+  };
+
+  const renderStatementLanguageWidget = () => {
+    const { defaultLanguage, languages } = props.worksheet;
+    if (!defaultLanguage || !languages) {
+      return null;
+    }
+    const widgetProps = {
+      defaultLanguage: defaultLanguage,
+      statementLanguages: languages,
+    };
+    return (
+      <div className="language-widget-wrapper">
+        <StatementLanguageWidget {...widgetProps} />
+      </div>
+    );
+  };
+
+  const renderStatement = () => {
+    const { problem, worksheet } = props.worksheet;
+    if (!problem || !worksheet) {
+      return <LoadingState />;
+    }
+
+    if (!latestSubmissions) {
+      return <LoadingState />;
+    }
+
+    const reasonNotAllowedToSubmit = isInSubmissionsPath()
+      ? 'Submission received.'
+      : worksheet.reasonNotAllowedToSubmit;
+
+    const resultsUrl = (location.pathname + '/submissions').replace('//', '/');
+
+    return (
+      <ProblemWorksheetCard
+        alias={problem.alias}
+        latestSubmissions={latestSubmissions}
+        onAnswerItem={createSubmission}
+        worksheet={{ ...worksheet, reasonNotAllowedToSubmit }}
+        showTitle={false}
+        resultsUrl={resultsUrl}
+      />
+    );
+  };
+
+  return (
+    <ContentCard className="chapter-problem-pane chapter-problem-pane--statement">
+      {renderStatementLanguageWidget()}
+      {renderStatement()}
+    </ContentCard>
+  );
+}
