@@ -13,17 +13,10 @@ export const contestItemSubmissionsQueryOptions = (contestJid, params) => {
   });
 };
 
-export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, params) => {
-  const { language } = params || {};
+export const contestItemSubmissionSummaryQueryOptions = (contestJid, params) => {
+  const { username, language } = params || {};
   return queryOptions({
-    queryKey: [
-      'contest',
-      contestJid,
-      'submissions',
-      'bundle',
-      'summary',
-      ...(username || params ? [{ username, ...params }] : []),
-    ],
+    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
     meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getItemSubmissionSummary(getToken(), contestJid, username, language),
   });

@@ -4,7 +4,7 @@ import { profileAPI } from '../api/profile';
 
 export const basicProfileByUsernameQueryOptions = username =>
   queryOptions({
-    queryKey: ['basic-profile-by-username', username],
+    queryKey: ['profile-by-username', username, 'basic'],
     queryFn: () => profileAPI.getBasicProfileByUsername(username),
   });
 
@@ -17,7 +17,7 @@ export const basicProfileQueryOptions = userJid =>
 export const topRatedProfilesQueryOptions = params => {
   const { page, pageSize } = params || {};
   return queryOptions({
-    queryKey: ['profiles', 'top-rated', ...(params ? [params] : [])],
+    queryKey: ['profiles', 'top', ...(params ? [params] : [])],
     queryFn: () => profileAPI.getTopRatedProfiles(page, pageSize),
   });
 };
