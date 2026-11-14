@@ -1,17 +1,17 @@
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
 
-import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
-import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
-import { sendGAEvent } from '../../../../../../../../ga';
-import { getGradingLanguageFamily } from '../../../../../../../../modules/api/gradingLanguage.js';
-import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
-import { problemSetProblemQueryOptions } from '../../../../../../../../modules/queries/problemSetProblem';
-import { createProblemSetSubmissionMutationOptions } from '../../../../../../../../modules/queries/trainingSubmission';
-import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
+import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Programming/ProblemWorksheetCard';
+import { sendGAEvent } from '../../../../../../../../../ga';
+import { getGradingLanguageFamily } from '../../../../../../../../../modules/api/gradingLanguage.js';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../../modules/queries/problemSet';
+import { problemSetProblemQueryOptions } from '../../../../../../../../../modules/queries/problemSetProblem';
+import { createProblemSetSubmissionMutationOptions } from '../../../../../../../../../modules/queries/trainingSubmission';
+import { useWebPrefs } from '../../../../../../../../../modules/webPrefs';
 
-import { toastActions } from '../../../../../../../../modules/toast/toastActions';
+import { toastActions } from '../../../../../../../../../modules/toast/toastActions';
 
 export default function ProblemStatementPage({ worksheet }) {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });

@@ -99,9 +99,7 @@ export const createProblemsRoutes = appRoute => {
     getParentRoute: () => problemSetProblemRoute,
     path: '/',
     component: lazyRouteComponent(
-      retryImport(
-        () => import('./problemsets/single/problems/single/statement/ProblemStatementPage/ProblemStatementPage')
-      )
+      retryImport(() => import('./problemsets/single/problems/single/statement/ProblemStatementPage'))
     ),
     loader: async ({ params: { problemSetSlug, problemAlias } }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
