@@ -17,7 +17,7 @@ export default function RegisterPage() {
 
   const registerMutation = useMutation(registerUserMutationOptions);
 
-  const onRegisterUser = data => {
+  const onRegisterUser = async data => {
     const userRegistrationData = {
       username: data.username,
       password: data.password,
@@ -25,7 +25,7 @@ export default function RegisterPage() {
       name: data.name,
       recaptchaResponse: data.recaptchaResponse,
     };
-    registerMutation.mutate(userRegistrationData);
+    await registerMutation.mutateAsync(userRegistrationData);
     setRegisteredUser({
       username: data.username,
       email: data.email,

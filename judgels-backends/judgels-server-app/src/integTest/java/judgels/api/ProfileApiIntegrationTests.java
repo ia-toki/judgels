@@ -34,6 +34,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         BasicProfile andiBasicProfile = profileClient.getBasicProfile(andi.getJid());
         assertThat(andiBasicProfile).isEqualTo(new BasicProfile.Builder()
+                .userJid(andi.getJid())
                 .username("andi")
                 .country("ID")
                 .name("Andi")
@@ -41,8 +42,15 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         BasicProfile budiBasicProfile = profileClient.getBasicProfile(budi.getJid());
         assertThat(budiBasicProfile).isEqualTo(new BasicProfile.Builder()
+                .userJid(budi.getJid())
                 .username("budi")
                 .build());
+
+        // basic profiles by username
+
+        assertThat(profileClient.getBasicProfileByUsername("andi")).isEqualTo(andiBasicProfile);
+        assertThat(profileClient.getBasicProfileByUsername("budi")).isEqualTo(budiBasicProfile);
+        assertNotFound(() -> profileClient.getBasicProfileByUsername("nobody"));
 
         Instant firstTime = Instant.ofEpochSecond(10);
         userRatingClient.updateRatings(adminToken, new UserRatingUpdateData.Builder()
@@ -64,6 +72,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         andiBasicProfile = profileClient.getBasicProfile(andi.getJid());
         assertThat(andiBasicProfile).isEqualTo(new BasicProfile.Builder()
+                .userJid(andi.getJid())
                 .username("andi")
                 .country("ID")
                 .name("Andi")
@@ -72,6 +81,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         budiBasicProfile = profileClient.getBasicProfile(budi.getJid());
         assertThat(budiBasicProfile).isEqualTo(new BasicProfile.Builder()
+                .userJid(budi.getJid())
                 .username("budi")
                 .rating(UserRating.of(2700, 1800))
                 .build());

@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
@@ -17,13 +15,11 @@ import judgels.api.user.info.UserInfo;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserInfoClient;
-import judgels.client.UserSearchClient;
 import org.junit.jupiter.api.Test;
 
 class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private final UserClient userClient = createClient(UserClient.class);
     private final UserInfoClient userInfoClient = createClient(UserInfoClient.class);
-    private final UserSearchClient userSearchClient = createClient(UserSearchClient.class);
     private final SessionClient sessionClient = createClient(SessionClient.class);
 
     @Test
@@ -120,31 +116,28 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 + "dudi,dudidudi@judgels.com\n");
         assertThat(response.getUpdatedUsernames()).containsExactly("dudi");
 
-        Map<String, String> usernameToJid =
-                userSearchClient.translateUsernamesToJids(Set.of("andi", "budi", "caca", "dudi"));
-
-        User andi = userClient.getUser(adminToken, usernameToJid.get("andi"));
+        User andi = userClient.getUserByUsername(adminToken, "andi");
         assertThat(andi.getEmail()).isEqualTo("andi@judgels.com");
         UserInfo andiInfo = userInfoClient.getInfo(adminToken, andi.getJid());
         assertThat(andiInfo.getCountry()).contains("ID");
         assertThat(andiInfo.getName()).contains("Andi Indo");
         Session andiSession = sessionClient.logIn(Credentials.of("andi", "123"));
 
-        User budi = userClient.getUser(adminToken, usernameToJid.get("budi"));
+        User budi = userClient.getUserByUsername(adminToken, "budi");
         assertThat(budi.getEmail()).isEqualTo("budi2@judgels.com");
         UserInfo budiInfo = userInfoClient.getInfo(adminToken, budi.getJid());
         assertThat(budiInfo.getCountry()).contains("TH");
         assertThat(budiInfo.getName()).contains("Budi Thai 2");
         Session budiSession = sessionClient.logIn(Credentials.of("budi", "333"));
 
-        User caca = userClient.getUser(adminToken, usernameToJid.get("caca"));
+        User caca = userClient.getUserByUsername(adminToken, "caca");
         assertThat(caca.getEmail()).isEqualTo("caca@judgels.com");
         UserInfo cacaInfo = userInfoClient.getInfo(adminToken, caca.getJid());
         assertThat(cacaInfo.getCountry()).contains("MY");
         assertThat(cacaInfo.getName()).contains("Caca Malay");
         Session cacaSession = sessionClient.logIn(Credentials.of("caca", "778"));
 
-        User dudi = userClient.getUser(adminToken, usernameToJid.get("dudi"));
+        User dudi = userClient.getUserByUsername(adminToken, "dudi");
         assertThat(dudi.getJid()).isEqualTo("JID123");
         assertThat(dudi.getEmail()).isEqualTo("dudidudi@judgels.com");
         Session dudiSession = sessionClient.logIn(Credentials.of("dudi", "888"));

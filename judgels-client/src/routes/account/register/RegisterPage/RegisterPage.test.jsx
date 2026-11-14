@@ -20,11 +20,7 @@ describe('RegisterPage', () => {
     );
   };
 
-  test('form', async () => {
-    await renderComponent();
-
-    const user = userEvent.setup();
-
+  const fillForm = async user => {
     const username = await screen.findByRole('textbox', { name: /username/i });
     await user.type(username, 'user');
 
@@ -39,9 +35,15 @@ describe('RegisterPage', () => {
 
     const confirmPassword = screen.getByLabelText(/confirm password/i);
     await user.type(confirmPassword, 'pass');
+  };
 
-    nockApi().get('/v2/user-search/username-exists/user').reply(200, false);
-    nockApi().get('/v2/user-search/email-exists/email@domain.com').reply(200, false);
+  test('form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    await fillForm(user);
+
     nockApi()
       .post('/v4/account/registration', {
         username: 'user',
@@ -55,7 +57,23 @@ describe('RegisterPage', () => {
     await user.click(submitButton);
 
     await waitFor(() => expect(nock.isDone()).toBe(true));
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('textbox')).not.toBeInTheDocument());
     expect(document.querySelector('[data-key="instruction"]')).toHaveTextContent('email@domain.com');
+  });
+
+  test('form with a taken username', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+    await fillForm(user);
+
+    nockApi()
+      .post('/v4/account/registration')
+      .reply(400, { code: 400, message: 'AccountRegistrationUsernameAlreadyExists' });
+
+    const submitButton = screen.getByRole('button', { name: /register/i });
+    await user.click(submitButton);
+
+    expect(await screen.findByText('Username already exists')).toBeInTheDocument();
   });
 });

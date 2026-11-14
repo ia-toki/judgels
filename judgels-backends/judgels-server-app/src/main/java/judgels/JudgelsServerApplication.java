@@ -144,7 +144,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userAvatarResource());
         env.jersey().register(component.userInfoResource());
         env.jersey().register(component.userRoleResource());
-        env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
 

@@ -89,12 +89,17 @@ public class ProfileStore {
                 .collect(Collectors.toList()));
     }
 
+    public Optional<BasicProfile> getBasicProfileByUsername(Instant time, String username) {
+        return userStore.getUserByUsername(username).flatMap(user -> getBasicProfile(time, user.getJid()));
+    }
+
     public Optional<BasicProfile> getBasicProfile(Instant time, String userJid) {
         return userStore.getUserByJid(userJid).map(user -> {
             Map<String, UserRating> ratings = ratingStore.getRatings(time, ImmutableSet.of(userJid));
             UserInfo info = infoStore.getInfo(userJid);
 
             return new BasicProfile.Builder()
+                    .userJid(userJid)
                     .username(user.getUsername())
                     .country(info.getCountry())
                     .rating(Optional.ofNullable(ratings.get(userJid)))
