@@ -1,0 +1,104 @@
+import { Button } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { Fragment } from 'react';
+
+import { useEditableSection } from '../../../../../../components/EditableSections/EditableSections';
+import { UserRef } from '../../../../../../components/UserRef/UserRef';
+import { FormTable } from '../../../../../../components/forms/FormTable/FormTable';
+import { ProblemSetterRole } from '../../../../../../modules/api/problem';
+import {
+  problemSettersQueryOptions,
+  setProblemSettersMutationOptions,
+} from '../../../../../../modules/queries/problemSetter';
+import ProblemSettersEditForm from '../ProblemSettersEditForm/ProblemSettersEditForm';
+
+import * as toastActions from '../../../../../../modules/toast/toastActions';
+
+const setterFields = [
+  { role: ProblemSetterRole.Writer, title: 'Writers' },
+  { role: ProblemSetterRole.Developer, title: 'Developers' },
+  { role: ProblemSetterRole.Tester, title: 'Testers' },
+  { role: ProblemSetterRole.Editorialist, title: 'Editorialists' },
+];
+
+function parseUsernames(usernames) {
+  return (usernames || '')
+    .split(',')
+    .map(username => username.trim())
+    .filter(username => username);
+}
+
+export default function ProblemSettersPanel({ problemJid }) {
+  const {
+    data: { data: setterJidsMap, profilesMap },
+  } = useSuspenseQuery(problemSettersQueryOptions(problemJid));
+
+  const setSettersMutation = useMutation(setProblemSettersMutationOptions(problemJid));
+
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
+
+  const getSetterJids = role => setterJidsMap[role] || [];
+
+  const getSetterUsernames = role =>
+    getSetterJids(role)
+      .map(jid => profilesMap[jid]?.username)
+      .join(',');
+
+  const renderSetters = role =>
+    getSetterJids(role).map((jid, idx) => (
+      <Fragment key={jid}>
+        {idx > 0 && ' '}
+        <UserRef profile={profilesMap[jid]} />
+      </Fragment>
+    ));
+
+  const rows = setterFields.map(({ role, title }) => ({ key: role, title, value: renderSetters(role) }));
+
+  const setSetters = async data => {
+    const setterUsernamesMap = Object.fromEntries(setterFields.map(({ role }) => [role, parseUsernames(data[role])]));
+
+    await setSettersMutation.mutateAsync(setterUsernamesMap, {
+      onSuccess: () => toastActions.showSuccessToast('Setters updated.'),
+    });
+    setIsEditing(false);
+  };
+
+  const renderEditButton = () => {
+    return (
+      !isEditing && (
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
+          Edit
+        </Button>
+      )
+    );
+  };
+
+  const renderContent = () => {
+    if (isEditing) {
+      const initialValues = Object.fromEntries(setterFields.map(({ role }) => [role, getSetterUsernames(role)]));
+      return (
+        <ProblemSettersEditForm
+          initialValues={initialValues}
+          setterFields={setterFields}
+          onSubmit={setSetters}
+          onCancel={() => setIsEditing(false)}
+        />
+      );
+    }
+    return <FormTable fixedKey rows={rows} />;
+  };
+
+  return (
+    <div>
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
+        <h4>
+          <span>Setters</span>
+          {renderEditButton()}
+        </h4>
+      </Flex>
+      {renderContent()}
+    </div>
+  );
+}

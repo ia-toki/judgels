@@ -1,0 +1,84 @@
+import { Button } from '@blueprintjs/core';
+import { Edit } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
+import { useMutation } from '@tanstack/react-query';
+
+import { useEditableSection } from '../../../../../components/EditableSections/EditableSections';
+import { HtmlText } from '../../../../../components/HtmlText/HtmlText';
+import { FormTable } from '../../../../../components/forms/FormTable/FormTable';
+import { updateProblemSetMutationOptions } from '../../../../../modules/queries/problemSet';
+import ProblemSetGeneralEditForm from '../ProblemSetGeneralEditForm/ProblemSetGeneralEditForm';
+
+import * as toastActions from '../../../../../modules/toast/toastActions';
+
+export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
+  const updateProblemSetMutation = useMutation(updateProblemSetMutationOptions(problemSet.jid, problemSet.slug));
+
+  const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
+
+  const rows = [
+    { key: 'slug', title: 'Slug', value: problemSet.slug },
+    { key: 'name', title: 'Name', value: problemSet.name },
+    { key: 'archiveSlug', title: 'Archive slug', value: archiveSlug },
+    { key: 'contestTime', title: 'Contest time', value: new Date(problemSet.contestTime).toISOString() },
+    { key: 'description', title: 'Description', value: <HtmlText>{problemSet.description || ''}</HtmlText> },
+  ];
+
+  const updateProblemSet = async data => {
+    await updateProblemSetMutation.mutateAsync(
+      {
+        slug: data.slug,
+        name: data.name,
+        archiveSlug: data.archiveSlug,
+        description: data.description,
+        contestTime: new Date(data.contestTime).getTime(),
+      },
+      {
+        onSuccess: () => toastActions.showSuccessToast('Problemset updated.'),
+      }
+    );
+    setIsEditing(false);
+  };
+
+  const renderEditButton = () => {
+    return (
+      !isEditing && (
+        <Button small variant="outlined" icon={<Edit />} disabled={isEditDisabled} onClick={() => setIsEditing(true)}>
+          Edit
+        </Button>
+      )
+    );
+  };
+
+  const renderContent = () => {
+    if (isEditing) {
+      const initialValues = {
+        slug: problemSet.slug || '',
+        name: problemSet.name || '',
+        archiveSlug: archiveSlug || '',
+        description: problemSet.description || '',
+        contestTime: new Date(problemSet.contestTime).toISOString(),
+      };
+      return (
+        <ProblemSetGeneralEditForm
+          initialValues={initialValues}
+          onSubmit={updateProblemSet}
+          onCancel={() => setIsEditing(false)}
+        />
+      );
+    }
+    return <FormTable fixedKey rows={rows} />;
+  };
+
+  return (
+    <div>
+      <Flex asChild justifyContent="space-between" alignItems="center" gap={2}>
+        <h4>
+          <span>General</span>
+          {renderEditButton()}
+        </h4>
+      </Flex>
+      {renderContent()}
+    </div>
+  );
+}
