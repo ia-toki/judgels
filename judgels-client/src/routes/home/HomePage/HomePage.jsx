@@ -5,7 +5,7 @@ import { ButtonLink } from '../../../components/ButtonLink/ButtonLink';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import { HtmlText } from '../../../components/HtmlText/HtmlText';
 import { useSession } from '../../../modules/session';
-import { getHomeBanner, isRatingEnabled, isUserRegistrationEnabled } from '../../../modules/webConfig';
+import { getHomeBanner, isRatingEnabled, isTrainingAccountRegistrationEnabled } from '../../../modules/webConfig';
 import ActiveContestsWidget from '../widgets/activeContests/ActiveContestsWidget/ActiveContestsWidget';
 import TopRatingsWidget from '../widgets/topRatings/TopRatingsWidget/TopRatingsWidget';
 
@@ -26,7 +26,7 @@ export default function HomePage() {
             <HtmlText>{getHomeBanner() || ''}</HtmlText>
           </div>
           <Flex justifyContent="center" flexWrap="wrap" gap={2} marginTop={7}>
-            {isUserRegistrationEnabled() && (
+            {isTrainingAccountRegistrationEnabled() && (
               <ButtonLink to="/register" intent={Intent.PRIMARY} large>
                 Register
               </ButtonLink>

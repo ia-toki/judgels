@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
-import { requestToResetPasswordMutationOptions } from '../../../../../modules/queries/userAccount';
+import { requestToResetPasswordMutationOptions } from '../../../../../modules/queries/accountPassword';
 import { getUser } from '../../../../../modules/session';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 

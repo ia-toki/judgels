@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { requestToResetPasswordMutationOptions } from '../../../../modules/queries/userAccount';
+import { requestToResetPasswordMutationOptions } from '../../../../modules/queries/accountPassword';
 import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 
 export default function ForgotPasswordPage() {

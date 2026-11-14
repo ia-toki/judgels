@@ -3,7 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { activateUserMutationOptions } from '../../../../modules/queries/userAccount';
+import { activateUserMutationOptions } from '../../../../modules/queries/accountRegistration';
 
 export default function ActivatePage() {
   const { emailCode } = useParams({ strict: false });

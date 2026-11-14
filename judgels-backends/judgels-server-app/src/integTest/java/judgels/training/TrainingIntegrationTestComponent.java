@@ -5,6 +5,7 @@ import jakarta.inject.Singleton;
 import judgels.core.JudgelsModule;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
+import judgels.training.account.password.AccountResetPasswordStore;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.problem.ChapterProblemStore;
@@ -23,6 +24,7 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
         TrainingItemSubmissionModule.class})
 @Singleton
 public interface TrainingIntegrationTestComponent {
+    AccountResetPasswordStore accountResetPasswordStore();
     CurriculumStore curriculumStore();
     CourseStore courseStore();
     CourseChapterStore courseChapterStore();

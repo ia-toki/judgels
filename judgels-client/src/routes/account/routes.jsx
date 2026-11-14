@@ -4,7 +4,7 @@ import EnabledRoute from '../../components/EnabledRoute/EnabledRoute';
 import GuestRoute from '../../components/GuestRoute/GuestRoute';
 import UserRoute from '../../components/UserRoute/UserRoute';
 import { retryImport } from '../../lazy';
-import { isUserRegistrationEnabled, isUserResetPasswordEnabled } from '../../modules/webConfig';
+import { isTrainingAccountPasswordResetEnabled, isTrainingAccountRegistrationEnabled } from '../../modules/webConfig';
 import { createDocumentTitle } from '../../utils/title';
 import ActivatePage from './activate/ActivatePage/ActivatePage';
 import ForgotPasswordPage from './forgotPassword/ForgotPasswordPage/ForgotPasswordPage';
@@ -29,7 +29,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'registered',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <RegisteredPage />
       </EnabledRoute>
     ),
@@ -59,7 +59,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'register',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <GuestRoute>
           <RegisterPage />
         </GuestRoute>
@@ -71,7 +71,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'activate/$emailCode',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <GuestRoute>
           <ActivatePage />
         </GuestRoute>
@@ -83,7 +83,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'forgot-password',
     component: () => (
-      <EnabledRoute enabled={isUserResetPasswordEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountPasswordResetEnabled()}>
         <GuestRoute>
           <ForgotPasswordPage />
         </GuestRoute>
@@ -95,7 +95,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'need-activation',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <GuestRoute>
           <NeedActivationPage />
         </GuestRoute>
@@ -107,7 +107,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'reset-password/$emailCode',
     component: () => (
-      <EnabledRoute enabled={isUserResetPasswordEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountPasswordResetEnabled()}>
         <GuestRoute>
           <ResetPasswordPage />
         </GuestRoute>
@@ -120,7 +120,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => appRoute,
     path: 'account',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled() || isUserResetPasswordEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled() || isTrainingAccountPasswordResetEnabled()}>
         <AccountLayout />
       </EnabledRoute>
     ),
@@ -130,14 +130,14 @@ export const createAccountRoutes = appRoute => {
   const accountIndexRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: '/',
-    component: () => <Navigate to={isUserRegistrationEnabled() ? '/account/info' : '/account/password'} />,
+    component: () => <Navigate to={isTrainingAccountRegistrationEnabled() ? '/account/info' : '/account/password'} />,
   });
 
   const accountInfoRoute = createRoute({
     getParentRoute: () => accountRoute,
     path: 'info',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <InfoPage />
       </EnabledRoute>
     ),
@@ -148,7 +148,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => accountRoute,
     path: 'avatar',
     component: () => (
-      <EnabledRoute enabled={isUserRegistrationEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountRegistrationEnabled()}>
         <ChangeAvatarPage />
       </EnabledRoute>
     ),
@@ -159,7 +159,7 @@ export const createAccountRoutes = appRoute => {
     getParentRoute: () => accountRoute,
     path: 'password',
     component: () => (
-      <EnabledRoute enabled={isUserResetPasswordEnabled()}>
+      <EnabledRoute enabled={isTrainingAccountPasswordResetEnabled()}>
         <AccountResetPasswordPage />
       </EnabledRoute>
     ),

@@ -10,15 +10,15 @@ import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SessionSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
-import judgels.api.setting.UserRegistrationSettings;
-import judgels.api.setting.UserResetPasswordSettings;
+import judgels.api.setting.TrainingAccountPasswordResetSettings;
+import judgels.api.setting.TrainingAccountRegistrationSettings;
 import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
 
 public class SettingStore {
     static final String APP_GOOGLE_ANALYTICS_TRACKING_ID = "app_google_analytics_tracking_id";
-    static final String USER_REGISTRATION_ENABLED = "user_registration_enabled";
-    static final String USER_RESET_PASSWORD_ENABLED = "user_reset_password_enabled";
+    static final String TRAINING_ACCOUNT_REGISTRATION_ENABLED = "training_account_registration_enabled";
+    static final String TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED = "training_account_password_reset_enabled";
 
     private final SettingDao settingDao;
 
@@ -49,25 +49,25 @@ public class SettingStore {
                         .maxConcurrentSessionsPerUser(Integer.parseInt(
                                 settings.getOrDefault("session_max_concurrent_sessions_per_user", "-1")))
                         .build())
-                .userRegistration(new UserRegistrationSettings.Builder()
-                        .enabled(Boolean.parseBoolean(settings.getOrDefault(USER_REGISTRATION_ENABLED, "false")))
+                .trainingAccountRegistration(new TrainingAccountRegistrationSettings.Builder()
+                        .enabled(Boolean.parseBoolean(settings.getOrDefault(TRAINING_ACCOUNT_REGISTRATION_ENABLED, "false")))
                         .recaptchaEnabled(Boolean.parseBoolean(
-                                settings.getOrDefault("user_registration_recaptcha_enabled", "false")))
+                                settings.getOrDefault("training_account_registration_recaptcha_enabled", "false")))
                         .activationEmailTemplate(getEmailTemplate(
                                 settings,
-                                "user_registration_activation_email",
-                                UserRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE))
+                                "training_account_registration_activation_email",
+                                TrainingAccountRegistrationSettings.DEFAULT_ACTIVATION_EMAIL_TEMPLATE))
                         .build())
-                .userResetPassword(new UserResetPasswordSettings.Builder()
-                        .enabled(Boolean.parseBoolean(settings.getOrDefault(USER_RESET_PASSWORD_ENABLED, "false")))
+                .trainingAccountPasswordReset(new TrainingAccountPasswordResetSettings.Builder()
+                        .enabled(Boolean.parseBoolean(settings.getOrDefault(TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED, "false")))
                         .requestEmailTemplate(getEmailTemplate(
                                 settings,
-                                "user_reset_password_request_email",
-                                UserResetPasswordSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE))
+                                "training_account_password_reset_request_email",
+                                TrainingAccountPasswordResetSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE))
                         .resetEmailTemplate(getEmailTemplate(
                                 settings,
-                                "user_reset_password_reset_email",
-                                UserResetPasswordSettings.DEFAULT_RESET_EMAIL_TEMPLATE))
+                                "training_account_password_reset_reset_email",
+                                TrainingAccountPasswordResetSettings.DEFAULT_RESET_EMAIL_TEMPLATE))
                         .build())
                 .build();
     }
@@ -92,17 +92,17 @@ public class SettingStore {
                     "session_max_concurrent_sessions_per_user",
                     String.valueOf(session.getMaxConcurrentSessionsPerUser()));
         });
-        data.getUserRegistration().ifPresent(userRegistration -> {
-            upsertSetting(USER_REGISTRATION_ENABLED, String.valueOf(userRegistration.getEnabled()));
+        data.getTrainingAccountRegistration().ifPresent(registration -> {
+            upsertSetting(TRAINING_ACCOUNT_REGISTRATION_ENABLED, String.valueOf(registration.getEnabled()));
             upsertSetting(
-                    "user_registration_recaptcha_enabled",
-                    String.valueOf(userRegistration.getRecaptchaEnabled()));
-            upsertEmailTemplate("user_registration_activation_email", userRegistration.getActivationEmailTemplate());
+                    "training_account_registration_recaptcha_enabled",
+                    String.valueOf(registration.getRecaptchaEnabled()));
+            upsertEmailTemplate("training_account_registration_activation_email", registration.getActivationEmailTemplate());
         });
-        data.getUserResetPassword().ifPresent(userResetPassword -> {
-            upsertSetting(USER_RESET_PASSWORD_ENABLED, String.valueOf(userResetPassword.getEnabled()));
-            upsertEmailTemplate("user_reset_password_request_email", userResetPassword.getRequestEmailTemplate());
-            upsertEmailTemplate("user_reset_password_reset_email", userResetPassword.getResetEmailTemplate());
+        data.getTrainingAccountPasswordReset().ifPresent(passwordReset -> {
+            upsertSetting(TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED, String.valueOf(passwordReset.getEnabled()));
+            upsertEmailTemplate("training_account_password_reset_request_email", passwordReset.getRequestEmailTemplate());
+            upsertEmailTemplate("training_account_password_reset_reset_email", passwordReset.getResetEmailTemplate());
         });
     }
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { registerUserMutationOptions } from '../../../../modules/queries/userAccount';
+import { registerUserMutationOptions } from '../../../../modules/queries/accountRegistration';
 import { getRecaptchaSiteKey } from '../../../../modules/webConfig';
 import GoogleAuth from '../../login/GoogleAuth/GoogleAuth';
 import ResendActivation from '../../needActivation/ResendActivation/ResendActivation';

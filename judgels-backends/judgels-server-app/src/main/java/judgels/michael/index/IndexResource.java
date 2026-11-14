@@ -27,7 +27,6 @@ import judgels.michael.template.HtmlTemplate;
 import judgels.session.SessionStore;
 import judgels.session.SessionTokenGenerator;
 import judgels.user.UserStore;
-import judgels.user.registration.UserRegistrationEmailStore;
 
 @Path("/")
 public class IndexResource extends BaseResource {
@@ -36,7 +35,6 @@ public class IndexResource extends BaseResource {
     @Inject protected Optional<GoogleAuth> googleAuth;
     @Inject protected SessionStore sessionStore;
     @Inject protected UserStore userStore;
-    @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
 
     @Inject public IndexResource() {}
 
@@ -75,7 +73,7 @@ public class IndexResource extends BaseResource {
         }
 
         User user = maybeUser.get();
-        if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
+        if (!userStore.isUserActivated(user.getJid())) {
             form.globalError = "Username or password incorrect.";
             return ok(renderLogin(form));
         }

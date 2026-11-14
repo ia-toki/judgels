@@ -3,24 +3,27 @@ import { Outlet } from '@tanstack/react-router';
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
 import UserRoute from '../../../components/UserRoute/UserRoute';
-import { isUserRegistrationEnabled, isUserResetPasswordEnabled } from '../../../modules/webConfig';
+import {
+  isTrainingAccountPasswordResetEnabled,
+  isTrainingAccountRegistrationEnabled,
+} from '../../../modules/webConfig';
 
 export default function AccountLayout() {
   const sidebarItems = [
     {
       path: 'info',
       title: 'Info',
-      visible: isUserRegistrationEnabled(),
+      visible: isTrainingAccountRegistrationEnabled(),
     },
     {
       path: 'avatar',
       title: 'Change avatar',
-      visible: isUserRegistrationEnabled(),
+      visible: isTrainingAccountRegistrationEnabled(),
     },
     {
       path: 'password',
       title: 'Reset password',
-      visible: isUserResetPasswordEnabled(),
+      visible: isTrainingAccountPasswordResetEnabled(),
     },
   ].filter(item => item.visible);
 
