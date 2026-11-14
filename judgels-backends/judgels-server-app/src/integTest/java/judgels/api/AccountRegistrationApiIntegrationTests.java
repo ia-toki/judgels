@@ -12,6 +12,7 @@ import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
 import judgels.api.training.account.registration.AccountRegistrationData;
+import judgels.api.training.account.registration.AccountRegistrationErrors;
 import judgels.client.AccountRegistrationClient;
 import judgels.client.SessionClient;
 import judgels.client.SettingClient;
@@ -41,6 +42,27 @@ class AccountRegistrationApiIntegrationTests extends BaseJudgelsApiIntegrationTe
                 .build()));
         assertNotFound(() -> registrationClient.activateUser("code"));
         assertNotFound(() -> registrationClient.resendActivationEmail("gamma@domain.com"));
+    }
+
+    @Test
+    void registration_rejects_taken_username_or_email() {
+        createUser("delta");
+
+        assertBadRequest(() -> registrationClient.registerUser(new AccountRegistrationData.Builder()
+                .username("delta")
+                .name("Delta")
+                .password("pass")
+                .email("epsilon@domain.com")
+                .build()))
+                .hasMessageContaining(AccountRegistrationErrors.USERNAME_ALREADY_EXISTS);
+
+        assertBadRequest(() -> registrationClient.registerUser(new AccountRegistrationData.Builder()
+                .username("epsilon")
+                .name("Delta")
+                .password("pass")
+                .email("delta@domain.com")
+                .build()))
+                .hasMessageContaining(AccountRegistrationErrors.EMAIL_ALREADY_EXISTS);
     }
 
     @Test

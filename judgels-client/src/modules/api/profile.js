@@ -11,6 +11,10 @@ export const profileAPI = {
     return get(`${baseURL}/top/?${params}`);
   },
 
+  getBasicProfileByUsername: username => {
+    return get(`${baseURL}/username/${username}/basic`);
+  },
+
   getBasicProfile: userJid => {
     return get(`${baseURL}/${userJid}/basic`);
   },

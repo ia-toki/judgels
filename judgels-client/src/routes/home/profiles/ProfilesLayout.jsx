@@ -5,13 +5,13 @@ import { useEffect } from 'react';
 
 import ContentWithSidebar from '../../../components/ContentWithSidebar/ContentWithSidebar';
 import { FullPageLayout } from '../../../components/FullPageLayout/FullPageLayout';
-import { userJidByUsernameQueryOptions } from '../../../modules/queries/userSearch';
+import { basicProfileByUsernameQueryOptions } from '../../../modules/queries/profile';
 import { isTrainingEnabled } from '../../../modules/webConfig';
 import { createDocumentTitle } from '../../../utils/title';
 
 export default function ProfilesLayout() {
   const { username } = useParams({ strict: false });
-  const { data: userJid } = useSuspenseQuery(userJidByUsernameQueryOptions(username));
+  useSuspenseQuery(basicProfileByUsernameQueryOptions(username));
 
   useEffect(() => {
     document.title = createDocumentTitle(username);

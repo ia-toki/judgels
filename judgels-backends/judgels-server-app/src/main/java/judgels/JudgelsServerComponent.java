@@ -59,7 +59,6 @@ public interface JudgelsServerComponent {
     judgels.user.info.UserInfoResource userInfoResource();
     judgels.user.rating.UserRatingResource userRatingResource();
     judgels.user.role.UserRoleResource userRoleResource();
-    judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
     judgels.profile.ProfileResource profileResource();
 

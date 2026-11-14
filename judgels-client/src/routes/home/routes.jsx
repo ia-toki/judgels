@@ -3,11 +3,10 @@ import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 import EnabledRoute from '../../components/EnabledRoute/EnabledRoute';
 import { retryImport } from '../../lazy';
 import { contestPublicHistoryQueryOptions } from '../../modules/queries/contestHistory';
-import { basicProfileQueryOptions } from '../../modules/queries/profile';
+import { basicProfileByUsernameQueryOptions } from '../../modules/queries/profile';
 import { profileSubmissionsQueryOptions } from '../../modules/queries/trainingSubmission';
 import { trainingUserStatsQueryOptions } from '../../modules/queries/trainingUserStats';
 import { userAvatarUrlQueryOptions } from '../../modules/queries/userAvatar';
-import { userJidByUsernameQueryOptions } from '../../modules/queries/userSearch';
 import { queryClient } from '../../modules/queryClient';
 import { isTrainingEnabled } from '../../modules/webConfig';
 import { createDocumentTitle } from '../../utils/title';
@@ -30,7 +29,7 @@ export const createHomeRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./profiles/ProfilesLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Profiles') }] }),
     loader: async ({ params: { username } }) => {
-      await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
+      await queryClient.ensureQueryData(basicProfileByUsernameQueryOptions(username));
     },
   });
 
@@ -41,9 +40,8 @@ export const createHomeRoutes = appRoute => {
       retryImport(() => import('./profiles/single/summary/ProfileSummaryPage/ProfileSummaryPage'))
     ),
     loader: async ({ params: { username } }) => {
-      const userJid = await queryClient.ensureQueryData(userJidByUsernameQueryOptions(username));
+      const { userJid } = await queryClient.ensureQueryData(basicProfileByUsernameQueryOptions(username));
       queryClient.prefetchQuery(userAvatarUrlQueryOptions(userJid));
-      queryClient.prefetchQuery(basicProfileQueryOptions(userJid));
       if (isTrainingEnabled()) {
         queryClient.prefetchQuery(trainingUserStatsQueryOptions(username));
       }

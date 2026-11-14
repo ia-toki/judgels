@@ -10,6 +10,9 @@ public interface ProfileClient {
     @RequestLine("GET /api/v2/profiles/top")
     Page<Profile> getTopRatedProfiles();
 
+    @RequestLine("GET /api/v2/profiles/username/{username}/basic")
+    BasicProfile getBasicProfileByUsername(@Param("username") String username);
+
     @RequestLine("GET /api/v2/profiles/{userJid}/basic")
     BasicProfile getBasicProfile(@Param("userJid") String userJid);
 }

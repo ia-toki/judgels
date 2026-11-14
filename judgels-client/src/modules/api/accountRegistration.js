@@ -1,6 +1,11 @@
 import { APP_CONFIG } from '../../conf';
 import { post } from './http';
 
+export const AccountRegistrationErrors = {
+  UsernameAlreadyExists: 'AccountRegistrationUsernameAlreadyExists',
+  EmailAlreadyExists: 'AccountRegistrationEmailAlreadyExists',
+};
+
 const baseURL = `${APP_CONFIG.apiUrl}/v4/account/registration`;
 
 export const accountRegistrationAPI = {

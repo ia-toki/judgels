@@ -35,6 +35,14 @@ public class ProfileResource {
     }
 
     @GET
+    @Path("/username/{username}/basic")
+    @Produces(APPLICATION_JSON)
+    @UnitOfWork(readOnly = true)
+    public BasicProfile getBasicProfileByUsername(@PathParam("username") String username) {
+        return checkFound(profileStore.getBasicProfileByUsername(clock.instant(), username));
+    }
+
+    @GET
     @Path("/{userJid}/basic")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)

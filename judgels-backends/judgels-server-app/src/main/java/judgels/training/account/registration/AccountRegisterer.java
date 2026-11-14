@@ -5,6 +5,7 @@ import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Optional;
 import judgels.api.training.account.registration.AccountRegistrationData;
+import judgels.api.training.account.registration.AccountRegistrationErrors;
 import judgels.api.training.account.registration.GoogleAccountRegistrationData;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
@@ -51,6 +52,9 @@ public class AccountRegisterer {
             }
         }
 
+        checkUsernameAvailable(data.getUsername());
+        checkEmailAvailable(data.getEmail());
+
         UserData userData = new UserData.Builder()
                 .username(data.getUsername())
                 .password(data.getPassword())
@@ -74,6 +78,8 @@ public class AccountRegisterer {
             throw new ForbiddenException();
         }
         GoogleIdToken.Payload payload = googleAuth.get().verifyIdToken(data.getIdToken());
+        checkUsernameAvailable(data.getUsername());
+        checkEmailAvailable(payload.getEmail());
 
         User user = userStore.createUser(new UserData.Builder()
                 .username(data.getUsername())
@@ -99,5 +105,17 @@ public class AccountRegisterer {
         Optional<String> maybeEmailCode = accountRegistrationEmailStore.getEmailCode(user.getJid());
         String emailCode = maybeEmailCode.orElseGet(() -> accountRegistrationEmailStore.generateEmailCode(user.getJid()));
         accountRegistrationEmailMailer.sendActivationEmail(user, user.getEmail(), emailCode);
+    }
+
+    private void checkUsernameAvailable(String username) {
+        if (userStore.getUserByUsername(username).isPresent()) {
+            throw AccountRegistrationErrors.usernameAlreadyExists();
+        }
+    }
+
+    private void checkEmailAvailable(String email) {
+        if (userStore.getUserByEmail(email).isPresent()) {
+            throw AccountRegistrationErrors.emailAlreadyExists();
+        }
     }
 }
