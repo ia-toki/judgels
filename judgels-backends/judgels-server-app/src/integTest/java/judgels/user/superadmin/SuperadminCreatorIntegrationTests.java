@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 @WithHibernateSession(models = {UserModel.class, UserRoleModel.class})
 public class SuperadminCreatorIntegrationTests extends BaseUserIntegrationTests {
-    private static final SuperadminCreatorConfiguration CONFIG = new SuperadminCreatorConfiguration.Builder()
+    private static final SuperadminConfiguration CONFIG = new SuperadminConfiguration.Builder()
             .initialPassword("superpass")
             .build();
 

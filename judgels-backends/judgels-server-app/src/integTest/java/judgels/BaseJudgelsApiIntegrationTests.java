@@ -61,9 +61,9 @@ import judgels.core.feign.FeignClients;
 import judgels.core.mailer.MailerConfiguration;
 import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
+import judgels.rating.RatingConfiguration;
 import judgels.training.TrainingConfiguration;
-import judgels.user.rating.UserRatingConfiguration;
-import judgels.user.superadmin.SuperadminCreatorConfiguration;
+import judgels.user.superadmin.SuperadminConfiguration;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.glassfish.jersey.client.JerseyClientBuilder;
@@ -111,7 +111,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
                 .enabled(true)
                 .build();
 
-        UserRatingConfiguration userRatingConfig = new UserRatingConfiguration.Builder()
+        RatingConfiguration ratingConfig = new RatingConfiguration.Builder()
                 .enabled(true)
                 .build();
 
@@ -126,9 +126,9 @@ public abstract class BaseJudgelsApiIntegrationTests {
                         .password("wiser")
                         .sender("noreply@wiser.com")
                         .build())
-                .superadminCreatorConfig(SuperadminCreatorConfiguration.DEFAULT)
+                .superadminConfig(SuperadminConfiguration.DEFAULT)
                 .trainingConfig(trainingConfig)
-                .userRatingConfig(userRatingConfig);
+                .ratingConfig(ratingConfig);
 
         if (System.getenv("CI") != null) {
             judgelsConfigBuilder.rabbitMQConfig(RabbitMQConfiguration.DEFAULT);

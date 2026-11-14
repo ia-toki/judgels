@@ -30,8 +30,8 @@ public class UserWebResource {
     @Inject protected SettingStore settingStore;
     @Inject protected TrainingAccountChecker trainingAccountChecker;
     @Inject protected Optional<GoogleAuth> googleAuth;
-    @Inject @Named("trainingEnabled") protected boolean trainingEnabled;
     @Inject @Named("ratingEnabled") protected boolean ratingEnabled;
+    @Inject @Named("trainingEnabled") protected boolean trainingEnabled;
 
     @Inject public UserWebResource() {}
 
@@ -46,13 +46,13 @@ public class UserWebResource {
                 .appSlogan(settings.getApp().getSlogan())
                 .appAnnouncement(settings.getApp().getAnnouncement())
                 .homeBanner(settings.getHome().getBanner())
-                .trainingAccountRegistrationEnabled(trainingAccountChecker.isRegistrationEnabled())
-                .trainingAccountPasswordResetEnabled(trainingAccountChecker.isPasswordResetEnabled())
-                .trainingEnabled(trainingEnabled)
-                .ratingEnabled(ratingEnabled)
                 .googleAuthClientId(googleAuth.map(GoogleAuth::getClientId))
+                .googleAnalyticsTrackingId(settings.getApp().getGoogleAnalyticsTrackingId())
                 .recaptchaSiteKey(trainingAccountChecker.getRecaptchaSiteKey())
-                .googleAnalyticsTrackingId(settings.getApp().getGoogleAnalyticsTrackingId());
+                .ratingEnabled(ratingEnabled)
+                .trainingEnabled(trainingEnabled)
+                .trainingAccountRegistrationEnabled(trainingAccountChecker.isRegistrationEnabled())
+                .trainingAccountPasswordResetEnabled(trainingAccountChecker.isPasswordResetEnabled());
 
         if (!authHeader.isPresent()) {
             config.roles(Set.of());

@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
+import java.util.Optional;
 import judgels.catalog.problem.ProblemService;
 import judgels.persistence.dao.TrainingBundleItemSubmissionDao;
 import judgels.submission.bundle.BaseItemSubmissionStore;
@@ -13,6 +14,7 @@ import judgels.submission.bundle.ItemSubmissionRegradeProcessor;
 import judgels.submission.bundle.ItemSubmissionRegrader;
 import judgels.submission.bundle.ItemSubmissionStore;
 import judgels.submission.bundle.NoOpItemSubmissionConsumer;
+import judgels.training.TrainingConfiguration;
 import judgels.training.stats.ItemSubmissionStatsProcessor;
 import judgels.training.stats.StatsConfiguration;
 
@@ -20,8 +22,8 @@ import judgels.training.stats.StatsConfiguration;
 public class TrainingItemSubmissionModule {
     private final StatsConfiguration statsConfig;
 
-    public TrainingItemSubmissionModule(StatsConfiguration statsConfig) {
-        this.statsConfig = statsConfig;
+    public TrainingItemSubmissionModule(Optional<TrainingConfiguration> trainingConfig) {
+        this.statsConfig = trainingConfig.map(TrainingConfiguration::getStatsConfig).orElse(StatsConfiguration.DEFAULT);
     }
 
     @Provides

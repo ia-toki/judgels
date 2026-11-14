@@ -12,24 +12,23 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 
         judgels.core.JudgelsModule.class,
         judgels.core.JudgelsSchedulerModule.class,
-        judgels.core.messaging.RabbitMQModule.class,
         judgels.core.auth.AuthModule.class,
+        judgels.core.messaging.RabbitMQModule.class,
         judgels.core.mailer.MailerModule.class,
         judgels.core.recaptcha.RecaptchaModule.class,
 
         judgels.persistence.JudgelsPersistenceModule.class,
         judgels.persistence.JudgelsHibernateModule.class,
 
+        judgels.setting.SettingModule.class,
+        judgels.session.SessionModule.class,
+
         judgels.user.superadmin.SuperadminModule.class,
         judgels.user.avatar.UserAvatarModule.class,
-        judgels.session.SessionModule.class,
-        judgels.setting.SettingModule.class,
-
-        judgels.grading.GradingModule.class,
 
         judgels.catalog.CatalogModule.class,
-
         judgels.submission.SubmissionModule.class,
+        judgels.grading.GradingModule.class,
 
         judgels.contest.file.ContestFileModule.class,
         judgels.contest.log.ContestLogModule.class,
@@ -49,8 +48,11 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
 public interface JudgelsServerComponent {
     JudgelsScheduler scheduler();
 
+    judgels.setting.SettingResource settingResource();
+    judgels.setting.SettingCreator settingCreator();
     judgels.session.SessionResource sessionResource();
     judgels.session.SessionCleaner sessionCleaner();
+
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
     judgels.user.avatar.UserAvatarResource userAvatarResource();
@@ -60,10 +62,6 @@ public interface JudgelsServerComponent {
     judgels.user.search.UserSearchResource userSearchResource();
     judgels.user.web.UserWebResource userWebResource();
     judgels.profile.ProfileResource profileResource();
-    judgels.setting.SettingResource settingResource();
-    judgels.setting.SettingCreator settingCreator();
-
-    judgels.grading.FakeGradingRequestPoller fakeGradingRequestPoller();
 
     judgels.catalog.problem.ProblemResource problemResource();
     judgels.catalog.problem.ProblemRenderResource problemRenderResource();
@@ -85,7 +83,11 @@ public interface JudgelsServerComponent {
 
     judgels.submission.bundle.ProblemBundleSubmissionResource problemBundleSubmissionResource();
     judgels.submission.programming.ProblemSubmissionResource problemSubmissionResource();
+
+    judgels.grading.FakeGradingRequestPoller fakeGradingRequestPoller();
     GradingResponsePoller problemGradingResponsePoller();
+    @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
+    @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
 
     judgels.contest.ContestResource contestResource();
     judgels.contest.web.ContestWebResource contestWebResource();
@@ -104,9 +106,9 @@ public interface JudgelsServerComponent {
     judgels.contest.submission.programming.ContestSubmissionResource contestSubmissionResource();
     judgels.contest.submission.bundle.ContestItemSubmissionResource contestItemSubmissionResource();
     judgels.contest.supervisor.ContestSupervisorResource contestSupervisorResource();
+
     judgels.contest.log.ContestLogPoller contestLogPoller();
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
-    @ContestGradingResponsePoller GradingResponsePoller contestGradingResponsePoller();
 
     judgels.training.curriculum.CurriculumCreator curriculumCreator();
     judgels.training.curriculum.CurriculumResource curriculumResource();
@@ -130,7 +132,6 @@ public interface JudgelsServerComponent {
     judgels.training.LegacyTrainingResources.UserStatsResource legacyUserStatsResource();
     judgels.training.LegacyTrainingResources.SubmissionResource legacySubmissionResource();
     judgels.training.LegacyTrainingResources.ItemSubmissionResource legacyItemSubmissionResource();
-    @TrainingGradingResponsePoller GradingResponsePoller trainingGradingResponsePoller();
 
     judgels.tasks.DumpContestTask dumpContestTask();
     judgels.tasks.ReplaceContestProblemTask replaceContestProblemTask();

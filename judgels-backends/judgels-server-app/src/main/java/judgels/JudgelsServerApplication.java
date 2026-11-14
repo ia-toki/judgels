@@ -7,16 +7,11 @@ import io.dropwizard.core.setup.Environment;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import java.time.Duration;
-import java.util.Optional;
 import judgels.contest.rating.ContestRatingModule;
 import judgels.core.JudgelsJerseyFeature;
 import judgels.core.JudgelsObjectMappers;
 import judgels.core.JudgelsSchedulerModule;
 import judgels.core.auth.AuthModule;
-import judgels.core.fs.FileSystem;
-import judgels.core.fs.aws.AwsConfiguration;
-import judgels.core.fs.aws.AwsFileSystem;
-import judgels.core.fs.aws.AwsFsConfiguration;
 import judgels.core.mailer.MailerModule;
 import judgels.core.messaging.RabbitMQModule;
 import judgels.core.recaptcha.RecaptchaModule;
@@ -24,13 +19,12 @@ import judgels.grading.GradingModule;
 import judgels.michael.DaggerMichaelComponent;
 import judgels.michael.MichaelComponent;
 import judgels.persistence.JudgelsHibernateModule;
+import judgels.rating.RatingConfiguration;
 import judgels.session.SessionModule;
 import judgels.setting.SettingModule;
 import judgels.training.TrainingConfiguration;
-import judgels.training.stats.StatsConfiguration;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
-import judgels.user.rating.UserRatingConfiguration;
 import judgels.user.superadmin.SuperadminModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
@@ -56,7 +50,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
     @Override
     public void run(JudgelsServerApplicationConfiguration config, Environment env) throws Exception {
-        // Shared so that, without RabbitMQ, both components exchange messages through the same fake one.
         RabbitMQModule rabbitMQModule = new RabbitMQModule(config.getJudgelsConfig().getRabbitMQConfig());
 
         runMichael(config, env, rabbitMQModule);
@@ -115,27 +108,12 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         JudgelsServerConfiguration judgelsConfig = config.getJudgelsConfig();
 
-        Optional<TrainingConfiguration> enabledTrainingConfig = judgelsConfig.getTrainingConfig()
-                .filter(TrainingConfiguration::getEnabled);
-        boolean trainingEnabled = enabledTrainingConfig.isPresent();
-        boolean ratingEnabled = judgelsConfig.getUserRatingConfig()
-                .map(UserRatingConfiguration::getEnabled)
+        boolean ratingEnabled = judgelsConfig.getRatingConfig()
+                .map(RatingConfiguration::getEnabled)
                 .orElse(false);
-
-        StatsConfiguration statsConfig = StatsConfiguration.DEFAULT;
-        Optional<FileSystem> trainingSubmissionFs = Optional.empty();
-        if (trainingEnabled) {
-            TrainingConfiguration trainingConfig = enabledTrainingConfig.get();
-            statsConfig = trainingConfig.getStatsConfig();
-
-            if (trainingConfig.getSubmissionConfig().isPresent()
-                    && trainingConfig.getAwsConfig().isPresent()
-                    && trainingConfig.getSubmissionConfig().get().getFs() instanceof AwsFsConfiguration) {
-                AwsConfiguration awsConfig = trainingConfig.getAwsConfig().get();
-                AwsFsConfiguration submissionFsConfig = (AwsFsConfiguration) trainingConfig.getSubmissionConfig().get().getFs();
-                trainingSubmissionFs = Optional.of(new AwsFileSystem(awsConfig, submissionFsConfig));
-            }
-        }
+        boolean trainingEnabled = judgelsConfig.getTrainingConfig()
+                .map(TrainingConfiguration::getEnabled)
+                .orElse(false);
 
         JudgelsServerComponent component = DaggerJudgelsServerComponent.builder()
                 .judgelsServerModule(new JudgelsServerModule(judgelsConfig))
@@ -143,28 +121,24 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 .judgelsHibernateModule(new JudgelsHibernateModule(hibernateBundle))
                 .authModule(new AuthModule(judgelsConfig.getAuthConfig()))
                 .rabbitMQModule(rabbitMQModule)
-                .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
-                .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminCreatorConfig()))
-                .sessionModule(new SessionModule())
                 .mailerModule(new MailerModule(judgelsConfig.getMailerConfig()))
                 .recaptchaModule(new RecaptchaModule(judgelsConfig.getRecaptchaConfig()))
                 .settingModule(new SettingModule(
                         judgelsConfig.getUserRegistrationConfig(),
                         judgelsConfig.getUserResetPasswordConfig(),
                         judgelsConfig.getGoogleAnalyticsConfig()))
-                .contestRatingModule(new ContestRatingModule(ratingEnabled))
-                .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
-                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(statsConfig))
+                .sessionModule(new SessionModule())
+                .superadminModule(new SuperadminModule(judgelsConfig.getSuperadminConfig()))
+                .gradingModule(new GradingModule(judgelsConfig.getGradingConfig()))
+                .contestRatingModule(new ContestRatingModule(judgelsConfig.getRatingConfig()))
+                .trainingSubmissionModule(new TrainingSubmissionModule(judgelsConfig.getTrainingConfig()))
+                .trainingItemSubmissionModule(new TrainingItemSubmissionModule(judgelsConfig.getTrainingConfig()))
                 .build();
 
-        component.superadminCreator().ensureSuperadminExists();
         component.settingCreator().initializeSettings();
+        component.superadminCreator().ensureSuperadminExists();
 
-        if (trainingEnabled) {
-            component.curriculumCreator().ensureCurriculumExists();
-        }
-
-        // Users
+        env.jersey().register(component.settingResource());
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.userResource());
         env.jersey().register(component.userAvatarResource());
@@ -174,16 +148,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
 
-        if (ratingEnabled) {
-            env.jersey().register(component.userRatingResource());
-        }
-
-        component.scheduler().scheduleWithFixedDelay(
-                "session-cleaner",
-                component.sessionCleaner(),
-                Duration.ofDays(1));
-
-        // Problems
         env.jersey().register(component.problemResource());
         env.jersey().register(component.problemRenderResource());
         env.jersey().register(component.problemCloneRenderResource());
@@ -198,18 +162,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.problemWriterResource());
         env.jersey().register(component.problemBundleSubmissionResource());
         env.jersey().register(component.problemSubmissionResource());
-        env.jersey().register(component.lessonResource());
-        env.jersey().register(component.lessonRenderResource());
-        env.jersey().register(component.lessonCloneRenderResource());
-        env.jersey().register(component.lessonStatementResource());
-        env.jersey().register(component.lessonVersionResource());
 
-        env.lifecycle().manage(component.problemGradingResponsePoller());
-        if (judgelsConfig.getGradingConfig().getFakeGraderEnabled()) {
-            env.lifecycle().manage(component.fakeGradingRequestPoller());
-        }
-
-        // Contests
         env.jersey().register(component.contestResource());
         env.jersey().register(component.contestWebResource());
         env.jersey().register(component.contestAnnouncementResource());
@@ -227,9 +180,10 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.contestItemSubmissionResource());
         env.jersey().register(component.contestSupervisorResource());
 
-        if (ratingEnabled) {
-            env.jersey().register(component.contestRatingResource());
-        }
+        component.scheduler().scheduleWithFixedDelay(
+                "session-cleaner",
+                component.sessionCleaner(),
+                Duration.ofDays(1));
 
         component.scheduler().scheduleWithFixedDelay(
                 "contest-scoreboard-poller",
@@ -241,14 +195,32 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                 component.contestLogPoller(),
                 Duration.ofSeconds(3));
 
+        env.lifecycle().manage(component.problemGradingResponsePoller());
         env.lifecycle().manage(component.contestGradingResponsePoller());
+
+        if (judgelsConfig.getGradingConfig().getFakeGraderEnabled()) {
+            env.lifecycle().manage(component.fakeGradingRequestPoller());
+        }
 
         env.admin().addTask(component.dumpContestTask());
 
-        // Training
+        if (ratingEnabled) {
+            env.jersey().register(component.userRatingResource());
+            env.jersey().register(component.contestRatingResource());
+        }
+
         if (trainingEnabled) {
+            component.curriculumCreator().ensureCurriculumExists();
+
             env.jersey().register(component.accountRegistrationResource());
             env.jersey().register(component.accountPasswordResource());
+
+            env.jersey().register(component.lessonResource());
+            env.jersey().register(component.lessonRenderResource());
+            env.jersey().register(component.lessonCloneRenderResource());
+            env.jersey().register(component.lessonStatementResource());
+            env.jersey().register(component.lessonVersionResource());
+
             env.jersey().register(component.archiveResource());
             env.jersey().register(component.curriculumResource());
             env.jersey().register(component.courseResource());
@@ -256,13 +228,15 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.jersey().register(component.courseChapterResource());
             env.jersey().register(component.chapterLessonResource());
             env.jersey().register(component.chapterProblemResource());
-            env.jersey().register(component.trainingProblemResource());
             env.jersey().register(component.problemSetResource());
             env.jersey().register(component.problemSetProblemResource());
+
+            env.jersey().register(component.trainingProblemResource());
             env.jersey().register(component.trainingItemSubmissionResource());
             env.jersey().register(component.trainingSubmissionResource());
             env.jersey().register(component.trainingProblemTagResource());
             env.jersey().register(component.trainingUserStatsResource());
+
             env.jersey().register(component.legacyProblemResource());
             env.jersey().register(component.legacyProblemTagResource());
             env.jersey().register(component.legacyUserStatsResource());
@@ -278,8 +252,5 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
             env.admin().addTask(component.moveTrainingProblemToProblemSetTask());
             env.admin().addTask(component.refreshProblemSetStatsTask());
         }
-
-        // Settings
-        env.jersey().register(component.settingResource());
     }
 }

@@ -10,9 +10,9 @@ import judgels.user.role.UserRoleStore;
 
 @Module
 public class SuperadminModule {
-    private Optional<SuperadminCreatorConfiguration> config;
+    private Optional<SuperadminConfiguration> config;
 
-    public SuperadminModule(Optional<SuperadminCreatorConfiguration> config) {
+    public SuperadminModule(Optional<SuperadminConfiguration> config) {
         this.config = config;
     }
 

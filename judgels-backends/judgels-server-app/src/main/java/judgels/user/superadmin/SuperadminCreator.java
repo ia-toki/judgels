@@ -18,12 +18,12 @@ public class SuperadminCreator {
 
     private final UserStore userStore;
     private final UserRoleStore userRoleStore;
-    private final Optional<SuperadminCreatorConfiguration> config;
+    private final Optional<SuperadminConfiguration> config;
 
     public SuperadminCreator(
             UserStore userStore,
             UserRoleStore userRoleStore,
-            Optional<SuperadminCreatorConfiguration> config) {
+            Optional<SuperadminConfiguration> config) {
 
         this.userStore = userStore;
         this.userRoleStore = userRoleStore;
@@ -32,7 +32,7 @@ public class SuperadminCreator {
 
     @UnitOfWork
     public void ensureSuperadminExists() {
-        String initialPassword = config.orElse(SuperadminCreatorConfiguration.DEFAULT).getInitialPassword();
+        String initialPassword = config.orElse(SuperadminConfiguration.DEFAULT).getInitialPassword();
 
         Optional<User> maybeUser = userStore.getUserByUsername(SUPERADMIN_USERNAME);
         User user;
