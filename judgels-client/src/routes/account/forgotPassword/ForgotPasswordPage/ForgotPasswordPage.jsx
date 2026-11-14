@@ -9,7 +9,7 @@ import ForgotPasswordForm from '../ForgotPasswordForm/ForgotPasswordForm';
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
 
-  const resetPasswordMutation = useMutation(requestToResetPasswordMutationOptions);
+  const resetPasswordMutation = useMutation(requestToResetPasswordMutationOptions());
 
   const onForgetPassword = data => {
     resetPasswordMutation.mutate(data.email);

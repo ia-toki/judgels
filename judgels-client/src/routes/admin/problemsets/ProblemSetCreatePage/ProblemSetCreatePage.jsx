@@ -12,7 +12,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export default function ProblemSetCreatePage() {
   const navigate = useNavigate();
 
-  const createProblemSetMutation = useMutation(createProblemSetMutationOptions);
+  const createProblemSetMutation = useMutation(createProblemSetMutationOptions());
 
   // Computed once, so that the form does not reset whenever the page re-renders.
   const [initialValues] = useState(() => ({

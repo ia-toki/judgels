@@ -1,7 +1,7 @@
 import { accountPasswordAPI } from '../api/accountPassword';
 import { BadRequestError, NotFoundError } from '../api/error';
 
-export const requestToResetPasswordMutationOptions = {
+export const requestToResetPasswordMutationOptions = () => ({
   mutationFn: async email => {
     try {
       await accountPasswordAPI.requestToResetPassword(email);
@@ -12,9 +12,9 @@ export const requestToResetPasswordMutationOptions = {
       throw error;
     }
   },
-};
+});
 
-export const resetPasswordMutationOptions = {
+export const resetPasswordMutationOptions = () => ({
   mutationFn: async ({ emailCode, newPassword }) => {
     try {
       await accountPasswordAPI.resetPassword({ emailCode, newPassword });
@@ -26,4 +26,4 @@ export const resetPasswordMutationOptions = {
       }
     }
   },
-};
+});

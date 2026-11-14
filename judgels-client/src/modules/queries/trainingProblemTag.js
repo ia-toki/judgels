@@ -4,6 +4,6 @@ import { trainingProblemTagAPI } from '../api/trainingProblemTag';
 
 export const trainingProblemTagsQueryOptions = () =>
   queryOptions({
-    queryKey: ['training-problem-tags'],
+    queryKey: ['training', 'problems', 'tags'],
     queryFn: () => trainingProblemTagAPI.getProblemTags(),
   });

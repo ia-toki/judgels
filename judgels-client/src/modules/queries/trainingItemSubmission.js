@@ -6,7 +6,7 @@ import { getToken } from '../session';
 
 export const chapterLatestItemSubmissionsQueryOptions = (chapterJid, problemAlias) =>
   queryOptions({
-    queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'latest', problemAlias],
+    queryKey: ['training', 'submissions', 'bundle', 'answers', { containerJid: chapterJid, problemAlias }],
     meta: { persist: false },
     queryFn: () => trainingItemSubmissionAPI.getLatestItemSubmissions(getToken(), chapterJid, problemAlias),
   });
@@ -14,7 +14,7 @@ export const chapterLatestItemSubmissionsQueryOptions = (chapterJid, problemAlia
 export const chapterItemSubmissionSummaryQueryOptions = (chapterJid, params) => {
   const { problemAlias, language } = params || {};
   return queryOptions({
-    queryKey: ['chapter', chapterJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
+    queryKey: ['training', 'submissions', 'bundle', 'summary', { containerJid: chapterJid, ...params }],
     meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissionSummary(
@@ -45,7 +45,7 @@ export const createChapterItemSubmissionMutationOptions = (chapterJid, problemAl
 export const problemSetItemSubmissionsQueryOptions = (problemSetJid, params) => {
   const { username, problemAlias, page } = params || {};
   return queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', ...(params ? [params] : [])],
+    queryKey: ['training', 'submissions', 'bundle', { containerJid: problemSetJid, ...params }],
     meta: { persist: false },
     queryFn: () =>
       trainingItemSubmissionAPI.getItemSubmissions(getToken(), problemSetJid, username, problemAlias, page),
@@ -55,16 +55,23 @@ export const problemSetItemSubmissionsQueryOptions = (problemSetJid, params) => 
 export const problemSetItemSubmissionSummaryQueryOptions = (problemSetJid, params) => {
   const { problemJid, username, language } = params || {};
   return queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'summary', ...(params ? [params] : [])],
+    queryKey: ['training', 'submissions', 'bundle', 'summary', { containerJid: problemSetJid, ...params }],
     meta: { persist: false },
     queryFn: () =>
-      trainingItemSubmissionAPI.getItemSubmissionSummary(getToken(), problemSetJid, problemJid, username, language),
+      trainingItemSubmissionAPI.getItemSubmissionSummary(
+        getToken(),
+        problemSetJid,
+        problemJid,
+        username,
+        undefined,
+        language
+      ),
   });
 };
 
 export const problemSetLatestItemSubmissionsQueryOptions = (problemSetJid, problemAlias) =>
   queryOptions({
-    queryKey: ['problem-set', problemSetJid, 'submissions', 'bundle', 'latest', problemAlias],
+    queryKey: ['training', 'submissions', 'bundle', 'answers', { containerJid: problemSetJid, problemAlias }],
     meta: { persist: false },
     queryFn: () => trainingItemSubmissionAPI.getLatestItemSubmissions(getToken(), problemSetJid, problemAlias),
   });

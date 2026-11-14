@@ -7,7 +7,7 @@ import { clearSession, getToken, setSession } from '../session';
 
 import * as toastActions from '../toast/toastActions';
 
-export const logInMutationOptions = {
+export const logInMutationOptions = () => ({
   mutationFn: async ({ usernameOrEmail, password }) => {
     let session;
     try {
@@ -29,7 +29,7 @@ export const logInMutationOptions = {
     }
     return session;
   },
-};
+});
 
 export async function afterLogin(session) {
   const user = await userAPI.getMyself(session.token);
@@ -39,7 +39,7 @@ export async function afterLogin(session) {
   queryClient.invalidateQueries(userWebConfigQueryOptions());
 }
 
-export const logOutMutationOptions = {
+export const logOutMutationOptions = () => ({
   mutationFn: async () => {
     try {
       await sessionAPI.logOut(getToken());
@@ -54,9 +54,9 @@ export const logOutMutationOptions = {
     clearSession();
     queryClient.resetQueries();
   },
-};
+});
 
-export const logInWithGoogleMutationOptions = {
+export const logInWithGoogleMutationOptions = () => ({
   mutationFn: async idToken => {
     let session;
     try {
@@ -70,4 +70,4 @@ export const logInWithGoogleMutationOptions = {
     await afterLogin(session);
     return session;
   },
-};
+});

@@ -27,7 +27,7 @@ export default function ProblemWritersEditPage() {
     data: { data: writerJids, profilesMap },
   } = useSuspenseQuery(problemWritersQueryOptions());
 
-  const setWritersMutation = useMutation(setProblemWritersMutationOptions);
+  const setWritersMutation = useMutation(setProblemWritersMutationOptions());
 
   const usernames = writerJids
     .map(userJid => profilesMap[userJid]?.username ?? userJid)

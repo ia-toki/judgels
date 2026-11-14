@@ -27,7 +27,7 @@ export default function SubmissionsPage() {
 
   const { data: response } = useQuery(trainingSubmissionsQueryOptions({ username: usernameFilter, beforeId, afterId }));
 
-  const regradeMutation = useMutation(regradeTrainingSubmissionMutationOptions);
+  const regradeMutation = useMutation(regradeTrainingSubmissionMutationOptions());
 
   const onRegrade = submissionJid => {
     regradeMutation.mutate(submissionJid, {

@@ -16,7 +16,14 @@ export const contestItemSubmissionsQueryOptions = (contestJid, params) => {
 export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'summary', username, ...(params ? [params] : [])],
+    queryKey: [
+      'contest',
+      contestJid,
+      'submissions',
+      'bundle',
+      'summary',
+      ...(username || params ? [{ username, ...params }] : []),
+    ],
     meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getItemSubmissionSummary(getToken(), contestJid, username, language),
   });
@@ -24,7 +31,7 @@ export const contestItemSubmissionSummaryQueryOptions = (contestJid, username, p
 
 export const contestLatestItemSubmissionsQueryOptions = (contestJid, problemAlias) => {
   return queryOptions({
-    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'latest', problemAlias],
+    queryKey: ['contest', contestJid, 'submissions', 'bundle', 'answers', { problemAlias }],
     meta: { persist: false },
     queryFn: () => contestItemSubmissionAPI.getLatestItemSubmissions(getToken(), contestJid, problemAlias),
   });

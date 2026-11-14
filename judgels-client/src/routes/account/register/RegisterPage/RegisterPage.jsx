@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const [registeredUser, setRegisteredUser] = useState(undefined);
   const [isInternalAuthEnabled, setIsInternalAuthEnabled] = useState(true);
 
-  const registerMutation = useMutation(registerUserMutationOptions);
+  const registerMutation = useMutation(registerUserMutationOptions());
 
   const onRegisterUser = async data => {
     const userRegistrationData = {

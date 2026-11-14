@@ -20,8 +20,8 @@ export default function GoogleAuth({ onToggleInternalAuth }) {
     isRegisterDialogOpen: false,
   });
 
-  const googleLogInMutation = useMutation(logInWithGoogleMutationOptions);
-  const googleRegisterMutation = useMutation(registerGoogleUserMutationOptions);
+  const googleLogInMutation = useMutation(logInWithGoogleMutationOptions());
+  const googleRegisterMutation = useMutation(registerGoogleUserMutationOptions());
 
   const clientId = getGoogleAuthClientId();
   if (!clientId) {

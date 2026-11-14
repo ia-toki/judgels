@@ -9,11 +9,11 @@ import { getToken } from '../session';
 
 export const problemWritersQueryOptions = () =>
   queryOptions({
-    queryKey: ['problem-writers'],
+    queryKey: ['problems', 'writers'],
     queryFn: () => problemWriterAPI.getWriters(getToken()),
   });
 
-export const setProblemWritersMutationOptions = {
+export const setProblemWritersMutationOptions = () => ({
   mutationFn: async data => {
     try {
       return await problemWriterAPI.setWriters(getToken(), data);
@@ -27,4 +27,4 @@ export const setProblemWritersMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(problemWritersQueryOptions());
   },
-};
+});

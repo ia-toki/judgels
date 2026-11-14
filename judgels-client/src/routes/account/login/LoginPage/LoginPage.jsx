@@ -14,7 +14,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [isInternalAuthEnabled, setIsInternalAuthEnabled] = useState(true);
 
-  const logInMutation = useMutation(logInMutationOptions);
+  const logInMutation = useMutation(logInMutationOptions());
 
   const toggleInternalAuth = () => {
     setIsInternalAuthEnabled(prev => !prev);

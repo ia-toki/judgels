@@ -15,7 +15,7 @@ export const problemBundleSubmissionsQueryOptions = (problemJid, params) => {
 
 export const problemBundleSubmissionWithAnswerByIdQueryOptions = (problemJid, submissionId) =>
   queryOptions({
-    queryKey: ['problem', problemJid, 'submissions', 'bundle', submissionId, 'answer'],
+    queryKey: ['problem', problemJid, 'submission', 'bundle', submissionId, 'answer'],
     meta: { persist: false },
     queryFn: () => problemBundleSubmissionAPI.getBundleSubmissionWithAnswerById(getToken(), problemJid, submissionId),
   });

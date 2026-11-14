@@ -23,7 +23,7 @@ export const problemSubmissionConfigQueryOptions = problemJid =>
 
 export const problemSubmissionWithSourceByIdQueryOptions = (problemJid, submissionId) =>
   queryOptions({
-    queryKey: ['problem', problemJid, 'submissions', 'programming', submissionId, 'source'],
+    queryKey: ['problem', problemJid, 'submission', 'programming', submissionId, 'source'],
     meta: { persist: false },
     queryFn: () => problemSubmissionAPI.getSubmissionWithSourceById(getToken(), problemJid, submissionId),
   });

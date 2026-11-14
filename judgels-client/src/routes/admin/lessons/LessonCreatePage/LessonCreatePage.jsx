@@ -11,7 +11,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export default function LessonCreatePage() {
   const navigate = useNavigate();
 
-  const createLessonMutation = useMutation(createLessonMutationOptions);
+  const createLessonMutation = useMutation(createLessonMutationOptions());
 
   const createLesson = async data => {
     await createLessonMutation.mutateAsync(

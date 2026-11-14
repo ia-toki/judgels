@@ -20,7 +20,7 @@ export function UserWidget({ user, profile, items, homeRoute }) {
     ...userAvatarUrlQueryOptions(user?.jid),
     enabled: !!user,
   });
-  const logOutMutation = useMutation(logOutMutationOptions);
+  const logOutMutation = useMutation(logOutMutationOptions());
 
   const logOut = () => {
     logOutMutation.mutate(undefined, { onSuccess: () => navigate({ to: '/', ignoreBlocker: true }) });

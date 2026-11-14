@@ -16,12 +16,12 @@ export const chapterByJidQueryOptions = chapterJid =>
     select: response => response.data.find(c => c.jid === chapterJid),
   });
 
-export const createChapterMutationOptions = {
+export const createChapterMutationOptions = () => ({
   mutationFn: data => chapterAPI.createChapter(getToken(), data),
   onSuccess: () => {
     queryClient.invalidateQueries(chaptersQueryOptions());
   },
-};
+});
 
 export const updateChapterMutationOptions = chapterJid => ({
   mutationFn: data => chapterAPI.updateChapter(getToken(), chapterJid, data),
