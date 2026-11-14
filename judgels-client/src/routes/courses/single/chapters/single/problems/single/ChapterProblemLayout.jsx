@@ -20,7 +20,7 @@ import { createDocumentTitle } from '../../../../../../../utils/title';
 import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
 import { ChapterProblemProgressTag } from '../../resources/ChapterProblemProgressTag/ChapterProblemProgressTag';
 import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
-import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
+import ProgrammingChapterProblemLayout from './Programming/ChapterProblemLayout';
 
 import './ChapterProblemLayout.scss';
 
@@ -145,7 +145,7 @@ export default function ChapterProblemLayout() {
     }
 
     return (
-      <ChapterProblemProgrammingLayout
+      <ProgrammingChapterProblemLayout
         worksheet={worksheet}
         renderNavigation={renderNavigation}
         reloadProblem={reloadProblem}
