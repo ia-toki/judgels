@@ -32,7 +32,6 @@ import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
 import judgels.user.rating.UserRatingConfiguration;
 import judgels.user.superadmin.SuperadminModule;
-import judgels.user.web.UserWebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
 
 public class JudgelsServerApplication extends Application<JudgelsServerApplicationConfiguration> {
@@ -153,7 +152,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                         judgelsConfig.getUserRegistrationConfig(),
                         judgelsConfig.getUserResetPasswordConfig(),
                         judgelsConfig.getGoogleAnalyticsConfig()))
-                .userWebModule(new UserWebModule(trainingEnabled, ratingEnabled))
                 .contestRatingModule(new ContestRatingModule(ratingEnabled))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
                 .trainingItemSubmissionModule(new TrainingItemSubmissionModule(statsConfig))
@@ -170,12 +168,15 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.sessionResource());
         env.jersey().register(component.userResource());
         env.jersey().register(component.userAvatarResource());
-        env.jersey().register(component.userProfileResource());
-        env.jersey().register(component.userRatingResource());
+        env.jersey().register(component.userInfoResource());
         env.jersey().register(component.userRoleResource());
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
+
+        if (ratingEnabled) {
+            env.jersey().register(component.userRatingResource());
+        }
 
         component.scheduler().scheduleWithFixedDelay(
                 "session-cleaner",
@@ -244,10 +245,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         env.admin().addTask(component.dumpContestTask());
 
-        if (trainingEnabled) {
-            env.admin().addTask(component.replaceContestProblemTask());
-        }
-
         // Training
         if (trainingEnabled) {
             env.jersey().register(component.accountRegistrationResource());
@@ -274,10 +271,11 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
             env.lifecycle().manage(component.trainingGradingResponsePoller());
 
+            env.admin().addTask(component.replaceContestProblemTask());
+            env.admin().addTask(component.refreshContestStatsTask());
             env.admin().addTask(component.deleteTrainingProblemTask());
             env.admin().addTask(component.moveTrainingProblemToChapterTask());
             env.admin().addTask(component.moveTrainingProblemToProblemSetTask());
-            env.admin().addTask(component.refreshContestStatsTask());
             env.admin().addTask(component.refreshProblemSetStatsTask());
         }
 

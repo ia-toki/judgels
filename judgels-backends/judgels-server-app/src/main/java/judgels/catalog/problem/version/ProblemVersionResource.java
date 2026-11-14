@@ -101,7 +101,7 @@ public class ProblemVersionResource {
     @Path("/local/exists")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean versionLocalChangesExist(
+    public boolean hasVersionLocalChanges(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("problemJid") String problemJid) {
 

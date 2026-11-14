@@ -62,7 +62,7 @@ public class UserAvatarResource {
     @Path("/exists")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean avatarExists(@PathParam("userJid") String userJid) {
+    public boolean hasAvatar(@PathParam("userJid") String userJid) {
         return userStore.getUserAvatarFilename(userJid).isPresent();
     }
 

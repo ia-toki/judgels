@@ -22,7 +22,7 @@ export const problemEditorialQueryOptions = (problemJid, params) => {
 export const problemEditorialExistsQueryOptions = problemJid =>
   queryOptions({
     queryKey: ['problem', problemJid, 'editorial', 'exists'],
-    queryFn: () => problemEditorialAPI.editorialExists(getToken(), problemJid),
+    queryFn: () => problemEditorialAPI.hasEditorial(getToken(), problemJid),
   });
 
 export const createProblemEditorialMutationOptions = problemJid => ({

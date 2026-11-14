@@ -4,8 +4,8 @@ import { SubmissionError } from '../form/submissionError';
 
 export const registerUserMutationOptions = {
   mutationFn: async data => {
-    const usernameExists = await userSearchAPI.usernameExists(data.username);
-    const emailExists = await userSearchAPI.emailExists(data.email);
+    const usernameExists = await userSearchAPI.hasUsername(data.username);
+    const emailExists = await userSearchAPI.hasEmail(data.email);
 
     if (usernameExists || emailExists) {
       const usernameError = usernameExists ? { username: 'Username already exists' } : {};
@@ -26,7 +26,7 @@ export const activateUserMutationOptions = {
 
 export const registerGoogleUserMutationOptions = {
   mutationFn: async data => {
-    const usernameExists = await userSearchAPI.usernameExists(data.username);
+    const usernameExists = await userSearchAPI.hasUsername(data.username);
     if (usernameExists) {
       throw new SubmissionError({ username: 'Username already exists' });
     }

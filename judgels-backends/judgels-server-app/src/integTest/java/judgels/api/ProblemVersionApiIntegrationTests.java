@@ -34,14 +34,14 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertBadRequest(() -> versionClient.commitVersionLocalChanges(adminToken, problemJid, commitData("Empty")));
         assertBadRequest(() -> versionClient.rebaseVersionLocalChanges(adminToken, problemJid));
         assertPermitted(() -> versionClient.discardVersionLocalChanges(adminToken, problemJid));
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
 
         ProblemStatement committedStatement = statementClient.getStatement(adminToken, problemJid, "en-US");
 
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement("Discarded"));
         versionClient.discardVersionLocalChanges(adminToken, problemJid);
 
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(committedStatement);
 
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement("Committed"));
@@ -54,7 +54,7 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .description("Reworded the statement.")
                 .build());
 
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
         assertThat(statementClient.getStatement(superadminToken, problemJid, "en-US")).isEqualTo(statement("Committed"));
 
         List<CatalogVersion> versions = versionClient.getVersions(adminToken, problemJid).getData();
@@ -83,7 +83,7 @@ class ProblemVersionApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         versionClient.rebaseVersionLocalChanges(adminToken, problemJid);
 
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(statement("By superadmin"));
 
         versionClient.commitVersionLocalChanges(adminToken, problemJid, commitData("Add language"));

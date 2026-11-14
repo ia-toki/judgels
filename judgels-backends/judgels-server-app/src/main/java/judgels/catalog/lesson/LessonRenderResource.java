@@ -27,7 +27,7 @@ public class LessonRenderResource {
     @GET
     @Path("/render/{mediaFilename}")
     @UnitOfWork
-    public Response renderStatementImage(
+    public Response renderStatementMediaFile(
             @HeaderParam("If-Modified-Since") Optional<String> ifModifiedSince,
             @PathParam("lessonJid") String lessonJid,
             @PathParam("mediaFilename") String mediaFilename) {

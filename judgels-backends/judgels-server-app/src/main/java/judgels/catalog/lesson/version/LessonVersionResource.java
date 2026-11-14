@@ -101,7 +101,7 @@ public class LessonVersionResource {
     @Path("/local/exists")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean versionLocalChangesExist(
+    public boolean hasVersionLocalChanges(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("lessonJid") String lessonJid) {
 

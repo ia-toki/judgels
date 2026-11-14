@@ -42,7 +42,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         ProblemGradingConfig gradingConfig = gradingClient.getGradingConfig(adminToken, problemJid);
         assertThat(gradingConfig.getEngine()).isEqualTo("Batch");
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
 
         ObjectNode config = gradingConfig.getConfig().deepCopy();
         config.put("timeLimit", 3000);
@@ -53,7 +53,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         gradingClient.updateGradingConfig(adminToken, problemJid, newGradingConfig);
 
         assertThat(gradingClient.getGradingConfig(adminToken, problemJid)).isEqualTo(newGradingConfig);
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
 
         // a config for another engine, and a config the engine cannot parse
         assertBadRequest(() -> gradingClient.updateGradingConfig(adminToken, problemJid, new ProblemGradingConfig.Builder()
@@ -124,7 +124,7 @@ class ProblemGradingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(gradingClient.getGradingTestDataFiles(adminToken, problemJid).getData())
                 .extracting(CatalogFile::getName)
                 .containsExactly("1.in", "1.out", "2.in");
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
 
         try (var response = gradingClient.downloadGradingTestDataFile(adminToken, problemJid, "1.in")) {
             assertThat(response.status()).isEqualTo(200);

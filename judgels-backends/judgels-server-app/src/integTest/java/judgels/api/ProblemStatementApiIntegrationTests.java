@@ -37,7 +37,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         assertThat(defaultStatement.getTitle()).isNotEmpty();
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(defaultStatement);
 
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
 
         ProblemStatement statement = new ProblemStatement.Builder()
                 .title("Problem A")
@@ -46,7 +46,7 @@ class ProblemStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         statementClient.updateStatement(adminToken, problemJid, "en-US", statement);
 
         assertThat(statementClient.getStatement(adminToken, problemJid, "en-US")).isEqualTo(statement);
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
 
         assertBadRequest(() -> statementClient.getStatement(adminToken, problemJid, "id-ID"));
         assertBadRequest(() -> statementClient.updateStatement(adminToken, problemJid, "id-ID", statement));
