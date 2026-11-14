@@ -29,10 +29,10 @@ describe('SettingsTopbar', () => {
     expect(screen.getByText('Training')).toBeInTheDocument();
   });
 
-  test('hides the Training tab when training is off', async () => {
+  test('shows no tabs when training is off', async () => {
     await renderComponent({ trainingEnabled: false });
 
-    expect(await screen.findByText('General')).toBeInTheDocument();
+    expect(screen.queryByText('General')).not.toBeInTheDocument();
     expect(screen.queryByText('Training')).not.toBeInTheDocument();
   });
 });
