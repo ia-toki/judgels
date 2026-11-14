@@ -5,8 +5,7 @@ import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/Si
 import ResendActivation from '../ResendActivation/ResendActivation';
 
 export default function NeedActivationPage() {
-  const location = useLocation();
-  const email = location.state && location.state.email;
+  const email = useLocation({ select: location => location.state.email });
 
   if (!email) {
     return <Navigate to="/" replace />;
