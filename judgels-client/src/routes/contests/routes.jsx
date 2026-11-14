@@ -145,9 +145,7 @@ export const createContestsRoutes = appRoute => {
   const contestProblemRoute = createRoute({
     getParentRoute: () => contestRoute,
     path: 'problems/$problemAlias',
-    component: lazyRouteComponent(
-      retryImport(() => import('./single/problems/single/ContestProblemPage/ContestProblemPage'))
-    ),
+    component: lazyRouteComponent(retryImport(() => import('./single/problems/single/ContestProblemPage'))),
     loader: async ({ params: { contestSlug, problemAlias } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       const language = getWebPrefs().statementLanguage;

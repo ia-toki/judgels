@@ -1,7 +1,7 @@
 import { useLocation } from '@tanstack/react-router';
 
-import ChapterProblemStatementPage from './ChapterProblemStatementPage/ChapterProblemStatementPage';
-import ChapterProblemSubmissionsPage from './submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
+import ChapterProblemStatementPage from '../ChapterProblemStatementPage/ChapterProblemStatementPage';
+import ChapterProblemSubmissionsPage from '../submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage';
 
 export default function ChapterProblemPage({ worksheet, renderNavigation }) {
   const location = useLocation();

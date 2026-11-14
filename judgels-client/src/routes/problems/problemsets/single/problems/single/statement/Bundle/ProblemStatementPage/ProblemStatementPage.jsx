@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 
-import { ContentCard } from '../../../../../../../../components/ContentCard/ContentCard';
-import StatementLanguageWidget from '../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { ProblemWorksheetCard } from '../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
-import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { ContentCard } from '../../../../../../../../../components/ContentCard/ContentCard';
+import StatementLanguageWidget from '../../../../../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../../../../../components/LoadingState/LoadingState';
+import { ProblemWorksheetCard } from '../../../../../../../../../components/ProblemWorksheetCard/Bundle/ProblemWorksheetCard';
+import { problemSetBySlugQueryOptions } from '../../../../../../../../../modules/queries/problemSet';
 import {
   createProblemSetItemSubmissionMutationOptions,
   problemSetLatestItemSubmissionsQueryOptions,
-} from '../../../../../../../../modules/queries/trainingItemSubmission';
+} from '../../../../../../../../../modules/queries/trainingItemSubmission';
 
 export default function ProblemStatementPage(props) {
   const { problemSetSlug } = useParams({ strict: false });

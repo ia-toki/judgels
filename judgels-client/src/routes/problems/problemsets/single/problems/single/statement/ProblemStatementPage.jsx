@@ -2,17 +2,17 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { LoadingState } from '../../../../../../../../components/LoadingState/LoadingState';
-import { sendGAEvent } from '../../../../../../../../ga';
-import { ProblemType } from '../../../../../../../../modules/api/problem';
-import { problemSetBySlugQueryOptions } from '../../../../../../../../modules/queries/problemSet';
+import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
+import { sendGAEvent } from '../../../../../../../ga';
+import { ProblemType } from '../../../../../../../modules/api/problem';
+import { problemSetBySlugQueryOptions } from '../../../../../../../modules/queries/problemSet';
 import {
   problemSetProblemQueryOptions,
   problemSetProblemWorksheetQueryOptions,
-} from '../../../../../../../../modules/queries/problemSetProblem';
-import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
-import ProblemSetProblemBundleStatementPage from '../Bundle/ProblemStatementPage';
-import ProblemSetProblemProgrammingStatementPage from '../Programming/ProblemStatementPage';
+} from '../../../../../../../modules/queries/problemSetProblem';
+import { useWebPrefs } from '../../../../../../../modules/webPrefs';
+import BundleProblemStatementPage from './Bundle/ProblemStatementPage/ProblemStatementPage';
+import ProgrammingProblemStatementPage from './Programming/ProblemStatementPage/ProblemStatementPage';
 
 export default function ProblemStatementPage() {
   const { problemSetSlug, problemAlias } = useParams({ strict: false });
@@ -41,8 +41,8 @@ export default function ProblemStatementPage() {
 
   const { problem: problemData } = response;
   if (problemData.type === ProblemType.Programming) {
-    return <ProblemSetProblemProgrammingStatementPage worksheet={response} />;
+    return <ProgrammingProblemStatementPage worksheet={response} />;
   } else {
-    return <ProblemSetProblemBundleStatementPage worksheet={response} />;
+    return <BundleProblemStatementPage worksheet={response} />;
   }
 }
