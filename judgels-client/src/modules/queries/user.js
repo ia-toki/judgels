@@ -27,6 +27,6 @@ export const usersQueryOptions = params => {
 export const upsertUsersMutationOptions = () => ({
   mutationFn: csv => userAPI.upsertUsers(getToken(), csv),
   onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['users'] });
+    queryClient.invalidateQueries(usersQueryOptions());
   },
 });

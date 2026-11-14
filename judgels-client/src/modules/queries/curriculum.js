@@ -12,17 +12,13 @@ export const curriculumsQueryOptions = () =>
 
 export const curriculumByJidQueryOptions = curriculumJid =>
   queryOptions({
-    queryKey: ['curriculum-by-jid', curriculumJid],
-    queryFn: async () => {
-      const response = await curriculumAPI.getCurriculums(getToken());
-      return response.data.find(c => c.jid === curriculumJid);
-    },
+    ...curriculumsQueryOptions(),
+    select: response => response.data.find(c => c.jid === curriculumJid),
   });
 
 export const updateCurriculumMutationOptions = curriculumJid => ({
   mutationFn: data => curriculumAPI.updateCurriculum(getToken(), curriculumJid, data),
   onSuccess: () => {
     queryClient.invalidateQueries(curriculumsQueryOptions());
-    queryClient.invalidateQueries({ queryKey: ['curriculum-by-jid'] });
   },
 });

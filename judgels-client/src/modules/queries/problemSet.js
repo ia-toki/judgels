@@ -40,7 +40,7 @@ export const createProblemSetMutationOptions = {
   },
 };
 
-export const updateProblemSetMutationOptions = problemSetJid => ({
+export const updateProblemSetMutationOptions = (problemSetJid, problemSetSlug) => ({
   mutationFn: async data => {
     try {
       await problemSetAPI.updateProblemSet(getToken(), problemSetJid, data);
@@ -56,7 +56,7 @@ export const updateProblemSetMutationOptions = problemSetJid => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetsQueryOptions());
-    queryClient.invalidateQueries({ queryKey: ['problem-set-by-slug'] });
+    queryClient.invalidateQueries(problemSetBySlugQueryOptions(problemSetSlug));
   },
 });
 

@@ -34,7 +34,7 @@ export const createCourseMutationOptions = {
   },
 };
 
-export const updateCourseMutationOptions = courseJid => ({
+export const updateCourseMutationOptions = (courseJid, courseSlug) => ({
   mutationFn: async data => {
     try {
       await courseAPI.updateCourse(getToken(), courseJid, data);
@@ -47,6 +47,6 @@ export const updateCourseMutationOptions = courseJid => ({
   },
   onSuccess: () => {
     queryClient.invalidateQueries(coursesQueryOptions());
-    queryClient.invalidateQueries({ queryKey: ['course-by-slug'] });
+    queryClient.invalidateQueries(courseBySlugQueryOptions(courseSlug));
   },
 });
