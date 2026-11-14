@@ -7,7 +7,7 @@ import { getToken } from '../session';
 export const userAvatarExistsQueryOptions = userJid =>
   queryOptions({
     queryKey: ['user', userJid, 'avatar-exists'],
-    queryFn: () => userAvatarAPI.avatarExists(userJid),
+    queryFn: () => userAvatarAPI.hasAvatar(userJid),
   });
 
 export const userAvatarUrlQueryOptions = userJid =>

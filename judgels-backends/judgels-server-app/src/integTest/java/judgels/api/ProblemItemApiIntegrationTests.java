@@ -30,7 +30,7 @@ class ProblemItemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         String problemJid = problem.getJid();
 
         assertThat(itemClient.getItems(adminToken, problemJid, null).getData()).isEmpty();
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
 
         Item statement = itemClient.createItem(adminToken, problemJid, type(ItemType.STATEMENT));
         Item multipleChoice = itemClient.createItem(adminToken, problemJid, type(ItemType.MULTIPLE_CHOICE));
@@ -50,7 +50,7 @@ class ProblemItemApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         assertThat(itemClient.getItems(adminToken, problemJid, null).getData())
                 .containsExactly(statement, multipleChoice, shortAnswer, essay);
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
 
         MultipleChoiceItemConfig multipleChoiceConfig = new MultipleChoiceItemConfig.Builder()
                 .statement("<p>What is 1 + 1?</p>")

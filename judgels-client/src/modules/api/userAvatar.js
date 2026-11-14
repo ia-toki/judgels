@@ -8,7 +8,7 @@ export const userAvatarAPI = {
     return delete_(`${baseURL(userJid)}`, token);
   },
 
-  avatarExists: userJid => {
+  hasAvatar: userJid => {
     return get(`${baseURL(userJid)}/exists`);
   },
 

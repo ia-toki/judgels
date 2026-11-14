@@ -15,20 +15,20 @@ class UserSearchApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
     @Test
     void search_users() {
-        assertThat(searchClient.usernameExists("nano")).isFalse();
-        assertThat(searchClient.emailExists("nano@domain.com")).isFalse();
-        assertThat(searchClient.usernameExists("budi")).isFalse();
-        assertThat(searchClient.emailExists("budi@domain.com")).isFalse();
+        assertThat(searchClient.hasUsername("nano")).isFalse();
+        assertThat(searchClient.hasEmail("nano@domain.com")).isFalse();
+        assertThat(searchClient.hasUsername("budi")).isFalse();
+        assertThat(searchClient.hasEmail("budi@domain.com")).isFalse();
 
         User nano = createUser("nano");
         User budi = createUser("budi");
 
-        assertThat(searchClient.usernameExists("nano")).isTrue();
-        assertThat(searchClient.emailExists("nano@domain.com")).isTrue();
-        assertThat(searchClient.usernameExists("budi")).isTrue();
-        assertThat(searchClient.emailExists("budi@domain.com")).isTrue();
-        assertThat(searchClient.usernameExists("random")).isFalse();
-        assertThat(searchClient.emailExists("random@random.com")).isFalse();
+        assertThat(searchClient.hasUsername("nano")).isTrue();
+        assertThat(searchClient.hasEmail("nano@domain.com")).isTrue();
+        assertThat(searchClient.hasUsername("budi")).isTrue();
+        assertThat(searchClient.hasEmail("budi@domain.com")).isTrue();
+        assertThat(searchClient.hasUsername("random")).isFalse();
+        assertThat(searchClient.hasEmail("random@random.com")).isFalse();
 
         Set<String> usernames = Set.of("nano", "budi", "88888");
         Map<String, String> jidsByUsernames = searchClient.translateUsernamesToJids(usernames);

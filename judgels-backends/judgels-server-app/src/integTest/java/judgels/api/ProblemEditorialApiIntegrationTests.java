@@ -34,7 +34,7 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
         Problem problem = createProblem(adminToken, "editorial-problem");
         String problemJid = problem.getJid();
 
-        assertThat(editorialClient.editorialExists(adminToken, problemJid)).isFalse();
+        assertThat(editorialClient.hasEditorial(adminToken, problemJid)).isFalse();
         assertNotFound(() -> editorialClient.getEditorial(adminToken, problemJid, null));
         assertNotFound(() -> editorialClient.getEditorialLanguages(adminToken, problemJid));
         assertNotFound(() -> editorialClient.getEditorialMediaFiles(adminToken, problemJid));
@@ -45,8 +45,8 @@ class ProblemEditorialApiIntegrationTests extends BaseJudgelsApiIntegrationTests
 
         editorialClient.createEditorial(adminToken, problemJid, createData("en-US"));
 
-        assertThat(editorialClient.editorialExists(adminToken, problemJid)).isTrue();
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isTrue();
+        assertThat(editorialClient.hasEditorial(adminToken, problemJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isTrue();
         assertThat(editorialClient.getEditorial(adminToken, problemJid, null)).isEqualTo(editorial(""));
 
         assertBadRequest(() -> editorialClient.createEditorial(adminToken, problemJid, createData("en-US")));

@@ -31,7 +31,7 @@ class LessonStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         assertThat(defaultStatement.getTitle()).isNotEmpty();
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(defaultStatement);
 
-        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, lessonJid)).isFalse();
 
         LessonStatement statement = new LessonStatement.Builder()
                 .title("Lesson A")
@@ -40,7 +40,7 @@ class LessonStatementApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         statementClient.updateStatement(adminToken, lessonJid, "en-US", statement);
 
         assertThat(statementClient.getStatement(adminToken, lessonJid, "en-US")).isEqualTo(statement);
-        assertThat(versionClient.versionLocalChangesExist(adminToken, lessonJid)).isTrue();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, lessonJid)).isTrue();
 
         assertBadRequest(() -> statementClient.getStatement(adminToken, lessonJid, "id-ID"));
         assertBadRequest(() -> statementClient.updateStatement(adminToken, lessonJid, "id-ID", statement));

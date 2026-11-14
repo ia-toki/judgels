@@ -31,7 +31,7 @@ public interface ProblemVersionClient {
 
     @RequestLine("GET /api/v4/problems/{problemJid}/versions/local/exists")
     @Headers("Authorization: Bearer {token}")
-    boolean versionLocalChangesExist(@Param("token") String token, @Param("problemJid") String problemJid);
+    boolean hasVersionLocalChanges(@Param("token") String token, @Param("problemJid") String problemJid);
 
     @RequestLine("DELETE /api/v4/problems/{problemJid}/versions/local")
     @Headers("Authorization: Bearer {token}")

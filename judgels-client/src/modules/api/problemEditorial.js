@@ -22,7 +22,7 @@ export const problemEditorialAPI = {
     return get(`${baseURL(problemJid)}?${params}`, token);
   },
 
-  editorialExists: (token, problemJid) => {
+  hasEditorial: (token, problemJid) => {
     return get(`${baseURL(problemJid)}/exists`, token);
   },
 

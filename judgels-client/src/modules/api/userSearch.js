@@ -4,11 +4,11 @@ import { get, post } from './http';
 const baseURL = `${APP_CONFIG.apiUrl}/v2/user-search`;
 
 export const userSearchAPI = {
-  usernameExists: username => {
+  hasUsername: username => {
     return get(`${baseURL}/username-exists/${username}`);
   },
 
-  emailExists: email => {
+  hasEmail: email => {
     return get(`${baseURL}/email-exists/${email}`);
   },
 

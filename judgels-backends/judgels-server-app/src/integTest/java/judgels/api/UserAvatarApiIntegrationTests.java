@@ -17,13 +17,13 @@ class UserAvatarApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         User andi = createUser("andi");
         String andiToken = getToken(andi);
 
-        assertThat(avatarClient.avatarExists(andi.getJid())).isFalse();
+        assertThat(avatarClient.hasAvatar(andi.getJid())).isFalse();
 
         avatarClient.updateAvatar(andiToken, andi.getJid(),
                 new FormData(MULTIPART_FORM_DATA, "avatar.png", new byte[]{1, 2, 3}));
-        assertThat(avatarClient.avatarExists(andi.getJid())).isTrue();
+        assertThat(avatarClient.hasAvatar(andi.getJid())).isTrue();
 
         avatarClient.deleteAvatar(andiToken, andi.getJid());
-        assertThat(avatarClient.avatarExists(andi.getJid())).isFalse();
+        assertThat(avatarClient.hasAvatar(andi.getJid())).isFalse();
     }
 }

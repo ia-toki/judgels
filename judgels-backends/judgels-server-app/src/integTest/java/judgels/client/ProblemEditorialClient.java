@@ -27,7 +27,7 @@ public interface ProblemEditorialClient {
 
     @RequestLine("GET /api/v4/problems/{problemJid}/editorial/exists")
     @Headers("Authorization: Bearer {token}")
-    boolean editorialExists(@Param("token") String token, @Param("problemJid") String problemJid);
+    boolean hasEditorial(@Param("token") String token, @Param("problemJid") String problemJid);
 
     @RequestLine("PUT /api/v4/problems/{problemJid}/editorial?language={language}")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})

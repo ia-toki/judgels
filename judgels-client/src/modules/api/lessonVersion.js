@@ -20,7 +20,7 @@ export const lessonVersionAPI = {
     return post(`${baseURL(lessonJid)}/local/rebase`, token);
   },
 
-  versionLocalChangesExist: (token, lessonJid) => {
+  hasVersionLocalChanges: (token, lessonJid) => {
     return get(`${baseURL(lessonJid)}/local/exists`, token);
   },
 

@@ -61,7 +61,7 @@ public class ProblemEditorialResource {
     @Path("/exists")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean editorialExists(
+    public boolean hasEditorial(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("problemJid") String problemJid) {
 

@@ -20,7 +20,7 @@ export const problemVersionAPI = {
     return post(`${baseURL(problemJid)}/local/rebase`, token);
   },
 
-  versionLocalChangesExist: (token, problemJid) => {
+  hasVersionLocalChanges: (token, problemJid) => {
     return get(`${baseURL(problemJid)}/local/exists`, token);
   },
 

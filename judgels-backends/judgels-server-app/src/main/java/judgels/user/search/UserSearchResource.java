@@ -24,7 +24,7 @@ public class UserSearchResource {
     @Path("/username-exists/{username}")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean usernameExists(@PathParam("username") String username) {
+    public boolean hasUsername(@PathParam("username") String username) {
         return userStore.getUserByUsername(username).isPresent();
     }
 
@@ -32,7 +32,7 @@ public class UserSearchResource {
     @Path("/email-exists/{email}")
     @Produces(APPLICATION_JSON)
     @UnitOfWork(readOnly = true)
-    public boolean emailExists(@PathParam("email") String email) {
+    public boolean hasEmail(@PathParam("email") String email) {
         return userStore.getUserByEmail(email).isPresent();
     }
 

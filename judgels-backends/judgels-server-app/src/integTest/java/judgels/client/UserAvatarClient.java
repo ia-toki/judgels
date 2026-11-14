@@ -7,7 +7,7 @@ import feign.form.FormData;
 
 public interface UserAvatarClient {
     @RequestLine("GET /api/v2/users/{userJid}/avatar/exists")
-    boolean avatarExists(@Param("userJid") String userJid);
+    boolean hasAvatar(@Param("userJid") String userJid);
 
     @RequestLine("POST /api/v2/users/{userJid}/avatar")
     @Headers({"Authorization: Bearer {token}", "Content-Type: multipart/form-data"})

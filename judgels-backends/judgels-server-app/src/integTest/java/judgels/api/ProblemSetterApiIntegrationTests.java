@@ -52,7 +52,7 @@ class ProblemSetterApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                 .hasMessageContaining(SETTER_USERNAMES_NOT_FOUND);
 
         // Setters are not part of the problem's files.
-        assertThat(versionClient.versionLocalChangesExist(adminToken, problemJid)).isFalse();
+        assertThat(versionClient.hasVersionLocalChanges(adminToken, problemJid)).isFalse();
 
         // as user
 
