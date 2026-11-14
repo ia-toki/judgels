@@ -1,0 +1,63 @@
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useParams } from '@tanstack/react-router';
+
+import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../components/Pagination/Pagination';
+import { contestBySlugQueryOptions } from '../../../../../modules/queries/contest';
+import { contestManagersQueryOptions } from '../../../../../modules/queries/contestManager';
+import { ContestManagerAddDialog } from '../ContestManagerAddDialog/ContestManagerAddDialog';
+import { ContestManagerRemoveDialog } from '../ContestManagerRemoveDialog/ContestManagerRemoveDialog';
+import { ContestManagersTable } from '../ContestManagersTable/ContestManagersTable';
+
+const PAGE_SIZE = 250;
+
+export default function ContestManagersPage() {
+  const location = useLocation();
+  const { contestSlug } = useParams({ strict: false });
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+
+  const page = location.search.page;
+
+  const { data: response } = useQuery(contestManagersQueryOptions(contest.jid, { page }));
+
+  const renderManagers = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    const { data: managers, profilesMap } = response;
+    if (managers.page.length === 0) {
+      return (
+        <p>
+          <small>No managers.</small>
+        </p>
+      );
+    }
+
+    return <ContestManagersTable managers={managers.page} profilesMap={profilesMap} />;
+  };
+
+  const renderActions = () => {
+    if (!response) {
+      return null;
+    }
+    if (!response.config.canManage) {
+      return null;
+    }
+    return (
+      <ActionButtons justifyContent="end">
+        <ContestManagerAddDialog contest={contest} />
+        <ContestManagerRemoveDialog contest={contest} />
+      </ActionButtons>
+    );
+  };
+
+  return (
+    <ContentCard title="Managers" action={renderActions()}>
+      {renderManagers()}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalCount} />}
+    </ContentCard>
+  );
+}

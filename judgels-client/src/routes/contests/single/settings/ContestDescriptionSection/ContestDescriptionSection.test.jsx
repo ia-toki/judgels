@@ -1,0 +1,60 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+
+import { EditableSections } from '../../../../../components/EditableSections/EditableSections';
+import { setSession } from '../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../test/RouterWrapper';
+import { nockApi } from '../../../../../utils/nock';
+import ContestDescriptionSection from './ContestDescriptionSection';
+
+describe('ContestDescriptionSection', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  const renderComponent = async () => {
+    nockApi().get('/v2/contests/slug/contest-slug').reply(200, {
+      jid: 'contestJid',
+      slug: 'contest-slug',
+    });
+
+    nockApi().get('/v2/contests/contestJid/description').reply(200, {
+      description: 'current description',
+    });
+
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter initialEntries={['/contests/contest-slug']} path="/contests/$contestSlug">
+            <EditableSections>
+              <ContestDescriptionSection />
+            </EditableSections>
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+  };
+
+  test('updates the description', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const button = await screen.findByRole('button', { name: /edit/i });
+    await user.click(button);
+
+    const description = screen.getByRole('textbox');
+    expect(description).toHaveValue('current description');
+    await user.clear(description);
+    await user.type(description, 'new description');
+
+    nockApi().post('/v2/contests/contestJid/description', { description: 'new description' }).reply(200);
+
+    const submitButton = screen.getByRole('button', { name: /save/i });
+    await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+});

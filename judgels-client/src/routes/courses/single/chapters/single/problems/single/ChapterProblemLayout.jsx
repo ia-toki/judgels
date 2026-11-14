@@ -1,0 +1,162 @@
+import { Home } from '@blueprintjs/icons';
+import { Box, Flex } from '@blueprintjs/labs';
+import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect, useRef } from 'react';
+
+import { BreadcrumbTitle } from '../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
+import { LoadingState } from '../../../../../../../components/LoadingState/LoadingState';
+import { sendGAEvent } from '../../../../../../../ga';
+import { VerdictCode } from '../../../../../../../modules/api/gradingVerdict';
+import { ProblemType } from '../../../../../../../modules/api/problem';
+import { chapterProblemWorksheetQueryOptions } from '../../../../../../../modules/queries/chapterProblem';
+import { courseBySlugQueryOptions } from '../../../../../../../modules/queries/course';
+import {
+  courseChapterQueryOptions,
+  courseChaptersQueryOptions,
+} from '../../../../../../../modules/queries/courseChapter';
+import { useWebPrefs } from '../../../../../../../modules/webPrefs';
+import { createDocumentTitle } from '../../../../../../../utils/title';
+import { ChapterNavigation } from '../../resources/ChapterNavigation/ChapterNavigation';
+import { ChapterProblemProgressTag } from '../../resources/ChapterProblemProgressTag/ChapterProblemProgressTag';
+import BundleChapterProblemPage from './Bundle/ChapterProblemPage';
+import ChapterProblemProgrammingLayout from './Programming/ChapterProblemLayout';
+
+import './ChapterProblemLayout.scss';
+
+export default function ChapterProblemLayout() {
+  const { courseSlug, chapterAlias, problemAlias } = useParams({ strict: false });
+  const queryClient = useQueryClient();
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { data: chapter } = useSuspenseQuery(courseChapterQueryOptions(course.jid, chapterAlias));
+  const {
+    data: { data: chapters },
+  } = useSuspenseQuery(courseChaptersQueryOptions(course.jid));
+  const { statementLanguage } = useWebPrefs();
+
+  const { data: response } = useQuery(
+    chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias, { language: statementLanguage })
+  );
+
+  const prevProgressRef = useRef(response?.progress);
+
+  useEffect(() => {
+    if (response) {
+      document.title = createDocumentTitle(`${chapterAlias} / ${response.problem.alias}`);
+
+      sendGAEvent({ category: 'Courses', action: 'View course problem', label: course.name });
+      sendGAEvent({ category: 'Courses', action: 'View chapter problem', label: chapter.name });
+      sendGAEvent({
+        category: 'Courses',
+        action: 'View problem',
+        label: chapter.name + ': ' + problemAlias,
+      });
+    }
+  }, [response?.problem?.alias]);
+
+  useEffect(() => {
+    if (response) {
+      checkEditorial(prevProgressRef.current, response.progress);
+      prevProgressRef.current = response.progress;
+    }
+  }, [response?.progress]);
+
+  const reloadProblem = () => {
+    queryClient.invalidateQueries(chapterProblemWorksheetQueryOptions(chapter.jid, problemAlias));
+    queryClient.invalidateQueries(courseChaptersQueryOptions(course.jid));
+  };
+
+  const checkEditorial = (oldProgress, newProgress) => {
+    if (
+      oldProgress &&
+      oldProgress.verdict !== VerdictCode.AC &&
+      newProgress?.verdict == VerdictCode.AC &&
+      response.editorial
+    ) {
+      const problemEditorialEl = document.querySelector('.chapter-problem-editorial');
+      if (problemEditorialEl) {
+        problemEditorialEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const renderHeader = () => {
+    const problemTitle = response && response.worksheet.statement.title;
+
+    return (
+      <Flex className="chapter-problem-page__title" flexWrap="wrap">
+        <h2>
+          <BreadcrumbTitle
+            items={[
+              { icon: <Home title={course.name} />, to: `/courses/${course.slug}` },
+              { text: chapterAlias, to: `/courses/${course.slug}/chapters/${chapterAlias}` },
+              { text: `${problemAlias}. ${problemTitle ?? ''}` },
+            ]}
+          />
+        </h2>
+
+        {renderProgress()}
+        {renderNavigation()}
+      </Flex>
+    );
+  };
+
+  const renderProgress = () => {
+    if (!response) {
+      return null;
+    }
+
+    const { progress } = response;
+    if (!progress) {
+      return null;
+    }
+
+    return <ChapterProblemProgressTag verdict={progress.verdict} />;
+  };
+
+  const renderNavigation = ({ hidePrev } = { hidePrev: false }) => {
+    if (!response) {
+      return null;
+    }
+
+    const { progress, previousResourcePath, nextResourcePath } = response;
+    return (
+      <ChapterNavigation
+        courseSlug={course.slug}
+        chapterAlias={chapterAlias}
+        previousResourcePath={hidePrev ? null : previousResourcePath}
+        nextResourcePath={nextResourcePath}
+        chapters={chapters}
+        disableNext={progress?.verdict !== VerdictCode.AC}
+      />
+    );
+  };
+
+  const renderContent = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    const worksheet = response;
+    const problemType = worksheet.problem?.type;
+
+    if (problemType === ProblemType.Bundle) {
+      return <BundleChapterProblemPage worksheet={worksheet} renderNavigation={renderNavigation} />;
+    }
+
+    return (
+      <ChapterProblemProgrammingLayout
+        worksheet={worksheet}
+        renderNavigation={renderNavigation}
+        reloadProblem={reloadProblem}
+      />
+    );
+  };
+
+  return (
+    <Box className="chapter-problem-page" flex={1} width={100}>
+      {renderHeader()}
+      {renderContent()}
+    </Box>
+  );
+}

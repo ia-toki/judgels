@@ -1,0 +1,255 @@
+import { Button, Callout, Intent, Switch } from '@blueprintjs/core';
+import { Pause, Refresh } from '@blueprintjs/icons';
+import { Flex } from '@blueprintjs/labs';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
+import { Fragment, useState } from 'react';
+
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
+import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import Pagination from '../../../../../components/Pagination/Pagination';
+import { ContestStyle } from '../../../../../modules/api/contest';
+import { ContestScoreboardType } from '../../../../../modules/api/contestScoreboard';
+import { contestBySlugQueryOptions } from '../../../../../modules/queries/contest';
+import {
+  contestScoreboardQueryOptions,
+  refreshContestScoreboardMutationOptions,
+} from '../../../../../modules/queries/contestScoreboard';
+import { useSession } from '../../../../../modules/session';
+import { BundleScoreboardTable } from '../BundleScoreboardTable/BundleScoreboardTable';
+import ContestUserProblemSubmissionsDialog from '../ContestUserProblemSubmissionsDialog/ContestUserProblemSubmissionsDialog';
+import { GcjScoreboardTable } from '../GcjScoreboardTable/GcjScoreboardTable';
+import { IcpcScoreboardTable } from '../IcpcScoreboardTable/IcpcScoreboardTable';
+import { IoiScoreboardTable } from '../IoiScoreboardTable/IoiScoreboardTable';
+import { TrocScoreboardTable } from '../TrocScoreboardTable/TrocScoreboardTable';
+
+import * as toastActions from '../../../../../modules/toast/toastActions';
+
+const PAGE_SIZE = 250;
+
+function ContestScoreboardPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { contestSlug } = useParams({ strict: false });
+  const { user } = useSession();
+  const userJid = user?.jid;
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+
+  const frozen = !!location.search.frozen;
+  const showClosedProblems = !!location.search.showClosedProblems;
+  const page = location.search.page;
+
+  const { data: response, isLoading } = useQuery(
+    contestScoreboardQueryOptions(contest.jid, { frozen, showClosedProblems, page })
+  );
+
+  const refreshMutation = useMutation(refreshContestScoreboardMutationOptions(contest.jid));
+
+  const [isSubmissionsDialogOpen, setIsSubmissionsDialogOpen] = useState(false);
+  const [submissionsDialogProps, setSubmissionsDialogProps] = useState(undefined);
+
+  const renderScoreboardUpdatedTime = () => {
+    if (!response) {
+      return null;
+    }
+
+    const scoreboard = response.data;
+    const contestEndTime = contest.beginTime + contest.duration;
+    return (
+      <span>
+        last updated <FormattedRelative value={Math.min(contestEndTime, scoreboard.updatedTime)} />
+      </span>
+    );
+  };
+
+  const renderFrozenScoreboardNotice = () => {
+    if (!response || response.data.type !== ContestScoreboardType.Frozen) {
+      return null;
+    }
+
+    return <Callout icon={<Pause />} intent={Intent.WARNING} title="SCOREBOARD HAS BEEN FROZEN" />;
+  };
+
+  const renderFilter = () => {
+    if (!response) {
+      return null;
+    }
+
+    const { canViewOfficialAndFrozen, canViewClosedProblems } = response.config;
+    if (!canViewOfficialAndFrozen && !canViewClosedProblems) {
+      return null;
+    }
+
+    return (
+      <Flex gap={5}>
+        {canViewOfficialAndFrozen && <Switch label="Frozen" checked={frozen} onChange={onChangeFrozen} />}
+        {canViewClosedProblems && (
+          <Switch label="Show closed problems" checked={showClosedProblems} onChange={onChangeShowClosedProblems} />
+        )}
+      </Flex>
+    );
+  };
+
+  const renderForceRefreshButton = () => {
+    if (!response) {
+      return null;
+    }
+
+    const { canRefresh } = response.config;
+    if (!canRefresh) {
+      return null;
+    }
+
+    return (
+      <Button
+        intent="primary"
+        small
+        icon={<Refresh />}
+        onClick={forceRefreshScoreboard}
+        loading={refreshMutation.isPending}
+      >
+        Force refresh
+      </Button>
+    );
+  };
+
+  const forceRefreshScoreboard = async () => {
+    refreshMutation.mutate(undefined, {
+      onSuccess: () => {
+        toastActions.showSuccessToast('Scoreboard refresh requested.');
+      },
+    });
+  };
+
+  const onChangeFrozen = ({ target }) => onChange(target.checked, showClosedProblems);
+
+  const onChangeShowClosedProblems = ({ target }) => onChange(frozen, target.checked);
+
+  const onChange = (frozenVal, showClosedProblemsVal) => {
+    let newQueries = { ...location.search, frozen: undefined, showClosedProblems: undefined };
+    if (frozenVal) {
+      newQueries = { ...newQueries, frozen: frozenVal };
+    }
+    if (showClosedProblemsVal) {
+      newQueries = { ...newQueries, showClosedProblems: showClosedProblemsVal };
+    }
+    navigate({ search: newQueries });
+  };
+
+  const openSubmissionsDialog = (contestantJid, problemJid) => {
+    const {
+      profilesMap,
+      data: { scoreboard },
+    } = response;
+
+    const profile = profilesMap[contestantJid];
+
+    const problemIndex = scoreboard.state.problemJids.indexOf(problemJid);
+    const problemAlias = scoreboard.state.problemAliases[problemIndex];
+
+    setIsSubmissionsDialogOpen(true);
+    setSubmissionsDialogProps({
+      userJid: contestantJid,
+      problemJid,
+      title: `Submissions by ${profile.username} for problem ${problemAlias}`,
+    });
+  };
+
+  const openSubmissionSummary = contestantJid => {
+    const { profilesMap } = response;
+
+    const profile = profilesMap[contestantJid];
+    navigate({ to: `/contests/${contest.slug}/submissions/users/${profile.username}` });
+  };
+
+  const renderScoreboard = () => {
+    if (isLoading) {
+      return <LoadingState />;
+    }
+    if (!response) {
+      return (
+        <p>
+          <small>No scoreboard.</small>
+        </p>
+      );
+    }
+
+    const {
+      data: scoreboard,
+      profilesMap,
+      config: { canViewSubmissions },
+    } = response;
+
+    const onClickSubmissionCell = canViewSubmissions ? openSubmissionsDialog : undefined;
+
+    if (contest.style === ContestStyle.TROC) {
+      return (
+        <TrocScoreboardTable
+          userJid={userJid}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          onClickSubmissionCell={onClickSubmissionCell}
+        />
+      );
+    } else if (contest.style === ContestStyle.ICPC) {
+      return (
+        <IcpcScoreboardTable
+          userJid={userJid}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          onClickSubmissionCell={onClickSubmissionCell}
+        />
+      );
+    } else if (contest.style === ContestStyle.IOI) {
+      return (
+        <IoiScoreboardTable
+          userJid={userJid}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          onClickSubmissionCell={onClickSubmissionCell}
+        />
+      );
+    } else if (contest.style === ContestStyle.Bundle) {
+      return (
+        <BundleScoreboardTable
+          userJid={userJid}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          onClickTotalScoresCell={openSubmissionSummary}
+        />
+      );
+    } else if (contest.style === ContestStyle.GCJ) {
+      return (
+        <GcjScoreboardTable
+          userJid={userJid}
+          scoreboard={scoreboard.scoreboard}
+          profilesMap={profilesMap}
+          onClickSubmissionCell={onClickSubmissionCell}
+        />
+      );
+    } else {
+      return <Fragment />;
+    }
+  };
+
+  return (
+    <ContentCard title="Scoreboard" subtitle={renderScoreboardUpdatedTime()}>
+      <Flex justifyContent="space-between" alignItems="center">
+        {renderFilter()}
+        {renderForceRefreshButton()}
+      </Flex>
+      {renderFrozenScoreboardNotice()}
+      {renderScoreboard()}
+      {response && <Pagination pageSize={PAGE_SIZE} totalCount={response.data.totalEntries} />}
+      {isSubmissionsDialogOpen && (
+        <ContestUserProblemSubmissionsDialog
+          onClose={() => setIsSubmissionsDialogOpen(false)}
+          {...submissionsDialogProps}
+        />
+      )}
+    </ContentCard>
+  );
+}
+
+export default ContestScoreboardPage;

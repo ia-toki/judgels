@@ -1,0 +1,109 @@
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useMemo } from 'react';
+
+import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
+import { ContentList } from '../../../../../components/ContentList/ContentList';
+import StatementLanguageWidget from '../../../../../components/LanguageWidget/StatementLanguageWidget';
+import { LoadingState } from '../../../../../components/LoadingState/LoadingState';
+import { ContestProblemStatus } from '../../../../../modules/api/contestProblem';
+import { consolidateLanguages } from '../../../../../modules/api/language';
+import { getProblemName } from '../../../../../modules/api/problem';
+import { contestBySlugQueryOptions } from '../../../../../modules/queries/contest';
+import { contestProblemsQueryOptions } from '../../../../../modules/queries/contestProblem';
+import { useWebPrefs } from '../../../../../modules/webPrefs';
+import { ContestProblemCard } from '../ContestProblemCard/ContestProblemCard';
+import { ContestProblemEditDialog } from '../ContestProblemEditDialog/ContestProblemEditDialog';
+
+export default function ContestProblemsPage() {
+  const { contestSlug } = useParams({ strict: false });
+  const { data: contest } = useSuspenseQuery(contestBySlugQueryOptions(contestSlug));
+  const { statementLanguage } = useWebPrefs();
+
+  const { data: response } = useQuery(contestProblemsQueryOptions(contest.jid));
+
+  const { defaultLanguage, uniqueLanguages } = useMemo(() => {
+    if (!response) {
+      return {};
+    }
+    return consolidateLanguages(response.problemsMap, statementLanguage);
+  }, [response, statementLanguage]);
+
+  const renderEditDialog = () => {
+    if (!response || !response.config.canManage) {
+      return null;
+    }
+
+    const problems = response.data.map(p => ({
+      alias: p.alias,
+      slug: response.problemsMap[p.problemJid].slug,
+      status: p.status,
+      submissionsLimit: p.submissionsLimit,
+      points: p.points,
+    }));
+    return <ContestProblemEditDialog contest={contest} problems={problems} />;
+  };
+
+  const renderStatementLanguageWidget = () => {
+    if (!defaultLanguage || !uniqueLanguages) {
+      return null;
+    }
+
+    return <StatementLanguageWidget defaultLanguage={defaultLanguage} statementLanguages={uniqueLanguages} />;
+  };
+
+  const renderProblems = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    const { data: problems, totalSubmissionsMap } = response;
+
+    if (problems.length === 0) {
+      return (
+        <p>
+          <small>No problems.</small>
+        </p>
+      );
+    }
+
+    return (
+      <ContentList>
+        {renderFilteredProblems(
+          problems.filter(p => p.status === ContestProblemStatus.Open),
+          totalSubmissionsMap
+        )}
+        {renderFilteredProblems(
+          problems.filter(p => p.status === ContestProblemStatus.Closed),
+          totalSubmissionsMap
+        )}
+      </ContentList>
+    );
+  };
+
+  const renderFilteredProblems = (problems, totalSubmissionsMap) => {
+    return problems.map(problem => {
+      const props = {
+        contest,
+        problem,
+        problemName: getProblemName(response.problemsMap[problem.problemJid], defaultLanguage),
+        totalSubmissions: totalSubmissionsMap[problem.problemJid],
+      };
+      return <ContestProblemCard key={problem.problemJid} {...props} />;
+    });
+  };
+
+  return (
+    <ContentCard
+      title="Problems"
+      action={
+        <>
+          {renderEditDialog()}
+          {renderStatementLanguageWidget()}
+        </>
+      }
+    >
+      {renderProblems()}
+    </ContentCard>
+  );
+}

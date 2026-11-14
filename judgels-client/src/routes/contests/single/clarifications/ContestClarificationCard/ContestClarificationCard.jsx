@@ -1,0 +1,105 @@
+import { Callout, Intent, Tag } from '@blueprintjs/core';
+import { Flex } from '@blueprintjs/labs';
+
+import { FormattedRelative } from '../../../../../components/FormattedRelative/FormattedRelative';
+import { UserRef } from '../../../../../components/UserRef/UserRef';
+import { ContestClarificationAnswerBox } from '../ContestClarificationAnswerBox/ContestClarificationAnswerBox';
+
+import './ContestClarificationCard.scss';
+
+export function ContestClarificationCard({
+  contest,
+  clarification,
+  canSupervise,
+  canManage,
+  askerProfile,
+  answererProfile,
+  problemAlias,
+  problemName,
+  isAnswerBoxOpen,
+  onToggleAnswerBox,
+}) {
+  const topic = problemAlias ? problemAlias + '. ' + problemName : 'General';
+  const asker = canSupervise && (
+    <>
+      by <UserRef profile={askerProfile} />
+    </>
+  );
+
+  let questionIntent = Intent.NONE;
+  if (canSupervise && !clarification.answer) {
+    questionIntent = Intent.WARNING;
+  }
+
+  let answerIntent = Intent.NONE;
+  if (!canSupervise && clarification.answer) {
+    answerIntent = Intent.WARNING;
+  }
+
+  const renderAnswer = () => {
+    if (!clarification.answer) {
+      if (canManage) {
+        return (
+          <ContestClarificationAnswerBox
+            contest={contest}
+            clarification={clarification}
+            isBoxOpen={isAnswerBoxOpen}
+            onToggleBox={onToggleAnswerBox}
+          />
+        );
+      }
+
+      return (
+        <p>
+          <small>Not answered yet.</small>
+        </p>
+      );
+    }
+
+    const answerer = canSupervise && (
+      <>
+        by <UserRef profile={answererProfile} />
+      </>
+    );
+
+    return (
+      <>
+        <Flex justifyContent="space-between">
+          <h5>Answer:</h5>
+          <p>
+            <small>
+              answered <FormattedRelative value={clarification.answeredTime} /> {answerer}
+            </small>
+          </p>
+        </Flex>
+        <hr />
+        <div className="multiline-text">{clarification.answer}</div>
+      </>
+    );
+  };
+
+  return (
+    <Callout role="article" className="contest-clarification-card" intent={questionIntent} icon={null}>
+      <Flex justifyContent="space-between">
+        <h4>
+          {clarification.title} &nbsp; <Tag>{topic}</Tag>
+        </h4>
+        <p>
+          <small>
+            asked <FormattedRelative value={clarification.time} /> {asker}
+          </small>
+        </p>
+      </Flex>
+      <hr />
+      <div className="multiline-text">{clarification.question}</div>
+      <Callout
+        role="article"
+        className="contest-clarification-card contest-clarification-card__answer"
+        intent={answerIntent}
+        icon={null}
+      >
+        {renderAnswer()}
+      </Callout>
+    </Callout>
+  );
+}

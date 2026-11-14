@@ -1,0 +1,70 @@
+@use '../../../../../styles/base' as *;
+
+.basic-profile-panel.content-card > .content-card__body {
+  padding: 0;
+}
+
+.basic-profile-panel__wrapper {
+  display: flex;
+}
+
+.basic-profile-panel__main {
+  width: 220px;
+  height: 180px;
+  font-size: $font-size-large;
+  text-align: center;
+}
+
+.basic-profile-panel__divider {
+  height: 220px;
+  border-right: 1px solid #d2d3d5;
+  width: 5px;
+}
+
+.basic-profile-panel__avatar-wrapper {
+  height: 120px;
+  width: 120px;
+  margin: auto;
+  margin-bottom: 15px;
+}
+
+.basic-profile-panel__avatar {
+  max-height: 120px;
+  max-width: 120px;
+}
+
+.basic-profile-panel__flag {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.basic-profile-panel__country {
+  vertical-align: middle;
+}
+
+.basic-profile-panel__details {
+  flex-grow: 1;
+}
+
+.basic-profile-panel__details-table {
+  margin-top: -1px;
+}
+
+.basic-profile-panel__details-keys {
+  font-weight: $font-weight-bold;
+  width: 100px;
+}
+
+@media only screen and (max-width: $breakpoint-phone) {
+  .basic-profile-panel__wrapper {
+    display: block;
+  }
+
+  .basic-profile-panel__divider {
+    display: none;
+  }
+
+  .basic-profile-panel__details {
+    margin-top: 40px;
+  }
+}

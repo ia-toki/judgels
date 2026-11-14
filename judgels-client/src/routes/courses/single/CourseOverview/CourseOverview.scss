@@ -1,0 +1,32 @@
+@use '../../../../styles/base' as *;
+
+.course-overview {
+  h2 {
+    @include page-title-compact;
+    margin-bottom: 16px;
+  }
+
+  .bp6-icon {
+    margin: 0 !important;
+  }
+}
+
+.course-overview__description {
+  display: flex;
+  gap: 16px;
+
+  > .html-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media only screen and (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+  }
+}
+
+.course-overview__image {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}

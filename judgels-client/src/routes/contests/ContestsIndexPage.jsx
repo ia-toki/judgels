@@ -1,5 +1,5 @@
 import { FullPageLayout } from '../../components/FullPageLayout/FullPageLayout';
-import ContestsPage from './contests/ContestsPage/ContestsPage';
+import ContestsPage from './ContestsPage/ContestsPage';
 
 export default function ContestsIndexPage() {
   return (

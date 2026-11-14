@@ -36,7 +36,7 @@ export const createCoursesRoutes = appRoute => {
   const courseRoute = createRoute({
     getParentRoute: () => coursesRoute,
     path: '$courseSlug',
-    component: lazyRouteComponent(retryImport(() => import('./courses/single/SingleCourseLayout'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/SingleCourseLayout'))),
     loader: async ({ params: { courseSlug } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       queryClient.prefetchQuery(courseChaptersQueryOptions(course.jid));
@@ -46,7 +46,7 @@ export const createCoursesRoutes = appRoute => {
   const courseIndexRoute = createRoute({
     getParentRoute: () => courseRoute,
     path: '/',
-    component: lazyRouteComponent(retryImport(() => import('./courses/single/CourseOverview/CourseOverview'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/CourseOverview/CourseOverview'))),
     loader: async ({ params: { courseSlug } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       queryClient.prefetchQuery(courseChaptersQueryOptions(course.jid));
@@ -56,9 +56,7 @@ export const createCoursesRoutes = appRoute => {
   const courseChapterRoute = createRoute({
     getParentRoute: () => courseRoute,
     path: 'chapters/$chapterAlias',
-    component: lazyRouteComponent(
-      retryImport(() => import('./courses/single/chapters/single/SingleCourseChapterLayout'))
-    ),
+    component: lazyRouteComponent(retryImport(() => import('./single/chapters/single/SingleCourseChapterLayout'))),
     loader: async ({ params: { courseSlug, chapterAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       await queryClient.ensureQueryData(courseChapterQueryOptions(course.jid, chapterAlias));
@@ -69,7 +67,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterRoute,
     path: '/',
     component: lazyRouteComponent(
-      retryImport(() => import('./courses/single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage'))
+      retryImport(() => import('./single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage'))
     ),
     loader: async ({ params: { courseSlug, chapterAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
@@ -89,7 +87,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterLessonsRoute,
     path: '$lessonAlias',
     component: lazyRouteComponent(
-      retryImport(() => import('./courses/single/chapters/single/lessons/single/ChapterLessonPage/ChapterLessonPage'))
+      retryImport(() => import('./single/chapters/single/lessons/single/ChapterLessonPage/ChapterLessonPage'))
     ),
     loader: async ({ params: { courseSlug, chapterAlias, lessonAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
@@ -109,7 +107,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterProblemsRoute,
     path: '$problemAlias',
     component: lazyRouteComponent(
-      retryImport(() => import('./courses/single/chapters/single/problems/single/ChapterProblemLayout'))
+      retryImport(() => import('./single/chapters/single/problems/single/ChapterProblemLayout'))
     ),
     loader: async ({ params: { courseSlug, chapterAlias, problemAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
@@ -132,7 +130,7 @@ export const createCoursesRoutes = appRoute => {
       retryImport(
         () =>
           import(
-            './courses/single/chapters/single/problems/single/Programming/ChapterProblemWorkspacePage/ChapterProblemWorkspacePage'
+            './single/chapters/single/problems/single/Programming/ChapterProblemWorkspacePage/ChapterProblemWorkspacePage'
           )
       )
     ),
@@ -145,7 +143,7 @@ export const createCoursesRoutes = appRoute => {
       retryImport(
         () =>
           import(
-            './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
+            './single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
           )
       )
     ),
@@ -164,7 +162,7 @@ export const createCoursesRoutes = appRoute => {
       retryImport(
         () =>
           import(
-            './courses/single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
+            './single/chapters/single/problems/single/Programming/submissions/ChapterProblemSubmissionsPage/ChapterProblemSubmissionsPage'
           )
       )
     ),
@@ -182,7 +180,7 @@ export const createCoursesRoutes = appRoute => {
       retryImport(
         () =>
           import(
-            './courses/single/chapters/single/problems/single/Programming/submissions/single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage'
+            './single/chapters/single/problems/single/Programming/submissions/single/ChapterProblemSubmissionPage/ChapterProblemSubmissionPage'
           )
       )
     ),

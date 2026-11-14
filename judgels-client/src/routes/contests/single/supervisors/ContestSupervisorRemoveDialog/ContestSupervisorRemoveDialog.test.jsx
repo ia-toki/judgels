@@ -1,0 +1,48 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+
+import { setSession } from '../../../../../modules/session';
+import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
+import { TestRouter } from '../../../../../test/RouterWrapper';
+import { nockApi } from '../../../../../utils/nock';
+import { ContestSupervisorRemoveDialog } from './ContestSupervisorRemoveDialog';
+
+describe('ContestSupervisorRemoveDialog', () => {
+  beforeEach(() => {
+    setSession('token', { jid: 'userJid' });
+  });
+
+  const renderComponent = async () => {
+    await act(async () =>
+      render(
+        <QueryClientProviderWrapper>
+          <TestRouter>
+            <ContestSupervisorRemoveDialog contest={{ jid: 'contestJid' }} />
+          </TestRouter>
+        </QueryClientProviderWrapper>
+      )
+    );
+  };
+
+  test('form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const button = screen.getByRole('button');
+    await user.click(button);
+
+    const usernames = screen.getByRole('textbox');
+    await user.type(usernames, 'andi\n\nbudi\n caca  \n');
+
+    nockApi()
+      .post('/v2/contests/contestJid/supervisors/batch-delete', ['andi', 'budi', 'caca'])
+      .reply(200, { deletedSupervisorProfilesMap: {} });
+
+    const submitButton = screen.getByRole('button', { name: /remove$/i });
+    await user.click(submitButton);
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+});

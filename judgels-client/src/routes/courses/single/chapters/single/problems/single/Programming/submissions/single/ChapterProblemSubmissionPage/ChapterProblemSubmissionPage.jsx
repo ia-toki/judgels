@@ -1,0 +1,66 @@
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useEffect } from 'react';
+
+import { BreadcrumbTitle } from '../../../../../../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
+import { ContentCard } from '../../../../../../../../../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../../../../../../../../../components/LoadingState/LoadingState';
+import { SubmissionDetails } from '../../../../../../../../../../../components/SubmissionDetails/Programming/SubmissionDetails';
+import { courseBySlugQueryOptions } from '../../../../../../../../../../../modules/queries/course';
+import { trainingSubmissionWithSourceByIdQueryOptions } from '../../../../../../../../../../../modules/queries/trainingSubmission';
+import { useWebPrefs } from '../../../../../../../../../../../modules/webPrefs';
+import { createDocumentTitle } from '../../../../../../../../../../../utils/title';
+
+export default function ChapterProblemSubmissionPage() {
+  const { courseSlug, chapterAlias, problemAlias, submissionId } = useParams({ strict: false });
+  const { data: course } = useSuspenseQuery(courseBySlugQueryOptions(courseSlug));
+  const { statementLanguage } = useWebPrefs();
+
+  const { data: response } = useQuery(
+    trainingSubmissionWithSourceByIdQueryOptions(+submissionId, { language: statementLanguage })
+  );
+
+  useEffect(() => {
+    if (response) {
+      document.title = createDocumentTitle(`Submission #${response.data.submission.id}`);
+    }
+  }, [response]);
+
+  const renderSubmission = () => {
+    if (!response) {
+      return <LoadingState />;
+    }
+
+    const { data: submissionWithSource, profile } = response;
+
+    return (
+      <SubmissionDetails
+        submission={submissionWithSource.submission}
+        source={submissionWithSource.source}
+        reasonNotAllowedToViewSource={submissionWithSource.reasonNotAllowedToViewSource}
+        profile={profile}
+        problemUrl={`/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}`}
+        hideSourceFilename
+        showLoaderWhenPending
+      />
+    );
+  };
+
+  return (
+    <ContentCard
+      title={
+        <BreadcrumbTitle
+          items={[
+            {
+              text: 'Submissions',
+              to: `/courses/${course.slug}/chapters/${chapterAlias}/problems/${problemAlias}/submissions`,
+            },
+            { text: `#${submissionId}` },
+          ]}
+        />
+      }
+    >
+      {renderSubmission()}
+    </ContentCard>
+  );
+}

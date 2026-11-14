@@ -1,0 +1,57 @@
+import { HTMLTable } from '@blueprintjs/core';
+import { useQuery } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
+
+import { ContentCard } from '../../../components/ContentCard/ContentCard';
+import { LoadingState } from '../../../components/LoadingState/LoadingState';
+import Pagination from '../../../components/Pagination/Pagination';
+import { UserRef } from '../../../components/UserRef/UserRef';
+import { topRatedProfilesQueryOptions } from '../../../modules/queries/profile';
+
+import './RatingsPage.scss';
+
+const PAGE_SIZE = 50;
+
+export default function RatingsPage() {
+  const location = useLocation();
+  const page = +(location.search.page || 1);
+
+  const { data: profiles } = useQuery(topRatedProfilesQueryOptions({ page, pageSize: PAGE_SIZE }));
+
+  const renderRatings = () => {
+    if (!profiles) {
+      return <LoadingState />;
+    }
+
+    const baseRank = (page - 1) * PAGE_SIZE + 1;
+    const rows = profiles.page.map((profile, idx) => (
+      <tr key={profile.username}>
+        <td className="col-rank">{baseRank + idx}</td>
+        <td>
+          <UserRef profile={profile} showFlag />
+        </td>
+        <td>{profile.rating && profile.rating.publicRating}</td>
+      </tr>
+    ));
+
+    return (
+      <HTMLTable striped className="table-list ratings-page-table">
+        <thead>
+          <tr>
+            <th className="col-rank">#</th>
+            <th>User</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </HTMLTable>
+    );
+  };
+
+  return (
+    <ContentCard title="Top ratings">
+      {renderRatings()}
+      {profiles && <Pagination pageSize={PAGE_SIZE} totalCount={profiles.totalCount} />}
+    </ContentCard>
+  );
+}
