@@ -9,7 +9,7 @@ export default function ActivatePage() {
   const { emailCode } = useParams({ strict: false });
   const navigate = useNavigate();
 
-  const activateMutation = useMutation(activateUserMutationOptions);
+  const activateMutation = useMutation(activateUserMutationOptions());
 
   useEffect(() => {
     const activate = () => {

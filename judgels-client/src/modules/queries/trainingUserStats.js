@@ -4,6 +4,6 @@ import { trainingUserStatsAPI } from '../api/trainingUserStats';
 
 export const trainingUserStatsQueryOptions = username =>
   queryOptions({
-    queryKey: ['training', 'user-stats', username],
+    queryKey: ['training', 'stats', 'users', { username }],
     queryFn: () => trainingUserStatsAPI.getUserStats(username),
   });

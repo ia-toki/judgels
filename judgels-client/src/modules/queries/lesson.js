@@ -26,7 +26,7 @@ export const lessonBySlugQueryOptions = lessonSlug =>
     queryFn: () => lessonAPI.getLessonBySlug(getToken(), lessonSlug),
   });
 
-export const createLessonMutationOptions = {
+export const createLessonMutationOptions = () => ({
   mutationFn: async data => {
     try {
       return await lessonAPI.createLesson(getToken(), data);
@@ -40,7 +40,7 @@ export const createLessonMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(lessonsQueryOptions());
   },
-};
+});
 
 export const updateLessonMutationOptions = (lessonJid, lessonSlug) => ({
   mutationFn: async data => {

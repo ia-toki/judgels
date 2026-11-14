@@ -11,7 +11,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export default function ChapterCreatePage() {
   const navigate = useNavigate();
 
-  const createChapterMutation = useMutation(createChapterMutationOptions);
+  const createChapterMutation = useMutation(createChapterMutationOptions());
 
   const createChapter = async data => {
     await createChapterMutation.mutateAsync(data, {

@@ -14,7 +14,7 @@ function toSubmissionError(error) {
   return error;
 }
 
-export const registerUserMutationOptions = {
+export const registerUserMutationOptions = () => ({
   mutationFn: async data => {
     try {
       await accountRegistrationAPI.registerUser(data);
@@ -22,13 +22,13 @@ export const registerUserMutationOptions = {
       throw toSubmissionError(error);
     }
   },
-};
+});
 
-export const activateUserMutationOptions = {
+export const activateUserMutationOptions = () => ({
   mutationFn: emailCode => accountRegistrationAPI.activateUser(emailCode),
-};
+});
 
-export const registerGoogleUserMutationOptions = {
+export const registerGoogleUserMutationOptions = () => ({
   mutationFn: async data => {
     try {
       await accountRegistrationAPI.registerGoogleUser(data);
@@ -36,4 +36,4 @@ export const registerGoogleUserMutationOptions = {
       throw toSubmissionError(error);
     }
   },
-};
+});

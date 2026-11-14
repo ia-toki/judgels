@@ -11,7 +11,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export default function ArchiveCreatePage() {
   const navigate = useNavigate();
 
-  const createArchiveMutation = useMutation(createArchiveMutationOptions);
+  const createArchiveMutation = useMutation(createArchiveMutationOptions());
 
   const createArchive = async data => {
     await createArchiveMutation.mutateAsync(data, {

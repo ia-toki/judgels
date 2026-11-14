@@ -37,7 +37,7 @@ export default function ProblemSubmissionsPage() {
     problemSetSubmissionsQueryOptions(problem.problemJid, { username: usernameFilter, beforeId, afterId })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions);
+  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions());
   const regradeSubmissionsMutation = useMutation(regradeProblemSetSubmissionsMutationOptions(problem.problemJid));
 
   const onRegrade = submissionJid => {

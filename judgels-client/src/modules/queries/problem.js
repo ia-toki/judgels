@@ -32,7 +32,7 @@ export const problemBySlugQueryOptions = problemSlug =>
     queryFn: () => problemAPI.getProblemBySlug(getToken(), problemSlug),
   });
 
-export const createProblemMutationOptions = {
+export const createProblemMutationOptions = () => ({
   mutationFn: async data => {
     try {
       return await problemAPI.createProblem(getToken(), data);
@@ -46,7 +46,7 @@ export const createProblemMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(problemsQueryOptions());
   },
-};
+});
 
 export const updateProblemMutationOptions = (problemJid, problemSlug) => ({
   mutationFn: async data => {

@@ -6,7 +6,7 @@ import { getToken } from '../session';
 export const trainingProblemsQueryOptions = params => {
   const { tags, page } = params || {};
   return queryOptions({
-    queryKey: ['training-problems', ...(params ? [params] : [])],
+    queryKey: ['training', 'problems', ...(params ? [params] : [])],
     queryFn: () => trainingProblemAPI.getProblems(getToken(), tags, page),
   });
 };

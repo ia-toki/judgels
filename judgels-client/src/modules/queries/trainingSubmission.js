@@ -20,26 +20,26 @@ export const trainingSubmissionsQueryOptions = params => {
 export const trainingSubmissionWithSourceByIdQueryOptions = (submissionId, params) => {
   const { language } = params || {};
   return queryOptions({
-    queryKey: ['training', 'submissions', 'programming', submissionId, 'source', ...(params ? [params] : [])],
+    queryKey: ['training', 'submission', 'programming', submissionId, 'source', ...(params ? [params] : [])],
     meta: { persist: false },
     queryFn: () => trainingSubmissionAPI.getSubmissionWithSourceById(getToken(), submissionId, language),
   });
 };
 
-export const regradeTrainingSubmissionMutationOptions = {
+export const regradeTrainingSubmissionMutationOptions = () => ({
   mutationFn: submissionJid => trainingSubmissionAPI.regradeSubmission(getToken(), submissionJid),
   onSuccess: () => {
     queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
-};
+});
 
-export const regradeTrainingSubmissionsMutationOptions = {
+export const regradeTrainingSubmissionsMutationOptions = () => ({
   mutationFn: ({ username } = {}) =>
     trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
   onSuccess: () => {
     queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
   },
-};
+});
 
 export const chapterSubmissionsQueryOptions = (chapterJid, params) => {
   const { problemAlias, username, beforeId, afterId } = params || {};

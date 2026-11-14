@@ -47,7 +47,7 @@ export default function ChapterProblemSubmissionsPage() {
     })
   );
 
-  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions);
+  const regradeSubmissionMutation = useMutation(regradeTrainingSubmissionMutationOptions());
   const regradeSubmissionsMutation = useMutation(regradeChapterSubmissionsMutationOptions(chapter.jid));
 
   const onChangeFilterShowAll = ({ target }) => {

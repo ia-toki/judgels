@@ -11,7 +11,7 @@ import * as toastActions from '../../../../modules/toast/toastActions';
 export default function ProblemCreatePage() {
   const navigate = useNavigate();
 
-  const createProblemMutation = useMutation(createProblemMutationOptions);
+  const createProblemMutation = useMutation(createProblemMutationOptions());
 
   const createProblem = async data => {
     await createProblemMutation.mutateAsync(

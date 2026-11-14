@@ -18,7 +18,7 @@ export const archiveBySlugQueryOptions = archiveSlug =>
     select: response => response.data.find(a => a.slug === archiveSlug),
   });
 
-export const createArchiveMutationOptions = {
+export const createArchiveMutationOptions = () => ({
   mutationFn: async data => {
     try {
       await archiveAPI.createArchive(getToken(), data);
@@ -32,7 +32,7 @@ export const createArchiveMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(archivesQueryOptions());
   },
-};
+});
 
 export const updateArchiveMutationOptions = archiveJid => ({
   mutationFn: async data => {

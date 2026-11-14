@@ -27,7 +27,7 @@ export default function ContestRatingChangesPage() {
   }
   const ratingChanges = ratingChangesMap[contest.jid];
 
-  const updateRatingsMutation = useMutation(updateUserRatingsMutationOptions);
+  const updateRatingsMutation = useMutation(updateUserRatingsMutationOptions());
 
   const goToRatings = () => navigate({ to: '/admin/ratings' });
 

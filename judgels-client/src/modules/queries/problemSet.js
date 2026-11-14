@@ -21,7 +21,7 @@ export const problemSetBySlugQueryOptions = problemSetSlug =>
     queryFn: () => problemSetAPI.getProblemSetBySlug(problemSetSlug),
   });
 
-export const createProblemSetMutationOptions = {
+export const createProblemSetMutationOptions = () => ({
   mutationFn: async data => {
     try {
       await problemSetAPI.createProblemSet(getToken(), data);
@@ -38,7 +38,7 @@ export const createProblemSetMutationOptions = {
   onSuccess: () => {
     queryClient.invalidateQueries(problemSetsQueryOptions());
   },
-};
+});
 
 export const updateProblemSetMutationOptions = (problemSetJid, problemSetSlug) => ({
   mutationFn: async data => {

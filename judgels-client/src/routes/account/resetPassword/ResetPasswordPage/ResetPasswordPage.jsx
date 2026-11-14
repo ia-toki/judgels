@@ -12,7 +12,7 @@ export default function ResetPasswordPage() {
   const { emailCode } = useParams({ strict: false });
   const navigate = useNavigate();
 
-  const resetMutation = useMutation(resetPasswordMutationOptions);
+  const resetMutation = useMutation(resetPasswordMutationOptions());
 
   const resetPassword = data => {
     resetMutation.mutate(
