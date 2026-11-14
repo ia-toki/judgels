@@ -3,7 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 
 import { Card } from '../../../../components/Card/Card';
 import { SingleColumnLayout } from '../../../../components/SingleColumnLayout/SingleColumnLayout';
-import { resetPasswordMutationOptions } from '../../../../modules/queries/userAccount';
+import { resetPasswordMutationOptions } from '../../../../modules/queries/accountPassword';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
 import * as toastActions from '../../../../modules/toast/toastActions';

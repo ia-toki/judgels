@@ -9,7 +9,7 @@ import { logOutMutationOptions } from '../../modules/queries/session';
 import { userAvatarUrlQueryOptions } from '../../modules/queries/userAvatar';
 import { userWebConfigQueryOptions } from '../../modules/queries/userWeb';
 import { useSession } from '../../modules/session';
-import { isUserRegistrationEnabled, isUserResetPasswordEnabled } from '../../modules/webConfig';
+import { isTrainingAccountPasswordResetEnabled, isTrainingAccountRegistrationEnabled } from '../../modules/webConfig';
 import MenuItemLink from '../MenuItemLink/MenuItemLink';
 
 import './UserWidget.scss';
@@ -30,7 +30,7 @@ export function UserWidget({ user, profile, items, homeRoute }) {
     const menuItems = (
       <>
         <MenuItemLink text="My profile" to={`/profiles/${profile.username}`} />
-        {(isUserRegistrationEnabled() || isUserResetPasswordEnabled()) && (
+        {(isTrainingAccountRegistrationEnabled() || isTrainingAccountPasswordResetEnabled()) && (
           <MenuItemLink text="My account" to="/account" />
         )}
         <MenuItem text="Log out" onClick={logOut} />
@@ -93,7 +93,7 @@ export function UserWidget({ user, profile, items, homeRoute }) {
             Log in
           </Link>
         </Box>
-        {isUserRegistrationEnabled() && (
+        {isTrainingAccountRegistrationEnabled() && (
           <Box className="user-widget__link" marginRight={5}>
             <Link data-key="register" to="/register">
               Register

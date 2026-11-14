@@ -11,15 +11,15 @@ import { nockApi } from '../../utils/nock';
 import { UserWidget } from './UserWidget';
 
 describe('UserWidget', () => {
-  const setAccountFeatures = ({ userRegistrationEnabled, userResetPasswordEnabled }) => {
+  const setAccountFeatures = ({ trainingAccountRegistrationEnabled, trainingAccountPasswordResetEnabled }) => {
     queryClient.setQueryData(userWebConfigQueryOptions().queryKey, {
-      userRegistrationEnabled,
-      userResetPasswordEnabled,
+      trainingAccountRegistrationEnabled,
+      trainingAccountPasswordResetEnabled,
     });
   };
 
   beforeEach(() => {
-    setAccountFeatures({ userRegistrationEnabled: true, userResetPasswordEnabled: true });
+    setAccountFeatures({ trainingAccountRegistrationEnabled: true, trainingAccountPasswordResetEnabled: true });
   });
 
   afterEach(() => {
@@ -52,7 +52,7 @@ describe('UserWidget', () => {
   });
 
   test('when not logged in and registration is disabled, hides the register link', async () => {
-    setAccountFeatures({ userRegistrationEnabled: false, userResetPasswordEnabled: true });
+    setAccountFeatures({ trainingAccountRegistrationEnabled: false, trainingAccountPasswordResetEnabled: true });
 
     const { container } = await renderComponent();
     expect(container.querySelector('[data-key="login"]')).toBeInTheDocument();
@@ -69,13 +69,13 @@ describe('UserWidget', () => {
     };
 
     test('is shown when only password reset is enabled', async () => {
-      setAccountFeatures({ userRegistrationEnabled: false, userResetPasswordEnabled: true });
+      setAccountFeatures({ trainingAccountRegistrationEnabled: false, trainingAccountPasswordResetEnabled: true });
       await openMenu();
       expect(screen.getByText('My account')).toBeInTheDocument();
     });
 
     test('is hidden when registration and password reset are disabled', async () => {
-      setAccountFeatures({ userRegistrationEnabled: false, userResetPasswordEnabled: false });
+      setAccountFeatures({ trainingAccountRegistrationEnabled: false, trainingAccountPasswordResetEnabled: false });
       await openMenu();
       expect(screen.getByText('Log out')).toBeInTheDocument();
       expect(screen.queryByText('My account')).not.toBeInTheDocument();

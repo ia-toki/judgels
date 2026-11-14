@@ -6,6 +6,7 @@ import static judgels.core.JudgelsRequestChecks.checkAllowed;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -30,6 +31,7 @@ public class SettingResource {
     @Inject protected SettingStore store;
     @Inject protected Optional<Mailer> mailer;
     @Inject protected Optional<RecaptchaVerifier> recaptchaVerifier;
+    @Inject @Named("trainingEnabled") protected boolean trainingEnabled;
 
     @Inject public SettingResource() {}
 
@@ -69,17 +71,25 @@ public class SettingResource {
     }
 
     private void checkValid(SettingUpdateData data) {
-        data.getUserRegistration().ifPresent(userRegistration -> {
-            checkMailerConfigured(userRegistration.getEnabled());
-            if (userRegistration.getRecaptchaEnabled() && recaptchaVerifier.isEmpty()) {
+        data.getTrainingAccountRegistration().ifPresent(registration -> {
+            checkTrainingEnabled();
+            checkMailerConfigured(registration.getEnabled());
+            if (registration.getRecaptchaEnabled() && recaptchaVerifier.isEmpty()) {
                 throw new BadRequestException("reCAPTCHA cannot be enabled without the recaptcha config");
             }
-            checkHasEmailCode(userRegistration.getActivationEmailTemplate());
+            checkHasEmailCode(registration.getActivationEmailTemplate());
         });
-        data.getUserResetPassword().ifPresent(userResetPassword -> {
-            checkMailerConfigured(userResetPassword.getEnabled());
-            checkHasEmailCode(userResetPassword.getRequestEmailTemplate());
+        data.getTrainingAccountPasswordReset().ifPresent(passwordReset -> {
+            checkTrainingEnabled();
+            checkMailerConfigured(passwordReset.getEnabled());
+            checkHasEmailCode(passwordReset.getRequestEmailTemplate());
         });
+    }
+
+    private void checkTrainingEnabled() {
+        if (!trainingEnabled) {
+            throw new BadRequestException("Training account settings cannot be set while training is disabled");
+        }
     }
 
     private void checkMailerConfigured(boolean enabled) {

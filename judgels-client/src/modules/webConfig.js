@@ -17,12 +17,12 @@ export function getHomeBanner() {
   return getUserWebConfig()?.homeBanner;
 }
 
-export function isUserRegistrationEnabled() {
-  return !!getUserWebConfig()?.userRegistrationEnabled;
+export function isTrainingAccountRegistrationEnabled() {
+  return !!getUserWebConfig()?.trainingAccountRegistrationEnabled;
 }
 
-export function isUserResetPasswordEnabled() {
-  return !!getUserWebConfig()?.userResetPasswordEnabled;
+export function isTrainingAccountPasswordResetEnabled() {
+  return !!getUserWebConfig()?.trainingAccountPasswordResetEnabled;
 }
 
 export function isTrainingEnabled() {

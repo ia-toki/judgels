@@ -5,8 +5,6 @@ import dagger.Provides;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import jakarta.inject.Singleton;
 import java.util.Optional;
-import judgels.user.account.UserResetPasswordConfiguration;
-import judgels.user.registration.UserRegistrationConfiguration;
 
 @Module
 public class SettingModule {

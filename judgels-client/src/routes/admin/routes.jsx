@@ -55,6 +55,7 @@ import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { userRolesQueryOptions } from '../../modules/queries/userRole';
 import { queryClient } from '../../modules/queryClient';
+import { isTrainingEnabled } from '../../modules/webConfig';
 import { createDocumentTitle } from '../../utils/title';
 
 export const createAdminRoutes = appRoute => {
@@ -653,10 +654,15 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./settings/GeneralSettingsPage/GeneralSettingsPage'))),
   });
 
-  const adminAccountSettingsRoute = createRoute({
+  const adminTrainingSettingsRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'settings/account',
-    component: lazyRouteComponent(retryImport(() => import('./settings/AccountSettingsPage/AccountSettingsPage'))),
+    path: 'settings/training',
+    beforeLoad: () => {
+      if (!isTrainingEnabled()) {
+        throw redirect({ to: '/admin/settings/general', replace: true });
+      }
+    },
+    component: lazyRouteComponent(retryImport(() => import('./settings/TrainingSettingsPage/TrainingSettingsPage'))),
   });
 
   return adminRoute.addChildren([
@@ -729,6 +735,6 @@ export const createAdminRoutes = appRoute => {
     ]),
     adminSettingsRoute,
     adminGeneralSettingsRoute,
-    adminAccountSettingsRoute,
+    adminTrainingSettingsRoute,
   ]);
 };

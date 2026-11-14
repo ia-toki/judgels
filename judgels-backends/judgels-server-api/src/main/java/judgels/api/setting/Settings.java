@@ -9,8 +9,8 @@ public interface Settings {
     AppSettings getApp();
     HomeSettings getHome();
     SessionSettings getSession();
-    UserRegistrationSettings getUserRegistration();
-    UserResetPasswordSettings getUserResetPassword();
+    TrainingAccountRegistrationSettings getTrainingAccountRegistration();
+    TrainingAccountPasswordResetSettings getTrainingAccountPasswordReset();
 
     @Value.Default
     default boolean getMailerConfigured() {

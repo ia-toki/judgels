@@ -14,8 +14,8 @@ public interface UserWebConfig {
     String getAppSlogan();
     Optional<String> getAppAnnouncement();
     String getHomeBanner();
-    boolean getUserRegistrationEnabled();
-    boolean getUserResetPasswordEnabled();
+    boolean getTrainingAccountRegistrationEnabled();
+    boolean getTrainingAccountPasswordResetEnabled();
     boolean getTrainingEnabled();
     boolean getRatingEnabled();
     Optional<String> getGoogleAuthClientId();

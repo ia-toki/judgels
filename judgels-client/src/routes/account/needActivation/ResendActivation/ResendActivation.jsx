@@ -2,7 +2,7 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 
-import { userAccountAPI } from '../../../../modules/api/userAccount';
+import { accountRegistrationAPI } from '../../../../modules/api/accountRegistration';
 
 import * as toastActions from '../../../../modules/toast/toastActions';
 
@@ -11,7 +11,7 @@ export default function ResendActivation({ email }) {
   const [timeRemaining, setTimeRemaining] = useState(5);
 
   const resendMutation = useMutation({
-    mutationFn: () => userAccountAPI.resendActivationEmail(email),
+    mutationFn: () => accountRegistrationAPI.resendActivationEmail(email),
   });
 
   useEffect(() => {

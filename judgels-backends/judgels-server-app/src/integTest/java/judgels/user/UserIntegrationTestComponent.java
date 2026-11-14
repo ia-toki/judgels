@@ -6,7 +6,6 @@ import judgels.core.JudgelsModule;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
 import judgels.session.SessionStore;
-import judgels.user.account.UserResetPasswordStore;
 import judgels.user.avatar.UserAvatarIntegrationTestModule;
 import judgels.user.role.UserRoleStore;
 
@@ -19,6 +18,5 @@ import judgels.user.role.UserRoleStore;
 public interface UserIntegrationTestComponent {
     UserStore userStore();
     SessionStore sessionStore();
-    UserResetPasswordStore userResetPasswordStore();
     UserRoleStore userRoleStore();
 }

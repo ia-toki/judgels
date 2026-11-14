@@ -43,7 +43,7 @@ describe('RegisterPage', () => {
     nockApi().get('/v2/user-search/username-exists/user').reply(200, false);
     nockApi().get('/v2/user-search/email-exists/email@domain.com').reply(200, false);
     nockApi()
-      .post('/v2/user-account/register', {
+      .post('/v4/account/registration', {
         username: 'user',
         name: 'name',
         email: 'email@domain.com',

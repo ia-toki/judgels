@@ -47,8 +47,14 @@ The host for time-boxed events in which contestants solve contest problems. Each
 _Avoid_: Uriel
 
 **Training**:
-The host for self-paced practice, the sibling of contest. It has no single root: its containers are chapters and problem sets, organized by a curriculum, courses and archives.
+The host for self-paced practice, the sibling of contest. It has no single root: its containers are chapters and problem sets, organized by a curriculum, courses and archives. Being the public face of the site, it also owns account registration and password reset; without training, only admins create users.
 _Avoid_: Jerahmeel
+
+**Account registration**:
+A guest creating their own user, then activating it through a code sent by email before they can log in. Part of training.
+
+**Account password reset**:
+A user setting a new password through a code sent to their email. Part of training.
 
 **Curriculum**:
 The single program that frames all courses, shown above the course list.

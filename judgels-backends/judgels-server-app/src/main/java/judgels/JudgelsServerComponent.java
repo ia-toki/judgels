@@ -35,13 +35,13 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.training.submission.programming.TrainingSubmissionModule.class,
         judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
         judgels.training.curriculum.CurriculumModule.class,
+        judgels.training.account.registration.AccountRegistrationModule.class,
+        judgels.training.account.password.AccountResetPasswordModule.class,
 
         judgels.core.auth.AuthModule.class,
         judgels.core.mailer.MailerModule.class,
         judgels.core.recaptcha.RecaptchaModule.class,
-        judgels.user.registration.UserRegistrationModule.class,
         judgels.user.web.UserWebModule.class,
-        judgels.user.account.UserResetPasswordModule.class,
 
         judgels.tasks.JudgelsServerTaskModule.class})
 @Singleton
@@ -49,7 +49,6 @@ public interface JudgelsServerComponent {
     judgels.session.SessionResource sessionResource();
     judgels.user.superadmin.SuperadminCreator superadminCreator();
     judgels.user.UserResource userResource();
-    judgels.user.account.UserAccountResource userAccountResource();
     judgels.user.avatar.UserAvatarResource userAvatarResource();
     judgels.user.info.UserInfoResource userProfileResource();
     judgels.user.rating.UserRatingResource userRatingResource();
@@ -98,6 +97,8 @@ public interface JudgelsServerComponent {
     judgels.contest.scoreboard.ContestScoreboardPoller contestScoreboardPoller();
     judgels.contest.rating.ContestRatingResource contestRatingResource();
 
+    judgels.training.account.AccountRegistrationResource accountRegistrationResource();
+    judgels.training.account.AccountPasswordResource accountPasswordResource();
     judgels.training.curriculum.CurriculumCreator curriculumCreator();
     judgels.training.curriculum.CurriculumResource curriculumResource();
     judgels.training.archive.ArchiveResource archiveResource();

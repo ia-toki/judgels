@@ -4,8 +4,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { registerGoogleUserMutationOptions } from '../../../../modules/queries/accountRegistration';
 import { afterLogin, logInWithGoogleMutationOptions } from '../../../../modules/queries/session';
-import { registerGoogleUserMutationOptions } from '../../../../modules/queries/userAccount';
 import { getGoogleAuthClientId } from '../../../../modules/webConfig';
 import GoogleAuthRegisterForm from './GoogleAuthRegisterForm';
 

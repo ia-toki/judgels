@@ -10,10 +10,10 @@ import judgels.core.messaging.RabbitMQConfiguration;
 import judgels.core.recaptcha.RecaptchaConfiguration;
 import judgels.grading.JudgelsServerGradingConfiguration;
 import judgels.setting.GoogleAnalyticsConfiguration;
+import judgels.setting.UserRegistrationConfiguration;
+import judgels.setting.UserResetPasswordConfiguration;
 import judgels.training.TrainingConfiguration;
-import judgels.user.account.UserResetPasswordConfiguration;
 import judgels.user.rating.UserRatingConfiguration;
-import judgels.user.registration.UserRegistrationConfiguration;
 import judgels.user.superadmin.SuperadminCreatorConfiguration;
 import org.immutables.value.Value;
 

@@ -6,7 +6,10 @@ import { Field, Form } from 'react-final-form';
 import { HorizontalDivider } from '../../../../components/HorizontalDivider/HorizontalDivider';
 import { FormTextInput } from '../../../../components/forms/FormTextInput/FormTextInput';
 import { Required } from '../../../../components/forms/validations';
-import { isUserRegistrationEnabled, isUserResetPasswordEnabled } from '../../../../modules/webConfig';
+import {
+  isTrainingAccountPasswordResetEnabled,
+  isTrainingAccountRegistrationEnabled,
+} from '../../../../modules/webConfig';
 
 import './LoginForm.scss';
 
@@ -30,7 +33,7 @@ export default function LoginForm({ onSubmit }) {
         <form onSubmit={handleSubmit}>
           <Field component={FormTextInput} {...usernameOrEmailField} />
           <Field component={FormTextInput} {...passwordField} />
-          {isUserResetPasswordEnabled() && (
+          {isTrainingAccountPasswordResetEnabled() && (
             <p className="login-form__forgot-password">
               <Link to="/forgot-password">Forgot your password?</Link>
             </p>
@@ -40,7 +43,7 @@ export default function LoginForm({ onSubmit }) {
 
           <Flex>
             <Button type="submit" text="Log in" intent={Intent.PRIMARY} loading={submitting} />
-            {isUserRegistrationEnabled() && (
+            {isTrainingAccountRegistrationEnabled() && (
               <p className="login-form__register">
                 Don't have account? <Link to="/register">Register now</Link>
               </p>

@@ -1,8 +1,8 @@
 package judgels.setting;
 
 import static judgels.setting.SettingStore.APP_GOOGLE_ANALYTICS_TRACKING_ID;
-import static judgels.setting.SettingStore.USER_REGISTRATION_ENABLED;
-import static judgels.setting.SettingStore.USER_RESET_PASSWORD_ENABLED;
+import static judgels.setting.SettingStore.TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED;
+import static judgels.setting.SettingStore.TRAINING_ACCOUNT_REGISTRATION_ENABLED;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
@@ -10,10 +10,8 @@ import judgels.api.setting.AppSettings;
 import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
-import judgels.api.setting.UserRegistrationSettings;
-import judgels.api.setting.UserResetPasswordSettings;
-import judgels.user.account.UserResetPasswordConfiguration;
-import judgels.user.registration.UserRegistrationConfiguration;
+import judgels.api.setting.TrainingAccountPasswordResetSettings;
+import judgels.api.setting.TrainingAccountRegistrationSettings;
 
 public class SettingCreator {
     private final SettingStore settingStore;
@@ -65,16 +63,16 @@ public class SettingCreator {
 
         userRegistrationConfig
                 .filter(UserRegistrationConfiguration::getEnabled)
-                .filter(c -> !settingStore.hasSetting(USER_REGISTRATION_ENABLED))
-                .ifPresent(c -> data.userRegistration(new UserRegistrationSettings.Builder()
+                .filter(c -> !settingStore.hasSetting(TRAINING_ACCOUNT_REGISTRATION_ENABLED))
+                .ifPresent(c -> data.trainingAccountRegistration(new TrainingAccountRegistrationSettings.Builder()
                         .enabled(true)
                         .recaptchaEnabled(c.getUseRecaptcha())
                         .activationEmailTemplate(c.getActivationEmailTemplate())
                         .build()));
         userResetPasswordConfig
                 .filter(UserResetPasswordConfiguration::getEnabled)
-                .filter(c -> !settingStore.hasSetting(USER_RESET_PASSWORD_ENABLED))
-                .ifPresent(c -> data.userResetPassword(new UserResetPasswordSettings.Builder()
+                .filter(c -> !settingStore.hasSetting(TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED))
+                .ifPresent(c -> data.trainingAccountPasswordReset(new TrainingAccountPasswordResetSettings.Builder()
                         .enabled(true)
                         .requestEmailTemplate(c.getRequestEmailTemplate())
                         .resetEmailTemplate(c.getResetEmailTemplate())

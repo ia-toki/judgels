@@ -31,7 +31,6 @@ import judgels.training.stats.StatsConfiguration;
 import judgels.training.submission.bundle.TrainingItemSubmissionModule;
 import judgels.training.submission.programming.TrainingSubmissionModule;
 import judgels.user.rating.UserRatingConfiguration;
-import judgels.user.registration.UserRegistrationModule;
 import judgels.user.superadmin.SuperadminModule;
 import judgels.user.web.UserWebModule;
 import org.eclipse.jetty.server.session.SessionHandler;
@@ -154,7 +153,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
                         judgelsConfig.getUserRegistrationConfig(),
                         judgelsConfig.getUserResetPasswordConfig(),
                         judgelsConfig.getGoogleAnalyticsConfig()))
-                .userRegistrationModule(new UserRegistrationModule())
                 .userWebModule(new UserWebModule(trainingEnabled, ratingEnabled))
                 .contestRatingModule(new ContestRatingModule(ratingEnabled))
                 .trainingSubmissionModule(new TrainingSubmissionModule(statsConfig, trainingSubmissionFs))
@@ -178,7 +176,6 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         env.jersey().register(component.userSearchResource());
         env.jersey().register(component.userWebResource());
         env.jersey().register(component.profileResource());
-        env.jersey().register(component.userAccountResource());
 
         component.scheduler().scheduleWithFixedDelay(
                 "session-cleaner",
@@ -253,6 +250,8 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
 
         // Training
         if (trainingEnabled) {
+            env.jersey().register(component.accountRegistrationResource());
+            env.jersey().register(component.accountPasswordResource());
             env.jersey().register(component.archiveResource());
             env.jersey().register(component.curriculumResource());
             env.jersey().register(component.courseResource());

@@ -19,24 +19,23 @@ import judgels.api.session.Session;
 import judgels.api.session.SessionErrors;
 import judgels.api.session.SessionWithRegistrationErrors;
 import judgels.api.setting.SessionSettings;
-import judgels.api.setting.Settings;
 import judgels.api.user.User;
 import judgels.core.api.AuthHeader;
 import judgels.core.auth.google.GoogleAuth;
 import judgels.setting.SettingStore;
+import judgels.setting.TrainingAccountChecker;
 import judgels.user.UserRoleChecker;
 import judgels.user.UserStore;
-import judgels.user.registration.UserRegistrationEmailStore;
 
 @Path("/api/v2/session")
 public class SessionResource {
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
-    @Inject protected UserRegistrationEmailStore userRegistrationEmailStore;
     @Inject protected Optional<GoogleAuth> googleAuth;
     @Inject protected SessionStore sessionStore;
     @Inject protected SettingStore settingStore;
+    @Inject protected TrainingAccountChecker trainingAccountChecker;
 
     @Inject public SessionResource() {}
 
@@ -51,14 +50,13 @@ public class SessionResource {
                     userStore.getUserByEmailAndPassword(credentials.getUsernameOrEmail(), credentials.getPassword())
                     .orElseThrow(ForbiddenException::new));
 
-        Settings settings = settingStore.getSettings();
-        if (settings.getUserRegistration().getEnabled()) {
-            if (!userRegistrationEmailStore.isUserActivated(user.getJid())) {
+        if (trainingAccountChecker.isRegistrationEnabled()) {
+            if (!userStore.isUserActivated(user.getJid())) {
                 throw SessionWithRegistrationErrors.userNotActivated(user.getEmail());
             }
         }
 
-        SessionSettings sessionSettings = settings.getSession();
+        SessionSettings sessionSettings = settingStore.getSettings().getSession();
         if (!roleChecker.canAdminister(user.getJid())) {
             int maxConcurrentSessionsPerUser = sessionSettings.getMaxConcurrentSessionsPerUser();
             if (maxConcurrentSessionsPerUser >= 0) {
