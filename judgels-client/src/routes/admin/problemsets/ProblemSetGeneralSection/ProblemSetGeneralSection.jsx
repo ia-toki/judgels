@@ -12,7 +12,7 @@ import ProblemSetGeneralEditForm from '../ProblemSetGeneralEditForm/ProblemSetGe
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function ProblemSetGeneralSection({ problemSet, archiveSlug }) {
-  const updateProblemSetMutation = useMutation(updateProblemSetMutationOptions(problemSet.jid));
+  const updateProblemSetMutation = useMutation(updateProblemSetMutationOptions(problemSet.jid, problemSet.slug));
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 

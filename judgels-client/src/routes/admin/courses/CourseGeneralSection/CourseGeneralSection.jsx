@@ -12,7 +12,7 @@ import CourseGeneralEditForm from '../CourseGeneralEditForm/CourseGeneralEditFor
 import * as toastActions from '../../../../modules/toast/toastActions';
 
 export function CourseGeneralSection({ course }) {
-  const updateCourseMutation = useMutation(updateCourseMutationOptions(course.jid));
+  const updateCourseMutation = useMutation(updateCourseMutationOptions(course.jid, course.slug));
 
   const { isEditing, isEditDisabled, setIsEditing } = useEditableSection();
 
