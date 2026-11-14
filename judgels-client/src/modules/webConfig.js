@@ -17,30 +17,30 @@ export function getHomeBanner() {
   return getUserWebConfig()?.homeBanner;
 }
 
-export function isTrainingAccountRegistrationEnabled() {
-  return !!getUserWebConfig()?.trainingAccountRegistrationEnabled;
-}
-
-export function isTrainingAccountPasswordResetEnabled() {
-  return !!getUserWebConfig()?.trainingAccountPasswordResetEnabled;
-}
-
-export function isTrainingEnabled() {
-  return !!getUserWebConfig()?.trainingEnabled;
-}
-
-export function isRatingEnabled() {
-  return !!getUserWebConfig()?.ratingEnabled;
-}
-
 export function getGoogleAuthClientId() {
   return getUserWebConfig()?.googleAuthClientId;
+}
+
+export function getGoogleAnalyticsTrackingId() {
+  return getUserWebConfig()?.googleAnalyticsTrackingId;
 }
 
 export function getRecaptchaSiteKey() {
   return getUserWebConfig()?.recaptchaSiteKey;
 }
 
-export function getGoogleAnalyticsTrackingId() {
-  return getUserWebConfig()?.googleAnalyticsTrackingId;
+export function isRatingEnabled() {
+  return !!getUserWebConfig()?.ratingEnabled;
+}
+
+export function isTrainingEnabled() {
+  return !!getUserWebConfig()?.trainingEnabled;
+}
+
+export function isTrainingAccountRegistrationEnabled() {
+  return !!getUserWebConfig()?.trainingAccountRegistrationEnabled;
+}
+
+export function isTrainingAccountPasswordResetEnabled() {
+  return !!getUserWebConfig()?.trainingAccountPasswordResetEnabled;
 }

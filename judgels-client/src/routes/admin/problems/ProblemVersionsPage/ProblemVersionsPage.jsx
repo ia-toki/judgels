@@ -5,7 +5,7 @@ import { problemBySlugQueryOptions } from '../../../../modules/queries/problem';
 import {
   commitProblemVersionLocalChangesMutationOptions,
   discardProblemVersionLocalChangesMutationOptions,
-  problemVersionLocalChangesExistQueryOptions,
+  problemHasVersionLocalChangesQueryOptions,
   problemVersionsQueryOptions,
   rebaseProblemVersionLocalChangesMutationOptions,
   restoreProblemVersionMutationOptions,
@@ -19,7 +19,7 @@ export default function ProblemVersionsPage() {
     data: { jid: problemJid },
   } = useSuspenseQuery(problemBySlugQueryOptions(problemSlug));
 
-  const { data: hasLocalChanges } = useSuspenseQuery(problemVersionLocalChangesExistQueryOptions(problemJid));
+  const { data: hasLocalChanges } = useSuspenseQuery(problemHasVersionLocalChangesQueryOptions(problemJid));
 
   const {
     data: { data: versions, profilesMap },

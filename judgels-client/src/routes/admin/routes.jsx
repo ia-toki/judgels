@@ -16,7 +16,7 @@ import {
   lessonStatementMediaFilesQueryOptions,
 } from '../../modules/queries/lessonStatement';
 import {
-  lessonVersionLocalChangesExistQueryOptions,
+  lessonHasVersionLocalChangesQueryOptions,
   lessonVersionsQueryOptions,
 } from '../../modules/queries/lessonVersion';
 import {
@@ -25,9 +25,9 @@ import {
   problemQueryOptions,
 } from '../../modules/queries/problem';
 import {
-  problemEditorialExistsQueryOptions,
   problemEditorialLanguagesQueryOptions,
   problemEditorialMediaFilesQueryOptions,
+  problemHasEditorialQueryOptions,
 } from '../../modules/queries/problemEditorial';
 import {
   problemGradingConfigQueryOptions,
@@ -46,7 +46,7 @@ import {
 } from '../../modules/queries/problemStatement';
 import { problemTopicTagsQueryOptions } from '../../modules/queries/problemTag';
 import {
-  problemVersionLocalChangesExistQueryOptions,
+  problemHasVersionLocalChangesQueryOptions,
   problemVersionsQueryOptions,
 } from '../../modules/queries/problemVersion';
 import { problemWritersQueryOptions } from '../../modules/queries/problemWriter';
@@ -55,8 +55,20 @@ import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
 import { userRolesQueryOptions } from '../../modules/queries/userRole';
 import { queryClient } from '../../modules/queryClient';
-import { isTrainingEnabled } from '../../modules/webConfig';
+import { isRatingEnabled, isTrainingEnabled } from '../../modules/webConfig';
 import { createDocumentTitle } from '../../utils/title';
+
+function requireRatingEnabled() {
+  if (!isRatingEnabled()) {
+    throw redirect({ to: '/admin', replace: true });
+  }
+}
+
+function requireTrainingEnabled() {
+  if (!isTrainingEnabled()) {
+    throw redirect({ to: '/admin', replace: true });
+  }
+}
 
 export const createAdminRoutes = appRoute => {
   const adminRoute = createRoute({
@@ -145,12 +157,14 @@ export const createAdminRoutes = appRoute => {
   const adminRatingsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'ratings',
+    beforeLoad: requireRatingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./ratings/RatingsPage/RatingsPage'))),
   });
 
   const adminContestRatingChangesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'ratings/$contestSlug',
+    beforeLoad: requireRatingEnabled,
     component: lazyRouteComponent(
       retryImport(() => import('./ratings/ContestRatingChangesPage/ContestRatingChangesPage'))
     ),
@@ -174,12 +188,14 @@ export const createAdminRoutes = appRoute => {
   const adminCurriculumsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'curriculums',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./curriculums/CurriculumsPage/CurriculumsPage'))),
   });
 
   const adminCurriculumRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'curriculums/$curriculumJid',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./curriculums/CurriculumPage/CurriculumPage'))),
     loader: async ({ params: { curriculumJid } }) => {
       await queryClient.ensureQueryData(curriculumByJidQueryOptions(curriculumJid));
@@ -189,18 +205,21 @@ export const createAdminRoutes = appRoute => {
   const adminCoursesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./courses/CoursesPage/CoursesPage'))),
   });
 
   const adminCourseCreateRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses/-/new',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./courses/CourseCreatePage/CourseCreatePage'))),
   });
 
   const adminCourseRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'courses/$courseSlug',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./courses/CoursePage/CoursePage'))),
     loader: async ({ params: { courseSlug } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
@@ -211,18 +230,21 @@ export const createAdminRoutes = appRoute => {
   const adminChaptersRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'chapters',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./chapters/ChaptersPage/ChaptersPage'))),
   });
 
   const adminChapterCreateRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'chapters/-/new',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./chapters/ChapterCreatePage/ChapterCreatePage'))),
   });
 
   const adminChapterRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'chapters/$chapterJid',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./chapters/ChapterPage/ChapterPage'))),
     loader: async ({ params: { chapterJid } }) => {
       await queryClient.ensureQueryData(chapterByJidQueryOptions(chapterJid));
@@ -236,18 +258,21 @@ export const createAdminRoutes = appRoute => {
   const adminArchivesRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'archives',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./archives/ArchivesPage/ArchivesPage'))),
   });
 
   const adminArchiveCreateRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'archives/-/new',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./archives/ArchiveCreatePage/ArchiveCreatePage'))),
   });
 
   const adminArchiveRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'archives/$archiveSlug',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./archives/ArchivePage/ArchivePage'))),
     loader: async ({ params: { archiveSlug } }) => {
       await queryClient.ensureQueryData(archiveBySlugQueryOptions(archiveSlug));
@@ -257,18 +282,21 @@ export const createAdminRoutes = appRoute => {
   const adminProblemSetsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'problemsets',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetsPage/ProblemSetsPage'))),
   });
 
   const adminProblemSetCreateRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'problemsets/-/new',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetCreatePage/ProblemSetCreatePage'))),
   });
 
   const adminProblemSetRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'problemsets/$problemSetSlug',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./problemsets/ProblemSetPage/ProblemSetPage'))),
     loader: async ({ params: { problemSetSlug } }) => {
       const problemSet = await queryClient.ensureQueryData(problemSetBySlugQueryOptions(problemSetSlug));
@@ -300,7 +328,7 @@ export const createAdminRoutes = appRoute => {
       await Promise.all([
         queryClient.ensureQueryData(problemQueryOptions(problemJid)),
         queryClient.ensureQueryData(problemPermissionsQueryOptions(problemJid)),
-        queryClient.ensureQueryData(problemVersionLocalChangesExistQueryOptions(problemJid)),
+        queryClient.ensureQueryData(problemHasVersionLocalChangesQueryOptions(problemJid)),
       ]);
     },
   });
@@ -364,8 +392,8 @@ export const createAdminRoutes = appRoute => {
 
   // A problem without an editorial has nothing to load: its layout offers to create one instead.
   const ensureProblemEditorialQueryData = async (problemJid, editorialQueryOptions) => {
-    const editorialExists = await queryClient.ensureQueryData(problemEditorialExistsQueryOptions(problemJid));
-    if (editorialExists) {
+    const hasEditorial = await queryClient.ensureQueryData(problemHasEditorialQueryOptions(problemJid));
+    if (hasEditorial) {
       await queryClient.ensureQueryData(editorialQueryOptions(problemJid));
     }
   };
@@ -557,24 +585,27 @@ export const createAdminRoutes = appRoute => {
   const adminLessonsRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonsPage/LessonsPage'))),
   });
 
   const adminLessonCreateRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons/-/new',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonCreatePage/LessonCreatePage'))),
   });
 
   const adminLessonRoute = createRoute({
     getParentRoute: () => adminRoute,
     path: 'lessons/$lessonSlug',
+    beforeLoad: requireTrainingEnabled,
     component: lazyRouteComponent(retryImport(() => import('./lessons/LessonLayout/LessonLayout'))),
     loader: async ({ params: { lessonSlug } }) => {
       const { jid: lessonJid } = await queryClient.ensureQueryData(lessonBySlugQueryOptions(lessonSlug));
       await Promise.all([
         queryClient.ensureQueryData(lessonQueryOptions(lessonJid)),
-        queryClient.ensureQueryData(lessonVersionLocalChangesExistQueryOptions(lessonJid)),
+        queryClient.ensureQueryData(lessonHasVersionLocalChangesQueryOptions(lessonJid)),
       ]);
     },
   });
