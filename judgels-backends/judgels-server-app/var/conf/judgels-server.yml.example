@@ -51,16 +51,16 @@ judgels:
 #    username: guest
 #    password: guest
 
+  superadmin:
+    initialPassword: superadmin
+
   grading:
     gradingRequestQueueName: judgels-grading-request
     gradingResponseQueueName: judgels-grading-response
 #    fake: true
 
-  superadmin:
-    initialPassword: superadmin
-
-  training:
+  rating:
     enabled: false
 
-  rating:
+  training:
     enabled: false

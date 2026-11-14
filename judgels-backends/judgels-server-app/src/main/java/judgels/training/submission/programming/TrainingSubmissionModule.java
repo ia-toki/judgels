@@ -13,6 +13,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import judgels.core.JudgelsBaseDataDir;
 import judgels.core.JudgelsScheduler;
 import judgels.core.fs.FileSystem;
+import judgels.core.fs.FsConfiguration;
+import judgels.core.fs.aws.AwsConfiguration;
+import judgels.core.fs.aws.AwsFileSystem;
+import judgels.core.fs.aws.AwsFsConfiguration;
 import judgels.core.fs.local.LocalFileSystem;
 import judgels.core.messaging.MessageListener;
 import judgels.core.messaging.MessageSender;
@@ -22,31 +26,41 @@ import judgels.submission.programming.BaseSubmissionStore;
 import judgels.submission.programming.GradingResponsePoller;
 import judgels.submission.programming.GradingResponseProcessor;
 import judgels.submission.programming.NoOpSubmissionConsumer;
+import judgels.submission.programming.SubmissionConfiguration;
 import judgels.submission.programming.SubmissionConsumer;
 import judgels.submission.programming.SubmissionRegradeProcessor;
 import judgels.submission.programming.SubmissionRegrader;
 import judgels.submission.programming.SubmissionSourceBuilder;
 import judgels.submission.programming.SubmissionStore;
 import judgels.submission.programming.Submitter;
+import judgels.training.TrainingConfiguration;
 import judgels.training.stats.StatsConfiguration;
 import judgels.training.stats.SubmissionStatsProcessor;
 import org.hibernate.SessionFactory;
 
 @Module
 public class TrainingSubmissionModule {
+    private final Optional<TrainingConfiguration> trainingConfig;
     private final StatsConfiguration statsConfig;
-    private final Optional<FileSystem> fs;
 
-    public TrainingSubmissionModule(StatsConfiguration statsConfig, Optional<FileSystem> fs) {
-        this.statsConfig = statsConfig;
-        this.fs = fs;
+    public TrainingSubmissionModule(Optional<TrainingConfiguration> trainingConfig) {
+        this.trainingConfig = trainingConfig;
+        this.statsConfig = trainingConfig.map(TrainingConfiguration::getStatsConfig).orElse(StatsConfiguration.DEFAULT);
     }
 
     @Provides
     @Singleton
     @TrainingSubmissionFs
     FileSystem submissionFs(@JudgelsBaseDataDir Path baseDataDir) {
-        return fs.orElse(new LocalFileSystem(baseDataDir.resolve("submissions")));
+        Optional<AwsConfiguration> awsConfig = trainingConfig.flatMap(TrainingConfiguration::getAwsConfig);
+        Optional<FsConfiguration> fsConfig = trainingConfig
+                .flatMap(TrainingConfiguration::getSubmissionConfig)
+                .map(SubmissionConfiguration::getFs);
+
+        if (awsConfig.isPresent() && fsConfig.isPresent() && fsConfig.get() instanceof AwsFsConfiguration) {
+            return new AwsFileSystem(awsConfig.get(), (AwsFsConfiguration) fsConfig.get());
+        }
+        return new LocalFileSystem(baseDataDir.resolve("submissions"));
     }
 
     @Provides

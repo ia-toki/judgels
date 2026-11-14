@@ -47,21 +47,17 @@ webSecurity:
 judgels:
   baseDataDir: var/data
 
+  auth:
+{% if auth_google_clientId is defined %}
+    google:
+      clientId: {{ auth_google_clientId }}
+{% endif %}
+
 {% if rabbitmq_username is defined %}
   rabbitmq:
     host: localhost
     username: {{ rabbitmq_username }}
     password: {{ rabbitmq_password }}
-{% endif %}
-
-  grading:
-    gradingRequestQueueName: judgels-grading-request
-    gradingResponseQueueName: judgels-grading-response
-
-  auth:
-{% if auth_google_clientId is defined %}
-    google:
-      clientId: {{ auth_google_clientId }}
 {% endif %}
 
 {% if mailer_host is defined %}
@@ -78,6 +74,41 @@ judgels:
   recaptcha:
     siteKey: {{ recaptcha_siteKey }}
     secretKey: {{ recaptcha_secretKey }}
+{% endif %}
+
+  superadmin:
+    initialPassword: {{ superadmin_initialPassword }}
+
+  grading:
+    gradingRequestQueueName: judgels-grading-request
+    gradingResponseQueueName: judgels-grading-response
+
+  rating:
+    enabled: {{ rating_enabled | default(false) | bool | lower }}
+
+  training:
+    enabled: {{ training_enabled | default(false) | bool | lower }}
+
+{% if training_aws_accessKey is defined %}
+    aws:
+      accessKey: {{ training_aws_accessKey }}
+      secretKey: {{ training_aws_secretKey }}
+      s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
+{% endif %}
+
+    submission:
+      fs:
+        type: {{ training_submission_fs_type | default('local', true) }}
+{% if training_submission_fs_type | default('local', true) != 'local' %}
+        s3BucketName: {{ training_submission_fs_s3BucketName }}
+{% endif %}
+
+    stats:
+      enabled: {{ training_stats_enabled | default(false, true) }}
+
+{% if googleAnalytics_trackingId is defined %}
+  googleAnalytics:
+    trackingId: {{ googleAnalytics_trackingId }}
 {% endif %}
 
   userRegistration:
@@ -111,34 +142,3 @@ judgels:
       subject: UNUSED
       body: UNUSED
 {% endif %}
-
-  superadmin:
-    initialPassword: {{ superadmin_initialPassword }}
-
-{% if googleAnalytics_trackingId is defined %}
-  googleAnalytics:
-    trackingId: {{ googleAnalytics_trackingId }}
-{% endif %}
-
-  training:
-    enabled: {{ training_enabled | default(false) | bool | lower }}
-
-{% if training_aws_accessKey is defined %}
-    aws:
-      accessKey: {{ training_aws_accessKey }}
-      secretKey: {{ training_aws_secretKey }}
-      s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
-{% endif %}
-
-    submission:
-      fs:
-        type: {{ training_submission_fs_type | default('local', true) }}
-{% if training_submission_fs_type | default('local', true) != 'local' %}
-        s3BucketName: {{ training_submission_fs_s3BucketName }}
-{% endif %}
-
-    stats:
-      enabled: {{ training_stats_enabled | default(false, true) }}
-
-  rating:
-    enabled: {{ rating_enabled | default(false) | bool | lower }}

@@ -3,6 +3,7 @@ package judgels.training;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
+import judgels.core.fs.aws.AwsConfiguration;
 import judgels.submission.programming.SubmissionConfiguration;
 import judgels.training.stats.StatsConfiguration;
 import org.immutables.value.Value;
@@ -16,7 +17,7 @@ public interface TrainingConfiguration {
     }
 
     @JsonProperty("aws")
-    Optional<judgels.core.fs.aws.AwsConfiguration> getAwsConfig();
+    Optional<AwsConfiguration> getAwsConfig();
 
     @JsonProperty("submission")
     Optional<SubmissionConfiguration> getSubmissionConfig();
