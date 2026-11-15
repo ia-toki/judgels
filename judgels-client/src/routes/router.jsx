@@ -10,9 +10,9 @@ import { userWebConfigQueryOptions } from '../modules/queries/userWeb';
 import { queryClient } from '../modules/queryClient';
 import App from './App';
 import Root from './Root';
+import { createMyAccountRoutes } from './account/my/routes';
 import { createAccountRoutes } from './account/routes';
 import { createAdminRoutes } from './admin/routes';
-import { createAuthRoutes } from './auth/routes';
 import { createContestsRoutes } from './contests/routes';
 import { createCoursesRoutes } from './courses/routes';
 import { createHomeRoutes } from './home/routes';
@@ -37,8 +37,8 @@ export const appRoute = createRoute({
 
 const appChildren = [
   createHomeRoutes(appRoute),
-  ...createAuthRoutes(appRoute),
-  createAccountRoutes(appRoute),
+  ...createAccountRoutes(appRoute),
+  createMyAccountRoutes(appRoute),
   createProfilesRoutes(appRoute),
   createAdminRoutes(appRoute),
   createContestsRoutes(appRoute),
