@@ -19,7 +19,7 @@ export const createProfilesRoutes = appRoute => {
   const profilesRoute = createRoute({
     getParentRoute: () => appRoute,
     path: 'profiles/$username',
-    component: lazyRouteComponent(retryImport(() => import('./ProfilesLayout'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/ProfilesLayout'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Profiles') }] }),
     loader: async ({ params: { username } }) => {
       await queryClient.ensureQueryData(basicProfileByUsernameQueryOptions(username));

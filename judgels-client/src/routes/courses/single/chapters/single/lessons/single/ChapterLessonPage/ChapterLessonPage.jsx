@@ -16,7 +16,7 @@ import {
 } from '../../../../../../../../modules/queries/courseChapter';
 import { useWebPrefs } from '../../../../../../../../modules/webPrefs';
 import { createDocumentTitle } from '../../../../../../../../utils/title';
-import { ChapterNavigation } from '../../../resources/ChapterNavigation/ChapterNavigation';
+import { ChapterNavigation } from '../../../ChapterNavigation/ChapterNavigation';
 
 import './ChapterLessonPage.scss';
 

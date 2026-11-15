@@ -25,7 +25,7 @@ export const createRankingRoutes = appRoute => {
   const rankingRatingSystemRoute = createRoute({
     getParentRoute: () => rankingRoute,
     path: 'rating-system',
-    component: lazyRouteComponent(retryImport(() => import('./RatingSystemPage/RatingSystemPage'))),
+    component: lazyRouteComponent(retryImport(() => import('./ratingSystem/RatingSystemPage/RatingSystemPage'))),
     head: () => ({ meta: [{ title: createDocumentTitle('Rating system') }] }),
   });
 
