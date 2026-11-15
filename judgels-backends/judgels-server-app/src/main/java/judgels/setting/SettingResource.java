@@ -84,11 +84,12 @@ public class SettingResource {
             checkMailerConfigured(passwordReset.getEnabled());
             checkHasEmailCode(passwordReset.getRequestEmailTemplate());
         });
+        data.getTrainingGoogleAnalytics().ifPresent(googleAnalytics -> checkTrainingEnabled());
     }
 
     private void checkTrainingEnabled() {
         if (!trainingEnabled) {
-            throw new BadRequestException("Training account settings cannot be set while training is disabled");
+            throw new BadRequestException("Training settings cannot be set while training is disabled");
         }
     }
 

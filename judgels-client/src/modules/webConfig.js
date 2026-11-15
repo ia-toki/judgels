@@ -21,10 +21,6 @@ export function getGoogleAuthClientId() {
   return getUserWebConfig()?.googleAuthClientId;
 }
 
-export function getGoogleAnalyticsTrackingId() {
-  return getUserWebConfig()?.googleAnalyticsTrackingId;
-}
-
 export function getRecaptchaSiteKey() {
   return getUserWebConfig()?.recaptchaSiteKey;
 }
@@ -43,4 +39,8 @@ export function isTrainingAccountRegistrationEnabled() {
 
 export function isTrainingAccountPasswordResetEnabled() {
   return !!getUserWebConfig()?.trainingAccountPasswordResetEnabled;
+}
+
+export function getTrainingGoogleAnalyticsTrackingId() {
+  return getUserWebConfig()?.trainingGoogleAnalyticsTrackingId;
 }

@@ -12,13 +12,14 @@ import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
 import judgels.api.setting.TrainingAccountPasswordResetSettings;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
+import judgels.api.setting.TrainingGoogleAnalyticsSettings;
 import judgels.persistence.dao.SettingDao;
 import judgels.persistence.model.SettingModel;
 
 public class SettingStore {
-    static final String APP_GOOGLE_ANALYTICS_TRACKING_ID = "app_google_analytics_tracking_id";
     static final String TRAINING_ACCOUNT_REGISTRATION_ENABLED = "training_account_registration_enabled";
     static final String TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED = "training_account_password_reset_enabled";
+    static final String TRAINING_GOOGLE_ANALYTICS_TRACKING_ID = "training_google_analytics_tracking_id";
 
     private final SettingDao settingDao;
 
@@ -37,8 +38,6 @@ public class SettingStore {
                         .slogan(settings.getOrDefault("app_slogan", ""))
                         .announcement(Optional.ofNullable(settings.get("app_announcement"))
                                 .filter(announcement -> !announcement.isEmpty()))
-                        .googleAnalyticsTrackingId(Optional.ofNullable(settings.get(APP_GOOGLE_ANALYTICS_TRACKING_ID))
-                                .filter(trackingId -> !trackingId.isEmpty()))
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner(settings.getOrDefault("home_banner", ""))
@@ -69,6 +68,10 @@ public class SettingStore {
                                 "training_account_password_reset_reset_email",
                                 TrainingAccountPasswordResetSettings.DEFAULT_RESET_EMAIL_TEMPLATE))
                         .build())
+                .trainingGoogleAnalytics(new TrainingGoogleAnalyticsSettings.Builder()
+                        .trackingId(Optional.ofNullable(settings.get(TRAINING_GOOGLE_ANALYTICS_TRACKING_ID))
+                                .filter(trackingId -> !trackingId.isEmpty()))
+                        .build())
                 .build();
     }
 
@@ -81,7 +84,6 @@ public class SettingStore {
             upsertSetting("app_name", app.getName());
             upsertSetting("app_slogan", app.getSlogan());
             upsertSetting("app_announcement", app.getAnnouncement().orElse(""));
-            upsertSetting(APP_GOOGLE_ANALYTICS_TRACKING_ID, app.getGoogleAnalyticsTrackingId().orElse(""));
         });
         data.getHome().ifPresent(home -> {
             upsertSetting("home_banner", home.getBanner());
@@ -103,6 +105,9 @@ public class SettingStore {
             upsertSetting(TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED, String.valueOf(passwordReset.getEnabled()));
             upsertEmailTemplate("training_account_password_reset_request_email", passwordReset.getRequestEmailTemplate());
             upsertEmailTemplate("training_account_password_reset_reset_email", passwordReset.getResetEmailTemplate());
+        });
+        data.getTrainingGoogleAnalytics().ifPresent(googleAnalytics -> {
+            upsertSetting(TRAINING_GOOGLE_ANALYTICS_TRACKING_ID, googleAnalytics.getTrackingId().orElse(""));
         });
     }
 

@@ -13,7 +13,6 @@ public interface AppSettings {
     String getName();
     String getSlogan();
     Optional<String> getAnnouncement();
-    Optional<String> getGoogleAnalyticsTrackingId();
 
     class Builder extends ImmutableAppSettings.Builder {}
 }
