@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -40,20 +39,18 @@ import judgels.api.catalog.problem.bundle.item.ProblemItemCreateData;
 import judgels.api.catalog.problem.bundle.item.ProblemItemUpdateData;
 import judgels.api.catalog.problem.editorial.ProblemEditorialCreateData;
 import judgels.api.catalog.problem.version.ProblemVersionCommitData;
-import judgels.api.catalog.problem.writer.ProblemWriterData;
-import judgels.api.catalog.problem.writer.ProblemWritersResponse;
 import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
+import judgels.api.user.role.UserRolesUpsertData;
 import judgels.client.LessonClient;
 import judgels.client.ProblemClient;
 import judgels.client.ProblemEditorialClient;
 import judgels.client.ProblemItemClient;
 import judgels.client.ProblemStatementClient;
 import judgels.client.ProblemVersionClient;
-import judgels.client.ProblemWriterClient;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
 import judgels.client.UserRoleClient;
@@ -221,14 +218,10 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static void grantProblemWriter(User user) {
-        ProblemWriterClient writerClient = createClient(ProblemWriterClient.class);
-        ProblemWritersResponse writers = writerClient.getWriters(superadminToken);
-        List<ProblemWriterData> data = new ArrayList<>();
-        for (String userJid : writers.getData()) {
-            data.add(new ProblemWriterData.Builder().username(writers.getProfilesMap().get(userJid).getUsername()).build());
-        }
-        data.add(new ProblemWriterData.Builder().username(user.getUsername()).build());
-        writerClient.setWriters(superadminToken, data);
+        createClient(UserRoleClient.class).upsertRoles(superadminToken, new UserRolesUpsertData.Builder()
+                .addUsernames(user.getUsername())
+                .addRoles(UserRole.PROBLEM_WRITER)
+                .build());
     }
 
     protected static String getToken(User user) {

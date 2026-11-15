@@ -7,7 +7,7 @@ import { ActionButtons } from '../../../../../../components/ActionButtons/Action
 import { BreadcrumbTitle } from '../../../../../../components/BreadcrumbTitle/BreadcrumbTitle';
 import { ContentCard } from '../../../../../../components/ContentCard/ContentCard';
 import { NotFoundError } from '../../../../../../modules/api/error';
-import { UserRole } from '../../../../../../modules/api/userRole';
+import { UserRole, adminRoles } from '../../../../../../modules/api/userRole';
 import { setUserRolesMutationOptions, userRolesQueryOptions } from '../../../../../../modules/queries/userRole';
 import { useSession } from '../../../../../../modules/session';
 import { RoleCheckboxes, getRoleFields } from '../../RoleCheckboxes/RoleCheckboxes';
@@ -21,7 +21,7 @@ export default function RoleEditPage() {
 
   const { data: roles } = useSuspenseQuery(userRolesQueryOptions());
   const user = buildUsers(roles, actor?.jid).find(user => user.username === username);
-  if (!user || user.isSuperadmin) {
+  if (!user || user.isSuperadmin || !user.roles.some(role => adminRoles.includes(role))) {
     throw new NotFoundError();
   }
 
@@ -53,7 +53,7 @@ function RoleEditForm({ user }) {
   // Roles not shown here are kept as they are.
   const shownRoles = getRoleFields().map(({ role }) => role);
   const roles = [...user.roles.filter(role => !shownRoles.includes(role)), ...shownRoles.filter(role => checked[role])];
-  const isRemoving = roles.length === 0;
+  const isRemoving = !roles.some(role => adminRoles.includes(role));
 
   const goToRoles = () => navigate({ to: '/admin/roles/admins' });
 
@@ -75,7 +75,7 @@ function RoleEditForm({ user }) {
       <ActionButtons justifyContent="end">
         <Button text="Cancel" disabled={setRoleMutation.isPending} onClick={goToRoles} />
         <Button
-          text={isRemoving ? 'Remove all roles' : 'Save'}
+          text={isRemoving ? 'Remove all admin roles' : 'Save'}
           intent={isRemoving ? Intent.DANGER : Intent.PRIMARY}
           loading={setRoleMutation.isPending}
           onClick={save}

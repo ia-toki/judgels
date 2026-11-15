@@ -49,7 +49,6 @@ import {
   problemHasVersionLocalChangesQueryOptions,
   problemVersionsQueryOptions,
 } from '../../modules/queries/problemVersion';
-import { problemWritersQueryOptions } from '../../modules/queries/problemWriter';
 import { basicProfileQueryOptions } from '../../modules/queries/profile';
 import { userByUsernameQueryOptions } from '../../modules/queries/user';
 import { userInfoQueryOptions } from '../../modules/queries/userInfo';
@@ -134,18 +133,18 @@ export const createAdminRoutes = appRoute => {
       retryImport(() => import('./roles/problemWriters/ProblemWritersPage/ProblemWritersPage'))
     ),
     loader: async () => {
-      await queryClient.ensureQueryData(problemWritersQueryOptions());
+      await queryClient.ensureQueryData(userRolesQueryOptions());
     },
   });
 
-  const adminProblemWritersEditRoute = createRoute({
+  const adminProblemWriterUpsertRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'roles/problem-writers/edit',
+    path: 'roles/problem-writers/-/upsert',
     component: lazyRouteComponent(
-      retryImport(() => import('./roles/problemWriters/edit/ProblemWritersEditPage/ProblemWritersEditPage'))
+      retryImport(() => import('./roles/problemWriters/upsert/ProblemWriterUpsertPage/ProblemWriterUpsertPage'))
     ),
     loader: async () => {
-      await queryClient.ensureQueryData(problemWritersQueryOptions());
+      await queryClient.ensureQueryData(userRolesQueryOptions());
     },
   });
 
@@ -745,7 +744,7 @@ export const createAdminRoutes = appRoute => {
     adminRoleAdminsRoute,
     adminRoleUpsertRoute,
     adminProblemWritersRoute,
-    adminProblemWritersEditRoute,
+    adminProblemWriterUpsertRoute,
     adminRoleEditRoute,
     adminRatingsRoute,
     adminContestRatingChangesRoute,
