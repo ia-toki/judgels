@@ -27,6 +27,7 @@ describe('TrainingSettingsPage', () => {
       requestEmailTemplate: { subject: 'Reset?', body: 'Reset code: {{emailCode}}' },
       resetEmailTemplate: { subject: 'Reset', body: 'Done' },
     },
+    trainingGoogleAnalytics: { trackingId: 'G-OLD' },
     mailerConfigured: true,
     recaptchaConfigured: true,
   };
@@ -54,6 +55,8 @@ describe('TrainingSettingsPage', () => {
     expect(screen.getByText('Account password reset')).toBeInTheDocument();
     expect(screen.getByText('Activate')).toBeInTheDocument();
     expect(screen.getByText('Reset?')).toBeInTheDocument();
+    expect(screen.getByText('Google Analytics')).toBeInTheDocument();
+    expect(screen.getByText('G-OLD')).toBeInTheDocument();
     expect(screen.queryByText('Session')).not.toBeInTheDocument();
   });
 
@@ -104,6 +107,28 @@ describe('TrainingSettingsPage', () => {
           resetEmailTemplate: { subject: 'Reset', body: 'Done' },
         },
       })
+      .reply(200);
+
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+  });
+
+  test('google analytics form', async () => {
+    await renderComponent();
+
+    const user = userEvent.setup();
+
+    const editButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await user.click(editButtons[2]);
+
+    const trackingId = screen.getByRole('textbox', { name: /tracking id/i });
+    expect(trackingId).toHaveValue('G-OLD');
+    await user.clear(trackingId);
+    await user.type(trackingId, 'G-NEW');
+
+    nockApi()
+      .put('/v2/settings', { trainingGoogleAnalytics: { trackingId: 'G-NEW' } })
       .reply(200);
 
     await user.click(screen.getByRole('button', { name: /save/i }));

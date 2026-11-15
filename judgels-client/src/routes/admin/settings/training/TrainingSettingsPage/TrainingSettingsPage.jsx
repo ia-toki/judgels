@@ -8,6 +8,7 @@ import { settingsQueryOptions } from '../../../../../modules/queries/setting';
 import { SettingsTopbar } from '../../SettingsTopbar/SettingsTopbar';
 import { AccountPasswordResetSection } from './AccountPasswordResetSection';
 import { AccountRegistrationSection } from './AccountRegistrationSection';
+import { GoogleAnalyticsSection } from './GoogleAnalyticsSection';
 
 export default function TrainingSettingsPage() {
   const { data } = useQuery(settingsQueryOptions());
@@ -28,6 +29,7 @@ export default function TrainingSettingsPage() {
                 trainingAccountPasswordReset={data.trainingAccountPasswordReset}
                 mailerConfigured={data.mailerConfigured}
               />
+              <GoogleAnalyticsSection trainingGoogleAnalytics={data.trainingGoogleAnalytics} />
             </Flex>
           </EditableSections>
         ) : (

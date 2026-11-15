@@ -1,8 +1,8 @@
 package judgels.setting;
 
-import static judgels.setting.SettingStore.APP_GOOGLE_ANALYTICS_TRACKING_ID;
 import static judgels.setting.SettingStore.TRAINING_ACCOUNT_PASSWORD_RESET_ENABLED;
 import static judgels.setting.SettingStore.TRAINING_ACCOUNT_REGISTRATION_ENABLED;
+import static judgels.setting.SettingStore.TRAINING_GOOGLE_ANALYTICS_TRACKING_ID;
 
 import io.dropwizard.hibernate.UnitOfWork;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
 import judgels.api.setting.TrainingAccountPasswordResetSettings;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
+import judgels.api.setting.TrainingGoogleAnalyticsSettings;
 
 public class SettingCreator {
     private final SettingStore settingStore;
@@ -42,17 +43,12 @@ public class SettingCreator {
         boolean appInitialized = !app.getName().isEmpty() && !app.getSlogan().isEmpty();
         boolean homeInitialized = !home.getBanner().isEmpty();
 
-        Optional<String> googleAnalyticsTrackingId = googleAnalyticsConfig
-                .map(GoogleAnalyticsConfiguration::getTrackingId)
-                .filter(c -> !settingStore.hasSetting(APP_GOOGLE_ANALYTICS_TRACKING_ID));
-
         SettingUpdateData.Builder data = new SettingUpdateData.Builder();
-        if (!appInitialized || googleAnalyticsTrackingId.isPresent()) {
+        if (!appInitialized) {
             data.app(new AppSettings.Builder()
                     .name(app.getName().isEmpty() ? AppSettings.DEFAULT_NAME : app.getName())
                     .slogan(app.getSlogan().isEmpty() ? AppSettings.DEFAULT_SLOGAN : app.getSlogan())
                     .announcement(app.getAnnouncement())
-                    .googleAnalyticsTrackingId(googleAnalyticsTrackingId.or(app::getGoogleAnalyticsTrackingId))
                     .build());
         }
         if (!homeInitialized) {
@@ -76,6 +72,11 @@ public class SettingCreator {
                         .enabled(true)
                         .requestEmailTemplate(c.getRequestEmailTemplate())
                         .resetEmailTemplate(c.getResetEmailTemplate())
+                        .build()));
+        googleAnalyticsConfig
+                .filter(c -> !settingStore.hasSetting(TRAINING_GOOGLE_ANALYTICS_TRACKING_ID))
+                .ifPresent(c -> data.trainingGoogleAnalytics(new TrainingGoogleAnalyticsSettings.Builder()
+                        .trackingId(c.getTrackingId())
                         .build()));
 
         settingStore.updateSettings(data.build());

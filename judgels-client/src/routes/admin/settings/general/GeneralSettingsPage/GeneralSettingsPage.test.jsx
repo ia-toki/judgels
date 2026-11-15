@@ -14,12 +14,7 @@ describe('GeneralSettingsPage', () => {
   });
 
   const settings = {
-    app: {
-      name: 'Judgels',
-      slogan: 'Programming Contest System',
-      announcement: 'Hi',
-      googleAnalyticsTrackingId: 'G-OLD',
-    },
+    app: { name: 'Judgels', slogan: 'Programming Contest System', announcement: 'Hi' },
     home: { banner: 'Welcome' },
     session: { disableLogout: false, maxConcurrentSessionsPerUser: 5 },
   };
@@ -47,7 +42,6 @@ describe('GeneralSettingsPage', () => {
 
     expect(screen.getByText('Judgels')).toBeInTheDocument();
     expect(screen.getByText('Programming Contest System')).toBeInTheDocument();
-    expect(screen.getByText('G-OLD')).toBeInTheDocument();
     expect(screen.getByText('Welcome')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();
   });
@@ -87,19 +81,9 @@ describe('GeneralSettingsPage', () => {
     await user.clear(name);
     await user.type(name, 'New Judge');
 
-    const trackingId = screen.getByRole('textbox', { name: /google analytics tracking id/i });
-    expect(trackingId).toHaveValue('G-OLD');
-    await user.clear(trackingId);
-    await user.type(trackingId, 'G-NEW');
-
     nockApi()
       .put('/v2/settings', {
-        app: {
-          name: 'New Judge',
-          slogan: 'Programming Contest System',
-          announcement: 'Hi',
-          googleAnalyticsTrackingId: 'G-NEW',
-        },
+        app: { name: 'New Judge', slogan: 'Programming Contest System', announcement: 'Hi' },
       })
       .reply(200);
 

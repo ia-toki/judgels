@@ -10,6 +10,7 @@ import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.Settings;
 import judgels.api.setting.TrainingAccountPasswordResetSettings;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
+import judgels.api.setting.TrainingGoogleAnalyticsSettings;
 import judgels.client.SettingClient;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,6 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(settings.getApp().getName()).isEqualTo(AppSettings.DEFAULT_NAME);
         assertThat(settings.getApp().getSlogan()).isEqualTo(AppSettings.DEFAULT_SLOGAN);
         assertThat(settings.getApp().getAnnouncement()).isEmpty();
-        assertThat(settings.getApp().getGoogleAnalyticsTrackingId()).isEmpty();
         assertThat(settings.getMailerConfigured()).isTrue();
         assertThat(settings.getRecaptchaConfigured()).isFalse();
         assertThat(settings.getHome().getBanner()).isEqualTo(HomeSettings.DEFAULT_BANNER);
@@ -32,7 +32,6 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .name("My Judge")
                         .slogan("Train hard")
                         .announcement("Maintenance tonight")
-                        .googleAnalyticsTrackingId("G-TEST")
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner("<h1>Hello</h1>")
@@ -42,7 +41,6 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(updated.getApp().getName()).isEqualTo("My Judge");
         assertThat(updated.getApp().getSlogan()).isEqualTo("Train hard");
         assertThat(updated.getApp().getAnnouncement()).contains("Maintenance tonight");
-        assertThat(updated.getApp().getGoogleAnalyticsTrackingId()).contains("G-TEST");
         assertThat(updated.getHome().getBanner()).isEqualTo("<h1>Hello</h1>");
 
         assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);
@@ -79,6 +77,21 @@ class SettingApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
 
         assertThat(updated.getTrainingAccountRegistration()).isEqualTo(userRegistration);
         assertThat(updated.getTrainingAccountPasswordReset()).isEqualTo(userResetPassword);
+        assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);
+    }
+
+    @Test
+    void get_and_update_google_analytics_settings() {
+        Settings settings = settingClient.getSettings(adminToken);
+        assertThat(settings.getTrainingGoogleAnalytics().getTrackingId()).isEmpty();
+
+        Settings updated = settingClient.updateSettings(adminToken, new SettingUpdateData.Builder()
+                .trainingGoogleAnalytics(new TrainingGoogleAnalyticsSettings.Builder()
+                        .trackingId("G-TEST")
+                        .build())
+                .build());
+
+        assertThat(updated.getTrainingGoogleAnalytics().getTrackingId()).contains("G-TEST");
         assertThat(settingClient.getSettings(adminToken)).isEqualTo(updated);
     }
 

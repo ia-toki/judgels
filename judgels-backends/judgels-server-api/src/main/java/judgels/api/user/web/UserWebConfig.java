@@ -15,12 +15,12 @@ public interface UserWebConfig {
     Optional<String> getAppAnnouncement();
     String getHomeBanner();
     Optional<String> getGoogleAuthClientId();
-    Optional<String> getGoogleAnalyticsTrackingId();
     Optional<String> getRecaptchaSiteKey();
     boolean getRatingEnabled();
     boolean getTrainingEnabled();
     boolean getTrainingAccountRegistrationEnabled();
     boolean getTrainingAccountPasswordResetEnabled();
+    Optional<String> getTrainingGoogleAnalyticsTrackingId();
     Set<UserRole> getRoles();
     Optional<Profile> getProfile();
 

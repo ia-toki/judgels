@@ -8,6 +8,7 @@ import judgels.api.setting.HomeSettings;
 import judgels.api.setting.SettingUpdateData;
 import judgels.api.setting.TrainingAccountPasswordResetSettings;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
+import judgels.api.setting.TrainingGoogleAnalyticsSettings;
 import judgels.api.user.role.UserRole;
 import judgels.api.user.web.UserWebConfig;
 import judgels.client.SettingClient;
@@ -32,7 +33,7 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertThat(anonymousConfig.getRatingEnabled()).isTrue();
         assertThat(anonymousConfig.getGoogleAuthClientId()).isEmpty();
         assertThat(anonymousConfig.getRecaptchaSiteKey()).isEmpty();
-        assertThat(anonymousConfig.getGoogleAnalyticsTrackingId()).isEmpty();
+        assertThat(anonymousConfig.getTrainingGoogleAnalyticsTrackingId()).isEmpty();
 
         UserWebConfig adminConfig = userWebClient.getWebConfig(adminToken);
         assertThat(adminConfig.getRoles()).containsExactlyInAnyOrder(
@@ -51,7 +52,6 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .name("Updated")
                         .slogan("Updated slogan")
                         .announcement("Hi")
-                        .googleAnalyticsTrackingId("G-TEST")
                         .build())
                 .home(new HomeSettings.Builder()
                         .banner("<h1>Updated</h1>")
@@ -66,15 +66,18 @@ class UserWebApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
                         .requestEmailTemplate(TrainingAccountPasswordResetSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE)
                         .resetEmailTemplate(TrainingAccountPasswordResetSettings.DEFAULT_RESET_EMAIL_TEMPLATE)
                         .build())
+                .trainingGoogleAnalytics(new TrainingGoogleAnalyticsSettings.Builder()
+                        .trackingId("G-TEST")
+                        .build())
                 .build());
 
         UserWebConfig updatedConfig = userWebClient.getWebConfig();
         assertThat(updatedConfig.getAppName()).isEqualTo("Updated");
         assertThat(updatedConfig.getAppSlogan()).isEqualTo("Updated slogan");
         assertThat(updatedConfig.getAppAnnouncement()).contains("Hi");
-        assertThat(updatedConfig.getGoogleAnalyticsTrackingId()).contains("G-TEST");
         assertThat(updatedConfig.getHomeBanner()).isEqualTo("<h1>Updated</h1>");
         assertThat(updatedConfig.getTrainingAccountRegistrationEnabled()).isTrue();
         assertThat(updatedConfig.getTrainingAccountPasswordResetEnabled()).isTrue();
+        assertThat(updatedConfig.getTrainingGoogleAnalyticsTrackingId()).contains("G-TEST");
     }
 }

@@ -12,6 +12,7 @@ public interface SettingUpdateData {
     Optional<SessionSettings> getSession();
     Optional<TrainingAccountRegistrationSettings> getTrainingAccountRegistration();
     Optional<TrainingAccountPasswordResetSettings> getTrainingAccountPasswordReset();
+    Optional<TrainingGoogleAnalyticsSettings> getTrainingGoogleAnalytics();
 
     class Builder extends ImmutableSettingUpdateData.Builder {}
 }

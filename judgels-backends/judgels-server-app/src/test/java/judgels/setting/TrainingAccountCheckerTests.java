@@ -11,6 +11,7 @@ import judgels.api.setting.SessionSettings;
 import judgels.api.setting.Settings;
 import judgels.api.setting.TrainingAccountPasswordResetSettings;
 import judgels.api.setting.TrainingAccountRegistrationSettings;
+import judgels.api.setting.TrainingGoogleAnalyticsSettings;
 import judgels.core.mailer.Mailer;
 import judgels.core.recaptcha.RecaptchaVerifier;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,6 +95,7 @@ class TrainingAccountCheckerTests {
                         .requestEmailTemplate(TrainingAccountPasswordResetSettings.DEFAULT_REQUEST_EMAIL_TEMPLATE)
                         .resetEmailTemplate(TrainingAccountPasswordResetSettings.DEFAULT_RESET_EMAIL_TEMPLATE)
                         .build())
+                .trainingGoogleAnalytics(new TrainingGoogleAnalyticsSettings.Builder().build())
                 .build();
     }
 }

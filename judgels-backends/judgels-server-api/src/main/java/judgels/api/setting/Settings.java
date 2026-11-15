@@ -11,6 +11,7 @@ public interface Settings {
     SessionSettings getSession();
     TrainingAccountRegistrationSettings getTrainingAccountRegistration();
     TrainingAccountPasswordResetSettings getTrainingAccountPasswordReset();
+    TrainingGoogleAnalyticsSettings getTrainingGoogleAnalytics();
 
     @Value.Default
     default boolean getMailerConfigured() {

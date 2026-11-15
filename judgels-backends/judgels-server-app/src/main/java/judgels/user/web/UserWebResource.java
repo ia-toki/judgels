@@ -47,12 +47,13 @@ public class UserWebResource {
                 .appAnnouncement(settings.getApp().getAnnouncement())
                 .homeBanner(settings.getHome().getBanner())
                 .googleAuthClientId(googleAuth.map(GoogleAuth::getClientId))
-                .googleAnalyticsTrackingId(settings.getApp().getGoogleAnalyticsTrackingId())
                 .recaptchaSiteKey(trainingAccountChecker.getRecaptchaSiteKey())
                 .ratingEnabled(ratingEnabled)
                 .trainingEnabled(trainingEnabled)
                 .trainingAccountRegistrationEnabled(trainingAccountChecker.isRegistrationEnabled())
-                .trainingAccountPasswordResetEnabled(trainingAccountChecker.isPasswordResetEnabled());
+                .trainingAccountPasswordResetEnabled(trainingAccountChecker.isPasswordResetEnabled())
+                .trainingGoogleAnalyticsTrackingId(settings.getTrainingGoogleAnalytics().getTrackingId()
+                        .filter(trackingId -> trainingEnabled));
 
         if (!authHeader.isPresent()) {
             config.roles(Set.of());

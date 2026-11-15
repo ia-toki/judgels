@@ -1,10 +1,10 @@
 import { stringify } from 'query-string';
 import ReactGA from 'react-ga4';
 
-import { getGoogleAnalyticsTrackingId } from './modules/webConfig';
+import { getTrainingGoogleAnalyticsTrackingId } from './modules/webConfig';
 
 export function initGA() {
-  const trackingId = getGoogleAnalyticsTrackingId();
+  const trackingId = getTrainingGoogleAnalyticsTrackingId();
   if (trackingId && !ReactGA.isInitialized) {
     ReactGA.initialize(trackingId);
   }

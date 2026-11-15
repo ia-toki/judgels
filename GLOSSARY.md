@@ -47,7 +47,7 @@ The host for time-boxed events in which contestants solve contest problems. Each
 _Avoid_: Uriel
 
 **Training**:
-The host for self-paced practice, the sibling of contest. It has no single root: its containers are chapters and problem sets, organized by a curriculum, courses and archives. Being the public face of the site, it also owns account registration and password reset; without training, only admins create users.
+The host for self-paced practice, the sibling of contest. It has no single root: its containers are chapters and problem sets, organized by a curriculum, courses and archives. Being the public face of the site, it also owns account registration, password reset and the site's Google Analytics tracking; without training, only admins create users and no visit is tracked.
 _Avoid_: Jerahmeel
 
 **Account registration**:
