@@ -1,5 +1,4 @@
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
-import { Flex } from '@blueprintjs/labs';
 import { Field, Form } from 'react-final-form';
 
 import { FormCheckbox } from '../../../../../components/forms/FormCheckbox/FormCheckbox';
@@ -54,7 +53,6 @@ export default function ContestSupervisorAddForm({ onSubmit, renderFormComponent
     const allowAllPermissionsField = {
       name: 'managementPermissions.All',
       label: '(all)',
-      small: true,
     };
 
     const permissionFields = supervisorManagementPermissions
@@ -62,19 +60,13 @@ export default function ContestSupervisorAddForm({ onSubmit, renderFormComponent
       .map(p => ({
         name: 'managementPermissions.' + p,
         label: p,
-        small: true,
       }));
 
     return (
-      <FormGroup
-        label="Management permissions"
-        helperText="Supervisors who are already in the contest get these permissions instead of their current ones."
-      >
-        <Flex flexDirection="column" gap={2}>
-          <Field component={FormCheckbox} {...allowAllPermissionsField} />
-          {!values.managementPermissions.All &&
-            permissionFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
-        </Flex>
+      <FormGroup label="Management permissions">
+        <Field component={FormCheckbox} {...allowAllPermissionsField} />
+        {!values.managementPermissions.All &&
+          permissionFields.map(f => <Field key={f.name} component={FormCheckbox} {...f} />)}
       </FormGroup>
     );
   };

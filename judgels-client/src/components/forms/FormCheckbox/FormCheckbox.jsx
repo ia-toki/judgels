@@ -3,9 +3,7 @@ import classNames from 'classnames';
 
 import { getIntentClassName } from '../meta';
 
-import './FormCheckbox.scss';
-
-export function FormCheckbox({ input, label, small, meta }) {
+export function FormCheckbox({ input, label, meta }) {
   const { value, onChange, ...inputProps } = input;
   const newOnChange = ({ target }) => onChange(target.checked);
 
@@ -15,7 +13,7 @@ export function FormCheckbox({ input, label, small, meta }) {
       defaultChecked={!!value}
       onChange={newOnChange}
       {...inputProps}
-      className={classNames({ 'form-checkbox--small': small }, getIntentClassName(meta))}
+      className={classNames(getIntentClassName(meta))}
     />
   );
 }
