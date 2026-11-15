@@ -1,0 +1,24 @@
+app_version: "4.0.0"
+
+nginx_certbot_enabled: true
+nginx_certbot_email: admin@judgels.com
+
+nginx_domain_judgels_client: judgels.com
+nginx_domain_judgels_server_api: api.judgels.com
+nginx_domain_judgels_server_admin: admin.judgels.com
+# nginx_domain_judgels_server_admin_auth_basic_user: user # <-- CHANGE THIS !!!
+# nginx_domain_judgels_server_admin_auth_basic_pass: pass # <-- CHANGE THIS !!!
+
+# java_opts_judgels_server: -Xmx1g
+# java_opts_judgels_grader: -Xmx1g
+
+db_root_password: pass # <------------------------------------- CHANGE THIS !!!
+db_username: judgels
+db_password: pass # <------------------------------------------ CHANGE THIS !!!
+
+rabbitmq_username: judgels
+rabbitmq_password: pass # <------------------------------------ CHANGE THIS !!!
+
+superadmin_initialPassword: superadmin # <------------- CHANGE THIS !!!
+
+grading_numWorkerThreads: 1

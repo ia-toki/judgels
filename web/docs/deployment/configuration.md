@@ -37,7 +37,7 @@ It means that each grader VM can have 2 concurrent grading executions.
 
 ### Redeploying Judgels
 
-After updating `vars.yml`, to actually apply the new configuration, run the following in `deployment/v3-ubuntu-24.04/ansible`:
+After updating `vars.yml`, to actually apply the new configuration, run the following in `deployment/v4-ubuntu-24.04/ansible`:
 
 ```
 ansible-playbook -e @env/vars.yml playbooks/deploy.yml --tags=config

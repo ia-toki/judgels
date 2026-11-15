@@ -1,0 +1,5 @@
+- hosts: core
+  gather_facts: false
+  become: true
+  roles:
+    - name: nginx-http-deploy

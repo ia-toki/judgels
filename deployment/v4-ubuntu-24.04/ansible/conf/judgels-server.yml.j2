@@ -1,0 +1,144 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 9101
+
+  adminConnectors:
+    - type: http
+      port: 9111
+
+  requestLog:
+    appenders:
+    - type: file
+      currentLogFilename: var/log/judgels-server-request.log
+      archivedLogFilenamePattern: var/log/judgels-server-request-%d.log.gz
+      archivedFileCount: 14
+
+database:
+  driverClass: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost/judgels?useSSL=false
+  user: {{ db_username }}
+  password: {{ db_password }}
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    hibernate.generate_statistics: false
+    hibernate.query.plan_cache_max_size: 64
+    hibernate.query.plan_parameter_metadata_max_size: 32
+
+logging:
+  appenders:
+    - type: console
+      threshold: INFO
+    - type: file
+      currentLogFilename: var/log/judgels-server.log
+      archivedLogFilenamePattern: var/log/judgels-server-%d.log.gz
+      archivedFileCount: 14
+
+  loggers:
+    org.hibernate.type.BasicTypeRegistry:
+      level: OFF
+
+webSecurity:
+  cors:
+    allowedOrigins: https://{{ nginx_domain_judgels_client }}
+    allowCredentials: true
+
+judgels:
+  baseDataDir: var/data
+
+  auth:
+{% if auth_google_clientId is defined %}
+    google:
+      clientId: {{ auth_google_clientId }}
+{% endif %}
+
+{% if rabbitmq_username is defined %}
+  rabbitmq:
+    host: localhost
+    username: {{ rabbitmq_username }}
+    password: {{ rabbitmq_password }}
+{% endif %}
+
+{% if mailer_host is defined %}
+  mailer:
+    host: {{ mailer_host }}
+    port: {{ mailer_port }}
+    useSsl: {{ mailer_useSsl }}
+    username: {{ mailer_username }}
+    password: {{ mailer_password }}
+    sender: {{ mailer_sender }}
+{% endif %}
+
+{% if recaptcha_siteKey is defined %}
+  recaptcha:
+    siteKey: {{ recaptcha_siteKey }}
+    secretKey: {{ recaptcha_secretKey }}
+{% endif %}
+
+  superadmin:
+    initialPassword: {{ superadmin_initialPassword }}
+
+  grading:
+    gradingRequestQueueName: judgels-grading-request
+    gradingResponseQueueName: judgels-grading-response
+
+  rating:
+    enabled: {{ rating_enabled | default(false) | bool | lower }}
+
+  training:
+    enabled: {{ training_enabled | default(false) | bool | lower }}
+
+{% if training_aws_accessKey is defined %}
+    aws:
+      accessKey: {{ training_aws_accessKey }}
+      secretKey: {{ training_aws_secretKey }}
+      s3BucketRegionId: {{ training_aws_s3BucketRegionId }}
+{% endif %}
+
+    submission:
+      fs:
+        type: {{ training_submission_fs_type | default('local', true) }}
+{% if training_submission_fs_type | default('local', true) != 'local' %}
+        s3BucketName: {{ training_submission_fs_s3BucketName }}
+{% endif %}
+
+    stats:
+      enabled: {{ training_stats_enabled | default(false, true) }}
+
+{% if googleAnalytics_trackingId is defined %}
+  googleAnalytics:
+    trackingId: {{ googleAnalytics_trackingId }}
+{% endif %}
+
+  userRegistration:
+    enabled: {{ userRegistration_enabled | default(false, true) }}
+{% if userRegistration_enabled | default(false, true) %}
+    useRecaptcha: {{ userRegistration_useRecaptcha }}
+    activationEmailTemplate:
+      subject: {{ userRegistration_activationEmailTemplate_subject }}
+      body: {{ userRegistration_activationEmailTemplate_body }}
+{% else %}
+    useRecaptcha: false
+    activationEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+{% endif %}
+
+  userResetPassword:
+    enabled: {{ userResetPassword_enabled | default(false, true) }}
+{% if userResetPassword_enabled | default(false, true) %}
+    requestEmailTemplate:
+      subject: {{ userResetPassword_requestEmailTemplate_subject }}
+      body: {{ userResetPassword_requestEmailTemplate_body }}
+    resetEmailTemplate:
+      subject: {{ userResetPassword_resetEmailTemplate_subject }}
+      body: {{ userResetPassword_resetEmailTemplate_body }}
+{% else %}
+    requestEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+    resetEmailTemplate:
+      subject: UNUSED
+      body: UNUSED
+{% endif %}

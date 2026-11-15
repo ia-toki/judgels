@@ -1,0 +1,7 @@
+window.conf = {
+{% if nginx_certbot_enabled | default(true) | bool %}
+  apiUrl: 'https://{{ nginx_domain_judgels_server_api }}',
+{% else %}
+  apiUrl: '/api',
+{% endif %}
+};

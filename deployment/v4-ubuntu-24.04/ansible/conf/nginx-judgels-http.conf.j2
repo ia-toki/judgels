@@ -1,0 +1,36 @@
+upstream judgels_client {
+    {% for host in groups['core'] %}
+    server {{ host }}:5000;
+    {% endfor %}
+}
+
+upstream judgels_server_api {
+    {% for host in groups['core'] %}
+    server {{ host }}:9101;
+    {% endfor %}
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name _;
+
+    location /api/ {
+        include proxy_params;
+        proxy_pass http://judgels_server_api;
+        proxy_set_header Connection "";
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        client_max_body_size 512M;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://judgels_client;
+        proxy_set_header Connection "";
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        client_max_body_size 512M;
+    }
+}

@@ -1,0 +1,76 @@
+- name: Install dependencies
+  apt:
+    name:
+      - unzip
+      - rsync
+      - php-fpm
+      - php-mbstring
+      - php-zip
+      - php-gd
+      - php-json
+      - php-mysql
+    state: present
+    update_cache: yes
+
+- name: Download phpmyadmin
+  get_url:
+    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
+    dest: "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
+
+- name: Create document root directory
+  file:
+    path: /var/www/html/phpmyadmin
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Create phpmyadmin tmp directory
+  file:
+    path: /var/www/html/phpmyadmin/tmp
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Unzip phpmyadmin
+  unarchive:
+    src: "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip"
+    remote_src: yes
+    dest: /tmp
+
+- name: Sync to /var/www/phpmyadmin
+  command: "rsync -av --delete --exclude=tmp/ --exclude=config.inc.php /tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/html/phpmyadmin/"
+
+- name: Generate phpmyadmin config
+  template:
+    src: config.inc.php.j2
+    dest: /var/www/html/phpmyadmin/config.inc.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Add nginx site config
+  template:
+    src: nginx-phpmyadmin.conf.j2
+    dest: /etc/nginx/sites-available/phpmyadmin
+    owner: www-data
+    group: www-data
+    mode: 0644
+  notify: Reload nginx
+
+- name: Enable nginx site config
+  file:
+    src: /etc/nginx/sites-available/phpmyadmin
+    dest: /etc/nginx/sites-enabled/phpmyadmin
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Reload nginx
+
+- name: Allow phpmyadmin traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "8080"
+    proto: tcp
+    comment: phpmyadmin
