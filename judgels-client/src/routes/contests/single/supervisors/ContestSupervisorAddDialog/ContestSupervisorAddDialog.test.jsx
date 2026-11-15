@@ -43,14 +43,14 @@ describe('ContestSupervisorAddDialog', () => {
     await user.click(clarificationPermission);
 
     nockApi()
-      .post('/v2/contests/contestJid/supervisors/batch-upsert', {
+      .post('/v2/contests/contestJid/supervisors/add', {
         usernames: ['andi', 'budi', 'caca'],
         managementPermissions: ['ANNOUNCEMENT', 'CLARIFICATION'],
       })
-      .reply(200, { upsertedSupervisorProfilesMap: {} });
+      .reply(200, { addedSupervisorProfilesMap: {} });
 
     const dialog = screen.getByRole('dialog');
-    const submitButton = within(dialog).getByRole('button', { name: /add\/update/i });
+    const submitButton = within(dialog).getByRole('button', { name: /^add$/i });
     await user.click(submitButton);
 
     await waitFor(() => expect(nock.isDone()).toBe(true));

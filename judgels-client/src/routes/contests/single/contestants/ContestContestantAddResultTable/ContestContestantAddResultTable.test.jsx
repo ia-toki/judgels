@@ -6,7 +6,7 @@ import { ContestContestantAddResultTable } from './ContestContestantAddResultTab
 describe('ContestContestantAddResultTable', () => {
   const renderComponent = async ({
     usernames = ['budi', 'caca', 'andi', 'dudi', 'zoro'],
-    insertedContestantProfilesMap = {
+    addedContestantProfilesMap = {
       budi: { username: 'budi' },
       andi: { username: 'andi' },
     },
@@ -20,7 +20,7 @@ describe('ContestContestantAddResultTable', () => {
         <TestRouter>
           <ContestContestantAddResultTable
             usernames={usernames}
-            insertedContestantProfilesMap={insertedContestantProfilesMap}
+            addedContestantProfilesMap={addedContestantProfilesMap}
             alreadyContestantProfilesMap={alreadyContestantProfilesMap}
           />
         </TestRouter>
@@ -33,10 +33,10 @@ describe('ContestContestantAddResultTable', () => {
 
     const tables = screen.getAllByRole('table');
 
-    const insertedContestantRows = within(tables[0]).getAllByRole('row');
-    expect(insertedContestantRows).toHaveLength(2);
-    expect(insertedContestantRows[0]).toHaveTextContent('andi');
-    expect(insertedContestantRows[1]).toHaveTextContent('budi');
+    const addedContestantRows = within(tables[0]).getAllByRole('row');
+    expect(addedContestantRows).toHaveLength(2);
+    expect(addedContestantRows[0]).toHaveTextContent('andi');
+    expect(addedContestantRows[1]).toHaveTextContent('budi');
 
     const alreadyContestantRows = within(tables[1]).getAllByRole('row');
     expect(alreadyContestantRows).toHaveLength(2); // 2 data rows

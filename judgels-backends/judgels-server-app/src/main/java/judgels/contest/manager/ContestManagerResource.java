@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 import judgels.api.contest.Contest;
 import judgels.api.contest.manager.ContestManager;
 import judgels.api.contest.manager.ContestManagerConfig;
-import judgels.api.contest.manager.ContestManagersDeleteResponse;
+import judgels.api.contest.manager.ContestManagersAddResponse;
+import judgels.api.contest.manager.ContestManagersRemoveResponse;
 import judgels.api.contest.manager.ContestManagersResponse;
-import judgels.api.contest.manager.ContestManagersUpsertResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
 import judgels.contest.log.ContestLogger;
@@ -83,11 +83,11 @@ public class ContestManagerResource {
     }
 
     @POST
-    @Path("/batch-upsert")
+    @Path("/add")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestManagersUpsertResponse upsertManagers(
+    public ContestManagersAddResponse addManagers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames) {
@@ -100,18 +100,18 @@ public class ContestManagerResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
-        Set<String> insertedManagerUsernames = Sets.newHashSet();
+        Set<String> addedManagerUsernames = Sets.newHashSet();
         Set<String> alreadyManagerUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (managerStore.upsertManager(contest.getJid(), userJid)) {
-                insertedManagerUsernames.add(username);
+                addedManagerUsernames.add(username);
             } else {
                 alreadyManagerUsernames.add(username);
             }
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> insertedManagerProfilesMap = insertedManagerUsernames
+        Map<String, Profile> addedManagerProfilesMap = addedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
         Map<String, Profile> alreadyManagerProfilesMap = alreadyManagerUsernames
@@ -120,18 +120,18 @@ public class ContestManagerResource {
 
         contestLogger.log(contestJid, "ADD_MANAGERS");
 
-        return new ContestManagersUpsertResponse.Builder()
-                .insertedManagerProfilesMap(insertedManagerProfilesMap)
+        return new ContestManagersAddResponse.Builder()
+                .addedManagerProfilesMap(addedManagerProfilesMap)
                 .alreadyManagerProfilesMap(alreadyManagerProfilesMap)
                 .build();
     }
 
     @POST
-    @Path("/batch-delete")
+    @Path("/remove")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestManagersDeleteResponse deleteManagers(
+    public ContestManagersRemoveResponse removeManagers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames) {
@@ -144,22 +144,22 @@ public class ContestManagerResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
-        Set<String> deletedManagerUsernames = Sets.newHashSet();
+        Set<String> removedManagerUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (managerStore.deleteManager(contest.getJid(), userJid)) {
-                deletedManagerUsernames.add(username);
+                removedManagerUsernames.add(username);
             }
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> deletedManagerProfilesMap = deletedManagerUsernames
+        Map<String, Profile> removedManagerProfilesMap = removedManagerUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
         contestLogger.log(contestJid, "REMOVE_MANAGERS");
 
-        return new ContestManagersDeleteResponse.Builder()
-                .deletedManagerProfilesMap(deletedManagerProfilesMap)
+        return new ContestManagersRemoveResponse.Builder()
+                .removedManagerProfilesMap(removedManagerProfilesMap)
                 .build();
     }
 }

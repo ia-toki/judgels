@@ -63,8 +63,8 @@ describe('UsersPage', () => {
     ).toEqual([[], ['andi', 'andi@example.com', expect.any(String)], ['budi', 'budi@example.com', '-']]);
   });
 
-  test('links to the upsert page', async () => {
+  test('links to the import page', async () => {
     await renderComponent();
-    expect(await screen.findByRole('link', { name: /upsert users/i })).toHaveAttribute('href', '/admin/users/-/upsert');
+    expect(await screen.findByRole('link', { name: /import users/i })).toHaveAttribute('href', '/admin/users/-/import');
   });
 });

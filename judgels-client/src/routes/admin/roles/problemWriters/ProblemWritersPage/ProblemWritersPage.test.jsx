@@ -44,7 +44,7 @@ describe('ProblemWritersPage', () => {
       )
     );
 
-    await screen.findByRole('link', { name: /upsert problem writers/i });
+    await screen.findByRole('link', { name: /add problem writers/i });
   };
 
   test('writers, by username, without superadmin', async () => {
@@ -77,14 +77,14 @@ describe('ProblemWritersPage', () => {
     expect(screen.queryByRole('link', { name: 'Admins' })).not.toBeInTheDocument();
   });
 
-  test('links to the upsert page', async () => {
+  test('links to the add page', async () => {
     await renderComponent();
 
-    expect(screen.getByRole('link', { name: /upsert problem writers/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /add problem writers/i })).toHaveAttribute(
       'href',
-      '/admin/roles/problem-writers/-/upsert'
+      '/admin/roles/problem-writers/-/add'
     );
-    expect(screen.queryByRole('link', { name: /upsert admins/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /add admins/i })).not.toBeInTheDocument();
   });
 
   test('removes a writer, keeping their other roles', async () => {

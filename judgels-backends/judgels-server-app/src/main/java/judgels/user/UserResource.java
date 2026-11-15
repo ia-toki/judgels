@@ -32,8 +32,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
+import judgels.api.user.UsersImportResponse;
 import judgels.api.user.UsersResponse;
-import judgels.api.user.UsersUpsertResponse;
 import judgels.core.api.AuthHeader;
 import judgels.persistence.api.OrderDir;
 import judgels.persistence.api.Page;
@@ -53,7 +53,7 @@ public class UserResource {
     @Inject public UserResource() {}
 
     @POST
-    @Path("/batch-get")
+    @Path("/export")
     @Consumes(APPLICATION_JSON)
     @Produces(TEXT_PLAIN)
     @UnitOfWork(readOnly = true)
@@ -155,23 +155,23 @@ public class UserResource {
     }
 
     @POST
-    @Path("/batch-upsert")
+    @Path("/import")
     @Consumes(TEXT_PLAIN)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public UsersUpsertResponse upsertUsers(
+    public UsersImportResponse importUsers(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             String csv) throws IOException {
 
         String actorJid = actorChecker.check(authHeader);
         checkAllowed(roleChecker.canAdminister(actorJid));
 
-        UserCreator.UpsertUsersResult result = userCreator.upsertUsers(csv);
+        UserCreator.ImportUsersResult result = userCreator.importUsers(csv);
         if (result.errorMessage.isPresent()) {
             throw new IllegalArgumentException(result.errorMessage.get());
         }
 
-        return new UsersUpsertResponse.Builder()
+        return new UsersImportResponse.Builder()
                 .createdUsernames(result.createdUsernames)
                 .updatedUsernames(result.updatedUsernames)
                 .build();

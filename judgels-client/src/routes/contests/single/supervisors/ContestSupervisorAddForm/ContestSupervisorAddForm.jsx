@@ -24,7 +24,7 @@ export default function ContestSupervisorAddForm({ onSubmit, renderFormComponent
   };
 
   const renderSubmitButton = submitting => {
-    return <Button type="submit" text="Add/update" intent={Intent.PRIMARY} loading={submitting} />;
+    return <Button type="submit" text="Add" intent={Intent.PRIMARY} loading={submitting} />;
   };
 
   const renderFields = values => {
@@ -66,7 +66,10 @@ export default function ContestSupervisorAddForm({ onSubmit, renderFormComponent
       }));
 
     return (
-      <FormGroup label="Management permissions">
+      <FormGroup
+        label="Management permissions"
+        helperText="Supervisors who are already in the contest get these permissions instead of their current ones."
+      >
         <Flex flexDirection="column" gap={2}>
           <Field component={FormCheckbox} {...allowAllPermissionsField} />
           {!values.managementPermissions.All &&

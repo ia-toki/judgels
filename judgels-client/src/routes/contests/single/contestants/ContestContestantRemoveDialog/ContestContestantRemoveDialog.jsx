@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { deleteContestContestantsMutationOptions } from '../../../../../modules/queries/contestContestant';
+import { removeContestContestantsMutationOptions } from '../../../../../modules/queries/contestContestant';
 import ContestContestantRemoveForm from '../ContestContestantRemoveForm/ContestContestantRemoveForm';
 import { ContestContestantRemoveResultTable } from '../ContestContestantRemoveResultTable/ContestContestantRemoveResultTable';
 
@@ -16,7 +16,7 @@ export function ContestContestantRemoveDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const deleteContestantsMutation = useMutation(deleteContestContestantsMutationOptions(contest.jid));
+  const removeContestantsMutation = useMutation(removeContestContestantsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -40,8 +40,8 @@ export function ContestContestantRemoveDialog({ contest }) {
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await deleteContestantsMutation.mutateAsync(usernames);
-    if (usernames.length === Object.keys(response.deletedContestantProfilesMap).length) {
+    const response = await removeContestantsMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.removedContestantProfilesMap).length) {
       toastActions.showSuccessToast('Contestants removed.');
       setIsDialogOpen(false);
     } else {
@@ -51,13 +51,13 @@ export function ContestContestantRemoveDialog({ contest }) {
 
   const renderDialogRemoveResultTable = () => {
     const { usernames, response } = submitted;
-    const { deletedContestantProfilesMap } = response;
+    const { removedContestantProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestContestantRemoveResultTable
             usernames={usernames}
-            deletedContestantProfilesMap={deletedContestantProfilesMap}
+            removedContestantProfilesMap={removedContestantProfilesMap}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>

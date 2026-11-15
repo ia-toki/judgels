@@ -13,16 +13,16 @@ import { FormUnsavedChangesAlert } from '../../../../../../components/forms/Unsa
 import { parseUsernames } from '../../../../../../components/forms/UsernamesEditForm/UsernamesEditForm';
 import { Required } from '../../../../../../components/forms/validations';
 import { UserRole, isSuperadmin } from '../../../../../../modules/api/userRole';
-import { upsertUserRolesMutationOptions, userRolesQueryOptions } from '../../../../../../modules/queries/userRole';
+import { addUserRolesMutationOptions, userRolesQueryOptions } from '../../../../../../modules/queries/userRole';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
 
-const MAX_UPSERTED_WRITERS = 100;
+const MAX_ADDED_WRITERS = 100;
 
 function validateUsernames(text) {
   return (
     Required(text) ||
-    (parseUsernames(text).length > MAX_UPSERTED_WRITERS ? `At most ${MAX_UPSERTED_WRITERS} users at once` : undefined)
+    (parseUsernames(text).length > MAX_ADDED_WRITERS ? `At most ${MAX_ADDED_WRITERS} users at once` : undefined)
   );
 }
 
@@ -36,7 +36,7 @@ const usernamesField = {
   autoFocus: true,
 };
 
-export default function ProblemWriterUpsertPage() {
+export default function ProblemWriterAddPage() {
   const navigate = useNavigate();
   const [error, setError] = useState(undefined);
 
@@ -46,25 +46,25 @@ export default function ProblemWriterUpsertPage() {
   const superadminJid = users.find(({ roles }) => isSuperadmin(roles))?.userJid;
   const superadminUsername = profilesMap[superadminJid]?.username;
 
-  const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
+  const addRolesMutation = useMutation(addUserRolesMutationOptions());
 
   const goToWriters = () => navigate({ to: '/admin/roles/problem-writers', ignoreBlocker: true });
 
-  const upsertWriters = async (values, form) => {
+  const addWriters = async (values, form) => {
     const usernames = parseUsernames(values.usernames);
     if (usernames.includes(superadminUsername)) {
       setError(`${superadminUsername} already holds every role.`);
       return;
     }
 
-    const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({
+    const { addedUserProfilesMap } = await addRolesMutation.mutateAsync({
       usernames,
       roles: [UserRole.ProblemWriter],
     });
 
-    const notFound = usernames.filter(username => !upsertedUserProfilesMap[username]);
+    const notFound = usernames.filter(username => !addedUserProfilesMap[username]);
     if (notFound.length < usernames.length) {
-      toastActions.showSuccessToast('Writers added.');
+      toastActions.showSuccessToast('Problem writers added.');
     }
     if (notFound.length === 0) {
       goToWriters();
@@ -81,14 +81,14 @@ export default function ProblemWriterUpsertPage() {
           items={[
             { text: 'Roles', to: '/admin/roles' },
             { text: 'Problem Writers', to: '/admin/roles/problem-writers' },
-            { text: 'Upsert' },
+            { text: 'Add' },
           ]}
         />
       }
     >
       <Flex flexDirection="column" gap={4}>
         {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
-        <Form onSubmit={upsertWriters}>
+        <Form onSubmit={addWriters}>
           {({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
               <FormUnsavedChangesAlert />

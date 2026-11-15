@@ -37,8 +37,8 @@ describe('ContestManagerAddDialog', () => {
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
     nockApi()
-      .post('/v2/contests/contestJid/managers/batch-upsert', ['andi', 'budi', 'caca'])
-      .reply(200, { insertedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} });
+      .post('/v2/contests/contestJid/managers/add', ['andi', 'budi', 'caca'])
+      .reply(200, { addedManagerProfilesMap: {}, alreadyManagerProfilesMap: {} });
 
     const submitButton = screen.getByRole('button', { name: /^add$/i });
     await user.click(submitButton);

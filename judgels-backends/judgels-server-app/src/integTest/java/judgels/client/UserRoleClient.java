@@ -5,18 +5,18 @@ import feign.Param;
 import feign.RequestLine;
 import java.util.Set;
 import judgels.api.user.role.UserRole;
+import judgels.api.user.role.UserRolesAddData;
+import judgels.api.user.role.UserRolesAddResponse;
 import judgels.api.user.role.UserRolesResponse;
-import judgels.api.user.role.UserRolesUpsertData;
-import judgels.api.user.role.UserRolesUpsertResponse;
 
 public interface UserRoleClient {
     @RequestLine("GET /api/v2/user-roles")
     @Headers("Authorization: Bearer {token}")
     UserRolesResponse getRoles(@Param("token") String token);
 
-    @RequestLine("POST /api/v2/user-roles/batch-upsert")
+    @RequestLine("POST /api/v2/user-roles/add")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    UserRolesUpsertResponse upsertRoles(@Param("token") String token, UserRolesUpsertData data);
+    UserRolesAddResponse addRoles(@Param("token") String token, UserRolesAddData data);
 
     @RequestLine("PUT /api/v2/user-roles/{userJid}")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})

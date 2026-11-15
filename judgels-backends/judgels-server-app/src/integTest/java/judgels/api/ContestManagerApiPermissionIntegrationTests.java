@@ -15,12 +15,12 @@ class ContestManagerApiPermissionIntegrationTests extends BaseContestApiIntegrat
     }
 
     @Test
-    void upsert_delete_managers() {
-        assertPermitted(upsertDeleteManagers(adminToken));
-        assertForbidden(upsertDeleteManagers(managerToken));
-        assertForbidden(upsertDeleteManagers(supervisorToken));
-        assertForbidden(upsertDeleteManagers(contestantToken));
-        assertForbidden(upsertDeleteManagers(userToken));
+    void add_remove_managers() {
+        assertPermitted(addRemoveManagers(adminToken));
+        assertForbidden(addRemoveManagers(managerToken));
+        assertForbidden(addRemoveManagers(supervisorToken));
+        assertForbidden(addRemoveManagers(contestantToken));
+        assertForbidden(addRemoveManagers(userToken));
     }
 
     @Test
@@ -32,10 +32,10 @@ class ContestManagerApiPermissionIntegrationTests extends BaseContestApiIntegrat
         assertForbidden(getManagers(userToken));
     }
 
-    private ThrowingCallable upsertDeleteManagers(String token) {
+    private ThrowingCallable addRemoveManagers(String token) {
         return callAll(
-                () -> managerClient.upsertManagers(token, contest.getJid(), Set.of(USER)),
-                () -> managerClient.deleteManagers(token, contest.getJid(), Set.of(USER)));
+                () -> managerClient.addManagers(token, contest.getJid(), Set.of(USER)),
+                () -> managerClient.removeManagers(token, contest.getJid(), Set.of(USER)));
     }
 
     private ThrowingCallable getManagers(String token) {

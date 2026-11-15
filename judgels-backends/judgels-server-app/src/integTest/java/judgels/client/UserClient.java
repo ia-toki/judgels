@@ -6,8 +6,8 @@ import feign.RequestLine;
 import java.util.List;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
+import judgels.api.user.UsersImportResponse;
 import judgels.api.user.UsersResponse;
-import judgels.api.user.UsersUpsertResponse;
 
 public interface UserClient {
     @RequestLine("GET /api/v2/users")
@@ -18,9 +18,9 @@ public interface UserClient {
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     User createUser(@Param("token") String token, UserData data);
 
-    @RequestLine("POST /api/v2/users/batch-upsert")
+    @RequestLine("POST /api/v2/users/import")
     @Headers({"Authorization: Bearer {token}", "Content-Type: text/plain"})
-    UsersUpsertResponse upsertUsers(@Param("token") String token, String csv);
+    UsersImportResponse importUsers(@Param("token") String token, String csv);
 
     @RequestLine("GET /api/v2/users/{userJid}")
     @Headers("Authorization: Bearer {token}")
@@ -34,11 +34,11 @@ public interface UserClient {
     @Headers("Authorization: Bearer {token}")
     User getMyself(@Param("token") String token);
 
-    @RequestLine("POST /api/v2/users/batch-get")
+    @RequestLine("POST /api/v2/users/export")
     @Headers("Content-Type: application/json")
     String exportUsers(List<String> usernames);
 
-    @RequestLine("POST /api/v2/users/batch-get")
+    @RequestLine("POST /api/v2/users/export")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
     String exportUsers(@Param("token") String token, List<String> usernames);
 }

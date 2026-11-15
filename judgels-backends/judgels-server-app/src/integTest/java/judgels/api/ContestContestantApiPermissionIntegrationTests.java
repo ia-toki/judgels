@@ -24,13 +24,13 @@ class ContestContestantApiPermissionIntegrationTests extends BaseContestApiInteg
     }
 
     @Test
-    void upsert_delete_contestants() {
-        assertPermitted(upsertDeleteContestants(adminToken));
-        assertPermitted(upsertDeleteContestants(managerToken));
-        assertPermitted(upsertDeleteContestants(supervisorAToken));
-        assertForbidden(upsertDeleteContestants(supervisorBToken));
-        assertForbidden(upsertDeleteContestants(contestantToken));
-        assertForbidden(upsertDeleteContestants(userToken));
+    void add_remove_contestants() {
+        assertPermitted(addRemoveContestants(adminToken));
+        assertPermitted(addRemoveContestants(managerToken));
+        assertPermitted(addRemoveContestants(supervisorAToken));
+        assertForbidden(addRemoveContestants(supervisorBToken));
+        assertForbidden(addRemoveContestants(contestantToken));
+        assertForbidden(addRemoveContestants(userToken));
     }
 
     @Test
@@ -73,7 +73,7 @@ class ContestContestantApiPermissionIntegrationTests extends BaseContestApiInteg
         assertForbidden(registerMyselfAsContestant(supervisorBToken));
         assertForbidden(registerMyselfAsContestant(contestantToken));
         assertPermitted(registerMyselfAsContestant(userToken));
-        contestantClient.deleteContestants(supervisorAToken, contest.getJid(), Set.of(USER));
+        contestantClient.removeContestants(supervisorAToken, contest.getJid(), Set.of(USER));
 
         enableModule(contest, DIVISION, new ContestModulesConfig.Builder()
                 .division(new DivisionModuleConfig.Builder().division(1).build())
@@ -82,13 +82,13 @@ class ContestContestantApiPermissionIntegrationTests extends BaseContestApiInteg
         assertForbidden(registerMyselfAsContestant(userToken));
         assertPermitted(registerMyselfAsContestant(userAToken));
         assertForbidden(registerMyselfAsContestant(userBToken));
-        contestantClient.deleteContestants(supervisorAToken, contest.getJid(), Set.of(USER_A));
+        contestantClient.removeContestants(supervisorAToken, contest.getJid(), Set.of(USER_A));
 
         disableModule(contest, DIVISION);
 
         beginContest(contest);
         assertPermitted(registerMyselfAsContestant(userToken));
-        contestantClient.deleteContestants(supervisorAToken, contest.getJid(), Set.of(USER));
+        contestantClient.removeContestants(supervisorAToken, contest.getJid(), Set.of(USER));
 
         endContest(contest);
         assertForbidden(registerMyselfAsContestant(userToken));
@@ -111,7 +111,7 @@ class ContestContestantApiPermissionIntegrationTests extends BaseContestApiInteg
         assertForbidden(unregisterMyselfAsContestant(supervisorBToken));
         assertPermitted(unregisterMyselfAsContestant(contestantToken));
         assertForbidden(unregisterMyselfAsContestant(userToken));
-        contestantClient.upsertContestants(supervisorAToken, contest.getJid(), Set.of(CONTESTANT));
+        contestantClient.addContestants(supervisorAToken, contest.getJid(), Set.of(CONTESTANT));
 
         beginContest(contest);
         assertForbidden(unregisterMyselfAsContestant(contestantToken));
@@ -120,10 +120,10 @@ class ContestContestantApiPermissionIntegrationTests extends BaseContestApiInteg
         assertForbidden(unregisterMyselfAsContestant(contestantToken));
     }
 
-    private ThrowingCallable upsertDeleteContestants(String token) {
+    private ThrowingCallable addRemoveContestants(String token) {
         return callAll(
-                () -> contestantClient.upsertContestants(token, contest.getJid(), Set.of(USER)),
-                () -> contestantClient.deleteContestants(token, contest.getJid(), Set.of(USER)));
+                () -> contestantClient.addContestants(token, contest.getJid(), Set.of(USER)),
+                () -> contestantClient.removeContestants(token, contest.getJid(), Set.of(USER)));
     }
 
     private ThrowingCallable getContestants(String token) {

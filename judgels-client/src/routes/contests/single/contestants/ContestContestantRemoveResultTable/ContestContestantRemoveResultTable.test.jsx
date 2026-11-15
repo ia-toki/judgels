@@ -6,7 +6,7 @@ import { ContestContestantRemoveResultTable } from './ContestContestantRemoveRes
 describe('ContestContestantRemoveResultTable', () => {
   const renderComponent = async ({
     usernames = ['budi', 'andi', 'zoro'],
-    deletedContestantProfilesMap = {
+    removedContestantProfilesMap = {
       budi: { username: 'budi' },
       andi: { username: 'andi' },
     },
@@ -16,7 +16,7 @@ describe('ContestContestantRemoveResultTable', () => {
         <TestRouter>
           <ContestContestantRemoveResultTable
             usernames={usernames}
-            deletedContestantProfilesMap={deletedContestantProfilesMap}
+            removedContestantProfilesMap={removedContestantProfilesMap}
           />
         </TestRouter>
       )
@@ -28,10 +28,10 @@ describe('ContestContestantRemoveResultTable', () => {
 
     const tables = screen.getAllByRole('table');
 
-    const deletedContestantRows = within(tables[0]).getAllByRole('row');
-    expect(deletedContestantRows).toHaveLength(2);
-    expect(deletedContestantRows[0]).toHaveTextContent('andi');
-    expect(deletedContestantRows[1]).toHaveTextContent('budi');
+    const removedContestantRows = within(tables[0]).getAllByRole('row');
+    expect(removedContestantRows).toHaveLength(2);
+    expect(removedContestantRows[0]).toHaveTextContent('andi');
+    expect(removedContestantRows[1]).toHaveTextContent('budi');
 
     const unknownContestantRows = within(tables[1]).getAllByRole('row');
     expect(unknownContestantRows).toHaveLength(1);

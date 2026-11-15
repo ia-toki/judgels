@@ -89,10 +89,10 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./users/UsersPage/UsersPage'))),
   });
 
-  const adminUserUpsertRoute = createRoute({
+  const adminUserImportRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'users/-/upsert',
-    component: lazyRouteComponent(retryImport(() => import('./users/upsert/UserUpsertPage/UserUpsertPage'))),
+    path: 'users/-/import',
+    component: lazyRouteComponent(retryImport(() => import('./users/import/UserImportPage/UserImportPage'))),
   });
 
   const adminUserRoute = createRoute({
@@ -117,10 +117,10 @@ export const createAdminRoutes = appRoute => {
     component: lazyRouteComponent(retryImport(() => import('./roles/admins/RolesPage/RolesPage'))),
   });
 
-  const adminRoleUpsertRoute = createRoute({
+  const adminRoleAddRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'roles/admins/-/upsert',
-    component: lazyRouteComponent(retryImport(() => import('./roles/admins/upsert/RoleUpsertPage/RoleUpsertPage'))),
+    path: 'roles/admins/-/add',
+    component: lazyRouteComponent(retryImport(() => import('./roles/admins/add/RoleAddPage/RoleAddPage'))),
     loader: async () => {
       await queryClient.ensureQueryData(userRolesQueryOptions());
     },
@@ -137,11 +137,11 @@ export const createAdminRoutes = appRoute => {
     },
   });
 
-  const adminProblemWriterUpsertRoute = createRoute({
+  const adminProblemWriterAddRoute = createRoute({
     getParentRoute: () => adminRoute,
-    path: 'roles/problem-writers/-/upsert',
+    path: 'roles/problem-writers/-/add',
     component: lazyRouteComponent(
-      retryImport(() => import('./roles/problemWriters/upsert/ProblemWriterUpsertPage/ProblemWriterUpsertPage'))
+      retryImport(() => import('./roles/problemWriters/add/ProblemWriterAddPage/ProblemWriterAddPage'))
     ),
     loader: async () => {
       await queryClient.ensureQueryData(userRolesQueryOptions());
@@ -738,13 +738,13 @@ export const createAdminRoutes = appRoute => {
   return adminRoute.addChildren([
     adminIndexRoute,
     adminUsersRoute,
-    adminUserUpsertRoute,
+    adminUserImportRoute,
     adminUserRoute,
     adminRolesRoute,
     adminRoleAdminsRoute,
-    adminRoleUpsertRoute,
+    adminRoleAddRoute,
     adminProblemWritersRoute,
-    adminProblemWriterUpsertRoute,
+    adminProblemWriterAddRoute,
     adminRoleEditRoute,
     adminRatingsRoute,
     adminContestRatingChangesRoute,

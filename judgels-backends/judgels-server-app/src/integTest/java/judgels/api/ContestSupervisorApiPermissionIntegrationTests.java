@@ -2,7 +2,7 @@ package judgels.api;
 
 import java.util.Set;
 import judgels.api.contest.Contest;
-import judgels.api.contest.supervisor.ContestSupervisorUpsertData;
+import judgels.api.contest.supervisor.ContestSupervisorsAddData;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +16,12 @@ class ContestSupervisorApiPermissionIntegrationTests extends BaseContestApiInteg
     }
 
     @Test
-    void upsert_delete_supervisors() {
-        assertPermitted(upsertDeleteSupervisors(adminToken));
-        assertPermitted(upsertDeleteSupervisors(managerToken));
-        assertForbidden(upsertDeleteSupervisors(supervisorToken));
-        assertForbidden(upsertDeleteSupervisors(contestantToken));
-        assertForbidden(upsertDeleteSupervisors(userToken));
+    void add_remove_supervisors() {
+        assertPermitted(addRemoveSupervisors(adminToken));
+        assertPermitted(addRemoveSupervisors(managerToken));
+        assertForbidden(addRemoveSupervisors(supervisorToken));
+        assertForbidden(addRemoveSupervisors(contestantToken));
+        assertForbidden(addRemoveSupervisors(userToken));
     }
 
     @Test
@@ -33,12 +33,12 @@ class ContestSupervisorApiPermissionIntegrationTests extends BaseContestApiInteg
         assertForbidden(getSupervisors(userToken));
     }
 
-    private ThrowingCallable upsertDeleteSupervisors(String token) {
+    private ThrowingCallable addRemoveSupervisors(String token) {
         return callAll(
-                () -> supervisorClient.upsertSupervisors(token, contest.getJid(), new ContestSupervisorUpsertData.Builder()
+                () -> supervisorClient.addSupervisors(token, contest.getJid(), new ContestSupervisorsAddData.Builder()
                         .addUsernames("USER")
                         .build()),
-                () -> supervisorClient.deleteSupervisors(token, contest.getJid(), Set.of(USER)));
+                () -> supervisorClient.removeSupervisors(token, contest.getJid(), Set.of(USER)));
     }
 
     private ThrowingCallable getSupervisors(String token) {

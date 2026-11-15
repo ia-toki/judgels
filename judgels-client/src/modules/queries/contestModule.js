@@ -33,8 +33,8 @@ export const disableContestModuleMutationOptions = contestJid => ({
   },
 });
 
-export const upsertContestModulesConfigMutationOptions = contestJid => ({
-  mutationFn: config => contestModuleAPI.upsertModulesConfig(getToken(), contestJid, config),
+export const setContestModulesConfigMutationOptions = contestJid => ({
+  mutationFn: config => contestModuleAPI.setModulesConfig(getToken(), contestJid, config),
   onSuccess: () => {
     queryClient.invalidateQueries(contestModulesConfigQueryOptions(contestJid));
     queryClient.invalidateQueries(contestWebConfigQueryOptions(contestJid));

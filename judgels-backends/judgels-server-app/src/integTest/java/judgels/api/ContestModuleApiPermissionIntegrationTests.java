@@ -18,12 +18,12 @@ class ContestModuleApiPermissionIntegrationTests extends BaseContestApiIntegrati
     }
 
     @Test
-    void enable_disable_module_upsert_config() {
-        assertPermitted(enableDisableModuleUpsertConfig(adminToken));
-        assertPermitted(enableDisableModuleUpsertConfig(managerToken));
-        assertForbidden(enableDisableModuleUpsertConfig(supervisorToken));
-        assertForbidden(enableDisableModuleUpsertConfig(contestantToken));
-        assertForbidden(enableDisableModuleUpsertConfig(userToken));
+    void enable_disable_module_set_config() {
+        assertPermitted(enableDisableModuleSetConfig(adminToken));
+        assertPermitted(enableDisableModuleSetConfig(managerToken));
+        assertForbidden(enableDisableModuleSetConfig(supervisorToken));
+        assertForbidden(enableDisableModuleSetConfig(contestantToken));
+        assertForbidden(enableDisableModuleSetConfig(userToken));
     }
 
     @Test
@@ -47,11 +47,11 @@ class ContestModuleApiPermissionIntegrationTests extends BaseContestApiIntegrati
         assertForbidden(getConfig(userToken));
     }
 
-    private ThrowingCallable enableDisableModuleUpsertConfig(String token) {
+    private ThrowingCallable enableDisableModuleSetConfig(String token) {
         return callAll(
                 () -> moduleClient.enableModule(token, contest.getJid(), VIRTUAL),
                 () -> moduleClient.disableModule(token, contest.getJid(), VIRTUAL),
-                () -> moduleClient.upsertModulesConfig(token, contest.getJid(), new ContestModulesConfig.Builder().build()));
+                () -> moduleClient.setModulesConfig(token, contest.getJid(), new ContestModulesConfig.Builder().build()));
     }
 
     private ThrowingCallable getModules(String token) {

@@ -5,10 +5,10 @@ import java.util.Set;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableUserRolesUpsertData.class)
-public interface UserRolesUpsertData {
+@JsonDeserialize(as = ImmutableUserRolesAddData.class)
+public interface UserRolesAddData {
     Set<String> getUsernames();
     Set<UserRole> getRoles();
 
-    class Builder extends ImmutableUserRolesUpsertData.Builder {}
+    class Builder extends ImmutableUserRolesAddData.Builder {}
 }

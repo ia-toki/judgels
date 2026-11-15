@@ -6,7 +6,7 @@ import { ContestManagerAddResultTable } from './ContestManagerAddResultTable';
 describe('ContestManagerAddResultTable', () => {
   const renderComponent = async ({
     usernames = ['budi', 'caca', 'andi', 'dudi', 'zoro'],
-    insertedManagerProfilesMap = {
+    addedManagerProfilesMap = {
       budi: { username: 'budi' },
       andi: { username: 'andi' },
     },
@@ -20,7 +20,7 @@ describe('ContestManagerAddResultTable', () => {
         <TestRouter>
           <ContestManagerAddResultTable
             usernames={usernames}
-            insertedManagerProfilesMap={insertedManagerProfilesMap}
+            addedManagerProfilesMap={addedManagerProfilesMap}
             alreadyManagerProfilesMap={alreadyManagerProfilesMap}
           />
         </TestRouter>
@@ -33,10 +33,10 @@ describe('ContestManagerAddResultTable', () => {
 
     const tables = screen.getAllByRole('table');
 
-    const insertedManagerRows = within(tables[0]).getAllByRole('row');
-    expect(insertedManagerRows).toHaveLength(2);
-    expect(insertedManagerRows[0]).toHaveTextContent('andi');
-    expect(insertedManagerRows[1]).toHaveTextContent('budi');
+    const addedManagerRows = within(tables[0]).getAllByRole('row');
+    expect(addedManagerRows).toHaveLength(2);
+    expect(addedManagerRows[0]).toHaveTextContent('andi');
+    expect(addedManagerRows[1]).toHaveTextContent('budi');
 
     const alreadyManagerRows = within(tables[1]).getAllByRole('row');
     expect(alreadyManagerRows).toHaveLength(2);

@@ -44,7 +44,7 @@ import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
 import judgels.api.user.role.UserRole;
-import judgels.api.user.role.UserRolesUpsertData;
+import judgels.api.user.role.UserRolesAddData;
 import judgels.client.LessonClient;
 import judgels.client.ProblemClient;
 import judgels.client.ProblemEditorialClient;
@@ -218,7 +218,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static void grantProblemWriter(User user) {
-        createClient(UserRoleClient.class).upsertRoles(superadminToken, new UserRolesUpsertData.Builder()
+        createClient(UserRoleClient.class).addRoles(superadminToken, new UserRolesAddData.Builder()
                 .addUsernames(user.getUsername())
                 .addRoles(UserRole.PROBLEM_WRITER)
                 .build());

@@ -14,7 +14,7 @@ import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
 import judgels.api.user.User;
 import judgels.api.user.role.UserRole;
-import judgels.api.user.role.UserRolesUpsertData;
+import judgels.api.user.role.UserRolesAddData;
 import judgels.api.user.role.UserWithRoles;
 import judgels.client.SessionClient;
 import judgels.client.UserRoleClient;
@@ -28,7 +28,7 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
     private final UserWebClient userWebClient = createClient(UserWebClient.class);
 
     @Test
-    void upsert_set_get_roles() {
+    void add_set_get_roles() {
         String superadminJid = getSuperadminJid();
 
         User andi = createUser("andi");
@@ -40,13 +40,13 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
                 userWithRoles(admin.getJid(), ADMIN_ROLES));
 
         // Unknown usernames are left out of the response.
-        assertThat(userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        assertThat(userRoleClient.addRoles(adminToken, new UserRolesAddData.Builder()
                 .addUsernames("andi", "budi", "nonexistent")
                 .addRoles(CONTEST_ADMIN)
-                .build()).getUpsertedUserProfilesMap()).containsOnlyKeys("andi", "budi");
+                .build()).getAddedUserProfilesMap()).containsOnlyKeys("andi", "budi");
 
-        // Upserting grants roles on top of the ones already held.
-        userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        // Adding grants roles on top of the ones already held.
+        userRoleClient.addRoles(adminToken, new UserRolesAddData.Builder()
                 .addUsernames("budi")
                 .addRoles(TRAINING_ADMIN, PROBLEM_WRITER)
                 .build());
@@ -70,7 +70,7 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         User budi = createUser("budi2");
 
         assertBadRequest(() -> userRoleClient.setRoles(adminToken, budi.getJid(), Set.of(SUPERADMIN)));
-        assertBadRequest(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        assertBadRequest(() -> userRoleClient.addRoles(adminToken, new UserRolesAddData.Builder()
                 .addUsernames("budi2")
                 .addRoles(SUPERADMIN)
                 .build()));
@@ -86,7 +86,7 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         String ciciToken = getToken(cici);
         userRoleClient.setRoles(adminToken, cici.getJid(), Set.of(CONTEST_ADMIN));
 
-        userRoleClient.upsertRoles(piaToken, new UserRolesUpsertData.Builder()
+        userRoleClient.addRoles(piaToken, new UserRolesAddData.Builder()
                 .addUsernames("cici")
                 .addRoles(PROBLEM_WRITER)
                 .build());
@@ -95,7 +95,7 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
                 userWithRoles(cici.getJid(), Set.of(PROBLEM_WRITER)));
 
         assertForbidden(() -> userRoleClient.setRoles(piaToken, cici.getJid(), Set.of(CONTEST_ADMIN)));
-        assertForbidden(() -> userRoleClient.upsertRoles(piaToken, new UserRolesUpsertData.Builder()
+        assertForbidden(() -> userRoleClient.addRoles(piaToken, new UserRolesAddData.Builder()
                 .addUsernames("cici")
                 .addRoles(CONTEST_ADMIN)
                 .build()));
@@ -116,7 +116,7 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         grantProblemWriter(dodi);
 
         assertThat(getRoles(samToken, dodi.getJid())).isEmpty();
-        assertForbidden(() -> userRoleClient.upsertRoles(samToken, new UserRolesUpsertData.Builder()
+        assertForbidden(() -> userRoleClient.addRoles(samToken, new UserRolesAddData.Builder()
                 .addUsernames("dodi")
                 .addRoles(PROBLEM_WRITER)
                 .build()));
@@ -137,11 +137,11 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
 
         assertForbidden(() -> userRoleClient.setRoles(adminToken, superadminJid, ADMIN_ROLES));
         assertForbidden(() -> userRoleClient.setRoles(superadminToken, superadminJid, Set.of()));
-        assertForbidden(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        assertForbidden(() -> userRoleClient.addRoles(adminToken, new UserRolesAddData.Builder()
                 .addUsernames("superadmin")
                 .addRoles(CONTEST_ADMIN)
                 .build()));
-        assertForbidden(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        assertForbidden(() -> userRoleClient.addRoles(adminToken, new UserRolesAddData.Builder()
                 .addUsernames("superadmin")
                 .addRoles(PROBLEM_WRITER)
                 .build()));

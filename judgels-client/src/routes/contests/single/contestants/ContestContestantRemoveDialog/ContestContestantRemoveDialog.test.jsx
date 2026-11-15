@@ -37,8 +37,8 @@ describe('ContestContestantRemoveDialog', () => {
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
     nockApi()
-      .post('/v2/contests/contestJid/contestants/batch-delete', ['andi', 'budi', 'caca'])
-      .reply(200, { deletedContestantProfilesMap: {} });
+      .post('/v2/contests/contestJid/contestants/remove', ['andi', 'budi', 'caca'])
+      .reply(200, { removedContestantProfilesMap: {} });
 
     const submitButton = screen.getByRole('button', { name: /remove$/i });
     await user.click(submitButton);

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useState } from 'react';
 
 import { SupervisorManagementPermission } from '../../../../../modules/api/contestSupervisor';
-import { upsertContestSupervisorsMutationOptions } from '../../../../../modules/queries/contestSupervisor';
+import { addContestSupervisorsMutationOptions } from '../../../../../modules/queries/contestSupervisor';
 import ContestSupervisorAddForm from '../ContestSupervisorAddForm/ContestSupervisorAddForm';
 import { ContestSupervisorAddResultTable } from '../ContestSupervisorAddResultTable/ContestSupervisorAddResultTable';
 
@@ -17,7 +17,7 @@ export function ContestSupervisorAddDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const upsertSupervisorsMutation = useMutation(upsertContestSupervisorsMutationOptions(contest.jid));
+  const addSupervisorsMutation = useMutation(addContestSupervisorsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -53,8 +53,8 @@ export function ContestSupervisorAddDialog({ contest }) {
       usernames,
       managementPermissions: getPermissionList(dataForm.managementPermissions),
     };
-    const response = await upsertSupervisorsMutation.mutateAsync(data);
-    if (usernames.length === Object.keys(response.upsertedSupervisorProfilesMap).length) {
+    const response = await addSupervisorsMutation.mutateAsync(data);
+    if (usernames.length === Object.keys(response.addedSupervisorProfilesMap).length) {
       toastActions.showSuccessToast('Supervisors added.');
       setIsDialogOpen(false);
     } else {
@@ -64,13 +64,13 @@ export function ContestSupervisorAddDialog({ contest }) {
 
   const renderDialogAddResultTable = () => {
     const { usernames, response } = submitted;
-    const { upsertedSupervisorProfilesMap: insertedSupervisorProfilesMap } = response;
+    const { addedSupervisorProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestSupervisorAddResultTable
             usernames={usernames}
-            insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
+            addedSupervisorProfilesMap={addedSupervisorProfilesMap}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>
@@ -88,12 +88,12 @@ export function ContestSupervisorAddDialog({ contest }) {
     ) : (
       <ContestSupervisorAddForm renderFormComponents={renderDialogForm} onSubmit={addSupervisors} />
     );
-  const dialogTitle = submitted !== undefined ? 'Add/update supervisors results' : 'Add/update supervisors';
+  const dialogTitle = submitted !== undefined ? 'Add supervisors results' : 'Add supervisors';
 
   return (
     <>
       <Button small intent={Intent.PRIMARY} icon={<Plus />} onClick={toggleDialog} disabled={isDialogOpen}>
-        Add/update supervisors
+        Add supervisors
       </Button>
       <Dialog
         className="contest-supervisor-dialog"

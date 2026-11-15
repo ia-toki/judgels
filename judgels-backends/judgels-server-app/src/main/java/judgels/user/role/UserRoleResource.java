@@ -24,9 +24,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.profile.Profile;
 import judgels.api.user.role.UserRole;
+import judgels.api.user.role.UserRolesAddData;
+import judgels.api.user.role.UserRolesAddResponse;
 import judgels.api.user.role.UserRolesResponse;
-import judgels.api.user.role.UserRolesUpsertData;
-import judgels.api.user.role.UserRolesUpsertResponse;
 import judgels.api.user.role.UserWithRoles;
 import judgels.core.api.AuthHeader;
 import judgels.profile.ProfileStore;
@@ -68,13 +68,13 @@ public class UserRoleResource {
     }
 
     @POST
-    @Path("/batch-upsert")
+    @Path("/add")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public UserRolesUpsertResponse upsertRoles(
+    public UserRolesAddResponse addRoles(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
-            UserRolesUpsertData data) {
+            UserRolesAddData data) {
 
         String actorJid = actorChecker.check(authHeader);
         Set<UserRole> manageableRoles = roleChecker.getManageableRoles(actorJid);
@@ -93,12 +93,12 @@ public class UserRoleResource {
         }
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> upsertedUserProfilesMap = usernameToJidMap.keySet()
+        Map<String, Profile> addedUserProfilesMap = usernameToJidMap.keySet()
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
-        return new UserRolesUpsertResponse.Builder()
-                .upsertedUserProfilesMap(upsertedUserProfilesMap)
+        return new UserRolesAddResponse.Builder()
+                .addedUserProfilesMap(addedUserProfilesMap)
                 .build();
     }
 

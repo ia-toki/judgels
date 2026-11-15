@@ -26,7 +26,7 @@ public class ProfileApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         User budi = createUser("budi");
         createUser("caca");
 
-        userClient.upsertUsers(adminToken, "username,name,country\n"
+        userClient.importUsers(adminToken, "username,name,country\n"
                 + "andi,Andi,ID\n"
                 + "caca,Caca,SG\n");
 

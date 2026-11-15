@@ -17,7 +17,7 @@ import {
   contestModulesQueryOptions,
   disableContestModuleMutationOptions,
   enableContestModuleMutationOptions,
-  upsertContestModulesConfigMutationOptions,
+  setContestModulesConfigMutationOptions,
 } from '../../../../../../modules/queries/contestModule';
 import { ContestModule } from '../ContestModule/ContestModule';
 import { moduleConfigs, scoreboardConfig, styleConfigs } from '../contestModuleConfigs';
@@ -33,7 +33,7 @@ export default function ContestSettingsModulesPage() {
 
   const enableModuleMutation = useMutation(enableContestModuleMutationOptions(contest.jid));
   const disableModuleMutation = useMutation(disableContestModuleMutationOptions(contest.jid));
-  const upsertConfigMutation = useMutation(upsertContestModulesConfigMutationOptions(contest.jid));
+  const setConfigMutation = useMutation(setContestModulesConfigMutationOptions(contest.jid));
 
   // Set while editing; kept in state so that the form is not reset when the page rerenders.
   const [initialValues, setInitialValues] = useState(null);
@@ -57,9 +57,9 @@ export default function ContestSettingsModulesPage() {
     setInitialValues(Object.fromEntries(configSpecs.map(spec => [spec.key, spec.toFormValues(config[spec.key])])));
   };
 
-  const upsertConfig = async values => {
+  const saveConfig = async values => {
     const newConfig = Object.fromEntries(configSpecs.map(spec => [spec.key, spec.toConfig(values[spec.key] || {})]));
-    await upsertConfigMutation.mutateAsync(newConfig, {
+    await setConfigMutation.mutateAsync(newConfig, {
       onSuccess: () => toastActions.showSuccessToast('Configs updated.'),
     });
     setInitialValues(null);
@@ -129,7 +129,7 @@ export default function ContestSettingsModulesPage() {
       return renderEnabledModulesCard();
     }
     return (
-      <Form onSubmit={upsertConfig} initialValues={initialValues}>
+      <Form onSubmit={saveConfig} initialValues={initialValues}>
         {({ handleSubmit, values, submitting }) => (
           <form onSubmit={handleSubmit}>
             <FormUnsavedChangesAlert />

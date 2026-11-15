@@ -12,15 +12,15 @@ export const contestSupervisorsQueryOptions = (contestJid, params) => {
   });
 };
 
-export const upsertContestSupervisorsMutationOptions = contestJid => ({
-  mutationFn: data => contestSupervisorAPI.upsertSupervisors(getToken(), contestJid, data),
+export const addContestSupervisorsMutationOptions = contestJid => ({
+  mutationFn: data => contestSupervisorAPI.addSupervisors(getToken(), contestJid, data),
   onSuccess: () => {
     queryClient.invalidateQueries(contestSupervisorsQueryOptions(contestJid));
   },
 });
 
-export const deleteContestSupervisorsMutationOptions = contestJid => ({
-  mutationFn: usernames => contestSupervisorAPI.deleteSupervisors(getToken(), contestJid, usernames),
+export const removeContestSupervisorsMutationOptions = contestJid => ({
+  mutationFn: usernames => contestSupervisorAPI.removeSupervisors(getToken(), contestJid, usernames),
   onSuccess: () => {
     queryClient.invalidateQueries(contestSupervisorsQueryOptions(contestJid));
   },

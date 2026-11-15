@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { deleteContestManagersMutationOptions } from '../../../../../modules/queries/contestManager';
+import { removeContestManagersMutationOptions } from '../../../../../modules/queries/contestManager';
 import ContestManagerRemoveForm from '../ContestManagerRemoveForm/ContestManagerRemoveForm';
 import { ContestManagerRemoveResultTable } from '../ContestManagerRemoveResultTable/ContestManagerRemoveResultTable';
 
@@ -16,7 +16,7 @@ export function ContestManagerRemoveDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const deleteManagersMutation = useMutation(deleteContestManagersMutationOptions(contest.jid));
+  const removeManagersMutation = useMutation(removeContestManagersMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -40,8 +40,8 @@ export function ContestManagerRemoveDialog({ contest }) {
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await deleteManagersMutation.mutateAsync(usernames);
-    if (usernames.length === Object.keys(response.deletedManagerProfilesMap).length) {
+    const response = await removeManagersMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.removedManagerProfilesMap).length) {
       toastActions.showSuccessToast('Managers removed.');
       setIsDialogOpen(false);
     } else {
@@ -51,13 +51,13 @@ export function ContestManagerRemoveDialog({ contest }) {
 
   const renderDialogRemoveResultTable = () => {
     const { usernames, response } = submitted;
-    const { deletedManagerProfilesMap } = response;
+    const { removedManagerProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestManagerRemoveResultTable
             usernames={usernames}
-            deletedManagerProfilesMap={deletedManagerProfilesMap}
+            removedManagerProfilesMap={removedManagerProfilesMap}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>

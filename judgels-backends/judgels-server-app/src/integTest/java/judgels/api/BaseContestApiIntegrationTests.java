@@ -23,7 +23,7 @@ import judgels.api.contest.module.ContestModuleType;
 import judgels.api.contest.module.ContestModulesConfig;
 import judgels.api.contest.problem.ContestProblemData;
 import judgels.api.contest.problem.ContestProblemStatus;
-import judgels.api.contest.supervisor.ContestSupervisorUpsertData;
+import judgels.api.contest.supervisor.ContestSupervisorsAddData;
 import judgels.api.contest.supervisor.SupervisorManagementPermission;
 import judgels.api.user.User;
 import judgels.api.user.rating.UserRating;
@@ -191,7 +191,7 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
 
     protected Contest enableModule(Contest contest, ContestModuleType type, ContestModulesConfig config) {
         moduleClient.enableModule(adminToken, contest.getJid(), type);
-        moduleClient.upsertModulesConfig(adminToken, contest.getJid(), config);
+        moduleClient.setModulesConfig(adminToken, contest.getJid(), config);
         return contest;
     }
 
@@ -295,29 +295,29 @@ public abstract class BaseContestApiIntegrationTests extends BaseJudgelsApiInteg
             String tokenForManager = adminToken;
 
             if (!managers.isEmpty()) {
-                managerClient.upsertManagers(adminToken, contest.getJid(), managers);
+                managerClient.addManagers(adminToken, contest.getJid(), managers);
                 tokenForManager = managerToken;
             }
 
             if (!supervisors.isEmpty()) {
-                ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
+                ContestSupervisorsAddData data = new ContestSupervisorsAddData.Builder()
                         .usernames(supervisors)
                         .build();
-                supervisorClient.upsertSupervisors(tokenForManager, contest.getJid(), data);
+                supervisorClient.addSupervisors(tokenForManager, contest.getJid(), data);
             }
 
             if (!supervisorsWithManagementPermissions.isEmpty()) {
                 for (String supervisor : supervisorsWithManagementPermissions.keySet()) {
-                    ContestSupervisorUpsertData data = new ContestSupervisorUpsertData.Builder()
+                    ContestSupervisorsAddData data = new ContestSupervisorsAddData.Builder()
                             .addUsernames(supervisor)
                             .addManagementPermissions(supervisorsWithManagementPermissions.get(supervisor))
                             .build();
-                    supervisorClient.upsertSupervisors(tokenForManager, contest.getJid(), data);
+                    supervisorClient.addSupervisors(tokenForManager, contest.getJid(), data);
                 }
             }
 
             if (!contestants.isEmpty()) {
-                contestantClient.upsertContestants(tokenForManager, contest.getJid(), contestants);
+                contestantClient.addContestants(tokenForManager, contest.getJid(), contestants);
             }
 
             if (!problems.isEmpty()) {

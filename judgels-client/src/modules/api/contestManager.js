@@ -11,11 +11,11 @@ export const contestManagerAPI = {
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 
-  upsertManagers: (token, contestJid, usernames) => {
-    return post(`${baseURL(contestJid)}/batch-upsert`, token, usernames);
+  addManagers: (token, contestJid, usernames) => {
+    return post(`${baseURL(contestJid)}/add`, token, usernames);
   },
 
-  deleteManagers: (token, contestJid, usernames) => {
-    return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
+  removeManagers: (token, contestJid, usernames) => {
+    return post(`${baseURL(contestJid)}/remove`, token, usernames);
   },
 };

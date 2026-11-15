@@ -81,7 +81,7 @@ export const contestModuleAPI = {
     return get(`${baseURL(contestJid)}/config`, token);
   },
 
-  upsertModulesConfig: (token, contestJid, config) => {
+  setModulesConfig: (token, contestJid, config) => {
     return put(`${baseURL(contestJid)}/config`, token, config);
   },
 };

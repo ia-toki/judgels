@@ -29,9 +29,9 @@ import judgels.api.contest.contestant.ApprovedContestContestantsResponse;
 import judgels.api.contest.contestant.ContestContestant;
 import judgels.api.contest.contestant.ContestContestantConfig;
 import judgels.api.contest.contestant.ContestContestantState;
-import judgels.api.contest.contestant.ContestContestantsDeleteResponse;
+import judgels.api.contest.contestant.ContestContestantsAddResponse;
+import judgels.api.contest.contestant.ContestContestantsRemoveResponse;
 import judgels.api.contest.contestant.ContestContestantsResponse;
-import judgels.api.contest.contestant.ContestContestantsUpsertResponse;
 import judgels.api.contest.module.VirtualModuleConfig;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestStore;
@@ -176,11 +176,11 @@ public class ContestContestantResource {
     }
 
     @POST
-    @Path("/batch-upsert")
+    @Path("/add")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestContestantsUpsertResponse upsertContestants(
+    public ContestContestantsAddResponse addContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames) {
@@ -193,18 +193,18 @@ public class ContestContestantResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
-        Set<String> insertedContestantUsernames = Sets.newHashSet();
+        Set<String> addedContestantUsernames = Sets.newHashSet();
         Set<String> alreadyContestantUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (contestantStore.upsertContestant(contest.getJid(), userJid)) {
-                insertedContestantUsernames.add(username);
+                addedContestantUsernames.add(username);
             } else {
                 alreadyContestantUsernames.add(username);
             }
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> insertedContestantProfilesMap = insertedContestantUsernames
+        Map<String, Profile> addedContestantProfilesMap = addedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
         Map<String, Profile> alreadyContestantProfilesMap = alreadyContestantUsernames
@@ -213,18 +213,18 @@ public class ContestContestantResource {
 
         contestLogger.log(contestJid, "ADD_CONTESTANTS");
 
-        return new ContestContestantsUpsertResponse.Builder()
-                .insertedContestantProfilesMap(insertedContestantProfilesMap)
+        return new ContestContestantsAddResponse.Builder()
+                .addedContestantProfilesMap(addedContestantProfilesMap)
                 .alreadyContestantProfilesMap(alreadyContestantProfilesMap)
                 .build();
     }
 
     @POST
-    @Path("/batch-delete")
+    @Path("/remove")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestContestantsDeleteResponse deleteContestants(
+    public ContestContestantsRemoveResponse removeContestants(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames) {
@@ -237,22 +237,22 @@ public class ContestContestantResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
-        Set<String> deletedContestantUsernames = Sets.newHashSet();
+        Set<String> removedContestantUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (contestantStore.deleteContestant(contest.getJid(), userJid)) {
-                deletedContestantUsernames.add(username);
+                removedContestantUsernames.add(username);
             }
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> deletedContestantProfilesMap = deletedContestantUsernames
+        Map<String, Profile> removedContestantProfilesMap = removedContestantUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
         contestLogger.log(contestJid, "REMOVE_CONTESTANTS");
 
-        return new ContestContestantsDeleteResponse.Builder()
-                .deletedContestantProfilesMap(deletedContestantProfilesMap)
+        return new ContestContestantsRemoveResponse.Builder()
+                .removedContestantProfilesMap(removedContestantProfilesMap)
                 .build();
     }
 }

@@ -32,7 +32,7 @@ public interface ContestModuleClient {
 
     @RequestLine("PUT /api/v2/contests/{contestJid}/modules/config")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    void upsertModulesConfig(
+    void setModulesConfig(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
             ContestModulesConfig data);

@@ -17,7 +17,7 @@ import judgels.user.info.UserInfoStore;
 import liquibase.util.csv.CSVReader;
 
 public class UserCreator {
-    public static class UpsertUsersResult {
+    public static class ImportUsersResult {
         public Optional<String> errorMessage = Optional.empty();
         public List<String> createdUsernames = List.of();
         public List<String> updatedUsernames = List.of();
@@ -34,8 +34,8 @@ public class UserCreator {
         this.sessionStore = sessionStore;
     }
 
-    public UpsertUsersResult upsertUsers(String csv) throws IOException {
-        UpsertUsersResult result = new UpsertUsersResult();
+    public ImportUsersResult importUsers(String csv) throws IOException {
+        ImportUsersResult result = new ImportUsersResult();
 
         CSVReader reader = new CSVReader(new StringReader(csv));
         String[] header = reader.readNext();
