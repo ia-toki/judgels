@@ -5,7 +5,7 @@ import { getToken } from '../session';
 
 export const contestsPendingRatingQueryOptions = () => {
   return queryOptions({
-    queryKey: ['contests-pending-rating'],
+    queryKey: ['contest-rating', 'pending'],
     queryFn: () => contestRatingAPI.getContestsPendingRating(getToken()),
   });
 };

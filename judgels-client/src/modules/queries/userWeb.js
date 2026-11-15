@@ -5,6 +5,6 @@ import { getToken } from '../session';
 
 export const userWebConfigQueryOptions = () =>
   queryOptions({
-    queryKey: ['user-web-config'],
+    queryKey: ['user-web', 'config'],
     queryFn: () => userWebAPI.getWebConfig(getToken()),
   });

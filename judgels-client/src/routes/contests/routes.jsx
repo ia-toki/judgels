@@ -235,7 +235,7 @@ export const createContestsRoutes = appRoute => {
         const webConfig = await queryClient.ensureQueryData(contestWebConfigQueryOptions(contest.jid));
         if (webConfig.role === ContestRole.Contestant) {
           const language = getWebPrefs().statementLanguage;
-          queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, undefined, { language }));
+          queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, { language }));
         } else {
           queryClient.prefetchQuery(
             contestItemSubmissionsQueryOptions(contest.jid, {
@@ -279,7 +279,7 @@ export const createContestsRoutes = appRoute => {
     loader: async ({ params: { contestSlug, username } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
       const language = getWebPrefs().statementLanguage;
-      queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, username, { language }));
+      queryClient.prefetchQuery(contestItemSubmissionSummaryQueryOptions(contest.jid, { username, language }));
     },
   });
 

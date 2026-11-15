@@ -12,7 +12,7 @@ export const userHasAvatarQueryOptions = userJid =>
 
 export const userAvatarUrlQueryOptions = userJid =>
   queryOptions({
-    queryKey: ['user', userJid, 'avatar-url'],
+    queryKey: ['user', userJid, 'avatar'],
     queryFn: () => userAvatarAPI.renderAvatar(userJid),
   });
 
