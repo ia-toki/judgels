@@ -21,7 +21,7 @@ export function RolesActions() {
         </ButtonLink>
       )}
       {isProblemAdmin(roles) && (
-        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/problem-writers/-/add">
+        <ButtonLink small to="/admin/roles/problem-writers/-/add">
           <Plus />
           <span>Add problem writers</span>
         </ButtonLink>
