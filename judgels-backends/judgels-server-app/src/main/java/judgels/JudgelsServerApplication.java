@@ -210,8 +210,7 @@ public class JudgelsServerApplication extends Application<JudgelsServerApplicati
         if (trainingEnabled) {
             component.curriculumCreator().ensureCurriculumExists();
 
-            env.jersey().register(component.accountRegistrationResource());
-            env.jersey().register(component.accountPasswordResource());
+            env.jersey().register(component.accountResource());
 
             env.jersey().register(component.lessonResource());
             env.jersey().register(component.lessonRenderResource());

@@ -37,9 +37,9 @@ import judgels.training.submission.programming.TrainingGradingResponsePoller;
         judgels.contest.submission.programming.ContestSubmissionModule.class,
         judgels.contest.submission.bundle.ContestItemSubmissionModule.class,
 
+        judgels.training.account.AccountRegistrationModule.class,
+        judgels.training.account.AccountPasswordResetModule.class,
         judgels.training.curriculum.CurriculumModule.class,
-        judgels.training.account.registration.AccountRegistrationModule.class,
-        judgels.training.account.password.AccountPasswordResetModule.class,
         judgels.training.submission.programming.TrainingSubmissionModule.class,
         judgels.training.submission.bundle.TrainingItemSubmissionModule.class,
 
@@ -110,8 +110,7 @@ public interface JudgelsServerComponent {
 
     judgels.training.curriculum.CurriculumCreator curriculumCreator();
     judgels.training.curriculum.CurriculumResource curriculumResource();
-    judgels.training.account.registration.AccountRegistrationResource accountRegistrationResource();
-    judgels.training.account.password.AccountPasswordResource accountPasswordResource();
+    judgels.training.account.AccountResource accountResource();
     judgels.training.archive.ArchiveResource archiveResource();
     judgels.training.course.CourseResource courseResource();
     judgels.training.course.chapter.CourseChapterResource courseChapterResource();

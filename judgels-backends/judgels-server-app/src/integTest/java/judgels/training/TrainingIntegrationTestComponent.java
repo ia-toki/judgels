@@ -5,7 +5,7 @@ import jakarta.inject.Singleton;
 import judgels.core.JudgelsModule;
 import judgels.persistence.JudgelsHibernateModule;
 import judgels.persistence.JudgelsPersistenceModule;
-import judgels.training.account.password.AccountPasswordResetStore;
+import judgels.training.account.AccountPasswordResetStore;
 import judgels.training.archive.ArchiveStore;
 import judgels.training.chapter.ChapterStore;
 import judgels.training.chapter.problem.ChapterProblemStore;
