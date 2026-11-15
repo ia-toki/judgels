@@ -1,0 +1,43 @@
+- name: Install certbot
+  package:
+    name: certbot
+    state: present
+
+- name: Create letsencrypt webroot directory
+  file:
+    dest: /var/lib/letsencrypt
+    owner: www-data
+    group: www-data
+    state: directory
+
+# https://weakdh.org/
+- name: Generate dhparams file
+  command: "openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048"
+  args:
+    creates: /etc/letsencrypt/ssl-dhparams.pem
+  notify: Restart nginx
+
+- name: Add options-ssl-nginx.conf file
+  template:
+    src: options-ssl-nginx.conf.j2
+    dest: /etc/letsencrypt/options-ssl-nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart nginx
+
+- name: Add crontab to renew certificates
+  cron:
+    name: certbot-renew
+    weekday: '1'
+    hour: '3'
+    minute: '15'
+    job: "certbot renew"
+
+- name: Add crontab to reload nginx
+  cron:
+    name: reload-nginx
+    weekday: '1'
+    hour: '3'
+    minute: '30'
+    job: "/etc/init.d/nginx reload"

@@ -1,0 +1,10 @@
+- name: Set up certbot
+  include_tasks: setup_certbot.yml
+  tags: always
+
+- name: Configure domains
+  include_tasks: configure_domain.yml
+  loop: "{{ domains }}"
+  loop_control:
+    loop_var: domain
+  tags: always

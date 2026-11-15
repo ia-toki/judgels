@@ -1,0 +1,29 @@
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Enable nginx to start automatically on boot
+  service:
+    name: nginx
+    enabled: yes
+
+- name: Disable default sites config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
+- name: Allow nginx HTTP traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "80"
+    proto: tcp
+    comment: nginx http
+
+- name: Allow nginx HTTPS traffic through the firewall
+  ufw:
+    rule: allow
+    to_port: "443"
+    proto: tcp
+    comment: nginx https

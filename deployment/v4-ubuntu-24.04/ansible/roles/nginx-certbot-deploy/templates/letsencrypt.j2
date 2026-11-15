@@ -1,0 +1,10 @@
+server {
+    server_name {{ domain.fqdn }};
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/lib/letsencrypt;
+        default_type "text/plain";
+    }
+}

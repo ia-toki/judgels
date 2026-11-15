@@ -1,0 +1,22 @@
+- name: Add nginx judgels HTTP config
+  template:
+    src: "{{ playbook_dir }}/../conf/nginx-judgels-http.conf.j2"
+    dest: /etc/nginx/sites-available/judgels-http
+    owner: www-data
+    group: www-data
+    mode: 0644
+  notify: Reload nginx
+
+- name: Enable nginx judgels HTTP config
+  file:
+    src: /etc/nginx/sites-available/judgels-http
+    dest: /etc/nginx/sites-enabled/judgels-http
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Reload nginx
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
