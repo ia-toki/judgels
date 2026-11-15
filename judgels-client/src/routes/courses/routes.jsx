@@ -46,7 +46,7 @@ export const createCoursesRoutes = appRoute => {
   const courseIndexRoute = createRoute({
     getParentRoute: () => courseRoute,
     path: '/',
-    component: lazyRouteComponent(retryImport(() => import('./single/CourseOverview/CourseOverview'))),
+    component: lazyRouteComponent(retryImport(() => import('./single/CourseOverviewPage/CourseOverviewPage'))),
     loader: async ({ params: { courseSlug } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));
       queryClient.prefetchQuery(courseChaptersQueryOptions(course.jid));
@@ -67,7 +67,7 @@ export const createCoursesRoutes = appRoute => {
     getParentRoute: () => courseChapterRoute,
     path: '/',
     component: lazyRouteComponent(
-      retryImport(() => import('./single/chapters/single/resources/ChapterResourcesPage/ChapterResourcesPage'))
+      retryImport(() => import('./single/chapters/single/ChapterResourcesPage/ChapterResourcesPage'))
     ),
     loader: async ({ params: { courseSlug, chapterAlias } }) => {
       const course = await queryClient.ensureQueryData(courseBySlugQueryOptions(courseSlug));

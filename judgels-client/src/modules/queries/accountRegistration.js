@@ -28,6 +28,10 @@ export const activateUserMutationOptions = () => ({
   mutationFn: emailCode => accountRegistrationAPI.activateUser(emailCode),
 });
 
+export const resendActivationEmailMutationOptions = email => ({
+  mutationFn: () => accountRegistrationAPI.resendActivationEmail(email),
+});
+
 export const registerGoogleUserMutationOptions = () => ({
   mutationFn: async data => {
     try {

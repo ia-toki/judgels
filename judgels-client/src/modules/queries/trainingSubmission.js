@@ -33,14 +33,6 @@ export const regradeTrainingSubmissionMutationOptions = () => ({
   },
 });
 
-export const regradeTrainingSubmissionsMutationOptions = () => ({
-  mutationFn: ({ username } = {}) =>
-    trainingSubmissionAPI.regradeSubmissions(getToken(), undefined, username, undefined, undefined),
-  onSuccess: () => {
-    queryClient.invalidateQueries(trainingSubmissionsQueryOptions());
-  },
-});
-
 export const chapterSubmissionsQueryOptions = (chapterJid, params) => {
   const { problemAlias, username, beforeId, afterId } = params || {};
   return queryOptions({

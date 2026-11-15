@@ -1,7 +1,7 @@
 import { stringify } from 'query-string';
 
 import { APP_CONFIG } from '../../conf';
-import { get, post, postText } from './http';
+import { get, postText } from './http';
 
 export const baseUsersURL = `${APP_CONFIG.apiUrl}/v2/users`;
 
@@ -25,10 +25,6 @@ export const userAPI = {
 
   getUserByUsername: (token, username) => {
     return get(`${baseUsersURL}/username/${username}`, token);
-  },
-
-  createUser: (token, data) => {
-    return post(baseUsersURL, token, data);
   },
 
   upsertUsers: (token, csv) => {

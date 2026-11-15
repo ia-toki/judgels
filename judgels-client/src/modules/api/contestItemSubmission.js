@@ -25,10 +25,6 @@ export const contestItemSubmissionAPI = {
     return get(`${baseURL}/answers?${params}`, token);
   },
 
-  regradeItemSubmission: (token, submissionJid) => {
-    return post(`${baseURL}/${submissionJid}/regrade`, token);
-  },
-
   regradeItemSubmissions: (token, contestJid, username, problemJid, problemAlias) => {
     const params = stringify({ contestJid, username, problemJid, problemAlias });
     return post(`${baseURL}/regrade?${params}`, token);

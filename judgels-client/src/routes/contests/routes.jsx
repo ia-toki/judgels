@@ -83,7 +83,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSettingsRoute,
     path: 'general',
     component: lazyRouteComponent(
-      retryImport(() => import('./single/settings/ContestSettingsGeneralPage/ContestSettingsGeneralPage'))
+      retryImport(() => import('./single/settings/general/ContestSettingsGeneralPage/ContestSettingsGeneralPage'))
     ),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));
@@ -95,7 +95,7 @@ export const createContestsRoutes = appRoute => {
     getParentRoute: () => contestSettingsRoute,
     path: 'modules',
     component: lazyRouteComponent(
-      retryImport(() => import('./single/settings/ContestSettingsModulesPage/ContestSettingsModulesPage'))
+      retryImport(() => import('./single/settings/modules/ContestSettingsModulesPage/ContestSettingsModulesPage'))
     ),
     loader: async ({ params: { contestSlug } }) => {
       const contest = await queryClient.ensureQueryData(contestBySlugQueryOptions(contestSlug));

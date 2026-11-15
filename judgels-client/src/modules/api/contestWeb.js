@@ -36,14 +36,6 @@ export const ContestState = {
 const baseURL = `${APP_CONFIG.apiUrl}/v2/contest-web`;
 
 export const contestWebAPI = {
-  getContestBySlugWithWebConfig: (token, contestSlug) => {
-    return get(`${baseURL}/slug/${contestSlug}/with-config`, token);
-  },
-
-  getContestByJidWithWebConfig: (token, contestJid) => {
-    return get(`${baseURL}/${contestJid}/with-config`, token);
-  },
-
   getWebConfig: (token, contestJid) => {
     return get(`${baseURL}/${contestJid}/config`, token);
   },

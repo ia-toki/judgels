@@ -25,6 +25,12 @@ Bump `buster` in `src/index.jsx` whenever a key or the shape of its data changes
 
 Submission queries set `meta: { persist: false }`, which keeps them out of `localStorage`. Add it to every new submission query.
 
+# Route folders
+
+Folders under `src/routes` follow the URL: `/contests/$contestSlug/settings/general` is served from `contests/single/settings/general/`, with `single` standing for the item of the list above it.
+
+The page at `/` of a layout with tabs goes in a folder named after its tab, as if the tab had its own path: the contest's Overview tab is `contests/single/overview/ContestOverviewPage`. The page at `/` of a layout without tabs goes directly in the layout's folder: `courses/single/CourseOverviewPage`.
+
 # Layout
 
 Compose layout with `Flex` and `Box` from `@blueprintjs/labs`, not custom CSS: `Flex` for a row or a stack of children, `Box` for a container `div` that needs spacing.
