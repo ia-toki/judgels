@@ -37,8 +37,8 @@ describe('ContestContestantAddDialog', () => {
     await user.type(usernames, 'andi\n\nbudi\n caca  \n');
 
     nockApi()
-      .post('/v2/contests/contestJid/contestants/batch-upsert', ['andi', 'budi', 'caca'])
-      .reply(200, { insertedContestantProfilesMap: {}, alreadyContestantProfilesMap: {} });
+      .post('/v2/contests/contestJid/contestants/add', ['andi', 'budi', 'caca'])
+      .reply(200, { addedContestantProfilesMap: {}, alreadyContestantProfilesMap: {} });
 
     const submitButton = screen.getByRole('button', { name: /add$/i });
     await user.click(submitButton);

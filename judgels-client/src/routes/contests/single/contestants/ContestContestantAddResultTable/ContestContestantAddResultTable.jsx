@@ -5,7 +5,7 @@ import { UserRef } from '../../../../../components/UserRef/UserRef';
 
 export function ContestContestantAddResultTable({
   usernames,
-  insertedContestantProfilesMap,
+  addedContestantProfilesMap,
   alreadyContestantProfilesMap,
 }) {
   const renderContestantsTable = (title, profilesMap) => {
@@ -38,10 +38,7 @@ export function ContestContestantAddResultTable({
   };
 
   const renderUnknownContestantsTable = () => {
-    const knownUsernames = [
-      ...Object.keys(insertedContestantProfilesMap),
-      ...Object.keys(alreadyContestantProfilesMap),
-    ];
+    const knownUsernames = [...Object.keys(addedContestantProfilesMap), ...Object.keys(alreadyContestantProfilesMap)];
     const unknownUsernames = usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()
@@ -69,7 +66,7 @@ export function ContestContestantAddResultTable({
 
   return (
     <Flex flexDirection="column" gap={6}>
-      {renderContestantsTable('Added contestants', insertedContestantProfilesMap)}
+      {renderContestantsTable('Added contestants', addedContestantProfilesMap)}
       {renderContestantsTable('Already contestants', alreadyContestantProfilesMap)}
       {renderUnknownContestantsTable()}
     </Flex>

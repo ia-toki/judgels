@@ -33,11 +33,11 @@ export const contestSupervisorAPI = {
     return get(`${baseURL(contestJid)}?${params}`, token);
   },
 
-  upsertSupervisors: (token, contestJid, data) => {
-    return post(`${baseURL(contestJid)}/batch-upsert`, token, data);
+  addSupervisors: (token, contestJid, data) => {
+    return post(`${baseURL(contestJid)}/add`, token, data);
   },
 
-  deleteSupervisors: (token, contestJid, usernames) => {
-    return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
+  removeSupervisors: (token, contestJid, usernames) => {
+    return post(`${baseURL(contestJid)}/remove`, token, usernames);
   },
 };

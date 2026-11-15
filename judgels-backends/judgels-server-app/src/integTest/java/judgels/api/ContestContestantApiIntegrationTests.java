@@ -93,7 +93,7 @@ class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTest
 
     @Test
     void begin_contest() {
-        upsertContestants(USER);
+        addContestants(USER);
 
         beginContest(contest);
         assertThat(contestantClient.getMyContestantState(userToken, contest.getJid())).isEqualTo(ContestContestantState.CONTESTANT);
@@ -108,7 +108,7 @@ class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTest
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(2)).build())
                 .build());
 
-        upsertContestants(USER);
+        addContestants(USER);
 
         beginContest(contest);
         assertThat(contestantClient.getMyContestantState(userToken, contest.getJid())).isEqualTo(ContestContestantState.CONTESTANT);
@@ -130,24 +130,24 @@ class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTest
     }
 
     @Test
-    void upsert_delete_contestants() {
-        var upsertResponse = contestantClient.upsertContestants(supervisorAToken, contest.getJid(), Set.of(USER, USER_A, "bogus"));
-        assertThat(upsertResponse.getInsertedContestantProfilesMap()).containsOnlyKeys(USER, USER_A);
-        assertThat(upsertResponse.getAlreadyContestantProfilesMap()).isEmpty();
+    void add_remove_contestants() {
+        var addResponse = contestantClient.addContestants(supervisorAToken, contest.getJid(), Set.of(USER, USER_A, "bogus"));
+        assertThat(addResponse.getAddedContestantProfilesMap()).containsOnlyKeys(USER, USER_A);
+        assertThat(addResponse.getAlreadyContestantProfilesMap()).isEmpty();
 
-        upsertResponse = contestantClient.upsertContestants(supervisorAToken, contest.getJid(), Set.of(USER_A, USER_B));
-        assertThat(upsertResponse.getInsertedContestantProfilesMap()).containsOnlyKeys(USER_B);
-        assertThat(upsertResponse.getAlreadyContestantProfilesMap()).containsOnlyKeys(USER_A);
+        addResponse = contestantClient.addContestants(supervisorAToken, contest.getJid(), Set.of(USER_A, USER_B));
+        assertThat(addResponse.getAddedContestantProfilesMap()).containsOnlyKeys(USER_B);
+        assertThat(addResponse.getAlreadyContestantProfilesMap()).containsOnlyKeys(USER_A);
 
-        var deleteResponse = contestantClient.deleteContestants(supervisorAToken, contest.getJid(), Set.of(USER, USER_B, "bogus"));
-        assertThat(deleteResponse.getDeletedContestantProfilesMap()).containsOnlyKeys(USER, USER_B);
+        var deleteResponse = contestantClient.removeContestants(supervisorAToken, contest.getJid(), Set.of(USER, USER_B, "bogus"));
+        assertThat(deleteResponse.getRemovedContestantProfilesMap()).containsOnlyKeys(USER, USER_B);
     }
 
     @Test
     void get_contestants() {
-        upsertContestants(USER, USER_A, CONTESTANT_A);
-        upsertContestants(USER_A, USER_B);
-        deleteContestants(USER_A, CONTESTANT_A);
+        addContestants(USER, USER_A, CONTESTANT_A);
+        addContestants(USER_A, USER_B);
+        removeContestants(USER_A, CONTESTANT_A);
 
         Map<String, Boolean> canManageMap = new LinkedHashMap<>();
         canManageMap.put(adminToken, true);
@@ -171,12 +171,12 @@ class ContestContestantApiIntegrationTests extends BaseContestApiIntegrationTest
         assertThat(contestantClient.getApprovedContestantsCount(supervisorAToken, contest.getJid())).isEqualTo(2);
     }
 
-    private void upsertContestants(String... usernames) {
-        contestantClient.upsertContestants(supervisorAToken, contest.getJid(), Set.of(usernames));
+    private void addContestants(String... usernames) {
+        contestantClient.addContestants(supervisorAToken, contest.getJid(), Set.of(usernames));
     }
 
-    private void deleteContestants(String... usernames) {
-        contestantClient.deleteContestants(supervisorAToken, contest.getJid(), Set.of(usernames));
+    private void removeContestants(String... usernames) {
+        contestantClient.removeContestants(supervisorAToken, contest.getJid(), Set.of(usernames));
     }
 
     private List<ContestContestant> getContestants() {

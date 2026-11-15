@@ -6,7 +6,7 @@ import { ContestSupervisorAddResultTable } from './ContestSupervisorAddResultTab
 describe('ContestSupervisorAddResultTable', () => {
   const renderComponent = async ({
     usernames = ['budi', 'caca', 'andi', 'dudi', 'zoro'],
-    insertedSupervisorProfilesMap = {
+    addedSupervisorProfilesMap = {
       budi: { username: 'budi' },
       andi: { username: 'andi' },
       caca: { username: 'caca' },
@@ -18,7 +18,7 @@ describe('ContestSupervisorAddResultTable', () => {
         <TestRouter>
           <ContestSupervisorAddResultTable
             usernames={usernames}
-            insertedSupervisorProfilesMap={insertedSupervisorProfilesMap}
+            addedSupervisorProfilesMap={addedSupervisorProfilesMap}
           />
         </TestRouter>
       )
@@ -30,12 +30,12 @@ describe('ContestSupervisorAddResultTable', () => {
 
     const tables = screen.getAllByRole('table');
 
-    const insertedSupervisorRows = within(tables[0]).getAllByRole('row');
-    expect(insertedSupervisorRows).toHaveLength(4);
-    expect(insertedSupervisorRows[0].textContent).toEqual('andi');
-    expect(insertedSupervisorRows[1].textContent).toEqual('budi');
-    expect(insertedSupervisorRows[2].textContent).toEqual('caca');
-    expect(insertedSupervisorRows[3].textContent).toEqual('dudi');
+    const addedSupervisorRows = within(tables[0]).getAllByRole('row');
+    expect(addedSupervisorRows).toHaveLength(4);
+    expect(addedSupervisorRows[0].textContent).toEqual('andi');
+    expect(addedSupervisorRows[1].textContent).toEqual('budi');
+    expect(addedSupervisorRows[2].textContent).toEqual('caca');
+    expect(addedSupervisorRows[3].textContent).toEqual('dudi');
 
     const unknownSupervisorRows = within(tables[1]).getAllByRole('row');
     expect(unknownSupervisorRows).toHaveLength(1);

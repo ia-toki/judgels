@@ -6,9 +6,9 @@ import { setSession } from '../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../test/RouterWrapper';
 import { nockApi } from '../../../../../utils/nock';
-import UserUpsertPage from './UserUpsertPage';
+import UserImportPage from './UserImportPage';
 
-describe('UserUpsertPage', () => {
+describe('UserImportPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid' });
   });
@@ -17,8 +17,8 @@ describe('UserUpsertPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/users/-/upsert']}>
-            <UserUpsertPage />
+          <TestRouter initialEntries={['/admin/users/-/import']}>
+            <UserImportPage />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
@@ -33,7 +33,7 @@ describe('UserUpsertPage', () => {
     await user.type(textarea, 'username,password,email\nandi,pass1,andi@example.com');
 
     nockApi()
-      .post('/v2/users/batch-upsert', 'username,password,email\nandi,pass1,andi@example.com')
+      .post('/v2/users/import', 'username,password,email\nandi,pass1,andi@example.com')
       .reply(200, {
         createdUsernames: ['andi'],
         updatedUsernames: [],

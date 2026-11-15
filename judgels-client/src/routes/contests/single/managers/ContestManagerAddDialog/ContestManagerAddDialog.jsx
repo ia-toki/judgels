@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { upsertContestManagersMutationOptions } from '../../../../../modules/queries/contestManager';
+import { addContestManagersMutationOptions } from '../../../../../modules/queries/contestManager';
 import ContestManagerAddForm from '../ContestManagerAddForm/ContestManagerAddForm';
 import { ContestManagerAddResultTable } from '../ContestManagerAddResultTable/ContestManagerAddResultTable';
 
@@ -16,7 +16,7 @@ export function ContestManagerAddDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const upsertManagersMutation = useMutation(upsertContestManagersMutationOptions(contest.jid));
+  const addManagersMutation = useMutation(addContestManagersMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -40,8 +40,8 @@ export function ContestManagerAddDialog({ contest }) {
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
-    const response = await upsertManagersMutation.mutateAsync(usernames);
-    if (usernames.length === Object.keys(response.insertedManagerProfilesMap).length) {
+    const response = await addManagersMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.addedManagerProfilesMap).length) {
       toastActions.showSuccessToast('Managers added.');
       setIsDialogOpen(false);
     } else {
@@ -51,13 +51,13 @@ export function ContestManagerAddDialog({ contest }) {
 
   const renderDialogAddResultTable = () => {
     const { usernames, response } = submitted;
-    const { insertedManagerProfilesMap, alreadyManagerProfilesMap } = response;
+    const { addedManagerProfilesMap, alreadyManagerProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestManagerAddResultTable
             usernames={usernames}
-            insertedManagerProfilesMap={insertedManagerProfilesMap}
+            addedManagerProfilesMap={addedManagerProfilesMap}
             alreadyManagerProfilesMap={alreadyManagerProfilesMap}
           />
         </div>

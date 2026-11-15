@@ -6,7 +6,7 @@ import { ContestManagerRemoveResultTable } from './ContestManagerRemoveResultTab
 describe('ContestManagerRemoveResultTable', () => {
   const renderComponent = async ({
     usernames = ['budi', 'andi', 'zoro'],
-    deletedManagerProfilesMap = {
+    removedManagerProfilesMap = {
       budi: { username: 'budi' },
       andi: { username: 'andi' },
     },
@@ -16,7 +16,7 @@ describe('ContestManagerRemoveResultTable', () => {
         <TestRouter>
           <ContestManagerRemoveResultTable
             usernames={usernames}
-            deletedManagerProfilesMap={deletedManagerProfilesMap}
+            removedManagerProfilesMap={removedManagerProfilesMap}
           />
         </TestRouter>
       )
@@ -28,10 +28,10 @@ describe('ContestManagerRemoveResultTable', () => {
 
     const tables = screen.getAllByRole('table');
 
-    const deletedManagerRows = within(tables[0]).getAllByRole('row');
-    expect(deletedManagerRows).toHaveLength(2);
-    expect(deletedManagerRows[0]).toHaveTextContent('andi');
-    expect(deletedManagerRows[1]).toHaveTextContent('budi');
+    const removedManagerRows = within(tables[0]).getAllByRole('row');
+    expect(removedManagerRows).toHaveLength(2);
+    expect(removedManagerRows[0]).toHaveTextContent('andi');
+    expect(removedManagerRows[1]).toHaveTextContent('budi');
 
     const unknownManagerRows = within(tables[1]).getAllByRole('row');
     expect(unknownManagerRows).toHaveLength(1);

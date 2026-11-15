@@ -1,5 +1,5 @@
 import { Intent } from '@blueprintjs/core';
-import { Upload } from '@blueprintjs/icons';
+import { Plus } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
@@ -15,15 +15,15 @@ export function RolesActions() {
   return (
     <ActionButtons justifyContent="end">
       {isSystemAdmin(roles) && (
-        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/admins/-/upsert">
-          <Upload />
-          <span>Upsert admins</span>
+        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/admins/-/add">
+          <Plus />
+          <span>Add admins</span>
         </ButtonLink>
       )}
       {isProblemAdmin(roles) && (
-        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/problem-writers/-/upsert">
-          <Upload />
-          <span>Upsert problem writers</span>
+        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/problem-writers/-/add">
+          <Plus />
+          <span>Add problem writers</span>
         </ButtonLink>
       )}
     </ActionButtons>

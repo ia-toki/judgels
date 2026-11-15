@@ -3,7 +3,7 @@ import { Flex } from '@blueprintjs/labs';
 
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 
-export function ContestManagerAddResultTable({ usernames, insertedManagerProfilesMap, alreadyManagerProfilesMap }) {
+export function ContestManagerAddResultTable({ usernames, addedManagerProfilesMap, alreadyManagerProfilesMap }) {
   const renderManagersTable = (title, profilesMap) => {
     const usernames = Object.keys(profilesMap)
       .slice()
@@ -34,7 +34,7 @@ export function ContestManagerAddResultTable({ usernames, insertedManagerProfile
   };
 
   const renderUnknownManagersTable = () => {
-    const knownUsernames = [...Object.keys(insertedManagerProfilesMap), ...Object.keys(alreadyManagerProfilesMap)];
+    const knownUsernames = [...Object.keys(addedManagerProfilesMap), ...Object.keys(alreadyManagerProfilesMap)];
     const unknownUsernames = usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()
@@ -62,7 +62,7 @@ export function ContestManagerAddResultTable({ usernames, insertedManagerProfile
 
   return (
     <Flex flexDirection="column" gap={6}>
-      {renderManagersTable('Added managers', insertedManagerProfilesMap)}
+      {renderManagersTable('Added managers', addedManagerProfilesMap)}
       {renderManagersTable('Already managers', alreadyManagerProfilesMap)}
       {renderUnknownManagersTable()}
     </Flex>

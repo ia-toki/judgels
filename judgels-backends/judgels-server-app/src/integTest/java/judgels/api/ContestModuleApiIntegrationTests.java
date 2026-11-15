@@ -37,7 +37,7 @@ class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
     }
 
     @Test
-    void upsert_get_config() {
+    void set_get_config() {
         moduleClient.enableModule(managerToken, contest.getJid(), VIRTUAL);
 
         ContestModulesConfig config = moduleClient.getModulesConfig(managerToken, contest.getJid());
@@ -48,18 +48,18 @@ class ContestModuleApiIntegrationTests extends BaseContestApiIntegrationTests {
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(3)).build())
                 .build();
 
-        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), config);
+        moduleClient.setModulesConfig(managerToken, contest.getJid(), config);
         assertThat(moduleClient.getModulesConfig(managerToken, contest.getJid())).isEqualTo(config);
     }
 
     @Test
-    void upsert_config_keeps_configs_left_out() {
+    void set_config_keeps_configs_left_out() {
         moduleClient.enableModule(managerToken, contest.getJid(), VIRTUAL);
-        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
+        moduleClient.setModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
                 .scoreboard(new ScoreboardModuleConfig.Builder().isIncognitoScoreboard(true).build())
                 .build());
 
-        moduleClient.upsertModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
+        moduleClient.setModulesConfig(managerToken, contest.getJid(), new ContestModulesConfig.Builder()
                 .virtual(new VirtualModuleConfig.Builder().virtualDuration(Duration.ofHours(3)).build())
                 .build());
 

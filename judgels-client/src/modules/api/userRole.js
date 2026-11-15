@@ -31,8 +31,8 @@ export const userRoleAPI = {
     return get(baseURL, token);
   },
 
-  upsertRoles: (token, usernames, roles) => {
-    return post(`${baseURL}/batch-upsert`, token, { usernames, roles });
+  addRoles: (token, usernames, roles) => {
+    return post(`${baseURL}/add`, token, { usernames, roles });
   },
 
   setRoles: (token, userJid, roles) => {

@@ -19,17 +19,17 @@ class ContestManagerApiIntegrationTests extends BaseContestApiIntegrationTests {
     }
 
     @Test
-    void upsert_delete_get_managers() {
-        var upsertResponse = managerClient.upsertManagers(adminToken, contest.getJid(), Set.of(USER, USER_A, "bogus"));
-        assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER, USER_A);
-        assertThat(upsertResponse.getAlreadyManagerProfilesMap()).isEmpty();
+    void add_remove_get_managers() {
+        var addResponse = managerClient.addManagers(adminToken, contest.getJid(), Set.of(USER, USER_A, "bogus"));
+        assertThat(addResponse.getAddedManagerProfilesMap()).containsOnlyKeys(USER, USER_A);
+        assertThat(addResponse.getAlreadyManagerProfilesMap()).isEmpty();
 
-        upsertResponse = managerClient.upsertManagers(adminToken, contest.getJid(), Set.of(USER_A, USER_B));
-        assertThat(upsertResponse.getInsertedManagerProfilesMap()).containsOnlyKeys(USER_B);
-        assertThat(upsertResponse.getAlreadyManagerProfilesMap()).containsOnlyKeys(USER_A);
+        addResponse = managerClient.addManagers(adminToken, contest.getJid(), Set.of(USER_A, USER_B));
+        assertThat(addResponse.getAddedManagerProfilesMap()).containsOnlyKeys(USER_B);
+        assertThat(addResponse.getAlreadyManagerProfilesMap()).containsOnlyKeys(USER_A);
 
-        var deleteResponse = managerClient.deleteManagers(adminToken, contest.getJid(), Set.of(USER, USER_B, "bogus"));
-        assertThat(deleteResponse.getDeletedManagerProfilesMap()).containsOnlyKeys(USER, USER_B);
+        var deleteResponse = managerClient.removeManagers(adminToken, contest.getJid(), Set.of(USER, USER_B, "bogus"));
+        assertThat(deleteResponse.getRemovedManagerProfilesMap()).containsOnlyKeys(USER, USER_B);
 
         Map<String, Boolean> canManageMap = new LinkedHashMap<>();
         canManageMap.put(adminToken, true);

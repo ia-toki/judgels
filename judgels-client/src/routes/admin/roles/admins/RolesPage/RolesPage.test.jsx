@@ -101,11 +101,11 @@ describe('RolesPage', () => {
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });
 
-  test('links to the upsert page', async () => {
+  test('links to the add page', async () => {
     await renderComponent();
-    expect(await screen.findByRole('link', { name: /upsert admins/i })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: /add admins/i })).toHaveAttribute(
       'href',
-      '/admin/roles/admins/-/upsert'
+      '/admin/roles/admins/-/add'
     );
   });
 });

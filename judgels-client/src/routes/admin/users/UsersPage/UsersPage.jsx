@@ -20,9 +20,9 @@ export default function UsersPage() {
 
   const renderAction = () => {
     return (
-      <ButtonLink small intent={Intent.PRIMARY} to="/admin/users/-/upsert">
+      <ButtonLink small intent={Intent.PRIMARY} to="/admin/users/-/import">
         <Upload />
-        <span>Upsert users</span>
+        <span>Import users</span>
       </ButtonLink>
     );
   };

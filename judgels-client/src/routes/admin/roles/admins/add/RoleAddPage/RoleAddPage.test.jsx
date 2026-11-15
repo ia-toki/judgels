@@ -5,9 +5,9 @@ import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockApi } from '../../../../../../utils/nock';
-import RoleUpsertPage from './RoleUpsertPage';
+import RoleAddPage from './RoleAddPage';
 
-describe('RoleUpsertPage', () => {
+describe('RoleAddPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid1' });
   });
@@ -29,15 +29,15 @@ describe('RoleUpsertPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/roles/admins/-/upsert']}>
-            <RoleUpsertPage />
+          <TestRouter initialEntries={['/admin/roles/admins/-/add']}>
+            <RoleAddPage />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
   };
 
-  test('upserts admins, keeping the users not found', async () => {
+  test('adds admins, keeping the users not found', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
@@ -46,8 +46,8 @@ describe('RoleUpsertPage', () => {
     await user.click(screen.getByRole('checkbox', { name: /contest admin/i }));
 
     const scope = nockApi()
-      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], roles: ['CONTEST_ADMIN'] })
-      .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
+      .post('/v2/user-roles/add', { usernames: ['caca', 'dodi'], roles: ['CONTEST_ADMIN'] })
+      .reply(200, { addedUserProfilesMap: { caca: { username: 'caca' } } });
     await user.click(screen.getByRole('button', { name: /^submit$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
 

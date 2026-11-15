@@ -12,7 +12,7 @@ import { FormTextArea } from '../../../../../../components/forms/FormTextArea/Fo
 import { FormUnsavedChangesAlert } from '../../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../../../components/forms/validations';
 import { isSuperadmin } from '../../../../../../modules/api/userRole';
-import { upsertUserRolesMutationOptions, userRolesQueryOptions } from '../../../../../../modules/queries/userRole';
+import { addUserRolesMutationOptions, userRolesQueryOptions } from '../../../../../../modules/queries/userRole';
 import { RoleCheckboxes } from '../../RoleCheckboxes/RoleCheckboxes';
 
 import * as toastActions from '../../../../../../modules/toast/toastActions';
@@ -37,7 +37,7 @@ function parseUsernames(text) {
   return [...new Set(usernames)];
 }
 
-export default function RoleUpsertPage() {
+export default function RoleAddPage() {
   const navigate = useNavigate();
   const [error, setError] = useState(undefined);
 
@@ -47,11 +47,11 @@ export default function RoleUpsertPage() {
   const superadminJid = users.find(({ roles }) => isSuperadmin(roles))?.userJid;
   const superadminUsername = profilesMap[superadminJid]?.username;
 
-  const upsertRolesMutation = useMutation(upsertUserRolesMutationOptions());
+  const addRolesMutation = useMutation(addUserRolesMutationOptions());
 
   const goToRoles = () => navigate({ to: '/admin/roles/admins', ignoreBlocker: true });
 
-  const upsertUsers = async (values, form) => {
+  const addAdmins = async (values, form) => {
     const usernames = parseUsernames(values.usernames);
     if (usernames.includes(superadminUsername)) {
       setError(`${superadminUsername} already holds every role.`);
@@ -61,11 +61,11 @@ export default function RoleUpsertPage() {
     const roles = Object.entries(values.roles)
       .filter(([, checked]) => checked)
       .map(([role]) => role);
-    const { upsertedUserProfilesMap } = await upsertRolesMutation.mutateAsync({ usernames, roles });
+    const { addedUserProfilesMap } = await addRolesMutation.mutateAsync({ usernames, roles });
 
-    const notFound = usernames.filter(username => !upsertedUserProfilesMap[username]);
+    const notFound = usernames.filter(username => !addedUserProfilesMap[username]);
     if (notFound.length < usernames.length) {
-      toastActions.showSuccessToast('Roles granted.');
+      toastActions.showSuccessToast('Admins added.');
     }
     if (notFound.length === 0) {
       goToRoles();
@@ -83,14 +83,14 @@ export default function RoleUpsertPage() {
           items={[
             { text: 'Roles', to: '/admin/roles' },
             { text: 'Admins', to: '/admin/roles/admins' },
-            { text: 'Upsert' },
+            { text: 'Add' },
           ]}
         />
       }
     >
       <Flex flexDirection="column" gap={4}>
         {error && <Callout intent={Intent.DANGER}>{error}</Callout>}
-        <Form onSubmit={upsertUsers} initialValues={initialValues}>
+        <Form onSubmit={addAdmins} initialValues={initialValues}>
           {({ handleSubmit, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <FormUnsavedChangesAlert />

@@ -6,10 +6,10 @@ import judgels.api.profile.Profile;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestManagersUpsertResponse.class)
-public interface ContestManagersUpsertResponse {
-    Map<String, Profile> getInsertedManagerProfilesMap();
+@JsonDeserialize(as = ImmutableContestManagersAddResponse.class)
+public interface ContestManagersAddResponse {
+    Map<String, Profile> getAddedManagerProfilesMap();
     Map<String, Profile> getAlreadyManagerProfilesMap();
 
-    class Builder extends ImmutableContestManagersUpsertResponse.Builder {}
+    class Builder extends ImmutableContestManagersAddResponse.Builder {}
 }

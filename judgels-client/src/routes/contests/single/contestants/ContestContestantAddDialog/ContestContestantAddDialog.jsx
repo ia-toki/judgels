@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { upsertContestContestantsMutationOptions } from '../../../../../modules/queries/contestContestant';
+import { addContestContestantsMutationOptions } from '../../../../../modules/queries/contestContestant';
 import ContestContestantAddForm from '../ContestContestantAddForm/ContestContestantAddForm';
 import { ContestContestantAddResultTable } from '../ContestContestantAddResultTable/ContestContestantAddResultTable';
 
@@ -16,7 +16,7 @@ export function ContestContestantAddDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const upsertContestantsMutation = useMutation(upsertContestContestantsMutationOptions(contest.jid));
+  const addContestantsMutation = useMutation(addContestContestantsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -40,8 +40,8 @@ export function ContestContestantAddDialog({ contest }) {
       .split('\n')
       .map(s => s.trim())
       .filter(s => s.length > 0);
-    const response = await upsertContestantsMutation.mutateAsync(usernames);
-    if (usernames.length === Object.keys(response.insertedContestantProfilesMap).length) {
+    const response = await addContestantsMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.addedContestantProfilesMap).length) {
       toastActions.showSuccessToast('Contestants added.');
       setIsDialogOpen(false);
     } else {
@@ -51,13 +51,13 @@ export function ContestContestantAddDialog({ contest }) {
 
   const renderDialogAddResultTable = () => {
     const { usernames, response } = submitted;
-    const { insertedContestantProfilesMap, alreadyContestantProfilesMap } = response;
+    const { addedContestantProfilesMap, alreadyContestantProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestContestantAddResultTable
             usernames={usernames}
-            insertedContestantProfilesMap={insertedContestantProfilesMap}
+            addedContestantProfilesMap={addedContestantProfilesMap}
             alreadyContestantProfilesMap={alreadyContestantProfilesMap}
           />
         </div>

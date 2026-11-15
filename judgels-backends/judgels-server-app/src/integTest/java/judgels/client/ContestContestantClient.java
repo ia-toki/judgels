@@ -6,9 +6,9 @@ import feign.RequestLine;
 import java.util.Set;
 import judgels.api.contest.contestant.ApprovedContestContestantsResponse;
 import judgels.api.contest.contestant.ContestContestantState;
-import judgels.api.contest.contestant.ContestContestantsDeleteResponse;
+import judgels.api.contest.contestant.ContestContestantsAddResponse;
+import judgels.api.contest.contestant.ContestContestantsRemoveResponse;
 import judgels.api.contest.contestant.ContestContestantsResponse;
-import judgels.api.contest.contestant.ContestContestantsUpsertResponse;
 
 public interface ContestContestantClient {
     @RequestLine("GET /api/v2/contests/{contestJid}/contestants")
@@ -35,16 +35,16 @@ public interface ContestContestantClient {
     @Headers("Authorization: Bearer {token}")
     ContestContestantState getMyContestantState(@Param("token") String token, @Param("contestJid") String contestJid);
 
-    @RequestLine("POST /api/v2/contests/{contestJid}/contestants/batch-upsert")
+    @RequestLine("POST /api/v2/contests/{contestJid}/contestants/add")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    ContestContestantsUpsertResponse upsertContestants(
+    ContestContestantsAddResponse addContestants(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
             Set<String> usernames);
 
-    @RequestLine("POST /api/v2/contests/{contestJid}/contestants/batch-delete")
+    @RequestLine("POST /api/v2/contests/{contestJid}/contestants/remove")
     @Headers({"Authorization: Bearer {token}", "Content-Type: application/json"})
-    ContestContestantsDeleteResponse deleteContestants(
+    ContestContestantsRemoveResponse removeContestants(
             @Param("token") String token,
             @Param("contestJid") String contestJid,
             Set<String> usernames);

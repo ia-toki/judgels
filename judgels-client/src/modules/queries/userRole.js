@@ -10,8 +10,8 @@ export const userRolesQueryOptions = () =>
     queryFn: () => userRoleAPI.getRoles(getToken()),
   });
 
-export const upsertUserRolesMutationOptions = () => ({
-  mutationFn: ({ usernames, roles }) => userRoleAPI.upsertRoles(getToken(), usernames, roles),
+export const addUserRolesMutationOptions = () => ({
+  mutationFn: ({ usernames, roles }) => userRoleAPI.addRoles(getToken(), usernames, roles),
   onSuccess: () => {
     queryClient.invalidateQueries(userRolesQueryOptions());
   },

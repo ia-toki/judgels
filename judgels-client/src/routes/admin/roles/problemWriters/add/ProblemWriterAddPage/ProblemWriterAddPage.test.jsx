@@ -5,9 +5,9 @@ import { setSession } from '../../../../../../modules/session';
 import { QueryClientProviderWrapper } from '../../../../../../test/QueryClientProviderWrapper';
 import { TestRouter } from '../../../../../../test/RouterWrapper';
 import { nockApi } from '../../../../../../utils/nock';
-import ProblemWriterUpsertPage from './ProblemWriterUpsertPage';
+import ProblemWriterAddPage from './ProblemWriterAddPage';
 
-describe('ProblemWriterUpsertPage', () => {
+describe('ProblemWriterAddPage', () => {
   beforeEach(() => {
     setSession('token', { jid: 'userJid1' });
   });
@@ -24,23 +24,23 @@ describe('ProblemWriterUpsertPage', () => {
     await act(async () =>
       render(
         <QueryClientProviderWrapper>
-          <TestRouter initialEntries={['/admin/roles/problem-writers/-/upsert']}>
-            <ProblemWriterUpsertPage />
+          <TestRouter initialEntries={['/admin/roles/problem-writers/-/add']}>
+            <ProblemWriterAddPage />
           </TestRouter>
         </QueryClientProviderWrapper>
       )
     );
   };
 
-  test('upserts writers, keeping the users not found', async () => {
+  test('adds writers, keeping the users not found', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
     await user.type(await screen.findByLabelText(/usernames/i), 'caca\n\n dodi \ncaca');
 
     const scope = nockApi()
-      .post('/v2/user-roles/batch-upsert', { usernames: ['caca', 'dodi'], roles: ['PROBLEM_WRITER'] })
-      .reply(200, { upsertedUserProfilesMap: { caca: { username: 'caca' } } });
+      .post('/v2/user-roles/add', { usernames: ['caca', 'dodi'], roles: ['PROBLEM_WRITER'] })
+      .reply(200, { addedUserProfilesMap: { caca: { username: 'caca' } } });
     await user.click(screen.getByRole('button', { name: /^submit$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
 

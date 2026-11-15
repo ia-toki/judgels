@@ -54,7 +54,7 @@ describe('ContestSupervisorsPage', () => {
 
   test('renders action buttons', async () => {
     await renderComponent();
-    expect(await screen.findByRole('button', { name: /add\/update supervisors/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /add supervisors/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /remove supervisors/i })).toBeInTheDocument();
   });
 

@@ -3,7 +3,7 @@ import { Flex } from '@blueprintjs/labs';
 
 import { UserRef } from '../../../../../components/UserRef/UserRef';
 
-export function ContestContestantRemoveResultTable({ usernames, deletedContestantProfilesMap }) {
+export function ContestContestantRemoveResultTable({ usernames, removedContestantProfilesMap }) {
   const renderContestantsTable = (title, profilesMap) => {
     const usernames = Object.keys(profilesMap)
       .slice()
@@ -34,7 +34,7 @@ export function ContestContestantRemoveResultTable({ usernames, deletedContestan
   };
 
   const renderUnknownContestantsTable = () => {
-    const knownUsernames = Object.keys(deletedContestantProfilesMap);
+    const knownUsernames = Object.keys(removedContestantProfilesMap);
     const unknownUsernames = usernames
       .filter(u => knownUsernames.indexOf(u) === -1)
       .slice()
@@ -62,7 +62,7 @@ export function ContestContestantRemoveResultTable({ usernames, deletedContestan
 
   return (
     <Flex flexDirection="column" gap={6}>
-      {renderContestantsTable('Removed contestants', deletedContestantProfilesMap)}
+      {renderContestantsTable('Removed contestants', removedContestantProfilesMap)}
       {renderUnknownContestantsTable()}
     </Flex>
   );

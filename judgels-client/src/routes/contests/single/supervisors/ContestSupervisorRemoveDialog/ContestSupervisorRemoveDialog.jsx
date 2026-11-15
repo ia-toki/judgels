@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import { deleteContestSupervisorsMutationOptions } from '../../../../../modules/queries/contestSupervisor';
+import { removeContestSupervisorsMutationOptions } from '../../../../../modules/queries/contestSupervisor';
 import ContestSupervisorRemoveForm from '../ContestSupervisorRemoveForm/ContestSupervisorRemoveForm';
 import { ContestSupervisorRemoveResultTable } from '../ContestSupervisorRemoveResultTable/ContestSupervisorRemoveResultTable';
 
@@ -16,7 +16,7 @@ export function ContestSupervisorRemoveDialog({ contest }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(undefined);
 
-  const deleteSupervisorsMutation = useMutation(deleteContestSupervisorsMutationOptions(contest.jid));
+  const removeSupervisorsMutation = useMutation(removeContestSupervisorsMutationOptions(contest.jid));
 
   const toggleDialog = () => {
     setIsDialogOpen(open => !open);
@@ -40,8 +40,8 @@ export function ContestSupervisorRemoveDialog({ contest }) {
       .split('\n')
       .filter(s => s.length > 0)
       .map(s => s.trim());
-    const response = await deleteSupervisorsMutation.mutateAsync(usernames);
-    if (usernames.length === Object.keys(response.deletedSupervisorProfilesMap).length) {
+    const response = await removeSupervisorsMutation.mutateAsync(usernames);
+    if (usernames.length === Object.keys(response.removedSupervisorProfilesMap).length) {
       toastActions.showSuccessToast('Supervisors removed.');
       setIsDialogOpen(false);
     } else {
@@ -51,13 +51,13 @@ export function ContestSupervisorRemoveDialog({ contest }) {
 
   const renderDialogRemoveResultTable = () => {
     const { usernames, response } = submitted;
-    const { deletedSupervisorProfilesMap } = response;
+    const { removedSupervisorProfilesMap } = response;
     return (
       <>
         <div className={classNames(Classes.DIALOG_BODY, 'contest-user-dialog__result-body')}>
           <ContestSupervisorRemoveResultTable
             usernames={usernames}
-            deletedSupervisorProfilesMap={deletedSupervisorProfilesMap}
+            removedSupervisorProfilesMap={removedSupervisorProfilesMap}
           />
         </div>
         <div className={Classes.DIALOG_FOOTER}>

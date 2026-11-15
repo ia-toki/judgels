@@ -11,19 +11,19 @@ import { ContentCard } from '../../../../../components/ContentCard/ContentCard';
 import { FormTextArea } from '../../../../../components/forms/FormTextArea/FormTextArea';
 import { FormUnsavedChangesAlert } from '../../../../../components/forms/UnsavedChangesAlert/UnsavedChangesAlert';
 import { Required } from '../../../../../components/forms/validations';
-import { upsertUsersMutationOptions } from '../../../../../modules/queries/user';
+import { importUsersMutationOptions } from '../../../../../modules/queries/user';
 
-export default function UserUpsertPage() {
+export default function UserImportPage() {
   const navigate = useNavigate();
   const [result, setResult] = useState(undefined);
   const [isInstructionOpen, setIsInstructionOpen] = useState(false);
 
-  const upsertMutation = useMutation(upsertUsersMutationOptions());
+  const importMutation = useMutation(importUsersMutationOptions());
 
   const goToUsers = () => navigate({ to: '/admin/users', ignoreBlocker: true });
 
   const handleSubmit = async values => {
-    const response = await upsertMutation.mutateAsync(values.csv);
+    const response = await importMutation.mutateAsync(values.csv);
     setResult(response);
     window.scrollTo(0, 0);
   };
@@ -140,7 +140,7 @@ export default function UserUpsertPage() {
   };
 
   return (
-    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Users', to: '/admin/users' }, { text: 'Upsert' }]} />}>
+    <ContentCard title={<BreadcrumbTitle items={[{ text: 'Users', to: '/admin/users' }, { text: 'Import' }]} />}>
       {renderContent()}
     </ContentCard>
   );

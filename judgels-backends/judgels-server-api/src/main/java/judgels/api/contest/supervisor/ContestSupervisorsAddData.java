@@ -5,10 +5,10 @@ import java.util.Set;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableContestSupervisorUpsertData.class)
-public interface ContestSupervisorUpsertData {
+@JsonDeserialize(as = ImmutableContestSupervisorsAddData.class)
+public interface ContestSupervisorsAddData {
     Set<String> getUsernames();
     Set<SupervisorManagementPermission> getManagementPermissions();
 
-    class Builder extends ImmutableContestSupervisorUpsertData.Builder {}
+    class Builder extends ImmutableContestSupervisorsAddData.Builder {}
 }

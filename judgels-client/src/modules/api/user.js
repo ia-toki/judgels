@@ -27,7 +27,7 @@ export const userAPI = {
     return get(`${baseUsersURL}/username/${username}`, token);
   },
 
-  upsertUsers: (token, csv) => {
-    return postText(`${baseUsersURL}/batch-upsert`, token, csv);
+  importUsers: (token, csv) => {
+    return postText(`${baseUsersURL}/import`, token, csv);
   },
 };

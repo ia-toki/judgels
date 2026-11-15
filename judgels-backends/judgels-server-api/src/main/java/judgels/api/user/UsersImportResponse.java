@@ -5,10 +5,10 @@ import java.util.List;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(as = ImmutableUsersUpsertResponse.class)
-public interface UsersUpsertResponse {
+@JsonDeserialize(as = ImmutableUsersImportResponse.class)
+public interface UsersImportResponse {
     List<String> getCreatedUsernames();
     List<String> getUpdatedUsernames();
 
-    class Builder extends ImmutableUsersUpsertResponse.Builder {}
+    class Builder extends ImmutableUsersImportResponse.Builder {}
 }

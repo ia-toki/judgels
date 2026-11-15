@@ -24,8 +24,8 @@ export const usersQueryOptions = params => {
   });
 };
 
-export const upsertUsersMutationOptions = () => ({
-  mutationFn: csv => userAPI.upsertUsers(getToken(), csv),
+export const importUsersMutationOptions = () => ({
+  mutationFn: csv => userAPI.importUsers(getToken(), csv),
   onSuccess: () => {
     queryClient.invalidateQueries(usersQueryOptions());
   },

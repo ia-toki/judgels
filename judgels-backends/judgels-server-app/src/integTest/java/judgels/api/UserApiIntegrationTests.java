@@ -9,8 +9,8 @@ import judgels.api.session.Credentials;
 import judgels.api.session.Session;
 import judgels.api.user.User;
 import judgels.api.user.UserData;
+import judgels.api.user.UsersImportResponse;
 import judgels.api.user.UsersResponse;
-import judgels.api.user.UsersUpsertResponse;
 import judgels.api.user.info.UserInfo;
 import judgels.client.SessionClient;
 import judgels.client.UserClient;
@@ -86,33 +86,33 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     }
 
     @Test
-    void upsert_users() {
+    void import_users() {
         // create
-        UsersUpsertResponse response = userClient.upsertUsers(adminToken, "country,name,email,username,password\n"
+        UsersImportResponse response = userClient.importUsers(adminToken, "country,name,email,username,password\n"
                 + "ID,Andi Indo,andi@judgels.com,andi,123\r\n"
                 + "TH,Budi Thai,budi@judgels.com,budi,456\n");
         assertThat(response.getCreatedUsernames()).containsExactly("andi", "budi");
         assertThat(response.getUpdatedUsernames()).isEmpty();
 
         // update + create
-        response = userClient.upsertUsers(adminToken, "country,name,email,username,password\r\n"
+        response = userClient.importUsers(adminToken, "country,name,email,username,password\r\n"
                 + "TH,Budi Thai 2,budi2@judgels.com,budi,333\n"
                 + "MY,Caca Malay,caca@judgels.com,caca,777\n");
         assertThat(response.getCreatedUsernames()).containsExactly("caca");
         assertThat(response.getUpdatedUsernames()).containsExactly("budi");
 
         // update only password
-        response = userClient.upsertUsers(adminToken, "username,password\r\n"
+        response = userClient.importUsers(adminToken, "username,password\r\n"
                 + "caca,778\n");
         assertThat(response.getUpdatedUsernames()).containsExactly("caca");
 
         // create with fixed jid
-        response = userClient.upsertUsers(adminToken, "jid,email,username,password\r\n"
+        response = userClient.importUsers(adminToken, "jid,email,username,password\r\n"
                 + "JID123,dudi@judgels.com,dudi,888\n");
         assertThat(response.getCreatedUsernames()).containsExactly("dudi");
 
         // update without password
-        response = userClient.upsertUsers(adminToken, "username,email\r\n"
+        response = userClient.importUsers(adminToken, "username,email\r\n"
                 + "dudi,dudidudi@judgels.com\n");
         assertThat(response.getUpdatedUsernames()).containsExactly("dudi");
 
@@ -143,7 +143,7 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         Session dudiSession = sessionClient.logIn(Credentials.of("dudi", "888"));
 
         // update non-passwords, still logged in
-        response = userClient.upsertUsers(adminToken, "username,country\r\n"
+        response = userClient.importUsers(adminToken, "username,country\r\n"
                 + "andi,SG\n"
                 + "budi,SG\n"
                 + "caca,SG\n"
@@ -156,7 +156,7 @@ class UserApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
         assertPermitted(() -> userClient.getUser(dudiSession.getToken(), dudi.getJid()));
 
         // update passwords, logged out
-        response = userClient.upsertUsers(adminToken, "username,password\r\n"
+        response = userClient.importUsers(adminToken, "username,password\r\n"
                 + "andi,111\n"
                 + "budi,222\n"
                 + "caca,333\n"

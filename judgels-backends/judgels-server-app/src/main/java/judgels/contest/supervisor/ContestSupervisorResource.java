@@ -24,10 +24,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import judgels.api.contest.Contest;
 import judgels.api.contest.supervisor.ContestSupervisor;
-import judgels.api.contest.supervisor.ContestSupervisorUpsertData;
-import judgels.api.contest.supervisor.ContestSupervisorsDeleteResponse;
+import judgels.api.contest.supervisor.ContestSupervisorsAddData;
+import judgels.api.contest.supervisor.ContestSupervisorsAddResponse;
+import judgels.api.contest.supervisor.ContestSupervisorsRemoveResponse;
 import judgels.api.contest.supervisor.ContestSupervisorsResponse;
-import judgels.api.contest.supervisor.ContestSupervisorsUpsertResponse;
 import judgels.api.profile.Profile;
 import judgels.contest.ContestRoleChecker;
 import judgels.contest.ContestStore;
@@ -78,14 +78,14 @@ public class ContestSupervisorResource {
     }
 
     @POST
-    @Path("/batch-upsert")
+    @Path("/add")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestSupervisorsUpsertResponse upsertSupervisors(
+    public ContestSupervisorsAddResponse addSupervisors(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
-            ContestSupervisorUpsertData data) {
+            ContestSupervisorsAddData data) {
 
         String actorJid = actorChecker.check(authHeader);
         Contest contest = checkFound(contestStore.getContestByJid(contestJid));
@@ -95,30 +95,30 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(data.getUsernames());
 
-        Set<String> upsertedSupervisorUsernames = Sets.newHashSet();
+        Set<String> addedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             supervisorStore.upsertSupervisor(contest.getJid(), userJid, data.getManagementPermissions());
-            upsertedSupervisorUsernames.add(username);
+            addedSupervisorUsernames.add(username);
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> upsertedSupervisorProfilesMap = upsertedSupervisorUsernames
+        Map<String, Profile> addedSupervisorProfilesMap = addedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
         contestLogger.log(contestJid, "ADD_SUPERVISORS");
 
-        return new ContestSupervisorsUpsertResponse.Builder()
-                .upsertedSupervisorProfilesMap(upsertedSupervisorProfilesMap)
+        return new ContestSupervisorsAddResponse.Builder()
+                .addedSupervisorProfilesMap(addedSupervisorProfilesMap)
                 .build();
     }
 
     @POST
-    @Path("/batch-delete")
+    @Path("/remove")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @UnitOfWork
-    public ContestSupervisorsDeleteResponse deleteSupervisors(
+    public ContestSupervisorsRemoveResponse removeSupervisors(
             @HeaderParam(AUTHORIZATION) AuthHeader authHeader,
             @PathParam("contestJid") String contestJid,
             Set<String> usernames) {
@@ -131,22 +131,22 @@ public class ContestSupervisorResource {
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(usernames);
 
-        Set<String> deletedSupervisorUsernames = Sets.newHashSet();
+        Set<String> removedSupervisorUsernames = Sets.newHashSet();
         usernameToJidMap.forEach((username, userJid) -> {
             if (supervisorStore.deleteSupervisor(contest.getJid(), userJid)) {
-                deletedSupervisorUsernames.add(username);
+                removedSupervisorUsernames.add(username);
             }
         });
 
         Map<String, Profile> userJidToProfileMap = profileStore.getProfiles(usernameToJidMap.values());
-        Map<String, Profile> deletedSupervisorProfilesMap = deletedSupervisorUsernames
+        Map<String, Profile> removedSupervisorProfilesMap = removedSupervisorUsernames
                 .stream()
                 .collect(Collectors.toMap(u -> u, u -> userJidToProfileMap.get(usernameToJidMap.get(u))));
 
         contestLogger.log(contestJid, "REMOVE_SUPERVISORS");
 
-        return new ContestSupervisorsDeleteResponse.Builder()
-                .deletedSupervisorProfilesMap(deletedSupervisorProfilesMap)
+        return new ContestSupervisorsRemoveResponse.Builder()
+                .removedSupervisorProfilesMap(removedSupervisorProfilesMap)
                 .build();
     }
 }

@@ -39,11 +39,11 @@ export const contestContestantAPI = {
     return get(`${baseURL(contestJid)}/me/state`, token);
   },
 
-  upsertContestants: (token, contestJid, usernames) => {
-    return post(`${baseURL(contestJid)}/batch-upsert`, token, usernames);
+  addContestants: (token, contestJid, usernames) => {
+    return post(`${baseURL(contestJid)}/add`, token, usernames);
   },
 
-  deleteContestants: (token, contestJid, usernames) => {
-    return post(`${baseURL(contestJid)}/batch-delete`, token, usernames);
+  removeContestants: (token, contestJid, usernames) => {
+    return post(`${baseURL(contestJid)}/remove`, token, usernames);
   },
 };
