@@ -8,6 +8,7 @@ import static judgels.api.user.role.UserRole.SYSTEM_ADMIN;
 import static judgels.api.user.role.UserRole.TRAINING_ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Set;
 import judgels.BaseJudgelsApiIntegrationTests;
 import judgels.api.session.Credentials;
@@ -29,14 +30,13 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
     @Test
     void upsert_set_get_roles() {
         String superadminJid = getSuperadminJid();
-        UserWithRoles superadminRoles = userWithRoles(superadminJid, Set.of(SUPERADMIN, SYSTEM_ADMIN, PROBLEM_ADMIN,
-                CONTEST_ADMIN, TRAINING_ADMIN));
 
         User andi = createUser("andi");
         User budi = createUser("budi");
 
-        assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactly(
-                superadminRoles,
+        assertThat(getRoles(adminToken, superadminJid, admin.getJid())).containsExactly(
+                userWithRoles(superadminJid, Set.of(SUPERADMIN, SYSTEM_ADMIN, PROBLEM_ADMIN, CONTEST_ADMIN,
+                        TRAINING_ADMIN, PROBLEM_WRITER)),
                 userWithRoles(admin.getJid(), ADMIN_ROLES));
 
         // Unknown usernames are left out of the response.
@@ -48,22 +48,18 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
         // Upserting grants roles on top of the ones already held.
         userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
                 .addUsernames("budi")
-                .addRoles(TRAINING_ADMIN)
+                .addRoles(TRAINING_ADMIN, PROBLEM_WRITER)
                 .build());
 
-        assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactlyInAnyOrder(
-                superadminRoles,
-                userWithRoles(admin.getJid(), ADMIN_ROLES),
+        assertThat(getRoles(adminToken, andi.getJid(), budi.getJid())).containsExactlyInAnyOrder(
                 userWithRoles(andi.getJid(), Set.of(CONTEST_ADMIN)),
-                userWithRoles(budi.getJid(), Set.of(CONTEST_ADMIN, TRAINING_ADMIN)));
+                userWithRoles(budi.getJid(), Set.of(CONTEST_ADMIN, TRAINING_ADMIN, PROBLEM_WRITER)));
 
         // Setting replaces the roles held, and setting none removes the user.
         userRoleClient.setRoles(adminToken, budi.getJid(), Set.of(PROBLEM_ADMIN));
         userRoleClient.setRoles(adminToken, andi.getJid(), Set.of());
 
-        assertThat(userRoleClient.getRoles(adminToken).getData()).containsExactly(
-                superadminRoles,
-                userWithRoles(admin.getJid(), ADMIN_ROLES),
+        assertThat(getRoles(adminToken, andi.getJid(), budi.getJid())).containsExactly(
                 userWithRoles(budi.getJid(), Set.of(PROBLEM_ADMIN)));
 
         assertNotFound(() -> userRoleClient.setRoles(adminToken, "nonexistent", ADMIN_ROLES));
@@ -81,33 +77,57 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
     }
 
     @Test
-    void refuses_problem_writer_role() {
-        User cici = createUser("cici");
+    void problem_admin_manages_only_problem_writers() {
+        User pia = createUser("pia");
+        String piaToken = getToken(pia);
+        userRoleClient.setRoles(superadminToken, pia.getJid(), Set.of(PROBLEM_ADMIN));
 
-        assertBadRequest(() -> userRoleClient.setRoles(adminToken, cici.getJid(), Set.of(PROBLEM_WRITER)));
-        assertBadRequest(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+        User cici = createUser("cici");
+        String ciciToken = getToken(cici);
+        userRoleClient.setRoles(adminToken, cici.getJid(), Set.of(CONTEST_ADMIN));
+
+        userRoleClient.upsertRoles(piaToken, new UserRolesUpsertData.Builder()
                 .addUsernames("cici")
                 .addRoles(PROBLEM_WRITER)
+                .build());
+
+        assertThat(getRoles(piaToken, pia.getJid(), cici.getJid())).containsExactly(
+                userWithRoles(cici.getJid(), Set.of(PROBLEM_WRITER)));
+
+        assertForbidden(() -> userRoleClient.setRoles(piaToken, cici.getJid(), Set.of(CONTEST_ADMIN)));
+        assertForbidden(() -> userRoleClient.upsertRoles(piaToken, new UserRolesUpsertData.Builder()
+                .addUsernames("cici")
+                .addRoles(CONTEST_ADMIN)
                 .build()));
+
+        userRoleClient.setRoles(piaToken, cici.getJid(), Set.of());
+        assertThat(getRoles(piaToken, cici.getJid())).isEmpty();
+        assertThat(userWebClient.getWebConfig(ciciToken).getRoles()).containsExactly(CONTEST_ADMIN);
     }
 
     @Test
-    void hides_and_keeps_problem_writer_role() {
+    void system_admin_hides_and_keeps_problem_writer_role() {
+        User sam = createUser("sam");
+        String samToken = getToken(sam);
+        userRoleClient.setRoles(superadminToken, sam.getJid(), Set.of(SYSTEM_ADMIN));
+
         User dodi = createUser("dodi");
         String dodiToken = getToken(dodi);
         grantProblemWriter(dodi);
 
-        assertThat(userRoleClient.getRoles(adminToken).getData())
-                .extracting(UserWithRoles::getUserJid)
-                .doesNotContain(dodi.getJid());
+        assertThat(getRoles(samToken, dodi.getJid())).isEmpty();
+        assertForbidden(() -> userRoleClient.upsertRoles(samToken, new UserRolesUpsertData.Builder()
+                .addUsernames("dodi")
+                .addRoles(PROBLEM_WRITER)
+                .build()));
 
-        userRoleClient.setRoles(adminToken, dodi.getJid(), Set.of(CONTEST_ADMIN));
-        assertThat(userRoleClient.getRoles(adminToken).getData())
-                .contains(userWithRoles(dodi.getJid(), Set.of(CONTEST_ADMIN)));
-
+        userRoleClient.setRoles(samToken, dodi.getJid(), Set.of(CONTEST_ADMIN));
+        assertThat(getRoles(samToken, dodi.getJid())).containsExactly(
+                userWithRoles(dodi.getJid(), Set.of(CONTEST_ADMIN)));
         assertThat(userWebClient.getWebConfig(dodiToken).getRoles()).containsExactlyInAnyOrder(
                 CONTEST_ADMIN, PROBLEM_WRITER);
-        userRoleClient.setRoles(adminToken, dodi.getJid(), Set.of());
+
+        userRoleClient.setRoles(samToken, dodi.getJid(), Set.of());
         assertThat(userWebClient.getWebConfig(dodiToken).getRoles()).containsExactly(PROBLEM_WRITER);
     }
 
@@ -121,9 +141,21 @@ public class UserRoleApiIntegrationTests extends BaseJudgelsApiIntegrationTests 
                 .addUsernames("superadmin")
                 .addRoles(CONTEST_ADMIN)
                 .build()));
+        assertForbidden(() -> userRoleClient.upsertRoles(adminToken, new UserRolesUpsertData.Builder()
+                .addUsernames("superadmin")
+                .addRoles(PROBLEM_WRITER)
+                .build()));
 
         assertForbidden(() -> userRoleClient.setRoles(adminToken, admin.getJid(), Set.of(PROBLEM_ADMIN)));
         assertForbidden(() -> userRoleClient.setRoles(adminToken, admin.getJid(), Set.of()));
+    }
+
+    private List<UserWithRoles> getRoles(String token, String... userJids) {
+        Set<String> jids = Set.of(userJids);
+        return userRoleClient.getRoles(token).getData()
+                .stream()
+                .filter(u -> jids.contains(u.getUserJid()))
+                .toList();
     }
 
     private String getSuperadminJid() {

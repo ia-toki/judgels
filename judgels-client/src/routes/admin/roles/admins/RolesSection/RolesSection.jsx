@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { ActionButtons } from '../../../../../components/ActionButtons/ActionButtons';
 import { ButtonLink } from '../../../../../components/ButtonLink/ButtonLink';
 import { UserRef } from '../../../../../components/UserRef/UserRef';
-import { isSuperadmin } from '../../../../../modules/api/userRole';
+import { adminRoles, isSuperadmin } from '../../../../../modules/api/userRole';
 import { setUserRolesMutationOptions } from '../../../../../modules/queries/userRole';
 import { useSession } from '../../../../../modules/session';
 import { getRoleFields } from '../RoleCheckboxes/RoleCheckboxes';
@@ -36,10 +36,10 @@ export function RolesSection({ roles }) {
 
   const roleFields = getRoleFields();
   const allUsers = buildUsers(roles, actor?.jid);
-  const users = allUsers.filter(user => !user.isSuperadmin);
+  const users = allUsers.filter(user => !user.isSuperadmin && user.roles.some(role => adminRoles.includes(role)));
 
   const removeUser = async () => {
-    await removeRoleMutation.mutateAsync([]);
+    await removeRoleMutation.mutateAsync(userToRemove.roles.filter(role => !adminRoles.includes(role)));
     toastActions.showSuccessToast('Roles removed.');
     setUserToRemove(undefined);
   };
@@ -102,7 +102,7 @@ export function RolesSection({ roles }) {
         onConfirm={removeUser}
         onCancel={() => setUserToRemove(undefined)}
       >
-        {userToRemove && `Remove all roles from ${userToRemove.username}?`}
+        {userToRemove && `Remove all admin roles from ${userToRemove.username}?`}
       </Alert>
     </Flex>
   );

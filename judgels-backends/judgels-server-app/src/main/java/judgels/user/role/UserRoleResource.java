@@ -36,12 +36,6 @@ import judgels.user.UserStore;
 
 @Path("/api/v2/user-roles")
 public class UserRoleResource {
-    private static final Set<UserRole> ADMIN_ROLES = Sets.immutableEnumSet(
-            UserRole.SYSTEM_ADMIN,
-            UserRole.PROBLEM_ADMIN,
-            UserRole.CONTEST_ADMIN,
-            UserRole.TRAINING_ADMIN);
-
     @Inject protected ActorChecker actorChecker;
     @Inject protected UserRoleChecker roleChecker;
     @Inject protected UserStore userStore;
@@ -55,11 +49,12 @@ public class UserRoleResource {
     @UnitOfWork(readOnly = true)
     public UserRolesResponse getRoles(@HeaderParam(AUTHORIZATION) AuthHeader authHeader) {
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        Set<UserRole> manageableRoles = roleChecker.getManageableRoles(actorJid);
+        checkAllowed(!manageableRoles.isEmpty());
 
         List<UserWithRoles> roles = userRoleStore.getUsersWithRoles()
                 .stream()
-                .map(UserRoleResource::withoutNonAdminRoles)
+                .map(u -> withOnlyRoles(u, manageableRoles))
                 .filter(u -> !u.getRoles().isEmpty())
                 .collect(Collectors.toList());
 
@@ -82,10 +77,11 @@ public class UserRoleResource {
             UserRolesUpsertData data) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        Set<UserRole> manageableRoles = roleChecker.getManageableRoles(actorJid);
+        checkAllowed(!manageableRoles.isEmpty());
 
         checkArgument(data.getUsernames().size() <= 100, "Cannot add more than 100 users.");
-        checkRoles(data.getRoles());
+        checkRoles(data.getRoles(), manageableRoles);
         checkArgument(!data.getRoles().isEmpty(), "No role given.");
 
         Map<String, String> usernameToJidMap = userStore.translateUsernamesToJids(data.getUsernames());
@@ -116,31 +112,34 @@ public class UserRoleResource {
             Set<UserRole> roles) {
 
         String actorJid = actorChecker.check(authHeader);
-        checkAllowed(roleChecker.canAdminister(actorJid));
+        Set<UserRole> manageableRoles = roleChecker.getManageableRoles(actorJid);
+        checkAllowed(!manageableRoles.isEmpty());
         checkFound(userStore.getUserByJid(userJid));
 
-        checkRoles(roles);
+        checkRoles(roles, manageableRoles);
         checkAllowed(!isSuperadmin(userJid));
-        // A system admin cannot lock themselves out.
-        checkAllowed(!userJid.equals(actorJid) || roles.contains(UserRole.SYSTEM_ADMIN));
+        checkAllowed(!userJid.equals(actorJid)
+                || !manageableRoles.contains(UserRole.SYSTEM_ADMIN)
+                || roles.contains(UserRole.SYSTEM_ADMIN));
 
-        userRoleStore.setRoles(userJid, roles, ADMIN_ROLES);
+        userRoleStore.setRoles(userJid, roles, manageableRoles);
     }
 
     private boolean isSuperadmin(String userJid) {
         return userRoleStore.getRoles(userJid).contains(UserRole.SUPERADMIN);
     }
 
-    private static void checkRoles(Set<UserRole> roles) {
+    private static void checkRoles(Set<UserRole> roles, Set<UserRole> manageableRoles) {
         for (UserRole role : roles) {
-            checkArgument(ADMIN_ROLES.contains(role), "Cannot grant %s.", role);
+            checkArgument(role != UserRole.SUPERADMIN, "Cannot grant %s.", role);
+            checkAllowed(manageableRoles.contains(role));
         }
     }
 
-    private static UserWithRoles withoutNonAdminRoles(UserWithRoles user) {
+    private static UserWithRoles withOnlyRoles(UserWithRoles user, Set<UserRole> roles) {
         return new UserWithRoles.Builder()
                 .userJid(user.getUserJid())
-                .roles(Sets.filter(user.getRoles(), r -> r == UserRole.SUPERADMIN || ADMIN_ROLES.contains(r)))
+                .roles(Sets.filter(user.getRoles(), r -> r == UserRole.SUPERADMIN || roles.contains(r)))
                 .build();
     }
 }

@@ -32,13 +32,15 @@ describe('RolesPage', () => {
             userJid: 'superadminJid',
             roles: ['SUPERADMIN', 'SYSTEM_ADMIN', 'PROBLEM_ADMIN', 'CONTEST_ADMIN', 'TRAINING_ADMIN'],
           },
-          { userJid: 'userJid2', roles: ['PROBLEM_ADMIN'] },
+          { userJid: 'userJid2', roles: ['PROBLEM_ADMIN', 'PROBLEM_WRITER'] },
+          { userJid: 'userJid3', roles: ['PROBLEM_WRITER'] },
           { userJid: 'userJid1', roles: ['SYSTEM_ADMIN', 'TRAINING_ADMIN'] },
         ],
         profilesMap: {
           superadminJid: { username: 'superadmin' },
           userJid1: { username: 'andi' },
           userJid2: { username: 'budi' },
+          userJid3: { username: 'caca' },
         },
       })
       .persist();
@@ -62,7 +64,7 @@ describe('RolesPage', () => {
       .slice(1, -1)
       .map(cell => cell.textContent);
 
-  test('renders the roles table by username, without superadmin', async () => {
+  test('renders the roles table by username, without superadmin and problem writers', async () => {
     await renderComponent();
     await rowOf('andi');
 
@@ -87,14 +89,14 @@ describe('RolesPage', () => {
     );
   });
 
-  test('removes a user', async () => {
+  test('removes a user, keeping the problem writer role', async () => {
     await renderComponent();
     const user = userEvent.setup();
 
     await user.click(within(await rowOf('budi')).getByRole('button', { name: /remove/i }));
-    expect(screen.getByText('Remove all roles from budi?')).toBeInTheDocument();
+    expect(screen.getByText('Remove all admin roles from budi?')).toBeInTheDocument();
 
-    const scope = nockApi().put('/v2/user-roles/userJid2', []).reply(200);
+    const scope = nockApi().put('/v2/user-roles/userJid2', ['PROBLEM_WRITER']).reply(200);
     await user.click(screen.getByRole('button', { name: /^remove$/i }));
     await waitFor(() => expect(scope.isDone()).toBe(true));
   });

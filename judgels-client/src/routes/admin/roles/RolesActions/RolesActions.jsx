@@ -1,5 +1,5 @@
-import { Classes, Intent } from '@blueprintjs/core';
-import { Edit, Upload } from '@blueprintjs/icons';
+import { Intent } from '@blueprintjs/core';
+import { Upload } from '@blueprintjs/icons';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { ActionButtons } from '../../../../components/ActionButtons/ActionButtons';
@@ -21,9 +21,9 @@ export function RolesActions() {
         </ButtonLink>
       )}
       {isProblemAdmin(roles) && (
-        <ButtonLink small className={Classes.OUTLINED} to="/admin/roles/problem-writers/edit">
-          <Edit />
-          <span>Edit problem writers</span>
+        <ButtonLink small intent={Intent.PRIMARY} to="/admin/roles/problem-writers/-/upsert">
+          <Upload />
+          <span>Upsert problem writers</span>
         </ButtonLink>
       )}
     </ActionButtons>

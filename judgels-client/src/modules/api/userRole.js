@@ -10,6 +10,8 @@ export const UserRole = {
   TrainingAdmin: 'TRAINING_ADMIN',
 };
 
+export const adminRoles = [UserRole.SystemAdmin, UserRole.ProblemAdmin, UserRole.ContestAdmin, UserRole.TrainingAdmin];
+
 // `roles` is the list of roles a user holds, e.g. `webConfig.roles`. The superadmin holds every role.
 function holds(roles, role) {
   return !!roles && (roles.includes(role) || roles.includes(UserRole.Superadmin));
