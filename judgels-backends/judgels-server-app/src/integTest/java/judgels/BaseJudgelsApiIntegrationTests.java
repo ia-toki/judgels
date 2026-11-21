@@ -22,11 +22,18 @@ import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import judgels.api.catalog.lesson.Lesson;
 import judgels.api.catalog.lesson.LessonCreateData;
 import judgels.api.catalog.problem.Problem;
@@ -67,12 +74,18 @@ import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.h2.Driver;
 import org.hibernate.dialect.H2Dialect;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
+@ExtendWith(BaseJudgelsApiIntegrationTests.JudgelsAppExtension.class)
 public abstract class BaseJudgelsApiIntegrationTests {
-    private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
-    private static Path baseDataDir;
+    private static final String DB_URL = "jdbc:h2:mem:test";
+
+    private static JudgelsApp app;
 
     protected static User admin;
     protected static User user;
@@ -84,10 +97,126 @@ public abstract class BaseJudgelsApiIntegrationTests {
     protected static WebTarget webTarget;
 
     @BeforeAll
-    static void startApp() throws Exception {
+    static void setUpUsers() {
+        Session superadminSession = createClient(SessionClient.class).logIn(Credentials.of("superadmin", "superadmin"));
+        superadminToken = superadminSession.getToken();
+
+        admin = createUser("admin");
+        adminToken = getToken(admin);
+        createClient(UserRoleClient.class).setRoles(superadminToken, admin.getJid(), Set.of(
+                UserRole.SYSTEM_ADMIN,
+                UserRole.PROBLEM_ADMIN,
+                UserRole.CONTEST_ADMIN,
+                UserRole.TRAINING_ADMIN));
+
+        user = createUser("user");
+        userToken = getToken(user);
+    }
+
+    static class JudgelsAppExtension implements BeforeAllCallback {
+        @Override
+        public void beforeAll(ExtensionContext context) throws Exception {
+            Store store = context.getRoot().getStore(Namespace.GLOBAL);
+            JudgelsApp existingApp = store.get(JudgelsApp.class, JudgelsApp.class);
+            if (existingApp == null) {
+                app = JudgelsApp.start();
+                store.put(JudgelsApp.class, app);
+            } else {
+                app = existingApp;
+                app.reset();
+            }
+        }
+    }
+
+    private static class JudgelsApp implements Store.CloseableResource {
+        private final DropwizardTestSupport<JudgelsServerApplicationConfiguration> support;
+        private final Path baseDataDir;
+        private final Path baseDataSnapshotDir;
+        private final List<String> dbSnapshot;
+
+        private JudgelsApp(
+                DropwizardTestSupport<JudgelsServerApplicationConfiguration> support,
+                Path baseDataDir,
+                Path baseDataSnapshotDir,
+                List<String> dbSnapshot) {
+
+            this.support = support;
+            this.baseDataDir = baseDataDir;
+            this.baseDataSnapshotDir = baseDataSnapshotDir;
+            this.dbSnapshot = dbSnapshot;
+        }
+
+        static JudgelsApp start() throws Exception {
+            Path baseDataDir = Files.createTempDirectory("judgels");
+            DropwizardTestSupport<JudgelsServerApplicationConfiguration> support = createSupport(baseDataDir);
+            support.before();
+
+            Path baseDataSnapshotDir = Files.createTempDirectory("judgels-snapshot");
+            copyDirectoryContents(baseDataDir, baseDataSnapshotDir);
+
+            return new JudgelsApp(support, baseDataDir, baseDataSnapshotDir, snapshotDb());
+        }
+
+        int getLocalPort() {
+            return support.getLocalPort();
+        }
+
+        void reset() throws Exception {
+            restoreDb(dbSnapshot);
+            MoreFiles.deleteDirectoryContents(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
+            copyDirectoryContents(baseDataSnapshotDir, baseDataDir);
+        }
+
+        @Override
+        public void close() throws IOException {
+            support.after();
+            MoreFiles.deleteRecursively(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
+            MoreFiles.deleteRecursively(baseDataSnapshotDir, RecursiveDeleteOption.ALLOW_INSECURE);
+        }
+
+        private static List<String> snapshotDb() throws SQLException {
+            List<String> statements = new ArrayList<>();
+            try (Connection connection = DriverManager.getConnection(DB_URL);
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SCRIPT NOPASSWORDS NOSETTINGS")) {
+                while (resultSet.next()) {
+                    String sql = resultSet.getString(1);
+                    if (!sql.startsWith("--")) {
+                        statements.add(sql);
+                    }
+                }
+            }
+            return statements;
+        }
+
+        private static void restoreDb(List<String> snapshot) throws SQLException {
+            try (Connection connection = DriverManager.getConnection(DB_URL);
+                    Statement statement = connection.createStatement()) {
+                statement.execute("DROP ALL OBJECTS");
+                for (String sql : snapshot) {
+                    statement.execute(sql);
+                }
+            }
+        }
+
+        private static void copyDirectoryContents(Path source, Path target) throws IOException {
+            try (Stream<Path> paths = Files.walk(source)) {
+                for (Path path : (Iterable<Path>) paths::iterator) {
+                    Path targetPath = target.resolve(source.relativize(path));
+                    if (Files.isDirectory(path)) {
+                        Files.createDirectories(targetPath);
+                    } else {
+                        Files.copy(path, targetPath);
+                    }
+                }
+            }
+        }
+    }
+
+    private static DropwizardTestSupport<JudgelsServerApplicationConfiguration> createSupport(Path baseDataDir) {
         DataSourceFactory dbConfig = new DataSourceFactory();
         dbConfig.setDriverClass(Driver.class.getName());
-        dbConfig.setUrl("jdbc:h2:mem:test");
+        dbConfig.setUrl(DB_URL);
         dbConfig.setProperties(ImmutableMap.<String, String>builder()
                 .put(DIALECT, H2Dialect.class.getName())
                 .put(HBM2DDL_AUTO, "create")
@@ -96,8 +225,6 @@ public abstract class BaseJudgelsApiIntegrationTests {
 
         WebSecurityConfiguration webSecurityConfig = new WebSecurityConfiguration.Builder()
                 .build();
-
-        baseDataDir = Files.createTempDirectory("judgels");
 
         JudgelsServerGradingConfiguration gradingConfig = new JudgelsServerGradingConfiguration.Builder()
                 .gradingRequestQueueName("grading-request")
@@ -150,35 +277,14 @@ public abstract class BaseJudgelsApiIntegrationTests {
             }
         };
 
-        support = new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
-        support.before();
-
-        Session superadminSession = createClient(SessionClient.class).logIn(Credentials.of("superadmin", "superadmin"));
-        superadminToken = superadminSession.getToken();
-
-        admin = createUser("admin");
-        adminToken = getToken(admin);
-        createClient(UserRoleClient.class).setRoles(superadminToken, admin.getJid(), Set.of(
-                UserRole.SYSTEM_ADMIN,
-                UserRole.PROBLEM_ADMIN,
-                UserRole.CONTEST_ADMIN,
-                UserRole.TRAINING_ADMIN));
-
-        user = createUser("user");
-        userToken = getToken(user);
-    }
-
-    @AfterAll
-    static void stopApp() throws IOException {
-        support.after();
-        MoreFiles.deleteRecursively(baseDataDir, RecursiveDeleteOption.ALLOW_INSECURE);
+        return new DropwizardTestSupport<>(JudgelsServerApplication.class, config);
     }
 
     protected static WebTarget createWebTarget() {
         return JerseyClientBuilder.createClient()
                 .property("jersey.config.client.followRedirects", false)
                 .register(MultiPartFeature.class)
-                .target("http://localhost:" + support.getLocalPort());
+                .target(getLocalUrl());
     }
 
     protected static <T> T createClient(Class<T> clientClass) {
@@ -186,7 +292,7 @@ public abstract class BaseJudgelsApiIntegrationTests {
     }
 
     protected static String getLocalUrl() {
-        return "http://localhost:" + support.getLocalPort();
+        return "http://localhost:" + app.getLocalPort();
     }
 
     protected static void assertPermitted(ThrowingCallable callable) {

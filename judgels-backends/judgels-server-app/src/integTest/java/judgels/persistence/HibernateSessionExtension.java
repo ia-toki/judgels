@@ -44,7 +44,7 @@ public class HibernateSessionExtension implements ParameterResolver, AfterEachCa
 
         config.setProperty(DIALECT, H2Dialect.class.getName());
         config.setProperty(DRIVER, Driver.class.getName());
-        config.setProperty(URL, "jdbc:h2:mem:test");
+        config.setProperty(URL, "jdbc:h2:mem:dao");
         config.setProperty(HBM2DDL_AUTO, "create");
         config.setProperty(CURRENT_SESSION_CONTEXT_CLASS, "managed");
         config.setProperty(GENERATE_STATISTICS, "false");
