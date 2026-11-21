@@ -216,7 +216,7 @@ class AccountApiIntegrationTests extends BaseJudgelsApiIntegrationTests {
     private static String readEmail(Wiser wiser, int index) {
         await()
                 .atMost(30, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
+                .pollInterval(50, TimeUnit.MILLISECONDS)
                 .until(() -> wiser.getMessages().size() > index);
 
         return new String(wiser.getMessages().get(index).getData());
